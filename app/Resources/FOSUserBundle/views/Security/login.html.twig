@@ -1,0 +1,8 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block title %}Login{% endblock %}
+{% block description %}Logge dich ein{% endblock %}
+
+{% block fos_user_content %}
+    {{ include('@FOSUser/Security/login_content.html.twig') }}
+{% endblock fos_user_content %}

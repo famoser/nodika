@@ -1,0 +1,17 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block title %}Willkommen auf my_page{% endblock %}
+{% block description %}Registriere dich hier für my_page{% endblock %}
+
+{% block fos_user_content %}
+{% include "FOSUserBundle:Registration:register_content.html.twig" %}
+{% endblock fos_user_content %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            register_button_events();
+        });
+    </script>
+{% endblock %}

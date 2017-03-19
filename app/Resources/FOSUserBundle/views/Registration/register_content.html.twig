@@ -1,0 +1,61 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% import ":profile:edit_user_macros.html.twig" as edit %}
+
+{% macro button_row(index) %}
+    <div class="row">
+        <div class="col-md-3 register-icon">
+            <span class="ion ion-ios-person-outline {% if index == 1 %} active {% endif %}"></span>
+        </div>
+        <div class="col-md-3 register-icon">
+            <span class="ion ion-ios-information-outline {% if index == 2 %} active {% endif %}"></span>
+        </div>
+        <div class="col-md-3 register-icon">
+            <span class="ion ion-android-bicycle {% if index == 3 %} active {% endif %}"></span>
+        </div>
+        <div class="col-md-3 register-icon">
+            <span class="ion ion-arrow-graph-up-right {% if index == 4 %} active {% endif %}"></span>
+        </div>
+    </div>
+{% endmacro %}
+
+{% block content %}
+    <div id="register-form-wrapper" data-active="1">
+        <p>Nur 4 Schritte zu deinem personalisierten Menu</p>
+        <div id="error-placeholder"></div>
+
+        {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register', "id" : "register-form"}}) }}
+        {{ form_errors(form) }}
+
+        <div id="register-part-1">
+            {{ _self.button_row(1) }}
+            {{ edit.user_fields_part_1(form, "register") }}
+        </div>
+
+        <div id="register-part-2" class="hidden">
+            {{ _self.button_row(2) }}
+            {{ edit.user_fields_part_2(form, "register") }}
+        </div>
+
+        <div id="register-part-3" class="hidden">
+            {{ _self.button_row(3) }}
+            {{ edit.user_fields_part_3(form, "register") }}
+        </div>
+
+        <div id="register-part-4" class="hidden">
+            {{ _self.button_row(4) }}
+            {{ edit.user_fields_part_4(form, "register") }}
+        </div>
+        <div class="row register-buttons">
+            {% do form.save.setRendered %}
+            <div class="col-md-6">
+                <button id="register-back-button" class="btn btn-primary hidden">Zurück</button>
+            </div>
+            <div class="col-md-6">
+                <button id="register-forward-button" class="btn btn-primary">Weiter</button>
+            </div>
+        </div>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
