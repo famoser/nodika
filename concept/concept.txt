@@ -1,58 +1,82 @@
-Seiten
-	- / Darstellung der nächsten Termine in einer Tabelle
-		- bei eigenen Terminen: tauschen, history
-	- /members Mitglieder des Vereins
-	- /mine Nur eigene Termine (+print) (+ letzte Änderung)
-	- /switch/{id} Termine in Paketen tauschen. Es ist auch möglich einen Termin einfach so zu übernehmen
-	- /administrator Termine tauschen, neue Termine generieren, weitere admin funktionen
-	- /past Rückblick nach Jahr über die eigenen geleisteten Termine
+Vokabular
+	Organisation: Ein Zusammenschluss von Tierärzten die das ganze Jahr über Notfalldienst organisieren. Beispiel: KNBU
+	Mitglied: Ein Mitglied einer Organisation, im Normalfall eine Praxis. Beispiel: "Praxis Schönwetter"
+	User: Eine Person mit Zugriff zur Webseite. Jeder User wird einem Mitglied zugeordnet. Beispiel: "Dr. Moser"
+	Termin: Eine Zeiteinheit des Notfalldienstes. Jeder Termin ist einem Mitglied und eventuell einem User zugeordnet
+	Organisator: Der Verantwortliche für eine Organisation
 	
-Termine
-	- Vier Wochentagskategorien: Wochentag, Samstag, Sonntag, Feiertag
-	- Verteilung nach Punkten: je mehr Punkte eine Praxis hat desto mehr Termine bekommt sie zugeteilt
-	- Wochentelefon geht der Reihen nach (Round Robin, neue Praxen kommen am Schluss dazu)
-	- Termine werden an Members verteilt
-	- Memebers verteilen die Termine zu Personen und setzten ein Tag: grün, orange, rot wie sehr der Termin getauscht werden will	
+Grundfunktionen Webseite
+	- Darstellung & Export von Terminen
+	- Generierungs und Editieren von Terminen
+	- Tauschen von Terminen
+	- Transparente Änderung von Terminen (Verlauf wird gespeichert)
+	- Mitglieder werden zwei Mal über Termine informiert:
+		- einmal nach der Generierung (der Termin wird als "gesehen" markiert)
+		- einmal kurz vor der Ausführung (der Termin wird als "bestätigt" markiert)
+	- Bestätigen von Terminen
+	- Verwaltung Mitglieder
+
+Homepage /
+	- Kommende Termine der Mitglieder (dabei eigene Termine hervorgehoben)
+	- Bestätigung der kommenden Termine
 	
-Einstellungen
-	- Bis wie lange ab Beginn des Dienstes darf getauscht werden
-	- Wieviel vorher werden Erinnerungsemails versendet, und über welche Zeitspanne wird erinnert (1 Woche, 2 Wochen, 1 Monat, 2 Monate, 3 Monate)
-	- Wieviel vorher müssen Termine bestätigt sein, ab wann darf dies geschehen
-	- Welche Gewichtung haben die Wochentagskategorien
-	- Wie lange dauert ein Notfalldienst
-	- Wie lange dauert ein Wochentelefon
+Profile /profile
+	- Editierung Kontaktinformationen
+	- Änderung Logininformationen
+	- Editierung Informationen des Mitglieds
 
-Organisations
-	- jeder Notfalldienstverein erstellt eine Organisation
-	- jede Organisation hat Praxen (Tel. Nummer, Adresse, Webseite etc)
-	- jede Praxis hat zugriffsberechtigte Personen, die jeweils weiteren Personen (Tel. Nummer) der Praxis Zugriff gewähren können
-	- jeder Praxis werden Punkte zugeteilt, die bei der Verteilung der Termine berücksichtigt werden.
-	- Einige der Personen haben als Verantwortliche erweiterten Zugriff
-	- Die Verantwortlichen können Termine beliebig ändern, und neue Termine generieren lassen
-	- jedes Mitglied besitzt einen eigenen Login
+Members /members
+	- Alle Mitglieder, deren Kontaktinformationen und deren Gewichtung bei der Termingenerierung
 
-Sonstiges
-	- Alle Änderung an der Terminen wird gespeichert und ist einsichtbar für den Verantwortlichen
+Termine /appointments
+	- Verschiedene Ansichten der Termine die auch exportiert werden können, mindestens:
+		- alle Termine des Jahres
+		- alle Termine des Mitglieds (zur Erinnerung: ein Mitglied wäre z. B. "Praxis Schönwetter"
+		- alle eigenen Termine des Users (zur Erinnerung: ein User wäre z. B. "Dr. Moser")
+		- Rückblick über eine Zeitspanne
+	- Termine des Mitglieds können einem bestimmten User zugeordnet werden, und markiert werden ("wechsel erwünscht", "alles OK", ...) 
+	- Eigene Termine können mit anderen Benutzern getauscht werden
+	- Bestätigung der kommenden Termine
+	
+Tauschen /appointments/trade
+	- Termine können zwischen zwei Users getauscht werden
+	- Sind beide Parteien mit dem Trade einverstanden wird der Tausch ausgeführt
 
-Verantwortlicher Funktionen (exklusiv)
-	- neue Members hinzufügen & bearbeiten
-	- Punkte an Members vergeben
-	- neue Termine generieren und die Generierung akzeptieren oder ablehnen
-	- Termine setzten
-	- Einstellungen setzten
-	- Export Jahresrückblick
-	- E-Mail Versand falls Termin nicht rechtzeitig bestätigt wurde
-
-Algorythmus 
-	- Ermittelt die Anzahl Tage jeder Kategorie im gewählten Zeitraum
-	- Verteilt die Anzahl Tage jeder Kategorie auf die Praxen. Geht es nicht exakt auf wird ein "Lucky-Score" gespeichert, der in den folgenden Jahren berücksichtigt wird
-	- Ordnet jedem zugeteilten Tag einer Kategorie zufällig ein noch freies Datum im gewählten Zeitraum zu
-	- Wählt aus tausenden generierten Möglichkeit die Beste aus, dabei wird
-		- der zeitliche Abstand zwischen Terminen, die eine Praxis zugeordnet bekommt (der gleichen Wochentagskategorie maximiert
-		- der zeitliche Abstand zwischen Terminen, die eine Praxis zugeordnet bekommt der gleichen Wochentagskategorie maximiert
-		- der zeitliche Abstand zwischen Terminen von Praxen mit der gleichen Punkteanzahl maximiert
-		- die Repetition von Feiertagsdiensten minimiert (nicht 2x 24.12 nacheinander)
-	- speichert "Lucky-Score" der Mitglieder und berücksichtigt dien bei der nächsten Generierung
+Administration /administration
+	- Daten der Organisation können bearbeitet werden
+	- Mitglieder der Organisation können bearbeitet werden
+	- Mitgliedern kann eine Gewichtung bei der Termingenerierung zugewiesen werden
+	- Mitgliedern ohne User kann das Registrierungsemail weitere Male versendet werden
+	- Users der Mitglieder können eingesehen werden
+	- Termine können generiert und bearbeitet werden 
+	- Nicht rechtzeitig bestätigte Termine können eingesehen werden
+	- Einstellungen können bearbeitet werden:
+		- Bis wie lange ab Beginn des Dienstes darf getauscht werden
+		- In welchem Abstand werden Erinnerungsemails versendet
+		- Wieviel vorher müssen Termine bestätigt sein, ab wann darf dies geschehen
+		- Welche Gewichtung haben die Wochentagskategorien
+		- Wie lange dauert ein Notfalldienst
+		- Wie lange dauert ein Wochentelefon
+		- Ob Termin "bestätigt" werden muss
+		- Ob Mitglied sich registrieren muss um Termine als "gesehen" oder "bestätigt" zu markieren
+		
+Termine Generierung /administration/generation
+	- Der Organisator wählt einen Zeitraum in dem er generieren möchte
+	- Der Organisator definiert Feiertage (mit Notfalldienst) und ignorierte Tage (ohne Notfalldienst)
+	- Der Algorythmus:
+		- Ermittelt die Anzahl Tage jeder Kategorie im gewählten Zeitraum
+			- Es wird zwischen Feiertag, Sonntag, Samstag, Wochentag unterschieden
+		- Verteilt die Tage an die Mitglieder
+			- Dabei wird nach Kategorie gewichtet: So kann z.B. ein Mitglied, dass einen Feiertag übernimmt, dies mit zwei Wochentag aufwiegen
+			- Die Mitglieder empfangen soviele Tage der Kategorien relativ zu ihrer Gewichtung 
+			- Unregelmässigkeiten (z.B. ein Mitglied hat einen Wochentag als ein anderes mit gleicher Gewichtung) werden als "Lucky-Score" gespeichert, und bei der nächsten Generierung berücksichtigt
+		- Ordnet nun jedem verteilten Tag ein konkretes Datum zu
+			- Dabei wird:
+				- der zeitliche Abstand zwischen Terminen, die eine Praxis zugeordnet bekommt (der gleichen Wochentagskategorie maximiert
+				- der zeitliche Abstand zwischen Terminen, die eine Praxis zugeordnet bekommt der gleichen Wochentagskategorie maximiert
+				- der zeitliche Abstand zwischen Terminen von Praxen mit der gleichen Punkteanzahl maximiert
+				- die Repetition von Feiertagsdiensten minimiert (so dass das gleiche Mitglied möglichst nicht zwei Mal 25.12. nacheinander zugeteilt bekommt)
+	- Der Organisator kann das Ergebnis nun überprüfen und akzeptieren oder neu versuchen
 
 Technisches:
 	- Erstellung der Applikation mit symfony (Framework für Webanwendungen)
@@ -62,14 +86,73 @@ Technisches:
 		- erweiterbar
 	- Persönlich bereits mehrere grosse Webapplikationen umgesetzt
 
-Workflow: Einrichtung Tool von Admin
-	- Erstellung Account
-	- Erstellung Organisation
-	- Hinzufügen der Mitglieder zur Organisation
-	- Festlegen der Einstellungen
-	- Generierung Termine, automatischer Versand E-Mail an Mitglieder
+Use Case: Einrichtung Tool von Admin
+	Id: 1
+	Actor: Organisator Notfalldienst
+	Description: Der Organisator des Notfalldienstes richtet das Tool ein
+	Preconditions: -
+	Ablauf:
+		- Erstellung Account (required: Name, Adresse & E-Mail)
+		- Erstellung Organisation (required: Name & E-Mail der Organisation)
+		- Hinzufügen der Mitglieder zur Organisation (required: Name & E-Mail jedes Members)
+		- Festlegen der Einstellungen
+		- Anforderung Rechnung (Bezahlung kann zu späterem Zeitpunkt erfolgen)
+		- Generierung Termine (Verteilung auf Mitglieder)
+		- Akzeptierung der Termine oder Wiederholung der Generierung
+		- Automatischer Versand Registrierungs E-Mail an Mitglieder. Enthält:
+			Alle dem Mitglied zugeordneten Termine
+			Ein Link um den Empfang zu bestätigen und sich freiwillig zu registrieren (Verweis 1)
+			Informationen über das Tool
+	Postconditions: 
+		- Account Organisator & seine Organisation ist fertig eingerichtet
+		- Tool kann von allen Mitgliedern benutzt werden (mit oder ohne Account)
+		- Termine wurden erstellt und den Mitgliedern zugeordnet, mit Status "nicht gesehen"
+
+Use Case: Mitglieder werden über Tool informiert
+	Id: 2
+	Actor: Mitglied Notfalldienst
+	Description: Ein Mitglied der Notfalldienstorganisation wird zum ersten Mal mit dem Tool kontaktiert
+	Preconditions: Use Case 1 erledigt
+	Ablauf:
+		- Liest E-Mail aus (Verweis 1)
+		- Klick auf Link in der E-Mail um den Empfang zu bestätigen
+		- Der Administrator wird über die Bestätigung informiert
+		- Im geöffneten Browserfenster kann das Mitglied
+			- Case 1: einen neuen Account als User eröffnen (Verweis 2)
+			- Case 2: einem bereits existierenden Account verwenden (Verweis 2)
+			- Case 3: nichts weiteres unternehmen
+	Postconditions:
+		- Allen Termine wird der Status "gesehen" zugeordnet
+		- zusätzlich in Case 1 & 2: Dem Mitglied wurde ein User Account zugewiesen
+
+Use Case: Mitglied verteilt Termine auf Personen
+	Id: 3
+	Actor: User
+	Description: Die Termine eines Mitgliedes werden auf die User des Mitgliedes verteilt
+	Preconditions: Alle Schritte bis Verweis 2 ausgeführt, Eingeloggt auf Webseite
+	Ablauf:
+		- Ordnet Termine des Mitgliedes den damit verbundenen Useraccounts zu
+		- Jedem Termin kann ein Status zugewiesen werden (gut passend, möchte tauschen, muss tauschen)
+	Postconditions
+		- Termine sind nun explizit Users zugewiesen
+		
+Use Case: Users tauschen Termine
+	Id: 4
+	Actor: User
+	Description: Ein User tauscht einen sich zugeordneten Termin mit einem anderen User
+	Preconditions: Use Case 3
+	Ablauf:
+		- Der User wählt einen oder mehrere Termin aus die er tauschen möchte
+		- Der User wählt einen anderen User mit dem er tauschen möchte
+		- Der User fügt Termine der anderen Person zum Tausch hinzu die er dafür übernehmen würde (kann auch leer sein)
+	Postconditions
+		- Eine Anfrage an die wird gesendet
+	Special
+		- Der User bekommt Vorschläge welche User ähnliche Terminen haben die sie tauschen möchten
 	
 Kosten:
-	- 1500.- CHF einmalig
-	- 300.- CHF pro Jahr: Für Hosting, URL & Maintainance der Webanwendung.
+	- 2000.- CHF einmalig
+	- 400.- CHF pro Jahr: Für Hosting, URL & Maintainance der Webanwendung.
 	- 60.- CHF/h Support 
+	
+Zur einfacheren Lesbarkeit wurde immer die männliche Form verwendet
