@@ -2,19 +2,26 @@ Vokabular
 	Organisation: Ein Zusammenschluss von Tierärzten die das ganze Jahr über Notfalldienst organisieren. Beispiel: KNBU
 	Mitglied: Ein Mitglied einer Organisation, im Normalfall eine Praxis. Beispiel: "Praxis Schönwetter"
 	User: Eine Person mit Zugriff zur Webseite. Jeder User wird einem Mitglied zugeordnet. Beispiel: "Dr. Moser"
-	Termin: Eine Zeiteinheit des Notfalldienstes. Jeder Termin ist einem Mitglied und eventuell einem User zugeordnet
+	Termin: Eine Zeiteinheit des Notfalldienstes. Jeder Termin ist einem Mitglied und eventuell einem User zugeordnet. Jeder Termin geht 24h. Beispiel: "01.01.2017 08:00 - 02.01.2017 08:00" 
 	Organisator: Der Verantwortliche für eine Organisation
+
+Notfalldienstkonzept
+	Jedes Mitglied erledigt Notfalldienste anhand von Stellenprozente, 50% ist ein Punkt.
+	Anhand der Punkte werden die Termine über das Jahr verteilt, mehr Punkte bedeuted mehr Termine werden übernommen.
+	Bei den Terminen wird zwischen Wochentagen, Samstag, Sonntag und Feiertagen unterschieden. So kann je nach Gewichtung anstatt zwei Wochentagen ein Feiertag übernommen werden.
+	Die Termine werden nach dem Zufallsprinzip verteilt, dabei wird darauf geachtet das gemäss Punkten eine möglichst gleichmässige Anzahl von Terminen übernommen wird.
+	Zusätzlich zu den Terminen ist jeweils jede Woche ein Mitglied verantwortlich für das Wochentelefon, steht also zur Verfügung falls dass Mitglied mit dem aktiven Termin kurzfristig ausfällt. Ein Mitglied kan nicht gleichzeitig ein Termin und ein Wochentelefon haben.
 	
 Grundfunktionen Webseite
 	- Darstellung & Export von Terminen
-	- Generierungs und Editieren von Terminen
+	- Generierung und Editierung von Terminen
 	- Tauschen von Terminen
 	- Transparente Änderung von Terminen (Verlauf wird gespeichert)
 	- Mitglieder werden zwei Mal über Termine informiert:
 		- einmal nach der Generierung (der Termin wird als "gesehen" markiert)
 		- einmal kurz vor der Ausführung (der Termin wird als "bestätigt" markiert)
-	- Bestätigen von Terminen
-	- Verwaltung Mitglieder
+	- Bestätigung von Terminen
+	- Verwaltung von Mitgliedern
 
 Homepage /
 	- Kommende Termine der Mitglieder (dabei eigene Termine hervorgehoben)
@@ -51,6 +58,7 @@ Administration /administration
 	- Termine können generiert und bearbeitet werden 
 	- Nicht rechtzeitig bestätigte Termine können eingesehen werden
 	- Einstellungen können bearbeitet werden:
+		- Um welche Zeit starten jweils die Termine 
 		- Bis wie lange ab Beginn des Dienstes darf getauscht werden
 		- In welchem Abstand werden Erinnerungsemails versendet
 		- Wieviel vorher müssen Termine bestätigt sein, ab wann darf dies geschehen

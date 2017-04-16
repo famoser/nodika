@@ -1,5 +1,6 @@
-Im Auftrag von knbu (Kleintier-Notfalldienst Basel und Umgebung (KNBU)) erstelle ich eine Webapplikation betreffend der besseren Organisation der Mitglieder.
-Das Tool übernimmt die Verteilung der Termine und die Information der Mitglieder, und reduziert den Verwaltungsaufwand damit erheblich.
+Im Auftrag von knbu (Kleintier-Notfalldienst Basel und Umgebung (KNBU)) erstelle ich eine Webapplikation zur der besseren Organisation der Mitglieder.
+Das Tool übernimmt die Verteilung der Termine und die Information der Mitglieder, und reduziert den Verwaltungsaufwand des Vereins erheblich.
+
 
 Falls weitere Notfalldienst Vereine daran Interesse zeigen kann das Tool auch für mehrere Parteien konzipiert werden.
 
