@@ -8,7 +8,8 @@ Kurzer Überblick über die Funktionalitäten:
 	- Neue Termine werden mit einem ausgeklügelten Algorythmus gewichtet auf die verschiedenen Mitglieder verteilt
 	- Alle Termine sind für die Mitglieder auf der Webseite einsichtbar, und können untereinander abgetauscht werden
 	- Die Termine werden von den Mitgliedern online bestätigt, vergisst ein Mitglied die Bestätigung wird der Verantwortliche informiert
-	- Erfahrungen eines bereits im Einsatz bestehenden Tools werden berücksichtigt
+	- Mehrere bereits im Einsatz stehender Tools werden zusammengeführt und verbessert
+	- Veröffentlichung bis am 01.10.2017
 
 Ihre Chancen
 	- Verwatungsaufwand Ihres Vereins erheblich reduzieren und die Information der Mitglieder verbessern
@@ -16,13 +17,13 @@ Ihre Chancen
 	- Das Tool wird für mindestens drei Jahre gewartet und weiterentwickelt
 
 Finanzielles
-	- Jährlicher Betrag von 300 CHF für Wartung & Hosting der Platform
-	- Einmalige Registrierungsgebühr 1200 CHF zur Deckung der Entwicklungskosten
-	- Support wird seperat vergütet für 60CHf/h
+	- Jahres Abo für CHF 300 für Wartung & Hosting der Platform (fällt jeweils im Januar an, falls Abo erneuert wird)
+	- Einmalige Registrierungsgebühr 1500 CHF zur Deckung der Entwicklungskosten (fällt bei Interesse per 01.07.2017 an)
+	- Support wird seperat vergütet für 60CHF/h
 	- Geld zurück Garantie falls das Tool nicht rechtzeitig fertiggestellt werden kann
 	
 Besteht Interesse bitte ich um eine definitive Bestätigung bis am 14. Mai. In der folgenden Woche folgt eine Information meinerseits ob das Tool für mehrere Parteien realisiert wird.	
-Wünschen Sie weitere Informationen insbesondere zu den Algorythmen die die Termine verteilen stehe ich gerne für Fragen zur Verfügung.
+Wünschen Sie weitere Informationen insbesondere zu den Algorythmen, die die Termine verteilen, stehe ich gerne für Fragen zur Verfügung.
 
 Kurz zu meiner Person: 
 Mein Name ist Florian Moser, ich studiere Informatik an der ETH, und bin als Webentwickler tätig. 

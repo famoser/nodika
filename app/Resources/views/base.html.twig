@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}my_page{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
     {% block stylesheets %}
     {% endblock %}
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/css/styles.min.css') }}"/>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
-    <meta name="description" content="{% block description %}Alles über my_page{% endblock %}">
+    <meta name="description" content="{% block description %}{% endblock %}">
     <base href="/" target="_self">
 </head>
 <body>
@@ -20,34 +20,14 @@
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
 <![endif]-->
 
-{{ base_widgets.navbar_start("header-navbar") }}
-<ul class="nav navbar-nav navbar-center">
-    <li><a href="{{ path("homepage") }}">homepage</a></li>
-    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-        <li><a href="{{ path("homepage") }}">Profil Link</a></li>
-        <li>
-            <a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
-        </li>
-    {% else %}
-        <li><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
-    {% endif %}
-</ul>
-{{ base_widgets.navbar_end() }}
-
 {% block body %}
 
 {% endblock %}
-<footer class="footer">
-    <div class="row">
-        <div class="col-md-12">
-            <p class="text-center">my_page. @2016 all rights reserved</p>
-        </div>
-    </div>
-</footer>
+
 <script type="text/javascript" src="{{ asset('dist/js/scripts.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        //do stuff
+        boot();
     });
 </script>
 {% block javascript %}

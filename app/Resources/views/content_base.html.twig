@@ -3,8 +3,24 @@
 {% block body %}
     <header class="header">
         <div class="container">
-            {% block content %}
+            <h1>{% block title %}{% endblock %}</h1>
+            <p class="h1-description">{% block description %}{% endblock %}</p>
+            {% block header %}
             {% endblock %}
         </div>
     </header>
+    {% block content %}
+    {% endblock %}
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    made with <3 by <a href="http://famoser.ch">famoser</a>
+                </div>
+                <div class="col-md-8 col-md-2">
+                    version 2017.1
+                </div>
+            </div>
+        </div>
+    </footer>
 {% endblock %}
