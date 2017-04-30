@@ -51,4 +51,128 @@ class Member extends BaseEntity
      * @ORM\OneToMany(targetEntity="Event", mappedBy="member")
      */
     private $events;
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->persons = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set webpage
+     *
+     * @param string $webpage
+     *
+     * @return Member
+     */
+    public function setWebpage($webpage)
+    {
+        $this->webpage = $webpage;
+
+        return $this;
+    }
+
+    /**
+     * Get webpage
+     *
+     * @return string
+     */
+    public function getWebpage()
+    {
+        return $this->webpage;
+    }
+
+    /**
+     * Add person
+     *
+     * @param \AppBundle\Entity\Person $person
+     *
+     * @return Member
+     */
+    public function addPerson(\AppBundle\Entity\Person $person)
+    {
+        $this->persons[] = $person;
+
+        return $this;
+    }
+
+    /**
+     * Remove person
+     *
+     * @param \AppBundle\Entity\Person $person
+     */
+    public function removePerson(\AppBundle\Entity\Person $person)
+    {
+        $this->persons->removeElement($person);
+    }
+
+    /**
+     * Get persons
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPersons()
+    {
+        return $this->persons;
+    }
+
+    /**
+     * Set organisation
+     *
+     * @param \AppBundle\Entity\Organisation $organisation
+     *
+     * @return Member
+     */
+    public function setOrganisation(\AppBundle\Entity\Organisation $organisation = null)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get organisation
+     *
+     * @return \AppBundle\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * Add event
+     *
+     * @param \AppBundle\Entity\Event $event
+     *
+     * @return Member
+     */
+    public function addEvent(\AppBundle\Entity\Event $event)
+    {
+        $this->events[] = $event;
+
+        return $this;
+    }
+
+    /**
+     * Remove event
+     *
+     * @param \AppBundle\Entity\Event $event
+     */
+    public function removeEvent(\AppBundle\Entity\Event $event)
+    {
+        $this->events->removeElement($event);
+    }
+
+    /**
+     * Get events
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
 }

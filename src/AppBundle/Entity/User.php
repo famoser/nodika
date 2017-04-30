@@ -33,4 +33,62 @@ class User extends BaseUser
      * @ORM\ManyToOne(targetEntity="Person", inversedBy="users")
      */
     private $person;
+
+    /**
+     * Add setting
+     *
+     * @param \AppBundle\Entity\Setting $setting
+     *
+     * @return User
+     */
+    public function addSetting(\AppBundle\Entity\Setting $setting)
+    {
+        $this->settings[] = $setting;
+
+        return $this;
+    }
+
+    /**
+     * Remove setting
+     *
+     * @param \AppBundle\Entity\Setting $setting
+     */
+    public function removeSetting(\AppBundle\Entity\Setting $setting)
+    {
+        $this->settings->removeElement($setting);
+    }
+
+    /**
+     * Get settings
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * Set person
+     *
+     * @param \AppBundle\Entity\Person $person
+     *
+     * @return User
+     */
+    public function setPerson(\AppBundle\Entity\Person $person = null)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get person
+     *
+     * @return \AppBundle\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
 }

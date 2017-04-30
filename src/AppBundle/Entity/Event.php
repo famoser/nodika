@@ -71,4 +71,189 @@ class Event extends BaseEntity
      * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event")
      */
     private $eventPast;
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->eventPast = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set startDateTime
+     *
+     * @param \DateTime $startDateTime
+     *
+     * @return Event
+     */
+    public function setStartDateTime($startDateTime)
+    {
+        $this->startDateTime = $startDateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get startDateTime
+     *
+     * @return \DateTime
+     */
+    public function getStartDateTime()
+    {
+        return $this->startDateTime;
+    }
+
+    /**
+     * Set endDateTime
+     *
+     * @param \DateTime $endDateTime
+     *
+     * @return Event
+     */
+    public function setEndDateTime($endDateTime)
+    {
+        $this->endDateTime = $endDateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get endDateTime
+     *
+     * @return \DateTime
+     */
+    public function getEndDateTime()
+    {
+        return $this->endDateTime;
+    }
+
+    /**
+     * Set tradeTag
+     *
+     * @param integer $tradeTag
+     *
+     * @return Event
+     */
+    public function setTradeTag($tradeTag)
+    {
+        $this->tradeTag = $tradeTag;
+
+        return $this;
+    }
+
+    /**
+     * Get tradeTag
+     *
+     * @return integer
+     */
+    public function getTradeTag()
+    {
+        return $this->tradeTag;
+    }
+
+    /**
+     * Set member
+     *
+     * @param \AppBundle\Entity\Member $member
+     *
+     * @return Event
+     */
+    public function setMember(\AppBundle\Entity\Member $member = null)
+    {
+        $this->member = $member;
+
+        return $this;
+    }
+
+    /**
+     * Get member
+     *
+     * @return \AppBundle\Entity\Member
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * Set person
+     *
+     * @param \AppBundle\Entity\Person $person
+     *
+     * @return Event
+     */
+    public function setPerson(\AppBundle\Entity\Person $person = null)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get person
+     *
+     * @return \AppBundle\Entity\Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
+
+    /**
+     * Set eventLine
+     *
+     * @param \AppBundle\Entity\EventLine $eventLine
+     *
+     * @return Event
+     */
+    public function setEventLine(\AppBundle\Entity\EventLine $eventLine = null)
+    {
+        $this->eventLine = $eventLine;
+
+        return $this;
+    }
+
+    /**
+     * Get eventLine
+     *
+     * @return \AppBundle\Entity\EventLine
+     */
+    public function getEventLine()
+    {
+        return $this->eventLine;
+    }
+
+    /**
+     * Add eventPast
+     *
+     * @param \AppBundle\Entity\EventPast $eventPast
+     *
+     * @return Event
+     */
+    public function addEventPast(\AppBundle\Entity\EventPast $eventPast)
+    {
+        $this->eventPast[] = $eventPast;
+
+        return $this;
+    }
+
+    /**
+     * Remove eventPast
+     *
+     * @param \AppBundle\Entity\EventPast $eventPast
+     */
+    public function removeEventPast(\AppBundle\Entity\EventPast $eventPast)
+    {
+        $this->eventPast->removeElement($eventPast);
+    }
+
+    /**
+     * Get eventPast
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEventPast()
+    {
+        return $this->eventPast;
+    }
 }

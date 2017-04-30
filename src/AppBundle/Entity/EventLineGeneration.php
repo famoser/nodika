@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * An EventLineGeneration is the result of the generation algorithm
+ * An EventLineGeneration is the result of one of the generation algorithms
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventLineGenerationRepository")
@@ -66,4 +66,148 @@ class EventLineGeneration extends BaseEntity
      * @ORM\ManyToOne(targetEntity="EventLine", inversedBy="eventLineGenerations")
      */
     private $eventLine;
+
+    /**
+     * Set generationDate
+     *
+     * @param \DateTime $generationDate
+     *
+     * @return EventLineGeneration
+     */
+    public function setGenerationDate($generationDate)
+    {
+        $this->generationDate = $generationDate;
+
+        return $this;
+    }
+
+    /**
+     * Get generationDate
+     *
+     * @return \DateTime
+     */
+    public function getGenerationDate()
+    {
+        return $this->generationDate;
+    }
+
+    /**
+     * Set distributionType
+     *
+     * @param integer $distributionType
+     *
+     * @return EventLineGeneration
+     */
+    public function setDistributionType($distributionType)
+    {
+        $this->distributionType = $distributionType;
+
+        return $this;
+    }
+
+    /**
+     * Get distributionType
+     *
+     * @return integer
+     */
+    public function getDistributionType()
+    {
+        return $this->distributionType;
+    }
+
+    /**
+     * Set distributionConfigurationJson
+     *
+     * @param string $distributionConfigurationJson
+     *
+     * @return EventLineGeneration
+     */
+    public function setDistributionConfigurationJson($distributionConfigurationJson)
+    {
+        $this->distributionConfigurationJson = $distributionConfigurationJson;
+
+        return $this;
+    }
+
+    /**
+     * Get distributionConfigurationJson
+     *
+     * @return string
+     */
+    public function getDistributionConfigurationJson()
+    {
+        return $this->distributionConfigurationJson;
+    }
+
+    /**
+     * Set distributionOutputJson
+     *
+     * @param string $distributionOutputJson
+     *
+     * @return EventLineGeneration
+     */
+    public function setDistributionOutputJson($distributionOutputJson)
+    {
+        $this->distributionOutputJson = $distributionOutputJson;
+
+        return $this;
+    }
+
+    /**
+     * Get distributionOutputJson
+     *
+     * @return string
+     */
+    public function getDistributionOutputJson()
+    {
+        return $this->distributionOutputJson;
+    }
+
+    /**
+     * Set generationResultJson
+     *
+     * @param string $generationResultJson
+     *
+     * @return EventLineGeneration
+     */
+    public function setGenerationResultJson($generationResultJson)
+    {
+        $this->generationResultJson = $generationResultJson;
+
+        return $this;
+    }
+
+    /**
+     * Get generationResultJson
+     *
+     * @return string
+     */
+    public function getGenerationResultJson()
+    {
+        return $this->generationResultJson;
+    }
+
+    /**
+     * Set eventLine
+     *
+     * @param \AppBundle\Entity\EventLine $eventLine
+     *
+     * @return EventLineGeneration
+     */
+    public function setEventLine(\AppBundle\Entity\EventLine $eventLine = null)
+    {
+        $this->eventLine = $eventLine;
+
+        return $this;
+    }
+
+    /**
+     * Get eventLine
+     *
+     * @return \AppBundle\Entity\EventLine
+     */
+    public function getEventLine()
+    {
+        return $this->eventLine;
+    }
 }
