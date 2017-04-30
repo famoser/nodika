@@ -30,25 +30,6 @@ class EventLine extends BaseEntity
     use IdTrait;
     use ThingTrait;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $startDate;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $repetitionInHours;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $distributionType = DistributionType::FAIR;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $distributionConfigurationJson;
 
     /**
      * @var Organisation
@@ -63,4 +44,11 @@ class EventLine extends BaseEntity
      * @ORM\OneToMany(targetEntity="Event", mappedBy="member")
      */
     private $events;
+
+    /**
+     * @var EventLineGeneration[]
+     *
+     * @ORM\OneToMany(targetEntity="EventLineGeneration", mappedBy="eventLine")
+     */
+    private $eventLineGenerations;
 }

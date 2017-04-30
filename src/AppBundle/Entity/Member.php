@@ -32,16 +32,6 @@ class Member extends BaseEntity
     use CommunicationTrait;
 
     /**
-     * @ORM\Column(type="decimal")
-     */
-    private $points = 0.0;
-
-    /**
-     * @ORM\Column(type="decimal")
-     */
-    private $luckyScore = 0.0;
-
-    /**
      * @var Person[]
      *
      * @ORM\ManyToMany(targetEntity="Member", mappedBy="members")
