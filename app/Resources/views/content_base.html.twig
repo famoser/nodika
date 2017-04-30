@@ -2,7 +2,10 @@
 
 {% block body %}
     <header class="header">
-        <div class="container">
+        <div class="container header-container">
+            <div class="logo-wrapper">
+                <img src="{{ asset("dist/logo/nodika.svg") }}" class="logo-img">
+            </div>
             <h1>{% block title %}{% endblock %}</h1>
             <p class="h1-description">{% block description %}{% endblock %}</p>
             {% block header %}
@@ -12,12 +15,12 @@
     {% block content %}
     {% endblock %}
     <footer class="footer">
-        <div class="container">
+        <div class="container footer-container">
             <div class="row">
                 <div class="col-md-2">
                     made with <3 by <a href="http://famoser.ch">famoser</a>
                 </div>
-                <div class="col-md-8 col-md-2">
+                <div class="col-md-offset-8 col-md-2 align-right">
                     version 2017.1
                 </div>
             </div>

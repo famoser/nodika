@@ -1,0 +1,25 @@
+.header {
+  padding-top: 0; }
+
+.header-container {
+  padding: 0; }
+
+.footer-container {
+  padding: 0; }
+
+.logo-img {
+  display: block;
+  width: 100%; }
+
+.logo-wrapper {
+  margin-bottom: 50px; }
+
+.footer {
+  padding: 20px; }
+
+section {
+  padding: 100px 0;
+  background-color: #efefef; }
+
+footer {
+  padding: 0; }

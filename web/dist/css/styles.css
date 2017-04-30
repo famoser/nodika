@@ -9093,3 +9093,149 @@ button.close {
   overflow: visible;
   clip: auto;
 }
+
+html, body {
+  height: 100%; }
+
+body {
+  overflow-x: hidden;
+  font-family: "Calibri", sans-serif; }
+
+h1, h2, h3, h4,
+h1 a, h2 a, h3 a, h4 a {
+  color: #555555; }
+
+h1 {
+  font-size: 3em;
+  margin: 0;
+  font-weight: 300; }
+
+h2 {
+  font-size: 2em;
+  margin: 0;
+  font-weight: 300; }
+
+h3 {
+  font-size: 1.3em;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  font-weight: 500; }
+
+p {
+  font-size: 1.2em;
+  line-height: 1.6em;
+  margin-bottom: 1.8em;
+  font-weight: 500; }
+  p.lead {
+    font-size: 1.3em;
+    line-height: 1.8em;
+    margin-bottom: 0;
+    margin-top: 1em; }
+  p.info {
+    font-size: 0.8em;
+    color: #a7a7a7;
+    margin-bottom: 1.2em; }
+  p.low {
+    margin-bottom: 1.2em; }
+
+ul li, ol li {
+  font-size: 1.2em;
+  line-height: 1.6em; }
+
+ul, ol {
+  margin-bottom: 1.8em;
+  padding-left: 0; }
+
+a {
+  color: #618D61;
+  text-decoration: none; }
+  a:hover, a:active, a:focus {
+    color: #618D61;
+    text-decoration: none; }
+
+a.no-highlight {
+  color: inherit;
+  text-decoration: none; }
+  a.no-highlight:hover, a.no-highlight:active, a.no-highlight:focus {
+    color: inherit;
+    text-decoration: none; }
+
+hr {
+  border-color: #555555;
+  margin-top: 10px;
+  margin-bottom: 30px; }
+
+p.h1-description, p.h2-description {
+  color: #a7a7a7;
+  line-height: 1.4em;
+  margin-top: 0.5em; }
+
+.full-width {
+  width: 100%; }
+
+.full-height {
+  height: 100%; }
+
+.align-right {
+  text-align: right; }
+
+.position-relative {
+  position: relative; }
+
+.header {
+  padding-top: 0; }
+
+.header-container {
+  padding: 0; }
+
+.footer-container {
+  padding: 0; }
+
+.logo-img {
+  display: block;
+  width: 100%; }
+
+.logo-wrapper {
+  margin-bottom: 50px; }
+
+.footer {
+  padding: 20px; }
+
+section {
+  padding: 100px 0;
+  background-color: #efefef; }
+
+footer {
+  padding: 0; }
+
+.color-background {
+  position: absolute;
+  height: 20px;
+  width: 50%;
+  left: 0;
+  background-color: #555F76; }
+
+.color-foreground {
+  position: relative;
+  background-color: #efefef;
+  z-index: 10; }
+
+.introduction {
+  background-color: #555F76; }
+
+.features {
+  background-color: #B19E7A; }
+
+.promises {
+  background-color: #618D61; }
+
+.payment {
+  background-color: #496A6A; }
+
+.contact {
+  background-color: #B17A7A; }
+
+.index-container {
+  background-color: #efefef;
+  padding: 40px 40px calc(40px - 1.8em);
+  position: relative; }
