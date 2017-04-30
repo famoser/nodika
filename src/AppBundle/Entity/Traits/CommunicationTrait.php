@@ -10,7 +10,6 @@ namespace AppBundle\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use ProxyManagerTest\ProxyGenerator\RemoteObject\MethodGenerator\MagicIssetTest;
 
 trait CommunicationTrait
 {

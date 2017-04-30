@@ -8,6 +8,8 @@
 
 namespace AppBundle\Entity\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /*
  * represents a Thing; an object with name & optional description
  */

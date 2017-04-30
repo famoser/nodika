@@ -8,6 +8,8 @@
 
 namespace AppBundle\Entity\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /*
  * the id used in the entities
  */
