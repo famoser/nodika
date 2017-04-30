@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * A Member is part of the organisation, and is responsible for the events assigned to it
+ * An EventLineGeneration is the result of the generation algorithm
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventLineGenerationRepository")
@@ -40,16 +40,22 @@ class EventLineGeneration extends BaseEntity
     private $distributionType = DistributionType::FAIR;
 
     /**
+     * the input to the algorithm
+     *
      * @ORM\Column(type="text")
      */
     private $distributionConfigurationJson;
 
     /**
+     * the output of the algorithm
+     *
      * @ORM\Column(type="text")
      */
     private $distributionOutputJson;
 
     /**
+     * the result of the generation
+     *
      * @ORM\Column(type="text")
      */
     private $generationResultJson;

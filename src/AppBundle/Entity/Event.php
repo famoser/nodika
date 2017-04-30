@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * A Member is part of the organisation, and is responsible for the events assigned to it
+ * An Event is a time unit which is assigned to a member or a person
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventRepository")

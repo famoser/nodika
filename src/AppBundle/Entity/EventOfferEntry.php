@@ -14,6 +14,7 @@ use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
+use AppBundle\Enum\OfferStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -21,34 +22,24 @@ use Doctrine\ORM\Mapping as ORM;
  * A Member is part of the organisation, and is responsible for the events assigned to it
  *
  * @ORM\Table
- * @ORM\Entity(repositoryClass="AppBundle\Repository\MemberRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EventOfferRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class Member extends BaseEntity
+class EventOfferEntry extends BaseEntity
 {
     use IdTrait;
-    use PersonTrait;
-    use AddressTrait;
-    use CommunicationTrait;
 
     /**
-     * @var Person[]
+     * @var EventOffer
      *
-     * @ORM\ManyToMany(targetEntity="Person", mappedBy="members")
+     * @ORM\ManyToOne(targetEntity="EventOffer", inversedBy="eventOfferEntries")
      */
-    private $persons;
+    private $eventOffer;
 
     /**
-     * @var Organisation
+     * @var Event
      *
-     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="members")
+     * @ORM\ManyToOne(targetEntity="Event")
      */
-    private $organisation;
-
-    /**
-     * @var Event[]
-     *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="member")
-     */
-    private $events;
+    private $event;
 }

@@ -34,7 +34,7 @@ class Person extends BaseEntity
     /**
      * @var Organisation[]
      *
-     * @ORM\ManyToMany(targetEntity="Organisation", inversedBy="organisations")
+     * @ORM\ManyToMany(targetEntity="Organisation", inversedBy="leaders")
      */
     private $leaderOf;
 
@@ -42,6 +42,7 @@ class Person extends BaseEntity
      * @var Member[]
      *
      * @ORM\ManyToMany(targetEntity="Member", inversedBy="persons")
+     * @ORM\JoinTable(name="product_attributes_product")
      */
     private $members;
 

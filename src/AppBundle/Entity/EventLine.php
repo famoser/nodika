@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * A Member is part of the organisation, and is responsible for the events assigned to it
+ * An EventLine groups together events of the same category
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EventLineRepository")
@@ -29,7 +29,6 @@ class EventLine extends BaseEntity
 {
     use IdTrait;
     use ThingTrait;
-
 
     /**
      * @var Organisation
@@ -41,7 +40,7 @@ class EventLine extends BaseEntity
     /**
      * @var Event[]
      *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="member")
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="eventLine")
      */
     private $events;
 

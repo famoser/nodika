@@ -33,9 +33,16 @@ class Organisation extends BaseEntity
     /**
      * @var Person[]
      *
-     * @ORM\ManyToMany(targetEntity="Person", inversedBy="organisations")
+     * @ORM\ManyToMany(targetEntity="Person", inversedBy="leaderOf")
      */
     private $leaders;
+
+    /**
+     * @var Member[]
+     *
+     * @ORM\OneToMany(targetEntity="Member", inversedBy="organisation")
+     */
+    private $members;
 
     /**
      * @var Invoice[]
@@ -43,11 +50,4 @@ class Organisation extends BaseEntity
      * @ORM\OneToMany(targetEntity="Invoice", inversedBy="organisation")
      */
     private $invoices;
-
-    /**
-     * @var ActivationPeriod[]
-     *
-     * @ORM\OneToMany(targetEntity="ActivationPeriod", inversedBy="organisation")
-     */
-    private $activationPeriods;
 }

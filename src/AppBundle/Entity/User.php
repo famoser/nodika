@@ -19,4 +19,18 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var Setting[]
+     *
+     * @ORM\OneToMany(targetEntity="Setting", mappedBy="user")
+     */
+    private $settings;
+
+    /**
+     * @var Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person", inversedBy="users")
+     */
+    private $person;
 }

@@ -14,6 +14,7 @@ use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
+use AppBundle\Enum\InvoiceType;
 use AppBundle\Enum\PaymentStatus;
 use AppBundle\Enum\TradeTag;
 use Doctrine\ORM\Mapping as ORM;
@@ -32,7 +33,6 @@ class Invoice extends BaseEntity
     use AddressTrait;
     use ThingTrait;
 
-
     /**
      * @ORM\Column(type="datetime")
      */
@@ -47,32 +47,21 @@ class Invoice extends BaseEntity
      * @ORM\Column(type="integer")
      */
     private $paymentStatus = PaymentStatus::NOT_PAYED;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $invoiceType = InvoiceType::REGISTRATION_FEE;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $invoiceDataJson;
     
     /**
-     * @var Member
+     * @var Organisation
      *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="events")
+     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="invoices")
      */
-    private $member;
-
-    /**
-     * @var Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="events")
-     */
-    private $person;
-
-    /**
-     * @var EventLine
-     *
-     * @ORM\ManyToOne(targetEntity="EventLine", inversedBy="events")
-     */
-    private $eventLine;
-
-    /**
-     * @var EventPast[]
-     *
-     * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event")
-     */
-    private $eventPast;
+    private $organisation;
 }
