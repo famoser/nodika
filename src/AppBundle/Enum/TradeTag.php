@@ -29,7 +29,7 @@ class TradeTag extends BaseEnum
     {
         switch ($enumValue) {
             case static::NO_TRADE:
-                return "no trade";
+                return "trade_tag.no_trade";
             case static::MAYBE_TRADE:
                 return "maybe trade";
             case static::WANT_TRADE:

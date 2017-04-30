@@ -4,3 +4,5 @@ services:
         arguments: [~, AppBundle\Entity\User, ~]
         tags:
             - { name: sonata.admin, manager_type: orm, group: content, label: Benutzer }
+            
+      

@@ -15,7 +15,7 @@ use AppBundle\Enum\NewsletterChoice;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A Member is part of the organisation, and is responsible for the events assigned to it
+ * A Newsletter is a person subscribed (or not) to receive news about this application
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="AppBundle\Repository\NewsletterRepository")

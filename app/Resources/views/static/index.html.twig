@@ -5,7 +5,9 @@
     über die Verteilung von Notfalldiensten{% endblock %}
 
 {% block header %}
-
+    {% if message != "" %}
+        <p>{{ message }}</p>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -71,7 +73,6 @@
                             Sorgsam ausgewählte Standarteinstellungen können vom Administrator nachkonfiguriert werden
                         </li>
                     </ul>
-                    <p>Das vollständige Konzept finden Sie hier: </p>
                 </div>
             </div>
         </div>
@@ -156,12 +157,37 @@
     <section class="contact" id="contact">
         <div class="container index-container">
             <div class="row">
-                <div class="color-title col-md-4">
+                <div class="color-title col-md-5">
                     <h2>Interesse geweckt?</h2>
-                    <p class="h2-description">Damit das Projekt Wirklichkeit wird am Besten gleich registrieren!</p>
-
+                    <p class="h2-description">Jetzt die Early Bird Liste einschreiben</p>
+                    <p>Helfen Sie mit das Produkt zu realisieren und tragen Sie sich in die Early Bird Liste ein. Ihre
+                        Vorteile: </p>
+                    <ul>
+                        <li>
+                            <b>20% Rabatt:</b>
+                            Als kleines Dankeschön für das Vertrauen wird die Registrierungsgebühr und das erste Jahr
+                            20%
+                            billiger
+                        </li>
+                        <li>
+                            <b>Extra Funktionen:</b>
+                            Sofern möglich werden zusätzliche Funktionen programmiert um Ihrem Verein die Integrierung
+                            einfacher zu machen
+                        </li>
+                        <li>
+                            <b>Kein Risiko:</b>
+                            Es wird keine Rechnung versandt bis das Tool nicht fristgerecht mit allen versprochenen
+                            Funktionen veröffentlicht ist
+                        </li>
+                    </ul>
+                    <p>Mit dem Eintrag in die Early Bird Liste akzeptieren Sie die <a
+                                href="{{ asset("dist/files/AGB.pdf") }}">AGB</a> und erwerben das erste Jahr plus
+                        Registrierungsgebühr</p>
                 </div>
-                <div class="color-content col-md-offset-2 col-md-6">
+                <div class="color-content col-md-offset-1 col-md-6">
+                    {{ form_start(newsletter_form) }}
+                    {{ form_errors(newsletter_form) }}
+                    {{ form_end(newsletter_form) }}
                 </div>
             </div>
         </div>

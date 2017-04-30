@@ -15,7 +15,8 @@ use AppBundle\Enum\Base\ToChoicesArrayTrait;
 class NewsletterChoice extends BaseEnum
 {
     const REGISTER = 1;
-    const QUESTION = 2;
+    const REGISTER_INFO_ONLY = 2;
+    const QUESTION = 3;
 
     /**
      * enum value to string
@@ -27,11 +28,13 @@ class NewsletterChoice extends BaseEnum
     {
         switch ($enumValue) {
             case static::REGISTER:
-                return "register";
+                return "newsletter_choice.register";
+            case static::REGISTER_INFO_ONLY:
+                return "newsletter_choice.register_info_only";
             case static::QUESTION:
-                return "question";
+                return "newsletter_choice.question";
             default:
-                return "unknown";
+                return "enum.unknown";
         }
     }
 

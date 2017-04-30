@@ -9,6 +9,8 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Newsletter;
+use AppBundle\Form\Newsletter\RegisterForPreviewType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,9 +23,26 @@ class StaticController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $arr = [];
+        $arr["message"] = "";
+        $newsLetter = new Newsletter();
+        $newsletterForm = $this->createForm(RegisterForPreviewType::class);
+        $newsletterForm->setData($newsLetter);
+
+        $newsletterForm->handleRequest($request);
+
+        if ($newsletterForm->isSubmitted()) {
+            if ($newsletterForm->isValid()) {
+                $this->getDoctrine()->getManager()->persist($newsLetter);
+                $this->getDoctrine()->getManager()->flush();
+                $arr["message"] = "Vielen Dank! Ich melde mich zurück.";
+            }
+        }
+
+        $arr["newsletter_form"] = $newsletterForm->createView();
         //get today's menus
         return $this->render(
-            'static/index.html.twig'
+            'static/index.html.twig', $arr
         );
     }
 }
