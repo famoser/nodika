@@ -10757,6 +10757,12 @@ section {
 footer {
   padding: 0; }
 
+.content {
+  min-height: calc(100% - 180px - 60px); }
+
+.error-color {
+  background-color: #B17A7A; }
+
 .color-background {
   position: absolute;
   height: 20px;

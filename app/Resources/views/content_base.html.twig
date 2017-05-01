@@ -1,29 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout_base.html.twig' %}
 
-{% block body %}
-    <header class="header">
-        <div class="container header-container">
-            <div class="logo-wrapper">
-                <img src="{{ asset("dist/logo/nodika.svg") }}" class="logo-img">
-            </div>
-            <h1>{% block title %}{% endblock %}</h1>
-            <p class="h1-description">{% block description %}{% endblock %}</p>
-            {% block header %}
+{% block layout %}
+    <section class="content {{ color_class }}-color">
+        <div class="container index-container">
+            {% block content %}
             {% endblock %}
         </div>
-    </header>
-    {% block content %}
-    {% endblock %}
-    <footer class="footer">
-        <div class="container footer-container">
-            <div class="row">
-                <div class="col-md-2">
-                    made with <3 by <a href="http://famoser.ch">famoser</a>
-                </div>
-                <div class="col-md-offset-8 col-md-2 align-right">
-                    version 2017.1
-                </div>
-            </div>
-        </div>
-    </footer>
+    </section>
 {% endblock %}

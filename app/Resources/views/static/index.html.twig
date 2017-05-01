@@ -1,4 +1,4 @@
-{% extends 'content_base.html.twig' %}
+{% extends 'layout_base.html.twig' %}
 
 {% block title %}nodika.ch{% endblock %}
 {% block description %}Der Notfalldienst Kalender erlaubt schnelle, transparente und einfache Absprache
@@ -10,7 +10,7 @@
     {% endif %}
 {% endblock %}
 
-{% block content %}
+{% block layout %}
     <section class="introduction">
         <div class="container index-container">
             <div class="row">
@@ -50,7 +50,7 @@
                         </li>
                         <li>
                             <b>Fair:</b>
-                            Neue Termine werden mit einem ausgeklügelten Algorythmus gewichtet auf die verschiedenen
+                            Neue Termine werden mit einem ausgeklügelten Algorithmus gewichtet auf die verschiedenen
                             Mitglieder
                             verteilt
                         </li>

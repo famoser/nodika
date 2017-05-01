@@ -11,3 +11,10 @@ serverList('servers.yml');
 //stages: dev, testing, production
 set('default_stage', 'dev');
 set('writable_use_sudo', false);
+set('http_user', 'floria74');
+
+//I need this config for my hoster
+set(
+    'composer_options',
+    '{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader --ignore-platform-reqs'
+);

@@ -3,7 +3,9 @@
 {% block title %}404{% endblock %}
 {% block description %}Seite nicht gefunden{% endblock %}
 
+{% set color_class = "error" %}
+
 {% block content %}
-    <h1>404: nicht gefunden auf my_page.</h1>
-    <p>Wir haben die gewünsche Seite leider nicht gefunden</p>
+    <h2>Diese Seite wurde nicht gefunden</h2>
+    <p>Hier gehts zurück auf die <a href="{{ path("homepage") }}">Startseite</a></p>
 {% endblock %}

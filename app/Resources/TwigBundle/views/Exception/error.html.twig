@@ -1,9 +1,15 @@
 {% extends 'content_base.html.twig' %}
 
-{% block title %}Fehler{% endblock %}
+{% block title %}500{% endblock %}
 {% block description %}Seite konnte nicht geladen werden{% endblock %}
 
+{% set color_class = "error" %}
+
 {% block content %}
-    <h1>Fehler</h1>
-    <p>Seite kontne nicht geladen werden</p>
+    <h2>Ein Problem hat verhindert dass diese Anfrage ausgeführt werden konnte</h2>
+    <p>Denken Sie dies ist ein Fehler? Probieren Sie es doch einfach nocheinmal. <br/>Tritt der Fehler weiterhin auf
+        kontaktieren Sie mich am Besten direkt unter <a href="mailto:critical@famoser.ch">critical@famoser.ch</a> mit
+        einer genauen Beschreibung wie der Fehler passiert ist.</p>
+    <p>Hier gehts zurück auf die <a href="{{ path("homepage") }}">Startseite</a></p>
+
 {% endblock %}
