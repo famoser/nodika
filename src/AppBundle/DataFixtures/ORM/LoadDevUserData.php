@@ -10,7 +10,7 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
-use AppBundle\Entity\User;
+use AppBundle\Entity\FrontendUser;
 use AppBundle\Enum\Genders;
 use AppBundle\Enum\LeisureActivityLevel;
 use AppBundle\Enum\NutritionCategory;
@@ -26,7 +26,7 @@ class LoadDevUserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        /* @var User $user */
+        /* @var FrontendUser $user */
         $user = $this->getReference('user-1');
 
         $user->setPlainPassword('asdf123');

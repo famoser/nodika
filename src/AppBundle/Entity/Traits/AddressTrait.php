@@ -10,6 +10,11 @@ namespace AppBundle\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /*
  * Address information
@@ -44,7 +49,7 @@ trait AddressTrait
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $country;
+    private $country = "CH";
 
 
     /**
@@ -224,5 +229,31 @@ trait AddressTrait
     protected function getAddressIdentifier()
     {
         return implode(", ", $this->getAddressLine());
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return FormBuilderInterface
+     */
+    public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray)
+    {
+        return static::mapAddressFields($builder, $defaultArray);
+    }
+
+    /**
+     * @param FormBuilderInterface|FormMapper $mapper
+     * @param $defaultArray
+     * @return FormBuilderInterface|FormMapper
+     */
+    private static function mapAddressFields($mapper, $defaultArray)
+    {
+        return $mapper
+            ->add("street", TextType::class, $defaultArray)
+            ->add("streetNr", NumberType::class, $defaultArray)
+            ->add("addressLine", TextType::class, $defaultArray + ["required" => false])
+            ->add("postalCode", NumberType::class, $defaultArray)
+            ->add("city", TextType::class, $defaultArray)
+            ->add("country", CountryType::class, $defaultArray);
     }
 }

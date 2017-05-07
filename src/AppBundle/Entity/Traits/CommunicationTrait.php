@@ -10,6 +10,10 @@ namespace AppBundle\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 trait CommunicationTrait
 {
@@ -87,5 +91,28 @@ trait CommunicationTrait
     protected function getCommunicationIdentifier()
     {
         return implode(",", $this->getCommunicationLines());
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return FormBuilderInterface
+     */
+    public static function getCommunicationBuilder(FormBuilderInterface $builder, $defaultArray)
+    {
+        return static::mapCommunicationFields($builder, $defaultArray);
+    }
+
+    /**
+     * @param FormBuilderInterface|FormMapper $mapper
+     * @param $defaultArray
+     * @return FormBuilderInterface|FormMapper
+     */
+    private static function mapCommunicationFields($mapper, $defaultArray)
+    {
+        return $mapper
+            ->add("phone", TextType::class, $defaultArray + ["required" => false])
+            ->add("email", EmailType::class, $defaultArray)
+            ->add("webpage", TextType::class, $defaultArray + ["required" => false]);
     }
 }

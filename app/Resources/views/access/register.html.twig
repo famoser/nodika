@@ -1,0 +1,22 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "register"|trans }}{% endblock %}
+{% block description %}{{ "register_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "access" %}
+
+{% block primary_content %}
+    {{ form_start(register_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
+    {{ form_errors(register_form) }}
+    {{ form_end(register_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <h3>{{ "register"|trans }}</h3>
+    <p>{{ "register_description"|trans }}</p>
+    <h3>{{ "personal_data"|trans }}</h3>
+    <p>{{ "personal_data_description"|trans }}</p>
+    <h3>{{ "trial_period"|trans }}</h3>
+    <p>{{ "trial_period_description"|trans }}</p>
+{% endblock secondary_content %}

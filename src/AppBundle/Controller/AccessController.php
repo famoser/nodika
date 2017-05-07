@@ -10,9 +10,12 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Controller\Base\BaseController;
-use AppBundle\Entity\User;
+use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Person;
 use AppBundle\Form\Access\LoginType;
+use AppBundle\Form\Access\RegisterType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +36,6 @@ class AccessController extends BaseController
         $session = $request->getSession();
 
         $authErrorKey = Security::AUTHENTICATION_ERROR;
-        $lastUsernameKey = Security::LAST_USERNAME;
-
         // get the error if any (works with forward and redirect -- see below)
         if ($request->attributes->has($authErrorKey)) {
             $error = $request->attributes->get($authErrorKey);
@@ -44,21 +45,27 @@ class AccessController extends BaseController
         } else {
             $error = null;
         }
-        dump($error);
-        $this->get('session')->getFlashBag()->set('error', "Login fehlgeschlagen");
+        if ($error != null)
+            $this->get('session')->getFlashBag()->set('error', "Login fehlgeschlagen");
 
         // last username entered by the user
-        $lastUsername = (null === $session) ? '' : $session->get($lastUsernameKey);
+        $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
 
-        $user = new User();
+        $user = new FrontendUser();
         $user->setEmail($lastUsername);
 
-        $loginForm = $this->get("form.factory")->createNamedBuilder(null)
+
+        $loginForm = $this->get("form.factory")->createNamedBuilder(
+            null,
+            FormType::class,
+            ["_username" => $user->getEmail()],
+            ["translation_domain" => "access"]
+        )
             ->add("_username", EmailType::class)
             ->add("_password", PasswordType::class)
-            ->add("submit", SubmitType::class)
+            ->add("login", SubmitType::class)
             ->getForm();
-        $loginForm->setData(["_username" => $user->getEmail()]);
+
 
         $loginForm->handleRequest($request);
 
@@ -82,9 +89,40 @@ class AccessController extends BaseController
         $arr["login_form"] = $loginForm->createView();
 
 
-        //get today's menus
         return $this->render(
             'access/login.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/reset", name="access_reset")
+     */
+    public function resetAction(Request $request)
+    {
+
+    }
+
+    /**
+     * @Route("/register", name="access_register")
+     */
+    public function registerAction(Request $request)
+    {
+        $registerForm = $this->createForm(RegisterType::class);
+
+        $person = new Person();
+        $registerForm->setData($person);
+        $registerForm->handleRequest($request);
+
+        if ($registerForm->isSubmitted()) {
+            if ($registerForm->isValid()) {
+                $this->getDoctrine()->getManager()->persist($person);
+                $this->getDoctrine()->getManager()->flush();
+            }
+        }
+
+        $arr["register_form"] = $registerForm->createView();
+        return $this->render(
+            'access/register.html.twig', $arr
         );
     }
 

@@ -10,7 +10,7 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
-use AppBundle\Entity\User;
+use AppBundle\Entity\FrontendUser;
 use AppBundle\Enum\Genders;
 use AppBundle\Enum\LeisureActivityLevel;
 use AppBundle\Enum\NutritionCategory;
@@ -26,7 +26,7 @@ class LoadUserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        $user = new User();
+        $user = new FrontendUser();
         $user->setEmail("products@famoser.ch");
         $user->setPlainPassword('87128dg1889gfd6f2hag');
         $user->hashAndRemovePlainPassword();

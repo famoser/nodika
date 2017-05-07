@@ -10643,11 +10643,37 @@ blockquote.testimonial footer cite {
   margin-left: -32px;
 }
 
+.blue-background, .info-color {
+  background-color: #555F76; }
+
+.brown-background, .warning-color {
+  background-color: #B19E7A; }
+
+.green-background {
+  background-color: #618D61; }
+
+.green2-background {
+  background-color: #496A6A; }
+
+.red-background, .error-color {
+  background-color: #B17A7A;
+  color: #efefef; }
+
+.gray-background, .default-color {
+  background-color: #efefef; }
+
 .footer-container {
   padding: 0; }
 
 .footer {
   padding: 20px; }
+
+.two-dimensional-form > .form-group > div {
+  margin-bottom: 3em; }
+
+.two-dimensional-form > .form-group > .control-label {
+  font-size: 2em;
+  margin-bottom: 0.5em; }
 
 .header {
   padding-top: 0; }
@@ -10663,11 +10689,20 @@ blockquote.testimonial footer cite {
   margin-bottom: 50px; }
 
 section {
-  padding: 100px 0;
-  background-color: #efefef; }
+  padding: 100px 0; }
 
 .content {
   min-height: calc(100% - 180px - 60px); }
+
+.index-container {
+  padding: 40px;
+  position: relative; }
+
+.index-container *:last-child {
+  margin-bottom: 0; }
+
+.index-container *:first-child {
+  margin-top: 0; }
 
 .full-width {
   width: 100%; }
@@ -10698,14 +10733,15 @@ h1 {
 
 h2 {
   font-size: 2em;
-  margin: 0;
+  margin: 0 0 1em;
   font-weight: 300; }
 
 h3 {
   font-size: 1.3em;
   margin-bottom: 0.5em;
   margin-top: 0.5em;
-  font-weight: 400; }
+  text-transform: uppercase;
+  font-weight: 600; }
 
 p {
   font-size: 1.2em;
@@ -10756,21 +10792,6 @@ p.h1-description, p.h2-description {
   line-height: 1.4em;
   margin-top: 0.5em; }
 
-.blue-background, .info-color {
-  background-color: #555F76; }
-
-.brown-background, .warning-color {
-  background-color: #B19E7A; }
-
-.green-background {
-  background-color: #618D61; }
-
-.green2-background {
-  background-color: #496A6A; }
-
-.red-background, .error-color {
-  background-color: #B17A7A; }
-
 .color-background {
   position: absolute;
   height: 20px;
@@ -10797,8 +10818,3 @@ p.h1-description, p.h2-description {
 
 .contact {
   background-color: #B17A7A; }
-
-.index-container {
-  background-color: #efefef;
-  padding: 40px;
-  position: relative; }

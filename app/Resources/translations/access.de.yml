@@ -1,0 +1,30 @@
+#login form
+Username: Email
+Password: Passwort
+Login: Einloggen
+
+#login description
+forgot_password_action: Passwort vergessen
+create_organisation_action: Neue Organisation registrieren
+internal_area: Interner Bereich
+internal_area_action: Loggen Sie sich ein
+internal_area_description: Loggen Sie sich ein um Zugriff zum Terminkalender und weitere Funktionen zu erhalten
+no_account_question: Noch keinen Account?
+no_account_description: Fragen Sie den Leiter Ihrer Organisation oder erstellen Sie eine neue Organisation um den Kalender zu nutzen
+forgot_password_question: Passwort vergessen?
+forgot_password_description: Drücken Sie auf Passwort vergessen links und verifizieren Sie sich mit der hinterlegten E-Mail
+
+#register form
+Person: Name
+Address: Adresse
+Communication: Kontaktinformationen
+Registrieren: registrieren
+
+#register description
+register: Registrieren
+register_action: Erstellen Sie einen Account für Ihre Organisation
+register_description: Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen. Danach können Sie mit der Einrichtung für Ihre Organisation beginnen
+personal_data: Persönliche Daten
+personal_data_description: Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben. Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
+trial_period: Probephase
+trial_period_description: Nach der Einrichtung der Organisation können Sie alle Funktionen der Anwendung für 30 Tage gratis und ohne Verpflichtungen testen.

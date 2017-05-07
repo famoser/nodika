@@ -9,7 +9,7 @@
 namespace AppBundle\Form\Access;
 
 
-use AppBundle\Entity\User;
+use AppBundle\Entity\FrontendUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -30,7 +30,7 @@ class LoginType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => User::class,
+            'data_class' => FrontendUser::class,
         ));
     }
 }

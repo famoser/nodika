@@ -10,7 +10,7 @@ namespace AppBundle\Security;
 
 
 use AppBundle\Entity\BusinessUser;
-use AppBundle\Entity\User;
+use AppBundle\Entity\FrontendUser;
 use AppBundle\Security\Base\BaseUserProvider;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -43,9 +43,7 @@ class UserProvider extends BaseUserProvider
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->registry->getRepository("AppBundle:User")->findOneBy(["email" => $username]);
-        dump($user);
-        dump($username);
+        $user = $this->registry->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $username]);
         if ($user != null) {
             return $user;
         }
@@ -71,7 +69,7 @@ class UserProvider extends BaseUserProvider
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof FrontendUser) {
             throw new UnsupportedUserException(
                 sprintf('Instances of "%s" are not supported.', get_class($user))
             );
@@ -89,6 +87,6 @@ class UserProvider extends BaseUserProvider
      */
     public function supportsClass($class)
     {
-        return User::class === $class;
+        return FrontendUser::class === $class;
     }
 }

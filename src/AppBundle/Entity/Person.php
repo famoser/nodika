@@ -14,6 +14,7 @@ use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -34,7 +35,8 @@ class Person extends BaseEntity
     /**
      * @var Organisation[]
      *
-     * @ORM\ManyToMany(targetEntity="Organisation", inversedBy="leaders")
+     * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="leaders")
+     * @ORM\JoinTable(name="person_organisations")
      */
     private $leaderOf;
 
@@ -42,16 +44,16 @@ class Person extends BaseEntity
      * @var Member[]
      *
      * @ORM\ManyToMany(targetEntity="Member", inversedBy="persons")
-     * @ORM\JoinTable(name="product_attributes_product")
+     * @ORM\JoinTable(name="person_members")
      */
     private $members;
 
     /**
-     * @var User[]
+     * @var FrontendUser[]
      *
-     * @ORM\OneToMany(targetEntity="User", mappedBy="person")
+     * @ORM\OneToMany(targetEntity="FrontendUser", mappedBy="person")
      */
-    private $users;
+    private $frontendUsers;
 
     /**
      * @var Event[]
@@ -64,10 +66,10 @@ class Person extends BaseEntity
      */
     public function __construct()
     {
-        $this->leaderOf = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->members = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->leaderOf = new ArrayCollection();
+        $this->members = new ArrayCollection();
+        $this->frontendUsers = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     /**
@@ -165,13 +167,13 @@ class Person extends BaseEntity
     /**
      * Add user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param \AppBundle\Entity\FrontendUser $user
      *
      * @return Person
      */
-    public function addUser(\AppBundle\Entity\User $user)
+    public function addUser(\AppBundle\Entity\FrontendUser $user)
     {
-        $this->users[] = $user;
+        $this->frontendUsers[] = $user;
 
         return $this;
     }
@@ -179,11 +181,11 @@ class Person extends BaseEntity
     /**
      * Remove user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param \AppBundle\Entity\FrontendUser $user
      */
-    public function removeUser(\AppBundle\Entity\User $user)
+    public function removeUser(\AppBundle\Entity\FrontendUser $user)
     {
-        $this->users->removeElement($user);
+        $this->frontendUsers->removeElement($user);
     }
 
     /**
@@ -191,9 +193,9 @@ class Person extends BaseEntity
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getUsers()
+    public function getFrontendUsers()
     {
-        return $this->users;
+        return $this->frontendUsers;
     }
 
     /**

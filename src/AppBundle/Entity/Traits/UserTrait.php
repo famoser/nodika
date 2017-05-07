@@ -220,8 +220,9 @@ trait UserTrait
      * @param UserTrait $user
      * @return bool
      */
-    protected function isEqualToUser(UserTrait $user)
+    protected function isEqualToUser($user)
     {
+        /* @var UserTrait $user */
         if ($this->getUsername() != $user->getUsername())
             return false;
 
@@ -264,7 +265,7 @@ trait UserTrait
      */
     public function getUsername()
     {
-        return $this->getUsername();
+        return $this->email;
     }
 
     /**

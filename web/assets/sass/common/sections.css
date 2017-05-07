@@ -1,6 +1,15 @@
 section {
-  padding: 100px 0;
-  background-color: #efefef; }
+  padding: 100px 0; }
 
 .content {
   min-height: calc(100% - 180px - 60px); }
+
+.index-container {
+  padding: 40px;
+  position: relative; }
+
+.index-container *:last-child {
+  margin-bottom: 0; }
+
+.index-container *:first-child {
+  margin-top: 0; }

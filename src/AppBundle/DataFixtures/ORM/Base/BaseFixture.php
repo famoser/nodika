@@ -9,7 +9,7 @@
 namespace AppBundle\DataFixtures\ORM\Base;
 
 
-use AppBundle\Entity\User;
+use AppBundle\Entity\FrontendUser;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -33,7 +33,7 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
     protected abstract function getAllRandomInstance();
 
     /**
-     * @param object|User $obj
+     * @param object|FrontendUser $obj
      */
     protected function fillRandomAddress(&$obj)
     {

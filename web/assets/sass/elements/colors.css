@@ -11,4 +11,8 @@
   background-color: #496A6A; }
 
 .red-background, .error-color {
-  background-color: #B17A7A; }
+  background-color: #B17A7A;
+  color: #efefef; }
+
+.gray-background, .default-color {
+  background-color: #efefef; }

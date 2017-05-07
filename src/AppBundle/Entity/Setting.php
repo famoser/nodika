@@ -40,11 +40,11 @@ class Setting extends BaseEntity
     private $content;
 
     /**
-     * @var User
+     * @var FrontendUser
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="settings")
+     * @ORM\ManyToOne(targetEntity="FrontendUser", inversedBy="settings")
      */
-    private $user;
+    private $frontendUser;
 
     /**
      * Set key
@@ -97,13 +97,13 @@ class Setting extends BaseEntity
     /**
      * Set user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param \AppBundle\Entity\FrontendUser $frontendUser
      *
      * @return Setting
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setFrontendUser(\AppBundle\Entity\FrontendUser $frontendUser = null)
     {
-        $this->user = $user;
+        $this->frontendUser = $frontendUser;
 
         return $this;
     }
@@ -111,10 +111,10 @@ class Setting extends BaseEntity
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\User
+     * @return \AppBundle\Entity\FrontendUser
      */
-    public function getUser()
+    public function getFrontendUser()
     {
-        return $this->user;
+        return $this->frontendUser;
     }
 }

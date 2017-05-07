@@ -14,10 +14,10 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FrontendUserRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class User extends BaseEntity implements AdvancedUserInterface, EquatableInterface
+class FrontendUser extends BaseEntity implements AdvancedUserInterface, EquatableInterface
 {
     use IdTrait;
     use UserTrait;
@@ -25,14 +25,14 @@ class User extends BaseEntity implements AdvancedUserInterface, EquatableInterfa
     /**
      * @var Setting[]
      *
-     * @ORM\OneToMany(targetEntity="Setting", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Setting", mappedBy="frontendUser")
      */
     private $settings;
 
     /**
      * @var Person
      *
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="Person", inversedBy="frontendUsers")
      */
     private $person;
 
@@ -49,7 +49,7 @@ class User extends BaseEntity implements AdvancedUserInterface, EquatableInterfa
      *
      * @param Setting $setting
      *
-     * @return User
+     * @return FrontendUser
      */
     public function addSetting(Setting $setting)
     {
@@ -83,7 +83,7 @@ class User extends BaseEntity implements AdvancedUserInterface, EquatableInterfa
      *
      * @param \AppBundle\Entity\Person $person
      *
-     * @return User
+     * @return FrontendUser
      */
     public function setPerson(\AppBundle\Entity\Person $person = null)
     {

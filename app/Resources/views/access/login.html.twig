@@ -1,16 +1,28 @@
 {% extends "divided_content_base.html.twig" %}
 
-{% block title %}Login{% endblock %}
-{% block description %}Logge dich ein{% endblock %}
+{% block title %}{{ "internal_area"|trans }}{% endblock %}
+{% block description %}{{ "internal_area_action"|trans }}{% endblock %}
 {% set color_class = "blue-background" %}
+
+{% trans_default_domain "access" %}
 
 {% block primary_content %}
     {{ form_start(login_form, {"action" : path("access_login_check")}) }}
     {{ form_errors(login_form) }}
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     {{ form_end(login_form) }}
+    <p>
+        <a href="{{ path("access_reset") }}">{{ "forgot_password_action"|trans }}</a><br/>
+        <a href="{{ path("access_register") }}">{{ "create_organisation_action"|trans }}</a>
+    </p>
 {% endblock primary_content %}
 
 {% block secondary_content %}
-    <p>Hi</p>
+    <h3>{{ "internal_area"|trans }}</h3>
+    <p>{{ "internal_area_description"|trans }}</p>
+    <h3>{{ "no_account_question"|trans }}</h3>
+    <p>{{ "no_account_description"|trans }}</p>
+    <h3>{{ "forgot_password_question"|trans }}</h3>
+    <p>{{ "forgot_password_description"|trans }}</p>
+
 {% endblock secondary_content %}
