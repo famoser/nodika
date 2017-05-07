@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\User;
+
 /**
  * UserRepository
  *
@@ -10,4 +12,17 @@ namespace AppBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param User $user
+     * @return User|null
+     */
+    public function tryLogin(User $user)
+    {
+        /* @var User $tryUser */
+        $tryUser = $this->findOneBy(["email" => $user->getEmail()]);
+        $tryUser->setPlainPassword($user->getPlainPassword());
+        if ($tryUser->tryLoginWithPlainPassword())
+            return $tryUser;
+        return null;
+    }
 }

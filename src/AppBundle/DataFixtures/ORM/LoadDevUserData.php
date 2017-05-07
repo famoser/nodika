@@ -26,10 +26,12 @@ class LoadDevUserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        //add info@jkweb.ch for prod (change to insecure password)
+        /* @var User $user */
         $user = $this->getReference('user-1');
-        $user->setPassword('$2y$10$1vRCgEeGePCg4z97WArHl.FbWbASWk.ba0xsL8pxplDv8AkaVz42G');
+
         $user->setPlainPassword('asdf123');
+        $user->hashAndRemovePlainPassword();
+
         $manager->persist($user);
         $manager->flush();
     }

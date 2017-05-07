@@ -9,3 +9,6 @@
 
 .position-relative {
   position: relative; }
+
+html, body {
+  height: 100%; }

@@ -1,0 +1,16 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}Login{% endblock %}
+{% block description %}Logge dich ein{% endblock %}
+{% set color_class = "blue-background" %}
+
+{% block primary_content %}
+    {{ form_start(login_form, {"action" : path("access_login_check")}) }}
+    {{ form_errors(login_form) }}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    {{ form_end(login_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <p>Hi</p>
+{% endblock secondary_content %}

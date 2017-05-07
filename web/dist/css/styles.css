@@ -10643,16 +10643,53 @@ blockquote.testimonial footer cite {
   margin-left: -32px;
 }
 
+.footer-container {
+  padding: 0; }
+
+.footer {
+  padding: 20px; }
+
+.header {
+  padding-top: 0; }
+
+.header-container {
+  padding: 0; }
+
+.logo-img {
+  display: block;
+  width: 100%; }
+
+.logo-wrapper {
+  margin-bottom: 50px; }
+
+section {
+  padding: 100px 0;
+  background-color: #efefef; }
+
+.content {
+  min-height: calc(100% - 180px - 60px); }
+
+.full-width {
+  width: 100%; }
+
+.full-height {
+  height: 100%; }
+
+.align-right {
+  text-align: right; }
+
+.position-relative {
+  position: relative; }
+
 html, body {
   height: 100%; }
 
 body {
-  overflow-x: hidden;
+  color: #555555;
   font-family: "Open Sans", sans-serif; }
 
-h1, h2, h3, h4,
-h1 a, h2 a, h3 a, h4 a {
-  color: #555555; }
+h1, h2, h3, h4, p {
+  font-family: "Open Sans", sans-serif; }
 
 h1 {
   font-size: 3em;
@@ -10668,13 +10705,13 @@ h3 {
   font-size: 1.3em;
   margin-bottom: 0.5em;
   margin-top: 0.5em;
-  font-weight: 500; }
+  font-weight: 400; }
 
 p {
   font-size: 1.2em;
   line-height: 1.6em;
   margin-bottom: 1.8em;
-  font-weight: 500; }
+  font-weight: 400; }
   p.lead {
     font-size: 1.3em;
     line-height: 1.8em;
@@ -10719,48 +10756,19 @@ p.h1-description, p.h2-description {
   line-height: 1.4em;
   margin-top: 0.5em; }
 
-.full-width {
-  width: 100%; }
+.blue-background, .info-color {
+  background-color: #555F76; }
 
-.full-height {
-  height: 100%; }
+.brown-background, .warning-color {
+  background-color: #B19E7A; }
 
-.align-right {
-  text-align: right; }
+.green-background {
+  background-color: #618D61; }
 
-.position-relative {
-  position: relative; }
+.green2-background {
+  background-color: #496A6A; }
 
-.header {
-  padding-top: 0; }
-
-.header-container {
-  padding: 0; }
-
-.footer-container {
-  padding: 0; }
-
-.logo-img {
-  display: block;
-  width: 100%; }
-
-.logo-wrapper {
-  margin-bottom: 50px; }
-
-.footer {
-  padding: 20px; }
-
-section {
-  padding: 100px 0;
-  background-color: #efefef; }
-
-footer {
-  padding: 0; }
-
-.content {
-  min-height: calc(100% - 180px - 60px); }
-
-.error-color {
+.red-background, .error-color {
   background-color: #B17A7A; }
 
 .color-background {
@@ -10792,5 +10800,5 @@ footer {
 
 .index-container {
   background-color: #efefef;
-  padding: 40px 40px calc(40px - 1.8em);
+  padding: 40px;
   position: relative; }

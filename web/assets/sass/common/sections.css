@@ -1,0 +1,6 @@
+section {
+  padding: 100px 0;
+  background-color: #efefef; }
+
+.content {
+  min-height: calc(100% - 180px - 60px); }

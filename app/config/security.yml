@@ -2,15 +2,15 @@
 # http://symfony.com/doc/current/security.html
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: bcrypt
+        AppBundle\Entity\User: bcrypt
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
+        user_provider:
+            id: app.user_provider
 
     firewalls:
         # disables authentication for assets and the profiler
@@ -19,9 +19,13 @@ security:
             security: false
 
         main:
-            pattern: ^/
+            pattern:   ^/
+            anonymous: ~
             form_login:
-                provider: fos_userbundle
+                provider: user_provider
+                login_path: /login
+                check_path: /login_check
+                default_target_path: /
                 csrf_token_generator: security.csrf.token_manager
 
             logout:       true

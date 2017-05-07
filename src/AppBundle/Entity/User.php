@@ -3,22 +3,24 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Base\AddressTrait;
+use AppBundle\Entity\Base\BaseEntity;
+use AppBundle\Entity\Traits\IdTrait;
+use AppBundle\Entity\Traits\UserTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Table(name="fos_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
-class User extends BaseUser
+class User extends BaseEntity implements AdvancedUserInterface, EquatableInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use IdTrait;
+    use UserTrait;
 
     /**
      * @var Setting[]
@@ -35,13 +37,21 @@ class User extends BaseUser
     private $person;
 
     /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        $this->settings = new ArrayCollection();
+    }
+
+    /**
      * Add setting
      *
-     * @param \AppBundle\Entity\Setting $setting
+     * @param Setting $setting
      *
      * @return User
      */
-    public function addSetting(\AppBundle\Entity\Setting $setting)
+    public function addSetting(Setting $setting)
     {
         $this->settings[] = $setting;
 
@@ -51,9 +61,9 @@ class User extends BaseUser
     /**
      * Remove setting
      *
-     * @param \AppBundle\Entity\Setting $setting
+     * @param Setting $setting
      */
-    public function removeSetting(\AppBundle\Entity\Setting $setting)
+    public function removeSetting(Setting $setting)
     {
         $this->settings->removeElement($setting);
     }
@@ -90,5 +100,47 @@ class User extends BaseUser
     public function getPerson()
     {
         return $this->person;
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     * @return array (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        return ["ROLE_USER"];
+    }
+
+    /**
+     * The equality comparison should neither be done by referential equality
+     * nor by comparing identities (i.e. getId() === getId()).
+     *
+     * However, you do not need to compare every attribute, but only those that
+     * are relevant for assessing whether re-authentication is required.
+     *
+     * Also implementation should consider that $user instance may implement
+     * the extended user interface `AdvancedUserInterface`.
+     *
+     * @param UserInterface $user
+     *
+     * @return bool
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        if (!($user instanceof static))
+            return false;
+
+        return $this->isEqualToUser($user);
     }
 }

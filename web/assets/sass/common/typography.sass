@@ -1,15 +1,11 @@
-@import 'imports/_variables.sass'
-
-html, body
-  height: 100%
+@import '../imports/_variables.sass'
 
 body
-  overflow-x: hidden
+  color: $grey-dark
   font-family: $font-stack
 
-h1, h2, h3, h4,
-h1 a, h2 a, h3 a, h4 a
-  color: $font-color
+h1, h2, h3, h4, p
+  font-family: $font-stack
 
 h1
   font-size: 3em
@@ -39,7 +35,7 @@ p
     margin-top: 1em
   &.info
     font-size: 0.8em
-    color: $font-color-secondary
+    color: $grey-normal
     margin-bottom: 1.2em
   &.low
     margin-bottom: 1.2em
@@ -53,10 +49,10 @@ ul, ol
   padding-left: 0
 
 a
-  color: $link-color
+  color: $color-primary-0
   text-decoration: none
   &:hover, &:active, &:focus
-    color: $link-color
+    color: $color-primary-0
     text-decoration: none
 
 a.no-highlight
@@ -67,11 +63,11 @@ a.no-highlight
     text-decoration: none
 
 hr
-  border-color: $font-color
+  border-color: $grey-dark
   margin-top: 10px
   margin-bottom: 30px
 
 p.h1-description, p.h2-description
-  color: $font-color-secondary
+  color: $grey-normal
   line-height: 1.4em
   margin-top: 0.5em

@@ -26,19 +26,12 @@ class LoadUserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        //add info@jkweb.ch for dev
         $user = new User();
-        $user->setUsername('info@jkweb.ch');
-        $user->setEmail("info@jkweb.ch");
-        /* done with
-        $pwUpdater = $this->get('fos_user.util.password_updater');
-        $pwUpdater->hashPassword()
-        */
-        $user->setPassword('$2y$10$m5E0vbdaBruda1JiuUBxbOEWeGPttJwuSDHqRzm6N0a/IWf4C4WkS');
-        $user->setPlainPassword('ib13izdb186d');
-        $user->setLastLogin(new \DateTime());
-        $user->setEnabled(true);
-        $user->addRole('ROLE_ADMIN');
+        $user->setEmail("products@famoser.ch");
+        $user->setPlainPassword('87128dg1889gfd6f2hag');
+        $user->hashAndRemovePlainPassword();
+        $user->setRegistrationDate(new \DateTime());
+        $user->setIsActive(true);
         $manager->persist($user);
         $manager->flush();
 
