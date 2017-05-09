@@ -20,7 +20,7 @@ trait UserTrait
     /**
      * @var string $email
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", unique=true)
      */
     private $email;
 
@@ -144,6 +144,31 @@ trait UserTrait
     {
         $this->resetHash = $resetHash;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function createNewResetHash()
+    {
+        $newHash = '';
+        //0-9, A-Z, a-z
+        $allowedRanges = [[48, 57], [65, 90], [97, 122]];
+        for ($i = 0; $i < 20; $i++) {
+            $rand = mt_rand(20, 160);
+            $allowed = false;
+            for ($j = 0; $j < count($allowedRanges); $j++) {
+                if ($allowedRanges[$j][0] <= $rand && $allowedRanges[$j][1] >= $rand) {
+                    $allowed = true;
+                }
+            }
+            if ($allowed)
+                $newHash .= chr($rand);
+            else
+                $i--;
+        }
+        $this->setResetHash($newHash);
+        return $this->getResetHash();
     }
 
     /**
@@ -389,5 +414,20 @@ trait UserTrait
     public function prePersistsHandler()
     {
         $this->resetHash = uniqid();
+    }
+
+    /**
+     * @param $email
+     *
+     * sets all fields of the user object
+     */
+    public function initializeUserWithEmail($email)
+    {
+        $this->setPlainPassword(uniqid());
+        $this->setRegistrationDate(new \DateTime());
+        $this->setIsActive(true);
+        $this->setEmail($email);
+        $resetHash = $this->createNewResetHash();
+        $this->setPasswordHash(password_hash($resetHash, PASSWORD_BCRYPT));
     }
 }

@@ -143,4 +143,16 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
 
         return $this->isEqualToUser($user);
     }
+
+    /**
+     * @param Person $person
+     * @return static
+     */
+    public static function createFromPerson(Person $person)
+    {
+        $user = new static();
+        $user->initializeUserWithEmail($person->getEmail());
+        $user->setPerson($person);
+        return $user;
+    }
 }

@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 
@@ -108,6 +109,7 @@ class AccessController extends BaseController
     public function registerAction(Request $request)
     {
         $registerForm = $this->createForm(RegisterType::class);
+        $arr = [];
 
         $person = new Person();
         $registerForm->setData($person);
@@ -115,8 +117,74 @@ class AccessController extends BaseController
 
         if ($registerForm->isSubmitted()) {
             if ($registerForm->isValid()) {
-                $this->getDoctrine()->getManager()->persist($person);
-                $this->getDoctrine()->getManager()->flush();
+                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
+                if ($existingUser == null) {
+                    $arr["message"] = $this->get("translator")->trans("error.email_already_registered", [], "access");
+                } else {
+
+                    $this->getDoctrine()->getManager()->persist($person);
+                    $this->getDoctrine()->getManager()->flush();
+
+                    $user = FrontendUser::createFromPerson($person);
+                    $translate = $this->get("translator");
+                    $registerLink = $this->generateUrl(
+                        "access_register_confirm",
+                        ["confirmationToken" => $user->getResetHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($translate->trans("register.subject", [], "access_emails"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($user->getEmail())
+                        ->setBody($translate->trans(
+                            "register.message",
+                            ["register_link" => $registerLink],
+                            "access_emails"));
+                    $this->get('mailer')->send($message);
+                    return $this->redirectToRoute("access_register_thanks");
+                }
+            } else {
+                $arr["message"] = $this->get("translator")->trans("error.form_validation_failed", [], "common");
+            }
+        }
+
+        $arr["register_form"] = $registerForm->createView();
+        return $this->render(
+            'access/register.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/register/thanks", name="access_register_thanks")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function registerThanksAction(Request $request)
+    {
+        return $this->render(
+            'access/register_thanks.html.twig'
+        );
+    }
+
+    /**
+     * @Route("/register/{confirmationToken}", name="access_register_confirm")
+     * @param Request $request
+     * @param $confirmation
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function registerConfirmAction(Request $request, $confirmation)
+    {
+        $registerForm = $this->createForm(RegisterType::class);
+
+        $person = new Person();
+        $registerForm->setData($person);
+        $registerForm->handleRequest($request);
+
+        if ($registerForm->isSubmitted()) {
+            if ($registerForm->isValid()) {
+
+
             }
         }
 

@@ -1,0 +1,3 @@
+register:
+  subject: Registrierung abschliessen
+  message: "Vielen Dank für Ihr Interesse! Klicken Sie auf den folgenden Link um die Registrierung abzuschliessen und Ihre Organisation einzurichten: %register_link%"
