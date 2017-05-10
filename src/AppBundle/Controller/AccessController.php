@@ -14,6 +14,7 @@ use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
 use AppBundle\Form\Access\LoginType;
 use AppBundle\Form\Access\RegisterType;
+use AppBundle\Form\Access\SetPasswordType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -23,6 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\User;
 
 class AccessController extends BaseController
 {
@@ -46,8 +48,9 @@ class AccessController extends BaseController
         } else {
             $error = null;
         }
-        if ($error != null)
-            $this->get('session')->getFlashBag()->set('error', "Login fehlgeschlagen");
+        if ($error != null) {
+            $this->displayError("Login fehlgeschlagen");
+        }
 
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
@@ -72,23 +75,9 @@ class AccessController extends BaseController
 
         if ($loginForm->isSubmitted()) {
             throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
-            /*
-            if ($newsletterForm->isValid()) {
-                $myUser = $this->getDoctrine()->getRepository("AppBundle:User")->tryLogin($user);
-                if ($myUser != null) {
-                    if ($myUser->getIsActive()) {
-
-                    }
-                }
-                $this->getDoctrine()->getManager()->persist($newsLetter);
-                $this->getDoctrine()->getManager()->flush();
-                $arr["message"] = "Vielen Dank! Ich melde mich zurück.";
-            }
-            */
         }
 
         $arr["login_form"] = $loginForm->createView();
-
 
         return $this->render(
             'access/login.html.twig', $arr
@@ -145,7 +134,7 @@ class AccessController extends BaseController
                     return $this->redirectToRoute("access_register_thanks");
                 }
             } else {
-                $arr["message"] = $this->get("translator")->trans("error.form_validation_failed", [], "common");
+                $this->displayFormValidationError();
             }
         }
 
@@ -175,20 +164,37 @@ class AccessController extends BaseController
      */
     public function registerConfirmAction(Request $request, $confirmation)
     {
-        $registerForm = $this->createForm(RegisterType::class);
+        $setPasswordForm = $this->createForm(SetPasswordType::class);
 
-        $person = new Person();
-        $registerForm->setData($person);
-        $registerForm->handleRequest($request);
+        $user = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["resetHash" => $confirmation]);
+        $setPasswordForm->setData($user);
+        $setPasswordForm->handleRequest($request);
 
-        if ($registerForm->isSubmitted()) {
-            if ($registerForm->isValid()) {
+        if ($setPasswordForm->isSubmitted()) {
+            if ($setPasswordForm->isValid()) {
+                if ($user->isValidPlainPassword()) {
+                    if ($user->getPlainPassword() == $user->getRepeatPlainPassword()) {
+                        $user->hashAndRemovePlainPassword();
+                        $user->setResetHash(null);
 
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($user);
+                        $em->flush();
 
+                        //redirect to create organisation
+                        return $this->redirect("organisation_new");
+                    } else {
+                        $this->displayError("error.passwords_not_matching", "access");
+                    }
+                } else {
+                    $this->displayError("error.new_password_not_valid", "access");
+                }
+            } else {
+                $this->displayFormValidationError();
             }
         }
 
-        $arr["register_form"] = $registerForm->createView();
+        $arr["register_form"] = $setPasswordForm->createView();
         return $this->render(
             'access/register.html.twig', $arr
         );

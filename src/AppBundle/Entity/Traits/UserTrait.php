@@ -173,7 +173,7 @@ trait UserTrait
 
     /**
      * @param string $plainPassword
-     * @return UserTrait
+     * @return static
      */
     public function setPlainPassword($plainPassword)
     {
@@ -187,6 +187,26 @@ trait UserTrait
     public function getPlainPassword()
     {
         return $this->plainPassword;
+    }
+
+    private $repeatPlainPassword;
+
+    /**
+     * @param string $plainPassword
+     * @return static
+     */
+    public function setRepeatPlainPassword($plainPassword)
+    {
+        $this->repeatPlainPassword = $plainPassword;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRepeatPlainPassword()
+    {
+        return $this->repeatPlainPassword;
     }
 
     /**
@@ -226,7 +246,7 @@ trait UserTrait
      */
     public function isValidPlainPassword()
     {
-        return $this->getPlainPassword() != "";
+        return $this->getPlainPassword() != "" && strlen($this->getPlainPassword()) >= 8;
     }
 
     /**
@@ -302,6 +322,7 @@ trait UserTrait
     public function eraseCredentials()
     {
         $this->setPlainPassword(null);
+        $this->setRepeatPlainPassword(null);
     }
 
 
