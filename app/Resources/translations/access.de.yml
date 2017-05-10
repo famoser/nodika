@@ -33,7 +33,41 @@ trial_period_description: Nach der Einrichtung der Organisation können Sie alle
 register_thanks: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail.
 register_thanks_action: Account erfolgreich erstellt
 
+#register confirm
+register_confirm: Registrierung abschliessen
+register_confirm_action: Setzten Sie das Passwort für Ihren Account
+register_confirm_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account. Danach können Sie mit der Einrichtung Ihrer Organisation loslegen
+
+#register confirm form
+Set passwort: Passwort setzten
+
+#hash invalid
+hash_invalid: Link ungültig
+hash_invalid_action: Der aufgerufene Link ist ungültig
+hash_invalid_description: Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann.
+
+#reset form
+Email: Email
+Reset: zurücksetzten
+
+#reset description
+reset: Passwort zurücksetzten
+reset_action: Setzten Sie Ihr Passwort mit Ihrer E-Mail zurück
+reset_description: Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzten können.
+
+#reset done
+reset_done: Passwort zurücksetzten
+reset_done_action: E-Mail wurde versandt
+reset_done_description: Sofern Ihre E-Mail in unserem System gefunden wurde haben wir Ihnen soeben eine E-Mail gesendet mit einem Link, um das Passwort zurückzusetzten
+
+#reset confirm
+reset_confirm: Passwort zurücksetzten
+reset_confirm_action: Setzten Sie Ihr neues Passwort
+reset_confirm_description: Setzten Sie Ihr neues Passwort
+
 error:
   email_already_registered: Diese E-Mail ist bereits vergeben.
   passwords_do_not_match: Die Passwörter stimmen nicht überein
   new_password_not_valid: Das Passwort ist nicht sicher genug. Bitte verwenden Sie mindestens ein 8 stelliges Passwort
+  login_failed: Login fehlgeschlagen
+

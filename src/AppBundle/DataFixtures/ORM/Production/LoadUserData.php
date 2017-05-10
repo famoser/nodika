@@ -27,7 +27,7 @@ class LoadUserData extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $user = new FrontendUser();
-        $user->setEmail("products@famoser.ch");
+        $user->setEmail("info@nodika.ch");
         $user->setPlainPassword('87128dg1889gfd6f2hag');
         $user->hashAndRemovePlainPassword();
         $user->setRegistrationDate(new \DateTime());

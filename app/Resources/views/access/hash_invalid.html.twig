@@ -1,0 +1,15 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "hash_invalid"|trans }}{% endblock %}
+{% block description %}{{ "hash_invalid_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "access" %}
+
+{% block primary_content %}
+    <p>{{ "hash_invalid_description"|trans }}</p>
+{% endblock primary_content %}
+
+{% block secondary_content %}
+
+{% endblock secondary_content %}

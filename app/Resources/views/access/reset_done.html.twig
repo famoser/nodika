@@ -1,0 +1,15 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "reset_done"|trans }}{% endblock %}
+{% block description %}{{ "reset_done_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "access" %}
+
+{% block primary_content %}
+    <p>{{ "reset_done_description"|trans }}</p>
+{% endblock primary_content %}
+
+{% block secondary_content %}
+
+{% endblock secondary_content %}

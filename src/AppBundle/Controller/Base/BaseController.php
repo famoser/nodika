@@ -14,11 +14,10 @@ class BaseController extends Controller
 {
     /**
      * @param string $message the translation message to display
-     * @param string $domain the domain of the error message
      */
-    protected function displayError($message, $domain)
+    protected function displayError($message)
     {
-        $this->get('session')->getFlashBag()->set('error', $this->get("translator")->trans($message, [], $domain));
+        $this->get('session')->getFlashBag()->set('error', $message);
     }
 
     /**
@@ -26,6 +25,6 @@ class BaseController extends Controller
      */
     protected function displayFormValidationError()
     {
-        $this->displayError("error.form_validation_failed", "common");
+        $this->displayError($this->get("translator")->trans("error.form_validation_failed", [], "common"));
     }
 }

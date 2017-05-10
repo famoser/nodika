@@ -1,0 +1,18 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "reset"|trans }}{% endblock %}
+{% block description %}{{ "reset_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "access" %}
+
+{% block primary_content %}
+    {{ form_start(reset_form) }}
+    {{ form_errors(reset_form) }}
+    {{ form_end(reset_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <h3>{{ "reset"|trans }}</h3>
+    <p>{{ "reset_description"|trans }}</p>
+{% endblock secondary_content %}
