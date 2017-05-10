@@ -13,19 +13,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class BaseController extends Controller
 {
     /**
-     * @param $message
+     * @param string $message the translation message to display
+     * @param string $domain the domain of the error message
      */
     protected function displayError($message, $domain)
     {
-
         $this->get('session')->getFlashBag()->set('error', $this->get("translator")->trans($message, [], $domain));
     }
 
     /**
-     *
+     * displays the default form error
      */
     protected function displayFormValidationError()
     {
-        $this->displayError($this->get("translator")->trans("error.form_validation_failed", [], "common"));
+        $this->displayError("error.form_validation_failed", "common");
     }
 }

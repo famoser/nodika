@@ -26,7 +26,6 @@ class SetPasswordType extends AbstractType
 
         $builder->add("plainPassword", PasswordType::class, ["translation_domain" => "user"]);
         $builder->add("repeatPlainPassword", PasswordType::class, ["translation_domain" => "user"]);
-        $builder->add("resetHash", HiddenType::class);
 
         $builder->add("set password", SubmitType::class, $transArray);
     }

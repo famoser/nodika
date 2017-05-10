@@ -85,14 +85,6 @@ class AccessController extends BaseController
     }
 
     /**
-     * @Route("/reset", name="access_reset")
-     */
-    public function resetAction(Request $request)
-    {
-
-    }
-
-    /**
      * @Route("/register", name="access_register")
      */
     public function registerAction(Request $request)
@@ -142,6 +134,73 @@ class AccessController extends BaseController
         return $this->render(
             'access/register.html.twig', $arr
         );
+    }
+
+    /**
+     * @Route("/reset", name="access_reset")
+     */
+    public function resetAction(Request $request)
+    {
+        $resetForm = $this->get("form.factory")->createNamedBuilder(
+            null,
+            FormType::class,
+            [],
+            ["translation_domain" => "access"]
+        )
+            ->add("email", EmailType::class)
+            ->add("reset", SubmitType::class)
+            ->getForm();
+
+        $arr = [];
+
+        $resetForm->handleRequest($request);
+
+        if ($resetForm->isSubmitted()) {
+            if ($resetForm->isValid()) {
+                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $resetForm->get("email")]);
+                if ($existingUser != null) {
+                    $existingUser->createNewResetHash();
+
+                    $this->getDoctrine()->getManager()->persist($existingUser);
+                    $this->getDoctrine()->getManager()->flush();
+
+                    $translate = $this->get("translator");
+                    $resetLink = $this->generateUrl(
+                        "access_register_confirm",
+                        ["confirmationToken" => $existingUser->getResetHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($translate->trans("register.subject", [], "access_emails"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($user->getEmail())
+                        ->setBody($translate->trans(
+                            "register.message",
+                            ["register_link" => $resetLink],
+                            "access_emails"));
+                    $this->get('mailer')->send($message);
+                    return $this->redirectToRoute("access_register_thanks");
+                }
+            } else {
+                $this->displayFormValidationError();
+            }
+        }
+
+        $arr["register_form"] = $resetForm->createView();
+        return $this->render(
+            'access/register.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/reset/{confirmationToken}", name="access_reset_confirm")
+     * @param Request $request
+     * @param $confirmationToken
+     */
+    public function resetConfirmAction(Request $request, $confirmationToken)
+    {
+
     }
 
     /**
