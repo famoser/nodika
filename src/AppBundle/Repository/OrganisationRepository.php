@@ -2,6 +2,10 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Event;
+use AppBundle\Entity\Organisation;
+use AppBundle\Model\Organisation\SetupStatusModel;
+
 /**
  * OrganisationRepository
  *
@@ -10,4 +14,52 @@ namespace AppBundle\Repository;
  */
 class OrganisationRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param Organisation $organisation
+     * @param \DateTime $dateTime
+     * @param string $comparator
+     * @return Event[]
+     */
+    public function findEvents(Organisation $organisation, \DateTime $dateTime, $comparator = ">")
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("e")
+            ->from("AppBundle:Event", "e")
+            ->join("e.member", "m")
+            ->join("m.organisation", "o")
+            ->where("e.startDateTime $comparator :startDateTime")
+            ->where("o = :organisation")
+            ->setParameter('startDateTime', $dateTime)
+            ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return SetupStatusModel
+     */
+    public function getSetupStatus(Organisation $organisation)
+    {
+        $setupStatus = new SetupStatusModel();
+        $em = $this->getEntityManager();
+        $setupStatus->setStepOneDone($em->createQueryBuilder()
+                ->select('count(m)')
+                ->from('AppBundle:Organisation', 'o')
+                ->join("o.members", "m")
+                ->where("o = :organisation")
+                ->setParameter('organisation', $organisation)
+                ->getQuery()
+                ->getSingleScalarResult() > 0);
+        $setupStatus->setStepTwoDone($em->createQueryBuilder()
+                ->select('count(e)')
+                ->from('AppBundle:Organisation', 'o')
+                ->join("o.members", "m")
+                ->join("m.events", "e")
+                ->where("o = :organisation")
+                ->setParameter('organisation', $organisation)
+                ->getQuery()
+                ->getSingleScalarResult() > 0);
+        return $setupStatus;
+    }
 }

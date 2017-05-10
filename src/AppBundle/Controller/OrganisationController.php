@@ -12,6 +12,7 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Organisation;
 use AppBundle\Form\Organisation\NewOrganisationType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/organisation")
+ * @Security("has_role('ROLE_USER')")
  */
 class OrganisationController extends BaseController
 {
@@ -38,12 +40,13 @@ class OrganisationController extends BaseController
 
         if ($newOrganisationForm->isSubmitted()) {
             if ($newOrganisationForm->isValid()) {
-
+                $organisation->setActiveEnd(new \DateTime("today + 31 days"));
+                $organisation->setIsActive(true);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($organisation);
                 $em->flush();
 
-                return $this->redirectToRoute("organisation_start", ["organisation" => $organisation->getId()]);
+                return $this->redirectToRoute("organisation_setup", ["organisation" => $organisation->getId()]);
             } else {
                 $this->displayFormValidationError();
             }
@@ -56,16 +59,31 @@ class OrganisationController extends BaseController
     }
 
     /**
-     * @Route("/start/{organisation}", name="organisation_start")
+     * @Route("/setup/{organisation}", name="organisation_setup")
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
-    public
-    function startAction(Request $request, Organisation $organisation)
+    public function setupAction(Request $request, Organisation $organisation)
     {
+        $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         return $this->render(
-            'organisation/start.html.twig', []
+            'organisation/setup.html.twig', ["organisation" => $organisation, "setupStatus" => $setupStatus]
+        );
+    }
+
+    /**
+     * @Route("/events/{organisation}", name="organisation_events")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function eventsAction(Request $request, Organisation $organisation)
+    {
+        $events = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEvents($organisation, new \DateTime(), ">");
+        return $this->render(
+            'organisation/events.html.twig',
+            ["organisation" => $organisation, "events" => $events]
         );
     }
 }

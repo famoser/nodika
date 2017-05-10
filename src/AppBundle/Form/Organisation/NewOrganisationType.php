@@ -51,7 +51,7 @@ class NewOrganisationType extends AbstractType
         );
 
 
-        $builder->add("register", SubmitType::class, $transArray);
+        $builder->add("create", SubmitType::class, $transArray);
     }
 
     public function configureOptions(OptionsResolver $resolver)

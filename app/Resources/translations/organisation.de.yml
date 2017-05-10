@@ -2,6 +2,7 @@
 Thing: Organisation
 Address: Adresse
 Communication: Kontaktinformationen
+Create: erstellen
 
 #new description
 new: Neue Organisation
@@ -11,3 +12,20 @@ organisation_address: Adresse Ihrer Organisation
 organisation_address_description: Die Adresse der Organisation ist die Rechnungsadresse der Registrierungs- und Jahresgebühr. Sie muss nicht mit Ihrer eigenen Adresse übereinstimmen.
 organisation_contact: Kontaktinformationen Ihrer Organisation
 organisation_contact_description: Die Kontaktinformationen der Organisation werden dazu benützt, Ihnen wichtige Nachrichten über die Mitglieder der Organisation zuzustellen
+
+setup: Organisation einrichten
+setup_action: Richten Sie Ihre Organisation ein
+setup_step_1: Schritt 1
+setup_add_members: Mitglieder hinzufügen
+setup_add_members_description: Importieren Sie Mitglieder von einer .csv (Excel) Datei oder fügen Sie sie direkt online hinzu
+setup_step_2: Schritt 2
+setup_add_events: Termine hinzufügen
+setup_add_events_description: Generieren Sie die Termine der Mitglieder mit einem der bereitgestellten Verfahren oder importieren Sie sie von einem Excel
+setup_step_3: Schritt 3
+setup_configure_settings: Einstellungen anpassen
+setup_configure_settings_description: Verändern Sie die Standarteinstellungen um die Anwendungen spezifischen Bedürfnissen anzupassen
+setup_step_4: Schritt 4
+setup_invite_members: Mitglieder einladen
+setup_invite_members_description: Senden Sie eine E-Mail an Ihre Mitglieder damit sie sich hier online einloggen können
+setup_step_done: (erledigt)
+setup_step_voluntary: (freiwillig)

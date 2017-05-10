@@ -13,6 +13,7 @@ use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\ThingTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -66,9 +67,9 @@ class Organisation extends BaseEntity
      */
     public function __construct()
     {
-        $this->leaders = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->members = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->invoices = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->leaders = new ArrayCollection();
+        $this->members = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
 
     /**
