@@ -129,4 +129,14 @@ trait PersonTrait
             ->add("givenName", TextType::class, $defaultArray)
             ->add("familyName", TextType::class, $defaultArray);
     }
+
+    /**
+     * @param PersonTrait $source
+     */
+    public function setPersonFieldsFrom($source)
+    {
+        $this->setJobTitle($source->getJobTitle());
+        $this->setGivenName($source->getGivenName());
+        $this->setFamilyName($source->getFamilyName());
+    }
 }

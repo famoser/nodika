@@ -24,9 +24,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class AccessController extends BaseController
 {
@@ -292,7 +294,13 @@ class AccessController extends BaseController
                         $em->persist($user);
                         $em->flush();
 
-                        //redirect to create organisation
+                        //login programmatically
+                        $token = new UsernamePasswordToken($user, $user->getPassword(), "main", $user->getRoles());
+                        $this->get("security.token_storage")->setToken($token);
+
+                        $event = new InteractiveLoginEvent($request, $token);
+                        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+
                         return true;
                     } else {
                         $this->displayError($this->get("translator")->trans("error.passwords_do_not_match", [], "access"));

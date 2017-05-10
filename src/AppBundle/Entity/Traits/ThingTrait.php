@@ -97,4 +97,13 @@ trait ThingTrait
             ->add("name", TextType::class, $defaultArray)
             ->add("description", TextType::class, $defaultArray + ["required" => false]);
     }
+
+    /**
+     * @param ThingTrait $source
+     */
+    public function setThingFieldsFrom($source)
+    {
+        $this->setName($source->getName());
+        $this->setDescription($source->getDescription());
+    }
 }

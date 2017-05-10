@@ -4,4 +4,4 @@ register:
 
 reset:
   subject: Passwort zurücksetzen
-  message: 'Klicken Sie auf den folgenden Link um Ihr Passwort zurückzusetzten: %reset_link%.'
+  message: 'Klicken Sie auf den folgenden Link um Ihr Passwort zurückzusetzten: %reset_link%'

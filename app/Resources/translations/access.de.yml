@@ -26,8 +26,6 @@ register_action: Erstellen Sie zuerst einen persönlichen Account
 register_description: Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen. Danach können Sie mit der Einrichtung Ihrer Organisation beginnen
 personal_data: Persönliche Daten
 personal_data_description: Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben. Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
-trial_period: Probephase
-trial_period_description: Nach der Einrichtung der Organisation können Sie alle Funktionen der Anwendung für 30 Tage gratis und ohne Verpflichtungen testen.
 
 #register thanks
 register_thanks: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail.

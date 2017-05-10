@@ -23,7 +23,8 @@ class DashboardController extends BaseController
      */
     public function newAction(Request $request)
     {
+        $arr = [];
 
+        return $this->render("dashboard/start.html.twig", $arr);
     }
-
 }

@@ -115,4 +115,14 @@ trait CommunicationTrait
             ->add("email", EmailType::class, $defaultArray)
             ->add("webpage", TextType::class, $defaultArray + ["required" => false]);
     }
+
+    /**
+     * @param CommunicationTrait $source
+     */
+    public function setCommunicationFieldsFrom($source)
+    {
+        $this->setPhone($source->getPhone());
+        $this->setEmail($source->getEmail());
+        $this->setWebpage($source->getWebpage());
+    }
 }

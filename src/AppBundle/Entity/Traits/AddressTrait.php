@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 /*
  * Address information
  */
+
 trait AddressTrait
 {
     /**
@@ -255,5 +256,18 @@ trait AddressTrait
             ->add("postalCode", NumberType::class, $defaultArray)
             ->add("city", TextType::class, $defaultArray)
             ->add("country", CountryType::class, $defaultArray);
+    }
+
+    /**
+     * @param AddressTrait $source
+     */
+    public function setAddressFieldsFrom($source)
+    {
+        $this->setStreet($source->getStreet());
+        $this->setStreetNr($source->getStreetNr());
+        $this->setAddressLine($source->getAddressLine());
+        $this->setPostalCode($source->getPostalCode());
+        $this->setCity($source->getCity());
+        $this->setCountry($source->getCountry());
     }
 }

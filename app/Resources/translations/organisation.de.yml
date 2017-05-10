@@ -1,4 +1,13 @@
-#organisation form
+#new form
 Thing: Organisation
 Address: Adresse
 Communication: Kontaktinformationen
+
+#new description
+new: Neue Organisation
+new_action: Erstellen Sie Ihre neue Organisation
+new_description: Erfassen Sie die Daten Ihrer neuen Organisation
+organisation_address: Adresse Ihrer Organisation
+organisation_address_description: Die Adresse der Organisation ist die Rechnungsadresse der Registrierungs- und Jahresgebühr. Sie muss nicht mit Ihrer eigenen Adresse übereinstimmen.
+organisation_contact: Kontaktinformationen Ihrer Organisation
+organisation_contact_description: Die Kontaktinformationen der Organisation werden dazu benützt, Ihnen wichtige Nachrichten über die Mitglieder der Organisation zuzustellen

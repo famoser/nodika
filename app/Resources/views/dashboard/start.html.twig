@@ -7,9 +7,7 @@
 {% trans_default_domain "access" %}
 
 {% block primary_content %}
-    {{ form_start(register_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
-    {{ form_errors(register_form) }}
-    {{ form_end(register_form) }}
+    <p>Termine</p>
 {% endblock primary_content %}
 
 {% block secondary_content %}
@@ -17,6 +15,6 @@
     <p>{{ "register_description"|trans }}</p>
     <h3>{{ "personal_data"|trans }}</h3>
     <p>{{ "personal_data_description"|trans }}</p>
-    <h3>{{ "access.trial_period"|trans({},'pricing') }}</h3>
-    <p>{{ "access.trial_period_description"|trans({},'pricing') }}</p>
+    <h3>{{ "trial_period"|trans }}</h3>
+    <p>{{ "trial_period_description"|trans }}</p>
 {% endblock secondary_content %}

@@ -60,6 +60,7 @@ class Organisation extends BaseEntity
      * @ORM\OneToMany(targetEntity="Invoice", mappedBy="organisation")
      */
     private $invoices;
+
     /**
      * Constructor
      */
@@ -242,5 +243,17 @@ class Organisation extends BaseEntity
     public function getInvoices()
     {
         return $this->invoices;
+    }
+
+    /**
+     * @param Person $person
+     * @return Organisation
+     */
+    public static function createFromPerson(Person $person)
+    {
+        $organisation = new Organisation();
+        $organisation->setAddressFieldsFrom($person);
+        $organisation->setCommunicationFieldsFrom($person);
+        return $organisation;
     }
 }

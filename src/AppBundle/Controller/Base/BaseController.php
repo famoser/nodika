@@ -8,6 +8,8 @@
 
 namespace AppBundle\Controller\Base;
 
+use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BaseController extends Controller
@@ -26,5 +28,22 @@ class BaseController extends Controller
     protected function displayFormValidationError()
     {
         $this->displayError($this->get("translator")->trans("error.form_validation_failed", [], "common"));
+    }
+
+    /**
+     * @return Person
+     */
+    protected function getPerson()
+    {
+        $user = $this->getUser();
+        return $user->getPerson();
+    }
+
+    /**
+     * @return FrontendUser
+     */
+    protected function getUser()
+    {
+        return parent::getUser();
     }
 }
