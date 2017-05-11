@@ -3,6 +3,12 @@
 {% block title %}{{ "members"|trans }}{% endblock %}
 {% block description %}{{ "members_action"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
+{% set buttons = {
+button1:    { label: "member_add", link: "About Us" },
+button2:    { title: "How It’s Made", desc: "Services" },
+button3:    { title: "What’s On Tap", desc: "Our Work" },
+button4:    { title: "Brew News", desc: "The Latest" }
+} %}
 
 {% trans_default_domain "organisation" %}
 
@@ -49,7 +55,6 @@
         {% endfor %}
         </tbody>
     </table>
-
 {% endblock primary_content %}
 
 {% block secondary_content %}

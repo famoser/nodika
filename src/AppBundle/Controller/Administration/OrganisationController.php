@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrganisationController extends BaseController
 {
     /**
-     * @Route("/new", name="organisation_new")
+     * @Route("/new", name="administration_organisation_new")
      * @param Request $request
      * @return RedirectResponse|Response
      */
@@ -49,7 +49,7 @@ class OrganisationController extends BaseController
                 $em->persist($organisation);
                 $em->flush();
 
-                return $this->redirectToRoute("organisation_setup", ["organisation" => $organisation->getId()]);
+                return $this->redirectToRoute("administration_organisation_setup", ["organisation" => $organisation->getId()]);
             } else {
                 $this->displayFormValidationError();
             }
@@ -57,12 +57,12 @@ class OrganisationController extends BaseController
 
         $arr["new_organisation_form"] = $newOrganisationForm->createView();
         return $this->render(
-            'organisation/new.html.twig', $arr
+            'administration/organisation/new.html.twig', $arr
         );
     }
 
     /**
-     * @Route("/{organisation}/setup", name="organisation_setup")
+     * @Route("/{organisation}/setup", name="administration_organisation_setup")
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
@@ -73,12 +73,12 @@ class OrganisationController extends BaseController
 
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         return $this->render(
-            'organisation/setup.html.twig', ["organisation" => $organisation, "setupStatus" => $setupStatus]
+            'administration/organisation/setup.html.twig', ["organisation" => $organisation, "setupStatus" => $setupStatus]
         );
     }
 
     /**
-     * @Route("/{organisation}/members", name="organisation_members")
+     * @Route("/{organisation}/members", name="administration_organisation_members")
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
@@ -90,13 +90,13 @@ class OrganisationController extends BaseController
         $members = $organisation->getMembers();
         $leaders = $organisation->getLeaders();
         return $this->render(
-            'organisation/members.html.twig',
+            'administration/organisation/members.html.twig',
             ["organisation" => $organisation, "members" => $members, "leaders" => $leaders]
         );
     }
 
     /**
-     * @Route("/{organisation}/events", name="organisation_events")
+     * @Route("/{organisation}/events", name="administration_organisation_events")
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
@@ -107,7 +107,7 @@ class OrganisationController extends BaseController
 
         $events = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEvents($organisation, new \DateTime(), ">");
         return $this->render(
-            'organisation/events.html.twig',
+            'administration/organisation/events.html.twig',
             ["organisation" => $organisation, "events" => $events]
         );
     }

@@ -256,7 +256,7 @@ class AccessController extends BaseController
         if ($result instanceof Response) {
             return $result;
         } else if ($result === true) {
-            return $this->redirectToRoute("organisation_new");
+            return $this->redirectToRoute("administration_organisation_new");
         } else {
             $arr["register_confirm_form"] = $result->createView();
             return $this->render(

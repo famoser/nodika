@@ -19,13 +19,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/person")
+ * @Route("/organisation/{organisation}/person")
  * @Security("has_role('ROLE_USER')")
  */
 class PersonController extends BaseController
 {
     /**
-     * @Route("/{person}/view", name="admin_person_view")
+     * @Route("/{person}/view", name="administration_organisation_person_view")
      * @param Request $request
      * @return RedirectResponse|Response
      */
