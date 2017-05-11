@@ -10,7 +10,6 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Newsletter;
-use AppBundle\Enum\NewsletterChoice;
 use AppBundle\Form\Newsletter\RegisterForPreviewType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +35,6 @@ class StaticController extends Controller
             if ($newsletterForm->isValid()) {
                 $this->getDoctrine()->getManager()->persist($newsLetter);
                 $this->getDoctrine()->getManager()->flush();
-
 
                 $message = \Swift_Message::newInstance()
                     ->setSubject("Nachricht auf nodika")
