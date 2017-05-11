@@ -3,12 +3,6 @@
 {% block title %}{{ "members"|trans }}{% endblock %}
 {% block description %}{{ "members_action"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
-{% set buttons = {
-button1:    { label: "member_add", link: "About Us" },
-button2:    { title: "How It’s Made", desc: "Services" },
-button3:    { title: "What’s On Tap", desc: "Our Work" },
-button4:    { title: "Brew News", desc: "The Latest" }
-} %}
 
 {% trans_default_domain "organisation" %}
 
@@ -59,9 +53,17 @@ button4:    { title: "Brew News", desc: "The Latest" }
 
 {% block secondary_content %}
     <h3>{{ "members"|trans }}</h3>
-    <p>{{ "members_description"|trans }}</p>
+    <p>
+        {{ "members_description"|trans }}
+        <br/>
+        <a href="{{ path("administration_organisation_new", {"organisation" : organisation.id}) }}">{{ "add_member"|trans }}</a>
+    </p>
     <h3>{{ "members_no_person"|trans }}</h3>
     <p>{{ "members_no_person_description"|trans }}</p>
-    <h3>{{ "add_members"|trans }}</h3>
-    <p>{{ "add_members_description"|trans }}</p>
+    <h3>{{ "import_members"|trans }}</h3>
+    <p>
+        {{ "import_members_description"|trans }}
+        <br/>
+        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "import_members"|trans }}</a>
+    </p>
 {% endblock secondary_content %}

@@ -22,18 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 class MemberController extends BaseController
 {
     /**
-     * @Route("/add", name="administration_organisation_member_add")
-     * @param Request $request
-     * @return Response
-     */
-    public function addAction(Request $request)
-    {
-        return $this->render(
-            ':administration/organisation/member/add.html.twig', []
-        );
-    }
-
-    /**
      * @Route("/new", name="administration_organisation_member_new")
      * @param Request $request
      * @return Response

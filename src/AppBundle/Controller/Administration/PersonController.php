@@ -31,31 +31,8 @@ class PersonController extends BaseController
      */
     public function viewAction(Request $request)
     {
-        $newOrganisationForm = $this->createForm(NewOrganisationType::class);
-        $arr = [];
-
-        $organisation = Organisation::createFromPerson($this->getPerson());
-        $newOrganisationForm->setData($organisation);
-        $newOrganisationForm->handleRequest($request);
-
-        if ($newOrganisationForm->isSubmitted()) {
-            if ($newOrganisationForm->isValid()) {
-                $organisation->setActiveEnd(new \DateTime("today + 31 days"));
-                $organisation->setIsActive(true);
-                $organisation->addLeader($this->getPerson());
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($organisation);
-                $em->flush();
-
-                return $this->redirectToRoute("organisation_setup", ["organisation" => $organisation->getId()]);
-            } else {
-                $this->displayFormValidationError();
-            }
-        }
-
-        $arr["new_organisation_form"] = $newOrganisationForm->createView();
         return $this->render(
-            'organisation/new.html.twig', $arr
+            'administration/organisation/person/view.html.twig', []
         );
     }
 }
