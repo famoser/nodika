@@ -14,6 +14,7 @@ use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -121,30 +122,6 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Set webpage
-     *
-     * @param string $webpage
-     *
-     * @return Organisation
-     */
-    public function setWebpage($webpage)
-    {
-        $this->webpage = $webpage;
-
-        return $this;
-    }
-
-    /**
-     * Get webpage
-     *
-     * @return string
-     */
-    public function getWebpage()
-    {
-        return $this->webpage;
-    }
-
-    /**
      * Add leader
      *
      * @param \AppBundle\Entity\Person $leader
@@ -171,7 +148,7 @@ class Organisation extends BaseEntity
     /**
      * Get leaders
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|Person[]
      */
     public function getLeaders()
     {
@@ -205,7 +182,7 @@ class Organisation extends BaseEntity
     /**
      * Get members
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|Member[]
      */
     public function getMembers()
     {
@@ -239,7 +216,7 @@ class Organisation extends BaseEntity
     /**
      * Get invoices
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection|Invoice
      */
     public function getInvoices()
     {

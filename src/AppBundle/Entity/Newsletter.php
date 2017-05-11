@@ -84,28 +84,4 @@ class Newsletter
     {
         return $this->message;
     }
-
-    /**
-     * Set webpage
-     *
-     * @param string $webpage
-     *
-     * @return Newsletter
-     */
-    public function setWebpage($webpage)
-    {
-        $this->webpage = $webpage;
-
-        return $this;
-    }
-
-    /**
-     * Get webpage
-     *
-     * @return string
-     */
-    public function getWebpage()
-    {
-        return $this->webpage;
-    }
 }

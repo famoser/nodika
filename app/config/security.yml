@@ -1,6 +1,9 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/security.html
 security:
+    access_decision_manager:
+        strategy: unanimous
+
     encoders:
         AppBundle\Entity\FrontendUser: bcrypt
 

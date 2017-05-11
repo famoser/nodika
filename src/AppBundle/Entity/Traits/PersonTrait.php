@@ -139,4 +139,16 @@ trait PersonTrait
         $this->setGivenName($source->getGivenName());
         $this->setFamilyName($source->getFamilyName());
     }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        $res = $this->getJobTitle();
+        if ($this->getJobTitle() != "") {
+            $res .= " ";
+        }
+        return $res . $this->getGivenName() . " " . $this->getFamilyName();
+    }
 }

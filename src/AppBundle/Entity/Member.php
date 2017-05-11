@@ -27,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Member extends BaseEntity
 {
     use IdTrait;
-    use PersonTrait;
+    use ThingTrait;
     use AddressTrait;
     use CommunicationTrait;
 
@@ -58,30 +58,6 @@ class Member extends BaseEntity
     {
         $this->persons = new \Doctrine\Common\Collections\ArrayCollection();
         $this->events = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Set webpage
-     *
-     * @param string $webpage
-     *
-     * @return Member
-     */
-    public function setWebpage($webpage)
-    {
-        $this->webpage = $webpage;
-
-        return $this;
-    }
-
-    /**
-     * Get webpage
-     *
-     * @return string
-     */
-    public function getWebpage()
-    {
-        return $this->webpage;
     }
 
     /**

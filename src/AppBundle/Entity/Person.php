@@ -61,6 +61,7 @@ class Person extends BaseEntity
      * @ORM\OneToMany(targetEntity="Event", mappedBy="person")
      */
     private $events;
+
     /**
      * Constructor
      */
@@ -70,30 +71,6 @@ class Person extends BaseEntity
         $this->members = new ArrayCollection();
         $this->frontendUsers = new ArrayCollection();
         $this->events = new ArrayCollection();
-    }
-
-    /**
-     * Set webpage
-     *
-     * @param string $webpage
-     *
-     * @return Person
-     */
-    public function setWebpage($webpage)
-    {
-        $this->webpage = $webpage;
-
-        return $this;
-    }
-
-    /**
-     * Get webpage
-     *
-     * @return string
-     */
-    public function getWebpage()
-    {
-        return $this->webpage;
     }
 
     /**

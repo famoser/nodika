@@ -35,6 +35,22 @@ trait CommunicationTrait
     /**
      * @return mixed
      */
+    public function getWebpage()
+    {
+        return $this->webpage;
+    }
+
+    /**
+     * @param mixed $webpage
+     */
+    public function setWebpage($webpage)
+    {
+        $this->webpage = $webpage;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getPhone()
     {
         return $this->phone;
@@ -80,6 +96,8 @@ trait CommunicationTrait
             $res[] = $this->getPhone();
         if ($this->getEmail() != "")
             $res[] = $this->getEmail();
+        if ($this->getWebpage() != "")
+            $res[] = $this->getWebpage();
         return $res;
     }
 

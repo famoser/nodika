@@ -12,6 +12,8 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Organisation;
 use AppBundle\Form\Organisation\NewOrganisationType;
+use AppBundle\Security\Voter\Base\CrudVoter;
+use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +44,7 @@ class OrganisationController extends BaseController
             if ($newOrganisationForm->isValid()) {
                 $organisation->setActiveEnd(new \DateTime("today + 31 days"));
                 $organisation->setIsActive(true);
+                $organisation->addLeader($this->getPerson());
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($organisation);
                 $em->flush();
@@ -59,13 +62,15 @@ class OrganisationController extends BaseController
     }
 
     /**
-     * @Route("/setup/{organisation}", name="organisation_setup")
+     * @Route("/{organisation}/setup", name="organisation_setup")
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
     public function setupAction(Request $request, Organisation $organisation)
     {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         return $this->render(
             'organisation/setup.html.twig', ["organisation" => $organisation, "setupStatus" => $setupStatus]
@@ -73,13 +78,32 @@ class OrganisationController extends BaseController
     }
 
     /**
-     * @Route("/events/{organisation}", name="organisation_events")
+     * @Route("/{organisation}/members", name="organisation_members")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function membersAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $members = $organisation->getMembers();
+        return $this->render(
+            'organisation/members.html.twig',
+            ["organisation" => $organisation, "members" => $members]
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/events", name="organisation_events")
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
     public function eventsAction(Request $request, Organisation $organisation)
     {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
         $events = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEvents($organisation, new \DateTime(), ">");
         return $this->render(
             'organisation/events.html.twig',

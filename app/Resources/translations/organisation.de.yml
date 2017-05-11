@@ -13,6 +13,7 @@ organisation_address_description: Die Adresse der Organisation ist die Rechnungs
 organisation_contact: Kontaktinformationen Ihrer Organisation
 organisation_contact_description: Die Kontaktinformationen der Organisation werden dazu benützt, Ihnen wichtige Nachrichten über die Mitglieder der Organisation zuzustellen
 
+#setup
 setup: Organisation einrichten
 setup_action: Richten Sie Ihre Organisation ein
 setup_step_1: Schritt 1
@@ -29,3 +30,13 @@ setup_invite_members: Mitglieder einladen
 setup_invite_members_description: Senden Sie eine E-Mail an Ihre Mitglieder damit sie sich hier online einloggen können
 setup_step_done: (erledigt)
 setup_step_voluntary: (freiwillig)
+
+#members
+members: Mitglieder
+members_action: Verwalten Sie hier die Mitglieder Ihrer Organisation
+members_description: Ein Mitglied Ihrer Organisation wird Terminen zugeteilt. Jedes Mitglied kann beliebig viele Zugänge (Accounts) für verschiedene Personen auf der Webseite einrichten.
+members_no_person: Ein Mitglied ist keine Person
+members_no_person_description: Ein Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
+add_members: Mitglieder hinzufügen
+add_members_description: Sie können Mitglieder aus einer Excel .csv (Excel) Datei importieren oder direkt online hinzufügen
+member_persons: Zugänge
