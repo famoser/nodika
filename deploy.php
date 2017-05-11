@@ -21,21 +21,25 @@ set(
 );
 
 /**
- * Warm up cache
+ * Execute migrations
  */
-task('deploy:example_data', function () {
+task('deploy:doctrine:migrations', function () {
+    $commands = [
+        "doctrine:migrations:migrate -q"
+    ];
+    foreach ($commands as $command) {
+        run('{{bin/php}} {{release_path}}/' . trim(get('bin_dir'), '/') . '/console ' . $command);
+    }
+})->desc('Migrating data');
+
+/**
+ * Rebuild test data in dev
+ */
+task('deploy:doctrine:fixtures', function () {
     if (env('branch') == "develop") {
         run('rm {{release_path}}/app/data/data.db3');
         $commands = [
-            "doctrine:migrations:migrate -q",
             "doctrine:fixtures:load -q"
-        ];
-        foreach ($commands as $command) {
-            run('{{bin/php}} {{release_path}}/' . trim(get('bin_dir'), '/') . '/console ' . $command);
-        }
-    } else {
-        $commands = [
-            "doctrine:migrations:migrate -q"
         ];
         foreach ($commands as $command) {
             run('{{bin/php}} {{release_path}}/' . trim(get('bin_dir'), '/') . '/console ' . $command);
@@ -57,7 +61,8 @@ task('deploy', [
     'deploy:assetic:dump',
     'deploy:cache:warmup',
     'deploy:writable',
-    'deploy:example_data',
+    'deploy:doctrine:migrations',
+    'deploy:doctrine:fixtures',
     'deploy:symlink',
     'cleanup',
 ])->desc('Deploy your project');
