@@ -32,7 +32,7 @@ class RegisterType extends AbstractType
         $builder->add(
             PersonTrait::getPersonBuilder(
                 $builder->create('person', FormType::class, $inheritArray + $transArray),
-                ["translation_domain" => "person"]
+                ["translation_domain" => "person_trait"]
             )
         );
 
@@ -40,7 +40,7 @@ class RegisterType extends AbstractType
         $builder->add(
             AddressTrait::getAddressBuilder(
                 $builder->create('address', FormType::class, $inheritArray + $transArray),
-                ["translation_domain" => "address"]
+                ["translation_domain" => "address_trait"]
             )
         );
 
@@ -48,7 +48,7 @@ class RegisterType extends AbstractType
         $builder->add(
             CommunicationTrait::getCommunicationBuilder(
                 $builder->create('communication', FormType::class, $inheritArray +$transArray),
-                ["translation_domain" => "communication"]
+                ["translation_domain" => "communication_trait"]
             )
         );
 

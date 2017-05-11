@@ -30,7 +30,7 @@ class NewOrganisationType extends AbstractType
         $builder->add(
             ThingTrait::getThingBuilder(
                 $builder->create('thing', FormType::class, $inheritArray + $transArray),
-                ["translation_domain" => "thing"]
+                ["translation_domain" => "thing_trait"]
             )
         );
 
@@ -38,7 +38,7 @@ class NewOrganisationType extends AbstractType
         $builder->add(
             AddressTrait::getAddressBuilder(
                 $builder->create('address', FormType::class, $inheritArray + $transArray),
-                ["translation_domain" => "address"]
+                ["translation_domain" => "address_trait"]
             )
         );
 
@@ -46,7 +46,7 @@ class NewOrganisationType extends AbstractType
         $builder->add(
             CommunicationTrait::getCommunicationBuilder(
                 $builder->create('communication', FormType::class, $inheritArray +$transArray),
-                ["translation_domain" => "communication"]
+                ["translation_domain" => "communication_trait"]
             )
         );
 

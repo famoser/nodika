@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Newsletter;
+use AppBundle\Enum\NewsletterChoice;
 use AppBundle\Form\Newsletter\RegisterForPreviewType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +43,7 @@ class StaticController extends Controller
                     ->setFrom($this->getParameter("mailer_email"))
                     ->setTo($this->getParameter("contact_email"))
                     ->setBody("Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
+                        "\nListe: " . $newsLetter->getChoice() .
                         "\nEmail: " . $newsLetter->getEmail() .
                         "\nVorname: " . $newsLetter->getGivenName() .
                         "\nNachname: " . $newsLetter->getFamilyName() .
