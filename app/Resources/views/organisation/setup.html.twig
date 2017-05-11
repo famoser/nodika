@@ -9,12 +9,16 @@
 {% block primary_content %}
     <h2>{{ "setup_step_1"|trans }} {% if setupStatus.stepOneDone %}{{ "setup_step_done"|trans }}{% endif %}</h2>
     <p>
-        <a href="{{ path("organisation_events", {"organisation" : organisation.id}) }}">
+        <a href="{{ path("organisation_members", {"organisation" : organisation.id}) }}">
             {{ "setup_add_members"|trans }}
         </a>
     </p>
     <h2>{{ "setup_step_2"|trans }}{% if setupStatus.stepTwoDone %}{{ "setup_step_done"|trans }}{% endif %}</h2>
-    <p>{{ "setup_add_events"|trans }}</p>
+    <p>
+        <a href="{{ path("organisation_events", {"organisation" : organisation.id}) }}">
+            {{ "setup_add_events"|trans }}
+        </a>
+    </p>
     <h2>{{ "setup_step_3"|trans }}
         {% if setupStatus.stepThreeDone %}{{ "setup_step_done"|trans }}{% else %}{{ "setup_step_voluntary"|trans }}{% endif %}
     </h2>

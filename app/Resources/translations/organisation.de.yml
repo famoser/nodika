@@ -38,5 +38,7 @@ members_description: Ein Mitglied Ihrer Organisation wird Terminen zugeteilt. Je
 members_no_person: Ein Mitglied ist keine Person
 members_no_person_description: Ein Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
 add_members: Mitglieder hinzufügen
-add_members_description: Sie können Mitglieder aus einer Excel .csv (Excel) Datei importieren oder direkt online hinzufügen
+add_members_description: Sie können Mitglieder aus einer .csv (Excel) Datei importieren oder direkt online hinzufügen
 member_persons: Zugänge
+no_members_yet: Noch keine Mitglieder erfasst
+leaders: Administratoren

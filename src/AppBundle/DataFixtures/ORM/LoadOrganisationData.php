@@ -3,32 +3,31 @@
  * Created by PhpStorm.
  * User: famoser
  * Date: 11/05/2017
- * Time: 10:09
+ * Time: 14:01
  */
 
 namespace AppBundle\DataFixtures\ORM\Production;
 
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
-use AppBundle\Entity\FrontendUser;
-use AppBundle\Entity\Person;
-use AppBundle\Entity\Traits\PersonTrait;
+use AppBundle\Entity\Organisation;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadPersonData extends BaseFixture
+class LoadOrganisationData extends BaseFixture
 {
+
     /**
      * create an instance with all random values
      *
-     * @return Person
+     * @return Organisation
      */
     protected function getAllRandomInstance()
     {
-        $person = new Person();
-        $this->fillRandomAddress($person);
-        $this->fillRandomCommunication($person);
-        $this->fillRandomPerson($person);
-        return $person;
+        $organisation = new Organisation();
+        $this->fillRandomCommunication($organisation);
+        $this->fillRandomAddress($organisation);
+        $this->fillRandomThing($organisation);
+        return $organisation;
     }
 
     /**
@@ -38,15 +37,10 @@ class LoadPersonData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        $person = $this->getAllRandomInstance();
-        /* @var FrontendUser $user */
-        $user = $this->getReference("user-1");
-        $user->setPerson($person);
-        $manager->persist($user);
-        $manager->persist($person);
+        $organisation = $this->getAllRandomInstance();
+        $organisation->addLeader($this->getReference("person-1"));
+        $manager->persist($organisation);
         $manager->flush();
-
-        $this->setReference("person-1", $person);
     }
 
     /**
@@ -56,6 +50,6 @@ class LoadPersonData extends BaseFixture
      */
     public function getOrder()
     {
-        return 11;
+        return 12;
     }
 }

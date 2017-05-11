@@ -28,7 +28,7 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
             ->join("e.member", "m")
             ->join("m.organisation", "o")
             ->where("e.startDateTime $comparator :startDateTime")
-            ->where("o = :organisation")
+            ->andWhere("o = :organisation")
             ->setParameter('startDateTime', $dateTime)
             ->setParameter('organisation', $organisation)
             ->getQuery()

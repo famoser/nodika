@@ -1,3 +1,6 @@
 Job title: Titel (freiwillig)
 Given name: Vorname
 Family name: Nachname
+
+#methods
+fullName: Name

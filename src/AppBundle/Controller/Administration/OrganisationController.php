@@ -6,7 +6,7 @@
  * Time: 14:50
  */
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Administration;
 
 
 use AppBundle\Controller\Base\BaseController;
@@ -88,9 +88,10 @@ class OrganisationController extends BaseController
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
         $members = $organisation->getMembers();
+        $leaders = $organisation->getLeaders();
         return $this->render(
             'organisation/members.html.twig',
-            ["organisation" => $organisation, "members" => $members]
+            ["organisation" => $organisation, "members" => $members, "leaders" => $leaders]
         );
     }
 

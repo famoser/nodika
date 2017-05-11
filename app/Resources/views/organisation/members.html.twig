@@ -7,8 +7,9 @@
 {% trans_default_domain "organisation" %}
 
 {% block primary_content %}
+    <h2>{{ "members"|trans }}</h2>
     {% if members|length == 0 %}
-<p></p>
+        <p>{{ "no_members_yet"|trans }}</p>
     {% else %}
         <table class="table table-hover">
             <thead>
@@ -30,6 +31,24 @@
             </tbody>
         </table>
     {% endif %}
+    <h2>{{ "leaders"|trans }}</h2>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <td>{{ "fullName"|trans({}, "person") }}</td>
+            <td></td>
+        </tr>
+
+        </thead>
+        <tbody>
+        {% for person in leaders %}
+            <tr>
+                <td>{{ person.fullName }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock primary_content %}
 
