@@ -39,9 +39,13 @@ class StaticController extends Controller
 
                 $message = \Swift_Message::newInstance()
                     ->setSubject("Nachricht auf nodika")
-                    ->setFrom($this->getParameter("mai1ler_email"))
+                    ->setFrom($this->getParameter("mailer_email"))
                     ->setTo($this->getParameter("contact_email"))
-                    ->setBody("Sie haben eine Kontaktanfrage auf nodika erhalten: \n\n" . json_encode($newsLetter->getCommunicationLines(), JSON_PRETTY_PRINT));
+                    ->setBody("Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
+                        "\nEmail: " . $newsLetter->getEmail() .
+                        "\nVorname: " . $newsLetter->getGivenName() .
+                        "\nNachname: " . $newsLetter->getFamilyName() .
+                        "\nNachricht: " . $newsLetter->getMessage());
                 $this->get('mailer')->send($message);
 
                 $arr["message"] = "Vielen Dank! Ich melde mich zurück.";

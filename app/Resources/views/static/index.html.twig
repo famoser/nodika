@@ -188,6 +188,9 @@
                     {{ form_start(newsletter_form) }}
                     {{ form_errors(newsletter_form) }}
                     {{ form_end(newsletter_form) }}
+                    {% if message != "" %}
+                        <p>{{ message }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
