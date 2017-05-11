@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Base\AddressTrait;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\UserTrait;
