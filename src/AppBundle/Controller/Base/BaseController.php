@@ -23,6 +23,14 @@ class BaseController extends Controller
     }
 
     /**
+     * @param string $message the translation message to display
+     */
+    protected function displaySuccess($message)
+    {
+        $this->get('session')->getFlashBag()->set('info', $message);
+    }
+
+    /**
      * displays the default form error
      */
     protected function displayFormValidationError()

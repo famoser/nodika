@@ -10,6 +10,9 @@ namespace AppBundle\Controller\Administration;
 
 
 use AppBundle\Controller\Base\BaseController;
+use AppBundle\Entity\Member;
+use AppBundle\Entity\Organisation;
+use AppBundle\Form\Member\NewMemberType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,10 +29,32 @@ class MemberController extends BaseController
      * @param Request $request
      * @return Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, Organisation $organisation)
     {
+        $newMemberForm = $this->createForm(NewMemberType::class);
+        $arr = [];
+
+        $organisation = new Member();
+        $newMemberForm->setData($organisation);
+        $newMemberForm->handleRequest($request);
+
+        if ($newMemberForm->isSubmitted()) {
+            if ($newMemberForm->isValid()) {
+                $organisation->setOrganisation($organisation);
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($organisation);
+                $em->flush();
+
+                //todo: empty form
+                $this->displaySuccess($this->get("translator")->trans("info.member_add_successful", [], "member"));
+            } else {
+                $this->displayFormValidationError();
+            }
+        }
+
+        $arr["new_organisation_form"] = $newMemberForm->createView();
         return $this->render(
-            ':administration/organisation/member/add.html.twig', []
+            'administration/organisation/member/new.html.twig', $arr
         );
     }
 
@@ -41,7 +66,7 @@ class MemberController extends BaseController
     public function importAction(Request $request)
     {
         return $this->render(
-            ':administration/organisation/member/add.html.twig', []
+            ':administration/organisation/member/import.html.twig', []
         );
     }
 }

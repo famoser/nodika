@@ -1,0 +1,23 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "new"|trans }}{% endblock %}
+{% block description %}{{ "new_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "member" %}
+
+{% block primary_content %}
+    {{ form_start(new_member_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
+    {{ form_errors(new_member_form) }}
+    {{ form_end(new_member_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <h3>{{ "new"|trans }}</h3>
+    <p>{{ "new_description"|trans }}</p>
+    <h3>{{ "organisation_address"|trans }}</h3>
+    <p>{{ "organisation_address_description"|trans }}</p>
+    <h3>{{ "organisation_contact"|trans }}</h3>
+    <p>{{ "organisation_contact_description"|trans }}</p>
+
+{% endblock secondary_content %}

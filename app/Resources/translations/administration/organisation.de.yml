@@ -1,5 +1,10 @@
-#new form
+#general
 Thing: Organisation
+organisation: Organisation
+organisations: Organisationen
+organisations_description: Eine Organisation ist eine Einheit, die zusammen den Notfalldienst in einer bestimmten Region organisiert
+
+#new form
 Address: Adresse
 Communication: Kontaktinformationen
 Create: erstellen
@@ -32,11 +37,7 @@ setup_step_done: (erledigt)
 setup_step_voluntary: (freiwillig)
 
 #members
-members: Mitglieder
 members_action: Verwalten Sie hier die Mitglieder Ihrer Organisation
-members_description: Ein Mitglied Ihrer Organisation wird Terminen zugeteilt. Jedes Mitglied kann beliebig viele Zugänge (Accounts) für verschiedene Personen auf der Webseite einrichten.
-members_no_person: Ein Mitglied ist keine Person
-members_no_person_description: Ein Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
 import_members: Mitglieder importieren
 import_members_description: Sie können Mitglieder aus einer .csv (Excel) Datei importieren
 member_persons: Zugänge
