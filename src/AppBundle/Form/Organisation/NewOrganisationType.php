@@ -26,6 +26,7 @@ class NewOrganisationType extends AbstractType
     {
         $transArray = ["translation_domain" => "organisation"];
         $inheritArray = ['inherit_data' => true];
+        $requiredFalse = ['required' => false];
         //add person fields
         $builder->add(
             ThingTrait::getThingBuilder(

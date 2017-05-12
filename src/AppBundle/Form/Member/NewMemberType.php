@@ -25,6 +25,8 @@ class NewMemberType extends AbstractType
     {
         $transArray = ["translation_domain" => "member"];
         $inheritArray = ['inherit_data' => true];
+        $requiredFalse = ["required" => false];
+        
         //add person fields
         $builder->add(
             ThingTrait::getThingBuilder(
@@ -36,7 +38,7 @@ class NewMemberType extends AbstractType
         //add address fields
         $builder->add(
             AddressTrait::getAddressBuilder(
-                $builder->create('address', FormType::class, $inheritArray + $transArray),
+                $builder->create('address', FormType::class, $inheritArray + $transArray + $requiredFalse),
                 ["translation_domain" => "address_trait"]
             )
         );
@@ -44,7 +46,7 @@ class NewMemberType extends AbstractType
         //add communication fields
         $builder->add(
             CommunicationTrait::getCommunicationBuilder(
-                $builder->create('communication', FormType::class, $inheritArray +$transArray),
+                $builder->create('communication', FormType::class, $inheritArray + $transArray),
                 ["translation_domain" => "communication_trait"]
             )
         );

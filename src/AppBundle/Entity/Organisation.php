@@ -64,6 +64,13 @@ class Organisation extends BaseEntity
     private $invoices;
 
     /**
+     * @var EventLine[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EventLine", mappedBy="organisation")
+     */
+    private $eventLines;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -71,6 +78,7 @@ class Organisation extends BaseEntity
         $this->leaders = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->eventLines = new ArrayCollection();
     }
 
     /**
@@ -216,11 +224,45 @@ class Organisation extends BaseEntity
     /**
      * Get invoices
      *
-     * @return Collection|Invoice
+     * @return Collection|Invoice[]
      */
     public function getInvoices()
     {
         return $this->invoices;
+    }
+
+    /**
+     * Add event line
+     *
+     * @param EventLine $eventLine
+     *
+     * @return Organisation
+     */
+    public function addEventLine(EventLine $eventLine)
+    {
+        $this->eventLines[] = $eventLine;
+
+        return $this;
+    }
+
+    /**
+     * Remove event line
+     *
+     * @param EventLine $eventLine
+     */
+    public function removeEventLine(EventLine $eventLine)
+    {
+        $this->eventLines->removeElement($eventLine);
+    }
+
+    /**
+     * Get event lines
+     *
+     * @return Collection|EventLine[]
+     */
+    public function getEventLines()
+    {
+        return $this->eventLines;
     }
 
     /**

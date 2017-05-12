@@ -34,20 +34,19 @@ class MemberController extends BaseController
         $newMemberForm = $this->createForm(NewMemberType::class);
         $arr = [];
 
-        $organisation = new Member();
-        $newMemberForm->setData($organisation);
+        $member = new Member();
+        $newMemberForm->setData($member);
         $newMemberForm->handleRequest($request);
 
         if ($newMemberForm->isSubmitted()) {
             if ($newMemberForm->isValid()) {
-                $organisation->setOrganisation($organisation);
+                $member->setOrganisation($organisation);
                 $em = $this->getDoctrine()->getManager();
-                $em->persist($organisation);
+                $em->persist($member);
                 $em->flush();
 
-                //TODO: empty form
                 $this->displaySuccess($this->get("translator")->trans("info.member_add_successful", [], "member"));
-                $newMemberForm->setData(new Member());
+                $newMemberForm = $this->createForm(NewMemberType::class);
             } else {
                 $this->displayFormValidationError();
             }
