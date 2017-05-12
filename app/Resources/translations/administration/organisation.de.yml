@@ -37,7 +37,8 @@ setup_step_done: (erledigt)
 setup_step_voluntary: (freiwillig)
 
 #members
-members_action: Verwalten Sie hier die Mitglieder Ihrer Organisation
+member_administration: Mitgliederverwaltung
+member_administration_action: Verwalten Sie hier die Mitglieder Ihrer Organisation
 import_members: Mitglieder importieren
 import_members_description: Sie können Mitglieder aus einer .csv (Excel) Datei importieren
 member_persons: Zugänge

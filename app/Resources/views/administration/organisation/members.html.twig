@@ -1,21 +1,21 @@
 {% extends "divided_content_base.html.twig" %}
 
-{% block title %}{{ "members"|trans }}{% endblock %}
-{% block description %}{{ "members_action"|trans }}{% endblock %}
+{% block title %}{{ "member_administration"|trans }}{% endblock %}
+{% block description %}{{ "member_administration_action"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
 
 {% trans_default_domain "organisation" %}
 
 {% block primary_content %}
-    <h2>{{ "members"|trans }}</h2>
+    <h2>{{ "members"|trans({}, "member") }}</h2>
     {% if members|length == 0 %}
         <p>{{ "no_members_yet"|trans }}</p>
     {% else %}
         <table class="table table-hover">
             <thead>
             <tr>
-                <td>{{ "Name"|trans({}, "thing") }}</td>
-                <td>{{ "addressLines"|trans({}, "address") }}</td>
+                <td>{{ "Thing"|trans({}, "member") }}</td>
+                <td>{{ "addressLines"|trans({}, "address_trait") }}</td>
                 <td>{{ "member_persons"|trans({}, "organisation") }}</td>
             </tr>
 
@@ -35,7 +35,7 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <td>{{ "fullName"|trans({}, "person") }}</td>
+            <td>{{ "fullName"|trans({}, "person_trait") }}</td>
             <td></td>
         </tr>
 
@@ -52,11 +52,11 @@
 {% endblock primary_content %}
 
 {% block secondary_content %}
-    <h3>{{ "members"|trans }}</h3>
+    <h3>{{ "members"|trans({}, "member") }}</h3>
     <p>
         {{ "members_description"|trans({}, "member") }}
         <br/>
-        <a href="{{ path("administration_organisation_new", {"organisation" : organisation.id}) }}">{{ "add_member"|trans }}</a>
+        <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "add_member"|trans }}</a>
     </p>
     <h3>{{ "members_no_person"|trans({}, "member") }}</h3>
     <p>{{ "members_no_person_description"|trans({}, "member") }}</p>

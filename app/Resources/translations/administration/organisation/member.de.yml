@@ -6,11 +6,21 @@ members_no_person: Ein Mitglied ist keine Person
 members_no_person_description: Ein Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
 Thing: Mitglied
 
-#new
+#new form
 Address: Adresse
 Communication: Kontaktinformationen
 Create: erstellen
 Create and new: erstellen und weiteres Mitglied erfassen
+
+#new description
+new: Neues Mitglied
+new_action: Fügen Sie ein neues Mitglied zu Ihrer Organisation hinzu
+new_description: Erfassen Sie die Daten des neuen Mitglieds
+member_address: Adresse des Mitglieds
+member_address_description: Sie können auch nur den Namen ausfüllen, und Ihre Mitglieder ergänzen dann selber die fehlenden Informationen
+member_contact: Kontaktinformationen Ihres Mitglieds
+member_contact_description: An diese hinterlegte E-Mail werden die E-Mails versandt (z.B. zu Registrierung oder Terminerinnerungen)
+
 
 info:
   member_add_successful: Erfolgreich hinzugefügt

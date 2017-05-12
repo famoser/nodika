@@ -23,7 +23,7 @@ class NewMemberType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transArray = ["translation_domain" => "organisation"];
+        $transArray = ["translation_domain" => "member"];
         $inheritArray = ['inherit_data' => true];
         //add person fields
         $builder->add(

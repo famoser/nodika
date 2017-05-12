@@ -45,14 +45,15 @@ class MemberController extends BaseController
                 $em->persist($organisation);
                 $em->flush();
 
-                //todo: empty form
+                //TODO: empty form
                 $this->displaySuccess($this->get("translator")->trans("info.member_add_successful", [], "member"));
+                $newMemberForm->setData(new Member());
             } else {
                 $this->displayFormValidationError();
             }
         }
 
-        $arr["new_organisation_form"] = $newMemberForm->createView();
+        $arr["new_member_form"] = $newMemberForm->createView();
         return $this->render(
             'administration/organisation/member/new.html.twig', $arr
         );
