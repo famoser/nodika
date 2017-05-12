@@ -10643,25 +10643,6 @@ blockquote.testimonial footer cite {
   margin-left: -32px;
 }
 
-.blue-background, .info-color {
-  background-color: #555F76; }
-
-.brown-background, .warning-color {
-  background-color: #B19E7A; }
-
-.green-background {
-  background-color: #618D61; }
-
-.green2-background {
-  background-color: #496A6A; }
-
-.red-background, .error-color {
-  background-color: #B17A7A;
-  color: #efefef; }
-
-.gray-background, .default-color {
-  background-color: #efefef; }
-
 .footer-container {
   padding: 0; }
 
@@ -10688,6 +10669,11 @@ blockquote.testimonial footer cite {
 .logo-wrapper {
   margin-bottom: 50px; }
 
+@media (max-width: 1030px) {
+  .header-container {
+    padding-left: 20px;
+    padding-right: 20px; } }
+
 section {
   padding: 100px 0; }
 
@@ -10703,6 +10689,14 @@ section {
 
 .index-container *:first-child {
   margin-top: 0; }
+
+@media (max-width: 1030px) {
+  .index-container {
+    padding: 20px; } }
+
+@media (max-width: 760px) {
+  section {
+    padding: 40px 0; } }
 
 .full-width {
   width: 100%; }
@@ -10791,6 +10785,29 @@ p.h1-description, p.h2-description {
   color: #a7a7a7;
   line-height: 1.4em;
   margin-top: 0.5em; }
+
+.blue-background, .info-color {
+  background-color: #555F76;
+  color: #efefef; }
+
+.brown-background, .warning-color {
+  background-color: #B19E7A;
+  color: #efefef; }
+
+.green-background, .success-color {
+  background-color: #618D61;
+  color: #efefef; }
+
+.green2-background {
+  background-color: #496A6A; }
+
+.red-background, .error-color {
+  background-color: #B17A7A;
+  color: #efefef; }
+
+.gray-background, .default-color {
+  background-color: #efefef;
+  color: #555555; }
 
 .color-background {
   position: absolute;

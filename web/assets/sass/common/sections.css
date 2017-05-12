@@ -13,3 +13,11 @@ section {
 
 .index-container *:first-child {
   margin-top: 0; }
+
+@media (max-width: 1030px) {
+  .index-container {
+    padding: 20px; } }
+
+@media (max-width: 760px) {
+  section {
+    padding: 40px 0; } }

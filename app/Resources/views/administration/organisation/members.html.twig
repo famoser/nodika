@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{ member.name }}</td>
                     <td>{{ member.addressLines|join(", ") }}</td>
-                    <td>{{ member.persons }}</td>
+                    <td>{{ member.persons|length }}</td>
                 </tr>
             {% endfor %}
             </tbody>

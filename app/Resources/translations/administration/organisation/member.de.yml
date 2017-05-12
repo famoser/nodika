@@ -21,6 +21,13 @@ member_address_description: Sie können auch nur den Namen ausfüllen, und Ihre 
 member_contact: Kontaktinformationen Ihres Mitglieds
 member_contact_description: An diese hinterlegte E-Mail werden die E-Mails versandt (z.B. zu Registrierung oder Terminerinnerungen)
 
+#import description
+import_members: Mitglieder importieren
+import_members_action: Laden Sie eine .csv (Excel) Datei hoch mit den Mitgliedern
+import_members_description: Laden Sie die Musterdatei herunter, und fügen Sie die Daten Ihrer Mitglieder (ohne die Spaltenreihenfolge zu ändern) ein. Danach kehren Sie hier zurück, und laden die .csv (Excel) Datei hoch
+import_members_template_download: Musterdatei herunterladen
+import_members_required: Zwingend und optionale Felder
+import_members_required_description: Zwingend erfolderlich ist für jedes Mitglied nur der Name und die E-Mail. Weitere Daten können Sie leer lassen, diese können dann direkt vom Mitglied ergänzt werden
 
 info:
   member_add_successful: Erfolgreich hinzugefügt

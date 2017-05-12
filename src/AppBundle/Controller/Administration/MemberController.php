@@ -12,9 +12,11 @@ namespace AppBundle\Controller\Administration;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
+use AppBundle\Form\Member\ImportMembersType;
 use AppBundle\Form\Member\NewMemberType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +29,7 @@ class MemberController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_member_new")
      * @param Request $request
+     * @param Organisation $organisation
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation)
@@ -58,15 +61,52 @@ class MemberController extends BaseController
         );
     }
 
+
+    /**
+     * @Route("/import/download/template", name="administration_organisation_member_import_download_template")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function importDownloadTemplateAction(Request $request, Organisation $organisation)
+    {
+        $memberTrans = $this->get("translator")->trans("member", [], "member");
+        $newMemberForm = $this->createForm(NewMemberType::class);
+        $exchangeService = $this->get("app.exchange_service");
+
+        return $this->renderCsv($memberTrans . ".csv", $exchangeService->getCsvHeader($newMemberForm), []);
+    }
+
+
     /**
      * @Route("/import", name="administration_organisation_member_import")
      * @param Request $request
+     * @param Organisation $organisation
      * @return Response
      */
-    public function importAction(Request $request)
+    public function importAction(Request $request, Organisation $organisation)
     {
+        $importMembersForm = $this->createForm(ImportMembersType::class);
+
+        $importMembersForm->handleRequest($request);
+
+        if ($importMembersForm->isSubmitted()) {
+            if ($importMembersForm->isValid()) {
+                $newMemberForm = $this->createForm(NewMemberType::class);
+                $exchangeService = $this->get("app.exchange_service");
+                if ($exchangeService->importCsv($newMemberForm, $importMembersForm)) {
+                    $importMembersForm = $this->createForm(ImportMembersType::class);
+                }
+            } else {
+                $this->displayFormValidationError();
+            }
+        }
+
+        $arr = [];
+        $arr["import_members_form"] = $importMembersForm->createView();
+
         return $this->render(
-            ':administration/organisation/member/import.html.twig', []
+            'administration/organisation/member/import.html.twig', $arr + ["organisation" => $organisation]
         );
     }
 }

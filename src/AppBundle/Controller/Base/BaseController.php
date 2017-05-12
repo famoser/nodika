@@ -11,6 +11,7 @@ namespace AppBundle\Controller\Base;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BaseController extends Controller
 {
@@ -27,7 +28,7 @@ class BaseController extends Controller
      */
     protected function displaySuccess($message)
     {
-        $this->get('session')->getFlashBag()->set('info', $message);
+        $this->get('session')->getFlashBag()->set('success', $message);
     }
 
     /**
@@ -53,5 +54,38 @@ class BaseController extends Controller
     protected function getUser()
     {
         return parent::getUser();
+    }
+
+    /**
+     * @param array $header
+     * @param array $data
+     * @return StreamedResponse
+     */
+    protected function renderCsv($filename, $header, $data)
+    {
+        $response = new StreamedResponse();
+        $response->setCallback(function () use ($header, $data) {
+            $handle = fopen('php://output', 'w+');
+
+            // Add the header of the CSV file
+            fputcsv($handle, $header, ';');
+
+            //add the data
+            foreach ($data as $row) {
+                fputcsv(
+                    $handle, // The file pointer
+                    $row, // The fields
+                    ';' // The delimiter
+                );
+            }
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+
+        return $response;
     }
 }

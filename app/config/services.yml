@@ -15,3 +15,7 @@ services:
         tags:
             - { name: security.voter }
         public: false
+
+    app.exchange_service:
+        class:  AppBundle\Service\ExchangeService
+        arguments: ["@translator"]

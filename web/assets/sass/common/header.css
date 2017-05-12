@@ -10,3 +10,8 @@
 
 .logo-wrapper {
   margin-bottom: 50px; }
+
+@media (max-width: 1030px) {
+  .header-container {
+    padding-left: 20px;
+    padding-right: 20px; } }

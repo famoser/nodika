@@ -1,11 +1,14 @@
 .blue-background, .info-color {
-  background-color: #555F76; }
+  background-color: #555F76;
+  color: #efefef; }
 
 .brown-background, .warning-color {
-  background-color: #B19E7A; }
+  background-color: #B19E7A;
+  color: #efefef; }
 
-.green-background {
-  background-color: #618D61; }
+.green-background, .success-color {
+  background-color: #618D61;
+  color: #efefef; }
 
 .green2-background {
   background-color: #496A6A; }
@@ -15,4 +18,5 @@
   color: #efefef; }
 
 .gray-background, .default-color {
-  background-color: #efefef; }
+  background-color: #efefef;
+  color: #555555; }
