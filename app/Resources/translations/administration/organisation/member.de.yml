@@ -29,5 +29,11 @@ import_members_template_download: Musterdatei herunterladen
 import_members_required: Zwingend und optionale Felder
 import_members_required_description: Zwingend erfolderlich ist für jedes Mitglied nur der Name und die E-Mail. Weitere Daten können Sie leer lassen, diese können dann direkt vom Mitglied ergänzt werden
 
-info:
-  member_add_successful: Erfolgreich hinzugefügt
+#edit description
+edit: Mitglied bearbeiten
+edit_action: Editieren Sie das Mitglied Ihrer Organisation
+edit_description: Ändern Sie die Daten des neuen Mitglieds
+
+successful:
+  member_add: Erfolgreich hinzugefügt
+  member_save: Erfolgreich hinzugefügt

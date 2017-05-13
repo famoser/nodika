@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/organisation/{organisation}/member")
+ * @Route("/organisation/{organisation}/members")
  * @Security("has_role('ROLE_USER')")
  */
 class MemberController extends BaseController
@@ -51,7 +51,7 @@ class MemberController extends BaseController
                 $em->persist($member);
                 $em->flush();
 
-                $this->displaySuccess($this->get("translator")->trans("info.member_add_successful", [], "member"));
+                $this->displaySuccess($this->get("translator")->trans("successful.member_add", [], "member"));
                 $newMemberForm = $this->createForm(NewMemberType::class);
             } else {
                 $this->displayFormValidationError();
@@ -61,6 +61,40 @@ class MemberController extends BaseController
         $arr["new_member_form"] = $newMemberForm->createView();
         return $this->render(
             'administration/organisation/member/new.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/{member}/edit", name="administration_organisation_member_edit")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param Member $member
+     * @return Response
+     */
+    public function editAction(Request $request, Organisation $organisation, Member $member)
+    {
+        $newMemberForm = $this->createForm(NewMemberType::class);
+        $arr = [];
+
+        $newMemberForm->setData($member);
+        $newMemberForm->handleRequest($request);
+
+        if ($newMemberForm->isSubmitted()) {
+            if ($newMemberForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($member);
+                $em->flush();
+
+                $this->displaySuccess($this->get("translator")->trans("successful.member_save", [], "member"));
+                $newMemberForm = $this->createForm(NewMemberType::class);
+            } else {
+                $this->displayFormValidationError();
+            }
+        }
+
+        $arr["edit_member_form"] = $newMemberForm->createView();
+        return $this->render(
+            'administration/organisation/member/edit.html.twig', $arr
         );
     }
 
@@ -102,7 +136,7 @@ class MemberController extends BaseController
                 if ($exchangeService->importCsv($newMemberForm, function () use ($organisation) {
                     $member = new Member();
                     $member->setOrganisation($organisation);
-                    return $organisation;
+                    return $member;
                 }, $importFileModel)
                 ) {
                     $importMembersForm = $this->createForm(ImportFileType::class);

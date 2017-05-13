@@ -1,0 +1,23 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "edit"|trans }}{% endblock %}
+{% block description %}{{ "edit_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "member" %}
+
+{% block primary_content %}
+    {{ form_start(edit_member_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
+    {{ form_errors(edit_member_form) }}
+    {{ form_end(edit_member_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <h3>{{ "edit"|trans }}</h3>
+    <p>{{ "edit_description"|trans }}</p>
+    <h3>{{ "member_address"|trans }}</h3>
+    <p>{{ "member_address_description"|trans }}</p>
+    <h3>{{ "member_contact"|trans }}</h3>
+    <p>{{ "member_contact_description"|trans }}</p>
+
+{% endblock secondary_content %}

@@ -106,7 +106,6 @@ class ExchangeService implements ExchangeServiceInterface
                     }
                     continue;
                 }
-                $keyVal = [];
                 $newEntry = $createNewEntityClosure();
                 //transfer array to key-value
                 for ($i = 0; $i < count($data) && $i < count($header); $i++) {
@@ -116,12 +115,14 @@ class ExchangeService implements ExchangeServiceInterface
                 $errors = $this->validator->validate($newEntry);
                 if (count($errors) == 0) {
                     $em->persist($newEntry);
+                    dump($newEntry);
                 } else {
                     $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
                     fclose($handle);
                     return false;
                 }
             }
+            $em->flush();
             fclose($handle);
             return true;
         } else {
