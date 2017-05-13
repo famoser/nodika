@@ -23,9 +23,5 @@ abstract class BaseEntity
      *
      * @return string
      */
-    public function getFullIdentifier()
-    {
-        //TODO: mark as abstract and implement it into the repos
-        return "himom";
-    }
+    public abstract function getFullIdentifier();
 }

@@ -117,4 +117,14 @@ class Setting extends BaseEntity
     {
         return $this->frontendUser;
     }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getKey();
+    }
 }

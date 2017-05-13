@@ -208,4 +208,14 @@ class Person extends BaseEntity
     {
         return $this->events;
     }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getFullName();
+    }
 }

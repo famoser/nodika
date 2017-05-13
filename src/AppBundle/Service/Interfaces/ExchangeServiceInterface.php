@@ -9,7 +9,9 @@
 namespace AppBundle\Service\Interfaces;
 
 
+use AppBundle\Model\Form\ImportFileModel;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 interface ExchangeServiceInterface
 {
@@ -23,9 +25,9 @@ interface ExchangeServiceInterface
      * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
      * returns true on success
      *
-     * @param Form $createForm
-     * @param Form $importForm
+     * @param FormInterface $createForm
+     * @param ImportFileModel $importFileModel
      * @return boolean
      */
-    public function importCsv(Form $createForm, Form $importForm);
+    public function importCsv(FormInterface $createForm, ImportFileModel $importFileModel);
 }

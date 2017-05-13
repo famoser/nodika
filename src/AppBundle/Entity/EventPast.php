@@ -16,6 +16,7 @@ use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Enum\EventChangeType;
 use AppBundle\Enum\TradeTag;
+use AppBundle\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -179,5 +180,15 @@ class EventPast extends BaseEntity
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getChangeDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
     }
 }

@@ -29,7 +29,7 @@ class LoadDevUserData extends BaseFixture
         /* @var FrontendUser $user */
         $user = $this->getReference('user-1');
 
-        $user->setPlainPassword('asdf123');
+        $user->setPlainPassword('asdf1234');
         $user->hashAndRemovePlainPassword();
 
         $manager->persist($user);

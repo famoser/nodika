@@ -8,9 +8,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\PersonTrait;
+use AppBundle\Enum\Base\BaseEnum;
 use AppBundle\Enum\NewsletterChoice;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\NewsletterRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class Newsletter
+class Newsletter extends BaseEntity
 {
     use IdTrait;
     use PersonTrait;
@@ -83,5 +85,15 @@ class Newsletter
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getEmail();
     }
 }

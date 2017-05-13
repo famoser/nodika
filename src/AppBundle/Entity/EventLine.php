@@ -150,4 +150,14 @@ class EventLine extends BaseEntity
     {
         return $this->eventLineGenerations;
     }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getName();
+    }
 }

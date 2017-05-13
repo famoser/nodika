@@ -276,4 +276,14 @@ class Organisation extends BaseEntity
         $organisation->setCommunicationFieldsFrom($person);
         return $organisation;
     }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getName();
+    }
 }

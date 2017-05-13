@@ -12,6 +12,7 @@ namespace AppBundle\Controller\Administration;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
+use AppBundle\Form\ImportFileType;
 use AppBundle\Form\Member\ImportMembersType;
 use AppBundle\Form\Member\NewMemberType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -86,7 +87,7 @@ class MemberController extends BaseController
      */
     public function importAction(Request $request, Organisation $organisation)
     {
-        $importMembersForm = $this->createForm(ImportMembersType::class);
+        $importMembersForm = $this->createForm(ImportFileType::class);
 
         $importMembersForm->handleRequest($request);
 

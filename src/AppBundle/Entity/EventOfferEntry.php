@@ -90,4 +90,14 @@ class EventOfferEntry extends BaseEntity
     {
         return $this->event;
     }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return "entry";
+    }
 }

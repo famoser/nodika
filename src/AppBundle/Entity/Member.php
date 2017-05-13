@@ -51,6 +51,7 @@ class Member extends BaseEntity
      * @ORM\OneToMany(targetEntity="Event", mappedBy="member")
      */
     private $events;
+
     /**
      * Constructor
      */
@@ -150,5 +151,15 @@ class Member extends BaseEntity
     public function getEvents()
     {
         return $this->events;
+    }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getName();
     }
 }

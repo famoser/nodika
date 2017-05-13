@@ -39,6 +39,8 @@ class LoadOrganisationData extends BaseFixture
     {
         $organisation = $this->getAllRandomInstance();
         $organisation->addLeader($this->getReference("person-1"));
+        $organisation->setIsActive(true);
+        $organisation->setActiveEnd(new \DateTime("now + 1 month"));
         $manager->persist($organisation);
         $manager->flush();
     }

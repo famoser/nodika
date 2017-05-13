@@ -15,6 +15,7 @@ use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Enum\TradeTag;
+use AppBundle\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -71,6 +72,7 @@ class Event extends BaseEntity
      * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event")
      */
     private $eventPast;
+
     /**
      * Constructor
      */
@@ -255,5 +257,15 @@ class Event extends BaseEntity
     public function getEventPast()
     {
         return $this->eventPast;
+    }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . " - " . $this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
     }
 }

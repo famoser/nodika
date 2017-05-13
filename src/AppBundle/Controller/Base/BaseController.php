@@ -10,6 +10,8 @@ namespace AppBundle\Controller\Base;
 
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
+use AppBundle\Helper\CsvFileHelper;
+use AppBundle\Helper\FlashMessageHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -20,7 +22,7 @@ class BaseController extends Controller
      */
     protected function displayError($message)
     {
-        $this->get('session')->getFlashBag()->set('error', $message);
+        $this->get('session')->getFlashBag()->set(FlashMessageHelper::ERROR_MESSAGE, $message);
     }
 
     /**
@@ -28,7 +30,7 @@ class BaseController extends Controller
      */
     protected function displaySuccess($message)
     {
-        $this->get('session')->getFlashBag()->set('success', $message);
+        $this->get('session')->getFlashBag()->set(FlashMessageHelper::SUCCESS_MESSAGE, $message);
     }
 
     /**
@@ -68,14 +70,14 @@ class BaseController extends Controller
             $handle = fopen('php://output', 'w+');
 
             // Add the header of the CSV file
-            fputcsv($handle, $header, ';');
+            fputcsv($handle, $header, CsvFileHelper::DELIMITER);
 
             //add the data
             foreach ($data as $row) {
                 fputcsv(
                     $handle, // The file pointer
                     $row, // The fields
-                    ';' // The delimiter
+                    CsvFileHelper::DELIMITER // The delimiter
                 );
             }
 

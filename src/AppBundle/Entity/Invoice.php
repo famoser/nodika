@@ -17,6 +17,7 @@ use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Enum\InvoiceType;
 use AppBundle\Enum\PaymentStatus;
 use AppBundle\Enum\TradeTag;
+use AppBundle\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -57,7 +58,7 @@ class Invoice extends BaseEntity
      * @ORM\Column(type="text")
      */
     private $invoiceDataJson;
-    
+
     /**
      * @var Organisation
      *
@@ -207,5 +208,15 @@ class Invoice extends BaseEntity
     public function getOrganisation()
     {
         return $this->organisation;
+    }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getInvoiceDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . " - " . $this->getName();
     }
 }

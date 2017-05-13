@@ -18,4 +18,4 @@ services:
 
     app.exchange_service:
         class:  AppBundle\Service\ExchangeService
-        arguments: ["@translator"]
+        arguments: ["@translator", "@session.flash_bag"]

@@ -15,6 +15,7 @@ use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Enum\DistributionType;
+use AppBundle\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -209,5 +210,15 @@ class EventLineGeneration extends BaseEntity
     public function getEventLine()
     {
         return $this->eventLine;
+    }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getGenerationDate()->format(DateTimeFormatter::DATE_TIME_FORMAT);
     }
 }

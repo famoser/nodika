@@ -154,4 +154,14 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
         $user->setPerson($person);
         return $user;
     }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getEmail();
+    }
 }

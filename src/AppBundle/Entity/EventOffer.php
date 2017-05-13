@@ -83,6 +83,7 @@ class EventOffer extends BaseEntity
      * @ORM\OneToMany(targetEntity="EventOfferEntry", mappedBy="eventOffer")
      */
     private $eventOfferEntries;
+
     /**
      * Constructor
      */
@@ -315,5 +316,15 @@ class EventOffer extends BaseEntity
     public function getEventOfferEntries()
     {
         return $this->eventOfferEntries;
+    }
+
+    /**
+     * returns a string representation of this entity
+     *
+     * @return string
+     */
+    public function getFullIdentifier()
+    {
+        return $this->getDescription();
     }
 }
