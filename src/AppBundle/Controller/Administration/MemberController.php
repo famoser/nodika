@@ -15,6 +15,8 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Form\ImportFileType;
 use AppBundle\Form\Member\ImportMembersType;
 use AppBundle\Form\Member\NewMemberType;
+use AppBundle\Helper\FlashMessageHelper;
+use AppBundle\Model\Form\ImportFileModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
@@ -88,6 +90,8 @@ class MemberController extends BaseController
     public function importAction(Request $request, Organisation $organisation)
     {
         $importMembersForm = $this->createForm(ImportFileType::class);
+        $importFileModel = new ImportFileModel("/import");
+        $importMembersForm->setData($importFileModel);
 
         $importMembersForm->handleRequest($request);
 
@@ -95,8 +99,14 @@ class MemberController extends BaseController
             if ($importMembersForm->isValid()) {
                 $newMemberForm = $this->createForm(NewMemberType::class);
                 $exchangeService = $this->get("app.exchange_service");
-                if ($exchangeService->importCsv($newMemberForm, $importMembersForm)) {
-                    $importMembersForm = $this->createForm(ImportMembersType::class);
+                if ($exchangeService->importCsv($newMemberForm, function () use ($organisation) {
+                    $member = new Member();
+                    $member->setOrganisation($organisation);
+                    return $organisation;
+                }, $importFileModel)
+                ) {
+                    $importMembersForm = $this->createForm(ImportFileType::class);
+                    $this->displaySuccess($this->get("translator")->trans("success.import_successful", [], "import"));
                 }
             } else {
                 $this->displayFormValidationError();

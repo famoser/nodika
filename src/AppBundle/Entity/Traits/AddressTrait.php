@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /*
  * Address information
@@ -49,6 +50,7 @@ trait AddressTrait
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Country()
      */
     private $country = "CH";
 

@@ -13,11 +13,14 @@ use AppBundle\Helper\CsvFileHelper;
 use AppBundle\Helper\FlashMessageHelper;
 use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Service\Interfaces\ExchangeServiceInterface;
+use Closure;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ExchangeService implements ExchangeServiceInterface
 {
@@ -25,23 +28,31 @@ class ExchangeService implements ExchangeServiceInterface
     private $translator;
     /* @var FlashBagInterface $flashBag */
     private $flashBag;
+    /* @var ValidatorInterface $validator */
+    private $validator;
+    /* @var RegistryInterface $registry */
+    private $registry;
 
     /**
      * ExchangeService constructor.
      * @param TranslatorInterface $translator
      * @param FlashBagInterface $flashBag
+     * @param ValidatorInterface $validator
+     * @param RegistryInterface $registry
      */
-    public function __construct(TranslatorInterface $translator, FlashBagInterface $flashBag)
+    public function __construct(TranslatorInterface $translator, FlashBagInterface $flashBag, ValidatorInterface $validator, RegistryInterface $registry)
     {
         $this->translator = $translator;
         $this->flashBag = $flashBag;
+        $this->validator = $validator;
+        $this->registry = $registry;
     }
 
     /**
-     * @param Form $createForm
+     * @param FormInterface $createForm
      * @return \string[]
      */
-    public function getCsvHeader(Form $createForm)
+    public function getCsvHeader(FormInterface $createForm)
     {
         $myArr = [];
         foreach ($createForm as $group => $item) {
@@ -59,10 +70,11 @@ class ExchangeService implements ExchangeServiceInterface
      * returns true on success
      *
      * @param FormInterface $createForm
+     * @param Closure $createNewEntityClosure
      * @param ImportFileModel $importFileModel
-     * @return boolean
+     * @return bool
      */
-    public function importCsv(FormInterface $createForm, ImportFileModel $importFileModel)
+    public function importCsv(FormInterface $createForm, $createNewEntityClosure, ImportFileModel $importFileModel)
     {
         $header = [];
         foreach ($createForm as $group => $item) {
@@ -80,6 +92,8 @@ class ExchangeService implements ExchangeServiceInterface
 
         $row = 1;
         if (($handle = fopen($importFileModel->getFullFilePath(), "r")) !== false) {
+            $accessorNames = [];
+            $em = $this->registry->getEntityManager();
             while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== FALSE) {
                 if ($row++ == 1) {
                     //validate header (poorly, but should be enough for the normal user)
@@ -87,14 +101,26 @@ class ExchangeService implements ExchangeServiceInterface
                         $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_open_failed", [], "import"));
                         return false;
                     }
+                    for ($i = 0; $i < count($header); $i++) {
+                        $accessorNames[$i] = "set" . strtoupper(substr($header[$i], 0, 1)) . substr($header[$i], 1);
+                    }
                     continue;
                 }
                 $keyVal = [];
+                $newEntry = $createNewEntityClosure();
                 //transfer array to key-value
                 for ($i = 0; $i < count($data) && $i < count($header); $i++) {
-                    $keyVal[$header[$i]] = $data[$i];
+                    $propName = $accessorNames[$i];
+                    $newEntry->$propName($data[$i]);
                 }
-                $createForm->setData($keyVal);
+                $errors = $this->validator->validate($newEntry);
+                if (count($errors) == 0) {
+                    $em->persist($newEntry);
+                } else {
+                    $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
+                    fclose($handle);
+                    return false;
+                }
             }
             fclose($handle);
             return true;

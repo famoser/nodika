@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /*
  * represents a Thing; an object with name & optional description
@@ -22,6 +23,7 @@ trait ThingTrait
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     private $name;
 
