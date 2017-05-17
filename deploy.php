@@ -37,7 +37,6 @@ task('deploy:doctrine:migrations', function () {
  */
 task('deploy:doctrine:fixtures', function () {
     if (env('branch') == "develop") {
-        run('rm {{release_path}}/app/data/data.db3');
         $commands = [
             "doctrine:fixtures:load -q"
         ];
