@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Person;
+
 /**
  * EventLineRepository
  *
@@ -10,4 +12,8 @@ namespace AppBundle\Repository;
  */
 class EventLineRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getMyEventLines(Person $person)
+    {
+
+    }
 }
