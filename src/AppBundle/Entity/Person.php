@@ -100,7 +100,7 @@ class Person extends BaseEntity
     /**
      * Get leaderOf
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Organisation[]
      */
     public function getLeaderOf()
     {

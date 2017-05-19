@@ -31,6 +31,13 @@ class EventLine extends BaseEntity
     use ThingTrait;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $displayOrder;
+
+    /**
      * @var Organisation
      *
      * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="eventLines")
@@ -50,6 +57,7 @@ class EventLine extends BaseEntity
      * @ORM\OneToMany(targetEntity="EventLineGeneration", mappedBy="eventLine")
      */
     private $eventLineGenerations;
+
     /**
      * Constructor
      */
@@ -159,5 +167,24 @@ class EventLine extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getName();
+    }
+
+    /**
+     * @return int
+     */
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
+
+    /**
+     * @param int $displayOrder
+     * @return static
+     */
+    public function setDisplayOrder(int $displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+
+        return $this;
     }
 }

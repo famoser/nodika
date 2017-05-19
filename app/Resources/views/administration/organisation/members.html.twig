@@ -63,10 +63,10 @@
     </p>
     <h3>{{ "members_no_person"|trans({}, "member") }}</h3>
     <p>{{ "members_no_person_description"|trans({}, "member") }}</p>
-    <h3>{{ "import_members"|trans }}</h3>
+    <h3>{{ "member_import"|trans }}</h3>
     <p>
-        {{ "import_members_description"|trans }}
+        {{ "member_import_description"|trans }}
         <br/>
-        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "import_members"|trans }}</a>
+        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "member_import"|trans }}</a>
     </p>
 {% endblock secondary_content %}

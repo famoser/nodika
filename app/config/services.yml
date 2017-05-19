@@ -16,6 +16,20 @@ services:
             - { name: security.voter }
         public: false
 
+    #voters
+    app.voter.event:
+        class:  AppBundle\Security\Voter\EventVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
+    #voters
+    app.voter.event_line:
+        class:  AppBundle\Security\Voter\EventLineVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
     app.exchange_service:
         class:  AppBundle\Service\ExchangeService
         arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]

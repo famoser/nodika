@@ -39,9 +39,23 @@ setup_step_voluntary: (freiwillig)
 #members
 member_administration: Mitgliederverwaltung
 member_administration_action: Verwalten Sie hier die Mitglieder Ihrer Organisation
-import_members: Mitglieder importieren
-import_members_description: Sie können Mitglieder aus einer .csv (Excel) Datei importieren
+member_import: Mitglieder importieren
+member_import_description: Sie können Mitglieder aus einer .csv (Excel) Datei importieren
 member_persons: Zugänge
 no_members_yet: Noch keine Mitglieder erfasst
 leaders: Administratoren
 add_member: Mitglied hinzufügen
+
+#events
+event_administration: Termineverwaltung
+event_administration_action: Verwalten Sie hier die Termine Ihrer Mitglieder
+event_import: Termine importieren
+event_import_description: Sie können Termine aus einer .csv (Excel) Datei importieren
+event_generation: Termine generieren
+event_generation_description: Termine online generieren
+
+#administer
+administer: Organisation verwalten
+administer_action: Verwalten Sie Ihre Organisation
+administer_description: Alle relevanten Informationen zu Ihrer Organisation auf einem Blick
+administer_relinks: Relevante Verlinkungen

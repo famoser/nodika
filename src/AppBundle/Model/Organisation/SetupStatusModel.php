@@ -17,7 +17,7 @@ class SetupStatusModel
     private $stepFourDone;
 
     /**
-     * @return mixed
+     * @return boolean
      */
     public function getStepOneDone()
     {
@@ -25,7 +25,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param mixed $stepOneDone
+     * @param boolean $stepOneDone
      */
     public function setStepOneDone($stepOneDone)
     {
@@ -33,7 +33,7 @@ class SetupStatusModel
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
     public function getStepTwoDone()
     {
@@ -41,7 +41,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param mixed $stepTwoDone
+     * @param boolean $stepTwoDone
      */
     public function setStepTwoDone($stepTwoDone)
     {
@@ -49,7 +49,7 @@ class SetupStatusModel
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
     public function getStepThreeDone()
     {
@@ -57,7 +57,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param mixed $stepThreeDone
+     * @param boolean $stepThreeDone
      */
     public function setStepThreeDone($stepThreeDone)
     {
@@ -65,7 +65,7 @@ class SetupStatusModel
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
     public function getStepFourDone()
     {
@@ -73,10 +73,18 @@ class SetupStatusModel
     }
 
     /**
-     * @param mixed $stepFourDone
+     * @param boolean $stepFourDone
      */
     public function setStepFourDone($stepFourDone)
     {
         $this->stepFourDone = $stepFourDone;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAllDone()
+    {
+        return $this->getStepOneDone() && $this->getStepTwoDone() && $this->getStepThreeDone() && $this->getStepFourDone();
     }
 }

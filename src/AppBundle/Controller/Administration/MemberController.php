@@ -15,13 +15,11 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Form\Generic\ImportFileType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Form\Member\NewMemberType;
-use AppBundle\Helper\FlashMessageHelper;
 use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Security\Voter\MemberVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

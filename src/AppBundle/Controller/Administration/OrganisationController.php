@@ -62,6 +62,37 @@ class OrganisationController extends BaseController
     }
 
     /**
+     * @Route("/{organisation}/view", name="administration_organisation_view")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function viewAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::VIEW, $organisation);
+
+        return $this->render(
+            'administration/organisation/view.html.twig', ["organisation" => $organisation]
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/administer", name="administration_organisation_administer")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function administerAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
+        return $this->render(
+            'administration/organisation/administer.html.twig', ["organisation" => $organisation, "setupStatus" => $setupStatus]
+        );
+    }
+
+    /**
      * @Route("/{organisation}/setup", name="administration_organisation_setup")
      * @param Request $request
      * @param Organisation $organisation

@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Person;
 use AppBundle\Model\Organisation\SetupStatusModel;
 
 /**
@@ -31,6 +32,23 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("o = :organisation")
             ->setParameter('startDateTime', $dateTime)
             ->setParameter('organisation', $organisation)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param Person $person
+     * @return array
+     */
+    public function findByPerson(Person $person)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("o")
+            ->from("AppBundle:Organisation", "o")
+            ->join("o.members", "m")
+            ->join("m.persons", "p")
+            ->where("p = :person")
+            ->setParameter('person', $person)
             ->getQuery()
             ->getResult();
     }

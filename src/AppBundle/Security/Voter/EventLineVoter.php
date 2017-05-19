@@ -2,23 +2,22 @@
 /**
  * Created by PhpStorm.
  * User: famoser
- * Date: 14/05/2017
- * Time: 10:37
+ * Date: 19/05/2017
+ * Time: 19:31
  */
 
 namespace AppBundle\Security\Voter;
 
 
+use AppBundle\Entity\EventLine;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Entity\Member;
-use AppBundle\Security\Voter\Base\CrudVoter;
+use AppBundle\Entity\Organisation;
+use AppBundle\Repository\EventLineRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class MemberVoter extends OrganisationVoter
+class EventLineVoter extends OrganisationVoter
 {
     /**
-     * Determines if the attribute and subject are supported by this voter.
-     *
      * @param string $attribute An attribute
      * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
      *
@@ -27,12 +26,12 @@ class MemberVoter extends OrganisationVoter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::REMOVE, self::ADMINISTRATE))) {
+        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::REMOVE))) {
             return false;
         }
 
         // only vote on Post objects inside this voter
-        if (!$subject instanceof Member) {
+        if (!$subject instanceof EventLine) {
             return false;
         }
 
@@ -41,11 +40,8 @@ class MemberVoter extends OrganisationVoter
     }
 
     /**
-     * Perform a single access check operation on a given attribute, subject and token.
-     * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
-     *
      * @param string $attribute
-     * @param Member $subject
+     * @param EventLine $subject
      * @param TokenInterface $token
      *
      * @return bool
@@ -62,17 +58,14 @@ class MemberVoter extends OrganisationVoter
             return false;
         }
 
-        //check if own member
-        $own = $subject->getPersons()->contains($user->getPerson());
-
         $organisation = $subject->getOrganisation();
+        if (!$organisation instanceof Organisation) {
+            return false;
+        }
 
         switch ($attribute) {
             case self::VIEW:
-                return $own || parent::voteOnAttribute(self::VIEW, $organisation, $token);
             case self::EDIT:
-                return $own || parent::voteOnAttribute(self::ADMINISTRATE, $organisation, $token);
-            case self::ADMINISTRATE:
             case self::REMOVE:
                 return parent::voteOnAttribute(self::ADMINISTRATE, $organisation, $token);
         }

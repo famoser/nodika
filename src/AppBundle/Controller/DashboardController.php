@@ -10,11 +10,13 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Controller\Base\BaseController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/start")
+ * @Security("has_role('ROLE_USER')")
  */
 class DashboardController extends BaseController
 {
@@ -24,7 +26,8 @@ class DashboardController extends BaseController
     public function startAction(Request $request)
     {
         $arr = [];
-
+        $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
+        $arr["my_organisations"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
         return $this->render("dashboard/start.html.twig", $arr);
     }
 }

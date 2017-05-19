@@ -23,10 +23,31 @@ trait IdTrait
     private $id;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $isRemoved = 0;
+
+    /**
      * @return mixed
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsRemoved()
+    {
+        return $this->isRemoved;
+    }
+
+    /**
+     * @param boolean $isRemoved
+     */
+    public function setIsRemoved($isRemoved)
+    {
+        $this->isRemoved = $isRemoved;
     }
 }
