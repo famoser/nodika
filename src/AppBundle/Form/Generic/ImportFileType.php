@@ -6,7 +6,7 @@
  * Time: 13:40
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Generic;
 
 
 use AppBundle\Model\Form\ImportFileModel;

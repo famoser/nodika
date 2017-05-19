@@ -1,0 +1,2 @@
+name,description,street,streetNr,addressLine,postalCode,city,country,phone,email,webpage
+Kleintier 2,,Lange Strasse ,12,,,,,,emil@mail.com,

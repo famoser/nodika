@@ -26,6 +26,9 @@
                     <td>{{ member.name }}</td>
                     <td>{{ member.addressLines|join(", ") }}</td>
                     <td>{{ member.persons|length }}</td>
+                    <td>
+                        <a href="{{ path("administration_organisation_member_edit", {"organisation" : organisation.id, "member": member.id}) }}">bearbeiten</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

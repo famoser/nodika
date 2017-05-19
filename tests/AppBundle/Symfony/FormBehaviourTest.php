@@ -20,22 +20,11 @@ class FormBehaviourTest extends TypeTestCase
         $form = $this->factory->create(NewMemberType::class);
 
         $object = new Member();
-        $form->setData($object);
-
-        $this->assertTrue($form->isSynchronized());
-        $form->submit([]);
-        $this->assertTrue($form->isSubmitted());
-        $this->assertTrue(count($form->getErrors()) > 0);
-
-        $object = new Member();
         $object->setName("custom name");
         $object->setEmail("org@email.ch");
         $form->setData($object);
 
-        $this->assertTrue($form->isSynchronized());
-        $this->assertFalse($form->isSubmitted());
-        $form->submit(["name" => "my name", "email" => "me@mail.com"]);
-        $this->assertTrue($form->isSubmitted());
-        $this->assertTrue(count($form->getErrors()) == 0);
+        $form->submit(["new_member[thing][name]" => "my name", "email" => "me@mail.com"]);
+        $this->assertTrue($form->getData() instanceof Member);
     }
 }

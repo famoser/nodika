@@ -9,11 +9,14 @@
 namespace AppBundle\Entity\Traits;
 
 
+
+
 use Doctrine\ORM\Mapping as ORM;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait CommunicationTrait
 {
@@ -23,12 +26,15 @@ trait CommunicationTrait
     private $phone;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Email()
      * @ORM\Column(type="text")
      */
     private $email;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Url()
      */
     private $webpage;
 

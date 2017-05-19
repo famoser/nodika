@@ -21,7 +21,7 @@ class DashboardController extends BaseController
     /**
      * @Route("/", name="dashboard_start")
      */
-    public function newAction(Request $request)
+    public function startAction(Request $request)
     {
         $arr = [];
 

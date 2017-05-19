@@ -1,0 +1,13 @@
+Import file: Importdatei
+File: Importdatei
+Is correct format: Ich bestätige, das die ausgewählte Datei in der gleichen Form wie die Musterdatei ist
+Import: importieren
+
+error:
+  file_upload_failed: Datei konnte nicht hochgeladen werden
+  file_open_failed: Datei konnte nicht geöffnet werden
+  file_wrong_format: Die Datei hat das falsche Format. Bitte laden Sie die Musterdatei herunter, ergänzen Sie sie mit Ihrem eigenen Informationen, und benützen diese für den Import
+  failure_occurred_at: "Die Datei ist fehlerhaft in der Zeile %number%, der Error lautet: %error%"
+
+success:
+  import_successful: Die Datei wurde erfolgreich importiert
