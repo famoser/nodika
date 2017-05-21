@@ -44,7 +44,7 @@ member_import_description: Sie können Mitglieder aus einer .csv (Excel) Datei i
 member_persons: Zugänge
 no_members_yet: Noch keine Mitglieder erfasst
 leaders: Administratoren
-add_member: Mitglied hinzufügen
+member_add: Mitglied hinzufügen
 
 #events
 event_administration: Termineverwaltung
@@ -53,6 +53,9 @@ event_import: Termine importieren
 event_import_description: Sie können Termine aus einer .csv (Excel) Datei importieren
 event_generation: Termine generieren
 event_generation_description: Termine online generieren
+event_add: Termin hinzufügen
+event_lines_add: Termingruppe hinzufügen
+no_event_lines_yet: Noch keine Termine erfasst
 
 #administer
 administer: Organisation verwalten

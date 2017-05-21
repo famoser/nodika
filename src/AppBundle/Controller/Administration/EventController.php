@@ -11,7 +11,9 @@ namespace AppBundle\Controller\Administration;
 
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventPast;
 use AppBundle\Entity\Organisation;
+use AppBundle\Enum\EventChangeType;
 use AppBundle\Form\Generic\ImportFileType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Form\Event\NewEventType;
@@ -38,22 +40,31 @@ class EventController extends BaseController
     public function newAction(Request $request, Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
-
-        $newEventForm = $this->createForm(NewEventType::class);
         $arr = [];
+        $arr["organisation"] = $organisation;
+
+        if ($organisation->getEventLines()->count() == 0) {
+            return $this->render(
+                'administration/organisation/event/new.html.twig', $arr + ["no_event_lines" => true]
+            );
+        }
+
+        $arr["no_event_lines"] = false;
 
         $event = new Event();
-        $newEventForm->setData($event);
+        $newEventForm = $this->createForm(NewEventType::class, $event, ["organisation" => $organisation]);
         $newEventForm->handleRequest($request);
 
         if ($newEventForm->isSubmitted()) {
             if ($newEventForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+                $eventPast = EventPast::createFromEvent($event, EventChangeType::CREATED_BY_ADMIN);
+                $em->persist($eventPast);
                 $em->persist($event);
                 $em->flush();
 
                 $this->displaySuccess($this->get("translator")->trans("successful.event_add", [], "event"));
-                $newEventForm = $this->createForm(NewEventType::class);
+                $newEventForm = $this->createForm(NewEventType::class, new Event(), ["organisation" => $organisation]);
             } else {
                 $this->displayFormValidationError();
             }
@@ -76,20 +87,21 @@ class EventController extends BaseController
     {
         $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
 
-        $editEventForm = $this->createForm(NewEventType::class);
+        $editEventForm = $this->createForm(NewEventType::class, $event, ["organisation" => $organisation]);
         $arr = [];
 
-        $editEventForm->setData($event);
         $editEventForm->handleRequest($request);
 
         if ($editEventForm->isSubmitted()) {
             if ($editEventForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+                $eventPast = EventPast::createFromEvent($event, EventChangeType::CHANGED_BY_ADMIN);
+                $em->persist($eventPast);
                 $em->persist($event);
                 $em->flush();
 
                 $this->displaySuccess($this->get("translator")->trans("successful.event_save", [], "event"));
-                $editEventForm = $this->createForm(NewEventType::class);
+                $editEventForm = $this->createForm(NewEventType::class, $event, ["organisation" => $organisation]);
             } else {
                 $this->displayFormValidationError();
             }
@@ -112,7 +124,7 @@ class EventController extends BaseController
     {
         $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
 
-        $removeEventForm = $this->createForm(RemoveThingType::class);
+        $removeEventForm = $this->createForm(RemoveThingType::class, $event);
         $arr = [];
 
         $removeEventForm->handleRequest($request);
@@ -120,6 +132,8 @@ class EventController extends BaseController
         if ($removeEventForm->isSubmitted()) {
             if ($removeEventForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+                $eventPast = EventPast::createFromEvent($event, EventChangeType::REMOVED_BY_ADMIN);
+                $em->persist($eventPast);
                 $em->remove($event);
                 $em->flush();
 

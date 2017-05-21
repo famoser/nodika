@@ -1,0 +1,18 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "remove"|trans }}{% endblock %}
+{% block description %}{{ "remove_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "event_line" %}
+
+{% block primary_content %}
+    {{ form_start(remove_event_form) }}
+    {{ form_errors(remove_event_form) }}
+    {{ form_end(remove_event_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <h3>{{ "remove"|trans }}</h3>
+    <p>{{ "remove_description"|trans }}</p>
+{% endblock secondary_content %}

@@ -13,6 +13,8 @@ Create: erstellen
 new: Neues Termingruppe
 new_action: Fügen Sie ein neue Termingruppe zu Ihrer Organisation hinzu
 new_description: Der Termingruppe können Sie dann Termine zuweisen
+add_event: Termine hinzufügen
+add_event_action: Termine hinzufügen
 
 #edit description
 edit: Termingruppe bearbeiten

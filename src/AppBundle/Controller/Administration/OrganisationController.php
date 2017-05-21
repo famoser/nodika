@@ -136,10 +136,10 @@ class OrganisationController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $events = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEvents($organisation, new \DateTime(), ">");
+        $eventLines = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, new \DateTime(), ">");
         return $this->render(
             'administration/organisation/events.html.twig',
-            ["organisation" => $organisation, "events" => $events]
+            ["organisation" => $organisation, "eventLineModels" => $eventLines]
         );
     }
 }

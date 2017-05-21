@@ -3,8 +3,10 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventLine;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
+use AppBundle\Model\EventLine\EventLineModel;
 use AppBundle\Model\Organisation\SetupStatusModel;
 
 /**
@@ -19,9 +21,10 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
      * @param Organisation $organisation
      * @param \DateTime $dateTime
      * @param string $comparator
+     * @param int $maxResults
      * @return Event[]
      */
-    public function findEvents(Organisation $organisation, \DateTime $dateTime, $comparator = ">")
+    public function findEvents(Organisation $organisation, \DateTime $dateTime, $comparator = ">", $maxResults = 30)
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->select("e")
@@ -32,8 +35,40 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere("o = :organisation")
             ->setParameter('startDateTime', $dateTime)
             ->setParameter('organisation', $organisation)
+            ->setMaxResults($maxResults)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @param \DateTime $dateTime
+     * @param string $comparator
+     * @param int $maxResults
+     * @return EventLineModel[]
+     */
+    public function findEventLineModels(Organisation $organisation, \DateTime $dateTime, $comparator = ">", $maxResults = 30)
+    {
+        $res = [];
+        foreach ($organisation->getEventLines() as $eventLine) {
+            $eventLineModel = new EventLineModel();
+            $eventLineModel->eventLine = $eventLine;
+            $eventLineModel->events = $this->getEntityManager()->createQueryBuilder()
+                ->select("e")
+                ->from("AppBundle:Event", "e")
+                ->join("e.eventLine", "el")
+                ->leftJoin("e.member", "m")
+                ->leftJoin("e.person", "p")
+                ->where("e.endDateTime $comparator :startDateTime")
+                ->andWhere("el = :eventLine")
+                ->setParameter('startDateTime', $dateTime)
+                ->setParameter('eventLine', $eventLine)
+                ->setMaxResults($maxResults)
+                ->getQuery()
+                ->getResult();
+            $res[] = $eventLineModel;
+        }
+        return $res;
     }
 
     /**

@@ -15,4 +15,10 @@
 {% block secondary_content %}
     <h3>{{ "new"|trans }}</h3>
     <p>{{ "new_description"|trans }}</p>
+    <h3>{{ "add_event"|trans }}</h3>
+    <p>
+        <a href="{{ path("administration_organisation_event_new", {"organisation" : organisation.id}) }}">
+            {{ "add_event_action"|trans }}
+        </a>
+    </p>
 {% endblock secondary_content %}

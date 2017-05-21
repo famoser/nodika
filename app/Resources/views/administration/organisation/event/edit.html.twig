@@ -1,0 +1,18 @@
+{% extends "divided_content_base.html.twig" %}
+
+{% block title %}{{ "edit"|trans }}{% endblock %}
+{% block description %}{{ "edit_action"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "event" %}
+
+{% block primary_content %}
+    {{ form_start(edit_event_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
+    {{ form_errors(edit_event_form) }}
+    {{ form_end(edit_event_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <h3>{{ "edit"|trans }}</h3>
+    <p>{{ "edit_description"|trans }}</p>
+{% endblock secondary_content %}

@@ -1,5 +1,6 @@
 <?php
-use AppBundle\Entity\Organisation;
+
+namespace AppBundle\Form\Event;
 
 /**
  * Created by PhpStorm.
@@ -8,15 +9,15 @@ use AppBundle\Entity\Organisation;
  * Time: 19:13
  */
 
-namespace AppBundle\Form\Event;
-
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\Member;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Repository\EventLineRepository;
+use AppBundle\Repository\MemberRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -33,37 +34,46 @@ class NewEventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $transArray = ["translation_domain" => "event"];
+        $dateArray = ["date_widget" => "single_text", "time_widget" => "single_text"];
         $requiredFalse = ["required" => false];
 
         /* @var Organisation $organisation */
         $organisation = $options["organisation"];
-        $fillEventLine = function (FormEvent $event) use ($organisation, $transArray) {
+        $fillEventLine = function (FormEvent $event) use ($organisation, $transArray, $dateArray) {
             $formOptions = $transArray + array(
+                    'choice_label' => 'name'
+                );
+            $form = $event->getForm();
+            $form->add('eventLine', EntityType::class,
+                $formOptions + [
                     'class' => EventLine::class,
-                    'choice_label' => 'name',
                     'query_builder' => function (EventLineRepository $er) use ($organisation) {
                         return $er->getByOrganisationQueryBuilder($organisation);
-                    },
-                );
-            $event->getForm()->add('eventLine', EntityType::class, $formOptions);
+                    }]
+            );
+            $form->add('member', EntityType::class,
+                $formOptions + [
+                    'class' => Member::class,
+                    'query_builder' => function (MemberRepository $er) use ($organisation) {
+                        return $er->getByOrganisationQueryBuilder($organisation);
+                    }]
+            );
+            $form->add("startDateTime", DateTimeType::class, $transArray + $dateArray);
+            $form->add("endDateTime", DateTimeType::class, $transArray + $dateArray);
+            $form->add("create", SubmitType::class, $transArray);
         };
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             $fillEventLine
         );
-
-
-        $builder->add("startDateTime", DateTimeType::class, $transArray);
-        $builder->add("endDateTime", DateTimeType::class, $transArray);
-
-        $builder->add("create", SubmitType::class, $transArray);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => Event::class,
+            'organisation' => null
         ));
     }
 }

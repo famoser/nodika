@@ -35,7 +35,7 @@ class EventLine extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $displayOrder;
+    private $displayOrder = 1;
 
     /**
      * @var Organisation

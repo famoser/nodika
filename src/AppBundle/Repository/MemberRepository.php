@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Organisation;
+
 /**
  * MemberRepository
  *
@@ -10,4 +12,12 @@ namespace AppBundle\Repository;
  */
 class MemberRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param Organisation $organisation
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getByOrganisationQueryBuilder(Organisation $organisation)
+    {
+        return $this->createQueryBuilder("u")->where('u.organisation = :organisation')->setParameter('organisation', $organisation);
+    }
 }

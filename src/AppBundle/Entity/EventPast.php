@@ -191,4 +191,19 @@ class EventPast extends BaseEntity
     {
         return $this->getChangeDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
     }
+
+    /**
+     * @param Event $event
+     * @param $changeType
+     * @return static
+     */
+    public static function createFromEvent(Event $event, $changeType)
+    {
+        $eventPast = new static();
+        $eventPast->setEvent($event);
+        $eventPast->setEventJson($event->createJson());
+        $eventPast->setChangeDateTime(new \DateTime());
+        $eventPast->setChangeType($changeType);
+        return $eventPast;
+    }
 }

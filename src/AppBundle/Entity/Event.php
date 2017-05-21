@@ -16,6 +16,7 @@ use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Enum\TradeTag;
 use AppBundle\Helper\DateTimeFormatter;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -78,7 +79,7 @@ class Event extends BaseEntity
      */
     public function __construct()
     {
-        $this->eventPast = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->eventPast = new ArrayCollection();
     }
 
     /**
@@ -267,5 +268,23 @@ class Event extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . " - " . $this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+    }
+
+    /**
+     * creates a json representation of the object
+     *
+     * @return string
+     */
+    public function createJson()
+    {
+        $pseudoObject = new \stdClass();
+        $pseudoObject->id = $this->getId();
+        $pseudoObject->startDateTime = $this->getStartDateTime();
+        $pseudoObject->endDateTime = $this->getEndDateTime();
+        $pseudoObject->eventLineId = $this->getEventLine()->getId();
+        $pseudoObject->memberId = $this->getMember()->getId();
+        $pseudoObject->personId = $this->getPerson()->getId();
+        $pseudoObject->tradeTag = $this->getTradeTag();
+        return json_encode($pseudoObject);
     }
 }

@@ -14,11 +14,11 @@ use AppBundle\Enum\Base\ToChoicesArrayTrait;
 
 class EventChangeType extends BaseEnum
 {
-    const CREATED = 1;
-    const SWITCHED = 2;
-    const MEMBER_ASSIGNED = 3;
+    const CREATED_BY_ADMIN = 1;
+    const CHANGED_BY_ADMIN = 2;
+    const REMOVED_BY_ADMIN = 3;
     const PERSON_ASSIGNED = 4;
-    const REMOVED = 5;
+    const CHANGED_OWNER = 5;
 
     /**
      * enum value to string
@@ -29,16 +29,16 @@ class EventChangeType extends BaseEnum
     public function toString($enumValue)
     {
         switch ($enumValue) {
-            case static::CREATED:
-                return "created";
-            case static::SWITCHED:
-                return "created";
-            case static::MEMBER_ASSIGNED:
-                return "member assigned";
+            case static::CREATED_BY_ADMIN:
+                return "created_by_administration";
+            case static::CHANGED_BY_ADMIN:
+                return "changed_by_administration";
+            case static::REMOVED_BY_ADMIN:
+                return "removed_by_administration";
             case static::PERSON_ASSIGNED:
-                return "person assigned";
-            case static::REMOVED:
-                return "removed";
+                return "person_assigned";
+            case static::CHANGED_OWNER:
+                return "owner_changed";
             default:
                 return "unknown";
         }

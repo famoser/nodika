@@ -1,7 +1,9 @@
 #general
 event: Termin
 events: Termin
-events_description: Jeder Termin wird einem Mitglied zugeordnet. Das Mitglied kann dann den Termin einer bestimmten Person zuordnung (die dann z.B. den Termin tauschen kann)
+events_description: Jeder Termin wird einem Mitglied zugeordnet. Das Mitglied kann dann den Termin einer bestimmten Person zuordnen (diese dann z.B. den Termin tauschen kann)
+start_date_time: Start
+end_date_time: Ende
 Thing: Termin
 
 #new form
@@ -11,6 +13,14 @@ Create: erstellen
 new: Neuer Termin
 new_action: Fügen Sie einen neuen Termin hinzu
 new_description: Weisen Sie einen neuen Termin einem Mitglied zu
+event_lines: Termingruppen
+event_lines_description: Eine Terminegruppe hilft die Termine nach Zweck zu ordnen
+no_event_lines_yet: Noch keine Termingruppen.
+no_event_lines_yet_description: Erstellen Sie eine Termingruppe, bevor Sie Termine hinzufügen
+add_event_line: Termingruppe hinzufügen
+Event line: Termingruppe
+Start date time: Beginn
+End date time: Ende
 
 #edit description
 edit: Termin bearbeiten

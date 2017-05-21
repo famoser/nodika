@@ -26,7 +26,7 @@ class EventLineVoter extends OrganisationVoter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::REMOVE))) {
+        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::REMOVE, self::CREATE))) {
             return false;
         }
 
@@ -36,7 +36,6 @@ class EventLineVoter extends OrganisationVoter
         }
 
         return true;
-
     }
 
     /**
@@ -61,7 +60,9 @@ class EventLineVoter extends OrganisationVoter
 
         switch ($attribute) {
             case self::VIEW:
+                return parent::voteOnAttribute(self::VIEW, $organisation, $token);
             case self::EDIT:
+            case self::CREATE:
             case self::REMOVE:
                 return parent::voteOnAttribute(self::ADMINISTRATE, $organisation, $token);
         }

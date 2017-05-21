@@ -15,13 +15,14 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Form\EventLine\NewEventLineType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Security\Voter\EventLineVoter;
+use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/organisation/{organisation}/events")
+ * @Route("/organisation/{organisation}/event_line")
  * @Security("has_role('ROLE_USER')")
  */
 class EventLineController extends BaseController
@@ -34,10 +35,11 @@ class EventLineController extends BaseController
      */
     public function newAction(Request $request, Organisation $organisation)
     {
-        $this->denyAccessUnlessGranted(EventLineVoter::CREATE, $organisation);
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
         $newEventLineForm = $this->createForm(NewEventLineType::class);
         $arr = [];
+        $arr["organisation"] = $organisation;
 
         $eventLine = new EventLine();
         $newEventLineForm->setData($eventLine);
@@ -76,6 +78,7 @@ class EventLineController extends BaseController
 
         $editEventLineForm = $this->createForm(NewEventLineType::class);
         $arr = [];
+        $arr["organisation"] = $organisation;
 
         $editEventLineForm->setData($eventLine);
         $editEventLineForm->handleRequest($request);
@@ -112,6 +115,7 @@ class EventLineController extends BaseController
 
         $removeEventLineForm = $this->createForm(RemoveThingType::class);
         $arr = [];
+        $arr["organisation"] = $organisation;
 
         $removeEventLineForm->handleRequest($request);
 
