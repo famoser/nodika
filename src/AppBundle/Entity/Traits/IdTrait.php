@@ -23,12 +23,14 @@ trait IdTrait
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $isRemoved = 0;
+    private $deletedAt;
 
     /**
-     * @return mixed
+     * @return integer
      */
     public function getId()
     {
@@ -36,18 +38,18 @@ trait IdTrait
     }
 
     /**
-     * @return boolean
+     * @return \DateTime
      */
-    public function getIsRemoved()
+    public function getDeletedAt()
     {
-        return $this->isRemoved;
+        return $this->deletedAt;
     }
 
     /**
-     * @param boolean $isRemoved
+     * @param \DateTime $deletedAt
      */
-    public function setIsRemoved($isRemoved)
+    public function setDeletedAt($deletedAt)
     {
-        $this->isRemoved = $isRemoved;
+        $this->deletedAt = $deletedAt;
     }
 }

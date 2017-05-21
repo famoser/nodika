@@ -15,9 +15,9 @@
     <p>{{ "administer_description"|trans }}</p>
     <h3>{{ "administer_relinks"|trans }}</h3>
     <p>
-        <a href="{{ path("administration_organisation_members") }}">{{ "member_administration"|trans }}</a>
+        <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">{{ "member_administration"|trans }}</a>
         <br/>
-        <a href="{{ path("administration_organisation_events") }}">{{ "member_administration"|trans }}</a>
+        <a href="{{ path("administration_organisation_events", {"organisation" : organisation.id}) }}">{{ "event_administration"|trans }}</a>
         <br/>
     </p>
 {% endblock secondary_content %}

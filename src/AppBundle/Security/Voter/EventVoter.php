@@ -49,10 +49,6 @@ class EventVoter extends OrganisationVoter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        if ($subject->getIsRemoved()) {
-            return false;
-        }
-
         $user = $token->getUser();
 
         if (!$user instanceof FrontendUser) {

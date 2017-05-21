@@ -33,3 +33,8 @@ services:
     app.exchange_service:
         class:  AppBundle\Service\ExchangeService
         arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
+
+    listener.entity.remove:
+        class: AppBundle\Listener\DoctrinePreFlushListener
+        tags:
+            - { name: doctrine.event_listener, event: preFlush }

@@ -49,11 +49,20 @@ doctrine:
         path:     "%database_path%"
 
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
-        mappings:
-            AppBundle:  ~
+        default_entity_manager:  my_em
+        auto_generate_proxy_classes:  "%kernel.debug%"
+        entity_managers:
+            # A collection of different named entity managers (e.g. some_em, another_em)
+            my_em:
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping:         true
+                # Register SQL Filters in the entity manager
+                filters:
+                    # An array of filters
+                    some_filter:
+                        class:                AppBundle\Filter\DeleteFilter
+                        enabled:              true
+
 
 # Swiftmailer Configuration
 swiftmailer:

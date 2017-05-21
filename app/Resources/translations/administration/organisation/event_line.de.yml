@@ -3,7 +3,7 @@ event_line: Termingruppe
 event_lines: Termingruppen
 event_lines_description: Terminen werden Termingruppen zugeteilt, die dann jeweils einzeln administriert werden können. Für jede Termingruppe können Termine auf verschiedene Arten importiert oder generiert werden.
 event_lines_recommended_setup: Empfohlene Organisation
-event_lines_recommended_setup_description: Empfohlen werden zwei Termingruppen: Eine "Notfalldienst" und eine "Wochentelefon" Gruppe.  Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
+event_lines_recommended_setup_description: 'Empfohlen werden zwei Termingruppen: Eine "Notfalldienst" und eine "Wochentelefon" Gruppe.  Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).'
 Thing: Termingruppe
 
 #new form

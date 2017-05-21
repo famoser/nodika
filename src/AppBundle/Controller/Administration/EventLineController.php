@@ -15,7 +15,6 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Form\EventLine\NewEventLineType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Security\Voter\EventLineVoter;
-use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
