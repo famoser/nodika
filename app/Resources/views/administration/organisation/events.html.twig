@@ -1,4 +1,5 @@
 {% extends "divided_content_base.html.twig" %}
+{% import "macros/buttons.html.twig" as buttons %}
 
 {% block title %}{{ "event_administration"|trans }}{% endblock %}
 {% block description %}{{ "event_administration_action"|trans }}{% endblock %}
@@ -13,9 +14,8 @@
     {% else %}
         {% for eventLineModel in eventLineModels %}
             <h3>
-                <a href="{{ path("administration_organisation_event_line_edit", {"organisation" : organisation.id, "eventLine" : eventLineModel.eventLine.id}) }}">
-                    {{ eventLineModel.eventLine.name }}
-                </a>
+                {{ eventLineModel.eventLine.name }}
+                {{ buttons.edit_button(path("administration_organisation_event_line_edit", {"organisation" : organisation.id, "eventLine" : eventLineModel.eventLine.id})) }}
             </h3>
             <p>{{ eventLineModel.eventLine.description }}</p>
             <table class="table table-hover">

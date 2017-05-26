@@ -76,11 +76,11 @@ class MemberController extends BaseController
     public function editAction(Request $request, Organisation $organisation, Member $member)
     {
         $this->denyAccessUnlessGranted(MemberVoter::EDIT, $member);
-        $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
-
 
         $editMemberForm = $this->createForm(NewMemberType::class);
         $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["member"] = $member;
 
         $editMemberForm->setData($member);
         $editMemberForm->handleRequest($request);
@@ -113,12 +113,12 @@ class MemberController extends BaseController
      */
     public function removeAction(Request $request, Organisation $organisation, Member $member)
     {
-        $this->denyAccessUnlessGranted(MemberVoter::EDIT, $member);
-        $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
-
+        $this->denyAccessUnlessGranted(MemberVoter::REMOVE, $member);
 
         $removeMemberForm = $this->createForm(RemoveThingType::class);
         $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["member"] = $member;
 
         $removeMemberForm->handleRequest($request);
 

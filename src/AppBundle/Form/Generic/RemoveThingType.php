@@ -21,7 +21,7 @@ class RemoveThingType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transArray = ["translation_domain" => "import"];
+        $transArray = ["translation_domain" => "remove"];
         //add person fields
         $builder->add("confirmConsequences", CheckboxType::class, $transArray);
         $builder->add("remove", SubmitType::class, $transArray);

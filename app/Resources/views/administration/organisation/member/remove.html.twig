@@ -7,6 +7,7 @@
 {% trans_default_domain "member" %}
 
 {% block primary_content %}
+    <h2>{{ "remove_title"|trans({"%name%" : member.name}, "remove")|raw }}</h2>
     {{ form_start(remove_member_form) }}
     {{ form_errors(remove_member_form) }}
     {{ form_end(remove_member_form) }}

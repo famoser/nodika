@@ -19,5 +19,13 @@
     <p>{{ "member_address_description"|trans }}</p>
     <h3>{{ "member_contact"|trans }}</h3>
     <p>{{ "member_contact_description"|trans }}</p>
+    <h3>{{ "remove"|trans }}</h3>
+    <p>
+        {{ "remove_description"|trans }}
+        <br/>
+        <a href="{{ path("administration_organisation_member_remove", { "organisation" : organisation.id, "member": member.id}) }}">
+            {{ "remove"|trans }}
+        </a>
+    </p>
 
 {% endblock secondary_content %}

@@ -89,6 +89,8 @@ class EventController extends BaseController
 
         $editEventForm = $this->createForm(NewEventType::class, $event, ["organisation" => $organisation]);
         $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["event"] = $event;
 
         $editEventForm->handleRequest($request);
 
@@ -126,6 +128,8 @@ class EventController extends BaseController
 
         $removeEventForm = $this->createForm(RemoveThingType::class, $event);
         $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["event"] = $event;
 
         $removeEventForm->handleRequest($request);
 

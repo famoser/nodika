@@ -7,6 +7,7 @@
 {% trans_default_domain "event_line" %}
 
 {% block primary_content %}
+    <h2>{{ "remove_title"|trans({"%name%" : event.name}, "remove")|raw }}</h2>
     {{ form_start(remove_event_form) }}
     {{ form_errors(remove_event_form) }}
     {{ form_end(remove_event_form) }}

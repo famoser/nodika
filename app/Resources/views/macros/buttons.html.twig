@@ -1,0 +1,9 @@
+{% macro edit_button(link) %}
+    {{ _self.link_button(link, "edit") }}
+{% endmacro %}
+
+{% macro link_button(link, icon) %}
+    <a href="{{ link }}">
+        <span class="icon-{{ icon }}"></span>
+    </a>
+{% endmacro %}

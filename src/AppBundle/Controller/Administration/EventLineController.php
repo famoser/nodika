@@ -80,6 +80,7 @@ class EventLineController extends BaseController
         $editEventLineForm = $this->createForm(NewEventLineType::class);
         $arr = [];
         $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
 
         $editEventLineForm->setData($eventLine);
         $editEventLineForm->handleRequest($request);
@@ -117,6 +118,7 @@ class EventLineController extends BaseController
         $removeEventLineForm = $this->createForm(RemoveThingType::class);
         $arr = [];
         $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
 
         $removeEventLineForm->handleRequest($request);
 

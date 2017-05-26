@@ -15,4 +15,12 @@
 {% block secondary_content %}
     <h3>{{ "edit"|trans }}</h3>
     <p>{{ "edit_description"|trans }}</p>
+    <h3>{{ "remove"|trans }}</h3>
+    <p>
+        {{ "remove_description"|trans }}
+        <br/>
+        <a href="{{ path("administration_organisation_event_remove", { "organisation" : organisation.id, "event": event.id}) }}">
+            {{ "remove"|trans }}
+        </a>
+    </p>
 {% endblock secondary_content %}
