@@ -12,7 +12,11 @@
         <p>{{ "no_event_lines_yet"|trans }}</p>
     {% else %}
         {% for eventLineModel in eventLineModels %}
-            <h3>{{ eventLineModel.eventLine.name }}</h3>
+            <h3>
+                <a href="{{ path("administration_organisation_event_line_edit", {"organisation" : organisation.id, "eventLine" : eventLineModel.eventLine.id}) }}">
+                    {{ eventLineModel.eventLine.name }}
+                </a>
+            </h3>
             <p>{{ eventLineModel.eventLine.description }}</p>
             <table class="table table-hover">
                 <thead>

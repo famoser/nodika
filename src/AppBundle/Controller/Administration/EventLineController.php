@@ -53,7 +53,8 @@ class EventLineController extends BaseController
                 $em->flush();
 
                 $this->displaySuccess($this->get("translator")->trans("successful.event_line_add", [], "event_line"));
-                $newEventLineForm = $this->createForm(NewEventLineType::class);
+                return $this->redirectToRoute("administration_organisation_events", ["organisation" => $organisation->getId()]);
+
             } else {
                 $this->displayFormValidationError();
             }
@@ -90,7 +91,7 @@ class EventLineController extends BaseController
                 $em->flush();
 
                 $this->displaySuccess($this->get("translator")->trans("successful.event_line_save", [], "event_line"));
-                $editEventLineForm = $this->createForm(NewEventLineType::class);
+                return $this->redirectToRoute("administration_organisation_events", ["organisation" => $organisation->getId()]);
             } else {
                 $this->displayFormValidationError();
             }
