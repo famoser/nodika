@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 
 /**
@@ -19,5 +20,20 @@ class MemberRepository extends \Doctrine\ORM\EntityRepository
     public function getByOrganisationQueryBuilder(Organisation $organisation)
     {
         return $this->createQueryBuilder("u")->where('u.organisation = :organisation')->setParameter('organisation', $organisation);
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return Member[]
+     */
+    public function getIdAssociatedArray(Organisation $organisation)
+    {
+        $res = [];
+        /* @var Member[] $members */
+        $members = $this->findBy(["organisation" => $organisation]);
+        foreach ($members as $memberEntry) {
+            $res[$memberEntry->getId()] = $memberEntry;
+        }
+        return $res;
     }
 }

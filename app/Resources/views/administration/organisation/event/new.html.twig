@@ -7,13 +7,22 @@
 {% trans_default_domain "event" %}
 
 {% block primary_content %}
-    {% if no_event_lines %}
+    {% if no_event_lines is defined and no_event_lines %}
         <h2>{{ "no_event_lines_yet"|trans }}</h2>
         <p>
             {{ "no_event_lines_yet_description"|trans }}
             <br/>
             <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">
                 {{ "add_event_line"|trans }}
+            </a>
+        </p>
+    {% elseif no_members is defined and no_event_lines %}
+        <h2>{{ "no_members_yet"|trans }}</h2>
+        <p>
+            {{ "no_members_yet_description"|trans }}
+            <br/>
+            <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">
+                {{ "to_member_administration"|trans }}
             </a>
         </p>
     {% else %}

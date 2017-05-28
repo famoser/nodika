@@ -16,8 +16,11 @@ new_description: Weisen Sie einen neuen Termin einem Mitglied zu
 event_lines: Termingruppen
 event_lines_description: Eine Terminegruppe hilft die Termine nach Zweck zu ordnen
 no_event_lines_yet: Noch keine Termingruppen.
-no_event_lines_yet_description: Erstellen Sie eine Termingruppe, bevor Sie Termine hinzufügen
+no_event_lines_yet_description: Erstellen Sie eine Termingruppe bevor Sie Termine hinzufügen
 add_event_line: Termingruppe hinzufügen
+no_members_yet: Noch keine Mitglieder.
+no_members_yet_description: Fügen Sie Ihrer Organisation Mitglieder hinzu bevor Sie Termine hinzufügen
+to_member_administration: Zur Mitgliederverwaltung
 Event line: Termingruppe
 Start date time: Beginn
 End date time: Ende
@@ -26,6 +29,17 @@ End date time: Ende
 edit: Termin bearbeiten
 edit_action: Editieren Sie den Termin
 edit_description: Ändern Sie Zeitpunkt und Verantwortlicher des Termins. Alle Änderungen werden gespeichert und sind einsehbar für die Mitglieder.
+
+#import description
+import_events: Termine importieren
+import_events_action: Laden Sie eine .csv (Excel) Datei hoch mit den Terminen
+import_events_description: Laden Sie die Musterdatei herunter, und fügen Sie die Termine (ohne die Spaltenreihenfolge zu ändern) ein. Danach kehren Sie hier zurück, und laden die .csv (Excel) Datei hoch
+import_events_template_download: Musterdatei herunterladen
+import_events_required: Zwingend und optionale Felder
+import_events_required_description: Zwingend erfolderlich ist für jeden Termin Anfang- und Enddatum und das zugehörige Mitglied
+start_date_time: Anfang
+end_date_time: Ende
+member_id: Mitglied Id
 
 #remove description
 remove: Termin entfernen

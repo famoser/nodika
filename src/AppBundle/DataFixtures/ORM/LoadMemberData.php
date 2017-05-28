@@ -2,32 +2,32 @@
 /**
  * Created by PhpStorm.
  * User: famoser
- * Date: 11/05/2017
- * Time: 14:01
+ * Date: 28/05/2017
+ * Time: 15:48
  */
 
 namespace AppBundle\DataFixtures\ORM\Production;
 
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
-use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Member;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadOrganisationData extends BaseFixture
+class LoadMemberData extends BaseFixture
 {
 
     /**
      * create an instance with all random values
      *
-     * @return Organisation
+     * @return Member
      */
     protected function getAllRandomInstance()
     {
-        $organisation = new Organisation();
-        $this->fillRandomCommunication($organisation);
-        $this->fillRandomAddress($organisation);
-        $this->fillRandomThing($organisation);
-        return $organisation;
+        $member = new Member();
+        $this->fillRandomCommunication($member);
+        $this->fillRandomAddress($member);
+        $this->fillRandomThing($member);
+        return $member;
     }
 
     /**
@@ -38,13 +38,10 @@ class LoadOrganisationData extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $organisation = $this->getAllRandomInstance();
-        $organisation->addLeader($this->getReference("person-1"));
-        $organisation->setIsActive(true);
-        $organisation->setActiveEnd(new \DateTime("now + 1 month"));
+        $organisation->setOrganisation($this->getReference("organisation-1"));
+        $organisation->addPerson($this->getReference("person-1"));
         $manager->persist($organisation);
         $manager->flush();
-
-        $this->setReference("organisation-1", $organisation);
     }
 
     /**
@@ -54,6 +51,6 @@ class LoadOrganisationData extends BaseFixture
      */
     public function getOrder()
     {
-        return 12;
+        return 14;
     }
 }

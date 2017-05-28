@@ -11,13 +11,14 @@ namespace AppBundle\Controller\Administration;
 
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
-use AppBundle\Entity\EventPast;
 use AppBundle\Entity\Organisation;
-use AppBundle\Enum\EventChangeType;
-use AppBundle\Form\Generic\ImportFileType;
+use AppBundle\Form\Event\ImportEventsType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Form\Event\NewEventType;
-use AppBundle\Model\Form\ImportFileModel;
+use AppBundle\Helper\DateTimeFormatter;
+use AppBundle\Helper\EventLineChangeHelper;
+use AppBundle\Helper\FlashMessageHelper;
+use AppBundle\Model\Event\ImportEventModel;
 use AppBundle\Security\Voter\EventVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -49,6 +50,12 @@ class EventController extends BaseController
             );
         }
 
+        if ($organisation->getMembers()->count() == 0) {
+            return $this->render(
+                'administration/organisation/event/new.html.twig', $arr + ["no_members" => true]
+            );
+        }
+
         $arr["no_event_lines"] = false;
 
         $event = new Event();
@@ -58,7 +65,7 @@ class EventController extends BaseController
         if ($newEventForm->isSubmitted()) {
             if ($newEventForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $eventPast = EventPast::createFromEvent($event, EventChangeType::CREATED_BY_ADMIN);
+                $eventPast = EventLineChangeHelper::createCreatedByAdminChange($event, $this->getPerson());
                 $em->persist($eventPast);
                 $em->persist($event);
                 $em->flush();
@@ -91,13 +98,14 @@ class EventController extends BaseController
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["event"] = $event;
+        $oldEvent = clone($event);
 
         $editEventForm->handleRequest($request);
 
         if ($editEventForm->isSubmitted()) {
             if ($editEventForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $eventPast = EventPast::createFromEvent($event, EventChangeType::CHANGED_BY_ADMIN);
+                $eventPast = EventLineChangeHelper::createChangedByAdminChange($event, $oldEvent, $this->getPerson());
                 $em->persist($eventPast);
                 $em->persist($event);
                 $em->flush();
@@ -136,7 +144,7 @@ class EventController extends BaseController
         if ($removeEventForm->isSubmitted()) {
             if ($removeEventForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $eventPast = EventPast::createFromEvent($event, EventChangeType::REMOVED_BY_ADMIN);
+                $eventPast = EventLineChangeHelper::createRemovedByAdminChange($event, $this->getPerson());
                 $em->persist($eventPast);
                 $em->remove($event);
                 $em->flush();
@@ -164,10 +172,33 @@ class EventController extends BaseController
     public function importDownloadTemplateAction(Request $request, Organisation $organisation)
     {
         $eventTrans = $this->get("translator")->trans("event", [], "event");
-        $newEventForm = $this->createForm(NewEventType::class);
-        $exchangeService = $this->get("app.exchange_service");
 
-        return $this->renderCsv($eventTrans . ".csv", $exchangeService->getCsvHeader($newEventForm), []);
+        return $this->renderCsv(
+            $eventTrans . ".csv",
+            $this->getImportFileHeader(),
+            [$this->getImportFileExampleLine()]
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getImportFileHeader()
+    {
+        $start = $this->get("translator")->trans("start_date_time", [], "event");
+        $end = $this->get("translator")->trans("end_date_time", [], "event");
+        $memberId = $this->get("translator")->trans("member_id", [], "event");
+        return [$start, $end, $memberId];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getImportFileExampleLine()
+    {
+        $nowExample = new \DateTime();
+        $endExample = new \DateTime("now + 1 day");
+        return [$nowExample->format(DateTimeFormatter::DATE_TIME_FORMAT), $endExample->format(DateTimeFormatter::DATE_TIME_FORMAT), 1];
     }
 
     /**
@@ -180,20 +211,33 @@ class EventController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
-        $importEventsForm = $this->createForm(ImportFileType::class);
-        $importFileModel = new ImportFileModel("/import");
-        $importEventsForm->setData($importFileModel);
+        $members = $this->getDoctrine()->getRepository("AppBundle:Member")->getIdAssociatedArray($organisation);
 
+        $importFileModel = new ImportEventModel("/import");
+
+        $importEventsForm = $this->createForm(ImportEventsType::class, $importFileModel, ["organisation" => $organisation]);
         $importEventsForm->handleRequest($request);
 
         if ($importEventsForm->isSubmitted()) {
             if ($importEventsForm->isValid()) {
-                $newEventForm = $this->createForm(NewEventType::class);
                 $exchangeService = $this->get("app.exchange_service");
-                if ($exchangeService->importCsv($newEventForm, function () use ($organisation) {
+                $eventLine = $importFileModel->getEventLine();
+                if ($exchangeService->importCsvAdvanced(function ($data) use ($organisation, $members, $eventLine) {
                     $event = new Event();
-                    $event->setOrganisation($organisation);
+                    $event->setStartDateTime(new \DateTime($data[0]));
+                    $event->setEndDateTime(new \DateTime($data[1]));
+                    $event->setMember($members[$data[2]]);
+                    $event->setEventLine($eventLine);
                     return $event;
+                }, function ($header) use ($organisation) {
+                    $expectedHeader = $this->getImportFileHeader();
+                    for ($i = 0; $i < count($header); $i++) {
+                        if ($expectedHeader[$i] != $header[$i]) {
+                            $this->get("session.flash_bag")->set(FlashMessageHelper::ERROR_MESSAGE, $this->get("translator")->trans("error.file_upload_failed", [], "import"));
+                            return false;
+                        }
+                    }
+                    return true;
                 }, $importFileModel)
                 ) {
                     $importEventsForm = $this->createForm(ImportFileType::class);

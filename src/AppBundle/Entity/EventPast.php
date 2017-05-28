@@ -39,7 +39,7 @@ class EventPast extends BaseEntity
     /**
      * @ORM\Column(type="integer")
      */
-    private $changeType = EventChangeType::CREATED;
+    private $changeType = EventChangeType::CREATED_BY_ADMIN;
 
     /**
      * information about the change which occurred
@@ -190,20 +190,5 @@ class EventPast extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getChangeDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-    }
-
-    /**
-     * @param Event $event
-     * @param $changeType
-     * @return static
-     */
-    public static function createFromEvent(Event $event, $changeType)
-    {
-        $eventPast = new static();
-        $eventPast->setEvent($event);
-        $eventPast->setEventJson($event->createJson());
-        $eventPast->setChangeDateTime(new \DateTime());
-        $eventPast->setChangeType($changeType);
-        return $eventPast;
     }
 }

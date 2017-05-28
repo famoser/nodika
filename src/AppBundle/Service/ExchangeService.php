@@ -115,7 +115,52 @@ class ExchangeService implements ExchangeServiceInterface
                 $errors = $this->validator->validate($newEntry);
                 if (count($errors) == 0) {
                     $em->persist($newEntry);
-                    dump($newEntry);
+                } else {
+                    $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
+                    fclose($handle);
+                    return false;
+                }
+            }
+            $em->flush();
+            fclose($handle);
+            return true;
+        } else {
+            $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_open_failed", [], "import"));
+        }
+
+        return false;
+    }
+
+    /**
+     * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
+     * returns true on success
+     *
+     * @param Closure $entitySetClosure
+     * @param Closure $validateHeaderClosure
+     * @param ImportFileModel $importFileModel
+     * @return bool
+     */
+    public function importCsvAdvanced($entitySetClosure, $validateHeaderClosure, ImportFileModel $importFileModel)
+    {
+        if (!$importFileModel->uploadFile()) {
+            $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_upload_failed", [], "import"));
+            return false;
+        }
+
+        $row = 1;
+        if (($handle = fopen($importFileModel->getFullFilePath(), "r")) !== false) {
+            $em = $this->registry->getEntityManager();
+            while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== FALSE) {
+                if ($row++ == 1) {
+                    //validate header skipped
+                    if ($validateHeaderClosure($data)) {
+                        continue;
+                    }
+                }
+                $newEntry = $entitySetClosure($data);
+                $errors = $this->validator->validate($newEntry);
+                if (count($errors) == 0) {
+                    $em->persist($newEntry);
                 } else {
                     $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
                     fclose($handle);
