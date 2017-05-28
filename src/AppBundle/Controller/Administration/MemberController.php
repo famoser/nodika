@@ -169,7 +169,7 @@ class MemberController extends BaseController
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
         $importMembersForm = $this->createForm(ImportFileType::class);
-        $importFileModel = new ImportFileModel("/import");
+        $importFileModel = new ImportFileModel("/img/import");
         $importMembersForm->setData($importFileModel);
 
         $importMembersForm->handleRequest($request);

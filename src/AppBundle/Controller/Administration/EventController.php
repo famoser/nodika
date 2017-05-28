@@ -213,8 +213,10 @@ class EventController extends BaseController
 
         $members = $this->getDoctrine()->getRepository("AppBundle:Member")->getIdAssociatedArray($organisation);
 
-        $importFileModel = new ImportEventModel("/import");
+        $arr = [];
+        $arr["members"] = $members;
 
+        $importFileModel = new ImportEventModel("/img/import");
         $importEventsForm = $this->createForm(ImportEventsType::class, $importFileModel, ["organisation" => $organisation]);
         $importEventsForm->handleRequest($request);
 
@@ -226,7 +228,11 @@ class EventController extends BaseController
                     $event = new Event();
                     $event->setStartDateTime(new \DateTime($data[0]));
                     $event->setEndDateTime(new \DateTime($data[1]));
-                    $event->setMember($members[$data[2]]);
+                    if (isset($members[$data[2]])) {
+                        $event->setMember($members[$data[2]]);
+                    } else {
+                        return null;
+                    }
                     $event->setEventLine($eventLine);
                     return $event;
                 }, function ($header) use ($organisation) {
@@ -240,7 +246,7 @@ class EventController extends BaseController
                     return true;
                 }, $importFileModel)
                 ) {
-                    $importEventsForm = $this->createForm(ImportFileType::class);
+                    $importEventsForm = $this->createForm(ImportEventsType::class, $importFileModel, ["organisation" => $organisation]);
                     $this->displaySuccess($this->get("translator")->trans("success.import_successful", [], "import"));
                 }
             } else {
@@ -248,7 +254,6 @@ class EventController extends BaseController
             }
         }
 
-        $arr = [];
         $arr["import_events_form"] = $importEventsForm->createView();
 
         return $this->render(

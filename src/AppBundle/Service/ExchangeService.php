@@ -159,7 +159,7 @@ class ExchangeService implements ExchangeServiceInterface
                 }
                 $newEntry = $entitySetClosure($data);
                 $errors = $this->validator->validate($newEntry);
-                if (count($errors) == 0) {
+                if (count($errors) == 0 && $newEntry != null) {
                     $em->persist($newEntry);
                 } else {
                     $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));

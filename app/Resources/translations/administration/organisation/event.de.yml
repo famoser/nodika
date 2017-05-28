@@ -41,6 +41,25 @@ start_date_time: Anfang
 end_date_time: Ende
 member_id: Mitglied Id
 
+#generate/choose
+choose_algorythm: Algorythmus auswählen
+choose_algorythm_action: Wählen Sie den Algorythmus aus, der die Termine generieren soll
+choose_algorythm_description: Wählen Sie den Algorythmus aus, der die Termine generieren soll. Danach können noch Algorythmus spezifische Parameter eingestellt werden.
+generation_explanation: Ablauf Generierung
+generation_explanation_description: Nachdem Sie sich für einen Algorythmus entschieden haben, und ihn entsprechend konfiguriert haben, kann die Generierung beginnen. Nach der Generierung können Sie das Zwischenresultat begutachten. Ist alles in Ordnung können Sie die Termine speichern und Ihre Mitglieder informieren.
+common_paramters: Algorythmus übergreifende Merkmale
+common_paramters_description: Bei jeder Generierung können Sie die Zeitspanne angeben, Anfangs- und Endzeitpunkt sowie die Länge der Termine.
+round_robin: Round Robin Verfahren
+round_robin_description: Definieren Sie eine Reihenfolge der Mitglieder, und verteilen Sie die Termine der Reihe nach
+nodika_algorythmus: Nodika Algorythmus
+nodika_algorythmus_description: Dieser komplexe Algorythmus versucht die Termine zufällig aber trotzdem möglichst fair zu verteilen. Er wurde speziell für dieses Tool entwickelt, und ist der empfohlene Weg Termine zu verteilen. Zahlreiche Konfigurierungsparameter stehen zur Verfügung.
+
+#round robin
+round_robin_action: Generieren Sie Termine mit dem Round Robin Verfahren
+
+#nodika
+nodika_algorythmus_action: Generieren Sie Termine mit dem Nodika Algorythmus
+
 #remove description
 remove: Termin entfernen
 remove_action: Löschen Sie den Termin und alle damit verbundenen Daten

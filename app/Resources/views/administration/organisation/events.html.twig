@@ -24,7 +24,6 @@
                     <td>{{ "start_date_time"|trans({}, "event") }}</td>
                     <td>{{ "end_date_time"|trans({}, "event") }}</td>
                     <td>{{ "member"|trans({}, "member") }}</td>
-                    <td>{{ "person"|trans({}, "person") }}</td>
                     <td></td>
                 </tr>
 
@@ -35,9 +34,8 @@
                         <td>{{ event.startDateTime|date("d.m.Y H:s") }}</td>
                         <td>{{ event.endDateTime|date("d.m.Y H:s") }}</td>
                         <td>{{ event.member }}</td>
-                        <td>{{ event.person }}</td>
                         <td>
-                            <a href="{{ path("administration_organisation_event_edit", {"organisation" : organisation.id, "event": event.id}) }}">bearbeiten</a>
+                            {{ buttons.edit_button(path("administration_organisation_event_edit", {"organisation" : organisation.id, "event": event.id})) }}
                         </td>
                     </tr>
                 {% endfor %}
@@ -47,24 +45,29 @@
     {% endif %}
 {% endblock primary_content %}
 
-        {% block secondary_content %}
-            <h3>{{ "event_line"|trans({}, "event_line") }}</h3>
-            <p>
-                {{ "event_lines_description"|trans({}, "event_line") }}
-                <br/>
-                <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "event_lines_add"|trans }}</a>
-            </p>
-            <h3>{{ "events"|trans({}, "event") }}</h3>
-            <p>
-                {{ "events_description"|trans({}, "event") }}
-                <br/>
-                <a href="{{ path("administration_organisation_event_new", {"organisation" : organisation.id}) }}">{{ "event_add"|trans }}</a>
-            </p>
-            <h3>{{ "event_import"|trans }}</h3>
-            <p>
-                {{ "event_import_description"|trans }}
-                <br/>
-                <a href="{{ path("administration_organisation_event_import", {"organisation" : organisation.id}) }}">{{ "event_import"|trans }}</a>
-            </p>
-
-        {% endblock secondary_content %}
+{% block secondary_content %}
+    <h3>{{ "event_line"|trans({}, "event_line") }}</h3>
+    <p>
+        {{ "event_lines_description"|trans({}, "event_line") }}
+        <br/>
+        <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "event_lines_add"|trans }}</a>
+    </p>
+    <h3>{{ "events"|trans({}, "event") }}</h3>
+    <p>
+        {{ "events_description"|trans({}, "event") }}
+        <br/>
+        <a href="{{ path("administration_organisation_event_new", {"organisation" : organisation.id}) }}">{{ "event_add"|trans }}</a>
+    </p>
+    <h3>{{ "event_import"|trans }}</h3>
+    <p>
+        {{ "event_import_description"|trans }}
+        <br/>
+        <a href="{{ path("administration_organisation_event_import", {"organisation" : organisation.id}) }}">{{ "event_import"|trans }}</a>
+    </p>
+    <h3>{{ "event_generate"|trans }}</h3>
+    <p>
+        {{ "event_generate_description"|trans }}
+        <br/>
+        <a href="{{ path("administration_organisation_event_generate_choose", {"organisation" : organisation.id}) }}">{{ "event_generate"|trans }}</a>
+    </p>
+{% endblock secondary_content %}

@@ -51,6 +51,8 @@ event_administration: Termineverwaltung
 event_administration_action: Verwalten Sie hier die Termine Ihrer Mitglieder
 event_import: Termine importieren
 event_import_description: Sie können Termine aus einer .csv (Excel) Datei importieren
+event_generate: Termine generieren
+event_generate_description: Sie können Termine generieren lassen
 event_generation: Termine generieren
 event_generation_description: Termine online generieren
 event_add: Termin hinzufügen

@@ -10,6 +10,23 @@
     {{ form_start(import_events_form) }}
     {{ form_errors(import_events_form) }}
     {{ form_end(import_events_form) }}
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>{{ "member_id"|trans }}</th>
+            <th>{{ "member"|trans({}, "member") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for member in members %}
+            <tr>
+                <td>{{ member.id }}</td>
+                <td>{{ member.name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock primary_content %}
 
 {% block secondary_content %}
