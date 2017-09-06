@@ -1,0 +1,13 @@
+index:
+  returning:
+    welcome_back: 'Willkommen zurück!'
+    to_dashboard: 'hier gehts zum Dashboard'
+  introduction:
+    header: 'Überblick'
+    header_description: 'Das webbasierte Tool übernimmt die Administration und Organisation von Notfalldiensten'
+    paragraph_1: >
+      'Das Tool wird per 01.10.2017 für knbu (Kleintier-Notfalldienst Basel und Umgebung) erstellt, und erlaubt dem Verein die Administrationskosten erheblich zu reduzieren.
+      Gleichzeitig wird die Information der Mitglieder verbessert und die Verteilung der Termine transparenter.'
+    paragraph_2: >
+      'Das Tool wird so erstellt das auch weitere Vereine dieses benutzen können. Die sorgfältig erstellte Standartkonfiguration kann auch an andere Organisationsformen angepasst werden.'
+    register_action: 'Registrieren Sie sich und sichern Sie sich einen Early Bird Rabatt!'

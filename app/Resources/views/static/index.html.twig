@@ -4,6 +4,8 @@
 {% block description %}Der Notfalldienst Kalender erlaubt schnelle, transparente und einfache Absprache
     über die Verteilung von Notfalldiensten{% endblock %}
 
+{% trans_default_domain "static" %}
+
 {% block header %}
     {% if message != "" %}
         <p>{{ message }}</p>
@@ -11,24 +13,32 @@
 {% endblock %}
 
 {% block layout %}
+    {% if is_logged_in %}
+        <section class="returning">
+            <div class="container index-container default-color">
+                <div class="row">
+                    <div class="color-title col-md-4">
+                        <h2>{{ "index.returning.welcome_back"|trans }}</h2>
+                        <p class="h2-description">
+                            <a href="{{ path("dashboard_index") }}">{{ "index.returning.to_dashboard"|trans }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
     <section class="introduction">
         <div class="container index-container default-color">
             <div class="row">
                 <div class="color-title col-md-4">
-                    <h2>Überblick</h2>
-                    <p class="h2-description">Das webbasierte Tool übernimmt die Administration und Organisation von
-                        Notfalldiensten</p>
+                    <h2>{{ "index.introduction.header"|trans }}</h2>
+                    <p class="h2-description">{{ "index.introduction.header_description"|trans }}</p>
                 </div>
                 <div class="color-content col-md-offset-2 col-md-6">
-                    <p>Das Tool wird per 01.10.2017 für knbu (Kleintier-Notfalldienst Basel und Umgebung) erstellt, und
-                        erlaubt
-                        dem Verein die Administrationskosten erheblich zu reduzieren. Gleichzeitig wird die Information
-                        der
-                        Mitglieder verbessert und die Verteilung der Termine transparenter.</p>
-                    <p>Sind weitere Vereine an diesem Tool interessiert kann es für die Nutzung mehrerer Vereine
-                        ausgelegt
-                        werden.
-                        Interessiert? <a href="#contact">Registrieren Sie sich</a> um das Tool möglich zu machen!</p>
+                    <p>{{ "index.introduction.paragraph_1"|trans }}</p>
+                    <p>{{ "index.introduction.paragraph_2"|trans }}</p>
+
+                    <p><a href="#contact">{{ "index.introduction.register_action"|trans }}</a></p>
                 </div>
             </div>
         </div>
@@ -165,7 +175,8 @@
                     <ul>
                         <li>
                             <b>20% Rabatt:</b>
-                            Als kleines Dankeschön für das Vertrauen wird die Registrierungsgebühr und das erste Jahresgebühr
+                            Als kleines Dankeschön für das Vertrauen wird die Registrierungsgebühr und das erste
+                            Jahresgebühr
                             um 20% reduziert
                         </li>
                         <li>

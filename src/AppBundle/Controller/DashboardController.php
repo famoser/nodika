@@ -15,13 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/start")
+ * @Route("/dashboard")
  * @Security("has_role('ROLE_USER')")
  */
 class DashboardController extends BaseController
 {
     /**
-     * @Route("/", name="dashboard_start")
+     * @Route("/", name="dashboard_index")
      */
     public function startAction(Request $request)
     {

@@ -10,30 +10,12 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\ToChoicesArrayTrait;
+use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class PaymentStatus extends BaseEnum
 {
     const NOT_PAYED = 1;
     const PAYED = 2;
 
-    /**
-     * enum value to string
-     *
-     * @param $enumValue
-     * @return string
-     */
-    public function toString($enumValue)
-    {
-        switch ($enumValue) {
-            case static::NOT_PAYED:
-                return "not payed";
-            case static::PAYED;
-                return "payed";
-            default:
-                return "unknown";
-        }
-    }
-
-    use ToChoicesArrayTrait;
+    use EnumStaticPropertiesTrait;
 }

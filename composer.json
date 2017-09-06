@@ -26,8 +26,8 @@
     }
   ],
   "require": {
-    "php": ">=5.5.9",
-    "symfony/symfony": "3.2.*",
+    "php": "^7.1",
+    "symfony/symfony": "^3.2",
     "doctrine/orm": "^2.5",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-cache-bundle": "^1.2",
@@ -38,7 +38,6 @@
     "sensio/framework-extra-bundle": "^3.0.2",
     "incenteev/composer-parameter-handler": "^2.0",
     "doctrine/doctrine-migrations-bundle": "^1.2",
-    "friendsofsymfony/user-bundle": "~2.0@dev",
     "doctrine/data-fixtures": "^1.1",
     "erusev/parsedown": "^1.6",
     "deployer/deployer": "^3.3",
@@ -67,11 +66,6 @@
     "post-update-cmd": [
       "@symfony-scripts"
     ]
-  },
-  "config": {
-    "platform": {
-      "php": "5.5.9"
-    }
   },
   "extra": {
     "symfony-app-dir": "app",

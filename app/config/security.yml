@@ -26,9 +26,9 @@ security:
             anonymous: ~
             form_login:
                 provider: user_provider
-                login_path: /login
-                check_path: /login_check
-                default_target_path: /
+                login_path: access_login
+                check_path: access_login_check
+                default_target_path: dashboard_start
                 csrf_token_generator: security.csrf.token_manager
 
             logout:       true

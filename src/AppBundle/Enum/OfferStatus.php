@@ -10,6 +10,7 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
+use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class OfferStatus extends BaseEnum
 {
@@ -18,25 +19,5 @@ class OfferStatus extends BaseEnum
     const OFFER_DECLINED = 3;
     const OFFER_CLOSED = 4;
 
-    /**
-     * enum value to string
-     *
-     * @param $enumValue
-     * @return string
-     */
-    public function toString($enumValue)
-    {
-        switch ($enumValue) {
-            case static::OFFER_OPEN:
-                return "open";
-            case static::OFFER_ACCEPTED:
-                return "accepted";
-            case static::OFFER_DECLINED:
-                return "declined";
-            case static::OFFER_CLOSED:
-                return "closed";
-            default:
-                return "unknown";
-        }
-    }
+    use EnumStaticPropertiesTrait;
 }

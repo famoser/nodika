@@ -11,6 +11,8 @@ namespace AppBundle\Form\Newsletter;
 
 use AppBundle\Entity\Newsletter;
 use AppBundle\Enum\NewsletterChoice;
+use AppBundle\Enum\SubmitButtonType;
+use AppBundle\Form\BaseAbstractType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -21,17 +23,50 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Choice;
 
-class RegisterForPreviewType extends AbstractType
+class RegisterForPreviewType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add("choice", ChoiceType::class, ["choices" => NewsletterChoice::toChoicesArray()])
-            ->add("email", EmailType::class)
-            ->add("givenName", TextType::class)
-            ->add("familyName", TextType::class)
-            ->add("message", TextareaType::class)
-            ->add("submit", SubmitType::class, ["label" => "Send"]);
+        $transArray = ["translation_domain" => "entity_newsletter"];
+        $builder->add(
+            "choice", ChoiceType::class,
+            [
+                "translation_domain" => "entity_newsletter",
+                "label" => "choice"
+            ] +
+            NewsletterChoice::getChoicesForBuilder()
+        );
+        $builder->add(
+            "email", EmailType::class,
+            [
+                "translation_domain" => "entity_newsletter",
+                "label" => "email"
+            ]
+        );
+        $builder->add(
+            "givenName", TextType::class,
+            [
+                "translation_domain" => "entity_newsletter",
+                "label" => "given_name"
+            ]
+        );
+        $builder->add(
+            "familyName", TextType::class,
+            [
+                "translation_domain" => "entity_newsletter",
+                "label" => "family_name"
+            ]
+        );
+        $builder->add(
+            "message", TextType::class,
+            [
+                "translation_domain" => "entity_newsletter",
+                "label" => "message"
+            ]
+        );
+
+
+        $this->addSubmit($builder, SubmitButtonType::SEND);
     }
 
     public function configureOptions(OptionsResolver $resolver)

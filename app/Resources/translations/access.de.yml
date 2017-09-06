@@ -63,6 +63,7 @@ reset_confirm: Passwort zurücksetzten
 reset_confirm_action: Setzten Sie Ihr neues Passwort
 reset_confirm_description: Setzten Sie Ihr neues Passwort
 
+#errors
 error:
   email_already_registered: Diese E-Mail ist bereits vergeben.
   passwords_do_not_match: Die Passwörter stimmen nicht überein

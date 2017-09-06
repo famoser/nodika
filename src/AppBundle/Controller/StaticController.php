@@ -25,6 +25,7 @@ class StaticController extends Controller
     {
         $arr = [];
         $arr["message"] = "";
+        $arr["is_logged_in"] = true;
         $newsLetter = new Newsletter();
         $newsletterForm = $this->createForm(RegisterForPreviewType::class);
         $newsletterForm->setData($newsLetter);

@@ -10,7 +10,7 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\ToChoicesArrayTrait;
+use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class EventChangeType extends BaseEnum
 {
@@ -20,29 +20,5 @@ class EventChangeType extends BaseEnum
     const PERSON_ASSIGNED = 4;
     const CHANGED_OWNER = 5;
 
-    /**
-     * enum value to string
-     *
-     * @param $enumValue
-     * @return string
-     */
-    public function toString($enumValue)
-    {
-        switch ($enumValue) {
-            case static::CREATED_BY_ADMIN:
-                return "created_by_administration";
-            case static::CHANGED_BY_ADMIN:
-                return "changed_by_administration";
-            case static::REMOVED_BY_ADMIN:
-                return "removed_by_administration";
-            case static::PERSON_ASSIGNED:
-                return "person_assigned";
-            case static::CHANGED_OWNER:
-                return "owner_changed";
-            default:
-                return "unknown";
-        }
-    }
-
-    use ToChoicesArrayTrait;
+    use EnumStaticPropertiesTrait;
 }
