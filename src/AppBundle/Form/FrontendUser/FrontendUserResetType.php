@@ -24,8 +24,8 @@ class FrontendUserResetType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = UserTrait::getRegisterUserBuilder($builder);
-        $this->addSubmit($builder, SubmitButtonType::REGISTER);
+        $builder = UserTrait::getResetUserBuilder($builder);
+        $this->addSubmit($builder, SubmitButtonType::RESET_PASSWORD);
     }
 
     /**

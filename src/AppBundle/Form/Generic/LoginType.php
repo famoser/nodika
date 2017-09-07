@@ -18,7 +18,7 @@ abstract class LoginType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = UserTrait::getRegisterUserBuilder($builder);
+        $builder = UserTrait::getLoginBuilder($builder);
         $this->addSubmit($builder, SubmitButtonType::LOGIN);
     }
 }

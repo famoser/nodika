@@ -6,13 +6,14 @@
  * Time: 10:21
  */
 
-namespace AppBundle\Form\Access\FrontendUser;
+namespace AppBundle\Form\Person;
 
 
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\PersonTrait;
+use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
 use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,7 +31,7 @@ class PersonType extends BaseAbstractType
         $this->addTrait($builder, AddressTrait::class);
         $this->addTrait($builder, CommunicationTrait::class);
 
-        $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_TYPE_OPTION]);
+        $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
     }
 
     /**
@@ -38,8 +39,9 @@ class PersonType extends BaseAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setRequired([StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
         $resolver->setDefaults(array(
-            'data_class' => Person::class,
+            'data_class' => Person::class
         ));
     }
 }

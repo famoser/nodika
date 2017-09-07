@@ -12,8 +12,10 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
-        user_provider:
-            id: app.user_provider
+        frontend_user_provider:
+            id: app.frontend_user_provider
+        admin_user_provider:
+            id: app.admin_user_provider
 
     firewalls:
         # disables authentication for assets and the profiler
@@ -25,10 +27,26 @@ security:
             pattern:   ^/
             anonymous: ~
             form_login:
-                provider: user_provider
+                provider: frontend_user_provider
                 login_path: access_login
                 check_path: access_login_check
-                default_target_path: dashboard_start
+                default_target_path: dashboard_index
+                csrf_token_generator: security.csrf.token_manager
+                # field names for the username and password fields
+                username_parameter: frontend_user_login[email]
+                password_parameter: frontend_user_login[plainPassword]
+
+            logout:       true
+            anonymous:    true
+
+        backend:
+            pattern:   ^/
+            anonymous: ~
+            form_login:
+                provider: admin_user_provider
+                login_path: backend_login
+                check_path: backend_login_check
+                default_target_path: backend_dashboard_index
                 csrf_token_generator: security.csrf.token_manager
 
             logout:       true
@@ -38,4 +56,4 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/backend/, role: ROLE_ADMIN }

@@ -6,7 +6,7 @@
  * Time: 14:22
  */
 
-namespace AppBundle\Controller\Frontend;
+namespace AppBundle\Controller\Administration;
 
 
 use AppBundle\Controller\Base\BaseController;

@@ -4,14 +4,11 @@ login:
   description: In einen existierenden Account einloggen
   login_form_header: Login
   forgot_password_action: Passwort vergessen
-  create_organisation_action: Neue Organisation registrieren
-  internal_area: Interner Bereich
-  internal_area_action: Loggen Sie sich ein
-  internal_area_description: Loggen Sie sich ein um Zugriff zum Terminkalender und weitere Funktionen zu erhalten
-  no_account_question: Noch keinen Account?
-  no_account_description: Fragen Sie den Leiter Ihrer Organisation oder erstellen Sie eine neue Organisation um den Kalender zu nutzen
-  forgot_password_question: Passwort vergessen?
-  forgot_password_description: Drücken Sie auf Passwort vergessen links und verifizieren Sie sich mit der hinterlegten E-Mail
+  register_action: Neu registrieren
+  no_account: Noch keinen Account?
+  no_account_description: Fragen Sie den Leiter Ihrer Organisation um Zugangsdaten oder erstellen Sie registrieren Sie sich um für Ihre eigene Organisation einen Kalender zu erstellen
+  forgot_password: Passwort vergessen?
+  forgot_password_description: Drücken Sie auf "Passwort vergessen" unterhalb des Loginformulars und verifizieren Sie sich mit der hinterlegten E-Mail
 
 #register page
 register:
@@ -29,49 +26,48 @@ register:
   pricing: Kosten
   pricing_description: >
     Nach der gratis %free_period_days%-tägigen Testphase können Sie ein Abo für Ihre Organisation lösen.
-    Die einmalige Registrierungsgebühr beträgt %register_fee% und die Jahresgebühr ist %yearly_fee%
+    Die einmalige Registrierungsgebühr beträgt %register_fee% CHF und die Jahresgebühr ist %yearly_fee% CHF.
   register_action: Erstellen Sie zuerst einen persönlichen Account
 
-# register/thanks page
+#register/thanks page
 register_thanks:
   title: Vielen Dank für die Registrierung
   description: Account erfolgreich erstellt
   message: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail. Besuchen Sie den darin enthaltenen Link um die Registrierung abzuschliessen.
 
-#register confirm
+#register/confirm page
 register_confirm:
   title: Registrierung abschliessen
   description: Setzten Sie das Passwort für Ihren Account
   email_verified: Email verifiziert
   email_verified_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account, danach können Sie mit der Einrichtung Ihrer Organisation loslegen
-  set_password_form: Passwort setzten
+  set_password_form: Passwort setzen
 
-#register confirm form
-Set passwort: Passwort setzten
+#reset page
+reset:
+  title: Passwort zurücksetzen
+  description: Setzten Sie Ihr Passwort mit Ihrer E-Mail zurück
+  set_email_form_description: Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.
 
-#hash invalid
-hash_invalid: Link ungültig
-hash_invalid_action: Der aufgerufene Link ist ungültig
-hash_invalid_description: Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann.
+#reset/done page
+reset_done:
+  title: Passwort zurücksetzen
+  description: E-Mail wurde versandt
+  message: Sofern diese E-Mail in unserem System gefunden wurde haben wir Ihnen soeben eine E-Mail gesendet mit einem Link, um Ihr Passwort zurückzusetzen
 
-#reset form
-Email: Email
-Reset: zurücksetzten
+#reset/confirm page
+reset_confirm:
+  title: Passwort zurücksetzen
+  description: Setzen Sie Ihr neues Passwort
+  reset_password_form_description: Setzen Sie Ihr neues Passwort
 
-#reset description
-reset: Passwort zurücksetzten
-reset_action: Setzten Sie Ihr Passwort mit Ihrer E-Mail zurück
-reset_description: Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzten können.
+#displayed if hash from link is invalid
+hash_invalid:
+  title: Link ungültig
+  description: Der aufgerufene Link ist ungültig
+  message: Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann.
 
-#reset done
-reset_done: Passwort zurücksetzten
-reset_done_action: E-Mail wurde versandt
-reset_done_description: Sofern Ihre E-Mail in unserem System gefunden wurde haben wir Ihnen soeben eine E-Mail gesendet mit einem Link, um das Passwort zurückzusetzten
 
-#reset confirm
-reset_confirm: Passwort zurücksetzten
-reset_confirm_action: Setzten Sie Ihr neues Passwort
-reset_confirm_description: Setzten Sie Ihr neues Passwort
 
 #errors
 error:

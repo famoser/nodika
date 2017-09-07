@@ -3,4 +3,6 @@ create: erstellen
 edit: speichern
 remove: löschen
 login: login
-reister: registrieren
+register: registrieren
+set_password: Passwort setzen
+reset_password: Passwort zurücksetzen

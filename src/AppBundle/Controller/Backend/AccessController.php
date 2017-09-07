@@ -11,6 +11,7 @@ namespace AppBundle\Controller\Backend;
 
 use AppBundle\Controller\Base\BaseAccessController;
 use AppBundle\Entity\AdminUser;
+use AppBundle\Form\AdminUser\AdminUserLoginType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ class AccessController extends BaseAccessController
             return $this->redirectToRoute("backend_dashboard_index");
         }
 
-        $form = $this->getLoginForm($request, new AdminUser(), "backend_login");
+        $form = $this->getLoginForm($request, new AdminUser(), $this->createForm(AdminUserLoginType::class));
         if ($form instanceof RedirectResponse) {
             return $form;
         }

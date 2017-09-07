@@ -12,10 +12,14 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\Base\BaseAccessController;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
-use AppBundle\Form\Access\FrontendUser\PersonType;
+use AppBundle\Enum\SubmitButtonType;
+use AppBundle\Form\FrontendUser\FrontendUserLoginType;
 use AppBundle\Form\FrontendUser\FrontendUserResetType;
 use AppBundle\Form\FrontendUser\FrontendUserSetPasswordType;
+use AppBundle\Form\Person\PersonType;
 use AppBundle\Helper\HashHelper;
+use AppBundle\Helper\StaticMessageHelper;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +41,7 @@ class AccessController extends BaseAccessController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $form = $this->getLoginForm($request, new FrontendUser(), "access");
+        $form = $this->getLoginForm($request, new FrontendUser(), $this->createForm(FrontendUserLoginType::class));
         if ($form instanceof RedirectResponse) {
             return $form;
         }
@@ -56,7 +60,7 @@ class AccessController extends BaseAccessController
     public function registerAction(Request $request)
     {
         $registerForm = $this->handleDoctrineFormWithCustomOnSuccess(
-            $this->createForm(PersonType::class),
+            $this->createForm(PersonType::class, null, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => SubmitButtonType::REGISTER]),
             $request,
             new Person(),
             function ($form, $person) {
@@ -161,6 +165,10 @@ class AccessController extends BaseAccessController
             }
         );
 
+        if ($myForm instanceof Response) {
+            return $myForm;
+        }
+
         $arr = [];
         $arr["reset_form"] = $myForm->createView();
         return $this->render(
@@ -181,39 +189,61 @@ class AccessController extends BaseAccessController
     }
 
     /**
-     * @Route("/register/{confirmationToken}", name="access_register_confirm")
+     * @Route("/register/confirm/{confirmationToken}", name="access_register_confirm")
      * @param Request $request
      * @param $confirmationToken
      * @return Response
      */
     public function registerConfirmAction(Request $request, $confirmationToken)
     {
-        return $this->handleResetPasswordAction($request, $confirmationToken, ["mode" => "register"], function ($form, $entity) {
-            return $this->redirectToRoute("administration_organisation_new");
-        });
+        return $this->handleResetPasswordAction(
+            $request,
+            $confirmationToken,
+            function ($form, $entity) {
+                return $this->redirectToRoute("administration_organisation_new");
+            },
+            function ($form) {
+                /* @var FormInterface $form */
+                $outputArray["set_password_form"] = $form->createView();
+                return $this->render(
+                    'access/register_confirm.html.twig', $outputArray
+                );
+            }
+        );
     }
 
     /**
-     * @Route("/reset/{confirmationToken}", name="access_reset_confirm")
+     * @Route("/reset/confirm/{confirmationToken}", name="access_reset_confirm")
      * @param Request $request
      * @param $confirmationToken
      * @return Response
      */
     public function resetConfirmAction(Request $request, $confirmationToken)
     {
-        return $this->handleResetPasswordAction($request, $confirmationToken, ["mode" => "reset"], function ($form, $entity) {
-            return $this->redirectToRoute("dashboard_index");
-        });
+        return $this->handleResetPasswordAction(
+            $request,
+            $confirmationToken,
+            function ($form, $entity) {
+                return $this->redirectToRoute("dashboard_index");
+            },
+            function ($form) {
+                /* @var FormInterface $form */
+                $outputArray["reset_password_form"] = $form->createView();
+                return $this->render(
+                    'access/reset_confirm.html.twig', $outputArray
+                );
+            }
+        );
     }
 
     /**
      * @param Request $request
      * @param $confirmationToken
-     * @param array $outputArray
      * @param callable $onSuccessCallable with $form & $entity as argument
+     * @param callable $responseCallable with $form as argument
      * @return FormInterface|Response
      */
-    protected function handleResetPasswordAction(Request $request, $confirmationToken, $outputArray, $onSuccessCallable)
+    protected function handleResetPasswordAction(Request $request, $confirmationToken, $onSuccessCallable, $responseCallable)
     {
         $user = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
@@ -248,10 +278,7 @@ class AccessController extends BaseAccessController
         if ($myForm instanceof Response) {
             return $myForm;
         } else {
-            $outputArray["reset_password_form"] = $myForm->createView();
-            return $this->render(
-                'access/register_confirm.html.twig', $outputArray
-            );
+            return $responseCallable($myForm);
         }
     }
 

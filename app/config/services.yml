@@ -11,7 +11,7 @@ services:
 
     app.admin_user_provider:
         class: AppBundle\Security\AdminUserProvider
-        arguments: ["@doctrine"]
+        arguments: ["@doctrine", "%admin_emails%"]
 
     #voters
     app.voter.organisation:

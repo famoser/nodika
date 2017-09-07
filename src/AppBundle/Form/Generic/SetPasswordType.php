@@ -9,21 +9,19 @@
 namespace AppBundle\Form\Generic;
 
 
+use AppBundle\Entity\Traits\UserTrait;
+use AppBundle\Enum\SubmitButtonType;
+use AppBundle\Form\BaseAbstractType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-abstract class SetPasswordType extends AbstractType
+abstract class SetPasswordType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transArray = ["translation_domain" => $options["translation_domain"]];
-
-
-        $builder->add("plainPassword", PasswordType::class, ["translation_domain" => "user_trait"]);
-        $builder->add("repeatPlainPassword", PasswordType::class, ["translation_domain" => "user_trait"]);
-
-        $builder->add("set password", SubmitType::class, $transArray);
+        $builder = UserTrait::getSetPasswordBuilder($builder);
+        $this->addSubmit($builder, SubmitButtonType::SET_PASSWORD);
     }
 }

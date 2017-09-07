@@ -6,3 +6,8 @@ app_administration:
     resource: "@AppBundle/Controller/Administration/"
     type:     annotation
     prefix:   /administration
+
+app_backend:
+    resource: "@AppBundle/Controller/Backend/"
+    type:     annotation
+    prefix:   /backend

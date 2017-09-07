@@ -16,5 +16,5 @@ class StaticMessageHelper
     const FLASH_INFO = 'info';
     const FLASH_DANGER = 'danger';
 
-    const FORM_SUBMIT_TYPE_OPTION = 'submit_type_option';
+    const FORM_SUBMIT_BUTTON_TYPE_OPTION = 'submit_button_type_option';
 }

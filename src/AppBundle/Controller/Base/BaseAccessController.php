@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -29,10 +30,11 @@ class BaseAccessController extends BaseController
     /**
      * @param Request $request
      * @param UserTrait $user
+     * @param FormInterface $loginForm
      * @param $translationDomain
      * @return Form
      */
-    protected function getLoginForm(Request $request, $user, $translationDomain)
+    protected function getLoginForm(Request $request, $user, FormInterface $loginForm)
     {
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
@@ -55,8 +57,6 @@ class BaseAccessController extends BaseController
         $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
         $user->setEmail($lastUsername);
 
-
-        $loginForm = $this->createForm(LoginType::class, $user);
         $loginForm->handleRequest($request);
 
         if ($loginForm->isSubmitted()) {

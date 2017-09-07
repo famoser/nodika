@@ -11,6 +11,7 @@ namespace AppBundle\Entity\Traits;
 use AppBundle\Helper\HashHelper;
 use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
+use const Grpc\STATUS_ABORTED;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -61,7 +62,7 @@ trait UserTrait
      *
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $agbAccepted;
+    private $agbAccepted = false;
 
     /**
      * @var string $plainPassword
@@ -394,10 +395,9 @@ trait UserTrait
      */
     public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builder);
-        static::getPlainPasswordBuilder($builder, $builder);
+        static::getEmailBuilder($builder, $builderArray);
+        static::getPlainPasswordBuilder($builder, $builderArray);
         $builder->add(
             "agbAccepted",
             CheckboxType::class,
@@ -408,19 +408,42 @@ trait UserTrait
 
     /**
      * @param FormBuilderInterface $builder
+     * @param array $defaultArray
+     * @return FormBuilderInterface
+     */
+    public static function getLoginBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    {
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getEmailBuilder($builder, $builderArray);
+        static::getPlainPasswordBuilder($builder, $builderArray);
+        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
      * @param $defaultArray
      * @return FormBuilderInterface
      */
     public static function getResetUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builder);
-        static::getPlainPasswordBuilder($builder, $builder);
+        static::getEmailBuilder($builder, $builderArray);
+        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return FormBuilderInterface
+     */
+    public static function getSetPasswordBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    {
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getPlainPasswordBuilder($builder, $builderArray);
         $builder->add(
-            "agbAccepted",
-            CheckboxType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("agbAccepted")
+            "repeatPlainPassword",
+            PasswordType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("repeatPlainPassword")
         );
         return $builder;
     }
@@ -447,26 +470,8 @@ trait UserTrait
         $builder->add(
             "email",
             EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("email") + ["name" => "_username"]
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
         );
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     * @return FormBuilderInterface
-     */
-    public static function getSetPasswordBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getPlainPasswordBuilder($builder, $builder);
-        $builder->add(
-            "repeatPlainPassword",
-            PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("repeatPlainPassword")
-        );
-        return $builder;
     }
 
     /**
