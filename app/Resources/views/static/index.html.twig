@@ -1,16 +1,9 @@
 {% extends 'layout_base.html.twig' %}
 
-{% block title %}nodika.ch{% endblock %}
-{% block description %}Der Notfalldienst Kalender erlaubt schnelle, transparente und einfache Absprache
-    über die Verteilung von Notfalldiensten{% endblock %}
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
 
 {% trans_default_domain "static" %}
-
-{% block header %}
-    {% if message != "" %}
-        <p>{{ message }}</p>
-    {% endif %}
-{% endblock %}
 
 {% block layout %}
     {% if is_logged_in %}
@@ -47,40 +40,34 @@
         <div class="container index-container default-color">
             <div class="row">
                 <div class="color-title col-md-4">
-                    <h2>Funktionen</h2>
-                    <p class="h2-description">Der Notfalldienst Kalender ist eine Kombination aus mehreren bewährten und
-                        bereits
-                        im Einsatz stehenden Tools.</p>
+                    <h2>{{ "index.features.header"|trans }}</h2>
+                    <p class="h2-description">{{ "index.features.header_description"|trans }}</p>
                 </div>
                 <div class="color-content col-md-offset-2 col-md-6">
                     <ul>
                         <li>
-                            <b>Übersichtlich:</b>
-                            Sofortiger Einblick in kommende eigene Termine und Rückblick der vergangenen Termine
+                            <b>{{ "index.features.reason_1_name"|trans }}:</b>
+                            {{ "index.features.reason_1_description"|trans }}
                         </li>
                         <li>
-                            <b>Fair:</b>
-                            Neue Termine werden mit einem ausgeklügelten Algorithmus gewichtet auf die verschiedenen
-                            Mitglieder
-                            verteilt
+                            <b>{{ "index.features.reason_2_name"|trans }}:</b>
+                            {{ "index.features.reason_2_description"|trans }}
                         </li>
                         <li>
-                            <b>Praktisch:</b>
-                            Termine können einfach mit anderen Benutzern getauscht werden
+                            <b>{{ "index.features.reason_3_name"|trans }}:</b>
+                            {{ "index.features.reason_3_description"|trans }}
                         </li>
                         <li>
-                            <b>Erinnernd:</b>
-                            Kurz bevor ein Termin stattfindet wird der Benutzer daran erinnert. Bestätigt er den Erhalt
-                            der
-                            Erinnerung nicht, wird automatisch ein Administrator informiert
+                            <b>{{ "index.features.reason_4_name"|trans }}:</b>
+                            {{ "index.features.reason_4_description"|trans }}
                         </li>
                         <li>
-                            <b>Transparent:</b>
-                            Alle Veränderungen am Terminkalender werden gespeichert und zugänglich gemacht
+                            <b>{{ "index.features.reason_5_name"|trans }}:</b>
+                            {{ "index.features.reason_5_description"|trans }}
                         </li>
                         <li>
-                            <b>Individuell:</b>
-                            Sorgsam ausgewählte Standarteinstellungen können vom Administrator nachkonfiguriert werden
+                            <b>{{ "index.features.reason_6_name"|trans }}:</b>
+                            {{ "index.features.reason_6_description"|trans }}
                         </li>
                     </ul>
                 </div>
@@ -91,36 +78,30 @@
         <div class="container index-container default-color">
             <div class="row">
                 <div class="color-title col-md-4">
-                    <h2>Chancen</h2>
-                    <p class="h2-description">Reduzieren Sie den Verwaltungsaufwand, während gleichzeitig die
-                        Organisation der
-                        Mitglieder verbessert wird.</p>
+                    <h2>{{ "index.promises.header"|trans }}</h2>
+                    <p class="h2-description">{{ "index.promises.header_description"|trans }}</p>
                 </div>
                 <div class="color-content col-md-offset-2 col-md-6">
                     <ul>
                         <li>
-                            <b>Zeit und Kosten sparen:</b>
-                            Verwatungsaufwand Ihres Vereins erheblich reduzieren
+                            <b>{{ "index.promises.promise_1_name"|trans }}:</b>
+                            {{ "index.promises.promise_1_description"|trans }}
                         </li>
                         <li>
-                            <b>Strukturiert:</b>
-                            Jederzeit ist klar, wer die Verantwortung für welchen Termin hat. Die Erinnerungsfunktion
-                            beugt
-                            Missverständnissen vor.
+                            <b>{{ "index.promises.promise_2_name"|trans }}:</b>
+                            {{ "index.promises.promise_2_description"|trans }}
                         </li>
                         <li>
-                            <b>Lange Testphase:</b>
-                            Ab Anfang November kann das Tool ausgiebig gestestet werden
+                            <b>{{ "index.promises.promise_3_name"|trans }}:</b>
+                            {{ "index.promises.promise_3_description"|trans }}
                         </li>
                         <li>
-                            <b>Sicher:</b>
-                            Das Tool wird mit neuesten Technologien von einem erfahrenen Entwickler umgesetzt
+                            <b>{{ "index.promises.promise_4_name"|trans }}:</b>
+                            {{ "index.promises.promise_4_description"|trans }}
                         </li>
                         <li>
-                            <b>Langfristig:</b>
-                            Die verwendeten Technologien erlauben auch anderen Unternehmen die Weiterführung des
-                            Projektes.
-                            Das Tool wird für mindestens drei Jahre gewartet und weiterentwickelt
+                            <b>{{ "index.promises.promise_5_name"|trans }}:</b>
+                            {{ "index.promises.promise_5_description"|trans }}
                         </li>
                     </ul>
                 </div>
@@ -131,32 +112,26 @@
         <div class="container index-container default-color">
             <div class="row">
                 <div class="color-title col-md-4">
-                    <h2>Finanzielles</h2>
-                    <p class="h2-description">Der finanzielle Aspekt</p>
+                    <h2>{{ "index.payment.header"|trans }}</h2>
+                    <p class="h2-description">{{ "index.payment.header_description"|trans }}</p>
                 </div>
                 <div class="color-content col-md-offset-2 col-md-6">
                     <ul>
                         <li>
-                            <b>Registrierungsgebühr:</b>
-                            Einmalige Registrierungsgebühr 1500 CHF zur teilweisen Deckung der Entwicklungskosten (fällt
-                            per
-                            01.07.2017 an).
+                            <b>{{ "index.payment.aspect_1_name"|trans }}:</b>
+                            {{ "index.payment.aspect_1_description"|trans }}
                         </li>
                         <li>
-                            <b>Jährlicher Betrag:</b>
-                            Der jährliche Betrag von CHF 300 deckt den Rest der Entwicklungskosten, und bezahlt die
-                            Wartung und
-                            das Hosting der Platform
+                            <b>{{ "index.payment.aspect_2_name"|trans }}:</b>
+                            {{ "index.payment.aspect_2_description"|trans }}
                         </li>
                         <li>
-                            <b>Support:</b>
-                            Wird mit 60 CHF/h seperat vergütet
+                            <b>{{ "index.payment.aspect_3_name"|trans }}:</b>
+                            {{ "index.payment.aspect_3_description"|trans }}
                         </li>
                         <li>
-                            <b>Geld zurück Garantie:</b>
-                            Nicht zufrieden mit dem Notfalldienst Kalender? Bis ein Monat nach Beginn der Nutzung der
-                            Anwendung
-                            wird das Geld zurückerstattet!
+                            <b>{{ "index.payment.aspect_4_name"|trans }}:</b>
+                            {{ "index.payment.aspect_4_description"|trans }}
                         </li>
                     </ul>
                 </div>
@@ -168,39 +143,30 @@
         <div class="container index-container default-color">
             <div class="row">
                 <div class="color-title col-md-5">
-                    <h2>Interesse geweckt?</h2>
-                    <p class="h2-description">Jetzt in die Early Bird Liste einschreiben</p>
-                    <p>Helfen Sie mit das Produkt zu realisieren und tragen Sie sich in die Early Bird Liste ein. Ihre
-                        Vorteile: </p>
+                    <h2>{{ "index.contact.header"|trans }}</h2>
+                    <p class="h2-description">{{ "index.contact.header_description"|trans }}</p>
+                    <p>{{ "index.contact.early_bird_description"|trans }}</p>
                     <ul>
                         <li>
-                            <b>20% Rabatt:</b>
-                            Als kleines Dankeschön für das Vertrauen wird die Registrierungsgebühr und das erste
-                            Jahresgebühr
-                            um 20% reduziert
+                            <b>{{ "index.contact.reason_1_name"|trans }}:</b>
+                            {{ "index.contact.reason_1_description"|trans }}
                         </li>
                         <li>
-                            <b>Extra Funktionen:</b>
-                            Sofern möglich werden zusätzliche Funktionen programmiert um Ihrem Verein die Integrierung
-                            einfacher zu machen
+                            <b>{{ "index.contact.reason_2_name"|trans }}:</b>
+                            {{ "index.contact.reason_2_description"|trans }}
                         </li>
                         <li>
-                            <b>Kein Risiko:</b>
-                            Es wird keine Rechnung versandt bis das Tool nicht fristgerecht mit allen versprochenen
-                            Funktionen veröffentlicht ist
+                            <b>{{ "index.contact.reason_3_name"|trans }}:</b>
+                            {{ "index.contact.reason_3_description"|trans }}
                         </li>
                     </ul>
-                    <p>Mit dem Eintrag in die Early Bird Liste akzeptieren Sie die <a
-                                href="{{ asset("dist/files/AGB.pdf") }}">AGB</a> und erwerben das erste Jahr plus
-                        Registrierungsgebühr</p>
+                    <p>
+                        {{ "index.contact.early_bird_conditions"|trans }} <br/>
+                        <a href="{{ asset("dist/files/AGB.pdf") }}">{{ "index.contact.download_agb"|trans }}</a>
+                    </p>
                 </div>
                 <div class="color-content col-md-offset-1 col-md-6">
-                    {{ form_start(newsletter_form) }}
-                    {{ form_errors(newsletter_form) }}
-                    {{ form_end(newsletter_form) }}
-                    {% if message != "" %}
-                        <p>{{ message }}</p>
-                    {% endif %}
+                    {{ form(newsletter_form) }}
                 </div>
             </div>
         </div>

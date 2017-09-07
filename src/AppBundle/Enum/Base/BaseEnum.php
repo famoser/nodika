@@ -8,7 +8,7 @@
 
 namespace AppBundle\Enum\Base;
 
-use AppBundle\Framework\NamingHelper;
+use AppBundle\Helper\NamingHelper;
 use AppBundle\Framework\TranslatableObject;
 use ReflectionClass;
 
@@ -22,13 +22,11 @@ abstract class BaseEnum extends TranslatableObject
     protected function getChoicesForBuilderInternal()
     {
         $reflection = new ReflectionClass(get_class($this));
-
         $choices = $reflection->getConstants();
-        $toString = $reflection->getMethod('toString');
 
         $res = [];
-        foreach ($choices as $choice) {
-            $res[$toString->invoke($this, $choice)] = $choice;
+        foreach ($choices as $name => $value) {
+            $res[NamingHelper::constantToTranslation($name)] = $value;
         }
         return ["choices" => $res, 'choice_translation_domain' => $this->getTranslationDomain()];
     }
@@ -42,11 +40,11 @@ abstract class BaseEnum extends TranslatableObject
     protected function getTranslationForBuilderInternal($enumValue)
     {
         $reflection = new ReflectionClass(get_class($this));
-
         $choices = $reflection->getConstants();
+
         foreach ($choices as $name => $value) {
             if ($value == $enumValue) {
-                return ["translation_domain" => $this->getTranslationDomain(), "label" => NamingHelper::constantToTranslation($value)];
+                return ["translation_domain" => $this->getTranslationDomain(), "label" => NamingHelper::constantToTranslation($name)];
             }
         }
         return ["translation_domain" => "common_error", "label" => "enum.invalid_constant"];
@@ -58,5 +56,29 @@ abstract class BaseEnum extends TranslatableObject
     protected function getTranslationDomainPrefix()
     {
         return "enum";
+    }
+
+
+    /**
+     * returns an array fit to be used by the ChoiceType
+     *
+     * @return array
+     */
+    public static function getChoicesForBuilder()
+    {
+        $elem = new static();
+        return $elem->getChoicesForBuilderInternal();
+    }
+
+    /**
+     * translate enum value
+     *
+     * @param $enumValue
+     * @return array
+     */
+    public static function getTranslationForBuilder($enumValue)
+    {
+        $elem = new static();
+        return $elem->getTranslationForBuilderInternal($enumValue);
     }
 }

@@ -9,12 +9,12 @@
 namespace AppBundle\Entity\Traits;
 
 
-
-
+use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -122,22 +122,25 @@ trait CommunicationTrait
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    public static function getCommunicationBuilder(FormBuilderInterface $builder, $defaultArray)
+    public static function getCommunicationBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        return static::mapCommunicationFields($builder, $defaultArray);
-    }
-
-    /**
-     * @param FormBuilderInterface|FormMapper $mapper
-     * @param $defaultArray
-     * @return FormBuilderInterface|FormMapper
-     */
-    private static function mapCommunicationFields($mapper, $defaultArray)
-    {
-        return $mapper
-            ->add("phone", TextType::class, $defaultArray + ["required" => false])
-            ->add("email", EmailType::class, $defaultArray)
-            ->add("webpage", TextType::class, $defaultArray + ["required" => false]);
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(CommunicationTrait::class)] + $defaultArray;
+        $builder->add(
+            "phone",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("phone")
+        );
+        $builder->add(
+            "email",
+            EmailType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
+        );
+        $builder->add(
+            "webpage",
+            UrlType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("webpage")
+        );
+        return $builder;
     }
 
     /**

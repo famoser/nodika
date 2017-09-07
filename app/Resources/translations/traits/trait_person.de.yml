@@ -1,6 +1,11 @@
-Job title: Titel (freiwillig)
-Given name: Vorname
-Family name: Nachname
+#name
+trait:
+  name: zu Ihrer Person
+
+#properties
+job_title: Titel (freiwillig)
+given_name: Vorname
+family_name: Nachname
 
 #methods
-fullName: Name
+full_name: Name

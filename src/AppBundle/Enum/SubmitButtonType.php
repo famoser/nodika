@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class SubmitButtonType extends BaseEnum
 {
@@ -18,6 +17,4 @@ class SubmitButtonType extends BaseEnum
     const CREATE = 2;
     const EDIT = 3;
     const REMOVE = 4;
-
-    use EnumStaticPropertiesTrait;
 }

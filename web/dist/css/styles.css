@@ -10778,10 +10778,11 @@ blockquote.testimonial footer cite {
 .footer {
   padding: 20px; }
 
-.two-dimensional-form > .form-group > div {
-  margin-bottom: 3em; }
+.sub-form-control {
+  margin-bottom: 1em; }
 
-.two-dimensional-form > .form-group > .control-label {
+.sub-form-label {
+  margin-top: 1em;
   font-size: 2em;
   margin-bottom: 0.5em; }
 
@@ -10813,12 +10814,6 @@ section {
 .index-container {
   padding: 40px;
   position: relative; }
-
-.index-container *:last-child {
-  margin-bottom: 0; }
-
-.index-container *:first-child {
-  margin-top: 0; }
 
 @media (max-width: 1030px) {
   .index-container {

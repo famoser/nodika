@@ -10,13 +10,10 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class NewsletterChoice extends BaseEnum
 {
     const REGISTER = 1;
     const REGISTER_INFO_ONLY = 2;
     const QUESTION = 3;
-
-    use EnumStaticPropertiesTrait;
 }

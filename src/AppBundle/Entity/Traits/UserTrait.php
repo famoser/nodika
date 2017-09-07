@@ -8,11 +8,13 @@
 
 namespace AppBundle\Entity\Traits;
 
+use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -397,31 +399,19 @@ trait UserTrait
      */
     public static function getUserBuilder(FormBuilderInterface $builder, $defaultArray)
     {
-        return static::mapUserFields($builder, $defaultArray);
-    }
 
-    /**
-     * @param FormMapper $formMapper
-     * @param $defaultArray
-     * @return FormMapper
-     */
-    public static function getUserFormFields(FormMapper $formMapper, $defaultArray)
-    {
-        $mapper = static::mapUserFields($formMapper, $defaultArray);
-        $mapper->add("isEnabled", CheckboxType::class);
-        return $mapper;
-    }
-
-    /**
-     * @param FormBuilderInterface|FormMapper $mapper
-     * @param $defaultArray
-     * @return FormBuilderInterface|FormMapper
-     */
-    private static function mapUserFields($mapper, $defaultArray)
-    {
-        return $mapper
-            ->add("email", EmailType::class, $defaultArray)
-            ->add("plainPassword", TextType::class, $defaultArray + ["required" => false]);
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        $builder->add(
+            "email",
+            EmailType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
+        );
+        $builder->add(
+            "plainPassword",
+            PasswordType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("plainPassword")
+        );
+        return $builder;
     }
 
     /**

@@ -1,2 +1,7 @@
-Name: Name
-Description: Beschreibung (freiwillig)
+#name
+trait:
+  name: Objekt
+
+#properties
+name: Name
+description: Beschreibung (freiwillig)

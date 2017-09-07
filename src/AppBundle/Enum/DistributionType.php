@@ -10,12 +10,9 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class DistributionType extends BaseEnum
 {
     const ROUND_ROBIN = 1;
     const FAIR = 2;
-
-    use EnumStaticPropertiesTrait;
 }

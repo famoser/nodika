@@ -1,10 +1,15 @@
-Address: Adresse
-Street: Strasse
-Street nr: Hausnummer
-Address line: Adresszeile 2 (freiwillig)
-Postal code: Postleitzahl
-City: Stadt
-Country: Land
+#name
+trait:
+  name: Addresse
+
+#properties
+address: Adresse
+street: Strasse
+street_nr: Hausnummer
+address_line: Adresszeile 2 (freiwillig)
+postal_code: Postleitzahl
+city: Stadt
+country: Land
 
 #methods
-addressLines: Adresse
+address_lines: Adresse

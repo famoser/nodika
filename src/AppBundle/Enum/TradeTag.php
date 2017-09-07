@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class TradeTag extends BaseEnum
 {
@@ -18,6 +17,4 @@ class TradeTag extends BaseEnum
     const MAYBE_TRADE = 2;
     const WANT_TRADE = 3;
     const MUST_TRADE = 4;
-
-    use EnumStaticPropertiesTrait;
 }

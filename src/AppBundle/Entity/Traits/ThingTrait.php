@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity\Traits;
 
+use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -85,19 +86,18 @@ trait ThingTrait
      */
     public static function getThingBuilder(FormBuilderInterface $builder, $defaultArray)
     {
-        return static::mapThingFields($builder, $defaultArray);
-    }
-
-    /**
-     * @param FormBuilderInterface|FormMapper $mapper
-     * @param $defaultArray
-     * @return FormBuilderInterface|FormMapper
-     */
-    private static function mapThingFields($mapper, $defaultArray)
-    {
-        return $mapper
-            ->add("name", TextType::class, $defaultArray)
-            ->add("description", TextType::class, $defaultArray + ["required" => false]);
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(ThingTrait::class)] + $defaultArray;
+        $builder->add(
+            "name",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("name")
+        );
+        $builder->add(
+            "description",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("description") +  ["required" => false]
+        );
+        return $builder;
     }
 
     /**

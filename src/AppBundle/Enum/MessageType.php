@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class MessageType extends BaseEnum
 {
@@ -18,6 +17,4 @@ class MessageType extends BaseEnum
     const WARNING = 1;
     const ERROR = 2;
     const FATAL = 3;
-
-    use EnumStaticPropertiesTrait;
 }

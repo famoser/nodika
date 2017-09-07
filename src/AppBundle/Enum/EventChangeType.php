@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class EventChangeType extends BaseEnum
 {
@@ -19,6 +18,4 @@ class EventChangeType extends BaseEnum
     const REMOVED_BY_ADMIN = 3;
     const PERSON_ASSIGNED = 4;
     const CHANGED_OWNER = 5;
-
-    use EnumStaticPropertiesTrait;
 }

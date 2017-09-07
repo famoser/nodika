@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\EnumStaticPropertiesTrait;
 
 class OfferStatus extends BaseEnum
 {
@@ -18,6 +17,4 @@ class OfferStatus extends BaseEnum
     const OFFER_ACCEPTED = 2;
     const OFFER_DECLINED = 3;
     const OFFER_CLOSED = 4;
-
-    use EnumStaticPropertiesTrait;
 }

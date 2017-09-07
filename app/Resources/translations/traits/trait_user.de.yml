@@ -1,2 +1,7 @@
-Plain password: Passwort
-Repeat plain password: Passwort wiederholen
+#name
+trait:
+ name: Benutzer
+
+#properties
+plain_password: Passwort
+repeat_plain_password: Passwort wiederholen

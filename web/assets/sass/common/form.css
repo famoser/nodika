@@ -1,6 +1,7 @@
-.two-dimensional-form > .form-group > div {
-  margin-bottom: 3em; }
+.sub-form-control {
+  margin-bottom: 1em; }
 
-.two-dimensional-form > .form-group > .control-label {
+.sub-form-label {
+  margin-top: 1em;
   font-size: 2em;
   margin-bottom: 0.5em; }

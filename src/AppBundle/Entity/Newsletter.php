@@ -14,7 +14,11 @@ use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Enum\Base\BaseEnum;
 use AppBundle\Enum\NewsletterChoice;
+use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * A Newsletter is a person subscribed (or not) to receive news about this application
@@ -95,5 +99,27 @@ class Newsletter extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getEmail();
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return FormBuilderInterface
+     */
+    protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
+    {
+        $builderArray = $this->getTranslationDomainForBuilder() + $defaultArray;
+        $builder->add(
+            "choice",
+            ChoiceType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("choice") +
+            NewsletterChoice::getChoicesForBuilder()
+        );
+        $builder->add(
+            "message",
+            TextareaType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("message")
+        );
+        return $builder;
     }
 }

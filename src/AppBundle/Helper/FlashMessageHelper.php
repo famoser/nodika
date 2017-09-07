@@ -14,4 +14,5 @@ class FlashMessageHelper
     const ERROR_MESSAGE = 'error';
     const SUCCESS_MESSAGE = 'success';
     const INFO_MESSAGE = 'info';
+    const DANGER_MESSAGE = 'danger';
 }
