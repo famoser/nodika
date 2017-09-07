@@ -1,0 +1,3 @@
+entity:
+  name: Termintauschvorschlag
+  description: Ein Termintauschvorschlag enthält Termine die zwischen zwei Personen getauscht werden können

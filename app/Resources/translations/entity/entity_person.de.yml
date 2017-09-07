@@ -1,0 +1,3 @@
+entity:
+  name: Person
+  description: Eine Person ist einem Mitglied zugeordnet und entspricht einer natürlichen Person

@@ -1,0 +1,3 @@
+entity:
+  name: Termingruppe
+  description: Gruppiert Termine. Jeder Termin ist einer Termingruppe zuegeordnet.
