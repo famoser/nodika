@@ -11,9 +11,8 @@ namespace AppBundle\Controller\Base;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
-use AppBundle\Enum\Base\BaseEnum;
 use AppBundle\Helper\CsvFileHelper;
-use AppBundle\Helper\FlashMessageHelper;
+use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +25,7 @@ class BaseController extends Controller
      */
     protected function displayError($message)
     {
-        $this->get('session')->getFlashBag()->set(FlashMessageHelper::ERROR_MESSAGE, $message);
+        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_ERROR, $message);
     }
 
     /**
@@ -34,7 +33,7 @@ class BaseController extends Controller
      */
     protected function displayDanger($message)
     {
-        $this->get('session')->getFlashBag()->set(FlashMessageHelper::DANGER_MESSAGE, $message);
+        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_DANGER, $message);
     }
 
     /**
@@ -42,7 +41,7 @@ class BaseController extends Controller
      */
     protected function displaySuccess($message)
     {
-        $this->get('session')->getFlashBag()->set(FlashMessageHelper::SUCCESS_MESSAGE, $message);
+        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_SUCCESS, $message);
     }
 
     /**
@@ -71,6 +70,7 @@ class BaseController extends Controller
     }
 
     /**
+     * @param $filename
      * @param array $header
      * @param array $data
      * @return StreamedResponse
@@ -126,7 +126,7 @@ class BaseController extends Controller
      * @param FormInterface $form
      * @param Request $request
      * @param BaseEntity $entity
-     * @param $onSuccessCallable
+     * @param callable $onSuccessCallable with $form & $entity arguments
      * @return FormInterface
      */
     protected function handleDoctrineFormWithCustomOnSuccess(FormInterface $form, Request $request, BaseEntity $entity, $onSuccessCallable)
@@ -146,8 +146,8 @@ class BaseController extends Controller
      * @param FormInterface $form
      * @param Request $request
      * @param BaseEntity $entity
-     * @param callable $onRemoveCallable
-     * @param callable $beforeRemoveCallable
+     * @param callable $onRemoveCallable with $form & $entity arguments
+     * @param callable $beforeRemoveCallable with $form & $entity arguments
      * @return FormInterface
      */
     protected function handleDoctrineRemove(FormInterface $form, Request $request, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
@@ -168,7 +168,7 @@ class BaseController extends Controller
      * @param FormInterface $form
      * @param Request $request
      * @param $entity
-     * @param callable $callable
+     * @param callable $callable with $form & $entity arguments
      * @return FormInterface
      */
     protected function handleForm(FormInterface $form, Request $request, $entity, $callable)

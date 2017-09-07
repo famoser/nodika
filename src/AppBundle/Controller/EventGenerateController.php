@@ -10,17 +10,7 @@ namespace AppBundle\Controller\Frontend;
 
 
 use AppBundle\Controller\Base\BaseController;
-use AppBundle\Entity\Event;
 use AppBundle\Entity\Organisation;
-use AppBundle\Form\Event\ImportEventsType;
-use AppBundle\Form\Generic\RemoveThingType;
-use AppBundle\Form\Event\NewEventType;
-use AppBundle\Helper\DateTimeFormatter;
-use AppBundle\Helper\EventLineChangeHelper;
-use AppBundle\Helper\FlashMessageHelper;
-use AppBundle\Model\Event\ImportEventModel;
-use AppBundle\Security\Voter\EventVoter;
-use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

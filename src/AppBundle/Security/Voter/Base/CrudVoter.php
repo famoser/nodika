@@ -9,7 +9,6 @@
 namespace AppBundle\Security\Voter\Base;
 
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 abstract class CrudVoter extends Voter

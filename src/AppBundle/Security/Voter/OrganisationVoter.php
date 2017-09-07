@@ -14,7 +14,6 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Security\Voter\Base\CrudVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class OrganisationVoter extends CrudVoter
 {

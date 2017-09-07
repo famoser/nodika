@@ -5,8 +5,12 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: content, label: Benutzer }
 
-    app.user_provider:
-        class: AppBundle\Security\UserProvider
+    app.frontend_user_provider:
+        class: AppBundle\Security\FrontendUserProvider
+        arguments: ["@doctrine"]
+
+    app.admin_user_provider:
+        class: AppBundle\Security\AdminUserProvider
         arguments: ["@doctrine"]
 
     #voters

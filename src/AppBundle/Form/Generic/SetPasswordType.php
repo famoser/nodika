@@ -6,10 +6,9 @@
  * Time: 14:32
  */
 
-namespace AppBundle\Form\Access\Base;
+namespace AppBundle\Form\Generic;
 
 
-use AppBundle\Entity\FrontendUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

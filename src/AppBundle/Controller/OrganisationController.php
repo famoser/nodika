@@ -12,7 +12,6 @@ namespace AppBundle\Controller\Frontend;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Organisation;
 use AppBundle\Form\Organisation\NewOrganisationType;
-use AppBundle\Security\Voter\Base\CrudVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;

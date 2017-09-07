@@ -6,31 +6,35 @@
  * Time: 10:19
  */
 
-namespace AppBundle\Controller\Frontend;
+namespace AppBundle\Controller;
 
 
-use AppBundle\Controller\Base\AccessBaseController;
+use AppBundle\Controller\Base\BaseAccessController;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Form\Access\FrontendUser\FrontendUserRegisterType;
-use AppBundle\Form\Access\FrontendUser\FrontendUserSetPasswordType;
+use AppBundle\Entity\Person;
+use AppBundle\Form\Access\FrontendUser\PersonType;
+use AppBundle\Form\FrontendUser\FrontendUserResetType;
+use AppBundle\Form\FrontendUser\FrontendUserSetPasswordType;
+use AppBundle\Helper\HashHelper;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class AccessController extends AccessBaseController
+class AccessController extends BaseAccessController
 {
     /**
      * @Route("/login", name="access_login")
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\Form\Form|RedirectResponse|Response
      */
     public function loginAction(Request $request)
     {
         $user = $this->getUser();
         if ($user instanceof FrontendUser) {
-            return $this->redirectToRoute("frontend_dashboard_index");
+            return $this->redirectToRoute("dashboard_index");
         }
 
         $form = $this->getLoginForm($request, new FrontendUser(), "access");
@@ -45,68 +49,56 @@ class AccessController extends AccessBaseController
     }
 
     /**
-     * @Route("/", name="access_default")
-     * @param Request $request
-     * @return Response
-     */
-    public function defaultAction(Request $request)
-    {
-        return $this->redirectToRoute("access_login");
-    }
-
-    /**
      * @Route("/register", name="access_register")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return FormInterface|Response
      */
     public function registerAction(Request $request)
     {
-        $user = FrontendUser::createNewFrontendUser();
-        //random password at start because we want to confirm email first
-        $user->setPlainPassword(uniqid());
-
-        $form = $this->getRegisterForm(
+        $registerForm = $this->handleDoctrineFormWithCustomOnSuccess(
+            $this->createForm(PersonType::class),
             $request,
-            $this->createForm(FrontendUserRegisterType::class),
-            $user,
-            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
-            function ($user) {
-                /* @var $user FrontendUser */
-                $user->setEmail($user->getContactEmail());
-                if (!$user->isAcceptedAgb()) {
-                    $this->displayError($this->get("translator")->trans("error.must_accept_agb", [], "access"));
-                }
-                return $user->isAcceptedAgb();
-            },
-            function ($user) {
-                /* @var $user FrontendUser */
-                return $this->generateUrl(
-                    "access_register_confirm",
-                    ["confirmationToken" => $user->getResetHash()],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-            },
-            function ($user) {
-                $translate = $this->get("translator");
-                $receiverNotification = $this->getDoctrine()->getRepository("AppBundle:Setting")->getFrontendRegisterEmailReceiver();
-                if ($receiverNotification != null) {
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("access_registered.subject", [], "notification_emails"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($receiverNotification)
-                        ->setBody($translate->trans("access_registered.message", ["%site_name%" => $this->getParameter("site_name")], "notification_emails"));
-                    $this->get('mailer')->send($message);
-                }
+            new Person(),
+            function ($form, $person) {
+                /* @var Person $person */
+                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
+                if ($existingUser != null) {
+                    $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
+                    return $form;
+                } else {
+                    $user = FrontendUser::createFromPerson($person);
 
-                /* @var $user FrontendUser */
-                return $this->redirectToRoute("access_register_thanks");
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($person);
+                    $em->persist($user);
+                    $em->flush();
+
+                    $translate = $this->get("translator");
+                    $registerLink = $this->generateUrl(
+                        "access_register_confirm",
+                        ["confirmationToken" => $user->getResetHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($translate->trans("register.subject", [], "email_access"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($user->getEmail())
+                        ->setBody($translate->trans(
+                            "register.message",
+                            ["%register_link%" => $registerLink],
+                            "email_access"));
+                    $this->get('mailer')->send($message);
+                    return $this->redirectToRoute("access_register_thanks");
+                }
             }
         );
-        if ($form instanceof RedirectResponse) {
-            return $form;
+
+        if ($registerForm instanceof RedirectResponse) {
+            return $registerForm;
         }
 
-        $arr["register_form"] = $form->createView();
+        $arr["register_form"] = $registerForm->createView();
         return $this->render(
             'access/register.html.twig', $arr
         );
@@ -127,29 +119,50 @@ class AccessController extends AccessBaseController
     /**
      * @Route("/reset", name="access_reset")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return Response
      */
     public function resetAction(Request $request)
     {
-        $form = $this->getResetForm(
+        $myForm = $this->handleForm(
+            $this->createForm(FrontendUserResetType::class),
             $request,
-            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
-            function ($user) {
-                /* @var $user FrontendUser */
-                return $this->generateUrl(
-                    "access_reset_confirm",
-                    ["confirmationToken" => $user->getResetHash()],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-            },
-            function ($user) {
+            new FrontendUser(),
+            function ($form, $entity) {
+                /* @var FormInterface $form */
+                /* @var FrontendUser $entity */
+
+                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $entity->getEmail()]);
+                if ($existingUser != null) {
+                    $existingUser->setResetHash(HashHelper::createNewResetHash());
+
+                    $this->getDoctrine()->getManager()->persist($existingUser);
+                    $this->getDoctrine()->getManager()->flush();
+
+                    $translate = $this->get("translator");
+                    $resetLink = $this->generateUrl(
+                        "access_reset_confirm",
+                        ["confirmationToken" => $existingUser->getResetHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($translate->trans("reset.subject", [], "email_access"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($existingUser->getEmail())
+                        ->setBody($translate->trans(
+                            "reset.message",
+                            ["%reset_link%" => $resetLink],
+                            "email_access"));
+                    $this->get('mailer')->send($message);
+                } else {
+                    $this->get("logger")->error("tried to reset password for non-existing user " . $existingUser->getEmail());
+                }
                 return $this->redirectToRoute("access_reset_done");
             }
         );
-        if ($form instanceof RedirectResponse) {
-            return $form;
-        }
-        $arr["reset_form"] = $form->createView();
+
+        $arr = [];
+        $arr["reset_form"] = $myForm->createView();
         return $this->render(
             'access/reset.html.twig', $arr
         );
@@ -168,32 +181,6 @@ class AccessController extends AccessBaseController
     }
 
     /**
-     * @Route("/reset/{confirmationToken}", name="access_reset_confirm")
-     * @param Request $request
-     * @param $confirmationToken
-     * @return Response
-     */
-    public function resetConfirmAction(Request $request, $confirmationToken)
-    {
-        $result = $this->processConfirmationToken(
-            $request,
-            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
-            $confirmationToken,
-            $this->createForm(FrontendUserSetPasswordType::class)
-        );
-        if ($result instanceof Response) {
-            return $result;
-        } else if ($result === true) {
-            return $this->redirectToRoute("access_adverts");
-        } else {
-            $arr["reset_password_form"] = $result->createView();
-            return $this->render(
-                'access/reset_confirm.html.twig', $arr
-            );
-        }
-    }
-
-    /**
      * @Route("/register/{confirmationToken}", name="access_register_confirm")
      * @param Request $request
      * @param $confirmationToken
@@ -201,24 +188,72 @@ class AccessController extends AccessBaseController
      */
     public function registerConfirmAction(Request $request, $confirmationToken)
     {
-        $result = $this->processConfirmationToken(
-            $request,
-            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
-            $confirmationToken,
-            $this->createForm(FrontendUserSetPasswordType::class)
-        );
-        if ($result instanceof Response) {
-            return $result;
-        } else if ($result === true) {
-            return $this->redirectToRoute("access_dashboard_index");
-        } else {
-            $arr["register_confirm_form"] = $result->createView();
+        return $this->handleResetPasswordAction($request, $confirmationToken, ["mode" => "register"], function ($form, $entity) {
+            return $this->redirectToRoute("administration_organisation_new");
+        });
+    }
+
+    /**
+     * @Route("/reset/{confirmationToken}", name="access_reset_confirm")
+     * @param Request $request
+     * @param $confirmationToken
+     * @return Response
+     */
+    public function resetConfirmAction(Request $request, $confirmationToken)
+    {
+        return $this->handleResetPasswordAction($request, $confirmationToken, ["mode" => "reset"], function ($form, $entity) {
+            return $this->redirectToRoute("dashboard_index");
+        });
+    }
+
+    /**
+     * @param Request $request
+     * @param $confirmationToken
+     * @param array $outputArray
+     * @param callable $onSuccessCallable with $form & $entity as argument
+     * @return FormInterface|Response
+     */
+    protected function handleResetPasswordAction(Request $request, $confirmationToken, $outputArray, $onSuccessCallable)
+    {
+        $user = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["resetHash" => $confirmationToken]);
+        if ($user == null) {
             return $this->render(
-                'access/register_confirm.html.twig', $arr
+                'access/hash_invalid.html.twig'
+            );
+        }
+
+        $myForm = $this->handleForm(
+            $this->createForm(FrontendUserSetPasswordType::class),
+            $request,
+            $user,
+            function ($form, $user) use ($request, $onSuccessCallable) {
+                /* @var FrontendUser $user */
+                if ($user->isValidPlainPassword()) {
+                    if ($user->getPlainPassword() == $user->getRepeatPlainPassword()) {
+                        $user->persistNewPassword();
+                        $this->fastSave($user);
+                        $this->loginUser($request, $user);
+
+                        return $onSuccessCallable($form, $user);
+                    } else {
+                        $this->displayError($this->get("translator")->trans("error.passwords_do_not_match", [], "access"));
+                    }
+                } else {
+                    $this->displayError($this->get("translator")->trans("error.new_password_not_valid", [], "access"));
+                }
+                return $form;
+            }
+        );
+
+        if ($myForm instanceof Response) {
+            return $myForm;
+        } else {
+            $outputArray["reset_password_form"] = $myForm->createView();
+            return $this->render(
+                'access/register_confirm.html.twig', $outputArray
             );
         }
     }
-
 
     /**
      * @Route("/login_check", name="access_login_check")

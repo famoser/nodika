@@ -8,12 +8,8 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Entity\Traits\ThingTrait;
+use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Enum\TradeTag;
 use AppBundle\Helper\DateTimeFormatter;
 use Doctrine\Common\Collections\ArrayCollection;

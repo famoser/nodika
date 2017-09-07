@@ -6,20 +6,20 @@
  * Time: 10:19
  */
 
-namespace AppBundle\Controller\Admin;
+namespace AppBundle\Controller\Backend;
 
 
-use AppBundle\Controller\Base\AccessBaseController;
+use AppBundle\Controller\Base\BaseAccessController;
 use AppBundle\Entity\AdminUser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AccessController extends AccessBaseController
+class AccessController extends BaseAccessController
 {
     /**
-     * @Route("/login", name="admin_login")
+     * @Route("/login", name="backend_login")
      * @param Request $request
      * @return Response
      */
@@ -27,32 +27,32 @@ class AccessController extends AccessBaseController
     {
         $user = $this->getUser();
         if ($user instanceof AdminUser) {
-            return $this->redirectToRoute("admin_dashboard");
+            return $this->redirectToRoute("backend_dashboard_index");
         }
 
-        $form = $this->getLoginForm($request, new AdminUser(), "admin_login");
+        $form = $this->getLoginForm($request, new AdminUser(), "backend_login");
         if ($form instanceof RedirectResponse) {
             return $form;
         }
         $arr["login_form"] = $form->createView();
 
         return $this->render(
-            'admin/access/login.html.twig', $arr
+            'backend/access/login.html.twig', $arr
         );
     }
 
     /**
-     * @Route("/", name="admin_default")
+     * @Route("/", name="backend_default")
      * @param Request $request
      * @return Response
      */
     public function defaultAction(Request $request)
     {
-        return $this->redirectToRoute("admin_login");
+        return $this->redirectToRoute("backend_login");
     }
 
     /**
-     * @Route("/login_check", name="admin_login_check")
+     * @Route("/login_check", name="backend_login_check")
      * @param Request $request
      */
     public function loginCheck(Request $request)
@@ -61,7 +61,7 @@ class AccessController extends AccessBaseController
     }
 
     /**
-     * @Route("/logout", name="admin_logout")
+     * @Route("/logout", name="backend_logout")
      * @param Request $request
      */
     public function logoutAction(Request $request)

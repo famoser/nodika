@@ -11,7 +11,6 @@ namespace AppBundle\Form;
 
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Helper\NamingHelper;
-use ReflectionClass;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

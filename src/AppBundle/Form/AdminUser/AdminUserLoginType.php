@@ -6,14 +6,14 @@
  * Time: 13:01
  */
 
-namespace AppBundle\Form\Access\Admin;
+namespace AppBundle\Form\AdminUser;
 
 
 use AppBundle\Entity\AdminUser;
-use AppBundle\Form\Access\Base\LoginType;
+use AppBundle\Form\Generic\LoginType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdminLoginType extends LoginType
+class AdminUserLoginType extends LoginType
 {
     public function configureOptions(OptionsResolver $resolver)
     {

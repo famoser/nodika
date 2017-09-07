@@ -3,7 +3,6 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Person;
 
 /**
  * EventLineRepository

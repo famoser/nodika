@@ -12,7 +12,6 @@ use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Enum\Base\BaseEnum;
 use AppBundle\Enum\NewsletterChoice;
 use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;

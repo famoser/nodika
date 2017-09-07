@@ -9,22 +9,16 @@
 namespace AppBundle\Form\Access\FrontendUser;
 
 
-use AppBundle\Entity\BusinessUser;
-use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Person;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Entity\Traits\ThingTrait;
-use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FrontendUserRegisterType extends BaseAbstractType
+class PersonType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -32,14 +26,11 @@ class FrontendUserRegisterType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = FrontendUser::getBuilderStatic($builder);
-
         $this->addTrait($builder, PersonTrait::class);
         $this->addTrait($builder, AddressTrait::class);
         $this->addTrait($builder, CommunicationTrait::class);
 
-
-        $this->addSubmit($builder, SubmitButtonType::REGISTER);
+        $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_TYPE_OPTION]);
     }
 
     /**
@@ -48,7 +39,7 @@ class FrontendUserRegisterType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => FrontendUser::class,
+            'data_class' => Person::class,
         ));
     }
 }

@@ -11,10 +11,7 @@ namespace AppBundle\Security;
 
 use AppBundle\Entity\AdminUser;
 use AppBundle\Security\Base\BaseUserProvider;
-use AppBundle\Service\Interfaces\ISecurityService;
-use AppBundle\Service\Interfaces\ISessionService;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -27,19 +24,19 @@ class AdminUserProvider extends BaseUserProvider
     private $registry;
 
     /**
-     * @var ISecurityService $securityService
+     * @var string[] $adminEmails
      */
-    private $securityService;
+    private $adminEmails;
 
     /**
      * AdminUserProvider constructor.
      * @param RegistryInterface $registry
-     * @param ISecurityService $securityService
+     * @param $adminEmails
      */
-    public function __construct(RegistryInterface $registry, ISecurityService $securityService)
+    public function __construct(RegistryInterface $registry, $adminEmails)
     {
         $this->registry = $registry;
-        $this->securityService = $securityService;
+        $this->adminEmails = $adminEmails;
     }
 
     /**
@@ -58,8 +55,7 @@ class AdminUserProvider extends BaseUserProvider
     {
         $user = $this->registry->getRepository("AppBundle:AdminUser")->findOneBy(["email" => $username]);
         if ($user != null) {
-            $arr = $this->securityService->getAdminEmails();
-            if (in_array($user->getEmail(), $arr)) {
+            if (in_array($user->getEmail(), $this->adminEmails)) {
                 $user->addRole("ROLE_ADMIN");
             }
             return $user;

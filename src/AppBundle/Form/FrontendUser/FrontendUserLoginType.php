@@ -6,12 +6,11 @@
  * Time: 13:01
  */
 
-namespace AppBundle\Form\Access\FrontendUser;
+namespace AppBundle\Form\FrontendUser;
 
 
-use AppBundle\Entity\BusinessUser;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Form\Access\Base\LoginType;
+use AppBundle\Form\Generic\LoginType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FrontendUserLoginType extends LoginType

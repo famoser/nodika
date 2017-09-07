@@ -6,12 +6,11 @@
  * Time: 14:32
  */
 
-namespace AppBundle\Form\Access\FrontendUser;
+namespace AppBundle\Form\FrontendUser;
 
 
-use AppBundle\Entity\BusinessUser;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Form\Access\Base\SetPasswordType;
+use AppBundle\Form\Generic\SetPasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

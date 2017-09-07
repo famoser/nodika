@@ -10,20 +10,21 @@ namespace AppBundle\Controller\Base;
 
 
 use AppBundle\Entity\Traits\UserTrait;
-use AppBundle\Form\Access\Base\LoginType;
+use AppBundle\Form\Generic\LoginType;
+use AppBundle\Helper\HashHelper;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-class AccessBaseController extends BaseController
+class BaseAccessController extends BaseController
 {
     /**
      * @param Request $request
@@ -52,7 +53,6 @@ class AccessBaseController extends BaseController
 
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
-
         $user->setEmail($lastUsername);
 
 
@@ -92,8 +92,8 @@ class AccessBaseController extends BaseController
                         if (!$user->isValidPlainPassword()) {
                             $this->displayError($this->get("translator")->trans("error.new_password_not_valid", [], "access"));
                         } else {
-                            $user->hashAndRemovePlainPassword();
-                            $user->createNewResetHash();
+                            $user->persistNewPassword();
+                            $user->setResetHash(HashHelper::createNewResetHash());
                             $user->setRegistrationDate(new \DateTime());
 
                             $em = $this->getDoctrine()->getManager();
@@ -150,7 +150,7 @@ class AccessBaseController extends BaseController
                 /* @var $existingUser UserTrait */
                 $existingUser = $repository->findOneBy(["email" => $resetForm->get("email")->getData()]);
                 if ($existingUser != null) {
-                    $existingUser->createNewResetHash();
+                    $existingUser->setResetHash(HashHelper::createNewResetHash());
 
                     $this->getDoctrine()->getManager()->persist($existingUser);
                     $this->getDoctrine()->getManager()->flush();
@@ -185,7 +185,7 @@ class AccessBaseController extends BaseController
      */
     protected function processConfirmationToken(Request $request, $repository, $confirmationToken, $setPasswordForm)
     {
-        /* @var $user UserTrait */
+        /* @var $user AdvancedUserInterface|UserTrait */
         $user = $repository->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
             return $this->render(
@@ -199,8 +199,8 @@ class AccessBaseController extends BaseController
             if ($setPasswordForm->isValid()) {
                 if ($user->isValidPlainPassword()) {
                     if ($user->getPlainPassword() == $user->getRepeatPlainPassword()) {
-                        $user->hashAndRemovePlainPassword();
-                        $user->createNewResetHash();
+                        $user->persistNewPassword();
+                        $user->setResetHash(HashHelper::createNewResetHash());
 
                         $em = $this->getDoctrine()->getManager();
                         $em->persist($user);
@@ -225,5 +225,20 @@ class AccessBaseController extends BaseController
             }
         }
         return $setPasswordForm;
+    }
+
+
+    /**
+     * @param AdvancedUserInterface $user
+     * @param Request $request
+     */
+    protected function loginUser(Request $request, AdvancedUserInterface $user)
+    {
+        //login programmatically
+        $token = new UsernamePasswordToken($user, $user->getPassword(), "main", $user->getRoles());
+        $this->get("security.token_storage")->setToken($token);
+
+        $event = new InteractiveLoginEvent($request, $token);
+        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
     }
 }

@@ -11,7 +11,6 @@ namespace AppBundle\Entity\Traits;
 
 use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;

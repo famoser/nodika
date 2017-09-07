@@ -13,7 +13,6 @@ use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Newsletter;
 use AppBundle\Form\Newsletter\RegisterForPreviewType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +22,8 @@ class StaticController extends BaseController
 {
     /**
      * @Route("/", name="homepage")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {

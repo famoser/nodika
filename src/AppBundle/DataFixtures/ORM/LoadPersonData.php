@@ -12,7 +12,6 @@ namespace AppBundle\DataFixtures\ORM\Production;
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
-use AppBundle\Entity\Traits\PersonTrait;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadPersonData extends BaseFixture

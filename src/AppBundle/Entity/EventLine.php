@@ -8,13 +8,9 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
+use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\ThingTrait;
-use AppBundle\Enum\DistributionType;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -181,7 +177,7 @@ class EventLine extends BaseEntity
      * @param int $displayOrder
      * @return static
      */
-    public function setDisplayOrder(int $displayOrder)
+    public function setDisplayOrder($displayOrder)
     {
         $this->displayOrder = $displayOrder;
 

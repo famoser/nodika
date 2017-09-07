@@ -11,7 +11,6 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\EventLine;
-use AppBundle\Entity\Member;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadEventLineData extends BaseFixture

@@ -13,11 +13,11 @@ use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Organisation;
 use AppBundle\Form\Event\ImportEventsType;
-use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Form\Event\NewEventType;
+use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Helper\EventLineChangeHelper;
-use AppBundle\Helper\FlashMessageHelper;
+use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\Event\ImportEventModel;
 use AppBundle\Security\Voter\EventVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
@@ -239,7 +239,7 @@ class EventController extends BaseController
                     $expectedHeader = $this->getImportFileHeader();
                     for ($i = 0; $i < count($header); $i++) {
                         if ($expectedHeader[$i] != $header[$i]) {
-                            $this->get("session.flash_bag")->set(FlashMessageHelper::ERROR_MESSAGE, $this->get("translator")->trans("error.file_upload_failed", [], "import"));
+                            $this->get("session.flash_bag")->set(StaticMessageHelper::FLASH_ERROR, $this->get("translator")->trans("error.file_upload_failed", [], "import"));
                             return false;
                         }
                     }

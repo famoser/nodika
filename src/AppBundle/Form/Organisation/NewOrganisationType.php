@@ -12,7 +12,6 @@ namespace AppBundle\Form\Organisation;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;

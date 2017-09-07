@@ -13,6 +13,7 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            akewbiawbvc82wocq127q238d78qwb3daudzaub
     contact_email: ~
+    admin_emails: ["info@nodika.ch"]
 
     # application settings
     free_period_days: 31

@@ -2,22 +2,21 @@
 /**
  * Created by PhpStorm.
  * User: famoser
- * Date: 30/04/2017
- * Time: 21:26
+ * Date: 07/05/2017
+ * Time: 10:21
  */
 
-namespace AppBundle\Form\Newsletter;
+namespace AppBundle\Form\FrontendUser;
 
 
-use AppBundle\Entity\Newsletter;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\PersonTrait;
+use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Traits\UserTrait;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RegisterForPreviewType extends BaseAbstractType
+class FrontendUserRegisterType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -25,19 +24,18 @@ class RegisterForPreviewType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = Newsletter::getBuilderStatic($builder);
+        $builder = UserTrait::getRegisterUserBuilder($builder);
 
-        $this->addTrait($builder, PersonTrait::class);
-        $this->addTrait($builder, CommunicationTrait::class);
-
-
-        $this->addSubmit($builder, SubmitButtonType::SEND);
+        $this->addSubmit($builder, SubmitButtonType::REGISTER);
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Newsletter::class,
+            'data_class' => FrontendUser::class,
         ));
     }
 }

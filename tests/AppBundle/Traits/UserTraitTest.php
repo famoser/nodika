@@ -19,7 +19,7 @@ class UserTraitTest extends WebTestCase
         $user->setPlainPassword("asdf1234");
         $this->assertTrue($user->isValidPlainPassword());
 
-        $user->hashAndRemovePlainPassword();
+        $user->persistNewPassword();
         $this->assertEmpty($user->getPlainPassword());
         $this->assertNotEmpty($user->getPasswordHash() != "");
 

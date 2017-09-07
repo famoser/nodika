@@ -9,10 +9,8 @@
 namespace AppBundle\Service\Interfaces;
 
 
-use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Model\Form\ImportFileModel;
 use Closure;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 
 interface ExchangeServiceInterface

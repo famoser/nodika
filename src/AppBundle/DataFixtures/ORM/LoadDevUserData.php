@@ -11,10 +11,6 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Enum\Genders;
-use AppBundle\Enum\LeisureActivityLevel;
-use AppBundle\Enum\NutritionCategory;
-use AppBundle\Enum\WorkActivityLevel;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadDevUserData extends BaseFixture
@@ -30,7 +26,7 @@ class LoadDevUserData extends BaseFixture
         $user = $this->getReference('user-1');
 
         $user->setPlainPassword('asdf1234');
-        $user->hashAndRemovePlainPassword();
+        $user->persistNewPassword();
 
         $manager->persist($user);
         $manager->flush();

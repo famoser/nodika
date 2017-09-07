@@ -8,8 +8,8 @@
 
 namespace AppBundle\Enum\Base;
 
-use AppBundle\Helper\NamingHelper;
 use AppBundle\Framework\TranslatableObject;
+use AppBundle\Helper\NamingHelper;
 use ReflectionClass;
 
 abstract class BaseEnum extends TranslatableObject

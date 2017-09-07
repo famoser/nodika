@@ -6,7 +6,7 @@
  * Time: 18:28
  */
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Backend;
 
 
 use AppBundle\Controller\Base\BaseController;
@@ -16,20 +16,19 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/dashboard")
- * @Security("has_role('ROLE_USER')")
+ * @Security("has_role('ROLE_ADMIN')")
  */
 class DashboardController extends BaseController
 {
     /**
-     * @Route("/", name="dashboard_index")
+     * @Route("/", name="backend_dashboard_index")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function startAction(Request $request)
     {
         $arr = [];
-        $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
-        $arr["my_organisations"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
-        return $this->render("dashboard/start.html.twig", $arr);
+        $arr["organisations"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findAll();
+        return $this->render("backend/dashboard/index.html.twig", $arr);
     }
 }

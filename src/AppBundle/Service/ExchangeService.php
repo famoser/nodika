@@ -10,7 +10,7 @@ namespace AppBundle\Service;
 
 
 use AppBundle\Helper\CsvFileHelper;
-use AppBundle\Helper\FlashMessageHelper;
+use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Service\Interfaces\ExchangeServiceInterface;
 use Closure;
@@ -18,7 +18,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -86,7 +85,7 @@ class ExchangeService implements ExchangeServiceInterface
         }
 
         if (!$importFileModel->uploadFile()) {
-            $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_upload_failed", [], "import"));
+            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_upload_failed", [], "import"));
             return false;
         }
 
@@ -98,7 +97,7 @@ class ExchangeService implements ExchangeServiceInterface
                 if ($row++ == 1) {
                     //validate header (poorly, but should be enough for the normal user)
                     if (count($data) != count($header)) {
-                        $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_open_failed", [], "import"));
+                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));
                         return false;
                     }
                     for ($i = 0; $i < count($header); $i++) {
@@ -116,7 +115,7 @@ class ExchangeService implements ExchangeServiceInterface
                 if (count($errors) == 0) {
                     $em->persist($newEntry);
                 } else {
-                    $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
                     fclose($handle);
                     return false;
                 }
@@ -125,7 +124,7 @@ class ExchangeService implements ExchangeServiceInterface
             fclose($handle);
             return true;
         } else {
-            $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_open_failed", [], "import"));
+            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));
         }
 
         return false;
@@ -143,7 +142,7 @@ class ExchangeService implements ExchangeServiceInterface
     public function importCsvAdvanced($entitySetClosure, $validateHeaderClosure, ImportFileModel $importFileModel)
     {
         if (!$importFileModel->uploadFile()) {
-            $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_upload_failed", [], "import"));
+            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_upload_failed", [], "import"));
             return false;
         }
 
@@ -162,7 +161,7 @@ class ExchangeService implements ExchangeServiceInterface
                 if (count($errors) == 0 && $newEntry != null) {
                     $em->persist($newEntry);
                 } else {
-                    $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
                     fclose($handle);
                     return false;
                 }
@@ -171,7 +170,7 @@ class ExchangeService implements ExchangeServiceInterface
             fclose($handle);
             return true;
         } else {
-            $this->flashBag->set(FlashMessageHelper::ERROR_MESSAGE, $this->translator->trans("error.file_open_failed", [], "import"));
+            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));
         }
 
         return false;

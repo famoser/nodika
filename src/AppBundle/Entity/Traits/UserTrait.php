@@ -8,11 +8,12 @@
 
 namespace AppBundle\Entity\Traits;
 
+use AppBundle\Helper\HashHelper;
 use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -54,6 +55,13 @@ trait UserTrait
      * @ORM\Column(type="datetime")
      */
     private $registrationDate;
+
+    /**
+     * @var bool $agbAccepted
+     *
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $agbAccepted;
 
     /**
      * @var string $plainPassword
@@ -150,28 +158,19 @@ trait UserTrait
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function createNewResetHash()
+    public function isAgbAccepted()
     {
-        $newHash = '';
-        //0-9, A-Z, a-z
-        $allowedRanges = [[48, 57], [65, 90], [97, 122]];
-        for ($i = 0; $i < 20; $i++) {
-            $rand = mt_rand(20, 160);
-            $allowed = false;
-            for ($j = 0; $j < count($allowedRanges); $j++) {
-                if ($allowedRanges[$j][0] <= $rand && $allowedRanges[$j][1] >= $rand) {
-                    $allowed = true;
-                }
-            }
-            if ($allowed)
-                $newHash .= chr($rand);
-            else
-                $i--;
-        }
-        $this->setResetHash($newHash);
-        return $this->getResetHash();
+        return $this->agbAccepted;
+    }
+
+    /**
+     * @param bool $agbAccepted
+     */
+    public function setAgbAccepted($agbAccepted)
+    {
+        $this->agbAccepted = $agbAccepted;
     }
 
     /**
@@ -215,12 +214,11 @@ trait UserTrait
     /**
      * hashes the password if valid, and erases credentials
      */
-    public function hashAndRemovePlainPassword()
+    public function persistNewPassword()
     {
-        if ($this->isValidPlainPassword()) {
-            $this->setPasswordHash(password_hash($this->getPlainPassword(), PASSWORD_BCRYPT));
-        }
+        $this->setPasswordHash(password_hash($this->getPlainPassword(), PASSWORD_BCRYPT));
         $this->eraseCredentials();
+        $this->setResetHash(HashHelper::createNewResetHash());
     }
 
     /**
@@ -394,21 +392,63 @@ trait UserTrait
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    public static function getUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
 
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getEmailBuilder($builder, $builder);
+        static::getPlainPasswordBuilder($builder, $builder);
         $builder->add(
-            "email",
-            EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("email") + ["name" => "_username"]
+            "agbAccepted",
+            CheckboxType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("agbAccepted")
         );
+        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return FormBuilderInterface
+     */
+    public static function getResetUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    {
+
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getEmailBuilder($builder, $builder);
+        static::getPlainPasswordBuilder($builder, $builder);
+        $builder->add(
+            "agbAccepted",
+            CheckboxType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("agbAccepted")
+        );
+        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $builderArray
+     */
+    private static function getPlainPasswordBuilder(FormBuilderInterface $builder, $builderArray)
+    {
         $builder->add(
             "plainPassword",
             PasswordType::class,
             $builderArray + NamingHelper::propertyToTranslationForBuilder("plainPassword")
         );
-        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $builderArray
+     */
+    private static function getEmailBuilder(FormBuilderInterface $builder, $builderArray)
+    {
+        $builder->add(
+            "email",
+            EmailType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("email") + ["name" => "_username"]
+        );
     }
 
     /**
@@ -420,11 +460,7 @@ trait UserTrait
     {
 
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        $builder->add(
-            "plainPassword",
-            PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("plainPassword")
-        );
+        static::getPlainPasswordBuilder($builder, $builder);
         $builder->add(
             "repeatPlainPassword",
             PasswordType::class,
@@ -446,13 +482,12 @@ trait UserTrait
      *
      * sets all fields of the user object
      */
-    public function initializeUserWithEmail($email)
+    public function createUserFromEmail($email)
     {
-        $this->setPlainPassword(uniqid());
         $this->setRegistrationDate(new \DateTime());
         $this->setIsActive(true);
         $this->setEmail($email);
-        $resetHash = $this->createNewResetHash();
-        $this->setPasswordHash(password_hash($resetHash, PASSWORD_BCRYPT));
+        $this->setPlainPassword(uniqid());
+        $this->persistNewPassword();
     }
 }
