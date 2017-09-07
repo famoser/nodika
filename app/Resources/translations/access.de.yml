@@ -1,40 +1,50 @@
-#login form
-Username: Email
-Password: Passwort
-Login: Einloggen
+#login page
+login:
+  title: Login
+  description: In einen existierenden Account einloggen
+  login_form_header: Login
+  forgot_password_action: Passwort vergessen
+  create_organisation_action: Neue Organisation registrieren
+  internal_area: Interner Bereich
+  internal_area_action: Loggen Sie sich ein
+  internal_area_description: Loggen Sie sich ein um Zugriff zum Terminkalender und weitere Funktionen zu erhalten
+  no_account_question: Noch keinen Account?
+  no_account_description: Fragen Sie den Leiter Ihrer Organisation oder erstellen Sie eine neue Organisation um den Kalender zu nutzen
+  forgot_password_question: Passwort vergessen?
+  forgot_password_description: Drücken Sie auf Passwort vergessen links und verifizieren Sie sich mit der hinterlegten E-Mail
 
-#login description
-forgot_password_action: Passwort vergessen
-create_organisation_action: Neue Organisation registrieren
-internal_area: Interner Bereich
-internal_area_action: Loggen Sie sich ein
-internal_area_description: Loggen Sie sich ein um Zugriff zum Terminkalender und weitere Funktionen zu erhalten
-no_account_question: Noch keinen Account?
-no_account_description: Fragen Sie den Leiter Ihrer Organisation oder erstellen Sie eine neue Organisation um den Kalender zu nutzen
-forgot_password_question: Passwort vergessen?
-forgot_password_description: Drücken Sie auf Passwort vergessen links und verifizieren Sie sich mit der hinterlegten E-Mail
+#register page
+register:
+  title: Registrieren
+  description: Mitglied auf nodika.ch werden
+  register_form_header: Registrierungsformular
+  register: Registrieren
+  register_description: >
+    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen.
+    Danach können Sie mit der Einrichtung Ihrer Organisation beginnen
+  personal_data: Persönliche Daten
+  personal_data_description: >
+    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
+    Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
+  pricing: Kosten
+  pricing_description: >
+    Nach der gratis %free_period_days%-tägigen Testphase können Sie ein Abo für Ihre Organisation lösen.
+    Die einmalige Registrierungsgebühr beträgt %register_fee% und die Jahresgebühr ist %yearly_fee%
+  register_action: Erstellen Sie zuerst einen persönlichen Account
 
-#register form
-Person: Name
-Address: Adresse
-Communication: Kontaktinformationen
-Register: registrieren
-
-#register description
-register: Registrieren
-register_action: Erstellen Sie zuerst einen persönlichen Account
-register_description: Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen. Danach können Sie mit der Einrichtung Ihrer Organisation beginnen
-personal_data: Persönliche Daten
-personal_data_description: Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben. Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
-
-#register thanks
-register_thanks: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail.
-register_thanks_action: Account erfolgreich erstellt
+# register/thanks page
+register_thanks:
+  title: Vielen Dank für die Registrierung
+  description: Account erfolgreich erstellt
+  message: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail. Besuchen Sie den darin enthaltenen Link um die Registrierung abzuschliessen.
 
 #register confirm
-register_confirm: Registrierung abschliessen
-register_confirm_action: Setzten Sie das Passwort für Ihren Account
-register_confirm_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account. Danach können Sie mit der Einrichtung Ihrer Organisation loslegen
+register_confirm:
+  title: Registrierung abschliessen
+  description: Setzten Sie das Passwort für Ihren Account
+  email_verified: Email verifiziert
+  email_verified_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account, danach können Sie mit der Einrichtung Ihrer Organisation loslegen
+  set_password_form: Passwort setzten
 
 #register confirm form
 Set passwort: Passwort setzten
@@ -65,8 +75,8 @@ reset_confirm_description: Setzten Sie Ihr neues Passwort
 
 #errors
 error:
-  email_already_registered: Diese E-Mail ist bereits vergeben.
+  email_already_registered: Diese E-Mail ist bereits vergeben
   passwords_do_not_match: Die Passwörter stimmen nicht überein
   new_password_not_valid: Das Passwort ist nicht sicher genug. Bitte verwenden Sie mindestens ein 8 stelliges Passwort
   login_failed: Login fehlgeschlagen
-
+  must_accept_agb: Sie müssen die AGB's akzeptieren um fortzufahren

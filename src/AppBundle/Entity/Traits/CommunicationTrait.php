@@ -128,7 +128,7 @@ trait CommunicationTrait
         $builder->add(
             "phone",
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("phone")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("phone") + ["required" => false]
         );
         $builder->add(
             "email",
@@ -138,7 +138,7 @@ trait CommunicationTrait
         $builder->add(
             "webpage",
             UrlType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("webpage")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("webpage") + ["required" => false]
         );
         return $builder;
     }

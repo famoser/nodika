@@ -119,11 +119,11 @@
                     <ul>
                         <li>
                             <b>{{ "index.payment.aspect_1_name"|trans }}:</b>
-                            {{ "index.payment.aspect_1_description"|trans }}
+                            {{ "index.payment.aspect_1_description"|trans({"%register_fee%": globals_register_fee}) }}
                         </li>
                         <li>
                             <b>{{ "index.payment.aspect_2_name"|trans }}:</b>
-                            {{ "index.payment.aspect_2_description"|trans }}
+                            {{ "index.payment.aspect_2_description"|trans({"%yearly_fee%": globals_yearly_fee}) }}
                         </li>
                         <li>
                             <b>{{ "index.payment.aspect_3_name"|trans }}:</b>
@@ -166,6 +166,7 @@
                     </p>
                 </div>
                 <div class="color-content col-md-offset-1 col-md-6">
+                    <h3>{{ "index.contact.contact_form_header"|trans }}</h3>
                     {{ form(newsletter_form) }}
                 </div>
             </div>

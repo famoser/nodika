@@ -65,10 +65,10 @@ index:
       Der finanzielle Aspekt
     aspect_1_name: 'Registrierungsgebühr'
     aspect_1_description: >
-      Einmalige Registrierungsgebühr 1500 CHF zur teilweisen Deckung der Entwicklungskosten
+      Einmalige Registrierungsgebühr %register_fee% CHF zur teilweisen Deckung der Entwicklungskosten
     aspect_2_name: 'Jährlicher Betrag'
     aspect_2_description: >
-      Der jährliche Betrag von CHF 300 deckt den Rest der Entwicklungskosten, und ermöglicht die Wartung und das Hosting der Platform
+      Der jährliche Betrag von CHF %yearly_fee% deckt den Rest der Entwicklungskosten, und ermöglicht die Wartung und das Hosting der Platform
     aspect_3_name: 'Support'
     aspect_3_description: >
        Wird mit 100 CHF/h seperat vergütet'
@@ -92,4 +92,5 @@ index:
     early_bird_conditions: >
       Mit dem Eintrag in die Early Bird Liste akzeptieren Sie die AGBs und erwerben das erste Jahr plus Registrierungsgebühr
     download_agb: 'AGB herunterladen'
+    contact_form_header: 'Kontaktformular'
   thanks_for_contact_form: 'Vielen Dank für die Kontaktaufnahme. Wir melden uns.'

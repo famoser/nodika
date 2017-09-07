@@ -10,9 +10,6 @@ namespace AppBundle\Entity\Traits;
 
 use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -397,14 +394,14 @@ trait UserTrait
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    public static function getUserBuilder(FormBuilderInterface $builder, $defaultArray)
+    public static function getUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
 
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
         $builder->add(
             "email",
             EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("email") + ["name" => "_username"]
         );
         $builder->add(
             "plainPassword",
@@ -415,12 +412,25 @@ trait UserTrait
     }
 
     /**
-     * @param ListMapper $listMapper
-     * @return ListMapper
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return FormBuilderInterface
      */
-    public static function getUserListFields(ListMapper $listMapper)
+    public static function getSetPasswordBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        return $listMapper->addIdentifier("email")->add("registrationDate")->add("isEnabled");
+
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        $builder->add(
+            "plainPassword",
+            PasswordType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("plainPassword")
+        );
+        $builder->add(
+            "repeatPlainPassword",
+            PasswordType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("repeatPlainPassword")
+        );
+        return $builder;
     }
 
     /**

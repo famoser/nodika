@@ -17,4 +17,6 @@ class SubmitButtonType extends BaseEnum
     const CREATE = 2;
     const EDIT = 3;
     const REMOVE = 4;
+    const LOGIN = 5;
+    const REGISTER = 6;
 }

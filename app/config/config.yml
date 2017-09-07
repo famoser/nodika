@@ -40,7 +40,10 @@ twig:
             [":form:bootstrap_3_layout.html.twig"]
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-
+    globals:
+      globals_register_fee: "%register_fee%"
+      globals_yearly_fee: "%yearly_fee%"
+      globals_free_period_days: "%free_period_days%"
 
 # Doctrine Configuration
 doctrine:
@@ -77,29 +80,3 @@ doctrine_migrations:
     namespace: Application\Migrations
     table_name: migration_versions
     name: Application Migrations
-
-sonata_block:
-    default_contexts: [cms]
-    blocks:
-        sonata.admin.block.admin_list:
-            contexts: [admin]
-
-        sonata.block.service.text:
-
-
-sonata_admin:
-    title:  'my_page Administration'
-    dashboard:
-        blocks:
-            -
-                position: left
-                type: sonata.admin.block.admin_list
-                settings:
-                      groups: [content]
-            -
-                position: top
-                type: sonata.block.service.text
-                settings:
-                    content: >
-                        <h2>Welcome to the Admin Panel</h2>
-                        <p>Here you can edit any entries in your application. Be very careful! With <3, jkweb</p>

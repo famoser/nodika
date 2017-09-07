@@ -37,13 +37,16 @@ abstract class BaseEntity extends TranslatableObject
     }
 
     /**
-     * returns the builder with all fields from the entity
+     * returns the builder with all flat fields from the entity
      *
      * @param FormBuilderInterface $builder
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    protected abstract function getBuilder(FormBuilderInterface $builder, $defaultArray);
+    protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
+    {
+        return $builder;
+    }
 
     /**
      * returns the builder with all fields from the entity

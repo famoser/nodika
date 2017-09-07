@@ -240,7 +240,7 @@ trait AddressTrait
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray)
+    public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(AddressTrait::class)] + $defaultArray;
         $builder->add(

@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends BaseController
 {
     /**
-     * @Route("/", name="dashboard_index")
+     * @Route("/", name="frontend_dashboard_index")
      */
     public function startAction(Request $request)
     {

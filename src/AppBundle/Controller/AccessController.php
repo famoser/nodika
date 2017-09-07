@@ -6,82 +6,38 @@
  * Time: 10:19
  */
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Frontend;
 
 
-use AppBundle\Controller\Base\BaseController;
+use AppBundle\Controller\Base\AccessBaseController;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Entity\Person;
-use AppBundle\Form\Access\LoginType;
-use AppBundle\Form\Access\RegisterType;
-use AppBundle\Form\Access\SetPasswordType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Form;
+use AppBundle\Form\Access\FrontendUser\FrontendUserRegisterType;
+use AppBundle\Form\Access\FrontendUser\FrontendUserSetPasswordType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\User;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-class AccessController extends BaseController
+class AccessController extends AccessBaseController
 {
     /**
      * @Route("/login", name="access_login")
+     * @param Request $request
+     * @return Response
      */
     public function loginAction(Request $request)
     {
-        $arr = [];
-
-        /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
-        $session = $request->getSession();
-
-        $authErrorKey = Security::AUTHENTICATION_ERROR;
-        // get the error if any (works with forward and redirect -- see below)
-        if ($request->attributes->has($authErrorKey)) {
-            $error = $request->attributes->get($authErrorKey);
-        } elseif (null !== $session && $session->has($authErrorKey)) {
-            $error = $session->get($authErrorKey);
-            $session->remove($authErrorKey);
-        } else {
-            $error = null;
-        }
-        if ($error != null) {
-            $this->displayError($this->get("translator")->trans("error.login_failed", [], "access"));
+        $user = $this->getUser();
+        if ($user instanceof FrontendUser) {
+            return $this->redirectToRoute("frontend_dashboard_index");
         }
 
-        // last username entered by the user
-        $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
-
-        $user = new FrontendUser();
-        $user->setEmail($lastUsername);
-
-
-        $loginForm = $this->get("form.factory")->createNamedBuilder(
-            null,
-            FormType::class,
-            ["_username" => $user->getEmail()],
-            ["translation_domain" => "access"]
-        )
-            ->add("_username", EmailType::class)
-            ->add("_password", PasswordType::class)
-            ->add("login", SubmitType::class)
-            ->getForm();
-
-
-        $loginForm->handleRequest($request);
-
-        if ($loginForm->isSubmitted()) {
-            throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
+        $form = $this->getLoginForm($request, new FrontendUser(), "access");
+        if ($form instanceof RedirectResponse) {
+            return $form;
         }
-
-        $arr["login_form"] = $loginForm->createView();
+        $arr["login_form"] = $form->createView();
 
         return $this->render(
             'access/login.html.twig', $arr
@@ -89,54 +45,68 @@ class AccessController extends BaseController
     }
 
     /**
+     * @Route("/", name="access_default")
+     * @param Request $request
+     * @return Response
+     */
+    public function defaultAction(Request $request)
+    {
+        return $this->redirectToRoute("access_login");
+    }
+
+    /**
      * @Route("/register", name="access_register")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function registerAction(Request $request)
     {
-        $registerForm = $this->createForm(RegisterType::class);
-        $arr = [];
+        $user = FrontendUser::createNewFrontendUser();
+        //random password at start because we want to confirm email first
+        $user->setPlainPassword(uniqid());
 
-        $person = new Person();
-        $registerForm->setData($person);
-        $registerForm->handleRequest($request);
-
-        if ($registerForm->isSubmitted()) {
-            if ($registerForm->isValid()) {
-                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
-                if ($existingUser != null) {
-                    $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
-                } else {
-                    $user = FrontendUser::createFromPerson($person);
-
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($person);
-                    $em->persist($user);
-                    $em->flush();
-
-                    $translate = $this->get("translator");
-                    $registerLink = $this->generateUrl(
-                        "access_register_confirm",
-                        ["confirmationToken" => $user->getResetHash()],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("register.subject", [], "access_emails"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($user->getEmail())
-                        ->setBody($translate->trans(
-                            "register.message",
-                            ["%register_link%" => $registerLink],
-                            "access_emails"));
-                    $this->get('mailer')->send($message);
-                    return $this->redirectToRoute("access_register_thanks");
+        $form = $this->getRegisterForm(
+            $request,
+            $this->createForm(FrontendUserRegisterType::class),
+            $user,
+            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
+            function ($user) {
+                /* @var $user FrontendUser */
+                $user->setEmail($user->getContactEmail());
+                if (!$user->isAcceptedAgb()) {
+                    $this->displayError($this->get("translator")->trans("error.must_accept_agb", [], "access"));
                 }
-            } else {
-                $this->displayFormValidationError();
+                return $user->isAcceptedAgb();
+            },
+            function ($user) {
+                /* @var $user FrontendUser */
+                return $this->generateUrl(
+                    "access_register_confirm",
+                    ["confirmationToken" => $user->getResetHash()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+            },
+            function ($user) {
+                $translate = $this->get("translator");
+                $receiverNotification = $this->getDoctrine()->getRepository("AppBundle:Setting")->getFrontendRegisterEmailReceiver();
+                if ($receiverNotification != null) {
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($translate->trans("access_registered.subject", [], "notification_emails"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($receiverNotification)
+                        ->setBody($translate->trans("access_registered.message", ["%site_name%" => $this->getParameter("site_name")], "notification_emails"));
+                    $this->get('mailer')->send($message);
+                }
+
+                /* @var $user FrontendUser */
+                return $this->redirectToRoute("access_register_thanks");
             }
+        );
+        if ($form instanceof RedirectResponse) {
+            return $form;
         }
 
-        $arr["register_form"] = $registerForm->createView();
+        $arr["register_form"] = $form->createView();
         return $this->render(
             'access/register.html.twig', $arr
         );
@@ -156,56 +126,30 @@ class AccessController extends BaseController
 
     /**
      * @Route("/reset", name="access_reset")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function resetAction(Request $request)
     {
-        $resetForm = $this->get("form.factory")->createNamedBuilder(
-            null,
-            FormType::class,
-            [],
-            ["translation_domain" => "access"]
-        )
-            ->add("email", EmailType::class)
-            ->add("reset", SubmitType::class)
-            ->getForm();
-
-        $arr = [];
-
-        $resetForm->handleRequest($request);
-
-        if ($resetForm->isSubmitted()) {
-            if ($resetForm->isValid()) {
-                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $resetForm->get("email")->getData()]);
-                if ($existingUser != null) {
-                    $existingUser->createNewResetHash();
-
-                    $this->getDoctrine()->getManager()->persist($existingUser);
-                    $this->getDoctrine()->getManager()->flush();
-
-                    $translate = $this->get("translator");
-                    $resetLink = $this->generateUrl(
-                        "access_reset_confirm",
-                        ["confirmationToken" => $existingUser->getResetHash()],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("reset.subject", [], "access_emails"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($existingUser->getEmail())
-                        ->setBody($translate->trans(
-                            "reset.message",
-                            ["%reset_link%" => $resetLink],
-                            "access_emails"));
-                    $this->get('mailer')->send($message);
-                    return $this->redirectToRoute("access_reset_done");
-                }
-            } else {
-                $this->displayFormValidationError();
+        $form = $this->getResetForm(
+            $request,
+            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
+            function ($user) {
+                /* @var $user FrontendUser */
+                return $this->generateUrl(
+                    "access_reset_confirm",
+                    ["confirmationToken" => $user->getResetHash()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+            },
+            function ($user) {
+                return $this->redirectToRoute("access_reset_done");
             }
+        );
+        if ($form instanceof RedirectResponse) {
+            return $form;
         }
-
-        $arr["reset_form"] = $resetForm->createView();
+        $arr["reset_form"] = $form->createView();
         return $this->render(
             'access/reset.html.twig', $arr
         );
@@ -231,11 +175,16 @@ class AccessController extends BaseController
      */
     public function resetConfirmAction(Request $request, $confirmationToken)
     {
-        $result = $this->processConfirmationToken($request, $confirmationToken);
+        $result = $this->processConfirmationToken(
+            $request,
+            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
+            $confirmationToken,
+            $this->createForm(FrontendUserSetPasswordType::class)
+        );
         if ($result instanceof Response) {
             return $result;
         } else if ($result === true) {
-            return $this->redirectToRoute("dashboard_start");
+            return $this->redirectToRoute("access_adverts");
         } else {
             $arr["reset_password_form"] = $result->createView();
             return $this->render(
@@ -252,11 +201,16 @@ class AccessController extends BaseController
      */
     public function registerConfirmAction(Request $request, $confirmationToken)
     {
-        $result = $this->processConfirmationToken($request, $confirmationToken);
+        $result = $this->processConfirmationToken(
+            $request,
+            $this->getDoctrine()->getRepository("AppBundle:FrontendUser"),
+            $confirmationToken,
+            $this->createForm(FrontendUserSetPasswordType::class)
+        );
         if ($result instanceof Response) {
             return $result;
         } else if ($result === true) {
-            return $this->redirectToRoute("administration_organisation_new");
+            return $this->redirectToRoute("access_dashboard_index");
         } else {
             $arr["register_confirm_form"] = $result->createView();
             return $this->render(
@@ -265,61 +219,22 @@ class AccessController extends BaseController
         }
     }
 
-    /**
-     * @param Request $request
-     * @param $confirmationToken
-     * @return bool|Form|Response
-     */
-    private function processConfirmationToken(Request $request, $confirmationToken)
-    {
-        $setPasswordForm = $this->createForm(SetPasswordType::class);
-
-        $user = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["resetHash" => $confirmationToken]);
-        if ($user == null) {
-            return $this->render(
-                'access/hash_invalid.html.twig'
-            );
-        }
-        $setPasswordForm->setData($user);
-        $setPasswordForm->handleRequest($request);
-
-        if ($setPasswordForm->isSubmitted()) {
-            if ($setPasswordForm->isValid()) {
-                if ($user->isValidPlainPassword()) {
-                    if ($user->getPlainPassword() == $user->getRepeatPlainPassword()) {
-                        $user->hashAndRemovePlainPassword();
-                        $user->createNewResetHash();
-
-                        $em = $this->getDoctrine()->getManager();
-                        $em->persist($user);
-                        $em->flush();
-
-                        //login programmatically
-                        $token = new UsernamePasswordToken($user, $user->getPassword(), "main", $user->getRoles());
-                        $this->get("security.token_storage")->setToken($token);
-
-                        $event = new InteractiveLoginEvent($request, $token);
-                        $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-
-                        return true;
-                    } else {
-                        $this->displayError($this->get("translator")->trans("error.passwords_do_not_match", [], "access"));
-                    }
-                } else {
-                    $this->displayError($this->get("translator")->trans("error.new_password_not_valid", [], "access"));
-                }
-            } else {
-                $this->displayFormValidationError();
-            }
-        }
-        return $setPasswordForm;
-    }
 
     /**
      * @Route("/login_check", name="access_login_check")
+     * @param Request $request
      */
     public function loginCheck(Request $request)
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
+    }
+
+    /**
+     * @Route("/logout", name="access_logout")
+     * @param Request $request
+     */
+    public function logoutAction(Request $request)
+    {
+        throw new \RuntimeException('You must configure the logout path to be handled by the firewall using form_login.logout in your security firewall configuration.');
     }
 }

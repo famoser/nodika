@@ -44,8 +44,6 @@
     "doctrine/doctrine-fixtures-bundle": "^2.3",
     "sensio/generator-bundle": "^3.0",
     "fzaninotto/faker": "^1.6",
-    "sonata-project/doctrine-orm-admin-bundle": "^3.1",
-    "sonata-project/admin-bundle": "^3.10",
     "symfony/web-server-bundle": "^3.3"
   },
   "require-dev": {

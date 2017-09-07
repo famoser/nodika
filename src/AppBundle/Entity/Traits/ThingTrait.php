@@ -84,7 +84,7 @@ trait ThingTrait
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    public static function getThingBuilder(FormBuilderInterface $builder, $defaultArray)
+    public static function getThingBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(ThingTrait::class)] + $defaultArray;
         $builder->add(
