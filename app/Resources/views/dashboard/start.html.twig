@@ -1,29 +1,28 @@
 {% extends "divided_content_base.html.twig" %}
 
-{% block title %}{{ "start"|trans }}{% endblock %}
-{% block description %}{{ "start_action"|trans }}{% endblock %}
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
 
-{% trans_default_domain "start" %}
+{% trans_default_domain "dashboard" %}
 
 {% block primary_content %}
     <p>Termine</p>
 {% endblock primary_content %}
 
 {% block secondary_content %}
-    <h3>{{ "start"|trans }}</h3>
-    <p>{{ "start_description"|trans }}</p>
-    {% if my_organisations|length > 0 %}
-        <h3>{{ "my_organisations"|trans }}</h3>
-        <p>
-            {% for organisation in leading_organisations %}
-                <a href="{{ path("administration_organisation_view", {"organisation" : organisation.id}) }}">{{ organisation.name }}</a>
-                <br/>
-            {% endfor %}
-        </p>
-    {% endif %}
+    <h3>{{ "index.my_organisations"|trans }}</h3>
+    <p>
+        {% for organisation in leading_organisations %}
+            <a href="{{ path("administration_organisation_view", {"organisation" : organisation.id}) }}">{{ organisation.name }}</a>
+            <br/>
+        {% endfor %}
+    </p>
+    <p>
+        <a href="{{ path("administration_organisation_new") }}">{{ "index.new_organisation_action"|trans }}</a>
+    </p>
     {% if leading_organisations|length > 0 %}
-        <h3>{{ "administer_organisations"|trans }}</h3>
+        <h3>{{ "index.administer_organisations"|trans }}</h3>
         <p>
             {% for organisation in leading_organisations %}
                 <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">{{ organisation.name }}</a>
