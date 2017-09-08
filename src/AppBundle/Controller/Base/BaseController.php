@@ -21,6 +21,18 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class BaseController extends Controller
 {
     /**
+     * @param $type
+     * @param $submitButtonType
+     * @param null $data
+     * @param array $options
+     * @return \Symfony\Component\Form\Form
+     */
+    public function createCrudForm($type, $submitButtonType, $data = null, array $options = array())
+    {
+        return $this->createForm($type, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType] + $options);
+    }
+
+    /**
      * @param string $message the translation message to display
      */
     protected function displayError($message)

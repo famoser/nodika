@@ -1,26 +1,22 @@
 {% extends "divided_content_base.html.twig" %}
 
-{% block title %}{{ "edit"|trans }}{% endblock %}
-{% block description %}{{ "edit_action"|trans }}{% endblock %}
+{% block title %}{{ "edit.title"|trans }}{% endblock %}
+{% block description %}{{ "edit.description"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
 
 {% trans_default_domain "event_line" %}
 
 {% block primary_content %}
-    {{ form_start(edit_event_line_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
-    {{ form_errors(edit_event_line_form) }}
-    {{ form_end(edit_event_line_form) }}
+    {{ form(edit_event_line_form) }}
 {% endblock primary_content %}
 
 {% block secondary_content %}
-    <h3>{{ "edit"|trans }}</h3>
-    <p>{{ "edit_description"|trans }}</p>
-    <h3>{{ "remove"|trans }}</h3>
+    <h3>{{ "remove.title"|trans }}</h3>
     <p>
-        {{ "remove_description"|trans }}
+        {{ "remove.description"|trans }}
         <br/>
         <a href="{{ path("administration_organisation_event_line_remove", { "organisation" : organisation.id, "eventLine": eventLine.id}) }}">
-            {{ "remove"|trans }}
+            {{ "edit.remove_action"|trans }}
         </a>
     </p>
 {% endblock secondary_content %}

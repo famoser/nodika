@@ -1,5 +1,3 @@
-
-
 #general
 index:
   title: Termingruppen
@@ -16,19 +14,17 @@ edit:
   title: Termingruppe bearbeiten
   description: Editieren Sie die Termingruppe
   event_line_edit: Termingruppe bearbeiten
+  remove_action: löschen
 
 #remove page
 remove:
   title: Termingruppe entfernen
-  description: Editieren Sie die Termingruppe
+  description: Löschen Sie die Termingruppe und alle damit verbundenen Daten
+  warning: Alle mit der Termingruppe verbunden Termine und Generierungen werden ebenfalls entfernt!
   event_line_edit: Termingruppe bearbeiten
 
-#remove description
-remove: Termingruppe entfernen
-remove_action: Löschen Sie die Termingruppe und alle damit verbundenen Daten
-remove_description: Entfernen Sie die Termingruppe und alle damit verbundenen Daten. Alle damit verbundenen Termine werden ebenfalls entfernt!
-
-successful:
-  event_line_add: Erfolgreich hinzugefügt
-  event_line_save: Erfolgreich gespeichert
-  event_line_remove: Erfolgreich entfernt
+#administer page
+administer:
+  title: Verwalten
+  description: Termingruppen verwalten
+  new_action: neue Termingruppe erstellen

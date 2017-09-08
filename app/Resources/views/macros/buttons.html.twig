@@ -7,3 +7,25 @@
         <span class="icon-{{ icon }}"></span>
     </a>
 {% endmacro %}
+
+{% macro edit_button(link) %}
+    <a href="{{ link }}">{{ "row.edit"|trans({}, "common_table") }}
+    {#
+    <button type="button" class="btn btn-default">
+        <a href="{{ link }}">
+            <span class="glyphicon glyphicon-edit"></span>
+        </a>
+    </button>
+    #}
+{% endmacro %}
+
+{% macro delete_button(link) %}
+    <a href="{{ link }}">{{ "row.delete"|trans({}, "common_table") }}
+    {#
+    <button type="button" class="btn btn-default">
+        <a href="{{ link }}">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+    </button>
+    #}
+{% endmacro %}

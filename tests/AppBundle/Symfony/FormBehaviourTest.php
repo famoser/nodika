@@ -10,14 +10,14 @@ namespace AppBundle\Symfony;
 
 
 use AppBundle\Entity\Member;
-use AppBundle\Form\Member\NewMemberType;
+use AppBundle\Form\Member\MemberType;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 class FormBehaviourTest extends TypeTestCase
 {
     public function testObjectSet()
     {
-        $form = $this->factory->create(NewMemberType::class);
+        $form = $this->factory->create(MemberType::class);
 
         $object = new Member();
         $object->setName("custom name");

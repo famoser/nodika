@@ -1,1 +1,7 @@
-action_column: bearbeiten
+column:
+  edit: ""
+  delete: ""
+
+row:
+  edit: bearbeiten
+  delete: entfernen

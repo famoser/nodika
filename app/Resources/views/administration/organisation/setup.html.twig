@@ -1,25 +1,32 @@
 {% extends "divided_content_base.html.twig" %}
 
-{% block title %}{{ "setup"|trans }}{% endblock %}
-{% block description %}{{ "setup_action"|trans }}{% endblock %}
+{% block title %}{{ "setup.title"|trans }}{% endblock %}
+{% block description %}{{ "setup.description"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
 
 {% trans_default_domain "organisation" %}
 
 {% block primary_content %}
-    <h2>{{ "setup_step_1"|trans }} {% if setupStatus.stepOneDone %}{{ "setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_1"|trans }} {% if setupStatus.stepOneDone %}{{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
+        {{ "setup.setup_step_1_description"|trans }} <br/>
         <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">
-            {{ "setup_add_members"|trans }}
+            {{ "setup.setup_step_1_action"|trans }}
         </a>
     </p>
-    <h2>{{ "setup_step_2"|trans }}{% if setupStatus.stepTwoDone %}{{ "setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_2"|trans }}{% if setupStatus.stepTwoDone %}{{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <p>
+        {{ "setup.setup_step_2_description"|trans }} <br/>
+        <a href="{{ path("administration_organisation_event_line_administer", {"organisation" : organisation.id}) }}">
+            {{ "setup.setup_step_2_action"|trans }}
+        </a>
+    </p>
     <p>
         <a href="{{ path("administration_organisation_events", {"organisation" : organisation.id}) }}">
-            {{ "setup_add_events"|trans }}
+            {{ "setup.setup_step_2_description"|trans }}
         </a>
     </p>
-    <h2>{{ "setup_step_3"|trans }}
+    <h2>{{ "setup.setup_step_1"|trans }}
         {% if setupStatus.stepThreeDone %}{{ "setup_step_done"|trans }}{% else %}{{ "setup_step_voluntary"|trans }}{% endif %}
     </h2>
     <p>{{ "setup_configure_settings"|trans }}</p>

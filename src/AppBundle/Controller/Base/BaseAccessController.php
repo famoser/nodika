@@ -31,7 +31,6 @@ class BaseAccessController extends BaseController
      * @param Request $request
      * @param UserTrait $user
      * @param FormInterface $loginForm
-     * @param $translationDomain
      * @return Form
      */
     protected function getLoginForm(Request $request, $user, FormInterface $loginForm)

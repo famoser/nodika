@@ -12,7 +12,8 @@ namespace AppBundle\Controller\Administration\Organisation;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\Organisation;
-use AppBundle\Form\EventLine\NewEventLineType;
+use AppBundle\Enum\SubmitButtonType;
+use AppBundle\Form\EventLine\EventLineType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Security\Voter\EventLineVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
@@ -28,6 +29,24 @@ use Symfony\Component\HttpFoundation\Response;
 class EventLineController extends BaseController
 {
     /**
+     * @Route("/administer", name="administration_organisation_event_line_administer")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function administerAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $arr = [];
+        $arr["organisation"] = $organisation;
+
+        return $this->render(
+            'administration/organisation/event_line/administer.html.twig', $arr
+        );
+    }
+
+    /**
      * @Route("/new", name="administration_organisation_event_line_new")
      * @param Request $request
      * @param Organisation $organisation
@@ -37,29 +56,22 @@ class EventLineController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $newEventLineForm = $this->createForm(NewEventLineType::class);
-        $arr = [];
-        $arr["organisation"] = $organisation;
-
         $eventLine = new EventLine();
-        $newEventLineForm->setData($eventLine);
-        $newEventLineForm->handleRequest($request);
-
-        if ($newEventLineForm->isSubmitted()) {
-            if ($newEventLineForm->isValid()) {
-                $eventLine->setOrganisation($organisation);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($eventLine);
-                $em->flush();
-
-                $this->displaySuccess($this->get("translator")->trans("successful.event_line_add", [], "event_line"));
-                return $this->redirectToRoute("administration_organisation_events", ["organisation" => $organisation->getId()]);
-
-            } else {
-                $this->displayFormValidationError();
+        $eventLine->setOrganisation($organisation);
+        $newEventLineForm = $this->handleDoctrineFormWithCustomOnSuccess(
+            $this->createCrudForm(EventLineType::class, SubmitButtonType::CREATE),
+            $request,
+            $eventLine,
+            function ($form, $entity) use ($organisation) {
+                return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId()]);
             }
+        );
+        if ($newEventLineForm instanceof Response) {
+            return $newEventLineForm;
         }
 
+        $arr = [];
+        $arr["organisation"] = $organisation;
         $arr["new_event_line_form"] = $newEventLineForm->createView();
         return $this->render(
             'administration/organisation/event_line/new.html.twig', $arr
@@ -77,7 +89,7 @@ class EventLineController extends BaseController
     {
         $this->denyAccessUnlessGranted(EventLineVoter::EDIT, $eventLine);
 
-        $editEventLineForm = $this->createForm(NewEventLineType::class);
+        $editEventLineForm = $this->createForm(EventLineType::class);
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;

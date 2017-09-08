@@ -14,7 +14,7 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Form\Generic\ImportFileType;
 use AppBundle\Form\Generic\RemoveThingType;
-use AppBundle\Form\Member\NewMemberType;
+use AppBundle\Form\Member\MemberType;
 use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Security\Voter\MemberVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
@@ -39,7 +39,7 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
-        $newMemberForm = $this->createForm(NewMemberType::class);
+        $newMemberForm = $this->createForm(MemberType::class);
         $arr = [];
 
         $member = new Member();
@@ -54,7 +54,7 @@ class MemberController extends BaseController
                 $em->flush();
 
                 $this->displaySuccess($this->get("translator")->trans("successful.member_add", [], "member"));
-                $newMemberForm = $this->createForm(NewMemberType::class);
+                $newMemberForm = $this->createForm(MemberType::class);
             } else {
                 $this->displayFormValidationError();
             }
@@ -77,7 +77,7 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(MemberVoter::EDIT, $member);
 
-        $editMemberForm = $this->createForm(NewMemberType::class);
+        $editMemberForm = $this->createForm(MemberType::class);
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["member"] = $member;
@@ -92,7 +92,7 @@ class MemberController extends BaseController
                 $em->flush();
 
                 $this->displaySuccess($this->get("translator")->trans("successful.member_save", [], "member"));
-                $editMemberForm = $this->createForm(NewMemberType::class);
+                $editMemberForm = $this->createForm(MemberType::class);
             } else {
                 $this->displayFormValidationError();
             }
@@ -151,7 +151,7 @@ class MemberController extends BaseController
     public function importDownloadTemplateAction(Request $request, Organisation $organisation)
     {
         $memberTrans = $this->get("translator")->trans("member", [], "member");
-        $newMemberForm = $this->createForm(NewMemberType::class);
+        $newMemberForm = $this->createForm(MemberType::class);
         $exchangeService = $this->get("app.exchange_service");
 
         return $this->renderCsv($memberTrans . ".csv", $exchangeService->getCsvHeader($newMemberForm), []);
@@ -176,7 +176,7 @@ class MemberController extends BaseController
 
         if ($importMembersForm->isSubmitted()) {
             if ($importMembersForm->isValid()) {
-                $newMemberForm = $this->createForm(NewMemberType::class);
+                $newMemberForm = $this->createForm(MemberType::class);
                 $exchangeService = $this->get("app.exchange_service");
                 if ($exchangeService->importCsv($newMemberForm, function () use ($organisation) {
                     $member = new Member();

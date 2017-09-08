@@ -13,10 +13,10 @@ administer:
   member_administration: Mitglieder
   member_administration_description: Verwalten Sie die Mitglieder Ihrer Organisation
   member_administration_action: zur Mitgliederverwaltung
-  member_administration_new_action: neues Mitglied hinzufügen
   event_line_administration: Termingruppen
   event_line_administration_description: Verwalten Sie die Termingruppen Ihrer Organisation
-  event_line_administration_new_action: neue Termingruppe erstellen
+  new_event_line_action: Neue Termingruppe erstellen
+  new_member_action: Neues Mitglied hinzufügen
 
 #new page
 new:
@@ -33,14 +33,14 @@ setup:
   description: Richten Sie Ihre Organisation ein
   setup_step_1: Mitglieder hinzufügen
   setup_step_1_description: Importieren Sie Mitglieder von einer .csv (Excel) Datei oder fügen Sie sie direkt online hinzu
-  setup_step_2: Termine hinzufügen
-  setup_step_2_description: Generieren Sie die Termine der Mitglieder mit einem der bereitgestellten Verfahren oder importieren Sie sie von einem Excel
-  setup_step_3: Termine hinzufügen
-  setup_step_3_description: Generieren Sie die Termine der Mitglieder mit einem der bereitgestellten Verfahren oder importieren Sie sie von einem Excel
-  setup_step_4: Einstellungen anpassen
-  setup_step_4_description: Verändern Sie die Standarteinstellungen um die Anwendungen spezifischen Bedürfnissen anzupassen
-  setup_step_5: Mitglieder einladen
-  setup_step_5_description: Senden Sie eine E-Mail an Ihre Mitglieder damit sie sich hier online einloggen können
+  setup_step_1_action: zur Mitgliederverwaltung
+  setup_step_2: Termingruppen hinzufügen
+  setup_step_2_description: Erstellen Sie Termingruppen, und fügen Sie Termine hinzu (mit einem der bereitgestellten Verfahren oder durch einen importieren einer .csv Datei)
+  setup_step_2_action: zu den Termingruppen
+  setup_step_3: Einstellungen anpassen
+  setup_step_3_description: Verändern Sie die Standarteinstellungen um die Anwendungen spezifischen Bedürfnissen anzupassen
+  setup_step_4: Mitglieder einladen
+  setup_step_4_description: Senden Sie eine E-Mail an Ihre Mitglieder damit sie sich hier online einloggen können
   setup_step_done: (erledigt)
   setup_step_voluntary: (freiwillig)
 

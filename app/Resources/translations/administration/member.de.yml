@@ -45,3 +45,7 @@ remove:
   member_remove_form: Mitglied entfernen
   remove: Mitglied entfernen
   remove_description: Entfernen Sie das Mitglied und damit alle seine verbundenen Daten.
+
+#administer page
+administer:
+  new_action: neues Mitglied hinzufügen

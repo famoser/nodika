@@ -1,14 +1,14 @@
-{% extends "divided_content_base.html.twig" %}
+{% extends "single_content_base.html.twig" %}
+{% import ":macros:buttons.html.twig" as buttons %}
 
-{% block title %}{{ "new.title"|trans }}{% endblock %}
-{% block description %}{{ "new.description"|trans }}{% endblock %}
+{% block title %}{{ "administer.title"|trans }}{% endblock %}
+{% block description %}{{ "administer.description"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
 
 {% trans_default_domain "event_line" %}
 
 {% block primary_content %}
-    <h3>{{ "new.event_line_add_form"|trans }}</h3>
-    {{ form(new_event_line_form) }}
+
 {% endblock primary_content %}
 
 {% block secondary_content %}

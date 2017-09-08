@@ -23,7 +23,7 @@
         {% for member in organisation.members %}
             <tr>
                 <td>
-                    {{ member.name }}
+                    <a href="{{ path("administration_organisation_member_edit", {"organisation": organisation.id, "member": member.id}) }}">{{ member.name }}</a>
                 </td>
                 <td>
                     {{ member.persons.count }}
@@ -42,40 +42,25 @@
     <table class="table">
         <thead>
         <tr>
-            <th>{{ "display_order"|trans({}, "entity_event_line") }}</th>
             <th>{{ "entity.name"|trans({}, "entity_event_line") }}</th>
             <th>{{ "entity.plural"|trans({}, "entity_event") }}</th>
-            <th>{{ "column.edit"|trans({}, "common_table") }}</th>
-            <th>{{ "column.delete"|trans({}, "common_table") }}</th>
         </tr>
         </thead>
         <tbody>
         {% for eventLine in organisation.eventLines %}
             <tr>
                 <td>
-                    {{ eventLine.displayOrder }}
-                </td>
-                <td>
-                    {{ eventLine.name }}<br/>
-                    <p class="secondary">
-                        {{ eventLine.description }}
-                    </p>
+                    <a href="{{ path("administration_organisation_event_line_edit", {"organisation": organisation.id, "eventLine": eventLine.id}) }}">{{ eventLine.name }}</a>
                 </td>
                 <td>
                     {{ eventLine.events.count }}
-                </td>
-                <td>
-                    {{ buttons.edit_button(path("administration_organisation_event_line_edit", {"organisation": organisation.id, "eventLine": eventLine.id})) }}
-                </td>
-                <td>
-                    {{ buttons.delete_button(path("administration_organisation_event_line_remove", {"organisation": organisation.id, "eventLine": eventLine.id})) }}
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <p>
-        <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "administer.new_event_line_action"|trans }}</a>
+        <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "administer.event_line_administration_new_action"|trans }}</a>
     </p>
 {% endblock primary_content %}
 

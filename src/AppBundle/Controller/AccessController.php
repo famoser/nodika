@@ -60,7 +60,7 @@ class AccessController extends BaseAccessController
     public function registerAction(Request $request)
     {
         $registerForm = $this->handleDoctrineFormWithCustomOnSuccess(
-            $this->createForm(PersonType::class, null, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => SubmitButtonType::REGISTER]),
+            $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
             $request,
             new Person(),
             function ($form, $person) {

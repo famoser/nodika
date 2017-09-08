@@ -11,7 +11,7 @@ namespace AppBundle\Controller\Administration;
 
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Organisation;
-use AppBundle\Form\Organisation\NewOrganisationType;
+use AppBundle\Form\Organisation\OrganisationType;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -32,7 +32,7 @@ class OrganisationController extends BaseController
      */
     public function newAction(Request $request)
     {
-        $newOrganisationForm = $this->createForm(NewOrganisationType::class);
+        $newOrganisationForm = $this->createForm(OrganisationType::class);
         $arr = [];
 
         $organisation = Organisation::createFromPerson($this->getPerson());

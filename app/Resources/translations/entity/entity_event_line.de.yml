@@ -4,3 +4,4 @@ entity:
   plural: Termingruppen
 
 events: Termine
+display_order: Reihenfolge
