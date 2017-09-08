@@ -6,7 +6,7 @@
  * Time: 19:08
  */
 
-namespace AppBundle\Controller\Administration;
+namespace AppBundle\Controller\Administration\Organisation\EventLine;
 
 
 use AppBundle\Controller\Base\BaseController;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/organisation/{organisation}/events/generate")
+ * @Route("/events/generate")
  * @Security("has_role('ROLE_USER')")
  */
 class EventGenerateController extends BaseController

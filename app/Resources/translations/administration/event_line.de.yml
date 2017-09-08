@@ -1,0 +1,34 @@
+
+
+#general
+index:
+  title: Termingruppen
+  description: Termingruppen verwalten
+
+#new page
+new:
+  title: Neue Termingruppe
+  description: Fügen Sie ein neue Termingruppe zu Ihrer Organisation hinzu
+  event_line_add_form: Termingruppe erstellen
+
+#edit page
+edit:
+  title: Termingruppe bearbeiten
+  description: Editieren Sie die Termingruppe
+  event_line_edit: Termingruppe bearbeiten
+
+#remove page
+remove:
+  title: Termingruppe entfernen
+  description: Editieren Sie die Termingruppe
+  event_line_edit: Termingruppe bearbeiten
+
+#remove description
+remove: Termingruppe entfernen
+remove_action: Löschen Sie die Termingruppe und alle damit verbundenen Daten
+remove_description: Entfernen Sie die Termingruppe und alle damit verbundenen Daten. Alle damit verbundenen Termine werden ebenfalls entfernt!
+
+successful:
+  event_line_add: Erfolgreich hinzugefügt
+  event_line_save: Erfolgreich gespeichert
+  event_line_remove: Erfolgreich entfernt

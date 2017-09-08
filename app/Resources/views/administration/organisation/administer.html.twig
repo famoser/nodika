@@ -1,23 +1,79 @@
 {% extends "divided_content_base.html.twig" %}
 
-{% block title %}{{ "administer"|trans }}{% endblock %}
-{% block description %}{{ "administer_action"|trans }}{% endblock %}
+{% block title %}{{ "administer.title"|trans }}{% endblock %}
+{% block description %}{{ "administer.description"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
 
 {% trans_default_domain "organisation" %}
 
 {% block primary_content %}
-    <p>//sho org</p>
+
+    <h3>{{ "administer.member_administration"|trans }}</h3>
+    <p class="no-margin">
+        {{ "administer.member_administration_description"|trans }}
+    </p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_person") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for member in organisation.members %}
+            <tr>
+                <td>
+                    <a href="{{ path("administration_organisation_member_edit", {"organisation": organisation.id, "member": member.id}) }}">{{ member.name }}</a>
+                </td>
+                <td>
+                    {{ member.persons.count }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p>
+        <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">{{ "administer.member_administration_new_action"|trans }}</a>
+    </p>
+    <h3>{{ "administer.event_line_administration"|trans }}</h3>
+    <p class="no-margin">
+        {{ "administer.event_line_administration_description"|trans }}
+    </p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ "entity.name"|trans({}, "entity_event_line") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_event") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for eventLine in organisation.eventLines %}
+            <tr>
+                <td>
+                    <a href="{{ path("administration_organisation_event_line_edit", {"organisation": organisation.id, "eventLine": eventLine.id}) }}">{{ eventLine.name }}</a>
+                </td>
+                <td>
+                    {{ eventLine.events.count }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p>
+        <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "administer.event_line_administration_new_action"|trans }}</a>
+    </p>
 {% endblock primary_content %}
 
 {% block secondary_content %}
-    <h3>{{ "administer"|trans }}</h3>
-    <p>{{ "administer_description"|trans }}</p>
-    <h3>{{ "administer_relinks"|trans }}</h3>
-    <p>
-        <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">{{ "member_administration"|trans }}</a>
-        <br/>
-        <a href="{{ path("administration_organisation_events", {"organisation" : organisation.id}) }}">{{ "event_administration"|trans }}</a>
-        <br/>
-    </p>
+    <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_member") }}</p>
+    <h3>{{ "entity.name"|trans({}, "entity_event_line") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_event_line") }}</p>
+    {% if show_setup %}
+        <h3>{{ "administer.setup"|trans }}</h3>
+        <p>
+            {{ "administer.setup_description"|trans }}<br/>
+            <a href="{{ path("administration_organisation_setup", {"organisation" : organisation.id}) }}">{{ "administer.setup_action"|trans }}</a>
+        </p>
+    {% endif %}
 {% endblock secondary_content %}

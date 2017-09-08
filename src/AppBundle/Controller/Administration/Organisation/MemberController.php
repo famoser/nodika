@@ -6,7 +6,7 @@
  * Time: 15:27
  */
 
-namespace AppBundle\Controller\Administration;
+namespace AppBundle\Controller\Administration\Organisation;
 
 
 use AppBundle\Controller\Base\BaseController;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/organisation/{organisation}/members")
+ * @Route("/members")
  * @Security("has_role('ROLE_USER')")
  */
 class MemberController extends BaseController

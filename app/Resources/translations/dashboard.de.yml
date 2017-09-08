@@ -3,5 +3,6 @@ index:
   description: Alles Wichtige auf einem Blick
 
   administer_organisations: Meine Organisationen verwalten
+  administer_organisations_description: Sie sind Administrator folgender Organisationen und können diese verwalten
   my_organisations: Meine Organisationen
-  new_organisation_action: Neue Organisation hinzufügen
+  my_organisations_description: Sie sind Mitglied folgender Organisationen

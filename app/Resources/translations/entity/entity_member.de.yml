@@ -1,3 +1,8 @@
 entity:
   name: Mitglied
-  description: Ein Mitglied einer Organisation
+  description: >
+    Einem Mitglied Ihrer Organisation wird Terminen zugeteilt.
+    Jedes Mitglied kann beliebig viele Zugänge (Accounts) für verschiedene Personen auf der Webseite einrichten.
+  plural: Mitglieder
+
+persons: Zugänge

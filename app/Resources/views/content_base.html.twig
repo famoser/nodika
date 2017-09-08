@@ -2,10 +2,11 @@
 
 {% block layout %}
     <section class="content {{ color_class }}">
+        {% include "menu.html.twig" %}
         {% for type, messages in app.session.flashbag.all() %}
             <div class="container index-container {{ type }}-color">
                 {% for message in messages %}
-                    <p>
+                    <p class="no-margin">
                         {{ message }}
                     </p>
                 {% endfor %}

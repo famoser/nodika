@@ -11,7 +11,6 @@ namespace AppBundle\Entity\Traits;
 use AppBundle\Helper\HashHelper;
 use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use const Grpc\STATUS_ABORTED;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -223,6 +222,18 @@ trait UserTrait
     }
 
     /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        $this->setPlainPassword(null);
+        $this->setRepeatPlainPassword(null);
+    }
+
+    /**
      * @return bool
      */
     public function tryLoginWithPlainPassword()
@@ -313,18 +324,6 @@ trait UserTrait
     public function getUsername()
     {
         return $this->email;
-    }
-
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
-    public function eraseCredentials()
-    {
-        $this->setPlainPassword(null);
-        $this->setRepeatPlainPassword(null);
     }
 
 
@@ -486,13 +485,16 @@ trait UserTrait
      * @param $email
      *
      * sets all fields of the user object
+     * @return static
      */
-    public function createUserFromEmail($email)
+    private static function createUserFromEmail($email)
     {
-        $this->setRegistrationDate(new \DateTime());
-        $this->setIsActive(true);
-        $this->setEmail($email);
-        $this->setPlainPassword(uniqid());
-        $this->persistNewPassword();
+        $object = new static();
+        $object->setRegistrationDate(new \DateTime());
+        $object->setIsActive(true);
+        $object->setEmail($email);
+        $object->setPlainPassword(uniqid());
+        $object->persistNewPassword();
+        return $object;
     }
 }

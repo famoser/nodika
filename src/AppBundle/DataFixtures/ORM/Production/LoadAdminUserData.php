@@ -10,10 +10,11 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
+use AppBundle\Entity\AdminUser;
 use AppBundle\Entity\FrontendUser;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadUserData extends BaseFixture
+class LoadAdminUserData extends BaseFixture
 {
     /**
      * Load data fixtures with the passed EntityManager
@@ -22,9 +23,9 @@ class LoadUserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        $user = new FrontendUser();
+        $user = new AdminUser();
         $user->setEmail("info@nodika.ch");
-        $user->setPlainPassword('87128dg1889gfd6f2hag');
+        $user->setPlainPassword('jhagfgawefgajwef');
         $user->persistNewPassword();
         $user->setRegistrationDate(new \DateTime());
         $user->setIsActive(true);

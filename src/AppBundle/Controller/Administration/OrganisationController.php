@@ -83,11 +83,17 @@ class OrganisationController extends BaseController
      */
     public function administerAction(Request $request, Organisation $organisation)
     {
+        $arr = [];
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
+        $arr["show_setup"] = !$setupStatus->getAllDone();
+
+        $translator = $this->get("translator");
+        $this->displaySuccess($translator->trans("messages.not_fully_setup", [], "organisation"));
 
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         return $this->render(
-            'administration/organisation/administer.html.twig', ["organisation" => $organisation, "setupStatus" => $setupStatus]
+            'administration/organisation/administer.html.twig', $arr + ["organisation" => $organisation, "setupStatus" => $setupStatus]
         );
     }
 

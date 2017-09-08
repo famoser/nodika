@@ -1,0 +1,28 @@
+{% if is_granted("ROLE_USER") or is_granted("ROLE_ADMIN") %}
+    <div class="container menu-container">
+        <div class="menu-toggle-container">
+            <div class="menu-toggle">
+                <div class="nav-icon navigation" id="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+        <div class="menu-entries-container navigation">
+            <h3>{{ "menu.menu"|trans({}, "content_base") }}</h3>
+            <ul class="menu-entries">
+                {% if is_granted("ROLE_USER") %}
+                    <li class="menu-group-header">
+                        <span>{{ "menu.organisation"|trans({}, "content_base") }}</span>
+                    </li>
+                    <li>
+                        <a href="{{ path("administration_organisation_new") }}">{{ "menu.add_organisation"|trans({}, "content_base") }}</a>
+                    </li>
+                {% elseif is_granted("ROLE_ADMIN") %}
+
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endif %}

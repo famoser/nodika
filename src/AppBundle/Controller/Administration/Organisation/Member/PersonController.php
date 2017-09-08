@@ -6,7 +6,7 @@
  * Time: 14:22
  */
 
-namespace AppBundle\Controller\Administration;
+namespace AppBundle\Controller\Administration\Organisation\Member;
 
 
 use AppBundle\Controller\Base\BaseController;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/organisation/{organisation}/person")
+ * @Route("/person")
  * @Security("has_role('ROLE_USER')")
  */
 class PersonController extends BaseController

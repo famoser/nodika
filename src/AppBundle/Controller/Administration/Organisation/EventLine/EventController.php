@@ -6,7 +6,7 @@
  * Time: 19:08
  */
 
-namespace AppBundle\Controller\Administration;
+namespace AppBundle\Controller\Administration\Organisation\EventLine;
 
 
 use AppBundle\Controller\Base\BaseController;
@@ -25,9 +25,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
- * @Route("/organisation/{organisation}/events")
+ * @Route("/events")
  * @Security("has_role('ROLE_USER')")
  */
 class EventController extends BaseController

@@ -13,17 +13,18 @@
 {% block secondary_content %}
     <h3>{{ "index.my_organisations"|trans }}</h3>
     <p>
+        {{ "index.my_organisations_description"|trans }}
+        <br/>
         {% for organisation in leading_organisations %}
             <a href="{{ path("administration_organisation_view", {"organisation" : organisation.id}) }}">{{ organisation.name }}</a>
             <br/>
         {% endfor %}
     </p>
-    <p>
-        <a href="{{ path("administration_organisation_new") }}">{{ "index.new_organisation_action"|trans }}</a>
-    </p>
     {% if leading_organisations|length > 0 %}
         <h3>{{ "index.administer_organisations"|trans }}</h3>
         <p>
+            {{ "index.administer_organisations_description"|trans }}
+            <br/>
             {% for organisation in leading_organisations %}
                 <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">{{ organisation.name }}</a>
                 <br/>

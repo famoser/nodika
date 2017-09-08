@@ -12201,4 +12201,12 @@ function boot_general_usability() {
 //this function is called on document.ready
 function boot() {
     boot_general_usability();
+    boot_navigation();
+}
+
+function boot_navigation() {
+    $('#nav-toggle').click(function () {
+        $(".navigation").toggleClass('open');
+    });
+
 }

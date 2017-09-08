@@ -1,2 +1,7 @@
 error:
   form_validation_failed: Die Verarbeitung konnte nicht abgeschlossen werden. Sind alle benötigten Felder richtig ausgefüllt?
+
+successful:
+  add: Erfolgreich hinzugefügt
+  save: Erfolgreich gespeichert
+  remove: Erfolgreich entfernt

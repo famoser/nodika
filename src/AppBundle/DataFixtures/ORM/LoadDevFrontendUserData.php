@@ -11,9 +11,10 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Person;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadDevUserData extends BaseFixture
+class LoadDevFrontendUserData extends BaseFixture
 {
     /**
      * Load data fixtures with the passed EntityManager
@@ -22,9 +23,10 @@ class LoadDevUserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        /* @var FrontendUser $user */
-        $user = $this->getReference('user-1');
+        /* @var Person $person */
+        $person = $this->getReference("person-1");
 
+        $user = FrontendUser::createFromPerson($person);
         $user->setPlainPassword('asdf1234');
         $user->persistNewPassword();
 
@@ -34,7 +36,7 @@ class LoadDevUserData extends BaseFixture
 
     public function getOrder()
     {
-        return 2;
+        return 30;
     }
 
     /**

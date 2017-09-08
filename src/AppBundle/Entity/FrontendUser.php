@@ -148,8 +148,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
      */
     public static function createFromPerson(Person $person)
     {
-        $user = new static();
-        $user->createUserFromEmail($person->getEmail());
+        $user = static::createUserFromEmail($person->getEmail());
         $user->setPerson($person);
         return $user;
     }
