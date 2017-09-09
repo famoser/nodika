@@ -14,9 +14,6 @@ use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Form\BaseCrudAbstractType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,7 +21,7 @@ class OrganisationType extends BaseCrudAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addTrait($builder, ThingTrait::class);
+        $this->addTrait($builder, ThingTrait::class, ["translation_domain" => "entity_organisation", "label" => "entity.name"]);
         $this->addTrait($builder, AddressTrait::class);
         $this->addTrait($builder, CommunicationTrait::class);
         parent::buildForm($builder, $options);
@@ -32,8 +29,9 @@ class OrganisationType extends BaseCrudAbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Organisation::class,
-        ));
+        ]);
+        parent::configureOptions($resolver);
     }
 }

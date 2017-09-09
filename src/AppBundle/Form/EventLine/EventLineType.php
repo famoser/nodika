@@ -12,7 +12,6 @@ namespace AppBundle\Form\EventLine;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Form\BaseCrudAbstractType;
-use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,14 +20,14 @@ class EventLineType extends BaseCrudAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->addTrait($builder, ThingTrait::class, ["translation_domain" => "entity_event_line", "label" => "entity.name"]);
-        $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
+        parent::buildForm($builder, $options);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
         $resolver->setDefaults(array(
             'data_class' => EventLine::class,
         ));
+        parent::configureOptions($resolver);
     }
 }

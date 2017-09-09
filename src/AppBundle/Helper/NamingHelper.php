@@ -24,6 +24,21 @@ class NamingHelper
     }
 
     /**
+     * produces AppBundle\Form\MyClassName\MyClassNameType from Famoser\Class\MyClassName
+     * if $isRemoveType is true then the remove form is returned
+     *
+     * @param string $classWithNamespace
+     * @param bool $isRemoveType
+     * @return string
+     */
+    public static function classToCrudFormType($classWithNamespace, $isRemoveType)
+    {
+        $prepend = $isRemoveType ? "Remove" : "";
+        $className = substr($classWithNamespace, strrpos($classWithNamespace, "\\") + 1);
+        return "AppBundle\\Form\\" . $className . "\\" . $prepend . $className . "Type";
+    }
+
+    /**
      * produces my_stuff from Famoser\Class\MyStuffTrait
      *
      * @param $traitWithNamespace

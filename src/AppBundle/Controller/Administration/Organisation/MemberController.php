@@ -12,14 +12,15 @@ namespace AppBundle\Controller\Administration\Organisation;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
+use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\Generic\ImportFileType;
-use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Form\Member\MemberType;
 use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Security\Voter\MemberVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,28 +40,25 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
-        $newMemberForm = $this->createForm(MemberType::class);
-        $arr = [];
-
         $member = new Member();
-        $newMemberForm->setData($member);
-        $newMemberForm->handleRequest($request);
-
-        if ($newMemberForm->isSubmitted()) {
-            if ($newMemberForm->isValid()) {
-                $member->setOrganisation($organisation);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($member);
-                $em->flush();
-
-                $this->displaySuccess($this->get("translator")->trans("successful.member_add", [], "member"));
-                $newMemberForm = $this->createForm(MemberType::class);
-            } else {
-                $this->displayFormValidationError();
+        $member->setOrganisation($organisation);
+        $myForm = $this->handleCrudForm(
+            $request,
+            $member,
+            SubmitButtonType::CREATE,
+            function ($form, $entity) use ($organisation) {
+                /* @var Form $form */
+                /* @var Member $entity */
+                //return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $entity->getId()]);
+                return $this->redirectToRoute("administration_organisation_member_new", ["organisation" => $organisation->getId()]);
             }
+        );
+
+        if ($myForm instanceof Response) {
+            return $myForm;
         }
 
-        $arr["new_member_form"] = $newMemberForm->createView();
+        $arr["new_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/member/new.html.twig', $arr
         );
@@ -82,7 +80,7 @@ class MemberController extends BaseController
         $arr["member"] = $member;
 
         return $this->render(
-            'administration/organisation/event_line/administer.html.twig', $arr
+            'administration/organisation/member/administer.html.twig', $arr
         );
     }
 
@@ -97,28 +95,18 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(MemberVoter::EDIT, $member);
 
-        $editMemberForm = $this->createForm(MemberType::class);
-        $arr = [];
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
+        $myForm = $this->handleCrudForm(
+            $request,
+            $member,
+            SubmitButtonType::EDIT
+        );
 
-        $editMemberForm->setData($member);
-        $editMemberForm->handleRequest($request);
-
-        if ($editMemberForm->isSubmitted()) {
-            if ($editMemberForm->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($member);
-                $em->flush();
-
-                $this->displaySuccess($this->get("translator")->trans("successful.member_save", [], "member"));
-                $editMemberForm = $this->createForm(MemberType::class);
-            } else {
-                $this->displayFormValidationError();
-            }
+        if ($myForm instanceof Response) {
+            return $myForm;
         }
 
-        $arr["edit_member_form"] = $editMemberForm->createView();
+        $arr["member"] = $member;
+        $arr["edit_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/member/edit.html.twig', $arr
         );
@@ -135,27 +123,19 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(MemberVoter::REMOVE, $member);
 
-        $removeMemberForm = $this->createForm(RemoveThingType::class);
-        $arr = [];
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
 
-        $removeMemberForm->handleRequest($request);
+        $myForm = $this->handleCrudForm(
+            $request,
+            $member,
+            SubmitButtonType::REMOVE
+        );
 
-        if ($removeMemberForm->isSubmitted()) {
-            if ($removeMemberForm->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($member);
-                $em->flush();
-
-                $this->displaySuccess($this->get("translator")->trans("successful.member_save", [], "member"));
-                return $this->redirectToRoute("administration_organisation_members", ["organisation" => $organisation->getId()]);
-            } else {
-                $this->displayFormValidationError();
-            }
+        if ($myForm instanceof Response) {
+            return $myForm;
         }
 
-        $arr["remove_member_form"] = $removeMemberForm->createView();
+        $arr["member"] = $member;
+        $arr["remove_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/member/remove.html.twig', $arr
         );
@@ -170,7 +150,7 @@ class MemberController extends BaseController
      */
     public function importDownloadTemplateAction(Request $request, Organisation $organisation)
     {
-        $memberTrans = $this->get("translator")->trans("member", [], "member");
+        $memberTrans = $this->get("translator")->trans("entity.name", [], "entity_member");
         $newMemberForm = $this->createForm(MemberType::class);
         $exchangeService = $this->get("app.exchange_service");
 
@@ -188,32 +168,35 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
-        $importMembersForm = $this->createForm(ImportFileType::class);
-        $importFileModel = new ImportFileModel("/img/import");
-        $importMembersForm->setData($importFileModel);
 
-        $importMembersForm->handleRequest($request);
-
-        if ($importMembersForm->isSubmitted()) {
-            if ($importMembersForm->isValid()) {
+        $importForm = $this->handleForm(
+            $this->createForm(ImportFileType::class),
+            $request,
+            new ImportFileModel("/img/import"),
+            function ($form, $entity) use ($organisation) {
+                /* @var Form $form */
+                /* @var ImportFileModel $entity */
                 $newMemberForm = $this->createForm(MemberType::class);
                 $exchangeService = $this->get("app.exchange_service");
                 if ($exchangeService->importCsv($newMemberForm, function () use ($organisation) {
                     $member = new Member();
                     $member->setOrganisation($organisation);
                     return $member;
-                }, $importFileModel)
+                }, $entity)
                 ) {
-                    $importMembersForm = $this->createForm(ImportFileType::class);
                     $this->displaySuccess($this->get("translator")->trans("success.import_successful", [], "import"));
+                    return $this->createForm(ImportFileType::class);
                 }
-            } else {
-                $this->displayFormValidationError();
+                return $form;
             }
+        );
+
+        if ($importForm instanceof Response) {
+            return $importForm;
         }
 
         $arr = [];
-        $arr["import_members_form"] = $importMembersForm->createView();
+        $arr["import_form"] = $importForm->createView();
 
         return $this->render(
             'administration/organisation/member/import.html.twig', $arr + ["organisation" => $organisation]

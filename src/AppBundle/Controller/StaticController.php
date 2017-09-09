@@ -30,7 +30,7 @@ class StaticController extends BaseController
         $arr = [];
         $arr["is_logged_in"] = $this->getUser() instanceof FrontendUser;
 
-        $form = $this->handleDoctrineFormWithCustomOnSuccess(
+        $form = $this->handleFormDoctrinePersist(
             $this->createForm(RegisterForPreviewType::class),
             $request,
             new Newsletter(),

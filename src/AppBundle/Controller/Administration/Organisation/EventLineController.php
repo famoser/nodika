@@ -40,7 +40,7 @@ class EventLineController extends BaseController
 
         $eventLine = new EventLine();
         $eventLine->setOrganisation($organisation);
-        $newEventLineForm = $this->handleDoctrineFormWithCustomOnSuccess(
+        $newEventLineForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(EventLineType::class, SubmitButtonType::CREATE),
             $request,
             $eventLine,

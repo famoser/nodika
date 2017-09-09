@@ -10,8 +10,11 @@ namespace AppBundle\Controller\Base;
 
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
+use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Helper\CsvFileHelper;
+use AppBundle\Helper\NamingHelper;
 use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
@@ -30,6 +33,43 @@ class BaseController extends Controller
     public function createCrudForm($type, $submitButtonType, $data = null, array $options = array())
     {
         return $this->createForm($type, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType] + $options);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param BaseEntity $data
+     * @param int $submitButtonType
+     * @param $onSuccessCallable
+     * @return FormInterface
+     */
+    public function handleCrudForm(Request $request, BaseEntity $data, $submitButtonType, $onSuccessCallable = null)
+    {
+        $formType = NamingHelper::classToCrudFormType(get_class($data), $submitButtonType == SubmitButtonType::REMOVE);
+
+        $myOnSuccessCallable = function ($form, $entity) use ($onSuccessCallable, $submitButtonType) {
+            $translator = $this->get("translator");
+            if ($submitButtonType == SubmitButtonType::CREATE) {
+                $this->displaySuccess($translator->trans("successful.add", [], "common_form"));
+            } elseif ($submitButtonType == SubmitButtonType::EDIT) {
+                $this->displaySuccess($translator->trans("successful.save", [], "common_form"));
+            } elseif ($submitButtonType == SubmitButtonType::REMOVE) {
+                $this->displaySuccess($translator->trans("successful.remove", [], "common_form"));
+            }
+
+            if (is_callable($onSuccessCallable)) {
+                return $onSuccessCallable($form, $entity);
+            }
+            return $form;
+        };
+
+
+        return $this->handleFormDoctrinePersist(
+            $this->createForm($formType, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType]),
+            $request,
+            $data,
+            $myOnSuccessCallable
+        );
     }
 
     /**
@@ -130,40 +170,28 @@ class BaseController extends Controller
     /**
      * @param FormInterface $form
      * @param Request $request
-     * @param $entity
-     * @return FormInterface
-     */
-    protected function handleDoctrineForm(FormInterface $form, Request $request, BaseEntity $entity)
-    {
-        return $this->handleForm($form, $request, $entity, function ($form, $entity) {
-            /* @var FormInterface $form */
-            /* @var BaseEntity $entity */
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-            return $form;
-        });
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param Request $request
      * @param BaseEntity $entity
      * @param callable $onSuccessCallable with $form & $entity arguments
      * @return FormInterface
      */
-    protected function handleDoctrineFormWithCustomOnSuccess(FormInterface $form, Request $request, BaseEntity $entity, $onSuccessCallable)
+    protected function handleFormDoctrinePersist(FormInterface $form, Request $request, BaseEntity $entity, $onSuccessCallable = null)
     {
-        return $this->handleForm($form, $request, $entity, function ($form, $entity) use ($onSuccessCallable) {
-            /* @var FormInterface $form */
-            /* @var BaseEntity $entity */
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-            return $onSuccessCallable ($form, $entity);
-        });
+        if (is_callable($onSuccessCallable)) {
+            $myCallable = function ($form, $entity) use ($onSuccessCallable) {
+                /* @var FormInterface $form */
+                /* @var BaseEntity $entity */
+                $this->fastSave($entity);
+                return $onSuccessCallable ($form, $entity);
+            };
+        } else {
+            $myCallable = function ($form, $entity) use ($onSuccessCallable) {
+                /* @var FormInterface $form */
+                /* @var BaseEntity $entity */
+                $this->fastSave($entity);
+                return $form;
+            };
+        }
+        return $this->handleForm($form, $request, $entity, $myCallable);
     }
 
     /**
@@ -174,12 +202,11 @@ class BaseController extends Controller
      * @param callable $beforeRemoveCallable with $form & $entity arguments
      * @return FormInterface
      */
-    protected function handleDoctrineRemove(FormInterface $form, Request $request, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
+    protected function handleFormDoctrineRemove(FormInterface $form, Request $request, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
     {
         return $this->handleForm($form, $request, $entity, function ($form, $entity) use ($onRemoveCallable, $beforeRemoveCallable) {
             /* @var FormInterface $form */
             /* @var BaseEntity $entity */
-
             $em = $this->getDoctrine()->getManager();
             $beforeRemoveCallable($entity, $em);
             $em->remove($entity);
@@ -227,5 +254,15 @@ class BaseController extends Controller
             $mgr->persist($entity3);
         $mgr->persist($entity);
         $mgr->flush();
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @param int $applicationEventType
+     * @return bool
+     */
+    protected function getHasEventOccurred(Organisation $organisation, $applicationEventType)
+    {
+        return $this->getDoctrine()->getRepository("AppBundle:ApplicationEvent")->hasEventOccurred($organisation, $applicationEventType);
     }
 }

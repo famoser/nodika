@@ -14,7 +14,7 @@
     </p>
     {{ members.show_table(organisation, true) }}
     <p>
-        <a href="{{ path("administration_organisation_event_lines", {"organisation" : organisation.id}) }}">{{ "members.new_action"|trans }}</a> <br/>
+        <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "members.new_action"|trans }}</a> <br/>
         <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "members.import_action"|trans }}</a>
     </p>
 {% endblock %}

@@ -11,6 +11,8 @@ namespace AppBundle\Controller\Administration;
 
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Organisation;
+use AppBundle\Enum\ApplicationEventType;
+use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\Organisation\OrganisationType;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -32,26 +34,23 @@ class OrganisationController extends BaseController
      */
     public function newAction(Request $request)
     {
-        $newOrganisationForm = $this->createForm(OrganisationType::class);
         $arr = [];
 
         $organisation = Organisation::createFromPerson($this->getPerson());
-        $newOrganisationForm->setData($organisation);
-        $newOrganisationForm->handleRequest($request);
-
-        if ($newOrganisationForm->isSubmitted()) {
-            if ($newOrganisationForm->isValid()) {
-                $organisation->setActiveEnd(new \DateTime("today + 31 days"));
-                $organisation->setIsActive(true);
-                $organisation->addLeader($this->getPerson());
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($organisation);
-                $em->flush();
-
+        $organisation->setActiveEnd(new \DateTime("today + 31 days"));
+        $organisation->setIsActive(true);
+        $organisation->addLeader($this->getPerson());
+        $newOrganisationForm = $this->handleFormDoctrinePersist(
+            $this->createCrudForm(OrganisationType::class, SubmitButtonType::CREATE),
+            $request,
+            $organisation,
+            function ($form, $entity) use ($organisation) {
                 return $this->redirectToRoute("administration_organisation_setup", ["organisation" => $organisation->getId()]);
-            } else {
-                $this->displayFormValidationError();
             }
+        );
+
+        if ($newOrganisationForm instanceof Response) {
+            return $newOrganisationForm;
         }
 
         $arr["new_organisation_form"] = $newOrganisationForm->createView();

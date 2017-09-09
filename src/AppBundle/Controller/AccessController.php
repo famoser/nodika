@@ -59,7 +59,7 @@ class AccessController extends BaseAccessController
      */
     public function registerAction(Request $request)
     {
-        $registerForm = $this->handleDoctrineFormWithCustomOnSuccess(
+        $registerForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
             $request,
             new Person(),

@@ -39,5 +39,6 @@ class PersonType extends BaseCrudAbstractType
         $resolver->setDefaults([
             'data_class' => Person::class
         ]);
+        parent::configureOptions($resolver);
     }
 }

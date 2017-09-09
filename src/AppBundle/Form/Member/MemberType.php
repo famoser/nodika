@@ -25,15 +25,16 @@ class MemberType extends BaseCrudAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->addTrait($builder, ThingTrait::class, ["translation_domain" => "entity_member", "label" => "entity.name"]);
-        $this->addTrait($builder, AddressTrait::class);
+        $this->addTrait($builder, AddressTrait::class, ["required" => false]);
         $this->addTrait($builder, CommunicationTrait::class);
         parent::buildForm($builder, $options);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Member::class,
-        ));
+        ]);
+        parent::configureOptions($resolver);
     }
 }

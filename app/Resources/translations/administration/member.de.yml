@@ -11,7 +11,6 @@ index:
   members_no_person: Ein Mitglied ist keine Person
   members_no_person_description: Ein Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
 
-
 #new page
 new:
   title: Neues Mitglied
@@ -49,3 +48,5 @@ remove:
 #administer page
 administer:
   new_action: neues Mitglied hinzufügen
+  title: 'member'
+  description: 'member'
