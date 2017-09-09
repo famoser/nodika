@@ -22,9 +22,32 @@
     your browser</a> to improve your experience and security.</p>
 <![endif]-->
 
-{% block body %}
-
+<header class="header">
+    <div class="container header-container">
+        <div class="logo-wrapper">
+            <img src="{{ asset("dist/logo/nodika.svg") }}" class="logo-img">
+        </div>
+        <h1>{% block title %}{% endblock %}</h1>
+        <p class="h1-description">{% block description %}{% endblock %}</p>
+        {% block header %}
+        {% endblock %}
+    </div>
+</header>
+{% block content %}
+    
 {% endblock %}
+<footer class="footer">
+    <div class="container footer-container">
+        <div class="row">
+            <div class="col-md-2">
+                made with <3 by <a href="http://famoser.ch">famoser</a>
+            </div>
+            <div class="col-md-offset-7 col-md-3 align-right">
+                version 2017.3
+            </div>
+        </div>
+    </div>
+</footer>
 
 <script type="text/javascript" src="{{ asset('dist/js/scripts.min.js') }}"></script>
 <script type="text/javascript">

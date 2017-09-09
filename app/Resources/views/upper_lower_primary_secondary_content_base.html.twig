@@ -1,0 +1,33 @@
+{% extends 'layout:base.html.twig' %}
+
+{% block layout %}
+    <section class="content {{ color_class_upper }}">
+        {% include "layout:parts:menu.html.twig" %}
+        {% include "layout:parts:flashbag.html.twig" %}
+        <div class="row">
+            <div class="col-md-6">
+                {% block primary_content_upper %}
+                {% endblock primary_content_upper %}
+            </div>
+            <div class="col-md-6">
+                {% block secondary_content_upper %}
+                {% endblock secondary_content_upper %}
+            </div>
+        </div>
+    </section>
+
+    <section class="content {{ color_class_lower }}">
+        {% include "layout:parts:menu.html.twig" %}
+        {% include "layout:parts:flashbag.html.twig" %}
+        <div class="row">
+            <div class="col-md-6">
+                {% block primary_content_lower %}
+                {% endblock primary_content_lower %}
+            </div>
+            <div class="col-md-6">
+                {% block secondary_content_lower %}
+                {% endblock secondary_content_lower %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
