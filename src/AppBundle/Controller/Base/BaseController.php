@@ -46,7 +46,6 @@ class BaseController extends Controller
     public function handleCrudForm(Request $request, BaseEntity $data, $submitButtonType, $onSuccessCallable = null)
     {
         $formType = NamingHelper::classToCrudFormType(get_class($data), $submitButtonType == SubmitButtonType::REMOVE);
-
         $myOnSuccessCallable = function ($form, $entity) use ($onSuccessCallable, $submitButtonType) {
             $translator = $this->get("translator");
             if ($submitButtonType == SubmitButtonType::CREATE) {
@@ -63,13 +62,23 @@ class BaseController extends Controller
             return $form;
         };
 
+        $myForm = $this->createForm($formType, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType]);
+        if ($submitButtonType == SubmitButtonType::REMOVE) {
+            return $this->handleFormDoctrineRemove(
+                $myForm,
+                $request,
+                $data,
+                $myOnSuccessCallable
+            );
+        } else {
+            return $this->handleFormDoctrinePersist(
+                $myForm,
+                $request,
+                $data,
+                $myOnSuccessCallable
+            );
 
-        return $this->handleFormDoctrinePersist(
-            $this->createForm($formType, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType]),
-            $request,
-            $data,
-            $myOnSuccessCallable
-        );
+        }
     }
 
     /**
@@ -208,7 +217,9 @@ class BaseController extends Controller
             /* @var FormInterface $form */
             /* @var BaseEntity $entity */
             $em = $this->getDoctrine()->getManager();
-            $beforeRemoveCallable($entity, $em);
+            if (is_callable($beforeRemoveCallable)) {
+                $beforeRemoveCallable($form, $entity, $em);
+            }
             $em->remove($entity);
             $em->flush();
             return $onRemoveCallable ($form, $entity);

@@ -1,4 +1,4 @@
 entity:
-  name: Person
-  description: Ein Person ist einem Mitglied zugeordnet und entspricht einer natürlichen Person
-  plural: Personen
+  name: Account
+  description: Ein Account gehört einer Person und ist einem Mitglied zugeordnet
+  plural: Accounts

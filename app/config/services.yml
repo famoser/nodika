@@ -1,10 +1,4 @@
 services:
-    admin.content.users:
-        class: AppBundle\Admin\UserAdmin
-        arguments: [~, AppBundle\Entity\User, ~]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: content, label: Benutzer }
-
     app.frontend_user_provider:
         class: AppBundle\Security\FrontendUserProvider
         arguments: ["@doctrine"]
@@ -20,14 +14,24 @@ services:
             - { name: security.voter }
         public: false
 
-    #voters
+    app.voter.member:
+        class:  AppBundle\Security\Voter\MemberVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
+    app.voter.person:
+        class:  AppBundle\Security\Voter\PersonVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
     app.voter.event:
         class:  AppBundle\Security\Voter\EventVoter
         tags:
             - { name: security.voter }
         public: false
 
-    #voters
     app.voter.event_line:
         class:  AppBundle\Security\Voter\EventLineVoter
         tags:

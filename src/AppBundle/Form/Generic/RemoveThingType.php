@@ -12,9 +12,11 @@ namespace AppBundle\Form\Generic;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
 use AppBundle\Helper\NamingHelper;
+use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class RemoveThingType extends BaseAbstractType
 {
@@ -24,8 +26,16 @@ abstract class RemoveThingType extends BaseAbstractType
         $builder->add(
             "confirmConsequences",
             CheckboxType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("confirmConsequences")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("confirmConsequences") + ["mapped" => false]
         );
-        $this->addSubmit($builder, SubmitButtonType::REMOVE);
+        $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired([StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
     }
 }

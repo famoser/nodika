@@ -73,7 +73,7 @@ class MemberController extends BaseController
      */
     public function administerAction(Request $request, Organisation $organisation, Member $member)
     {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $this->denyAccessUnlessGranted(MemberVoter::ADMINISTRATE, $member);
 
         $arr = [];
         $arr["organisation"] = $organisation;
@@ -98,7 +98,12 @@ class MemberController extends BaseController
         $myForm = $this->handleCrudForm(
             $request,
             $member,
-            SubmitButtonType::EDIT
+            SubmitButtonType::EDIT,
+            function ($form, $entity) use ($organisation) {
+                /* @var Member $entity */
+                /* @var Form $form */
+                return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $entity->getId()]);
+            }
         );
 
         if ($myForm instanceof Response) {
@@ -123,11 +128,15 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(MemberVoter::REMOVE, $member);
 
-
         $myForm = $this->handleCrudForm(
             $request,
             $member,
-            SubmitButtonType::REMOVE
+            SubmitButtonType::REMOVE,
+            function ($form, $entity) use ($organisation) {
+                /* @var Member $entity */
+                /* @var Form $form */
+                return $this->redirectToRoute("administration_organisation_members", ["organisation" => $organisation->getId()]);
+            }
         );
 
         if ($myForm instanceof Response) {

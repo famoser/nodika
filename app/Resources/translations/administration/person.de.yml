@@ -1,8 +1,26 @@
-#general
-person: Person
-persons: Personen
-persons_description: Eine Person gehört zu einem Mitglied, und besitzt einen Login.
-Thing: Person
+#new page
+new:
+  title: Neuer Account
+  description: Fügen Sie einen neuen Account zum Mitglied hinzu
+  person_add_form: Account erfassen
+  about: Account
+  about_description: Ein Account gehört einer Person.
+  person_address: Adresse
+  person_address_description: Adresse der Person der den Account gehört. Sie können auch nur den Namen der Person ausfüllen, und sie ergänzt dann selber die fehlenden Informationen
+  person_contact: Kontaktinformationen
+  person_contact_description: An diese hinterlegte E-Mail werden die E-Mails versandt (z.B. zu Registrierung oder Terminerinnerungen)
 
-#new form
-Create: erstellen
+#edit page
+edit:
+  title: Account bearbeiten
+  description: Editieren Sie diesen Account
+  person_edit_form: Account ändern
+
+#remove description
+remove:
+  title: Account entfernen
+  description: Löschen Sie den Account und alle damit verbundenen Daten
+  person_remove_form: Account entfernen
+  remove: Account entfernen
+  remove_description: Entfernen Sie den Account und damit alle seine verbundenen Daten.
+  

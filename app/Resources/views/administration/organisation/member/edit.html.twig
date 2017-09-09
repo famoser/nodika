@@ -2,13 +2,13 @@
 
 {% block title %}{{ "edit.title"|trans }}{% endblock %}
 {% block description %}{{ "edit.description"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% set color_class = globals_color_class_member %}
 
 {% trans_default_domain "member" %}
 
 {% block primary_content %}
     <h3>{{ "edit.member_edit_form"|trans }}</h3>
-    {{ form_start(edit_form) }}
+    {{ form(edit_form) }}
 {% endblock primary_content %}
 
 {% block secondary_content %}

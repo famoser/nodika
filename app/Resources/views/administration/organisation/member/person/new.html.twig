@@ -1,0 +1,21 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+
+{% block title %}{{ "new.title"|trans }}{% endblock %}
+{% block description %}{{ "new.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_person %}
+
+{% trans_default_domain "person" %}
+
+{% block primary_content %}
+    <h3>{{ "new.person_add_form"|trans }}</h3>
+    {{ form(new_form) }}
+{% endblock primary_content %}
+
+{% block secondary_content %}
+    <h3>{{ "entity.name"|trans({}, "entity_person") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_person")  }}</p>
+    <h3>{{ "new.person_address"|trans }}</h3>
+    <p>{{ "new.person_address_description"|trans }}</p>
+    <h3>{{ "new.person_contact"|trans }}</h3>
+    <p>{{ "new.person_contact_description"|trans }}</p>
+{% endblock secondary_content %}

@@ -133,7 +133,7 @@ class Person extends BaseEntity
     /**
      * Get members
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Member[]
      */
     public function getMembers()
     {

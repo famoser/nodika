@@ -2,31 +2,29 @@
 
 {% block title %}{{ "administer.title"|trans }}{% endblock %}
 {% block description %}{{ "administer.description"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% set color_class = globals_color_class_member %}
+{% import "macros/persons.html.twig" as persons %}
 
 {% trans_default_domain "member" %}
 
 {% block primary_content %}
-    <h3>{{ "entity.name"|trans({}, "entity_event_line") }}</h3>
+    <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
     <p>
-        {{ "entity.description"|trans({}, "entity_event_line") }}
+        {{ "entity.description"|trans({}, "entity_member") }}
     </p>
-    {{ event_lines.show_table(organisation, true) }}
     <p>
-        <a href="{{ path("administration_organisation_event_lines", {"organisation" : organisation.id}) }}">{{ "event_lines.new_action"|trans }}</a>
+        <a href="{{ path("administration_organisation_member_edit", {"organisation" : organisation.id, "member": member.id}) }}">{{ "administer.edit_member_action"|trans }}</a><br/>
+        <a href="{{ path("administration_organisation_member_remove", {"organisation" : organisation.id, "member": member.id}) }}">{{ "administer.remove_member_action"|trans }}</a>
+    </p>
+    {{ persons.show_table(organisation, member, true) }}
+    <p>
+        <a href="{{ path("administration_organisation_member_person_new", {"organisation" : organisation.id, "member" : member.id}) }}">{{ "administer.new_person_action"|trans }}</a>
     </p>
 {% endblock primary_content %}
 
 {% block secondary_content %}
     <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
     <p>{{ "entity.description"|trans({}, "entity_member") }}</p>
-    <h3>{{ "entity.name"|trans({}, "entity_event_line") }}</h3>
-    <p>{{ "entity.description"|trans({}, "entity_event_line") }}</p>
-    {% if show_setup %}
-        <h3>{{ "administer.setup"|trans }}</h3>
-        <p>
-            {{ "administer.setup_description"|trans }}<br/>
-            <a href="{{ path("administration_organisation_setup", {"organisation" : organisation.id}) }}">{{ "administer.setup_action"|trans }}</a>
-        </p>
-    {% endif %}
+    <h3>{{ "entity.name"|trans({}, "entity_person") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_person") }}</p>
 {% endblock secondary_content %}

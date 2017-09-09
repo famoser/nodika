@@ -26,7 +26,7 @@ class PersonType extends BaseCrudAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->addTrait($builder, PersonTrait::class);
-        $this->addTrait($builder, AddressTrait::class);
+        $this->addTrait($builder, AddressTrait::class, ["required" => false]);
         $this->addTrait($builder, CommunicationTrait::class);
         parent::buildForm($builder, $options);
     }
