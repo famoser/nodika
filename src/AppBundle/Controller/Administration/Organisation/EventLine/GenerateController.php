@@ -49,7 +49,7 @@ class GenerateController extends BaseController
         $arr = [];
         $arr["organisation"] = $organisation;
         return $this->render(
-            'administration/organisation/event/generate/choose.html.twig', $arr
+            'administration/organisation/event_line/generate/choose.html.twig', $arr
         );
     }
 
@@ -64,7 +64,7 @@ class GenerateController extends BaseController
         $arr = [];
         $arr["organisation"] = $organisation;
         return $this->render(
-            'administration/organisation/event/generate/nodika.html.twig', $arr
+            'administration/organisation/event_line/generate/nodika.html.twig', $arr
         );
     }
 
@@ -79,7 +79,7 @@ class GenerateController extends BaseController
         $arr = [];
         $arr["organisation"] = $organisation;
         return $this->render(
-            'administration/organisation/event/generate/round_robin.html.twig', $arr
+            'administration/organisation/event_line/generate/round_robin.html.twig', $arr
         );
     }
 }
