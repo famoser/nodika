@@ -10769,36 +10769,6 @@ blockquote.testimonial footer cite {
   content: "\e920";
 }
 
-.color-background {
-  position: absolute;
-  height: 20px;
-  width: 50%;
-  left: 0;
-  background-color: #555F76; }
-
-.color-foreground {
-  position: relative;
-  background-color: #efefef;
-  z-index: 10; }
-
-.introduction {
-  background-color: #555F76; }
-
-.features {
-  background-color: #B19E7A; }
-
-.promises {
-  background-color: #618D61; }
-
-.payment {
-  background-color: #496A6A; }
-
-.contact {
-  background-color: #B17A7A; }
-
-.returning {
-  background-color: #618D61; }
-
 .titanic {
   float: none; }
 
@@ -11067,3 +11037,33 @@ p.h1-description, p.h2-description {
   position: absolute;
   right: 40px;
   top: 10px; }
+
+.color-background {
+  position: absolute;
+  height: 20px;
+  width: 50%;
+  left: 0;
+  background-color: #555F76; }
+
+.color-foreground {
+  position: relative;
+  background-color: #efefef;
+  z-index: 10; }
+
+.introduction {
+  background-color: #555F76; }
+
+.features {
+  background-color: #B19E7A; }
+
+.promises {
+  background-color: #618D61; }
+
+.payment {
+  background-color: #496A6A; }
+
+.contact {
+  background-color: #B17A7A; }
+
+.returning {
+  background-color: #618D61; }
