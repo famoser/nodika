@@ -17,6 +17,11 @@
     {{ buttons.base_button(link, "row.edit"|trans({}, "common_table")) }}
 {% endmacro %}
 
+{% macro view_button(link) %}
+    {% import _self as buttons %}
+    {{ buttons.base_button(link, "row.view"|trans({}, "common_table")) }}
+{% endmacro %}
+
 {% macro administer_button(link) %}
     {% import _self as buttons %}
     {{ buttons.base_button(link, "row.administer"|trans({}, "common_table")) }}

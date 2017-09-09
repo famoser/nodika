@@ -1,17 +1,30 @@
 {% extends "single_content_base.html.twig" %}
-{% import ":macros:buttons.html.twig" as buttons %}
 
 {% block title %}{{ "administer.title"|trans }}{% endblock %}
 {% block description %}{{ "administer.description"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% set color_class = globals_color_class_event_line %}
+{% import "macros/events.html.twig" as events %}
 
 {% trans_default_domain "event_line" %}
 
-{% block primary_content %}
-
-{% endblock primary_content %}
-
-{% block secondary_content %}
+{% block single_content %}
+    <h3>{{ "entity.name"|trans({}, "entity_event_line") }}</h3>
+    <p>
+        {{ "entity.description"|trans({}, "entity_event_line") }}
+    </p>
+    <p>
+        <a href="{{ path("administration_organisation_event_line_edit", {"organisation" : organisation.id, "eventLine": eventLine.id}) }}">{{ "administer.edit_event_line_action"|trans }}</a><br/>
+        <a href="{{ path("administration_organisation_event_line_remove", {"organisation" : organisation.id, "eventLine": eventLine.id}) }}">{{ "administer.remove_event_line_action"|trans }}</a>
+    </p>
+    {{ events.show_table(organisation, eventLine, true) }}
+    <p>
+        <a href="{{ path("administration_organisation_event_line_generate_choose", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "administer.generate_events_actions"|trans }}</a><br/>
+        <a href="{{ path("administration_organisation_event_line_import", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "administer.import_events_actions"|trans }}</a><br/>
+        <a href="{{ path("administration_organisation_event_line_event_new", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "administer.add_event_action"|trans }}</a><br/>
+    </p>
+    <hr/>
     <h3>{{ "entity.name"|trans({}, "entity_event_line") }}</h3>
     <p>{{ "entity.description"|trans({}, "entity_event_line") }}</p>
-{% endblock secondary_content %}
+    <h3>{{ "entity.name"|trans({}, "entity_event") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_event") }}</p>
+{% endblock %}

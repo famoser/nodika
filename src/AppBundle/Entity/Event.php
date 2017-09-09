@@ -249,7 +249,7 @@ class Event extends BaseEntity
     /**
      * Get eventPast
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|EventPast[]
      */
     public function getEventPast()
     {
@@ -277,9 +277,9 @@ class Event extends BaseEntity
         $pseudoObject->id = $this->getId();
         $pseudoObject->startDateTime = $this->getStartDateTime();
         $pseudoObject->endDateTime = $this->getEndDateTime();
-        $pseudoObject->eventLineId = $this->getEventLine()->getId();
-        $pseudoObject->memberId = $this->getMember()->getId();
-        $pseudoObject->personId = $this->getPerson()->getId();
+        $pseudoObject->eventLineId = $this->getEventLine() != null ? $this->getEventLine()->getId() : null;
+        $pseudoObject->memberId = $this->getMember() != null ? $this->getMember()->getId() : null;
+        $pseudoObject->personId = $this->getPerson() != null ? $this->getPerson()->getId() : null;
         $pseudoObject->tradeTag = $this->getTradeTag();
         return json_encode($pseudoObject);
     }

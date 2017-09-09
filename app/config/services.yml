@@ -46,3 +46,9 @@ services:
         class: AppBundle\Listener\DoctrinePreFlushListener
         tags:
             - { name: doctrine.event_listener, event: preFlush }
+
+    #twig extensions
+    app.extension.twig:
+        class: AppBundle\Extension\MyTwigExtension
+        tags:
+          - { name: twig.extension }

@@ -35,19 +35,34 @@ abstract class BaseEnum extends TranslatableObject
      * translate enum value
      *
      * @param $enumValue
-     * @return array
+     * @return bool|string
      */
-    protected function getTranslationForBuilderInternal($enumValue)
+    protected function getTranslationInternal($enumValue)
     {
         $reflection = new ReflectionClass(get_class($this));
         $choices = $reflection->getConstants();
 
         foreach ($choices as $name => $value) {
             if ($value == $enumValue) {
-                return ["translation_domain" => $this->getTranslationDomain(), "label" => NamingHelper::constantToTranslation($name)];
+                return NamingHelper::constantToTranslation($name);
             }
         }
-        return ["translation_domain" => "common_error", "label" => "enum.invalid_constant"];
+        return false;
+    }
+
+    /**
+     * translate enum value
+     *
+     * @param $enumValue
+     * @return array
+     */
+    protected function getTranslationForBuilderInternal($enumValue)
+    {
+        $trans = $this->getTranslationInternal($enumValue);
+        if ($trans === false) {
+            return ["translation_domain" => "common_error", "label" => "enum.invalid_constant"];
+        }
+        return ["translation_domain" => $this->getTranslationDomain(), "label" => $trans];
     }
 
     /**
@@ -80,5 +95,17 @@ abstract class BaseEnum extends TranslatableObject
     {
         $elem = new static();
         return $elem->getTranslationForBuilderInternal($enumValue);
+    }
+
+    /**
+     * translate enum value
+     *
+     * @param $enumValue
+     * @return string
+     */
+    public static function getTranslation($enumValue)
+    {
+        $elem = new static();
+        return $elem->getTranslationInternal($enumValue);
     }
 }

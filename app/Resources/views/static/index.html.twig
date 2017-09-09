@@ -1,11 +1,11 @@
-{% extends 'layout:base.html.twig' %}
+{% extends 'layout/base.html.twig' %}
 
 {% block title %}{{ "index.title"|trans }}{% endblock %}
 {% block description %}{{ "index.description"|trans }}{% endblock %}
 
 {% trans_default_domain "static" %}
 
-{% block layout %}
+{% block content %}
     {% if is_logged_in %}
         <section class="returning">
             <div class="container index-container default-color">

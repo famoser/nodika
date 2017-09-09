@@ -2,8 +2,10 @@ column:
   edit: ""
   delete: ""
   administer: ""
+  view: ''
 
 row:
   edit: bearbeiten
   delete: entfernen
   administer: verwalten
+  view: anzeigen

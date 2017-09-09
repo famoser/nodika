@@ -41,9 +41,10 @@ class BaseController extends Controller
      * @param BaseEntity $data
      * @param int $submitButtonType
      * @param $onSuccessCallable
+     * @param array $formOptions
      * @return FormInterface
      */
-    public function handleCrudForm(Request $request, BaseEntity $data, $submitButtonType, $onSuccessCallable = null)
+    public function handleCrudForm(Request $request, BaseEntity $data, $submitButtonType, $onSuccessCallable = null, $formOptions = [])
     {
         $formType = NamingHelper::classToCrudFormType(get_class($data), $submitButtonType == SubmitButtonType::REMOVE);
         $myOnSuccessCallable = function ($form, $entity) use ($onSuccessCallable, $submitButtonType) {
@@ -62,7 +63,7 @@ class BaseController extends Controller
             return $form;
         };
 
-        $myForm = $this->createForm($formType, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType]);
+        $myForm = $this->createForm($formType, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType] + $formOptions);
         if ($submitButtonType == SubmitButtonType::REMOVE) {
             return $this->handleFormDoctrineRemove(
                 $myForm,

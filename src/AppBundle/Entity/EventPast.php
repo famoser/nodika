@@ -106,6 +106,16 @@ class EventPast extends BaseEntity
     }
 
     /**
+     * Get changeType
+     *
+     * @return string
+     */
+    public function getChangeTypeText()
+    {
+        return EventChangeType::getTranslation($this->getChangeType());
+    }
+
+    /**
      * Set changeConfigurationJson
      *
      * @param string $changeConfigurationJson
