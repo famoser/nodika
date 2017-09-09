@@ -10,13 +10,12 @@ administer:
   setup: Checkliste
   setup_description: Richten Sie Ihre Organisation ein mit dieser praktischen Checkliste
   setup_action: zur Checkliste
-  member_administration: Mitglieder
-  member_administration_description: Verwalten Sie die Mitglieder Ihrer Organisation
-  member_administration_action: zur Mitgliederverwaltung
-  event_line_administration: Termingruppen
-  event_line_administration_description: Verwalten Sie die Termingruppen Ihrer Organisation
-  new_event_line_action: Neue Termingruppe erstellen
-  new_member_action: Neues Mitglied hinzufügen
+  member_overview: Mitglieder
+  member_overview_description: Die Mitglieder Ihrer Organisation
+  member_administration_action: Zur Mitgliederverwaltung
+  event_line_overview: Termingruppen
+  event_line_overview_description: Die Termingruppen Ihrer Organisation
+  event_line_administration_action: Zur Termingruppenverwaltung
 
 #new page
 new:
@@ -35,14 +34,38 @@ setup:
   setup_step_1_description: Importieren Sie Mitglieder von einer .csv (Excel) Datei oder fügen Sie sie direkt online hinzu
   setup_step_1_action: zur Mitgliederverwaltung
   setup_step_2: Termingruppen hinzufügen
-  setup_step_2_description: Erstellen Sie Termingruppen, und fügen Sie Termine hinzu (mit einem der bereitgestellten Verfahren oder durch einen importieren einer .csv Datei)
+  setup_step_2_description: Erstellen Sie Termingruppen
   setup_step_2_action: zu den Termingruppen
-  setup_step_3: Einstellungen anpassen
-  setup_step_3_description: Verändern Sie die Standarteinstellungen um die Anwendungen spezifischen Bedürfnissen anzupassen
-  setup_step_4: Mitglieder einladen
-  setup_step_4_description: Senden Sie eine E-Mail an Ihre Mitglieder damit sie sich hier online einloggen können
+  setup_step_3: Termine hinzufügen
+  setup_step_3_description: Fügen Sie den Termingruppen Termine hinzu (mit einem der bereitgestellten Verfahren oder durch einen Import einer .csv Datei)
+  setup_step_3_action: zu den Terminen
+  setup_step_4: Einstellungen anpassen
+  setup_step_4_description: Verändern Sie die Standarteinstellungen um die Anwendungen spezifischen Bedürfnissen anzupassen
+  setup_step_4_action: zu den Einstellungen
+  setup_step_5: Mitglieder einladen
+  setup_step_5_description: Senden Sie eine E-Mail an Ihre Mitglieder damit sie sich hier registrieren können
+  setup_step_5_action: Mitglieder einladen
   setup_step_done: (erledigt)
   setup_step_voluntary: (freiwillig)
+  setup: Organisation einrichten
+  setup_description: Lesen Sie zuerst alle Schritte durch, das gibt Ihnen einen groben Überblick was die Anwendung alles kann.
+  five_steps: Fünf Schritte zur vollständigen Einrichtung
+  five_steps_description: Sind alle diese fünf Schritte erledigt können Sie die Anwendung bereits in vollem Umfang nutzen.
+
+#event lines page
+event_lines:
+  title: Termingruppen verwalten
+  description: Verwalten Sie Ihre Termingruppen
+  new_action: neue Termingruppe erstellen
+  event_line_administration: Termingruppen
+  event_line_administration_description: Termingruppen verwalten
+
+#members page
+members:
+  title: Mitgliederverwaltung
+  description: Verwalten Sie Ihre Mitglieder
+  new_action: neues Mitglied hinzufügen
+  import_action: Mitglieder importieren
 
 messages:
   not_fully_setup: Ihre Organisation ist noch nicht vollständig eingerichtet. Gehen Sie zur Checkliste um die Einrichtung abzuschliessen

@@ -1,9 +1,9 @@
 {% extends "primary_secondary_content_base.html.twig" %}
+{% set color_class = globals_color_class_organisation %}
 {% import "macros/buttons.html.twig" as buttons %}
 
 {% block title %}{{ "event_administration"|trans }}{% endblock %}
 {% block description %}{{ "event_administration_action"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
 
 {% trans_default_domain "organisation" %}
 

@@ -29,24 +29,6 @@ use Symfony\Component\HttpFoundation\Response;
 class EventLineController extends BaseController
 {
     /**
-     * @Route("/administer", name="administration_organisation_event_line_administer")
-     * @param Request $request
-     * @param Organisation $organisation
-     * @return Response
-     */
-    public function administerAction(Request $request, Organisation $organisation)
-    {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
-
-        $arr = [];
-        $arr["organisation"] = $organisation;
-
-        return $this->render(
-            'administration/organisation/event_line/administer.html.twig', $arr
-        );
-    }
-
-    /**
      * @Route("/new", name="administration_organisation_event_line_new")
      * @param Request $request
      * @param Organisation $organisation
@@ -75,6 +57,26 @@ class EventLineController extends BaseController
         $arr["new_event_line_form"] = $newEventLineForm->createView();
         return $this->render(
             'administration/organisation/event_line/new.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/{eventLine}/administer", name="administration_organisation_event_line_administer")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @return Response
+     */
+    public function administerAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
+
+        return $this->render(
+            'administration/organisation/event_line/administer.html.twig', $arr
         );
     }
 

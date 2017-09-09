@@ -31,6 +31,11 @@ class Member extends BaseEntity
     use CommunicationTrait;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $hasBeenInvited = false;
+
+    /**
      * @var Person[]
      *
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="members")
@@ -160,5 +165,21 @@ class Member extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getName();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHasBeenInvited()
+    {
+        return $this->hasBeenInvited;
+    }
+
+    /**
+     * @param bool $hasBeenInvited
+     */
+    public function setHasBeenInvited($hasBeenInvited)
+    {
+        $this->hasBeenInvited = $hasBeenInvited;
     }
 }

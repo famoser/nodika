@@ -7,12 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}{% endblock %}</title>
+    {% set title = block('title')|raw %}
+    {% set description = block('description')|raw %}
+
+    <title>{{ title }}</title>
     {% block stylesheets %}
     {% endblock %}
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/css/styles.min.css') }}"/>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
-    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="description" content="{{ description }}">
     <base href="/" target="_self">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i" rel="stylesheet">
 </head>
@@ -27,14 +30,14 @@
         <div class="logo-wrapper">
             <img src="{{ asset("dist/logo/nodika.svg") }}" class="logo-img">
         </div>
-        <h1>{% block title %}{% endblock %}</h1>
-        <p class="h1-description">{% block description %}{% endblock %}</p>
+        <h1>{{ title }}</h1>
+        <p class="h1-description">{{ description }}</p>
         {% block header %}
         {% endblock %}
     </div>
 </header>
 {% block content %}
-    
+
 {% endblock %}
 <footer class="footer">
     <div class="container footer-container">

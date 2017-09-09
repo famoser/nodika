@@ -1,72 +1,20 @@
-{% extends "primary_secondary_content_base.html.twig" %}
+{% extends "single_content_base.html.twig" %}
+{% set color_class = globals_color_class_member %}
+{% import "macros/members.html.twig" as members %}
 
-{% block title %}{{ "member_administration"|trans }}{% endblock %}
-{% block description %}{{ "member_administration_action"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% block title %}{{ "members.title"|trans }}{% endblock %}
+{% block description %}{{ "members.description"|trans }}{% endblock %}
 
 {% trans_default_domain "organisation" %}
 
-{% block primary_content %}
-    <h2>{{ "members"|trans({}, "member") }}</h2>
-    {% if members|length == 0 %}
-        <p>{{ "no_members_yet"|trans }}</p>
-    {% else %}
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <td>{{ "Thing"|trans({}, "member") }}</td>
-                <td>{{ "addressLines"|trans({}, "address_trait") }}</td>
-                <td>{{ "member_persons"|trans({}, "organisation") }}</td>
-            </tr>
-
-            </thead>
-            <tbody>
-            {% for member in members %}
-                <tr>
-                    <td>{{ member.name }}</td>
-                    <td>{{ member.addressLines|join(", ") }}</td>
-                    <td>{{ member.persons|length }}</td>
-                    <td>
-                        <a href="{{ path("administration_organisation_member_edit", {"organisation" : organisation.id, "member": member.id}) }}">bearbeiten</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-    <h2>{{ "leaders"|trans }}</h2>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <td>{{ "fullName"|trans({}, "person_trait") }}</td>
-            <td></td>
-        </tr>
-
-        </thead>
-        <tbody>
-        {% for person in leaders %}
-            <tr>
-                <td>{{ person.fullName }}</td>
-                <td></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% endblock primary_content %}
-
-{% block secondary_content %}
-    <h3>{{ "members"|trans({}, "member") }}</h3>
+{% block single_content %}
+    <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
     <p>
-        {{ "members_description"|trans({}, "member") }}
-        <br/>
-        <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "member_add"|trans }}</a>
+        {{ "entity.description"|trans({}, "entity_member") }}
     </p>
-    <h3>{{ "members_no_person"|trans({}, "member") }}</h3>
-    <p>{{ "members_no_person_description"|trans({}, "member") }}</p>
-    <h3>{{ "member_import"|trans }}</h3>
+    {{ members.show_table(organisation, true) }}
     <p>
-        {{ "member_import_description"|trans }}
-        <br/>
-        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "member_import"|trans }}</a>
+        <a href="{{ path("administration_organisation_event_lines", {"organisation" : organisation.id}) }}">{{ "members.new_action"|trans }}</a> <br/>
+        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "members.import_action"|trans }}</a>
     </p>
-{% endblock secondary_content %}
+{% endblock %}

@@ -8,24 +8,21 @@
     </a>
 {% endmacro %}
 
+{% macro base_button(link, text) %}
+    <a href="{{ link }}">{{ text }}</a>
+{% endmacro %}
+
 {% macro edit_button(link) %}
-    <a href="{{ link }}">{{ "row.edit"|trans({}, "common_table") }}
-    {#
-    <button type="button" class="btn btn-default">
-        <a href="{{ link }}">
-            <span class="glyphicon glyphicon-edit"></span>
-        </a>
-    </button>
-    #}
+    {% import _self as buttons %}
+    {{ buttons.base_button(link, "row.edit"|trans({}, "common_table")) }}
+{% endmacro %}
+
+{% macro administer_button(link) %}
+    {% import _self as buttons %}
+    {{ buttons.base_button(link, "row.administer"|trans({}, "common_table")) }}
 {% endmacro %}
 
 {% macro delete_button(link) %}
-    <a href="{{ link }}">{{ "row.delete"|trans({}, "common_table") }}
-    {#
-    <button type="button" class="btn btn-default">
-        <a href="{{ link }}">
-            <span class="glyphicon glyphicon-remove"></span>
-        </a>
-    </button>
-    #}
+    {% import _self as buttons %}
+    {{ buttons.base_button(link, "row.delete"|trans({}, "common_table")) }}
 {% endmacro %}

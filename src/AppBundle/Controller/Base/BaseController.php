@@ -57,6 +57,18 @@ class BaseController extends Controller
     }
 
     /**
+     * @param string $message the translation message to display
+     * @param null $link
+     */
+    protected function displayInfo($message, $link = null)
+    {
+        if ($link != null) {
+            $message = '<a href="' . $link . '">' . $message . '</a>';
+        }
+        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_INFO, $message);
+    }
+
+    /**
      * displays the default form error
      */
     protected function displayFormValidationError()

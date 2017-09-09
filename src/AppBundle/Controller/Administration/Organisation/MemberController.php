@@ -67,6 +67,26 @@ class MemberController extends BaseController
     }
 
     /**
+     * @Route("/{member}/administer", name="administration_organisation_member_administer")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param Member $member
+     * @return Response
+     */
+    public function administerAction(Request $request, Organisation $organisation, Member $member)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["member"] = $member;
+
+        return $this->render(
+            'administration/organisation/event_line/administer.html.twig', $arr
+        );
+    }
+
+    /**
      * @Route("/{member}/edit", name="administration_organisation_member_edit")
      * @param Request $request
      * @param Organisation $organisation

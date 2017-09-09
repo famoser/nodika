@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
+use AppBundle\Enum\ApplicationEventType;
 use AppBundle\Model\EventLine\EventLineModel;
 use AppBundle\Model\Organisation\SetupStatusModel;
 
@@ -94,24 +95,21 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
     public function getSetupStatus(Organisation $organisation)
     {
         $setupStatus = new SetupStatusModel();
-        $em = $this->getEntityManager();
-        $setupStatus->setStepOneDone($em->createQueryBuilder()
-                ->select('count(m)')
-                ->from('AppBundle:Organisation', 'o')
-                ->join("o.members", "m")
-                ->where("o = :organisation")
-                ->setParameter('organisation', $organisation)
-                ->getQuery()
-                ->getSingleScalarResult() > 0);
-        $setupStatus->setStepTwoDone($em->createQueryBuilder()
-                ->select('count(e)')
-                ->from('AppBundle:Organisation', 'o')
-                ->join("o.members", "m")
-                ->join("m.events", "e")
-                ->where("o = :organisation")
-                ->setParameter('organisation', $organisation)
-                ->getQuery()
-                ->getSingleScalarResult() > 0);
+        $setupStatus->setHasMembers($organisation->getMembers()->count() > 0);
+        $setupStatus->setHasEventLines($organisation->getEventLines()->count() > 0);
+        $hasEvents = false;
+        foreach ($organisation->getEventLines() as $eventLine) {
+            $hasEvents = $hasEvents || $eventLine->getEvents()->count() > 0;
+        }
+        $setupStatus->setHasEvents($hasEvents);
+        $hasInvitedMembers = false;
+        foreach ($organisation->getMembers() as $member) {
+            $hasInvitedMembers = $hasInvitedMembers || $member->getHasBeenInvited();
+        }
+        $setupStatus->setHasInvitedMembers($hasInvitedMembers);
+        $applicationEventRepo = $this->getEntityManager()->getRepository("AppBundle:ApplicationEvent");
+        $hasVisitedSettings = $applicationEventRepo->hasEventOccurred($organisation, ApplicationEventType::VISITED_SETTINGS);
+        $setupStatus->setHasVisitedSettings($hasVisitedSettings);
         return $setupStatus;
     }
 }

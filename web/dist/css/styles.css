@@ -10769,6 +10769,36 @@ blockquote.testimonial footer cite {
   content: "\e920";
 }
 
+.color-background {
+  position: absolute;
+  height: 20px;
+  width: 50%;
+  left: 0;
+  background-color: #555F76; }
+
+.color-foreground {
+  position: relative;
+  background-color: #efefef;
+  z-index: 10; }
+
+.introduction {
+  background-color: #555F76; }
+
+.features {
+  background-color: #B19E7A; }
+
+.promises {
+  background-color: #618D61; }
+
+.payment {
+  background-color: #496A6A; }
+
+.contact {
+  background-color: #B17A7A; }
+
+.returning {
+  background-color: #618D61; }
+
 .titanic {
   float: none; }
 
@@ -10913,36 +10943,6 @@ p.h1-description, p.h2-description {
   line-height: 1.4em;
   margin-top: 0.5em; }
 
-.color-background {
-  position: absolute;
-  height: 20px;
-  width: 50%;
-  left: 0;
-  background-color: #555F76; }
-
-.color-foreground {
-  position: relative;
-  background-color: #efefef;
-  z-index: 10; }
-
-.introduction {
-  background-color: #555F76; }
-
-.features {
-  background-color: #B19E7A; }
-
-.promises {
-  background-color: #618D61; }
-
-.payment {
-  background-color: #496A6A; }
-
-.contact {
-  background-color: #B17A7A; }
-
-.returning {
-  background-color: #618D61; }
-
 .blue-background, .info-color {
   background-color: #555F76;
   color: #efefef; }
@@ -10965,6 +10965,10 @@ p.h1-description, p.h2-description {
 .gray-background, .default-color {
   background-color: #efefef;
   color: #555555; }
+
+.warning-color a, .info-color a, .error-color a, .success-color a {
+  color: #efefef;
+  text-decoration: underline; }
 
 .nav-icon {
   width: 20px;

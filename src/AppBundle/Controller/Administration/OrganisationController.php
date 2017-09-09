@@ -86,10 +86,13 @@ class OrganisationController extends BaseController
         $arr = [];
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
-        $arr["show_setup"] = !$setupStatus->getAllDone();
-
-        $translator = $this->get("translator");
-        $this->displaySuccess($translator->trans("messages.not_fully_setup", [], "organisation"));
+        if (!$setupStatus->getAllDone()) {
+            $translator = $this->get("translator");
+            $this->displayInfo(
+                $translator->trans("messages.not_fully_setup", [], "organisation"),
+                $this->generateUrl("administration_organisation_setup", ["organisation" => $organisation->getId()])
+            );
+        }
 
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         return $this->render(
@@ -128,6 +131,58 @@ class OrganisationController extends BaseController
         return $this->render(
             'administration/organisation/members.html.twig',
             ["organisation" => $organisation, "members" => $members, "leaders" => $leaders]
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/members/invite", name="administration_organisation_members_invite")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function inviteMembersAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $members = $organisation->getMembers();
+        $leaders = $organisation->getLeaders();
+        return $this->render(
+            'administration/organisation/members.html.twig',
+            ["organisation" => $organisation, "members" => $members, "leaders" => $leaders]
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/event_lines", name="administration_organisation_event_lines")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function eventLinesAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $eventLines = $organisation->getEventLines();
+        return $this->render(
+            'administration/organisation/event_lines.html.twig',
+            ["organisation" => $organisation, "eventLines" => $eventLines]
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/settings", name="administration_organisation_settings")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function settingsAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $eventLines = $organisation->getEventLines();
+        return $this->render(
+            'administration/organisation/settings.html.twig',
+            ["organisation" => $organisation, "eventLines" => $eventLines]
         );
     }
 

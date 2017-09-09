@@ -1,7 +1,9 @@
 column:
   edit: ""
   delete: ""
+  administer: ""
 
 row:
   edit: bearbeiten
   delete: entfernen
+  administer: verwalten

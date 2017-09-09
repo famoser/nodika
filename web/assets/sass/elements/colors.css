@@ -20,3 +20,7 @@
 .gray-background, .default-color {
   background-color: #efefef;
   color: #555555; }
+
+.warning-color a, .info-color a, .error-color a, .success-color a {
+  color: #efefef;
+  text-decoration: underline; }

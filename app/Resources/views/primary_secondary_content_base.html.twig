@@ -1,17 +1,19 @@
-{% extends 'layout:base.html.twig' %}
+{% extends 'layout/base.html.twig' %}
 
-{% block layout %}
+{% block content %}
     <section class="content {{ color_class }}">
-        {% include "layout:parts:menu.html.twig" %}
-        {% include "layout:parts:flashbag.html.twig" %}
-        <div class="row">
-            <div class="col-md-6">
-                {% block primary_content %}
-                {% endblock primary_content %}
-            </div>
-            <div class="col-md-6">
-                {% block secondary_content %}
-                {% endblock secondary_content %}
+        {% include "layout/parts/menu.html.twig" %}
+        {% include "layout/parts/flashbag.html.twig" %}
+        <div class="container index-container default-color">
+            <div class="row">
+                <div class="col-md-6">
+                    {% block primary_content %}
+                    {% endblock primary_content %}
+                </div>
+                <div class="col-md-6">
+                    {% block secondary_content %}
+                    {% endblock secondary_content %}
+                </div>
             </div>
         </div>
     </section>

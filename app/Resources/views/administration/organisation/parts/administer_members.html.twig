@@ -1,0 +1,11 @@
+{% trans_default_domain "organisation" %}
+{% import ":macros:buttons.html.twig" as buttons %}
+
+<h3>{{ "administer.member_administration"|trans }}</h3>
+<p>
+    {{ "administer.member_administration_description"|trans }}
+</p>
+
+<p>
+    <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">{{ "administer.new_member_action"|trans }}</a>
+</p>

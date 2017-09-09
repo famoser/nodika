@@ -2,7 +2,7 @@
     <div class="container index-container {{ type }}-color">
         {% for message in messages %}
             <p class="no-margin">
-                {{ message }}
+                {{ message|raw }}
             </p>
         {% endfor %}
     </div>
