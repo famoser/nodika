@@ -1,4 +1,4 @@
-{% macro show_table(organisation, eventLine, show_edit = false) %}
+{% macro show_table(organisation, eventLine, events, show_edit = false) %}
     {% import "macros/buttons.html.twig" as buttons %}
 
     <table class="table">
@@ -16,7 +16,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for event in eventLine.events %}
+        {% for event in events %}
             <tr>
                 <td>
                     {{ event.startDateTime|myDateTime }}

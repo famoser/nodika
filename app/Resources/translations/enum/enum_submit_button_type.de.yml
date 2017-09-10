@@ -6,3 +6,4 @@ login: login
 register: registrieren
 set_password: Passwort setzen
 reset_password: Passwort zurücksetzen
+not_set: übermitteln

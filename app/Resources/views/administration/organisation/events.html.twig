@@ -1,73 +1,44 @@
 {% extends "primary_secondary_content_base.html.twig" %}
 {% set color_class = globals_color_class_organisation %}
 {% import "macros/buttons.html.twig" as buttons %}
+{% import "macros/events.html.twig" as events %}
 
-{% block title %}{{ "event_administration"|trans }}{% endblock %}
-{% block description %}{{ "event_administration_action"|trans }}{% endblock %}
+{% block title %}{{ "events.title"|trans }}{% endblock %}
+{% block description %}{{ "events.description"|trans }}{% endblock %}
 
 {% trans_default_domain "organisation" %}
 
 {% block primary_content %}
     {% if eventLineModels|length == 0 %}
-        <h2>{{ "events"|trans({}, "event") }}</h2>
-        <p>{{ "no_event_lines_yet"|trans }}</p>
+        <p>{{ "events.no_event_lines"|trans }}
+            <br/>
+            <a href="{{ path("administration_organisation_event_lines", {"organisation" : organisation.id}) }}">
+                {{ "events.to_event_lines_administration"|trans }}
+            </a>
+        </p>
     {% else %}
         {% for eventLineModel in eventLineModels %}
-            <h3>
-                {{ eventLineModel.eventLine.name }}
-                {{ buttons.edit_button(path("administration_organisation_event_line_edit", {"organisation" : organisation.id, "eventLine" : eventLineModel.eventLine.id})) }}
-            </h3>
-            <p>{{ eventLineModel.eventLine.description }}</p>
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <td>{{ "start_date_time"|trans({}, "event") }}</td>
-                    <td>{{ "end_date_time"|trans({}, "event") }}</td>
-                    <td>{{ "member"|trans({}, "member") }}</td>
-                    <td></td>
-                </tr>
-
-                </thead>
-                <tbody>
-                {% for event in eventLineModel.events %}
-                    <tr>
-                        <td>{{ event.startDateTime|date("d.m.Y H:s") }}</td>
-                        <td>{{ event.endDateTime|date("d.m.Y H:s") }}</td>
-                        <td>{{ event.member }}</td>
-                        <td>
-                            {{ buttons.edit_button(path("administration_organisation_event_edit", {"organisation" : organisation.id, "event": event.id})) }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% if eventLineModel.events|length == 0 %}
+                <p>{{ "events.no_events"|trans }}</p>
+            {% else %}
+                <h3>
+                    {{ eventLineModel.eventLine.name }}
+                </h3>
+                <p>{{ eventLineModel.eventLine.description }}</p>
+                {{ events.show_table(organisation, eventLineModel.eventLine, eventLineModel.events) }}
+            {% endif %}
+            <p>
+                <a href="{{ path("administration_organisation_event_line_administer", {"organisation" : organisation.id, "eventLine" : eventLineModel.eventLine.id}) }}">
+                    {{ "events.to_event_line_administration"|trans }}
+                </a>
+            </p>
         {% endfor %}
     {% endif %}
 {% endblock %}
 
 {% block secondary_content %}
-    <h3>{{ "event_line"|trans({}, "event_line") }}</h3>
-    <p>
-        {{ "event_lines_description"|trans({}, "event_line") }}
-        <br/>
-        <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "event_lines_add"|trans }}</a>
-    </p>
-    <h3>{{ "events"|trans({}, "event") }}</h3>
-    <p>
-        {{ "events_description"|trans({}, "event") }}
-        <br/>
-        <a href="{{ path("administration_organisation_event_new", {"organisation" : organisation.id}) }}">{{ "event_add"|trans }}</a>
-    </p>
-    <h3>{{ "event_import"|trans }}</h3>
-    <p>
-        {{ "event_import_description"|trans }}
-        <br/>
-        <a href="{{ path("administration_organisation_event_import", {"organisation" : organisation.id}) }}">{{ "event_import"|trans }}</a>
-    </p>
-    <h3>{{ "event_generate"|trans }}</h3>
-    <p>
-        {{ "event_generate_description"|trans }}
-        <br/>
-        <a href="{{ path("administration_organisation_event_generate_choose", {"organisation" : organisation.id}) }}">{{ "event_generate"|trans }}</a>
-    </p>
+    <h3>{{ "entity.name"|trans({}, "entity_event") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_event") }}</p>
+    <h3>{{ "entity.name"|trans({}, "entity_event_line") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_event_line") }}</p>
 {% endblock %}

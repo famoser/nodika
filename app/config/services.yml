@@ -42,6 +42,10 @@ services:
         class:  AppBundle\Service\ExchangeService
         arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
 
+    app.event_past_evaluation_service:
+        class:  AppBundle\Service\EventPastEvaluationService
+        arguments: []
+
     listener.entity.remove:
         class: AppBundle\Listener\DoctrinePreFlushListener
         tags:

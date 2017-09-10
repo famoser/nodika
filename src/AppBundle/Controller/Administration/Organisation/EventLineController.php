@@ -16,10 +16,9 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\Event\ImportEventsType;
-use AppBundle\Form\EventLine\EventLineType;
-use AppBundle\Form\Generic\RemoveThingType;
+use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Helper\StaticMessageHelper;
-use AppBundle\Model\Event\ImportEventModel;
+use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Security\Voter\EventLineVoter;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -163,12 +162,23 @@ class EventLineController extends BaseController
      */
     public function importDownloadTemplateAction(Request $request, Organisation $organisation)
     {
-        $eventTrans = $this->get("translator")->trans("event", [], "event");
+        $eventTrans = $this->get("translator")->trans("entity.name", [], "entity_event");
+
+        $firstMemberId = 1;
+        foreach ($organisation->getMembers() as $member) {
+            $firstMemberId = $member->getId();
+        }
 
         return $this->renderCsv(
             $eventTrans . ".csv",
             $this->getImportFileHeader(),
-            [$this->getImportFileExampleLine()]
+            [
+                [
+                    (new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT),
+                    (new \DateTime("now + 1 day"))->format(DateTimeFormatter::DATE_TIME_FORMAT),
+                    $firstMemberId
+                ]
+            ]
         );
     }
 
@@ -177,53 +187,40 @@ class EventLineController extends BaseController
      */
     private function getImportFileHeader()
     {
-        $start = $this->get("translator")->trans("start_date_time", [], "event");
-        $end = $this->get("translator")->trans("end_date_time", [], "event");
-        $memberId = $this->get("translator")->trans("member_id", [], "event");
+        $start = $this->get("translator")->trans("start_date_time", [], "entity_event");
+        $end = $this->get("translator")->trans("end_date_time", [], "entity_event");
+        $memberId = $this->get("translator")->trans("member_id", [], "entity_event");
         return [$start, $end, $memberId];
     }
 
     /**
-     * @return string[]
-     */
-    private function getImportFileExampleLine()
-    {
-        $nowExample = new \DateTime();
-        $endExample = new \DateTime("now + 1 day");
-        return [$nowExample->format(DateTimeFormatter::DATE_TIME_FORMAT), $endExample->format(DateTimeFormatter::DATE_TIME_FORMAT), 1];
-    }
-
-    /**
-     * @Route("/import", name="administration_organisation_event_line_import")
+     * @Route("/{eventLine}/import", name="administration_organisation_event_line_import")
      * @param Request $request
      * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @return Response
      */
-    public function importAction(Request $request, Organisation $organisation)
+    public function importAction(Request $request, Organisation $organisation, EventLine $eventLine)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
-        $members = $this->getDoctrine()->getRepository("AppBundle:Member")->getIdAssociatedArray($organisation);
-
-        $arr = [];
-        $arr["members"] = $members;
-
-        $importFileModel = new ImportEventModel("/img/import");
-        $importEventsForm = $this->createForm(ImportEventsType::class, $importFileModel, ["organisation" => $organisation]);
-        $importEventsForm->handleRequest($request);
-
-        if ($importEventsForm->isSubmitted()) {
-            if ($importEventsForm->isValid()) {
+        $importForm = $this->handleForm(
+            $this->createForm(ImportEventsType::class),
+            $request,
+            new ImportFileModel("/public/import"),
+            function ($form, $importFileModel) use ($organisation, $eventLine) {
+                /* @var Form $form */
+                /* @var ImportFileModel $importFileModel */
                 $exchangeService = $this->get("app.exchange_service");
-                $eventLine = $importFileModel->getEventLine();
-                if ($exchangeService->importCsvAdvanced(function ($data) use ($organisation, $members, $eventLine) {
+                $members = $this->getDoctrine()->getRepository("AppBundle:Member")->getIdAssociatedArray($organisation);
+                if ($exchangeService->importCsvAdvanced(function ($data) use ($organisation, $eventLine, $members) {
                     $event = new Event();
                     $event->setStartDateTime(new \DateTime($data[0]));
                     $event->setEndDateTime(new \DateTime($data[1]));
                     if (isset($members[$data[2]])) {
                         $event->setMember($members[$data[2]]);
                     } else {
-                        return null;
+                        $this->get("session.flash_bag")->set(StaticMessageHelper::FLASH_ERROR, $this->get("translator")->trans("error.file_upload_failed", [], "import"));
                     }
                     $event->setEventLine($eventLine);
                     return $event;
@@ -238,18 +235,23 @@ class EventLineController extends BaseController
                     return true;
                 }, $importFileModel)
                 ) {
-                    $importEventsForm = $this->createForm(ImportEventsType::class, $importFileModel, ["organisation" => $organisation]);
-                    $this->displaySuccess($this->get("translator")->trans("success.import_successful", [], "import"));
+                    return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
                 }
-            } else {
-                $this->displayFormValidationError();
+                return $form;
             }
+        );
+
+        if ($importForm instanceof Response) {
+            return $importForm;
         }
 
-        $arr["import_events_form"] = $importEventsForm->createView();
+        $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["members"] = $organisation->getMembers();
+        $arr["import_form"] = $importForm->createView();
 
         return $this->render(
-            'administration/organisation/event/import.html.twig', $arr + ["organisation" => $organisation]
+            'administration/organisation/event_line/import.html.twig', $arr
         );
     }
 }

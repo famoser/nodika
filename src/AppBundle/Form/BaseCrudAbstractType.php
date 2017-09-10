@@ -9,6 +9,7 @@
 namespace AppBundle\Form;
 
 
+use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,5 +31,6 @@ class BaseCrudAbstractType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired([StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
+        $resolver->setDefault(StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION, SubmitButtonType::NOT_SET);
     }
 }

@@ -42,12 +42,14 @@ class GenerateController extends BaseController
      * @Route("/choose", name="administration_organisation_event_line_generate_choose")
      * @param Request $request
      * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @return Response
      */
-    public function chooseAction(Request $request, Organisation $organisation)
+    public function chooseAction(Request $request, Organisation $organisation, EventLine $eventLine)
     {
         $arr = [];
         $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
         return $this->render(
             'administration/organisation/event_line/generate/choose.html.twig', $arr
         );
@@ -57,12 +59,14 @@ class GenerateController extends BaseController
      * @Route("/nodika", name="administration_organisation_event_line_generate_nodika")
      * @param Request $request
      * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @return Response
      */
-    public function nodikaAction(Request $request, Organisation $organisation)
+    public function nodikaAction(Request $request, Organisation $organisation, EventLine $eventLine)
     {
         $arr = [];
         $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
         return $this->render(
             'administration/organisation/event_line/generate/nodika.html.twig', $arr
         );
@@ -72,12 +76,14 @@ class GenerateController extends BaseController
      * @Route("/round_robin", name="administration_organisation_event_line_generate_round_robin")
      * @param Request $request
      * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @return Response
      */
-    public function roundRobinAction(Request $request, Organisation $organisation)
+    public function roundRobinAction(Request $request, Organisation $organisation, EventLine $eventLine)
     {
         $arr = [];
         $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
         return $this->render(
             'administration/organisation/event_line/generate/round_robin.html.twig', $arr
         );

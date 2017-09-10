@@ -33,15 +33,16 @@ administer:
   import_events_actions: Termine importieren
   generate_events_actions: Termine generieren
 
-
 #import description
 import:
   title: Termine importieren
   description: Laden Sie eine .csv (Excel) Datei hoch mit den Terminen
-  help: Laden Sie die Musterdatei herunter, und fügen Sie die Termine (ohne die Spaltenreihenfolge zu ändern) ein. Danach kehren Sie hier zurück, und laden die .csv (Excel) Datei hoch
+  import_events_template: Musterdatei
+  import_events_template_description: Laden Sie die Musterdatei herunter, und fügen Sie die Termine (ohne die Spaltenreihenfolge zu ändern) ein. Danach kehren Sie hier zurück, und laden die .csv (Excel) Datei wieder hoch
   import_events_template_download: Musterdatei herunterladen
-  import_events_required: Zwingend und optionale Felder
+  import_events_required: Zwingende Felder
   import_events_required_description: Zwingend erfolderlich ist für jeden Termin Anfang- und Enddatum und das zugehörige Mitglied
+  no_members: Sie haben nocht keine Mitglider hinzugefügt
 
 #generate page
 generate_choose:

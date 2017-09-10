@@ -12,25 +12,16 @@ namespace AppBundle\Controller\Administration\Organisation\EventLine;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
-use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
+use AppBundle\Enum\EventChangeType;
 use AppBundle\Enum\SubmitButtonType;
-use AppBundle\Form\Event\ImportEventsType;
-use AppBundle\Form\Event\EventType;
-use AppBundle\Form\Generic\RemoveThingType;
-use AppBundle\Helper\DateTimeFormatter;
-use AppBundle\Helper\EventPastEvaluationHelper;
-use AppBundle\Helper\StaticMessageHelper;
-use AppBundle\Model\Event\ImportEventModel;
 use AppBundle\Security\Voter\EventLineVoter;
 use AppBundle\Security\Voter\EventVoter;
-use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * @Route("/events")
@@ -58,7 +49,8 @@ class EventController extends BaseController
             function ($form, $entity) use ($organisation, $eventLine) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $eventPast = EventPastEvaluationHelper::createCreatedByAdminChange($entity, $this->getPerson());
+                $myService = $this->get("app.event_past_evaluation_service");
+                $eventPast = $myService->createEventPast($this->getPerson(), null, $entity, EventChangeType::MANUALLY_CREATED_BY_ADMIN);
                 $this->fastSave($eventPast);
                 return $this->redirectToRoute("administration_organisation_event_line_event_new", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
             },
@@ -95,7 +87,8 @@ class EventController extends BaseController
             function ($form, $entity) use ($organisation, $eventLine, $oldEvent) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $eventPast = EventPastEvaluationHelper::createChangedByAdminChange($entity, $oldEvent, $this->getPerson());
+                $myService = $this->get("app.event_past_evaluation_service");
+                $eventPast = $myService->createEventPast($this->getPerson(), $oldEvent, $entity, EventChangeType::MANUALLY_CHANGED_BY_ADMIN);
                 $this->fastSave($eventPast);
                 return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
             },
@@ -132,7 +125,8 @@ class EventController extends BaseController
             function ($form, $entity) use ($organisation, $eventLine, $oldEvent) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $eventPast = EventPastEvaluationHelper::createRemovedByAdminChange($entity, $this->getPerson());
+                $myService = $this->get("app.event_past_evaluation_service");
+                $eventPast = $myService->createEventPast($this->getPerson(), $oldEvent, $entity, EventChangeType::MANUALLY_REMOVED_BY_ADMIN);
                 $this->fastSave($eventPast);
                 return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
             }

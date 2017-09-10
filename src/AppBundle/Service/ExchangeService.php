@@ -10,6 +10,7 @@ namespace AppBundle\Service;
 
 
 use AppBundle\Helper\CsvFileHelper;
+use AppBundle\Helper\NamingHelper;
 use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Service\Interfaces\ExchangeServiceInterface;
@@ -57,7 +58,8 @@ class ExchangeService implements ExchangeServiceInterface
         foreach ($createForm as $group => $item) {
             if ($item instanceof Form) {
                 foreach ($item->getIterator() as $name => $element) {
-                    $myArr[] = $this->translator->trans($name, [], $element->getConfig()->getOption("translation_domain"));
+                    $myName = NamingHelper::propertyToTranslation($name);
+                    $myArr[] = $this->translator->trans($myName, [], $element->getConfig()->getOption("translation_domain"));
                 }
             }
         }
@@ -97,7 +99,7 @@ class ExchangeService implements ExchangeServiceInterface
                 if ($row++ == 1) {
                     //validate header (poorly, but should be enough for the normal user)
                     if (count($data) != count($header)) {
-                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));
+                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_wrong_format", [], "import"));
                         return false;
                     }
                     for ($i = 0; $i < count($header); $i++) {
@@ -106,6 +108,10 @@ class ExchangeService implements ExchangeServiceInterface
                     continue;
                 }
                 $newEntry = $createNewEntityClosure();
+                if ($newEntry == false) {
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.creation_failure_occurred_at", ["%number%" => $row - 1], "import"));
+                    return false;
+                }
                 //transfer array to key-value
                 for ($i = 0; $i < count($data) && $i < count($header); $i++) {
                     $propName = $accessorNames[$i];
@@ -122,6 +128,11 @@ class ExchangeService implements ExchangeServiceInterface
             }
             $em->flush();
             fclose($handle);
+            if ($row - 2 <= 0) {
+                $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_empty", [], "import"));
+            } else {
+                $this->flashBag->set(StaticMessageHelper::FLASH_SUCCESS, $this->translator->trans("success.import_successful", ["%count%" => $row - 2], "import"));
+            }
             return true;
         } else {
             $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));
@@ -152,22 +163,35 @@ class ExchangeService implements ExchangeServiceInterface
             while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== FALSE) {
                 if ($row++ == 1) {
                     //validate header skipped
-                    if ($validateHeaderClosure($data)) {
+                    if (!$validateHeaderClosure($data)) {
+                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_wrong_format", [], "import"));
+                        return false;
+                    } else {
                         continue;
                     }
                 }
                 $newEntry = $entitySetClosure($data);
+                if ($newEntry == false) {
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.creation_failure_occurred_at", ["%number%" => $row - 1], "import"));
+                    return false;
+                }
                 $errors = $this->validator->validate($newEntry);
                 if (count($errors) == 0 && $newEntry != null) {
                     $em->persist($newEntry);
                 } else {
-                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
                     fclose($handle);
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
+
                     return false;
                 }
             }
             $em->flush();
             fclose($handle);
+            if ($row - 2 <= 0) {
+                $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_empty", [], "import"));
+            } else {
+                $this->flashBag->set(StaticMessageHelper::FLASH_SUCCESS, $this->translator->trans("success.import_successful", ["%count%" => $row - 2], "import"));
+            }
             return true;
         } else {
             $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));

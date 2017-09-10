@@ -1,0 +1,1 @@
+Name,Beschreibung (freiwillig),Strasse,streetNr,addressLine,postalCode,Stadt,Land,Telefonnummer (freiwillig),Email,Webseite (freiwillig)

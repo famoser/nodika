@@ -47,10 +47,10 @@ setup:
   setup_step_5_action: Mitglieder einladen
   setup_step_done: (erledigt)
   setup_step_voluntary: (freiwillig)
-  setup: Organisation einrichten
-  setup_description: Lesen Sie zuerst alle Schritte durch, das gibt Ihnen einen groben Überblick was die Anwendung alles kann.
   five_steps: Fünf Schritte zur vollständigen Einrichtung
   five_steps_description: Sind alle diese fünf Schritte erledigt können Sie die Anwendung bereits in vollem Umfang nutzen.
+  setup: Organisation einrichten
+  setup_description: Lesen Sie zuerst alle Schritte durch, das gibt Ihnen einen groben Überblick über die Funktionen der Anwendung.
 
 #event lines page
 event_lines:
@@ -59,6 +59,15 @@ event_lines:
   new_action: neue Termingruppe erstellen
   event_line_administration: Termingruppen
   event_line_administration_description: Termingruppen verwalten
+
+#event lines page
+events:
+  title: Termine verwalten
+  description: Verwalten Sie Ihre Termine
+  no_events: Noch keine Termine erfasst
+  to_event_line_administration: Termingruppe verwalten
+  no_event_lines: Noch keine Termingruppen erfasst
+  to_event_lines_administration: Termingruppen verwalten
 
 #members page
 members:

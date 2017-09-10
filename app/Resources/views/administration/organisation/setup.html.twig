@@ -7,14 +7,14 @@
 {% trans_default_domain "organisation" %}
 
 {% block primary_content %}
-    <h2>{{ "setup.setup_step_1"|trans }} {% if setupStatus.hasMembers %}{{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_1"|trans }} {% if setupStatus.hasMembers %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
         {{ "setup.setup_step_1_description"|trans }} <br/>
         <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">
             {{ "setup.setup_step_1_action"|trans }}
         </a>
     </p>
-    <h2>{{ "setup.setup_step_2"|trans }}{% if setupStatus.hasEventLines %}{{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_2"|trans }}{% if setupStatus.hasEventLines %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
         {{ "setup.setup_step_2_description"|trans }} <br/>
         <a href="{{ path("administration_organisation_event_lines", {"organisation" : organisation.id}) }}">
@@ -22,7 +22,7 @@
         </a>
     </p>
 
-    <h2>{{ "setup.setup_step_3"|trans }}{% if setupStatus.hasEvents %}{{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_3"|trans }}{% if setupStatus.hasEvents %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
         {{ "setup.setup_step_3_description"|trans }} <br/>
         <a href="{{ path("administration_organisation_events", {"organisation" : organisation.id}) }}">
@@ -30,7 +30,7 @@
         </a>
     </p>
 
-    <h2>{{ "setup.setup_step_4"|trans }}{% if setupStatus.hasVisitedSettings %}{{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_4"|trans }}{% if setupStatus.hasVisitedSettings %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
         {{ "setup.setup_step_4_description"|trans }} <br/>
         <a href="{{ path("administration_organisation_settings", {"organisation" : organisation.id}) }}">
@@ -38,7 +38,7 @@
         </a>
     </p>
 
-    <h2>{{ "setup.setup_step_5"|trans }}{% if setupStatus.hasInvitedMembers %}{{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_5"|trans }}{% if setupStatus.hasInvitedMembers %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
         {{ "setup.setup_step_5_description"|trans }} <br/>
         <a href="{{ path("administration_organisation_members_invite", {"organisation" : organisation.id}) }}">

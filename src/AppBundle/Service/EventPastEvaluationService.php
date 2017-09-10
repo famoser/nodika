@@ -97,7 +97,7 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
     {
         $eventPast = new EventPast();
         $eventPast->setEvent($newEvent);
-        $eventPast->setBeforeEventJson($oldEvent->createJson());
+        $eventPast->setBeforeEventJson($oldEvent != null ? $oldEvent->createJson() : "");
         $eventPast->setAfterEventJson($newEvent->createJson());
         $eventPast->setChangedAtDateTime(new \DateTime());
         $eventPast->setEventChangeType($eventChangeType);

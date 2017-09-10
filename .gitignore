@@ -63,3 +63,6 @@ servers.yml
 
 #phar files
 phpunit.phar
+
+web/public/*/**
+!web/public/import/.gitkeep

@@ -14,6 +14,7 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\Generic\ImportFileType;
+use AppBundle\Form\Member\ImportMembersType;
 use AppBundle\Form\Member\MemberType;
 use AppBundle\Model\Form\ImportFileModel;
 use AppBundle\Security\Voter\MemberVoter;
@@ -177,9 +178,8 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
-
         $importForm = $this->handleForm(
-            $this->createForm(ImportFileType::class),
+            $this->createForm(ImportMembersType::class),
             $request,
             new ImportFileModel("/img/import"),
             function ($form, $entity) use ($organisation) {
@@ -193,8 +193,7 @@ class MemberController extends BaseController
                     return $member;
                 }, $entity)
                 ) {
-                    $this->displaySuccess($this->get("translator")->trans("success.import_successful", [], "import"));
-                    return $this->createForm(ImportFileType::class);
+                    return $this->redirectToRoute("administration_organisation_members", ["organisation" => $organisation->getId()]);
                 }
                 return $form;
             }
