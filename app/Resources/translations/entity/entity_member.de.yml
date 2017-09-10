@@ -6,3 +6,4 @@ entity:
   plural: Mitglieder
 
 persons: Zugänge
+has_been_invited: Einladung versandt

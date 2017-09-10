@@ -56,3 +56,5 @@ services:
         class: AppBundle\Extension\MyTwigExtension
         tags:
           - { name: twig.extension }
+        arguments:
+          ["@translator"]

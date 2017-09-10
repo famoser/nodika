@@ -10,6 +10,7 @@ namespace AppBundle\Controller\Administration;
 
 
 use AppBundle\Controller\Base\BaseController;
+use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\ApplicationEventType;
 use AppBundle\Enum\SubmitButtonType;
@@ -139,15 +140,20 @@ class OrganisationController extends BaseController
      * @param Organisation $organisation
      * @return Response
      */
-    public function inviteMembersAction(Request $request, Organisation $organisation)
+    public function membersInviteAction(Request $request, Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $members = $organisation->getMembers();
-        $leaders = $organisation->getLeaders();
+        /* @var Member[] $notInvitedMembers */
+        $notInvitedMembers = [];
+        foreach ($organisation->getMembers() as $member) {
+            if (!$member->getHasBeenInvited()) {
+                $notInvitedMembers[] = $member;
+            }
+        }
         return $this->render(
-            'administration/organisation/members.html.twig',
-            ["organisation" => $organisation, "members" => $members, "leaders" => $leaders]
+            'administration/organisation/members_invite.html.twig',
+            ["organisation" => $organisation, "notInvitedMembers" => $notInvitedMembers]
         );
     }
 
@@ -178,6 +184,7 @@ class OrganisationController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
+        $this->getDoctrine()->getRepository("AppBundle:ApplicationEvent")->registerEventOccurred($organisation, ApplicationEventType::VISITED_SETTINGS);
         $eventLines = $organisation->getEventLines();
         return $this->render(
             'administration/organisation/settings.html.twig',

@@ -31,6 +31,13 @@ class ApplicationEvent extends BaseEntity
     private $applicationEventType;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime")
+     */
+    private $occurredAtDateTime;
+
+    /**
      * @var Organisation
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organisation")
@@ -84,5 +91,21 @@ class ApplicationEvent extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getOrganisation() . " " . $this->getApplicationEventType();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getOccurredAtDateTime()
+    {
+        return $this->occurredAtDateTime;
+    }
+
+    /**
+     * @param \DateTime $occurredAtDateTime
+     */
+    public function setOccurredAtDateTime($occurredAtDateTime)
+    {
+        $this->occurredAtDateTime = $occurredAtDateTime;
     }
 }

@@ -76,5 +76,19 @@ members:
   new_action: neues Mitglied hinzufügen
   import_action: Mitglieder importieren
 
+#messages page
 messages:
   not_fully_setup: Ihre Organisation ist noch nicht vollständig eingerichtet. Gehen Sie zur Checkliste um die Einrichtung abzuschliessen
+
+#settings page
+settings:
+  title: Einstellungen
+  description: Konfigurieren Sie Ihre Anwendung
+  coming: Einstellungen werden in Kürze verfügbar
+
+#members/invite page
+members_invite:
+  title: Mitglieder einladen
+  description: Mitglieder zu nodika einladen
+  invite: Einladung versenden
+  invite_description: Versenden Sie eine E-Mail an Ihre Mitglieder. Mit dem darin enthaltenen Link können diese hier Accounts erstellen

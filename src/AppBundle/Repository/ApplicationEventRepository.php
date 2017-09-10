@@ -13,14 +13,31 @@ use AppBundle\Entity\Organisation;
  */
 class ApplicationEventRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param Organisation $organisation
+     * @param $applicationEventType
+     * @return bool
+     */
     public function hasEventOccurred(Organisation $organisation, $applicationEventType)
     {
         $entity = $this->findOneBy(["organisation" => $organisation->getId(), "applicationEventType" => $applicationEventType]);
         return $entity instanceof ApplicationEvent;
     }
 
+    /**
+     * @param Organisation $organisation
+     * @param $applicationEventType
+     */
     public function registerEventOccurred(Organisation $organisation, $applicationEventType)
     {
-
+        if (!$this->hasEventOccurred($organisation, $applicationEventType)) {
+            $applicationEvent = new ApplicationEvent();
+            $applicationEvent->setOrganisation($organisation);
+            $applicationEvent->setApplicationEventType($applicationEventType);
+            $applicationEvent->setOccurredAtDateTime(new \DateTime());
+            $em = $this->getEntityManager();
+            $em->persist($applicationEvent);
+            $em->flush();
+        }
     }
 }
