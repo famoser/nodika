@@ -1,4 +1,4 @@
-{% macro show_table(organisation, show_edit = false) %}
+{% macro show_table(organisation, members, show_edit = false) %}
     {% import "macros/buttons.html.twig" as buttons %}
 
     <table class="table">
@@ -12,7 +12,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for member in organisation.members %}
+        {% for member in members %}
             <tr>
                 <td>
                     {{ member.name }} <br/>

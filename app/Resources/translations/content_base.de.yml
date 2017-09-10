@@ -1,5 +1,9 @@
 menu:
   menu: Menu
-  organisation: Organisation
-  add_organisation: Neue Organisation erstellen
+  add_organisation: neue erstellen
+  add_member: neues erstellen
+  add_event_line: neue erstellen
+  add_event: neuer erstellen
+  add_person: neuer erstellen
+  administer: verwalten
   settings: Einstellungen

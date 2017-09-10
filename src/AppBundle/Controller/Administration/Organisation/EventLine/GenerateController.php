@@ -47,7 +47,6 @@ class GenerateController extends BaseController
      */
     public function chooseAction(Request $request, Organisation $organisation, EventLine $eventLine)
     {
-        $arr = [];
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         return $this->render(

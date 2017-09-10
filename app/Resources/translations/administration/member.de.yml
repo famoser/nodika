@@ -45,7 +45,6 @@ import:
   import_members_required: Zwingend und optionale Felder
   import_members_required_description: Zwingend erfolderlich ist für jedes Mitglied nur der Name und die E-Mail. Weitere Daten können Sie leer lassen, diese können dann direkt vom Mitglied ergänzt werden
 
-
 #administer page
 administer:
   new_person_action: neuer Account hinzufügen
@@ -53,3 +52,4 @@ administer:
   edit_member_action: Mitglied bearbeiten
   title: Mitglied
   description: Mitglied verwalten
+  not_part_of_organisation_yet: Ihr Account ist noch keinem Mitglied Ihrer Organisation zugeordnet. Möchten Sie Ihren Account dem jetzt ausgewählten Mitglied zuordnen klicken Sie einfach hier.

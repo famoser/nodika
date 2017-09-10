@@ -35,8 +35,6 @@ class OrganisationController extends BaseController
      */
     public function newAction(Request $request)
     {
-        $arr = [];
-
         $organisation = Organisation::createFromPerson($this->getPerson());
         $organisation->setActiveEnd(new \DateTime("today + 31 days"));
         $organisation->setIsActive(true);
@@ -68,7 +66,6 @@ class OrganisationController extends BaseController
      */
     public function administerAction(Request $request, Organisation $organisation)
     {
-        $arr = [];
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         if (!$setupStatus->getAllDone()) {
@@ -79,6 +76,7 @@ class OrganisationController extends BaseController
             );
         }
 
+        $arr["organisation"] = $organisation;
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         return $this->render(
             'administration/organisation/administer.html.twig', $arr + ["organisation" => $organisation, "setupStatus" => $setupStatus]
@@ -96,8 +94,10 @@ class OrganisationController extends BaseController
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
+
+        $arr["organisation"] = $organisation;
         return $this->render(
-            'administration/organisation/setup.html.twig', ["organisation" => $organisation, "setupStatus" => $setupStatus]
+            'administration/organisation/setup.html.twig', $arr + ["setupStatus" => $setupStatus]
         );
     }
 
@@ -111,11 +111,10 @@ class OrganisationController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $members = $organisation->getMembers();
-        $leaders = $organisation->getLeaders();
+        $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/members.html.twig',
-            ["organisation" => $organisation, "members" => $members, "leaders" => $leaders]
+            $arr
         );
     }
 
@@ -136,9 +135,11 @@ class OrganisationController extends BaseController
                 $notInvitedMembers[] = $member;
             }
         }
+
+        $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/members_invite.html.twig',
-            ["organisation" => $organisation, "notInvitedMembers" => $notInvitedMembers]
+            $arr + ["notInvitedMembers" => $notInvitedMembers]
         );
     }
 
@@ -152,10 +153,10 @@ class OrganisationController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $eventLines = $organisation->getEventLines();
+        $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/event_lines.html.twig',
-            ["organisation" => $organisation, "eventLines" => $eventLines]
+            $arr
         );
     }
 
@@ -168,12 +169,12 @@ class OrganisationController extends BaseController
     public function settingsAction(Request $request, Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
-
         $this->getDoctrine()->getRepository("AppBundle:ApplicationEvent")->registerEventOccurred($organisation, ApplicationEventType::VISITED_SETTINGS);
-        $eventLines = $organisation->getEventLines();
+
+        $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/settings.html.twig',
-            ["organisation" => $organisation, "eventLines" => $eventLines]
+            $arr
         );
     }
 
@@ -188,9 +189,10 @@ class OrganisationController extends BaseController
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
         $eventLines = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, new \DateTime(), ">");
+        $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/events.html.twig',
-            ["organisation" => $organisation, "eventLineModels" => $eventLines]
+            $arr + ["eventLineModels" => $eventLines]
         );
     }
 }

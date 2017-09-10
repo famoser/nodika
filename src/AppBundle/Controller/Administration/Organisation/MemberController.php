@@ -13,7 +13,6 @@ use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\SubmitButtonType;
-use AppBundle\Form\Generic\ImportFileType;
 use AppBundle\Form\Member\ImportMembersType;
 use AppBundle\Form\Member\MemberType;
 use AppBundle\Model\Form\ImportFileModel;
@@ -59,9 +58,11 @@ class MemberController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
         $arr["new_form"] = $myForm->createView();
         return $this->render(
-            'administration/organisation/member/new.html.twig', $arr
+            'administration/organisation/member/new.html.twig',
+            $arr
         );
     }
 
@@ -76,13 +77,41 @@ class MemberController extends BaseController
     {
         $this->denyAccessUnlessGranted(MemberVoter::ADMINISTRATE, $member);
 
-        $arr = [];
+        //show message to add itself to member
+        $isPartOfOrganisation = false;
+        foreach ($this->getPerson()->getMembers() as $member) {
+            $isPartOfOrganisation = $isPartOfOrganisation || $member->getOrganisation()->getId() == $organisation->getId();
+        }
+        if (!$isPartOfOrganisation) {
+            $translator = $this->get("translator");
+            $this->displayInfo(
+                $translator->trans("administer.not_part_of_organisation_yet", [], "member"),
+                $this->generateUrl("administration_organisation_member_add_self", ["organisation" => $organisation->getId(), "member" => $member->getId()])
+            );
+        }
+
         $arr["organisation"] = $organisation;
         $arr["member"] = $member;
-
         return $this->render(
-            'administration/organisation/member/administer.html.twig', $arr
+            'administration/organisation/member/administer.html.twig',
+            $arr
         );
+    }
+
+    /**
+     * @Route("/{member}/add_self", name="administration_organisation_member_add_self")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param Member $member
+     * @return Response
+     */
+    public function addSelfAction(Request $request, Organisation $organisation, Member $member)
+    {
+        $this->denyAccessUnlessGranted(MemberVoter::ADMINISTRATE, $member);
+
+        $this->getPerson()->addMember($member);
+        $this->fastSave($this->getPerson());
+        return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()]);
     }
 
     /**
@@ -111,10 +140,12 @@ class MemberController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
         $arr["member"] = $member;
         $arr["edit_form"] = $myForm->createView();
         return $this->render(
-            'administration/organisation/member/edit.html.twig', $arr
+            'administration/organisation/member/edit.html.twig',
+            $arr
         );
     }
 
@@ -144,6 +175,7 @@ class MemberController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
         $arr["member"] = $member;
         $arr["remove_form"] = $myForm->createView();
         return $this->render(
@@ -205,6 +237,7 @@ class MemberController extends BaseController
 
         $arr = [];
         $arr["import_form"] = $importForm->createView();
+        $arr["organisation"] = $organisation;
 
         return $this->render(
             'administration/organisation/member/import.html.twig', $arr + ["organisation" => $organisation]

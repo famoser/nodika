@@ -8,9 +8,9 @@
 {% trans_default_domain "member" %}
 
 {% block primary_content %}
-    <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
+    <h3>{{ member.name }}</h3>
     <p>
-        {{ "entity.description"|trans({}, "entity_member") }}
+        {{ member.description }}
     </p>
     <p>
         <a href="{{ path("administration_organisation_member_edit", {"organisation" : organisation.id, "member": member.id}) }}">{{ "administer.edit_member_action"|trans }}</a><br/>

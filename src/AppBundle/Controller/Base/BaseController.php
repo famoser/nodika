@@ -83,27 +83,43 @@ class BaseController extends Controller
     }
 
     /**
-     * @param string $message the translation message to display
+     * @param $type
+     * @param $message
+     * @param null $link
      */
-    protected function displayError($message)
+    private function displayFlash($type, $message, $link = null)
     {
-        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_ERROR, $message);
+        if ($link != null) {
+            $message = '<a href="' . $link . '">' . $message . '</a>';
+        }
+        $this->get('session')->getFlashBag()->set($type, $message);
     }
 
     /**
      * @param string $message the translation message to display
+     * @param null $link
      */
-    protected function displayDanger($message)
+    protected function displayError($message, $link = null)
     {
-        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_DANGER, $message);
+        return $this->displayFlash(StaticMessageHelper::FLASH_ERROR, $message, $link);
     }
 
     /**
      * @param string $message the translation message to display
+     * @param null $link
      */
-    protected function displaySuccess($message)
+    protected function displayDanger($message, $link = null)
     {
-        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_SUCCESS, $message);
+        return $this->displayFlash(StaticMessageHelper::FLASH_DANGER, $message, $link);
+    }
+
+    /**
+     * @param string $message the translation message to display
+     * @param null $link
+     */
+    protected function displaySuccess($message, $link = null)
+    {
+        return $this->displayFlash(StaticMessageHelper::FLASH_SUCCESS, $message, $link);
     }
 
     /**
@@ -112,10 +128,7 @@ class BaseController extends Controller
      */
     protected function displayInfo($message, $link = null)
     {
-        if ($link != null) {
-            $message = '<a href="' . $link . '">' . $message . '</a>';
-        }
-        $this->get('session')->getFlashBag()->set(StaticMessageHelper::FLASH_INFO, $message);
+        return $this->displayFlash(StaticMessageHelper::FLASH_INFO, $message, $link);
     }
 
     /**

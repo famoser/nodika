@@ -61,6 +61,8 @@ class EventController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
         $arr["new_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/event_line/event/new.html.twig', $arr
@@ -99,6 +101,9 @@ class EventController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
+        $arr["event"] = $event;
         $arr["edit_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/event_line/event/edit.html.twig', $arr
@@ -136,6 +141,9 @@ class EventController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
+        $arr["event"] = $event;
         $arr["remove_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/event_line/event/remove.html.twig', $arr
@@ -154,6 +162,8 @@ class EventController extends BaseController
     {
         $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
 
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
         $arr["event"] = $event;
         return $this->render(
             'administration/organisation/event_line/event/view.html.twig', $arr

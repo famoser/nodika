@@ -61,6 +61,8 @@ class PersonController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
+        $arr["member"] = $member;
         $arr["new_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/member/person/new.html.twig', $arr
@@ -94,6 +96,8 @@ class PersonController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
+        $arr["member"] = $member;
         $arr["person"] = $person;
         $arr["edit_form"] = $myForm->createView();
         return $this->render(
@@ -128,6 +132,8 @@ class PersonController extends BaseController
             return $myForm;
         }
 
+        $arr["organisation"] = $organisation;
+        $arr["member"] = $member;
         $arr["person"] = $person;
         $arr["remove_form"] = $myForm->createView();
         return $this->render(

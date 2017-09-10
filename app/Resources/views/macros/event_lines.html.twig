@@ -1,4 +1,4 @@
-{% macro show_table(organisation, show_edit = false) %}
+{% macro show_table(organisation, eventLines, show_edit = false) %}
     {% import "macros/buttons.html.twig" as buttons %}
 
     <table class="table">
@@ -13,7 +13,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for eventLine in organisation.eventLines %}
+        {% for eventLine in eventLines %}
             <tr>
                 <td>
                     {{ eventLine.displayOrder }}

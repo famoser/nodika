@@ -45,10 +45,10 @@ twig:
       globals_yearly_fee: "%yearly_fee%"
       globals_free_period_days: "%free_period_days%"
       globals_color_class_member: "brown-background"
-      globals_color_class_organisation: "brown-background"
-      globals_color_class_event_line: "brown-background"
-      globals_color_class_event: "brown-background"
-      globals_color_class_person: "brown-background"
+      globals_color_class_organisation: "blue-background"
+      globals_color_class_event_line: "green-background"
+      globals_color_class_event: "green2-background"
+      globals_color_class_person: "red-background"
 
 # Doctrine Configuration
 doctrine:

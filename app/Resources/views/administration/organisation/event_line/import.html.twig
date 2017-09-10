@@ -9,7 +9,7 @@
 {% block primary_content %}
     {{ form(import_form) }}
 
-    {% if members|length == 0 %}
+    {% if organisation.members|length == 0 %}
         <p>
             {{ "import.no_members"|trans }}
         </p>
@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for member in members %}
+            {% for member in organisation.members %}
                 <tr>
                     <td>{{ member.id }}</td>
                     <td>{{ member.name }}</td>
