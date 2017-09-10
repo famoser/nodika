@@ -24,6 +24,7 @@ set(
     "bin/php71"
 );
 
+
 /**
  * Execute migrations
  */
