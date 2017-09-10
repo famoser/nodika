@@ -19,7 +19,7 @@ use AppBundle\Form\Event\ImportEventsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Helper\DateTimeFormatter;
-use AppBundle\Helper\EventLineChangeHelper;
+use AppBundle\Helper\EventPastEvaluationHelper;
 use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\Event\ImportEventModel;
 use AppBundle\Security\Voter\EventLineVoter;
@@ -58,7 +58,7 @@ class EventController extends BaseController
             function ($form, $entity) use ($organisation, $eventLine) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $eventPast = EventLineChangeHelper::createCreatedByAdminChange($entity, $this->getPerson());
+                $eventPast = EventPastEvaluationHelper::createCreatedByAdminChange($entity, $this->getPerson());
                 $this->fastSave($eventPast);
                 return $this->redirectToRoute("administration_organisation_event_line_event_new", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
             },
@@ -95,7 +95,7 @@ class EventController extends BaseController
             function ($form, $entity) use ($organisation, $eventLine, $oldEvent) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $eventPast = EventLineChangeHelper::createChangedByAdminChange($entity, $oldEvent, $this->getPerson());
+                $eventPast = EventPastEvaluationHelper::createChangedByAdminChange($entity, $oldEvent, $this->getPerson());
                 $this->fastSave($eventPast);
                 return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
             },
@@ -132,7 +132,7 @@ class EventController extends BaseController
             function ($form, $entity) use ($organisation, $eventLine, $oldEvent) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $eventPast = EventLineChangeHelper::createRemovedByAdminChange($entity, $this->getPerson());
+                $eventPast = EventPastEvaluationHelper::createRemovedByAdminChange($entity, $this->getPerson());
                 $this->fastSave($eventPast);
                 return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
             }

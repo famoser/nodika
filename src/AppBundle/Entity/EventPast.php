@@ -27,28 +27,39 @@ class EventPast extends BaseEntity
     use IdTrait;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime")
      */
-    private $changeDateTime;
+    private $changedAtDateTime;
 
     /**
+     * @var Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     */
+    private $changedByPerson;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(type="integer")
      */
-    private $changeType = EventChangeType::CREATED_BY_ADMIN;
+    private $eventChangeType = EventChangeType::MANUALLY_CREATED_BY_ADMIN;
 
     /**
-     * information about the change which occurred
+     * the event before the change occurred
      *
      * @ORM\Column(type="text")
      */
-    private $changeConfigurationJson;
+    private $beforeEventJson;
 
     /**
      * the event after the change occurred
      *
      * @ORM\Column(type="text")
      */
-    private $eventJson;
+    private $afterEventJson;
 
     /**
      * @var Event
@@ -58,133 +69,99 @@ class EventPast extends BaseEntity
     private $event;
 
     /**
-     * Set changeDateTime
-     *
-     * @param \DateTime $changeDateTime
-     *
-     * @return EventPast
-     */
-    public function setChangeDateTime($changeDateTime)
-    {
-        $this->changeDateTime = $changeDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get changeDateTime
-     *
      * @return \DateTime
      */
-    public function getChangeDateTime()
+    public function getChangedAtDateTime()
     {
-        return $this->changeDateTime;
+        return $this->changedAtDateTime;
     }
 
     /**
-     * Set changeType
-     *
-     * @param integer $changeType
-     *
-     * @return EventPast
+     * @param \DateTime $changedAtDateTime
      */
-    public function setChangeType($changeType)
+    public function setChangedAtDateTime($changedAtDateTime)
     {
-        $this->changeType = $changeType;
-
-        return $this;
+        $this->changedAtDateTime = $changedAtDateTime;
     }
 
     /**
-     * Get changeType
-     *
-     * @return integer
+     * @return Person
      */
-    public function getChangeType()
+    public function getChangedByPerson()
     {
-        return $this->changeType;
+        return $this->changedByPerson;
     }
 
     /**
-     * Get changeType
-     *
-     * @return string
+     * @param Person $changedByPerson
      */
-    public function getChangeTypeText()
+    public function setChangedByPerson($changedByPerson)
     {
-        return EventChangeType::getTranslation($this->getChangeType());
+        $this->changedByPerson = $changedByPerson;
     }
 
     /**
-     * Set changeConfigurationJson
-     *
-     * @param string $changeConfigurationJson
-     *
-     * @return EventPast
+     * @return int
      */
-    public function setChangeConfigurationJson($changeConfigurationJson)
+    public function getEventChangeType()
     {
-        $this->changeConfigurationJson = $changeConfigurationJson;
-
-        return $this;
+        return $this->eventChangeType;
     }
 
     /**
-     * Get changeConfigurationJson
-     *
-     * @return string
+     * @param int $eventChangeType
      */
-    public function getChangeConfigurationJson()
+    public function setEventChangeType($eventChangeType)
     {
-        return $this->changeConfigurationJson;
+        $this->eventChangeType = $eventChangeType;
     }
 
     /**
-     * Set eventJson
-     *
-     * @param string $eventJson
-     *
-     * @return EventPast
+     * @return mixed
      */
-    public function setEventJson($eventJson)
+    public function getBeforeEventJson()
     {
-        $this->eventJson = $eventJson;
-
-        return $this;
+        return $this->beforeEventJson;
     }
 
     /**
-     * Get eventJson
-     *
-     * @return string
+     * @param mixed $beforeEventJson
      */
-    public function getEventJson()
+    public function setBeforeEventJson($beforeEventJson)
     {
-        return $this->eventJson;
+        $this->beforeEventJson = $beforeEventJson;
     }
 
     /**
-     * Set event
-     *
-     * @param \AppBundle\Entity\Event $event
-     *
-     * @return EventPast
+     * @return mixed
      */
-    public function setEvent(\AppBundle\Entity\Event $event = null)
+    public function getAfterEventJson()
     {
-        $this->event = $event;
-
-        return $this;
+        return $this->afterEventJson;
     }
 
     /**
-     * Get event
-     *
-     * @return \AppBundle\Entity\Event
+     * @param mixed $afterEventJson
+     */
+    public function setAfterEventJson($afterEventJson)
+    {
+        $this->afterEventJson = $afterEventJson;
+    }
+
+    /**
+     * @return Event
      */
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function setEvent($event)
+    {
+        $this->event = $event;
     }
 
     /**
@@ -194,6 +171,6 @@ class EventPast extends BaseEntity
      */
     public function getFullIdentifier()
     {
-        return $this->getChangeDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        return $this->getChangedAtDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
     }
 }

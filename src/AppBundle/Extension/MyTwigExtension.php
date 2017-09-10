@@ -9,6 +9,7 @@
 namespace AppBundle\Extension;
 
 use AppBundle\Entity\Traits\CommunicationTrait;
+use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Service\Interfaces\ISessionService;
 use Twig_Extension;
 
@@ -28,7 +29,7 @@ class MyTwigExtension extends Twig_Extension
      */
     public function dateFilter($date)
     {
-        return $date->format("d.m.Y");
+        return $date->format(DateTimeFormatter::DATE_FORMAT);
     }
 
     /**
@@ -37,6 +38,6 @@ class MyTwigExtension extends Twig_Extension
      */
     public function dateTimeFilter($date)
     {
-        return $date->format("d.m.Y H:i");
+        return $date->format(DateTimeFormatter::DATE_TIME_FORMAT);
     }
 }

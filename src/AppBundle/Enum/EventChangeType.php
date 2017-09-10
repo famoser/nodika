@@ -13,9 +13,10 @@ use AppBundle\Enum\Base\BaseEnum;
 
 class EventChangeType extends BaseEnum
 {
-    const CREATED_BY_ADMIN = 1;
-    const CHANGED_BY_ADMIN = 2;
-    const REMOVED_BY_ADMIN = 3;
-    const PERSON_ASSIGNED = 4;
-    const CHANGED_OWNER = 5;
+    const MANUALLY_CREATED_BY_ADMIN = 1;
+    const GENERATED_BY_ADMIN = 2;
+    const MANUALLY_CHANGED_BY_ADMIN = 3;
+    const MANUALLY_REMOVED_BY_ADMIN = 4;
+    const PERSON_ASSIGNED_BY_ADMIN = 5;
+    const MEMBER_ASSIGNED_BY_ADMIN = 6;
 }

@@ -1,25 +1,25 @@
 production:
-  host: myurl.ch.inn.host.ch
-  port: 2121
-  user: myurl
+  host: ftp.server.ch
+  port: 22
+  user: username
   password: password
   branch: master
   stage: production
   deploy_path: ~/myurl.ch/prod
 
 testing:
-  host: myurl.ch.inn.host.ch
-  port: 2121
-  user: myurl
+  host: ftp.server.ch
+  port: 22
+  user: username
   password: password
   branch: master
   stage: testing
   deploy_path: ~/myurl.ch/testing
 
 dev:
-  host: myurl.ch.inn.host.ch
-  port: 2121
-  user: myurl
+  host: ftp.server.ch
+  port: 22
+  user: username
   password: password
   branch: develop
   stage: dev

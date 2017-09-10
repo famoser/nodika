@@ -13,6 +13,7 @@ use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\ThingTrait;
+use Doctrine\Common\Comparable;
 use Doctrine\ORM\Mapping as ORM;
 
 

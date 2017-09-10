@@ -19,7 +19,7 @@ use AppBundle\Form\Event\ImportEventsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Generic\RemoveThingType;
 use AppBundle\Helper\DateTimeFormatter;
-use AppBundle\Helper\EventLineChangeHelper;
+use AppBundle\Helper\EventPastEvaluationHelper;
 use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\Event\ImportEventModel;
 use AppBundle\Security\Voter\EventLineVoter;
