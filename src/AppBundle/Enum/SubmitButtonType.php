@@ -22,4 +22,7 @@ class SubmitButtonType extends BaseEnum
     const SET_PASSWORD = 7;
     const RESET_PASSWORD = 8;
     const NOT_SET = 9;
+    const NEXT = 10;
+    const CONFIRM = 11;
+    const APPLY = 12;
 }

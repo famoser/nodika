@@ -1,0 +1,49 @@
+{% macro toggle_form_field(name, value, description, classes = "") %}
+    <div class="form-group {{ classes }}">
+        <label class="switch" for="{{ name }}">
+            <input class="form-control" type="checkbox" name="{{ name }}" id="{{ name }}"
+                   {% if value %}checked="checked"{% endif %}>
+            <span class="slider"></span>
+        </label>
+        <label class="switch-description" for="{{ name }}">{{ description }}</label>
+    </div>
+{% endmacro %}
+
+{% macro submit_form_field(name, text) %}
+    <div class="form-group">
+        <button type="submit" id="{{ name }}" name="{{ name }}" class="btn-default btn">
+            {{ text }}
+        </button>
+    </div>
+{% endmacro %}
+
+{% macro form_field(name, value, description, type = "text", classes = "") %}
+    <div class="form-group {{ classes }}">
+        <label class="control-label" for="{{ name }}">{{ description }}</label>
+        <input class="form-control" type="{{ type }}" name="{{ name }}" id="{{ name }}"
+                {% if type == "checkbox" %}
+            {% if value %}checked="checked"{% endif %}
+        {% else %}
+            value="{{ value }}"
+                {% endif %}>
+    </div>
+{% endmacro %}
+
+
+{% macro horizontal_form_field(name, value, description, type = "text", classes = "") %}
+    <div class="form-group {{ classes }}">
+        <div class="row">
+            <div class="col-md-2">
+                <input class="form-control" type="{{ type }}" name="{{ name }}" id="{{ name }}"
+                        {% if type == "checkbox" %}
+                    {% if value %}checked="checked"{% endif %}
+                {% else %}
+                    value="{{ value }}"
+                        {% endif %}>
+            </div>
+            <div class="col-md-10">
+                <label class="control-label" for="{{ name }}">{{ description }}</label>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

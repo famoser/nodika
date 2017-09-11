@@ -45,7 +45,7 @@ import:
   no_members: Sie haben nocht keine Mitglider hinzugefügt
 
 #generate page
-generate_choose:
+generate:
   title: Algorythmus auswählen
   description: Wählen Sie den Algorythmus aus, der die Termine generieren soll
   help: Wählen Sie den Algorythmus aus, der die Termine generieren soll. Danach können noch Algorythmus spezifische Parameter eingestellt werden.
@@ -59,24 +59,6 @@ generate_choose:
   nodika_algorithmus: Nodika Algorythmus
   nodika_algorithmus_description: Dieser komplexe Algorithmus versucht die Termine zufällig aber trotzdem möglichst fair zu verteilen. Er wurde speziell für dieses Tool entwickelt, und ist der empfohlene Weg Termine zu verteilen. Zahlreiche Konfigurierungsparameter stehen zur Verfügung.
   nodika_algorithmus_action: Nodika Algorithmus wählen
-
-#generate/round_robin page
-generate_round_robin:
-  title: Round Robin
-  description: Generieren Sie Termine mit dem Round Robin Verfahren
-  help: >
-    Das Round Robin Verfahren verteilt alle verfügbaren Termine der Reihe nach an die Mitglieder.
-    Der Algorithmus ist deterministisch, also mit den gleichen Eingaben werden immer die gleichen Termine an das gleiche Mitglied zugewiesen.
-    In den folgenden drei Schritten definieren Sie den Zeitraum der Generierung, die teilnehmenden Mitglieder sowie deren Reihenfolge.
-
-  step_1: Zeitraum wählen
-  step_1_description: Wählen Sie Start- und Entzeitpunkt der Generierung aus, sowie die Länge eines Termines
-  step_2: Mitglieder wählen
-  step_2_description: Wählen Sie aus Ihren aktiven Mitgliedern die aus, die Termine zugeteilt bekommen sollen
-  step_3: Reihenfolge bestimmen
-  step_3_description: Definieren Sie die Reihenfolge der Mitglieder die bei der Zuordnung verwendet werden soll
-  step_4: Generierung überprüfen
-  step_4_description: Überprüfen Sie die erfolgte Generierung und bestätigen oder verwerfen Sie die neuen Termine
 
 #generate/nodika_algorithms page
 generate_nodika_algorithms:

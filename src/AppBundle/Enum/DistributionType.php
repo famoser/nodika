@@ -14,5 +14,5 @@ use AppBundle\Enum\Base\BaseEnum;
 class DistributionType extends BaseEnum
 {
     const ROUND_ROBIN = 1;
-    const FAIR = 2;
+    const NODIKA = 2;
 }

@@ -11,11 +11,11 @@ namespace AppBundle\Security\Voter;
 
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
+use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Entity\Organisation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class EventVoter extends EventLineVoter
+class EventLineGenerationVoter extends EventLineVoter
 {
     /**
      * @param string $attribute An attribute
@@ -25,13 +25,8 @@ class EventVoter extends EventLineVoter
      */
     protected function supports($attribute, $subject)
     {
-        // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::REMOVE))) {
-            return false;
-        }
-
         // only vote on Post objects inside this voter
-        if (!$subject instanceof Event) {
+        if (!$subject instanceof EventLineGeneration) {
             return false;
         }
 
@@ -59,13 +54,6 @@ class EventVoter extends EventLineVoter
             return false;
         }
 
-        switch ($attribute) {
-            case self::VIEW:
-            case self::EDIT:
-            case self::REMOVE:
-                return parent::voteOnAttribute(self::ADMINISTRATE, $eventLine, $token);
-        }
-
-        throw new \LogicException('This code should not be reached!');
+        return parent::voteOnAttribute(self::ADMINISTRATE, $eventLine, $token);
     }
 }

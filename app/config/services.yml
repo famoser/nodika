@@ -38,6 +38,12 @@ services:
             - { name: security.voter }
         public: false
 
+    app.voter.event_line_generation:
+        class:  AppBundle\Security\Voter\EventLineGenerationVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
     app.exchange_service:
         class:  AppBundle\Service\ExchangeService
         arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
@@ -45,6 +51,10 @@ services:
     app.event_past_evaluation_service:
         class:  AppBundle\Service\EventPastEvaluationService
         arguments: []
+
+    app.event_generation_service:
+        class:  AppBundle\Service\EventGenerationService
+        arguments: ["@doctrine","@translator","@session"]
 
     listener.entity.remove:
         class: AppBundle\Listener\DoctrinePreFlushListener

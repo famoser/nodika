@@ -10913,6 +10913,36 @@ p.h1-description, p.h2-description {
   line-height: 1.4em;
   margin-top: 0.5em; }
 
+.color-background {
+  position: absolute;
+  height: 20px;
+  width: 50%;
+  left: 0;
+  background-color: #555F76; }
+
+.color-foreground {
+  position: relative;
+  background-color: #efefef;
+  z-index: 10; }
+
+.introduction {
+  background-color: #555F76; }
+
+.features {
+  background-color: #B19E7A; }
+
+.promises {
+  background-color: #618D61; }
+
+.payment {
+  background-color: #496A6A; }
+
+.contact {
+  background-color: #B17A7A; }
+
+.returning {
+  background-color: #618D61; }
+
 .blue-background, .info-color {
   background-color: #555F76;
   color: #efefef; }
@@ -11038,32 +11068,54 @@ p.h1-description, p.h2-description {
   right: 40px;
   top: 10px; }
 
-.color-background {
-  position: absolute;
-  height: 20px;
-  width: 50%;
-  left: 0;
-  background-color: #555F76; }
-
-.color-foreground {
+/* The switch - the box around the slider */
+.switch {
   position: relative;
-  background-color: #efefef;
-  z-index: 10; }
+  display: inline-block;
+  width: 60px;
+  height: 34px; }
 
-.introduction {
-  background-color: #555F76; }
+/* Hide default HTML checkbox */
+.switch input {
+  display: none; }
 
-.features {
-  background-color: #B19E7A; }
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s; }
 
-.promises {
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s; }
+
+input:checked + .slider {
   background-color: #618D61; }
 
-.payment {
-  background-color: #496A6A; }
+input:focus + .slider {
+  box-shadow: 0 0 1px #618D61; }
 
-.contact {
-  background-color: #B17A7A; }
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px); }
 
-.returning {
-  background-color: #618D61; }
+.switch-description {
+  display: inline-block;
+  margin-top: 5px;
+  margin-left: 15px;
+  vertical-align: top;
+  cursor: pointer; }

@@ -1,0 +1,58 @@
+step_1:
+  title: Schritt 1
+  description: Choose members
+
+new:
+  title: Round Robin
+  description: Generieren Sie Termine mit dem Round Robin Verfahren
+  help: >
+    Das Round Robin Verfahren verteilt alle verfügbaren Termine der Reihe nach an die Mitglieder.
+    Der Algorithmus ist deterministisch, also mit den gleichen Eingaben werden immer die gleichen Termine an das gleiche Mitglied zugewiesen.
+    In den folgenden drei Schritten definieren Sie den Zeitraum der Generierung, die teilnehmenden Mitglieder sowie deren Reihenfolge.
+  new_action: starten
+
+choose_period:
+  title: Zeitraum wählen
+  description: Wählen Sie Start- und Entzeitpunkt der Generierung aus, sowie die Länge eines Termines
+  start_date_time: Anfangszeitpunkt
+  start_date_time_description: Die Startzeit des ersten Termines in der Generierung
+  end_date_time: Endzeitpunkt
+  end_date_time_description: Der Zeitpunkt der vom letzten Event der Generierung immer noch abgedeckt wird
+  length_in_hours: Länge eines Termines in Stunden
+  length_in_hours_description: Die Länge eines einzelnen Termines in Stunden. Danach beginnst sofort der nächste Termin
+
+choose_members:
+  title: Mitglieder wählen
+  description: Wählen Sie aus Ihren aktiven Mitgliedern die aus, die Termine zugeteilt bekommen sollen
+  help: Deaktivieren Sie die Mitglieder die nicht beachtet werden sollen bei der Generierung
+
+set_order:
+  title: Reihenfolge festlegen
+  description: Definieren Sie die Reihenfolge der Mitglieder die bei der Zuordnung verwendet werden soll
+  help: Überprüfen Sie die einmalig zufällig generierte Reihenfolge der Mitglieder
+  order: Reihenfolge
+  order_description: Die Termine werden in der hier beschrieben Reihenfolge an die Mitglieder verteilt, angefangen mit dem Mitglied mit der tiefsten Nummer.
+  randomize: Zufällige Reihenfolge
+  randomize_description: Die Mitglieder wurden zufällig so geordnet
+  randomize_action: Neu zufällig ordnen
+
+start_generation:
+  title: Generierung starten
+  description: Konfiguration abgeschlossen
+  help: Sie können nun die Generierung starten. Dies kann je nach Konfiguration eine Weile dauern.
+  start_now: Jetzt starten
+
+confirm_generation:
+  title: Generierung bestätigen
+  description: Überprüfen Sie die erfolgte Generierung und bestätigen oder verwerfen Sie die neuen Termine
+  help: >
+    Überprüfen Sie nun die Termine.
+    Scrollen Sie nach unten und speichern Sie die Termine wenn alles in Ordnung ist,
+    oder gehen Sie zurück und verändern Sie die Einstellungen um die Generierung von neuem zu beginnen
+  persist_now: Termine speichern
+  member_name: Mitglied Id
+  start_date_time: Anfangszeit
+  end_date_time: Endzeit
+
+error:
+  member_not_found_anymore: Ein Mitglied das einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Mitglieder

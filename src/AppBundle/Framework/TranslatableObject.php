@@ -51,4 +51,15 @@ abstract class TranslatableObject
         $instance = new static();
         return $instance->getTranslationDomainForBuilder();
     }
+
+    /**
+     * the array for the builder including the translation_domain member
+     *
+     * @return string
+     */
+    public static function getTranslationDomainStatic()
+    {
+        $instance = new static();
+        return $instance->getTranslationDomain();
+    }
 }

@@ -256,4 +256,20 @@ class EventLineController extends BaseController
             'administration/organisation/event_line/import.html.twig', $arr
         );
     }
+
+    /**
+     * @Route("/{eventLine}/choose", name="administration_organisation_event_line_generate")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @return Response
+     */
+    public function chooseAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    {
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
+        return $this->render(
+            'administration/organisation/event_line/generate.html.twig', $arr
+        );
+    }
 }

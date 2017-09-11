@@ -17,6 +17,11 @@ app_administration_organisation_event_line:
     type:     annotation
     prefix:   /administration/organisation/{organisation}/event_line/{eventLine}
 
+app_administration_organisation_event_line_generate:
+    resource: "@AppBundle/Controller/Administration/Organisation/EventLine/Generate"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}/event_line/{eventLine}/generate
+
 app_administration_organisation_member:
     resource: "@AppBundle/Controller/Administration/Organisation/Member"
     type:     annotation
