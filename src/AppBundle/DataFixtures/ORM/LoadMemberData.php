@@ -37,10 +37,21 @@ class LoadMemberData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        $organisation = $this->getAllRandomInstance();
-        $organisation->setOrganisation($this->getReference("organisation-1"));
-        $organisation->addPerson($this->getReference("person-1"));
-        $manager->persist($organisation);
+        $member = $this->getAllRandomInstance();
+        $member->setOrganisation($this->getReference("organisation-1"));
+        $member->addPerson($this->getReference("person-1"));
+        $manager->persist($member);
+
+        $member = $this->getAllRandomInstance();
+        $member->setOrganisation($this->getReference("organisation-1"));
+        $member->addPerson($this->getReference("person-2"));
+        $manager->persist($member);
+
+        $member = $this->getAllRandomInstance();
+        $member->setOrganisation($this->getReference("organisation-1"));
+        $member->addPerson($this->getReference("person-3"));
+        $manager->persist($member);
+
         $manager->flush();
     }
 

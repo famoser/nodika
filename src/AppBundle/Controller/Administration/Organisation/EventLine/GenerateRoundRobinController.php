@@ -12,6 +12,7 @@ namespace AppBundle\Controller\Administration\Organisation\EventLine;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
+use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\SubmitButtonType;
@@ -33,41 +34,29 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
- * @Route("/generate")
+ * @Route("/generate/round_robin")
  * @Security("has_role('ROLE_USER')")
  */
-class GenerateController extends BaseController
+class GenerateRoundRobinController extends BaseController
 {
     /**
-     * @Route("/choose", name="administration_organisation_event_line_generate_choose")
+     * @Route("/", name="administration_organisation_event_line_generate_round_robin")
      * @param Request $request
      * @param Organisation $organisation
      * @param EventLine $eventLine
      * @return Response
      */
-    public function chooseAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    public function roundRobinAction(Request $request, Organisation $organisation, EventLine $eventLine)
     {
-        $arr["organisation"] = $organisation;
-        $arr["eventLine"] = $eventLine;
-        return $this->render(
-            'administration/organisation/event_line/generate/choose.html.twig', $arr
-        );
-    }
+        $eventLineGeneration = new EventLineGeneration();
+        $eventLineGeneration->setGenerationDate(new \DateTime());
+        $eventLineGeneration->setEventLine($eventLine);
 
-    /**
-     * @Route("/nodika", name="administration_organisation_event_line_generate_nodika")
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     * @return Response
-     */
-    public function nodikaAction(Request $request, Organisation $organisation, EventLine $eventLine)
-    {
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         return $this->render(
-            'administration/organisation/event_line/generate/nodika.html.twig', $arr
+            'administration/organisation/event_line/generate/round_robin.html.twig', $arr
         );
     }
 }

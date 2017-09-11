@@ -105,7 +105,7 @@ generate_nodika_algorithms:
     Da die Generierung oft nicht die Termine ganz fair verteilen kann (zum Beispiel weil zwei Mitglieder drei Termine übernehmen müssen)
     wird der Unterschied als "Lucky Score" gespeichert. Es ist also eine Zahl die angibt, wieviel Glück das Mitglied bei der letzten Generierung hatte.
     Wird diese Generierung zum ersten Mal durchgeführt kann sie einfach 0 gelassen werden
-  step_4: Einstellungen Tagverteilung
+  step_4: Einstellungen
   step_4_description: Hier können weitere Parameter fakultativ konfigueriert werden
   step_4_holydays: Feiertage
   step_4_holydays_description: Definieren Sie hier welche Daten als Feiertage zählen sollen. Auf jeder Zeile ein Feiertag im Format dd.mm.yyyy (also z. B. 01.01.2020)
@@ -117,7 +117,13 @@ generate_nodika_algorithms:
   step_5_description: Ist die Tagverteilung so in Ordnung kann mit der Generierung fortgefahren werden
   step_6: Weitere Einstellungen
   step_6_description: Hier können weitere Einstellungen für die Zuordnung der Tage zu konkreten Daten vorgenommen werden
+  step_6_create_secondary: Sekundärer Dienst erstellen
+  step_6_create_secondary_description: >
+    Zusammen mit dieser Generierung können Sie einen sekündären Dienst dazu generieren. Die dadurch generierten Termine können zur Bestimmung von Stellvertretern oder von Unterstützern bei grosser Belastung dienen.
+    Es wird sichergestellt, das für das selbe Mitglied nie ein sekundärer Dienst gleichzeitig stattfindet wie ein anderer in diesem Durchgang generierten Termin.
   step_6_optimization_strategy: Wie soll der Algorithmus die Terminverteilung optimieren?
   step_6_blocked_starts: Mitglieder angeben die bereits Termine haben damit keine Konflikte entstehen
+  step_configure_secondary: Sekundärer Dienst konfigurieren
+  step_configure_secondary_description: Einstellungen für den sekundären Dienst
   step_7: Generierung überprüfen
   step_7_description: Überprüfen Sie die erfolgte Generierung und bestätigen oder verwerfen Sie die neuen Termine

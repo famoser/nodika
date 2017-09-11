@@ -42,6 +42,20 @@ class LoadPersonData extends BaseFixture
         $manager->flush();
 
         $this->setReference("person-1", $person);
+
+        $person = $this->getAllRandomInstance();
+        $person->setEmail("info@mymember1.ch");
+        $manager->persist($person);
+        $manager->flush();
+
+        $this->setReference("person-2", $person);
+
+        $person = $this->getAllRandomInstance();
+        $person->setEmail("info@mymeber2.ch");
+        $manager->persist($person);
+        $manager->flush();
+
+        $this->setReference("person-3", $person);
     }
 
     /**

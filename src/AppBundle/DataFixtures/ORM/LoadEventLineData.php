@@ -35,9 +35,16 @@ class LoadEventLineData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        $organisation = $this->getAllRandomInstance();
-        $organisation->setOrganisation($this->getReference("organisation-1"));
-        $manager->persist($organisation);
+        $eventLine = $this->getAllRandomInstance();
+        $eventLine->setOrganisation($this->getReference("organisation-1"));
+        $eventLine->setName("Notfalldienst");
+        $manager->persist($eventLine);
+
+        $eventLine = $this->getAllRandomInstance();
+        $eventLine->setOrganisation($this->getReference("organisation-1"));
+        $eventLine->setName("Wochentelefon");
+        $manager->persist($eventLine);
+
         $manager->flush();
     }
 
