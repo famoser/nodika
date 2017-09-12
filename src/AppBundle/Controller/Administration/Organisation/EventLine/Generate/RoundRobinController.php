@@ -19,6 +19,7 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Enum\DistributionType;
 use AppBundle\Enum\RoundRobinStatusCode;
 use AppBundle\Form\EventLineGeneration\RoundRobin\ChoosePeriodType;
+use AppBundle\Model\EventLineGeneration\Base\EventLineConfiguration;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
 use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
@@ -89,12 +90,12 @@ class RoundRobinController extends BaseController
     {
         $configuration = new RoundRobinConfiguration(json_decode($generation->getDistributionConfigurationJson()));
         $this->addMemberConfiguration($configuration, $organisation);
+        $this->addEventLineConfiguration($configuration, $organisation);
         if (!$configuration->randomOrderMade) {
             $this->randomizeMemberOrder($configuration);
             $configuration->randomOrderMade = true;
-
-            $this->saveDistributionConfiguration($generation, $configuration);
         }
+        $this->saveDistributionConfiguration($generation, $configuration);
         return $configuration;
     }
 
@@ -204,6 +205,57 @@ class RoundRobinController extends BaseController
     }
 
     /**
+     * @param RoundRobinConfiguration $configuration
+     * @param Organisation $organisation
+     */
+    protected function addEventLineConfiguration(RoundRobinConfiguration $configuration, Organisation $organisation)
+    {
+        /* @var EventLine[] $eventLineById */
+        $eventLineById = [];
+        foreach ($organisation->getEventLines() as $member) {
+            $eventLineById[$member->getId()] = $member;
+        }
+
+
+        $removeKeys = [];
+        foreach ($configuration->eventLineConfiguration as $key => $value) {
+            if (isset($eventLineById[$value->id])) {
+                $value->name = $eventLineById[$value->id]->getName();
+                unset($eventLineById[$value->id]);
+            } else {
+                $removeKeys[] = $key;
+            }
+        }
+
+        foreach ($removeKeys as $removeKey) {
+            unset($configuration->eventLineConfiguration[$removeKey]);
+        }
+
+        foreach ($eventLineById as $item) {
+            $newConfig = EventLineConfiguration::createFromEventLine($item);
+            $configuration->eventLineConfiguration[] = $newConfig;
+        }
+
+        //empty array
+        $eventLineById = [];
+
+        //add events if applicable
+        foreach ($configuration->eventLineConfiguration as $item) {
+            if ($item->isEnabled && !$item->eventsSet) {
+                if (count($eventLineById) == 0) {
+                    //cache event lines again
+                    foreach ($organisation->getEventLines() as $member) {
+                        $eventLineById[$member->getId()] = $member;
+                    }
+                }
+                //set events
+                $item->setEvents($eventLineById[$item->id]->getEvents());
+                $item->eventsSet = true;
+            }
+        }
+    }
+
+    /**
      * @Route("/{generation}/choose_period", name="administration_organisation_event_line_generate_round_robin_choose_period")
      * @param Request $request
      * @param Organisation $organisation
@@ -227,7 +279,7 @@ class RoundRobinController extends BaseController
                 $config->endDateTime = $entity->endDateTime;
                 $this->saveDistributionConfiguration($generation, $config);
                 return $this->redirectToRoute(
-                    "administration_organisation_event_line_generate_round_robin_choose_members",
+                    "administration_organisation_event_line_generate_round_robin_no_conflicts",
                     ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
                 );
             }
@@ -265,6 +317,51 @@ class RoundRobinController extends BaseController
         return $this->redirectToRoute(
             "administration_organisation_event_line_generate_round_robin_set_order",
             ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
+        );
+    }
+
+    /**
+     * @Route("/{generation}/no_conflicts", name="administration_organisation_event_line_generate_round_robin_no_conflicts")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
+     * @return Response
+     */
+    public function noConflictsAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    {
+        $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
+        $config = $this->getDistributionConfiguration($generation, $organisation);
+
+        if ($request->getMethod() == "POST") {
+            /* @var EventLineConfiguration[] $eventLineConfiguration */
+            $eventLineConfiguration = [];
+            foreach ($config->eventLineConfiguration as $eventLineConfiguration) {
+                $eventLineConfiguration[$eventLineConfiguration->id] = $eventLineConfiguration;
+            }
+            foreach ($request->request->all() as $key => $value) {
+                if (strpos($key, "event_line_") === 0) {
+                    $eventLineId = substr($key, 11); //cut off event_line_
+                    if (isset($eventLineConfiguration[$eventLineId])) {
+                        $eventLineConfiguration[$eventLineId]->isEnabled = true;
+                    }
+                }
+            }
+            $config->eventLineConfiguration = $eventLineConfiguration;
+            $this->saveDistributionConfiguration($generation, $config);
+            return $this->redirectToRoute(
+                "administration_organisation_event_line_generate_round_robin_choose_members",
+                ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
+            );
+        }
+
+        $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["eventLineConfigurations"] = $config->eventLineConfiguration;
+        $arr["eventLine"] = $eventLine;
+        $arr["eventLineGeneration"] = $generation;
+        return $this->render(
+            'administration/organisation/event_line/generate/round_robin/no_conflicts.html.twig', $arr
         );
     }
 

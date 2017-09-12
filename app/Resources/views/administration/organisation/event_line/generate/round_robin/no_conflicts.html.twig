@@ -1,0 +1,28 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+{% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
+
+{% block title %}{{ "no_conflicts.title"|trans }}{% endblock %}
+{% block description %}{{ "no_conflicts.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_event_line %}
+
+{% trans_default_domain "round_robin" %}
+
+{% block primary_content %}
+    <form class="form"
+          action="{{ path("administration_organisation_event_line_generate_round_robin_choose_members", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
+          method="post">
+        {% for eventLine in eventLineConfigurations %}
+            {{ kitchen_sink.toggle_form_field("event_line_" ~ eventLine.id, eventLine.isEnabled, eventLine.name) }}
+        {% endfor %}
+        {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+    </form>
+{% endblock %}
+
+{% block secondary_content %}
+    <h3>{{ "no_conflicts.no_conflicts"|trans }}</h3>
+    <p>{{ "no_conflicts.no_conflicts_description"|trans }}</p>
+    <h3>{{ "no_conflicts.conflict_puffer"|trans }}</h3>
+    <p>{{ "no_conflicts.conflict_puffer_description"|trans }}</p>
+    <h3>{{ "no_conflicts.no_match_warning"|trans }}</h3>
+    <p>{{ "no_conflicts.no_match_warning_description"|trans }}</p>
+{% endblock %}

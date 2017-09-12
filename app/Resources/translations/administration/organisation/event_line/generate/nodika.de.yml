@@ -1,0 +1,109 @@
+#new page
+new:
+  title: Nodika Algorithmus
+  description: Generieren Sie Termine mit dem Nodika Algorithmus
+  help: >
+    Der Nodika Algorithmus basiert auf den Erfahrungen eines grösseren Notfalldienstvereines.
+    Die Grundannahme sind, das nicht alle Mitglieder gleich viel Notfalldienst leisten, und das Termine an Feiertage und Wochenenden anders gewichtet werden sollen wie Termine an Wochentagen.
+    Der Algorithmus ist in zwei Teile unterteilt, der erste Teil ist deterministisch (ergibt also immer das gleiche Resultat mit den gleichen Eingaben) und vergibt die Anzahl Termine an die Mitglieder.
+    Der zweite Teil ist nicht deterministisch, er versucht zufällig den Terminen der Mitglieder konkreten Daten zuzuordnen.
+    Sie definieren in den folgenden Schritten den Zeitraum der Generierung, die teilnehmenden Mitglieder, deren zu leistenden Notfalldienstanteil (mit Punkten; je höher desto mehr) sowie weitere Einstellungen.
+  new_action: starten
+
+#choose_period page
+choose_period:
+  title: Zeitraum wählen
+  description: Wählen Sie Start- und Entzeitpunkt der Generierung aus, sowie die Länge eines Termines
+  start_date_time: Anfangszeitpunkt
+  start_date_time_description: Die Startzeit des ersten Termines in der Generierung
+  end_date_time: Endzeitpunkt
+  end_date_time_description: Der Zeitpunkt der vom letzten Event der Generierung immer noch abgedeckt wird
+  length_in_hours: Länge eines Termines in Stunden
+  length_in_hours_description: Die Länge eines einzelnen Termines in Stunden. Danach beginnst sofort der nächste Termin
+
+#choose_members page
+choose_members:
+  title: Mitglieder wählen
+  description: Wählen Sie aus Ihren aktiven Mitgliedern die aus, die Termine zugeteilt bekommen sollen
+  help: Deaktivieren Sie die Mitglieder die nicht beachtet werden sollen bei der Generierung
+
+#relative_distribution page
+relative_distribution:
+  title: Relative Verteilung an die Mitglieder
+  description: Bestimmen Sie wieviel Termine das Mitglied übernehmen soll
+  member_points: Mitgliederpunkte
+  member_points_description:
+    Ein Mitgliederpunkt definiert wieviele Termine das Mitglied relativ zu den anderen übernehmen soll.
+    Der Wert muss eine Zahl grösser / gleich 0 sein.
+    Ist der Wert eines Mitgliedes verglichen zu einem anderen verdoppelt, wird das entsprechende Mitglied auch doppelt so viele Tage zugewiesen bekommen
+  member_lucky_score: Lucky Score
+  member_lucky_score_description:
+    Da die Generierung oft nicht die Termine ganz fair verteilen kann (zum Beispiel weil zwei Mitglieder drei Termine übernehmen müssen)
+    wird der Unterschied als "Lucky Score" gespeichert. Es ist also eine Zahl die angibt, wieviel Glück das Mitglied bei der letzten Generierung hatte.
+    Wird diese Generierung zum ersten Mal durchgeführt kann sie einfach 0 gelassen werden
+
+#distribution_settings page
+distribution_settings:
+  title: Einstellungen Termineverteilung
+  description: Konfigurieren Sie weitere Einstellungen zur Termineverteilung
+  day_weighting: Gewichtung der Tage
+  day_weighting_description: >
+    Sie können pro Tagesart eine relative Punkteanzahl definieren. Der Wert muss eine Zahl grösser als 0 sein, und gibt den Wert dieser Tagesart an.
+    Hat zum Beispiel ein Feiertag den Wert zwei und ein Wochentag den Wert eins dann bedeuted das das die Übernahme eine Feiertags gleichbedeutend der Übernahme zweier Wochentage ist.
+    Der Startzeitpunkt des Termines bestimmt die Gewichtung des Termines
+  holydays: Feiertage
+  holydays_description: >
+    Definieren Sie hier welche Daten als Feiertage zählen sollen. Erfassen Sie auf jeder Zeile ein Feiertag im Format dd.mm.yyyy (also z. B. 01.01.2020)
+    Die Reihenfolge ist egal.
+
+#distribution_confirm page
+distribution_confirm:
+  title: Terminverteilung bestätigen
+  description: Die Verteilung der Termine an die Mitglieder
+  help: >
+    Überprüfen Sie die Tagverteilung. Ist alles so in Ordnung kann mit der Generierung fortgefahren werden.
+    Sie werden in den folgenden Schritten nun die Zuordnung der Termine auf konkrete Daten konfigurieren
+  continue_action: Weiter
+
+#assignment_settings page
+assignment_settings:
+  title: Terminzuordnung bestätigen
+  description: Konfigurieren Sie die Zuordnung der Termine zu konkreten Daten
+  before_data: Bestehende Termine
+  before_data_description: >
+    Geben Sie hier eventuell bereits vorhandene Termine an unmittelbar vor der Generierung des Termines.
+    Ist die Generierung ab 01.01 mit folgender Verteilung:
+    Mitglied A mit der ID 98 ist am 29.12. zugeordnet, Mitglied B mit der ID 62 ist am 30.12. zugeordnet und Mitglied c mit der ID 86 am 31.12.
+    Dann füllen Sie in die Liste mit 98,62,86 aus.
+    Sie können zudem die "0" als Platzhalter verwenden. Möchten Sie also nur den Termin vom Mitglied B definieren dann füllen Sie das Feld mit 62,0 aus
+
+#create_secondary page
+create_secondary:
+  title: Sekundärer Dienst erstellen
+  description: Konfigurieren Sie den sekundären Dienst
+  other_event_line: Termingruppe
+  other_event_line_description: Wählen Sie die Termingruppe aus in der diese Termine gespeichert werden
+
+#start_generation page
+start_generation:
+  title: Generierung starten
+  description: Konfiguration abgeschlossen
+  help: Sie können nun die Generierung starten. Dies kann je nach Konfiguration eine Weile dauern.
+  start_now: Jetzt starten
+
+#confirm_generation page
+confirm_generation:
+  title: Generierung bestätigen
+  description: Überprüfen Sie die erfolgte Generierung und bestätigen oder verwerfen Sie die neuen Termine
+  help: >
+    Überprüfen Sie nun die Termine.
+    Scrollen Sie nach unten und speichern Sie die Termine wenn alles in Ordnung ist,
+    oder gehen Sie zurück und versuchen Sie die Generierung von Neuem
+  persist_now: Termine speichern
+  member_name: Mitglied
+  start_date_time: Anfangszeit
+  end_date_time: Endzeit
+
+#erros
+error:
+  member_not_found_anymore: Ein Mitglied das einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Mitglieder

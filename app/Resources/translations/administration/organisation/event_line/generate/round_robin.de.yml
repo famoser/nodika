@@ -1,7 +1,4 @@
-step_1:
-  title: Schritt 1
-  description: Choose members
-
+#new page
 new:
   title: Round Robin
   description: Generieren Sie Termine mit dem Round Robin Verfahren
@@ -11,6 +8,7 @@ new:
     In den folgenden drei Schritten definieren Sie den Zeitraum der Generierung, die teilnehmenden Mitglieder sowie deren Reihenfolge.
   new_action: starten
 
+#choose_period page
 choose_period:
   title: Zeitraum wählen
   description: Wählen Sie Start- und Entzeitpunkt der Generierung aus, sowie die Länge eines Termines
@@ -21,11 +19,28 @@ choose_period:
   length_in_hours: Länge eines Termines in Stunden
   length_in_hours_description: Die Länge eines einzelnen Termines in Stunden. Danach beginnst sofort der nächste Termin
 
+#choose_members page
 choose_members:
   title: Mitglieder wählen
   description: Wählen Sie aus Ihren aktiven Mitgliedern die aus, die Termine zugeteilt bekommen sollen
   help: Deaktivieren Sie die Mitglieder die nicht beachtet werden sollen bei der Generierung
 
+#no_conflicts page
+no_conflicts:
+  title: Konflikte verhindern
+  description: Verhinden Sie Terminkonflikte
+  no_conflicts: Konflikte verhindern
+  no_conflicts_description: >
+    Aktivieren Sie hier alle Termingruppen mit denen es keine Konflikte geben darf.
+    Ein Konflikt ist dann, wenn das selbe Mitglied zur gleichen Zeit mehrere Termine übernehmen soll
+  no_match_warning: Zuordnung vielleicht unmöglich
+  no_match_warning_description: Je nach Einstellung hier kann es sein das die Zurodnung nicht mehr möglich ist!
+  conflict_puffer: Puffer
+  conflict_puffer_description: >
+    Mindestabstand in Stunden zwischen Terminen der anderen Termingruppen und den generierten Terminen.
+    Wird dieser Abstand nicht eingehalten zählt es als Konflikt.
+
+#set_order page
 set_order:
   title: Reihenfolge festlegen
   description: Definieren Sie die Reihenfolge der Mitglieder die bei der Zuordnung verwendet werden soll
@@ -36,12 +51,14 @@ set_order:
   randomize_description: Die Mitglieder wurden zufällig so geordnet
   randomize_action: Neu zufällig ordnen
 
+#start_generation page
 start_generation:
   title: Generierung starten
   description: Konfiguration abgeschlossen
   help: Sie können nun die Generierung starten. Dies kann je nach Konfiguration eine Weile dauern.
   start_now: Jetzt starten
 
+#confirm_generation page
 confirm_generation:
   title: Generierung bestätigen
   description: Überprüfen Sie die erfolgte Generierung und bestätigen oder verwerfen Sie die neuen Termine
@@ -50,9 +67,10 @@ confirm_generation:
     Scrollen Sie nach unten und speichern Sie die Termine wenn alles in Ordnung ist,
     oder gehen Sie zurück und verändern Sie die Einstellungen um die Generierung von neuem zu beginnen
   persist_now: Termine speichern
-  member_name: Mitglied Id
+  member_name: Mitglied
   start_date_time: Anfangszeit
   end_date_time: Endzeit
 
+#erros
 error:
   member_not_found_anymore: Ein Mitglied das einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Mitglieder

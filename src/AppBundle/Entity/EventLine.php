@@ -114,7 +114,7 @@ class EventLine extends BaseEntity
     /**
      * Get events
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Event[]
      */
     public function getEvents()
     {

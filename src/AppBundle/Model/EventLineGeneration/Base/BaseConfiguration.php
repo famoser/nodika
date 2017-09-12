@@ -8,22 +8,28 @@
 
 namespace AppBundle\Model\EventLineGeneration\Base;
 
-
-use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
-
 class BaseConfiguration
 {
+    /**
+     * BaseConfiguration constructor.
+     * @param $data
+     */
     public function __construct($data)
     {
         if ($data != null) {
             $this->startDateTime = new \DateTime($data->startDateTime->date);
             $this->endDateTime = new \DateTime($data->endDateTime->date);
             $this->lengthInHours = (int)$data->lengthInHours;
+            $this->eventLineConfiguration = [];
+            foreach ($data->eventLineConfiguration as $item) {
+                $this->eventLineConfiguration[] = new EventLineConfiguration($item);
+            }
         } else {
             //default values
             $this->startDateTime = new \DateTime();
             $this->endDateTime = new \DateTime('now + 1 year');
             $this->lengthInHours = 12;
+            $this->eventLineConfiguration = [];
         }
     }
 
@@ -35,4 +41,7 @@ class BaseConfiguration
 
     /* @var int $lengthInHours */
     public $lengthInHours;
+
+    /* @var EventLineConfiguration[] $eventLineConfiguration */
+    public $eventLineConfiguration;
 }
