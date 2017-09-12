@@ -20,6 +20,7 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Enum\DistributionType;
 use AppBundle\Enum\NodikaStatusCode;
 use AppBundle\Form\EventLineGeneration\Nodika\ChoosePeriodType;
+use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Model\EventLineGeneration\Base\EventLineConfiguration;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
 use AppBundle\Model\EventLineGeneration\Nodika\MemberConfiguration;
@@ -288,13 +289,22 @@ class NodikaController extends BaseGenerationController
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
+
+        $holidayString = "";
+        foreach ($config->holidays as $holiday) {
+            $holidayString .= $holiday->format(DateTimeFormatter::DATE_FORMAT) . ", ";
+        }
+        if (strlen($holidayString) > 0) {
+            $holidayString = substr($holidayString, 0, -2);
+        }
+
         if ($request->getMethod() == "POST") {
-            //todo
             /* @var MemberConfiguration[] $memberConfigurations */
             $memberConfigurations = [];
             foreach ($config->memberConfigurations as $memberConfiguration) {
                 $memberConfigurations[$memberConfiguration->id] = $memberConfiguration;
             }
+            $submissionFailure = false;
             foreach ($request->request->all() as $key => $value) {
                 if (strpos($key, "member_p_") === 0) {
                     $memberId = substr($key, 9); //cut off member_p_
@@ -306,14 +316,48 @@ class NodikaController extends BaseGenerationController
                     if (isset($memberConfigurations[$memberId])) {
                         $memberConfigurations[$memberId]->luckyScore = $value;
                     }
+                } else if ($key == "holiday_string") {
+                    $holidayString = $value;
+                    $parts = explode(",", $value);
+                    $sanitizedParts = [];
+                    $foundInvalid = false;
+                    foreach ($parts as $part) {
+                        $part = trim($part);
+                        //must be of the form dd.mm.yyyy
+                        $parts = explode(".", $part);
+                        if (!(count($parts) == 3 &&
+                            is_numeric($part[0]) && strlen($part[0]) == 2 &&
+                            is_numeric($part[1]) && strlen($part[1]) == 2 &&
+                            is_numeric($part[2]) && strlen($part[2]) == 4)) {
+                            $submissionFailure = true;
+                            $foundInvalid = true;
+                            $translator = $this->get("translator");
+                            $this->displayError($translator->trans("error.date_format_invalid", ["%date%" => $part], "nodika"));
+                        } else {
+                            $sanitizedParts[] = $part;
+                        }
+                    }
+                    if (!$foundInvalid) {
+                        $config->holidays = [];
+                        $config->holidaysFilled = true;
+                        $dateTimes = [];
+                        foreach ($sanitizedParts as $sanitizedPart) {
+                            $date = new \DateTime($sanitizedPart);
+                            $dateTimes[$date->getTimestamp()] = $date;
+                        }
+                        ksort($dateTimes);
+                        $config->holidays = $dateTimes;
+                    }
                 }
             }
             $config->memberConfigurations = $memberConfigurations;
             $this->saveDistributionConfiguration($generation, $config);
-            return $this->redirectToRoute(
-                "administration_organisation_event_line_generate_nodika_start_generation",
-                ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
-            );
+            if (!$submissionFailure) {
+                return $this->redirectToRoute(
+                    "administration_organisation_event_line_generate_nodika_do_distribution",
+                    ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
+                );
+            }
         }
 
         $onlyEnabled = [];
@@ -328,8 +372,52 @@ class NodikaController extends BaseGenerationController
         $arr["memberConfigurations"] = $onlyEnabled;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
+        $arr["eventTypeConfiguration"] = $config->eventTypeConfiguration;
+        $arr["holidayString"] = $holidayString;
         return $this->render(
-            'administration/organisation/event_line/generate/nodika/relative_distribution.html.twig', $arr
+            'administration/organisation/event_line/generate/nodika/distribution_settings.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/{generation}/do_distribution", name="administration_organisation_event_line_generate_nodika_do_distribution")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
+     * @return Response
+     */
+    public function doDistributionAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    {
+        $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
+        $config = $this->getDistributionConfiguration($generation, $organisation);
+
+
+        return $this->redirectToRoute(
+            "administration_organisation_event_line_generate_nodika_distribution_confirm",
+            ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
+        );
+    }
+
+    /**
+     * @Route("/{generation}/distribution_confirm", name="administration_organisation_event_line_generate_nodika_distribution_confirm")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
+     * @return Response
+     */
+    public function distributionConfirmAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    {
+        $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
+        $config = $this->getDistributionConfiguration($generation, $organisation);
+
+        $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
+        $arr["eventLineGeneration"] = $generation;
+        return $this->render(
+            'administration/organisation/event_line/generate/nodika/start_generation.html.twig', $arr
         );
     }
 
@@ -489,6 +577,7 @@ class NodikaController extends BaseGenerationController
         $this->addMemberConfiguration($configuration, $organisation);
         $this->addEventLineConfiguration($configuration, $organisation);
         $this->saveDistributionConfiguration($generation, $configuration);
+        $this->fillHolidays($configuration);
         return $configuration;
     }
 
@@ -546,5 +635,46 @@ class NodikaController extends BaseGenerationController
             $newConfig = MemberConfiguration::createFromMember($item, ++$maxOrder);
             $configuration->memberConfigurations[] = $newConfig;
         }
+    }
+
+    /**
+     * @param NodikaConfiguration $configuration
+     */
+    private function fillHolidays(NodikaConfiguration $configuration)
+    {
+        if (!$configuration->holidaysFilled) {
+            $configuration->holidaysFilled = true;
+            $currentYear = $configuration->startDateTime->format("Y");
+            while (true) {
+                $yearlyHolyDays = $this->getYearlyHolidays($currentYear);
+                foreach ($yearlyHolyDays as $yearlyHolyDay) {
+                    if ($yearlyHolyDay->getTimestamp() < $configuration->startDateTime->getTimestamp()) {
+                        //too early
+                    } else if ($yearlyHolyDay > $configuration->endDateTime->getTimestamp()) {
+                        //too late; get back
+                        return;
+                    } else {
+                        $configuration->holidays[] = $yearlyHolyDay;
+                    }
+                }
+                $currentYear++;
+            }
+        }
+    }
+
+    /**
+     * @param $year
+     * @return \DateTime[]
+     */
+    private function getYearlyHolidays($year)
+    {
+        return [
+            // new year: 01.01.2000
+            new \DateTime("01.01." . $year),
+            // noel: 25.12.2000
+            new \DateTime("01.08." . $year),
+            // swiss: 01.08.2000
+            new \DateTime("25.12." . $year)
+        ];
     }
 }

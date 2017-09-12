@@ -66,8 +66,8 @@ distribution_settings:
     Sie können pro Tagesart eine relative Punkteanzahl definieren. Der Wert muss eine Zahl grösser als 0 sein, und gibt den Wert dieser Tagesart an.
     Hat zum Beispiel ein Feiertag den Wert zwei und ein Wochentag den Wert eins dann bedeuted das das die Übernahme eine Feiertags gleichbedeutend der Übernahme zweier Wochentage ist.
     Der Startzeitpunkt des Termines bestimmt die Gewichtung des Termines
-  holydays: Feiertage
-  holydays_description: >
+  holidays: Feiertage
+  holidays_description: >
     Definieren Sie hier welche Daten als Feiertage zählen sollen. Erfassen Sie auf jeder Zeile ein Feiertag im Format dd.mm.yyyy (also z. B. 01.01.2020)
     Die Reihenfolge ist egal.
 
@@ -76,7 +76,7 @@ distribution_confirm:
   title: Terminverteilung bestätigen
   description: Die Verteilung der Termine an die Mitglieder
   help: >
-    Überprüfen Sie die Tagverteilung. Ist alles so in Ordnung kann mit der Generierung fortgefahren werden.
+    Überprüfen Sie die Terminverteilung. Ist alles so in Ordnung kann mit der Generierung fortgefahren werden.
     Sie werden in den folgenden Schritten nun die Zuordnung der Termine auf konkrete Daten konfigurieren
   continue_action: Weiter
 
@@ -122,3 +122,4 @@ confirm_generation:
 #erros
 error:
   member_not_found_anymore: Ein Mitglied das einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Mitglieder
+  date_format_invalid: 'Das Datum %date% ist nicht korrekt formatiert. Bitte formatieren Sie das Datum gemäss dd.mm.YYYY, also zum Beispiel 01.01.1995'

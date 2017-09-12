@@ -15,10 +15,10 @@
             <p>{{ member.name }}</p>
             <div class="row">
                 <div class="col-m-6">
-                    {{ kitchen_sink.form_field("member_" ~ member.id, member.points, "relative_distribution.member_points"|trans ) }}
+                    {{ kitchen_sink.form_field("member_p_" ~ member.id, member.points, "relative_distribution.member_points"|trans ) }}
                 </div>
                 <div class="col-m-6">
-                    {{ kitchen_sink.form_field("member_" ~ member.id, member.luckyScore, "relative_distribution.member_lucky_score_description"|trans ) }}
+                    {{ kitchen_sink.form_field("member_l_" ~ member.id, member.luckyScore, "relative_distribution.member_lucky_score"|trans ) }}
                 </div>
             </div>
         {% endfor %}

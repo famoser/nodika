@@ -11,8 +11,22 @@
     <form class="form"
           action="{{ path("administration_organisation_event_line_generate_nodika_distribution_settings", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
           method="post">
-
-
+        <p>{{ "distribution_settings.day_weighting"|trans }}</p>
+        <div class="row">
+            <div class="col-md-6">
+                {{ kitchen_sink.form_field("event_type_weeday", eventTypeConfiguration.holiday, "weekday"|trans({}, "enum_nodika_event_type")) }}
+            </div>
+            <div class="col-md-6">
+                {{ kitchen_sink.form_field("event_type_saturday", eventTypeConfiguration.holiday, "saturday"|trans({}, "enum_nodika_event_type")) }}
+            </div>
+            <div class="col-md-6">
+                {{ kitchen_sink.form_field("event_type_sunday", eventTypeConfiguration.holiday, "sunday"|trans({}, "enum_nodika_event_type")) }}
+            </div>
+            <div class="col-md-6">
+                {{ kitchen_sink.form_field("event_type_holiday", eventTypeConfiguration.holiday, "holiday"|trans({}, "enum_nodika_event_type")) }}
+            </div>
+        </div>
+        {{ kitchen_sink.textarea_form_field("holiday_string", holidayString, "distribution_settings.holidays"|trans) }}
         {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>
 {% endblock %}
@@ -20,6 +34,6 @@
 {% block secondary_content %}
     <h3>{{ "distribution_settings.day_weighting"|trans }}</h3>
     <p>{{ "distribution_settings.day_weighting_description"|trans }}</p>
-    <h3>{{ "distribution_settings.holydays"|trans }}</h3>
-    <p>{{ "distribution_settings.holydays_description"|trans }}</p>
+    <h3>{{ "distribution_settings.holidays"|trans }}</h3>
+    <p>{{ "distribution_settings.holidays_description"|trans }}</p>
 {% endblock %}

@@ -15,4 +15,6 @@ class NodikaOutput extends BaseOutput
 {
     /* @var MemberConfiguration[] $memberConfiguration */
     public $memberConfiguration;
+    /* @var int $nodikaStatusCode */
+    public $nodikaStatusCode;
 }

@@ -29,6 +29,14 @@
     </div>
 {% endmacro %}
 
+{% macro textarea_form_field(name, value, description, type = "text", classes = "") %}
+    <div class="form-group {{ classes }}">
+        <label class="control-label" for="{{ name }}">{{ description }}</label>
+        <textarea class="form-control" name="{{ name }}" id="{{ name }}">
+                {{ value }}
+        </textarea>
+    </div>
+{% endmacro %}
 
 {% macro horizontal_form_field(name, value, description, type = "text", classes = "") %}
     <div class="form-group {{ classes }}">
