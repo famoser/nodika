@@ -10,8 +10,9 @@ namespace AppBundle\Model\EventLineGeneration\RoundRobin;
 
 
 use AppBundle\Entity\Member;
+use AppBundle\Model\EventLineGeneration\Base\BaseMemberConfiguration;
 
-class MemberConfiguration
+class MemberConfiguration extends BaseMemberConfiguration
 {
     /**
      * MemberConfiguration constructor.
@@ -20,19 +21,9 @@ class MemberConfiguration
     public function __construct($data)
     {
         if ($data != null) {
-            $this->id = $data->id;
-            $this->name = $data->name;
-            $this->isEnabled = $data->isEnabled;
             $this->order = $data->order;
         }
-    }
-
-    /**
-     * @param Member $member
-     */
-    public function updateFromMember(Member $member)
-    {
-        $this->name = $member->getName();
+        parent::__construct($data);
     }
 
     /**
@@ -42,20 +33,12 @@ class MemberConfiguration
      */
     public static function createFromMember(Member $member, $order)
     {
-        $val = new static(null);
-        $val->id = $member->getId();
-        $val->name = $member->getName();
-        $val->isEnabled = true;
-        $val->order = $order;
-        return $val;
+        $instance = new static(null);
+        $instance->initializeFromMember($member);
+        $instance->order = $order;
+        return $instance;
     }
 
-    /* @var int $id */
-    public $id;
-    /* @var string $name */
-    public $name;
-    /* @var bool $isEnabled */
-    public $isEnabled;
     /* @var int $order */
     public $order;
 }

@@ -15,15 +15,15 @@ use AppBundle\Enum\EventGenerationServicePersistResponse;
 use AppBundle\Enum\RoundRobinStatusCode;
 use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
-use AppBundle\Model\EventLineGeneration\Base\EventLineConfigurationEventEntry;
+use AppBundle\Model\EventLineGeneration\Base\BaseMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\GeneratedEvent;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
+use AppBundle\Model\EventLineGeneration\Nodika\MemberConfiguration as NMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
-use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
+use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration as RRMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 use AppBundle\Service\Interfaces\EventGenerationServiceInterface;
-use function Deployer\Support\array_flatten;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -170,7 +170,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         return function ($currentEventCount, $member) use ($conflictBuffer) {
-            /* @var MemberConfiguration $member */
+            /* @var BaseMemberConfiguration $member */
             return in_array($member->id, $conflictBuffer[$currentEventCount]);
         };
     }
@@ -194,7 +194,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         $conflictCallable = $this->buildConflictBuffer($roundRobinConfiguration);
 
-        /* @var MemberConfiguration[] $members */
+        /* @var RRMemberConfiguration[] $members */
         $members = [];
         foreach ($roundRobinConfiguration->memberConfigurations as $memberConfiguration) {
             if ($memberConfiguration->isEnabled) {
@@ -208,7 +208,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $assignedEventCount = 0;
         $activeIndex = 0;
         $totalMembers = count($members);
-        /* @var MemberConfiguration[] $priorityQueue */
+        /* @var RRMemberConfiguration[] $priorityQueue */
         $priorityQueue = [];
         $currentDate = clone($roundRobinConfiguration->startDateTime);
         $dateIntervalAdd = "PT" . $roundRobinConfiguration->lengthInHours . "H";
@@ -216,7 +216,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $endDate = clone($currentDate);
             $endDate->add(new \DateInterval($dateIntervalAdd));
             //check if something in priority queue
-            /* @var MemberConfiguration $matchMember */
+            /* @var RRMemberConfiguration $matchMember */
             $matchMember = null;
             if (count($priorityQueue) > 0) {
                 $i = 0;
@@ -324,18 +324,57 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     public function setEventTypeDistribution(NodikaConfiguration $nodikaConfiguration)
     {
+        /* @var NMemberConfiguration[] $enabledMembers */
+        $enabledMembers = [];
+        foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
+            if ($memberConfiguration->isEnabled) {
+                $enabledMembers[] = $memberConfiguration;
+            }
+        }
+
         $weekdayCount = 0;
         $saturdayCount = 0;
         $sundayCount = 0;
         $holidayCount = 0;
 
+        $holidays = [];
+        foreach ($nodikaConfiguration->holidays as $holiday) {
+            $holidays[(new \DateTime($holiday->format("d.m.Y")))->getTimestamp()] = 1;
+        }
 
         $currentDate = clone($nodikaConfiguration->startDateTime);
         $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
-        while ($currentDate < $nodikaConfiguration->endDateTime) {
+        $oneMore = 1;
+        while ($currentDate < $nodikaConfiguration->endDateTime || $oneMore--) {
+            $day = new \DateTime($currentDate->format("d.m.Y"));
+            if (isset($holidays[$day->getTimestamp()])) {
+                $holidayCount++;
+            } else {
+                $dayOfWeek = $day->format('N');
+                if ($dayOfWeek == 7) {
+                    $sundayCount++;
+                } else if ($dayOfWeek == 6) {
+                    $saturdayCount++;
+                } else {
+                    $weekdayCount++;
+                }
+            }
 
             $currentDate->add(new \DateInterval($dateIntervalAdd));
         }
+
+        $eventTypeConfiguration = $nodikaConfiguration->eventTypeConfiguration;
+        $totalPoints = $holidayCount * $eventTypeConfiguration->holiday;
+        $totalPoints += $sundayCount * $eventTypeConfiguration->sunday;
+        $totalPoints += $saturdayCount * $eventTypeConfiguration->saturday;
+        $totalPoints += $weekdayCount * $eventTypeConfiguration->weekday;
+
+        $totalMemberPoints = 0;
+        foreach ($enabledMembers as $enabledMember) {
+            $totalMemberPoints += $enabledMember->points;
+        }
+
+        $pointsPerMemberPoint = $totalPoints / $totalMemberPoints;
 
         return true;
     }
