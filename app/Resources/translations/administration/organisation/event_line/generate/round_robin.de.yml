@@ -19,12 +19,6 @@ choose_period:
   length_in_hours: Länge eines Termines in Stunden
   length_in_hours_description: Die Länge eines einzelnen Termines in Stunden. Danach beginnst sofort der nächste Termin
 
-#choose_members page
-choose_members:
-  title: Mitglieder wählen
-  description: Wählen Sie aus Ihren aktiven Mitgliedern die aus, die Termine zugeteilt bekommen sollen
-  help: Deaktivieren Sie die Mitglieder die nicht beachtet werden sollen bei der Generierung
-
 #no_conflicts page
 no_conflicts:
   title: Konflikte verhindern
@@ -39,6 +33,12 @@ no_conflicts:
   conflict_puffer_description: >
     Mindestabstand in Stunden zwischen Terminen der anderen Termingruppen und den generierten Terminen.
     Wird dieser Abstand nicht eingehalten zählt es als Konflikt.
+
+#choose_members page
+choose_members:
+  title: Mitglieder wählen
+  description: Wählen Sie aus Ihren aktiven Mitgliedern die aus, die Termine zugeteilt bekommen sollen
+  help: Deaktivieren Sie die Mitglieder die nicht beachtet werden sollen bei der Generierung
 
 #set_order page
 set_order:

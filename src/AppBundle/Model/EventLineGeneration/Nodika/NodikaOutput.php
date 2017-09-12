@@ -13,5 +13,6 @@ use AppBundle\Model\EventLineGeneration\Base\BaseOutput;
 
 class NodikaOutput extends BaseOutput
 {
-
+    /* @var MemberConfiguration[] $memberConfiguration */
+    public $memberConfiguration;
 }

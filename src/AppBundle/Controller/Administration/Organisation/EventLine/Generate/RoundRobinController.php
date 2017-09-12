@@ -10,6 +10,7 @@
 namespace AppBundle\Controller\Administration\Organisation\EventLine\Generate;
 
 
+use AppBundle\Controller\Administration\Organisation\EventLine\Generate\Base\BaseGenerationController;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
@@ -35,7 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @Route("/round_robin")
  * @Security("has_role('ROLE_USER')")
  */
-class RoundRobinController extends BaseController
+class RoundRobinController extends BaseGenerationController
 {
     /**
      * @Route("/new", name="administration_organisation_event_line_generate_round_robin_new")
@@ -71,7 +72,7 @@ class RoundRobinController extends BaseController
         $eventLineGeneration->setCreatedAtDateTime(new \DateTime());
         $eventLineGeneration->setDistributionConfiguration(new RoundRobinConfiguration(null));
         $eventLineGeneration->setDistributionOutput(new RoundRobinOutput());
-        $eventLineGeneration->setDistributionType(DistributionType::NODIKA);
+        $eventLineGeneration->setDistributionType(DistributionType::ROUND_ROBIN);
         $eventLineGeneration->setGenerationResult(new GenerationResult(null));
         $this->fastSave($eventLineGeneration);
 
@@ -79,180 +80,6 @@ class RoundRobinController extends BaseController
             "administration_organisation_event_line_generate_round_robin_choose_period",
             ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $eventLineGeneration->getId()]
         );
-    }
-
-    /**
-     * @param EventLineGeneration $generation
-     * @param Organisation $organisation
-     * @return RoundRobinConfiguration
-     */
-    protected function getDistributionConfiguration(EventLineGeneration $generation, Organisation $organisation)
-    {
-        $configuration = new RoundRobinConfiguration(json_decode($generation->getDistributionConfigurationJson()));
-        $this->addMemberConfiguration($configuration, $organisation);
-        $this->addEventLineConfiguration($configuration, $organisation);
-        if (!$configuration->randomOrderMade) {
-            $this->randomizeMemberOrder($configuration);
-            $configuration->randomOrderMade = true;
-        }
-        $this->saveDistributionConfiguration($generation, $configuration);
-        return $configuration;
-    }
-
-    /**
-     * @param EventLineGeneration $generation
-     * @return GenerationResult
-     */
-    protected function getGenerationResult(EventLineGeneration $generation)
-    {
-        return new GenerationResult(json_decode($generation->getGenerationResultJson()));
-    }
-
-    /**
-     * @param EventLineGeneration $generation
-     * @param $configuration
-     */
-    protected function saveDistributionConfiguration(EventLineGeneration $generation, RoundRobinConfiguration $configuration)
-    {
-        $generation->setDistributionConfiguration($configuration);
-        $this->fastSave($generation);
-    }
-
-
-    /**
-     * @param EventLineGeneration $generation
-     * @param RoundRobinOutput $roundRobinOutput
-     */
-    protected function saveRoundRobinOutput(EventLineGeneration $generation, RoundRobinOutput $roundRobinOutput)
-    {
-        $generation->setGenerationResult($roundRobinOutput->generationResult);
-        $generation->setDistributionOutput($roundRobinOutput);
-        $this->fastSave($generation);
-    }
-
-    /**
-     * @param RoundRobinConfiguration $configuration
-     */
-    protected function randomizeMemberOrder(RoundRobinConfiguration $configuration)
-    {
-        //get ids
-        $ids = [];
-        /* @var MemberConfiguration[] $memberConfigurations */
-        $memberConfigurations = [];
-        $appendMemberConfiguration = [];
-        foreach ($configuration->memberConfigurations as $key => $value) {
-            if ($value->isEnabled) {
-                $ids[] = $value->id;
-                $memberConfigurations[$value->id] = $value;
-            } else {
-                $value->order = 99;
-                $appendMemberConfiguration[] = $value;
-            }
-        }
-
-        //randomize order
-        shuffle($ids);
-
-        //recreate array
-        $order = 1;
-        $configuration->memberConfigurations = [];
-        foreach ($ids as $id) {
-            $memberConfigurations[$id]->order = $order++;
-            $configuration->memberConfigurations[] = $memberConfigurations[$id];
-        }
-
-        foreach ($appendMemberConfiguration as $item) {
-            $configuration->memberConfigurations[] = $item;
-        }
-    }
-
-    /**
-     * @param RoundRobinConfiguration $configuration
-     * @param Organisation $organisation
-     */
-    protected function addMemberConfiguration(RoundRobinConfiguration $configuration, Organisation $organisation)
-    {
-        /* @var Member[] $memberById */
-        $memberById = [];
-        foreach ($organisation->getMembers() as $member) {
-            $memberById[$member->getId()] = $member;
-        }
-        $maxOrder = 1;
-
-        $removeKeys = [];
-        foreach ($configuration->memberConfigurations as $key => $value) {
-            if (isset($memberById[$value->id])) {
-                $value->name = $memberById[$value->id]->getName();
-                unset($memberById[$value->id]);
-            } else {
-                $removeKeys[] = $key;
-            }
-
-            if ($value->order >= $maxOrder) {
-                $maxOrder = $value->order;
-            }
-
-        }
-
-        foreach ($removeKeys as $removeKey) {
-            unset($configuration->memberConfigurations[$removeKey]);
-        }
-
-        foreach ($memberById as $item) {
-            $newConfig = MemberConfiguration::createFromMember($item, ++$maxOrder);
-            $configuration->memberConfigurations[] = $newConfig;
-        }
-    }
-
-    /**
-     * @param RoundRobinConfiguration $configuration
-     * @param Organisation $organisation
-     */
-    protected function addEventLineConfiguration(RoundRobinConfiguration $configuration, Organisation $organisation)
-    {
-        /* @var EventLine[] $eventLineById */
-        $eventLineById = [];
-        foreach ($organisation->getEventLines() as $member) {
-            $eventLineById[$member->getId()] = $member;
-        }
-
-
-        $removeKeys = [];
-        foreach ($configuration->eventLineConfiguration as $key => $value) {
-            if (isset($eventLineById[$value->id])) {
-                $value->name = $eventLineById[$value->id]->getName();
-                unset($eventLineById[$value->id]);
-            } else {
-                $removeKeys[] = $key;
-            }
-        }
-
-        foreach ($removeKeys as $removeKey) {
-            unset($configuration->eventLineConfiguration[$removeKey]);
-        }
-
-        foreach ($eventLineById as $item) {
-            $newConfig = EventLineConfiguration::createFromEventLine($item);
-            $configuration->eventLineConfiguration[] = $newConfig;
-        }
-
-        //empty array
-        $eventLineById = [];
-
-        //add events if applicable
-        foreach ($configuration->eventLineConfiguration as $item) {
-            if ($item->isEnabled && !$item->eventsSet) {
-                if (count($eventLineById) == 0) {
-                    //cache event lines again
-                    foreach ($organisation->getEventLines() as $member) {
-                        $eventLineById[$member->getId()] = $member;
-                    }
-                }
-                //set events
-                $item->setEvents($eventLineById[$item->id]->getEvents());
-                $item->eventsSet = true;
-            }
-        }
     }
 
     /**
@@ -608,4 +435,119 @@ class RoundRobinController extends BaseController
             ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]
         );
     }
+
+    /**
+     * @param EventLineGeneration $generation
+     * @param Organisation $organisation
+     * @return RoundRobinConfiguration
+     */
+    private function getDistributionConfiguration(EventLineGeneration $generation, Organisation $organisation)
+    {
+        $configuration = new RoundRobinConfiguration(json_decode($generation->getDistributionConfigurationJson()));
+        $this->addMemberConfiguration($configuration, $organisation);
+        $this->addEventLineConfiguration($configuration, $organisation);
+        if (!$configuration->randomOrderMade) {
+            $this->randomizeMemberOrder($configuration);
+            $configuration->randomOrderMade = true;
+        }
+        $this->saveDistributionConfiguration($generation, $configuration);
+        return $configuration;
+    }
+
+    /**
+     * @param EventLineGeneration $generation
+     * @param $configuration
+     */
+    private function saveDistributionConfiguration(EventLineGeneration $generation, RoundRobinConfiguration $configuration)
+    {
+        $generation->setDistributionConfiguration($configuration);
+        $this->fastSave($generation);
+    }
+
+
+    /**
+     * @param EventLineGeneration $generation
+     * @param RoundRobinOutput $roundRobinOutput
+     */
+    private function saveRoundRobinOutput(EventLineGeneration $generation, RoundRobinOutput $roundRobinOutput)
+    {
+        $generation->setGenerationResult($roundRobinOutput->generationResult);
+        $generation->setDistributionOutput($roundRobinOutput);
+        $this->fastSave($generation);
+    }
+
+    /**
+     * @param RoundRobinConfiguration $configuration
+     */
+    private function randomizeMemberOrder(RoundRobinConfiguration $configuration)
+    {
+        //get ids
+        $ids = [];
+        /* @var MemberConfiguration[] $memberConfigurations */
+        $memberConfigurations = [];
+        $appendMemberConfiguration = [];
+        foreach ($configuration->memberConfigurations as $key => $value) {
+            if ($value->isEnabled) {
+                $ids[] = $value->id;
+                $memberConfigurations[$value->id] = $value;
+            } else {
+                $value->order = 99;
+                $appendMemberConfiguration[] = $value;
+            }
+        }
+
+        //randomize order
+        shuffle($ids);
+
+        //recreate array
+        $order = 1;
+        $configuration->memberConfigurations = [];
+        foreach ($ids as $id) {
+            $memberConfigurations[$id]->order = $order++;
+            $configuration->memberConfigurations[] = $memberConfigurations[$id];
+        }
+
+        foreach ($appendMemberConfiguration as $item) {
+            $configuration->memberConfigurations[] = $item;
+        }
+    }
+
+    /**
+     * @param RoundRobinConfiguration $configuration
+     * @param Organisation $organisation
+     */
+    private function addMemberConfiguration(RoundRobinConfiguration $configuration, Organisation $organisation)
+    {
+        /* @var Member[] $memberById */
+        $memberById = [];
+        foreach ($organisation->getMembers() as $member) {
+            $memberById[$member->getId()] = $member;
+        }
+        $maxOrder = 1;
+
+        $removeKeys = [];
+        foreach ($configuration->memberConfigurations as $key => $value) {
+            if (isset($memberById[$value->id])) {
+                $value->name = $memberById[$value->id]->getName();
+                unset($memberById[$value->id]);
+            } else {
+                $removeKeys[] = $key;
+            }
+
+            if ($value->order >= $maxOrder) {
+                $maxOrder = $value->order;
+            }
+
+        }
+
+        foreach ($removeKeys as $removeKey) {
+            unset($configuration->memberConfigurations[$removeKey]);
+        }
+
+        foreach ($memberById as $item) {
+            $newConfig = MemberConfiguration::createFromMember($item, ++$maxOrder);
+            $configuration->memberConfigurations[] = $newConfig;
+        }
+    }
+
 }

@@ -21,6 +21,21 @@ choose_period:
   length_in_hours: Länge eines Termines in Stunden
   length_in_hours_description: Die Länge eines einzelnen Termines in Stunden. Danach beginnst sofort der nächste Termin
 
+#no_conflicts page
+no_conflicts:
+  title: Konflikte verhindern
+  description: Verhinden Sie Terminkonflikte
+  no_conflicts: Konflikte verhindern
+  no_conflicts_description: >
+    Aktivieren Sie hier alle Termingruppen mit denen es keine Konflikte geben darf.
+    Ein Konflikt ist dann, wenn das selbe Mitglied zur gleichen Zeit mehrere Termine übernehmen soll
+  no_match_warning: Zuordnung vielleicht unmöglich
+  no_match_warning_description: Je nach Einstellung hier kann es sein das die Zurodnung nicht mehr möglich ist!
+  conflict_puffer: Puffer
+  conflict_puffer_description: >
+    Mindestabstand in Stunden zwischen Terminen der anderen Termingruppen und den generierten Terminen.
+    Wird dieser Abstand nicht eingehalten zählt es als Konflikt.
+
 #choose_members page
 choose_members:
   title: Mitglieder wählen

@@ -20,13 +20,13 @@ class RoundRobinConfiguration extends BaseConfiguration
     public function __construct($data)
     {
         $this->memberConfigurations = [];
-        $this->randomOrderMade = false;
         if ($data != null) {
-            $this->randomOrderMade = $data->randomOrderMade;
             foreach ($data->memberConfigurations as $key => $item) {
                 $this->memberConfigurations[] = new MemberConfiguration($item);
             }
             $this->randomOrderMade = $data->randomOrderMade;
+        } else {
+            $this->randomOrderMade = false;
         }
         parent::__construct($data);
     }
