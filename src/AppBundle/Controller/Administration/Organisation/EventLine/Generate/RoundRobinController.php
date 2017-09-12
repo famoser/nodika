@@ -18,6 +18,7 @@ use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\DistributionType;
+use AppBundle\Enum\EventGenerationServicePersistResponse;
 use AppBundle\Enum\RoundRobinStatusCode;
 use AppBundle\Form\EventLineGeneration\RoundRobin\ChoosePeriodType;
 use AppBundle\Model\EventLineGeneration\Base\EventLineConfiguration;
@@ -400,40 +401,25 @@ class RoundRobinController extends BaseGenerationController
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);
-        $memberById = [];
-        foreach ($this->getDoctrine()->getRepository("AppBundle:Member")->findBy(["organisation" => $organisation->getId()]) as $item) {
-            $memberById[$item->getId()] = $item;
-        }
-        $em = $this->getDoctrine()->getManager();
-        foreach ($generationResult->events as $event) {
-            if (isset($memberById[$event->memberId])) {
-                $newEvent = new Event();
-                $newEvent->setStartDateTime($event->startDateTime);
-                $newEvent->setEndDateTime($event->endDateTime);
-                $newEvent->setEventLine($eventLine);
-                $newEvent->setMember($memberById[$event->memberId]);
-                $em->persist($newEvent);
-            } else {
-                $translator = $this->get("translator");
-                $this->displayError(
-                    $translator->trans(
-                        "error.member_not_found_anymore",
-                        [],
-                        "round_robin"
-                    )
-                );
-                return $this->redirectToRoute(
-                    "administration_organisation_event_line_generate_round_robin_choose_members",
-                    ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
-                );
-            }
-        }
-        $em->flush();
 
-        return $this->redirectToRoute(
-            "administration_organisation_event_line_administer",
-            ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]
-        );
+        $generationService = $this->get("app.event_generation_service");
+        $resp = $generationService->persist($generation, $generationResult);
+        if ($resp == EventGenerationServicePersistResponse::SUCCESSFUL) {
+            return $this->redirectToRoute(
+                "administration_organisation_event_line_administer",
+                ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]
+            );
+        } else if ($resp == EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE) {
+            return $this->redirectToRoute(
+                "administration_organisation_event_line_generate_round_robin_choose_members",
+                ["organisation" => $generation->getEventLine()->getOrganisation()->getId(), "eventLine" => $generation->getEventLine()->getId(), "generation" => $generation->getId()]
+            );
+        } else {
+            return $this->redirectToRoute(
+                "administration_organisation_event_line_generate_nodika_confirm_generation",
+                ["organisation" => $generation->getEventLine()->getOrganisation()->getId(), "eventLine" => $generation->getEventLine()->getId(), "generation" => $generation->getId()]
+            );
+        }
     }
 
     /**

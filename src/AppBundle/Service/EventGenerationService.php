@@ -9,13 +9,16 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLineGeneration;
+use AppBundle\Enum\EventGenerationServicePersistResponse;
 use AppBundle\Enum\RoundRobinStatusCode;
 use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
 use AppBundle\Model\EventLineGeneration\Base\EventLineConfigurationEventEntry;
 use AppBundle\Model\EventLineGeneration\GeneratedEvent;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
+use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
@@ -163,6 +166,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
             $conflictBuffer[$assignedEventCount] = $currentConflictBuffer;
             $assignedEventCount++;
+            $currentDate = $endDate;
         }
 
         return function ($currentEventCount, $member) use ($conflictBuffer) {
@@ -284,8 +288,55 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param EventLineGeneration $generation
      * @return bool
      */
-    public function persist(EventLineGeneration $generation)
+    public function persist(EventLineGeneration $generation, GenerationResult $generationResult)
     {
-        // TODO: Implement persist() method.
+        $memberById = [];
+        foreach ($this->doctrine->getRepository("AppBundle:Member")->findBy(["organisation" => $generation->getEventLine()->getOrganisation()->getId()]) as $item) {
+            $memberById[$item->getId()] = $item;
+        }
+        $em = $this->doctrine->getManager();
+        foreach ($generationResult->events as $event) {
+            if (isset($memberById[$event->memberId])) {
+                $newEvent = new Event();
+                $newEvent->setStartDateTime($event->startDateTime);
+                $newEvent->setEndDateTime($event->endDateTime);
+                $newEvent->setEventLine($generation->getEventLine());
+                $newEvent->setMember($memberById[$event->memberId]);
+                $em->persist($newEvent);
+            } else {
+                $this->displayError(
+                    $this->translator->trans(
+                        "member_not_found_anymore",
+                        [],
+                        "enum_event_generation_service_persist_response"
+                    )
+                );
+                return EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE;
+            }
+        }
+        $em->flush();
+        return EventGenerationServicePersistResponse::SUCCESSFUL;
+    }
+
+    /**
+     * @param NodikaConfiguration $nodikaConfiguration
+     * @return bool
+     */
+    public function setEventTypeDistribution(NodikaConfiguration $nodikaConfiguration)
+    {
+        $weekdayCount = 0;
+        $saturdayCount = 0;
+        $sundayCount = 0;
+        $holidayCount = 0;
+
+
+        $currentDate = clone($nodikaConfiguration->startDateTime);
+        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
+        while ($currentDate < $nodikaConfiguration->endDateTime) {
+
+            $currentDate->add(new \DateInterval($dateIntervalAdd));
+        }
+
+        return true;
     }
 }

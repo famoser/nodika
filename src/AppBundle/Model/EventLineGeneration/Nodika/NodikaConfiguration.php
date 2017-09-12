@@ -20,10 +20,14 @@ class NodikaConfiguration extends BaseConfiguration
     public function __construct($data)
     {
         $this->memberConfigurations = [];
+        $this->memberEventTypeDistribution = [];
         $this->holidays = [];
         if ($data != null) {
             foreach ($data->memberConfigurations as $key => $item) {
                 $this->memberConfigurations[] = new MemberConfiguration($item);
+            }
+            foreach ($data->memberEventTypeDistribution as $key => $item) {
+                $this->memberEventTypeDistribution[] = new MemberEventTypeDistribution($item);
             }
             foreach ($data->holidays as $holiday) {
                 $this->holidays[] = new \DateTime($holiday->date);
@@ -42,6 +46,9 @@ class NodikaConfiguration extends BaseConfiguration
 
     /* @var EventTypeConfiguration $eventTypeConfiguration */
     public $eventTypeConfiguration;
+
+    /* @var MemberEventTypeDistribution[] $memberEventTypeDistribution */
+    public $memberEventTypeDistribution;
 
     /* @var boolean $holidaysFilled */
     public $holidaysFilled;

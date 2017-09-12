@@ -10,6 +10,8 @@ namespace AppBundle\Service\Interfaces;
 
 
 use AppBundle\Entity\EventLineGeneration;
+use AppBundle\Model\EventLineGeneration\GenerationResult;
+use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 
@@ -29,7 +31,14 @@ interface EventGenerationServiceInterface
      * persist the events associated with this generation in the database
      *
      * @param EventLineGeneration $generation
+     * @param GenerationResult $generationResult
      * @return bool
      */
-    public function persist(EventLineGeneration $generation);
+    public function persist(EventLineGeneration $generation, GenerationResult $generationResult);
+
+    /**
+     * @param NodikaConfiguration $nodikaConfiguration
+     * @return bool
+     */
+    public function setEventTypeDistribution(NodikaConfiguration $nodikaConfiguration);
 }

@@ -70,7 +70,3 @@ confirm_generation:
   member_name: Mitglied
   start_date_time: Anfangszeit
   end_date_time: Endzeit
-
-#erros
-error:
-  member_not_found_anymore: Ein Mitglied das einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Mitglieder
