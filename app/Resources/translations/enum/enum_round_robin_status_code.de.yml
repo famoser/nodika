@@ -1,3 +1,3 @@
 successful: Generierung erfolgreich
-priority_queue_full: Keine konfliktfreie Zuordnung gefunden
+no_matching_member: Keine konfliktfreie Zuordnung gefunden
 unknown_error: Unbekannter Fehler

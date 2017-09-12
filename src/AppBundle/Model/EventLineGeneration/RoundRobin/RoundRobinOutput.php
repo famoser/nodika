@@ -20,8 +20,6 @@ class RoundRobinOutput extends BaseOutput
     public $priorityQueue;
     /* @var int $activeIndex */
     public $activeIndex;
-    /* @var int[] $indexesInPriorityQueue */
-    public $indexesInPriorityQueue;
     /* @var int $roundRobinStatusCode */
     public $roundRobinStatusCode;
 }

@@ -20,6 +20,7 @@ class BaseConfiguration
             $this->startDateTime = new \DateTime($data->startDateTime->date);
             $this->endDateTime = new \DateTime($data->endDateTime->date);
             $this->lengthInHours = (int)$data->lengthInHours;
+            $this->conflictPufferInHours = (int)$data->conflictPufferInHours;
             $this->eventLineConfiguration = [];
             foreach ($data->eventLineConfiguration as $item) {
                 $this->eventLineConfiguration[] = new EventLineConfiguration($item);
@@ -41,6 +42,9 @@ class BaseConfiguration
 
     /* @var int $lengthInHours */
     public $lengthInHours;
+
+    /* @var int $conflictPufferInHours */
+    public $conflictPufferInHours;
 
     /* @var EventLineConfiguration[] $eventLineConfiguration */
     public $eventLineConfiguration;

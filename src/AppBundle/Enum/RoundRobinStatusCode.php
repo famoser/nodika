@@ -14,6 +14,6 @@ use AppBundle\Enum\Base\BaseEnum;
 class RoundRobinStatusCode extends BaseEnum
 {
     const SUCCESSFUL = 1;
-    const PRIORITY_QUEUE_FULL = 2;
+    const NO_MATCHING_MEMBER = 2;
     const UNKNOWN_ERROR = 10;
 }

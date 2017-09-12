@@ -13,6 +13,10 @@ use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
 
 class RoundRobinConfiguration extends BaseConfiguration
 {
+    /**
+     * RoundRobinConfiguration constructor.
+     * @param $data
+     */
     public function __construct($data)
     {
         $this->memberConfigurations = [];

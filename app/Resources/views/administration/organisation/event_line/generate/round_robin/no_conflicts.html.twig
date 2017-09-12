@@ -14,6 +14,7 @@
         {% for eventLine in eventLineConfigurations %}
             {{ kitchen_sink.toggle_form_field("event_line_" ~ eventLine.id, eventLine.isEnabled, eventLine.name) }}
         {% endfor %}
+        {{ kitchen_sink.form_field("conflict_puffer", conflictPuffer, "no_conflicts.conflict_puffer"|trans) }}
         {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>
 {% endblock %}

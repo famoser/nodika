@@ -334,20 +334,20 @@ class RoundRobinController extends BaseController
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
         if ($request->getMethod() == "POST") {
-            /* @var EventLineConfiguration[] $eventLineConfiguration */
-            $eventLineConfiguration = [];
+            /* @var EventLineConfiguration[] $eventLineConfigurations */
+            $eventLineConfigurations = [];
             foreach ($config->eventLineConfiguration as $eventLineConfiguration) {
-                $eventLineConfiguration[$eventLineConfiguration->id] = $eventLineConfiguration;
+                $eventLineConfigurations[$eventLineConfiguration->id] = $eventLineConfiguration;
             }
             foreach ($request->request->all() as $key => $value) {
                 if (strpos($key, "event_line_") === 0) {
                     $eventLineId = substr($key, 11); //cut off event_line_
-                    if (isset($eventLineConfiguration[$eventLineId])) {
-                        $eventLineConfiguration[$eventLineId]->isEnabled = true;
+                    if (isset($eventLineConfigurations[$eventLineId])) {
+                        $eventLineConfigurations[$eventLineId]->isEnabled = true;
                     }
                 }
             }
-            $config->eventLineConfiguration = $eventLineConfiguration;
+            $config->eventLineConfiguration = $eventLineConfigurations;
             $this->saveDistributionConfiguration($generation, $config);
             return $this->redirectToRoute(
                 "administration_organisation_event_line_generate_round_robin_choose_members",
@@ -358,6 +358,7 @@ class RoundRobinController extends BaseController
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["eventLineConfigurations"] = $config->eventLineConfiguration;
+        $arr["conflictPufferInHours"] = $config->conflictPufferInHours;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
         return $this->render(
@@ -499,9 +500,12 @@ class RoundRobinController extends BaseController
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
         /* @var RoundRobinOutput $roundRobinOutput */
-        $roundRobinOutput = $this->get("app.event_generation_service")->generateRoundRobin($config, function ($startDate, $endDate, $member) {
-            return true;
-        });
+        $roundRobinOutput = $this->get("app.event_generation_service")->generateRoundRobin(
+            $config,
+            function ($startDate, $endDate, $assignedEventCount, $member) {
+                return true;
+            }
+        );
         if ($roundRobinOutput instanceof RoundRobinOutput) {
             if ($roundRobinOutput->roundRobinStatusCode == RoundRobinStatusCode::SUCCESSFUL) {
                 $this->saveRoundRobinOutput($generation, $roundRobinOutput);

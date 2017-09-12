@@ -12,12 +12,15 @@ namespace AppBundle\Service;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Enum\RoundRobinStatusCode;
 use AppBundle\Helper\StaticMessageHelper;
+use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
+use AppBundle\Model\EventLineGeneration\Base\EventLineConfigurationEventEntry;
 use AppBundle\Model\EventLineGeneration\GeneratedEvent;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
 use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 use AppBundle\Service\Interfaces\EventGenerationServiceInterface;
+use function Deployer\Support\array_flatten;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -95,6 +98,80 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
+     * @param BaseConfiguration $configuration
+     * @return \Closure with arguments ($currentEventCount, $memberId)
+     */
+    private function buildConflictBuffer(BaseConfiguration $configuration)
+    {
+        /* @var [][] $allEventLineEvents */
+        $allEventLineEvents = [];
+        $conflictPufferInSeconds = $configuration->conflictPufferInHours * 60 * 60;
+        foreach ($configuration->eventLineConfiguration as $item) {
+            if ($item->isEnabled) {
+                $eventLineEvents = [];
+                foreach ($item->eventEntries as $eventEntry) {
+                    $myArr = [];
+                    $myArr["start"] = $eventEntry->startDateTime->getTimestamp() - $conflictPufferInSeconds;
+                    $myArr["end"] = $eventEntry->endDateTime->getTimestamp() + $conflictPufferInSeconds;
+                    $myArr["id"] = $eventEntry->memberId;
+                    $eventLineEvents[$eventEntry->startDateTime->getTimestamp()][] = $myArr;
+                }
+                ksort($eventLineEvents);
+                $allEventLineEvents[] = call_user_func_array('array_merge', $eventLineEvents);;
+            }
+        }
+
+        $eventLineCount = count($allEventLineEvents);
+        $activeIndexes = [];
+        $eventLineCounts = [];
+        for ($i = 0; $i < $eventLineCount; $i++) {
+            $activeIndexes[$i] = 0;
+            $eventLineCounts[$i] = count($allEventLineEvents[$i]);
+        }
+
+        $conflictBuffer = [];
+        $assignedEventCount = 0;
+
+        $currentDate = clone($configuration->startDateTime);
+        $dateIntervalAdd = "PT" . $configuration->lengthInHours . "H";
+        while ($currentDate < $configuration->endDateTime) {
+            $endDate = clone($currentDate);
+            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $startTimeStamp = $currentDate->getTimestamp();
+            $endTimeStamp = $endDate->getTimestamp();
+            $currentConflictBuffer = [];
+            for ($i = 0; $i < $eventLineCount; $i++) {
+                for ($j = $activeIndexes[$i]; $j < $eventLineCounts[$i]; $j++) {
+                    $currentEvent = $allEventLineEvents[$i][$j];
+                    if ($currentEvent["end"] < $startTimeStamp) {
+                        //not in critical zone yet
+                        $activeIndexes[$i]++;
+                    } else {
+                        if ($currentEvent["start"] <= $startTimeStamp && $currentEvent["end"] >= $startTimeStamp) {
+                            //start overlap
+                            $currentConflictBuffer[] = $currentEvent["id"];
+                        } else if ($currentEvent["end"] <= $endTimeStamp && $currentEvent["end"] >= $endTimeStamp) {
+                            //end overlap
+                            $currentConflictBuffer[] = $currentEvent["id"];
+                        } else {
+                            //no overlap anymore
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $conflictBuffer[$assignedEventCount] = $currentConflictBuffer;
+            $assignedEventCount++;
+        }
+
+        return function ($currentEventCount, $member) use ($conflictBuffer) {
+            /* @var MemberConfiguration $member */
+            return in_array($member->id, $conflictBuffer[$currentEventCount]);
+        };
+    }
+
+    /**
      * tries to generate the events
      * returns true if successful
      *
@@ -111,6 +188,8 @@ class EventGenerationService implements EventGenerationServiceInterface
         $roundRobinResult = new RoundRobinOutput();
         $roundRobinResult->version = 1;
 
+        $conflictCallable = $this->buildConflictBuffer($roundRobinConfiguration);
+
         /* @var MemberConfiguration[] $members */
         $members = [];
         foreach ($roundRobinConfiguration->memberConfigurations as $memberConfiguration) {
@@ -122,12 +201,11 @@ class EventGenerationService implements EventGenerationServiceInterface
         ksort($members);
         $members = array_values($members);
 
+        $assignedEventCount = 0;
         $activeIndex = 0;
         $totalMembers = count($members);
         /* @var MemberConfiguration[] $priorityQueue */
         $priorityQueue = [];
-        /* @var int[] $indexesInPriorityQueue */
-        $indexesInPriorityQueue = [];
         $currentDate = clone($roundRobinConfiguration->startDateTime);
         $dateIntervalAdd = "PT" . $roundRobinConfiguration->lengthInHours . "H";
         while ($currentDate < $roundRobinConfiguration->endDateTime) {
@@ -139,41 +217,40 @@ class EventGenerationService implements EventGenerationServiceInterface
             if (count($priorityQueue) > 0) {
                 $i = 0;
                 for (; $i < count($priorityQueue); $i++) {
-                    if ($memberAllowedCallable($currentDate, $endDate, $priorityQueue[$i])) {
+                    if (
+                        $memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
+                        $conflictCallable($assignedEventCount, $priorityQueue[$i])
+                    ) {
                         $matchMember = $priorityQueue[$i];
                         break;
                     }
                 }
                 if ($matchMember != null) {
-                    unset($indexesInPriorityQueue[$priorityQueue[$i]->id]);
                     unset($priorityQueue[$i]);
                     //reset keys in array (0,1,2,3,4,...)
                     $priorityQueue = array_values($priorityQueue);
                 }
             }
             if ($matchMember == null) {
+                $startIndex = $activeIndex;
                 while (true) {
                     //wrap around index
                     if ($activeIndex >= $totalMembers) {
                         $activeIndex = 0;
                     }
 
-                    if (isset($indexesInPriorityQueue[$members[$activeIndex]->id])) {
-                        $activeIndex++;
-                        continue;
-                    }
-
-                    if ($memberAllowedCallable($currentDate, $endDate, $members[$activeIndex])) {
-                        $matchMember = $members[$activeIndex];
+                    $myMember = $members[$activeIndex];
+                    if ($memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $myMember) &&
+                        $conflictCallable($assignedEventCount, $myMember)) {
+                        $matchMember = $myMember;
                         $activeIndex++;
                         break;
                     } else {
-                        $priorityQueue[] = $members[$activeIndex];
-                        $indexesInPriorityQueue[$members[$activeIndex]->id] = 1;
-                        if (count($priorityQueue) == $totalMembers) {
-                            return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::PRIORITY_QUEUE_FULL);
-                        }
+                        $priorityQueue[] = $myMember;
                         $activeIndex++;
+                        if ($startIndex == $activeIndex) {
+                            return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER);
+                        }
                     }
                 }
             }
@@ -186,6 +263,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $event->startDateTime = $currentDate;
                 $event->endDateTime = $endDate;
                 $generationResult->events[] = $event;
+                $assignedEventCount++;
             }
             $currentDate = clone($endDate);
         }
@@ -196,7 +274,6 @@ class EventGenerationService implements EventGenerationServiceInterface
         $roundRobinResult->memberConfiguration = $members;
         $roundRobinResult->priorityQueue = $priorityQueue;
         $roundRobinResult->activeIndex = $activeIndex;
-        $roundRobinResult->indexesInPriorityQueue = $indexesInPriorityQueue;
         $roundRobinResult->generationResult = $generationResult;
         return $this->returnRoundRobinSuccess($roundRobinResult);
     }
