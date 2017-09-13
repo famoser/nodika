@@ -37,6 +37,11 @@ class Member extends BaseEntity
     private $hasBeenInvited = false;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $invitationHash = null;
+
+    /**
      * @var Person[]
      *
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="members")
@@ -93,7 +98,7 @@ class Member extends BaseEntity
     /**
      * Get persons
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Person[]
      */
     public function getPersons()
     {
@@ -182,5 +187,21 @@ class Member extends BaseEntity
     public function setHasBeenInvited($hasBeenInvited)
     {
         $this->hasBeenInvited = $hasBeenInvited;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvitationHash()
+    {
+        return $this->invitationHash;
+    }
+
+    /**
+     * @param string $invitationHash
+     */
+    public function setInvitationHash($invitationHash)
+    {
+        $this->invitationHash = $invitationHash;
     }
 }

@@ -67,6 +67,12 @@ hash_invalid:
   description: Der aufgerufene Link ist ungültig
   message: Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann.
 
+#displayed if invitation hash from link is invalid
+invitation_hash_invalid:
+  title: Link ungültig
+  description: Der aufgerufene Link ist ungültig
+  message: Dieser Link ist ungültig (haben Sie den Link richtig in den Browser kopiert?).
+
 
 
 #errors

@@ -376,6 +376,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         $pointsPerMemberPoint = $totalPoints / $totalMemberPoints;
 
+
         return true;
     }
 }

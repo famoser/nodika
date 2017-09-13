@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\Base\BaseAccessController;
 use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Member;
 use AppBundle\Entity\Person;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\FrontendUser\FrontendUserLoginType;
@@ -59,6 +60,76 @@ class AccessController extends BaseAccessController
      */
     public function registerAction(Request $request)
     {
+        $registerForm = $this->handleFormDoctrinePersist(
+            $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
+            $request,
+            new Person(),
+            function ($form, $person) {
+                /* @var Person $person */
+                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
+                if ($existingUser != null) {
+                    $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
+                    return $form;
+                } else {
+                    $user = FrontendUser::createFromPerson($person);
+
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($person);
+                    $em->persist($user);
+                    $em->flush();
+
+                    $translate = $this->get("translator");
+                    $registerLink = $this->generateUrl(
+                        "access_register_confirm",
+                        ["confirmationToken" => $user->getResetHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($translate->trans("register.subject", [], "email_access"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($user->getEmail())
+                        ->setBody($translate->trans(
+                            "register.message",
+                            ["%register_link%" => $registerLink],
+                            "email_access"));
+                    $this->get('mailer')->send($message);
+                    return $this->redirectToRoute("access_register_thanks");
+                }
+            }
+        );
+
+        if ($registerForm instanceof RedirectResponse) {
+            return $registerForm;
+        }
+
+        $arr["register_form"] = $registerForm->createView();
+        return $this->render(
+            'access/register.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/invite/{invitationHash}", name="access_invite")
+     * @param Request $request
+     * @param $invitationHash
+     * @return FormInterface|Response
+     */
+    public function inviteAction(Request $request, $invitationHash)
+    {
+        $member = $this->getDoctrine()->getRepository("AppBundle:Member")->findOneBy(["invitationHash" => $invitationHash]);
+        if (!$member instanceof Member) {
+            return $this->render(
+                'access/invitation_hash_invalid.html.twig', []
+            );
+        }
+        if ($this->getUser() instanceof FrontendUser) {
+            //already logged in!
+            foreach ($member->getPersons() as $person) {
+                //if ($person->getId())
+            }
+            if ($member->getPersons()) {}
+        }
         $registerForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
             $request,
