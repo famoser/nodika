@@ -36,12 +36,12 @@ class MemberConfiguration extends BaseMemberConfiguration
         $instance = new static(null);
         $instance->initializeFromMember($member);
         $instance->points = 1;
-        $instance->luckyScore = 0;
+        $instance->luckyScore = 0.0;
         return $instance;
     }
 
     /* @var int $order */
     public $points;
-    /* @var int $order */
+    /* @var double $order */
     public $luckyScore;
 }
