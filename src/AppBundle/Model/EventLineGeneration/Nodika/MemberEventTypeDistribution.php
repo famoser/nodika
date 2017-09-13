@@ -20,13 +20,13 @@ class MemberEventTypeDistribution
     public function __construct($data)
     {
         if ($data != null) {
-            $this->memberConfiguration = new MemberConfiguration($data->memberConfiguration);
-            $this->eventTypeConfiguration = new EventTypeConfiguration($data->eventTypeConfiguration);
+            $this->newMemberConfiguration = new MemberConfiguration($data->memberConfiguration);
+            $this->eventTypeAssigment = new EventTypeConfiguration($data->eventTypeConfiguration);
         }
     }
 
-    /* @var MemberConfiguration $memberConfiguration */
-    public $memberConfiguration;
-    /* @var EventTypeConfiguration $eventTypeConfiguration */
-    public $eventTypeConfiguration;
+    /* @var MemberConfiguration $newMemberConfiguration */
+    public $newMemberConfiguration;
+    /* @var EventTypeConfiguration $eventTypeAssigment */
+    public $eventTypeAssigment;
 }

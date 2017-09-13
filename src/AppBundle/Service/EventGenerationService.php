@@ -18,7 +18,9 @@ use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
 use AppBundle\Model\EventLineGeneration\Base\BaseMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\GeneratedEvent;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
+use AppBundle\Model\EventLineGeneration\Nodika\EventTypeConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\MemberConfiguration as NMemberConfiguration;
+use AppBundle\Model\EventLineGeneration\Nodika\MemberEventTypeDistribution;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration as RRMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
@@ -38,6 +40,12 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /* @var Session $session */
     private $session;
+
+    /* the accuracy of double comparision at critical points */
+    const ACCURACY_THRESHOLD = 0.0001;
+
+    /* the random accuracy used. must be a valid input for random_int. */
+    const RANDOM_ACCURACY = 1000;
 
     public function __construct($doctrine, $translator, $session)
     {
@@ -332,6 +340,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         }
 
+        //count day types
         $weekdayCount = 0;
         $saturdayCount = 0;
         $sundayCount = 0;
@@ -363,11 +372,12 @@ class EventGenerationService implements EventGenerationServiceInterface
             $currentDate->add(new \DateInterval($dateIntervalAdd));
         }
 
-        $eventTypeConfiguration = $nodikaConfiguration->eventTypeConfiguration;
-        $totalPoints = $holidayCount * $eventTypeConfiguration->holiday;
-        $totalPoints += $sundayCount * $eventTypeConfiguration->sunday;
-        $totalPoints += $saturdayCount * $eventTypeConfiguration->saturday;
-        $totalPoints += $weekdayCount * $eventTypeConfiguration->weekday;
+        //count total points
+        $eventTypeAssignment = $nodikaConfiguration->eventTypeConfiguration;
+        $totalPoints = $holidayCount * $eventTypeAssignment->holiday;
+        $totalPoints += $sundayCount * $eventTypeAssignment->sunday;
+        $totalPoints += $saturdayCount * $eventTypeAssignment->saturday;
+        $totalPoints += $weekdayCount * $eventTypeAssignment->weekday;
 
         $totalMemberPoints = 0;
         foreach ($enabledMembers as $enabledMember) {
@@ -376,7 +386,173 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         $pointsPerMemberPoint = $totalPoints / $totalMemberPoints;
 
+        //initialize partiesArray to distribute days with the bucket algorithm
+        $partiesArray = [];
+        $distributedDaysArray = [];
+        foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
+            $partiesArray[$memberConfiguration->id] = $pointsPerMemberPoint * $memberConfiguration->points;
+            $partiesArray[$memberConfiguration->id] += $this->convertFromLuckyScore($totalPoints, $memberConfiguration->luckyScore);
+            $distributedDaysArray[$memberConfiguration->id] = [];
+            $distributedDaysArray[$memberConfiguration->id][0] = 0;
+            $distributedDaysArray[$memberConfiguration->id][1] = 0;
+            $distributedDaysArray[$memberConfiguration->id][2] = 0;
+            $distributedDaysArray[$memberConfiguration->id][3] = 0;
+        }
+
+        //distribute days to parties
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->holiday, 3);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->sunday, 2);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->saturday, 1);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->weekday, 0);
+
+        //create configurations
+        $nodikaConfiguration->memberEventTypeDistribution = [];
+        foreach ($enabledMembers as $enabledMember) {
+            $memberEventTypeDistribution = new MemberEventTypeDistribution(null);
+            $member = clone($enabledMember);
+            $member->points = $partiesArray[$enabledMember->id];
+            $member->luckyScore = $this->convertToLuckyScore($totalPoints, $member->points);
+            $memberEventTypeDistribution->newMemberConfiguration = $enabledMember;
+
+            $eventTypeAssignment = new EventTypeConfiguration(null);
+            $eventTypeAssignment->holiday = $distributedDaysArray[$enabledMember->id][3];
+            $eventTypeAssignment->sunday = $distributedDaysArray[$enabledMember->id][2];
+            $eventTypeAssignment->saturday = $distributedDaysArray[$enabledMember->id][1];
+            $eventTypeAssignment->weekday = $distributedDaysArray[$enabledMember->id][0];
+            $memberEventTypeDistribution->eventTypeAssigment = $eventTypeAssignment;
+
+            $nodikaConfiguration->memberEventTypeDistribution[] = $memberEventTypeDistribution;
+        }
 
         return true;
+    }
+
+    /**
+     * creates a lucky score
+     *
+     * @param $totalPoints
+     * @param $reachedPoints
+     * @return double
+     */
+    private function convertToLuckyScore($totalPoints, $reachedPoints)
+    {
+        return ($reachedPoints / $totalPoints) * 100.0;
+    }
+
+    /**
+     * creates a lucky score
+     *
+     * @param double $totalPoints
+     * @param double $luckyScore
+     * @return int
+     */
+    private function convertFromLuckyScore($totalPoints, $luckyScore)
+    {
+        $realScore = $luckyScore / 100.0;
+        return $totalPoints * $realScore;
+    }
+
+    /**
+     * distribute the days to the members
+     *
+     * @param array $partiesArray is an array of the form (int => double) (target points per member)
+     * @param array $distributedDaysArray is an array of the form (int => (int => int)) (distributed dayKey => dayCount per member)
+     * @param double $dayValue the value of this day for $distributedPointsArray calculation
+     * @param int $dayKey the key of this day used in $distributedDaysArray
+     */
+    private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayKey)
+    {
+        //get holiday assignment
+        $bucketAssignment = $this->bucketsAlgorithm($partiesArray, $dayValue);
+        //add points to $distributedPointsArray
+        foreach ($bucketAssignment as $bucketId => $memberId) {
+            $partiesArray[$memberId] -= $dayValue;
+            $distributedDaysArray[$memberId][$dayKey] += 1;
+        }
+    }
+
+    /**
+     * the buckets algorithm puts the parties into equal size buckets
+     * according to the share of one party into the bucket it secures that bucket with that probability
+     * the parties are distributed to the buckets to be in as few buckets as possible
+     *
+     * @param array $parties is an array of the form (int => double)
+     * @param int $bucketsCount the number of buckets to distribute
+     * @return array is an array of the form (int => int)
+     */
+    private function bucketsAlgorithm($parties, $bucketsCount)
+    {
+        //prepare parties (and sort by size)
+        $sizes = [];
+        $totalSize = 0;
+        foreach ($parties as $partyId => $partySize) {
+            $sizes[$partySize][] = $partyId;
+            $totalSize += $partySize;
+        }
+        ksort($sizes);
+
+        //prepare buckets
+        $bucketSize = $totalSize / $bucketsCount;
+        $remainingBucketSizes = [];
+        $bucketMembers = [];
+        for ($i = 0; $i < $bucketsCount; $i++) {
+            $remainingBucketSizes[$i] = $bucketSize;
+            $bucketMembers[$i] = [];
+        }
+
+        //distribute parties to buckets
+        foreach ($sizes as $partySize => $parties) {
+            foreach ($parties as $party) {
+                $myPartSize = $partySize;
+                while ($myPartSize > static::ACCURACY_THRESHOLD) {
+                    //find biggest remaining bucket
+                    $biggestRemaining = 0;
+                    $biggestRemainingIndex = 0;
+                    for ($i = 0; $i < $bucketsCount; $i++) {
+                        if ($biggestRemaining < $remainingBucketSizes[$i]) {
+                            $biggestRemainingIndex = $i;
+                            $biggestRemaining = $remainingBucketSizes[$i];
+                        }
+                    }
+
+                    if ($biggestRemaining > $myPartSize) {
+                        $biggestRemaining -= $myPartSize;
+                        $remainingBucketSizes[$biggestRemainingIndex] = $biggestRemaining;
+                        $myPartSize = 0;
+                    } else {
+                        $myPartSize -= $biggestRemaining;
+                        $remainingBucketSizes[$biggestRemainingIndex] = 0;
+                    }
+                    $bucketMembers[$i][$party] = $biggestRemaining;
+                }
+            }
+        }
+
+        //choose winner per bucket
+        $winnerPerBucket = [];
+        foreach ($bucketMembers as $bucketIndex => $members) {
+            if (count($members) == 1) {
+                //fully filled out!
+                reset($members);
+                $winnerPerBucket[$bucketIndex] = key($members);
+            }
+            //we need to choose randomly!
+            $randomValue = random_int(0, static::RANDOM_ACCURACY);
+            asort($members);
+            foreach ($members as $memberId => $memberPart) {
+                $bucketPercentage = $memberPart / $bucketSize;
+                //convert to int on RANDOM_ACCURACY scala. +0.5 because of rounding
+                $memberValue = (int)($bucketPercentage * static::RANDOM_ACCURACY + 0.5);
+
+                //set this as the winner so we have a match for sure
+                $winnerPerBucket[$bucketIndex] = $memberId;
+
+                //smaller/equal cause it starts at 0
+                if ($memberValue <= $randomValue) {
+                    break;
+                }
+            }
+        }
+        return $winnerPerBucket;
     }
 }
