@@ -8,3 +8,4 @@ entity:
 id: Id
 persons: Zugänge
 has_been_invited: Einladung versandt
+email: E-Mail

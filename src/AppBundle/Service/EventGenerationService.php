@@ -441,9 +441,9 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         //distribute days to parties
         $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->holiday, $holidayCount, 3);
-        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->sunday, $sundayCount,2);
-        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->saturday, $saturdayCount,1);
-        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->weekday, $weekdayCount,0);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->sunday, $sundayCount, 2);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->saturday, $saturdayCount, 1);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->weekday, $weekdayCount, 0);
 
         //create configurations
         $nodikaConfiguration->memberEventTypeDistributions = [];
@@ -620,22 +620,62 @@ class EventGenerationService implements EventGenerationServiceInterface
         $members = [];
         foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
             if ($memberConfiguration->isEnabled) {
-                $members[] = $memberConfiguration;
+                $members[$memberConfiguration->id] = $memberConfiguration;
             }
         }
 
+        /* @var EventTypeConfiguration $eventTypeDistributions */
+        $eventTypeDistributions = [];
+        foreach ($nodikaConfiguration->memberEventTypeDistributions as $memberEventTypeDistribution) {
+            $eventTypeDistributions[$memberEventTypeDistribution->newMemberConfiguration->id] = clone($memberEventTypeDistribution->eventTypeAssignment);
+        }
+
+        /*
+         * todo:
+         * do generation!
+         * create ideal stack, then traverse it, possibly repairing events in the past?
+         */
 
 
+        $holidays = [];
+        foreach ($nodikaConfiguration->holidays as $holiday) {
+            $holidays[(new \DateTime($holiday->format("d.m.Y")))->getTimestamp()] = 1;
+        }
+
+        $startDateTime = clone($nodikaConfiguration->startDateTime);
+        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
+        $assignedEventCount = 0;
+        while ($startDateTime < $nodikaConfiguration->endDateTime) {
+            $day = new \DateTime($startDateTime->format("d.m.Y"));
+            $endDate = clone($startDateTime);
+            $endDate->add(new \DateInterval($dateIntervalAdd));
+
+            if (isset($holidays[$day->getTimestamp()])) {
+                //holiday
+            } else {
+                $dayOfWeek = $day->format('N');
+                if ($dayOfWeek == 7) {
+                    //sunday
+                } else if ($dayOfWeek == 6) {
+                    //saturday
+                } else {
+                    //weekday
+                }
+            }
+
+            $startDateTime->add(new \DateInterval($dateIntervalAdd));
+            $assignedEventCount++;
+        }
 
         $assignedEventCount = 0;
         $activeIndex = 0;
         $totalMembers = count($members);
         /* @var NMemberConfiguration[] $priorityQueue */
         $priorityQueue = [];
-        $currentDate = clone($nodikaConfiguration->startDateTime);
+        $startDateTime = clone($nodikaConfiguration->startDateTime);
         $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
-        while ($currentDate < $nodikaConfiguration->endDateTime) {
-            $endDate = clone($currentDate);
+        while ($startDateTime < $nodikaConfiguration->endDateTime) {
+            $endDate = clone($startDateTime);
             $endDate->add(new \DateInterval($dateIntervalAdd));
             //check if something in priority queue
             /* @var NMemberConfiguration $matchMember */
@@ -644,7 +684,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $i = 0;
                 for (; $i < count($priorityQueue); $i++) {
                     if (
-                        $memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
+                        $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
                         $conflictCallable($assignedEventCount, $priorityQueue[$i])
                     ) {
                         $matchMember = $priorityQueue[$i];
@@ -666,7 +706,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                     }
 
                     $myMember = $members[$activeIndex];
-                    if ($memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $myMember) &&
+                    if ($memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $myMember) &&
                         $conflictCallable($assignedEventCount, $myMember)) {
                         $matchMember = $myMember;
                         $activeIndex++;
@@ -686,16 +726,16 @@ class EventGenerationService implements EventGenerationServiceInterface
             } else {
                 $event = new GeneratedEvent();
                 $event->memberId = $matchMember->id;
-                $event->startDateTime = $currentDate;
+                $event->startDateTime = $startDateTime;
                 $event->endDateTime = $endDate;
                 $generationResult->events[] = $event;
                 $assignedEventCount++;
             }
-            $currentDate = clone($endDate);
+            $startDateTime = clone($endDate);
         }
 
         //prepare RR result
-        $roundRobinResult->endDateTime = $currentDate;
+        $roundRobinResult->endDateTime = $startDateTime;
         $roundRobinResult->lengthInHours = $nodikaConfiguration->lengthInHours;
         $roundRobinResult->memberConfiguration = $members;
         $roundRobinResult->priorityQueue = $priorityQueue;

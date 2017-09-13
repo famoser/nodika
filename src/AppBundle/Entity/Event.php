@@ -33,6 +33,11 @@ class Event extends BaseEntity
     private $startDateTime;
 
     /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isConfirmed;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $endDateTime;
@@ -282,5 +287,21 @@ class Event extends BaseEntity
         $pseudoObject->personId = $this->getPerson() != null ? $this->getPerson()->getId() : null;
         $pseudoObject->tradeTag = $this->getTradeTag();
         return json_encode($pseudoObject);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getisConfirmed()
+    {
+        return $this->isConfirmed;
+    }
+
+    /**
+     * @param mixed $isConfirmed
+     */
+    public function setIsConfirmed($isConfirmed)
+    {
+        $this->isConfirmed = $isConfirmed;
     }
 }
