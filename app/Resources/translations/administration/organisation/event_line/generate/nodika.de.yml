@@ -4,10 +4,11 @@ new:
   description: Generieren Sie Termine mit dem Nodika Algorithmus
   help: >
     Der Nodika Algorithmus basiert auf den Erfahrungen eines grösseren Notfalldienstvereines.
-    Die Grundannahme sind, das nicht alle Mitglieder gleich viel Notfalldienst leisten, und das Termine an Feiertage und Wochenenden anders gewichtet werden sollen wie Termine an Wochentagen.
-    Der Algorithmus ist in zwei Teile unterteilt, der erste Teil ist deterministisch (ergibt also immer das gleiche Resultat mit den gleichen Eingaben) und vergibt die Anzahl Termine an die Mitglieder.
-    Der zweite Teil ist nicht deterministisch, er versucht zufällig den Terminen der Mitglieder konkreten Daten zuzuordnen.
-    Sie definieren in den folgenden Schritten den Zeitraum der Generierung, die teilnehmenden Mitglieder, deren zu leistenden Notfalldienstanteil (mit Punkten; je höher desto mehr) sowie weitere Einstellungen.
+    Die Grundannahme sind das nicht alle Mitglieder gleich viel Notfalldienst leisten, und das Termine an Feiertage und Wochenenden anders gewichtet werden sollen wie Termine an Wochentagen.
+    Der Algorithmus ist in zwei Teile unterteilt:
+    Der erste Teil macht die Terminverteilung, vergibt also die Anzahl Termine an die Mitglieder.
+    Der zweite Teil ordnet die vergebenen Termine konkreten Daten zu.
+    Sie definieren in den folgenden Schritten den Zeitraum der Generierung, die teilnehmenden Mitglieder, deren zu leistenden Anteil sowie weitere Einstellungen.
   new_action: starten
 
 #choose_period page
@@ -68,7 +69,8 @@ distribution_settings:
     Der Startzeitpunkt des Termines bestimmt die Gewichtung des Termines
   holidays: Feiertage
   holidays_description: >
-    Definieren Sie hier welche Daten als Feiertage zählen sollen. Erfassen Sie auf jeder Zeile ein Feiertag im Format dd.mm.yyyy (also z. B. 01.01.2020)
+    Definieren Sie hier welche Daten als Feiertage zählen sollen. Erfassen Sie die Feiertage im Format dd.mm.yyyy (also z. B. 01.01.2020), trennen Sie Feiertage mit einem Komma
+    (also z.B. 01.01.2020, 31.12.2021)
     Die Reihenfolge ist egal.
 
 #distribution_confirm page
@@ -78,11 +80,21 @@ distribution_confirm:
   help: >
     Überprüfen Sie die Terminverteilung. Ist alles so in Ordnung kann mit der Generierung fortgefahren werden.
     Sie werden in den folgenden Schritten nun die Zuordnung der Termine auf konkrete Daten konfigurieren
+  points: Punkte
+  points_description: >
+    Dies ist das Resultat des Algorithmus. Die erste Zahl ist die von Ihnen vergeben Punktzahl,
+    die zweite Zahl ist ein Wert nahe 0 die angibt wieviel Glück der Teilnehmer bei der Zuteilung hatte,
+    die dritte Zahl ist ein relativer Wert der zweiten Zahl der in der nächsten Generierung berücksichtigt wird (Lucky Score)
   continue_action: Weiter
+  random_days: Faire, zufällige Zuteilung
+  random_days_description: >
+    Diese Zuteilung ist so fair wie möglich. Bei Entscheidungen die keinen eindeutigen Ausgang hatten (wie zwei Mitglieder, ein Termin) hat der Algorithmus
+    zufällig ein Mitglied ausgewählt. Sie können diese zufälligen Entscheidungen wiederholen:
+  random_days_retry: Generierung wiederholen
 
 #assignment_settings page
 assignment_settings:
-  title: Terminzuordnung bestätigen
+  title: Terminzuordnung konfigurieren
   description: Konfigurieren Sie die Zuordnung der Termine zu konkreten Daten
   before_data: Bestehende Termine
   before_data_description: >
@@ -91,13 +103,8 @@ assignment_settings:
     Mitglied A mit der ID 98 ist am 29.12. zugeordnet, Mitglied B mit der ID 62 ist am 30.12. zugeordnet und Mitglied c mit der ID 86 am 31.12.
     Dann füllen Sie in die Liste mit 98,62,86 aus.
     Sie können zudem die "0" als Platzhalter verwenden. Möchten Sie also nur den Termin vom Mitglied B definieren dann füllen Sie das Feld mit 62,0 aus
-
-#create_secondary page
-create_secondary:
-  title: Sekundärer Dienst erstellen
-  description: Konfigurieren Sie den sekundären Dienst
-  other_event_line: Termingruppe
-  other_event_line_description: Wählen Sie die Termingruppe aus in der diese Termine gespeichert werden
+  members_table: Mitglieder
+  members_table_description: Eine Tabelle aller Mitglieder mit ihren jeweiligen Ids
 
 #start_generation page
 start_generation:
@@ -122,4 +129,6 @@ confirm_generation:
 #erros
 error:
   member_not_found_anymore: Ein Mitglied das einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Mitglieder
-  date_format_invalid: 'Das Datum %date% ist nicht korrekt formatiert. Bitte formatieren Sie das Datum gemäss dd.mm.YYYY, also zum Beispiel 01.01.1995'
+  date_format_invalid: 'Das Datum %date% ist nicht korrekt formatiert. Bitte formatieren Sie das Datum gemäss dd.mm.yyyy, also zum Beispiel 01.01.1995'
+  member_format_invalid: 'Die bestehenden Termine sind nicht korrekt formatiert (an der Stelle %part%). Bitte stellen Sie sicher das Sie die Ids der Mitglieder als Identifizierung verwenden.'
+  member_not_found: 'Das Mitglied mit der ID %id% wurde nicht gefunden. Bitte stellen Sie sicher das Sie die Ids der Mitglieder als Identifizierung verwenden.'

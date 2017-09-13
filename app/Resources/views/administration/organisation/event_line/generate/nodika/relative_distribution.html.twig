@@ -11,18 +11,28 @@
     <form class="form"
           action="{{ path("administration_organisation_event_line_generate_nodika_relative_distribution", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
           method="post">
-        {% for member in memberConfigurations %}
-            <p>{{ member.name }}</p>
-            <div class="row">
-                <div class="col-m-6">
-                    {{ kitchen_sink.form_field("member_p_" ~ member.id, member.points, "relative_distribution.member_points"|trans ) }}
-                </div>
-                <div class="col-m-6">
-                    {{ kitchen_sink.form_field("member_l_" ~ member.id, member.luckyScore, "relative_distribution.member_lucky_score"|trans ) }}
-                </div>
-            </div>
-        {% endfor %}
-
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                <th>{{ "relative_distribution.member_points"|trans }}</th>
+                <th>{{ "relative_distribution.member_lucky_score"|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for member in memberConfigurations %}
+                <tr>
+                    <td>{{ member.name }}</td>
+                    <td>
+                        {{ kitchen_sink.form_field("member_p_" ~ member.id, member.points ) }}
+                    </td>
+                    <td>
+                        {{ kitchen_sink.form_field("member_l_" ~ member.id, member.luckyScore) }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>
 {% endblock %}

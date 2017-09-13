@@ -11,8 +11,6 @@ namespace AppBundle\Controller\Administration\Organisation\EventLine\Generate;
 
 
 use AppBundle\Controller\Administration\Organisation\EventLine\Generate\Base\BaseGenerationController;
-use AppBundle\Controller\Base\BaseController;
-use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Member;
@@ -106,6 +104,7 @@ class NodikaController extends BaseGenerationController
                 $config->lengthInHours = $entity->lengthInHours;
                 $config->startDateTime = $entity->startDateTime;
                 $config->endDateTime = $entity->endDateTime;
+                $config->memberEventTypeDistributionFilled = false;
                 $this->saveDistributionConfiguration($generation, $config);
                 return $this->redirectToRoute(
                     "administration_organisation_event_line_generate_nodika_no_conflicts",
@@ -153,9 +152,12 @@ class NodikaController extends BaseGenerationController
                     if (isset($eventLineConfigurations[$eventLineId])) {
                         $eventLineConfigurations[$eventLineId]->isEnabled = true;
                     }
+                } else if ($key == "conflict_puffer_in_hours") {
+                    $config->conflictPufferInHours = $value;
                 }
             }
             $config->eventLineConfiguration = $eventLineConfigurations;
+            $config->memberEventTypeDistributionFilled = false;
             $this->saveDistributionConfiguration($generation, $config);
             return $this->redirectToRoute(
                 "administration_organisation_event_line_generate_nodika_choose_members",
@@ -203,6 +205,7 @@ class NodikaController extends BaseGenerationController
                 }
             }
             $config->memberConfigurations = $memberConfigurations;
+            $config->memberEventTypeDistributionFilled = false;
             $this->saveDistributionConfiguration($generation, $config);
             return $this->redirectToRoute(
                 "administration_organisation_event_line_generate_nodika_relative_distribution",
@@ -253,6 +256,7 @@ class NodikaController extends BaseGenerationController
                 }
             }
             $config->memberConfigurations = $memberConfigurations;
+            $config->memberEventTypeDistributionFilled = false;
             $this->saveDistributionConfiguration($generation, $config);
             return $this->redirectToRoute(
                 "administration_organisation_event_line_generate_nodika_distribution_settings",
@@ -307,19 +311,23 @@ class NodikaController extends BaseGenerationController
             }
             $submissionFailure = false;
             foreach ($request->request->all() as $key => $value) {
-                if (strpos($key, "member_p_") === 0) {
-                    $memberId = substr($key, 9); //cut off member_p_
-                    if (isset($memberConfigurations[$memberId])) {
-                        $memberConfigurations[$memberId]->points = $value;
-                    }
-                } else if (strpos($key, "member_l_") === 0) {
-                    $memberId = substr($key, 9); //cut off member_l_
-                    if (isset($memberConfigurations[$memberId])) {
-                        $memberConfigurations[$memberId]->luckyScore = $value;
-                    }
+                if ($key === "event_type_weekday") {
+                    $config->eventTypeConfiguration->weekday = $value;
+                } else if ($key === "event_type_saturday") {
+                    $config->eventTypeConfiguration->saturday = $value;
+                } else if ($key === "event_type_sunday") {
+                    $config->eventTypeConfiguration->sunday = $value;
+                } else if ($key === "event_type_holiday") {
+                    $config->eventTypeConfiguration->holiday = $value;
                 } else if ($key == "holiday_string") {
                     $holidayString = $value;
-                    $parts = explode(",", $value);
+                    if (trim($value) == "") {
+                        $parts = [];
+                    } elseif (!strpos($value, ",")) {
+                        $parts[] = $value;
+                    } else {
+                        $parts = explode(",", $value);
+                    }
                     $sanitizedParts = [];
                     $foundInvalid = false;
                     foreach ($parts as $part) {
@@ -327,9 +335,9 @@ class NodikaController extends BaseGenerationController
                         //must be of the form dd.mm.yyyy
                         $parts = explode(".", $part);
                         if (!(count($parts) == 3 &&
-                            is_numeric($part[0]) && strlen($part[0]) == 2 &&
-                            is_numeric($part[1]) && strlen($part[1]) == 2 &&
-                            is_numeric($part[2]) && strlen($part[2]) == 4)) {
+                            is_numeric($parts[0]) && strlen($parts[0]) == 2 &&
+                            is_numeric($parts[1]) && strlen($parts[1]) == 2 &&
+                            is_numeric($parts[2]) && strlen($parts[2]) == 4)) {
                             $submissionFailure = true;
                             $foundInvalid = true;
                             $translator = $this->get("translator");
@@ -352,6 +360,7 @@ class NodikaController extends BaseGenerationController
                 }
             }
             $config->memberConfigurations = $memberConfigurations;
+            $config->memberEventTypeDistributionFilled = false;
             $this->saveDistributionConfiguration($generation, $config);
             if (!$submissionFailure) {
                 return $this->redirectToRoute(
@@ -395,6 +404,7 @@ class NodikaController extends BaseGenerationController
 
         $generationService = $this->get("app.event_generation_service");
         $generationService->setEventTypeDistribution($config);
+        $config->memberEventTypeDistributionFilled = true;
         $this->saveDistributionConfiguration($generation, $config);
 
         return $this->redirectToRoute(
@@ -421,8 +431,95 @@ class NodikaController extends BaseGenerationController
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
+        $arr["memberEventTypeDistributions"] = $config->memberEventTypeDistributions;
         return $this->render(
-            'administration/organisation/event_line/generate/nodika/start_generation.html.twig', $arr
+            'administration/organisation/event_line/generate/nodika/distribution_confirm.html.twig', $arr
+        );
+    }
+
+    /**
+     * @Route("/{generation}/assignment_settings", name="administration_organisation_event_line_generate_nodika_assignment_settings")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
+     * @return Response
+     */
+    public function assignmentSettingsAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    {
+        $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
+        $config = $this->getDistributionConfiguration($generation, $organisation);
+
+        $beforeEventsString = "";
+        foreach ($config->beforeEvents as $beforeEvent) {
+            $beforeEventsString .= $beforeEvent . ", ";
+        }
+        if (strlen($beforeEventsString) > 0) {
+            $beforeEventsString = substr($beforeEventsString, 0, -2);
+        }
+
+        if ($request->getMethod() == "POST") {
+            $translator = $this->get("translator");
+            /* @var MemberConfiguration[] $memberConfigurations */
+            $memberConfigurations = [];
+            foreach ($config->memberConfigurations as $memberConfiguration) {
+                $memberConfigurations[$memberConfiguration->id] = $memberConfiguration;
+            }
+            $submissionFailure = false;
+            foreach ($request->request->all() as $key => $value) {
+                if ($key == "before_events") {
+                    $beforeEventsString = $value;
+                    if (trim($value) == "") {
+                        $parts = [];
+                    } elseif (!strpos($value, ",")) {
+                        $parts[] = $value;
+                    } else {
+                        $parts = explode(",", $value);
+                    }
+                    $sanitizedParts = [];
+                    $foundInvalid = false;
+                    foreach ($parts as $part) {
+                        $part = trim($part);
+                        if (!is_numeric($part)) {
+                            $submissionFailure = true;
+                            $foundInvalid = true;
+                            $this->displayError($translator->trans("error.member_format_invalid", ["%part%" => $part], "nodika"));
+                        } else {
+                            $sanitizedParts[] = $part;
+                        }
+                    }
+                    if (!$foundInvalid) {
+                        foreach ($sanitizedParts as $sanitizedPart) {
+                            if ($sanitizedPart != 0 && !isset($memberConfigurations[$sanitizedPart])) {
+                                $this->displayError($translator->trans("error.member_not_found", ["%id%" => $sanitizedPart], "nodika"));
+                                $submissionFailure = true;
+                                $foundInvalid = true;
+                                break;
+                            }
+                        }
+                        if (!$foundInvalid) {
+                            $config->beforeEvents = $sanitizedParts;
+                        }
+                    }
+                }
+            }
+            $this->saveDistributionConfiguration($generation, $config);
+            if (!$submissionFailure) {
+                return $this->redirectToRoute(
+                    "administration_organisation_event_line_generate_nodika_start_generation",
+                    ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
+                );
+            }
+        }
+
+        $arr = [];
+        $arr["organisation"] = $organisation;
+        $arr["eventLine"] = $eventLine;
+        $arr["eventLineGeneration"] = $generation;
+        $arr["memberConfigurations"] = $config->memberConfigurations;
+        $arr["beforeEventsString"] = $beforeEventsString;
+        return $this->render(
+            'administration/organisation/event_line/generate/nodika/assignment_settings.html.twig', $arr
         );
     }
 
@@ -545,7 +642,7 @@ class NodikaController extends BaseGenerationController
             );
         } else if ($resp == EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE) {
             return $this->redirectToRoute(
-                "administration_organisation_event_line_generate_round_robin_choose_members",
+                "administration_organisation_event_line_generate_nodika_choose_members",
                 ["organisation" => $generation->getEventLine()->getOrganisation()->getId(), "eventLine" => $generation->getEventLine()->getId(), "generation" => $generation->getId()]
             );
         } else {
@@ -565,7 +662,7 @@ class NodikaController extends BaseGenerationController
     {
         $configuration = new NodikaConfiguration(json_decode($generation->getDistributionConfigurationJson()));
         $this->addMemberConfiguration($configuration, $organisation);
-        $this->addEventLineConfiguration($configuration, $organisation);
+        $this->addEventLineConfiguration($configuration, $organisation, $generation);
         $this->saveDistributionConfiguration($generation, $configuration);
         $this->fillHolidays($configuration);
         return $configuration;
@@ -604,7 +701,6 @@ class NodikaController extends BaseGenerationController
         foreach ($organisation->getMembers() as $member) {
             $memberById[$member->getId()] = $member;
         }
-        $maxOrder = 1;
 
         $removeKeys = [];
         foreach ($configuration->memberConfigurations as $key => $value) {
@@ -617,13 +713,21 @@ class NodikaController extends BaseGenerationController
 
         }
 
+        $memberChanges = false;
+
         foreach ($removeKeys as $removeKey) {
+            $memberChanges = true;
             unset($configuration->memberConfigurations[$removeKey]);
         }
 
         foreach ($memberById as $item) {
-            $newConfig = MemberConfiguration::createFromMember($item, ++$maxOrder);
+            $memberChanges = true;
+            $newConfig = MemberConfiguration::createFromMember($item);
             $configuration->memberConfigurations[] = $newConfig;
+        }
+
+        if ($memberChanges) {
+            $configuration->memberEventTypeDistributionFilled = false;
         }
     }
 
@@ -640,7 +744,7 @@ class NodikaController extends BaseGenerationController
                 foreach ($yearlyHolyDays as $yearlyHolyDay) {
                     if ($yearlyHolyDay->getTimestamp() < $configuration->startDateTime->getTimestamp()) {
                         //too early
-                    } else if ($yearlyHolyDay > $configuration->endDateTime->getTimestamp()) {
+                    } else if ($yearlyHolyDay->getTimestamp() > $configuration->endDateTime->getTimestamp()) {
                         //too late; get back
                         return;
                     } else {

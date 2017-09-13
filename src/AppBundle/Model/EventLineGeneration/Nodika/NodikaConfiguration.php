@@ -20,14 +20,18 @@ class NodikaConfiguration extends BaseConfiguration
     public function __construct($data)
     {
         $this->memberConfigurations = [];
-        $this->memberEventTypeDistribution = [];
+        $this->memberEventTypeDistributions = [];
         $this->holidays = [];
+        $this->beforeEvents = [];
         if ($data != null) {
             foreach ($data->memberConfigurations as $key => $item) {
                 $this->memberConfigurations[] = new MemberConfiguration($item);
             }
-            foreach ($data->memberEventTypeDistribution as $key => $item) {
-                $this->memberEventTypeDistribution[] = new MemberEventTypeDistribution($item);
+            foreach ($data->beforeEvents as $item) {
+                $this->beforeEvents[] = $item;
+            }
+            foreach ($data->memberEventTypeDistributions as $key => $item) {
+                $this->memberEventTypeDistributions[] = new MemberEventTypeDistribution($item);
             }
             foreach ($data->holidays as $holiday) {
                 $this->holidays[] = new \DateTime($holiday->date);
@@ -37,6 +41,7 @@ class NodikaConfiguration extends BaseConfiguration
         } else {
             $this->eventTypeConfiguration = new EventTypeConfiguration(null);
             $this->holidaysFilled = false;
+            $this->memberEventTypeDistributionFilled = false;
         }
         parent::__construct($data);
     }
@@ -47,12 +52,18 @@ class NodikaConfiguration extends BaseConfiguration
     /* @var EventTypeConfiguration $eventTypeConfiguration */
     public $eventTypeConfiguration;
 
-    /* @var MemberEventTypeDistribution[] $memberEventTypeDistribution */
-    public $memberEventTypeDistribution;
+    /* @var MemberEventTypeDistribution[] $memberEventTypeDistributions */
+    public $memberEventTypeDistributions;
 
     /* @var boolean $holidaysFilled */
     public $holidaysFilled;
 
+    /* @var boolean $memberEventTypeDistributionFilled */
+    public $memberEventTypeDistributionFilled;
+
     /* @var \DateTime[] $holidays */
     public $holidays;
+
+    /* @var int[] $beforeEvents */
+    public $beforeEvents;
 }

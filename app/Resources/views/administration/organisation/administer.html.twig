@@ -14,7 +14,7 @@
     <p>
         {{ "administer.member_overview_description"|trans }}
     </p>
-    {{ members.show_table(organisation) }}
+    {{ members.show_table(organisation, organisation.members) }}
     <p>
         <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">{{ "administer.member_administration_action"|trans }}</a>
     </p>
@@ -30,7 +30,7 @@
     <p>
         {{ "administer.event_line_overview_description"|trans }}
     </p>
-    {{ event_lines.show_table(organisation) }}
+    {{ event_lines.show_table(organisation, organisation.eventLines) }}
     <p>
         <a href="{{ path("administration_organisation_event_lines", {"organisation" : organisation.id}) }}">{{ "administer.event_line_administration_action"|trans }}</a>
     </p>

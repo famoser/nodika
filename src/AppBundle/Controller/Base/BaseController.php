@@ -145,7 +145,10 @@ class BaseController extends Controller
     protected function getPerson()
     {
         $user = $this->getUser();
-        return $user->getPerson();
+        if ($user instanceof FrontendUser) {
+            return $user->getPerson();
+        }
+        return null;
     }
 
     /**

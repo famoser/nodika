@@ -46,13 +46,16 @@ class BaseGenerationController extends BaseController
     /**
      * @param BaseConfiguration $configuration
      * @param Organisation $organisation
+     * @param EventLineGeneration $eventLineGeneration
      */
-    protected function addEventLineConfiguration(BaseConfiguration $configuration, Organisation $organisation)
+    protected function addEventLineConfiguration(BaseConfiguration $configuration, Organisation $organisation, EventLineGeneration $eventLineGeneration)
     {
         /* @var EventLine[] $eventLineById */
         $eventLineById = [];
-        foreach ($organisation->getEventLines() as $member) {
-            $eventLineById[$member->getId()] = $member;
+        foreach ($organisation->getEventLines() as $eventLine) {
+            if ($eventLine->getId() != $eventLineGeneration->getEventLine()->getId()) {
+                $eventLineById[$eventLine->getId()] = $eventLine;
+            }
         }
 
 
@@ -83,8 +86,8 @@ class BaseGenerationController extends BaseController
             if ($item->isEnabled && !$item->eventsSet) {
                 if (count($eventLineById) == 0) {
                     //cache event lines again
-                    foreach ($organisation->getEventLines() as $member) {
-                        $eventLineById[$member->getId()] = $member;
+                    foreach ($organisation->getEventLines() as $eventLine) {
+                        $eventLineById[$eventLine->getId()] = $eventLine;
                     }
                 }
                 //set events

@@ -12,6 +12,7 @@ namespace AppBundle\Service\Interfaces;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
+use AppBundle\Model\EventLineGeneration\Nodika\NodikaOutput;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 
@@ -26,6 +27,16 @@ interface EventGenerationServiceInterface
      * @return RoundRobinOutput
      */
     public function generateRoundRobin(RoundRobinConfiguration $roundRobinConfiguration, $memberAllowedCallable);
+
+    /**
+     * tries to generate the events
+     * returns true if successful
+     *
+     * @param NodikaConfiguration $nodikaConfiguration
+     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @return NodikaOutput
+     */
+    public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable);
 
     /**
      * persist the events associated with this generation in the database

@@ -17,9 +17,11 @@
     </div>
 {% endmacro %}
 
-{% macro form_field(name, value, description, type = "text", classes = "") %}
+{% macro form_field(name, value, description = null, type = "text", classes = "") %}
     <div class="form-group {{ classes }}">
-        <label class="control-label" for="{{ name }}">{{ description }}</label>
+        {% if description is not null %}
+            <label class="control-label" for="{{ name }}">{{ description }}</label>
+        {% endif %}
         <input class="form-control" type="{{ type }}" name="{{ name }}" id="{{ name }}"
                 {% if type == "checkbox" %}
             {% if value %}checked="checked"{% endif %}
@@ -29,12 +31,12 @@
     </div>
 {% endmacro %}
 
-{% macro textarea_form_field(name, value, description, type = "text", classes = "") %}
+{% macro textarea_form_field(name, value, description = null, type = "text", classes = "") %}
     <div class="form-group {{ classes }}">
-        <label class="control-label" for="{{ name }}">{{ description }}</label>
-        <textarea class="form-control" name="{{ name }}" id="{{ name }}">
-                {{ value }}
-        </textarea>
+        {% if description is not null %}
+            <label class="control-label" for="{{ name }}">{{ description }}</label>
+        {% endif %}
+        <textarea class="form-control" name="{{ name }}" id="{{ name }}">{{ value }}</textarea>
     </div>
 {% endmacro %}
 

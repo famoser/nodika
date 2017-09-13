@@ -41,7 +41,7 @@ class BaseMemberConfiguration
     {
         $this->id = $member->getId();
         $this->name = $member->getName();
-        $this->isEnabled = false;
+        $this->isEnabled = true;
     }
 
     /* @var int $id */

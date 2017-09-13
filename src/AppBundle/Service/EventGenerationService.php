@@ -12,6 +12,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Enum\EventGenerationServicePersistResponse;
+use AppBundle\Enum\NodikaStatusCode;
 use AppBundle\Enum\RoundRobinStatusCode;
 use AppBundle\Helper\StaticMessageHelper;
 use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
@@ -22,6 +23,7 @@ use AppBundle\Model\EventLineGeneration\Nodika\EventTypeConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\MemberConfiguration as NMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\MemberEventTypeDistribution;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
+use AppBundle\Model\EventLineGeneration\Nodika\NodikaOutput;
 use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration as RRMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
@@ -90,6 +92,25 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
+     * @param NodikaOutput $nodikaOutput
+     * @param int $status
+     * @return NodikaOutput
+     */
+    private function returnNodikaError(NodikaOutput $nodikaOutput, $status)
+    {
+        $this->displayError(
+            $this->translator->trans(
+                NodikaStatusCode::getTranslation($status),
+                [],
+                NodikaStatusCode::getTranslationDomainStatic()
+            )
+        );
+
+        $nodikaOutput->nodikaStatusCode = $status;
+        return $nodikaOutput;
+    }
+
+    /**
      * @param RoundRobinOutput $roundRobinResult
      * @return RoundRobinOutput
      */
@@ -106,6 +127,25 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         $roundRobinResult->roundRobinStatusCode = $status;
         return $roundRobinResult;
+    }
+
+    /**
+     * @param NodikaOutput $nodikaOutput
+     * @return NodikaOutput
+     */
+    private function returnNodikaSuccess(NodikaOutput $nodikaOutput)
+    {
+        $status = NodikaStatusCode::SUCCESSFUL;
+        $this->displaySuccess(
+            $this->translator->trans(
+                NodikaStatusCode::getTranslation($status),
+                [],
+                NodikaStatusCode::getTranslationDomainStatic()
+            )
+        );
+
+        $nodikaOutput->nodikaStatusCode = $status;
+        return $nodikaOutput;
     }
 
     /**
@@ -400,17 +440,17 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         //distribute days to parties
-        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->holiday, 3);
-        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->sunday, 2);
-        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->saturday, 1);
-        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->weekday, 0);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->holiday, $holidayCount, 3);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->sunday, $sundayCount,2);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->saturday, $saturdayCount,1);
+        $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->weekday, $weekdayCount,0);
 
         //create configurations
-        $nodikaConfiguration->memberEventTypeDistribution = [];
+        $nodikaConfiguration->memberEventTypeDistributions = [];
         foreach ($enabledMembers as $enabledMember) {
             $memberEventTypeDistribution = new MemberEventTypeDistribution(null);
             $member = clone($enabledMember);
-            $member->points = $partiesArray[$enabledMember->id];
+            $member->endScore = $partiesArray[$enabledMember->id];
             $member->luckyScore = $this->convertToLuckyScore($totalPoints, $member->points);
             $memberEventTypeDistribution->newMemberConfiguration = $enabledMember;
 
@@ -419,9 +459,9 @@ class EventGenerationService implements EventGenerationServiceInterface
             $eventTypeAssignment->sunday = $distributedDaysArray[$enabledMember->id][2];
             $eventTypeAssignment->saturday = $distributedDaysArray[$enabledMember->id][1];
             $eventTypeAssignment->weekday = $distributedDaysArray[$enabledMember->id][0];
-            $memberEventTypeDistribution->eventTypeAssigment = $eventTypeAssignment;
+            $memberEventTypeDistribution->eventTypeAssignment = $eventTypeAssignment;
 
-            $nodikaConfiguration->memberEventTypeDistribution[] = $memberEventTypeDistribution;
+            $nodikaConfiguration->memberEventTypeDistributions[] = $memberEventTypeDistribution;
         }
 
         return true;
@@ -458,12 +498,13 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param array $partiesArray is an array of the form (int => double) (target points per member)
      * @param array $distributedDaysArray is an array of the form (int => (int => int)) (distributed dayKey => dayCount per member)
      * @param double $dayValue the value of this day for $distributedPointsArray calculation
+     * @param int $dayCount the amount of
      * @param int $dayKey the key of this day used in $distributedDaysArray
      */
-    private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayKey)
+    private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayCount, $dayKey)
     {
         //get holiday assignment
-        $bucketAssignment = $this->bucketsAlgorithm($partiesArray, $dayValue);
+        $bucketAssignment = $this->bucketsAlgorithm($partiesArray, $dayCount);
         //add points to $distributedPointsArray
         foreach ($bucketAssignment as $bucketId => $memberId) {
             $partiesArray[$memberId] -= $dayValue;
@@ -523,7 +564,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                         $myPartSize -= $biggestRemaining;
                         $remainingBucketSizes[$biggestRemainingIndex] = 0;
                     }
-                    $bucketMembers[$i][$party] = $biggestRemaining;
+                    $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
                 }
             }
         }
@@ -554,5 +595,112 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         }
         return $winnerPerBucket;
+    }
+
+    /**
+     * tries to generate the events
+     * returns true if successful
+     *
+     * @param NodikaConfiguration $nodikaConfiguration
+     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @return NodikaOutput
+     * @throws \Exception
+     */
+    public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable)
+    {
+        $generationResult = new GenerationResult(null);
+        $generationResult->generationDateTime = new \DateTime();
+
+        $roundRobinResult = new NodikaOutput();
+        $roundRobinResult->version = 1;
+
+        $conflictCallable = $this->buildConflictBuffer($nodikaConfiguration);
+
+        /* @var NMemberConfiguration[] $members */
+        $members = [];
+        foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
+            if ($memberConfiguration->isEnabled) {
+                $members[] = $memberConfiguration;
+            }
+        }
+
+
+
+
+        $assignedEventCount = 0;
+        $activeIndex = 0;
+        $totalMembers = count($members);
+        /* @var NMemberConfiguration[] $priorityQueue */
+        $priorityQueue = [];
+        $currentDate = clone($nodikaConfiguration->startDateTime);
+        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
+        while ($currentDate < $nodikaConfiguration->endDateTime) {
+            $endDate = clone($currentDate);
+            $endDate->add(new \DateInterval($dateIntervalAdd));
+            //check if something in priority queue
+            /* @var NMemberConfiguration $matchMember */
+            $matchMember = null;
+            if (count($priorityQueue) > 0) {
+                $i = 0;
+                for (; $i < count($priorityQueue); $i++) {
+                    if (
+                        $memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
+                        $conflictCallable($assignedEventCount, $priorityQueue[$i])
+                    ) {
+                        $matchMember = $priorityQueue[$i];
+                        break;
+                    }
+                }
+                if ($matchMember != null) {
+                    unset($priorityQueue[$i]);
+                    //reset keys in array (0,1,2,3,4,...)
+                    $priorityQueue = array_values($priorityQueue);
+                }
+            }
+            if ($matchMember == null) {
+                $startIndex = $activeIndex;
+                while (true) {
+                    //wrap around index
+                    if ($activeIndex >= $totalMembers) {
+                        $activeIndex = 0;
+                    }
+
+                    $myMember = $members[$activeIndex];
+                    if ($memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $myMember) &&
+                        $conflictCallable($assignedEventCount, $myMember)) {
+                        $matchMember = $myMember;
+                        $activeIndex++;
+                        break;
+                    } else {
+                        $priorityQueue[] = $myMember;
+                        $activeIndex++;
+                        if ($startIndex == $activeIndex) {
+                            return $this->returnNodikaError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER);
+                        }
+                    }
+                }
+            }
+
+            if ($matchMember == null) {
+                throw new \Exception("cannot happen!");
+            } else {
+                $event = new GeneratedEvent();
+                $event->memberId = $matchMember->id;
+                $event->startDateTime = $currentDate;
+                $event->endDateTime = $endDate;
+                $generationResult->events[] = $event;
+                $assignedEventCount++;
+            }
+            $currentDate = clone($endDate);
+        }
+
+        //prepare RR result
+        $roundRobinResult->endDateTime = $currentDate;
+        $roundRobinResult->lengthInHours = $nodikaConfiguration->lengthInHours;
+        $roundRobinResult->memberConfiguration = $members;
+        $roundRobinResult->priorityQueue = $priorityQueue;
+        $roundRobinResult->activeIndex = $activeIndex;
+        $roundRobinResult->generationResult = $generationResult;
+        return $this->returnNodikaSuccess($roundRobinResult);
     }
 }

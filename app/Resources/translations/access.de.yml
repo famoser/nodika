@@ -73,11 +73,15 @@ invitation_hash_invalid:
   description: Der aufgerufene Link ist ungültig
   message: Dieser Link ist ungültig (haben Sie den Link richtig in den Browser kopiert?).
 
+invite:
+  messages:
+    already_part_of_member: 'Sie sind bereits als Zugang des Mitglieds "%member%" der Organisation "%organisation%" registriert'
+    now_part_of_member: 'Sie wurden erfolgreich als Zugang des Mitglieds "%member%" der Organisation "%organisation%" hinzugefügt'
 
 
 #errors
 error:
-  email_already_registered: Diese E-Mail ist bereits vergeben
+  email_already_registered: Diese E-Mail ist bereits vergeben. Loggen Sie sich ein oder setzen Sie das Passwort zurück.
   passwords_do_not_match: Die Passwörter stimmen nicht überein
   new_password_not_valid: Das Passwort ist nicht sicher genug. Bitte verwenden Sie mindestens ein 8 stelliges Passwort
   login_failed: Login fehlgeschlagen

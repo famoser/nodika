@@ -11,8 +11,6 @@ namespace AppBundle\Controller\Administration\Organisation\EventLine\Generate;
 
 
 use AppBundle\Controller\Administration\Organisation\EventLine\Generate\Base\BaseGenerationController;
-use AppBundle\Controller\Base\BaseController;
-use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Member;
@@ -173,6 +171,8 @@ class RoundRobinController extends BaseGenerationController
                     if (isset($eventLineConfigurations[$eventLineId])) {
                         $eventLineConfigurations[$eventLineId]->isEnabled = true;
                     }
+                } else if ($key == "conflict_puffer_in_hours") {
+                    $config->conflictPufferInHours = $value;
                 }
             }
             $config->eventLineConfiguration = $eventLineConfigurations;
@@ -431,7 +431,7 @@ class RoundRobinController extends BaseGenerationController
     {
         $configuration = new RoundRobinConfiguration(json_decode($generation->getDistributionConfigurationJson()));
         $this->addMemberConfiguration($configuration, $organisation);
-        $this->addEventLineConfiguration($configuration, $organisation);
+        $this->addEventLineConfiguration($configuration, $organisation, $generation);
         if (!$configuration->randomOrderMade) {
             $this->randomizeMemberOrder($configuration);
             $configuration->randomOrderMade = true;

@@ -19,8 +19,6 @@ use AppBundle\Form\FrontendUser\FrontendUserResetType;
 use AppBundle\Form\FrontendUser\FrontendUserSetPasswordType;
 use AppBundle\Form\Person\PersonType;
 use AppBundle\Helper\HashHelper;
-use AppBundle\Helper\StaticMessageHelper;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,28 +70,9 @@ class AccessController extends BaseAccessController
                     return $form;
                 } else {
                     $user = FrontendUser::createFromPerson($person);
+                    $this->fastSave($person, $user);
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($person);
-                    $em->persist($user);
-                    $em->flush();
-
-                    $translate = $this->get("translator");
-                    $registerLink = $this->generateUrl(
-                        "access_register_confirm",
-                        ["confirmationToken" => $user->getResetHash()],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("register.subject", [], "email_access"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($user->getEmail())
-                        ->setBody($translate->trans(
-                            "register.message",
-                            ["%register_link%" => $registerLink],
-                            "email_access"));
-                    $this->get('mailer')->send($message);
+                    $this->sendRegisterConfirmEmail($user);
                     return $this->redirectToRoute("access_register_thanks");
                 }
             }
@@ -123,47 +102,60 @@ class AccessController extends BaseAccessController
                 'access/invitation_hash_invalid.html.twig', []
             );
         }
+
+        //add user if already registered
         if ($this->getUser() instanceof FrontendUser) {
+            $translator = $this->get("translator");
+            $found = false;
+
+            $person = $this->getPerson();
             //already logged in!
-            foreach ($member->getPersons() as $person) {
-                //if ($person->getId())
+            foreach ($member->getPersons() as $memberPerson) {
+                if ($memberPerson->getId() == $person->getId()) {
+                    $this->displayInfo(
+                        $translator->trans(
+                            "invite.messages.already_part_of_member",
+                            ["%member%" => $member->getName(), "%organisation%" => $member->getOrganisation()->getName()],
+                            "access"
+                        )
+                    );
+                    $found = true;
+                    break;
+                }
             }
-            if ($member->getPersons()) {}
+            if (!$found) {
+                $person->addMember($member);
+                $member->addPerson($person);
+                $this->fastSave($member, $person);
+
+                $this->displayInfo(
+                    $translator->trans(
+                        "invite.messages.now_part_of_member",
+                        ["%member%" => $member->getName(), "%organisation%" => $member->getOrganisation()->getName()],
+                        "access"
+                    )
+                );
+            }
+            return $this->redirectToRoute("dashboard_index");
         }
         $registerForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
             $request,
             new Person(),
-            function ($form, $person) {
+            function ($form, $person) use ($member) {
                 /* @var Person $person */
                 $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
                 if ($existingUser != null) {
                     $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
                     return $form;
                 } else {
+                    $person->addMember($member);
+                    $member->addPerson($person);
+
                     $user = FrontendUser::createFromPerson($person);
+                    $this->fastSave($user, $person, $member);
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($person);
-                    $em->persist($user);
-                    $em->flush();
-
-                    $translate = $this->get("translator");
-                    $registerLink = $this->generateUrl(
-                        "access_register_confirm",
-                        ["confirmationToken" => $user->getResetHash()],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("register.subject", [], "email_access"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($user->getEmail())
-                        ->setBody($translate->trans(
-                            "register.message",
-                            ["%register_link%" => $registerLink],
-                            "email_access"));
-                    $this->get('mailer')->send($message);
+                    $this->sendRegisterConfirmEmail($user);
                     return $this->redirectToRoute("access_register_thanks");
                 }
             }
@@ -177,6 +169,29 @@ class AccessController extends BaseAccessController
         return $this->render(
             'access/register.html.twig', $arr
         );
+    }
+
+    /**
+     * @param FrontendUser $user
+     */
+    private function sendRegisterConfirmEmail(FrontendUser $user)
+    {
+        $translate = $this->get("translator");
+        $registerLink = $this->generateUrl(
+            "access_register_confirm",
+            ["confirmationToken" => $user->getResetHash()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($translate->trans("register.subject", [], "email_access"))
+            ->setFrom($this->getParameter("mailer_email"))
+            ->setTo($user->getEmail())
+            ->setBody($translate->trans(
+                "register.message",
+                ["%register_link%" => $registerLink],
+                "email_access"));
+        $this->get('mailer')->send($message);
     }
 
     /**
@@ -271,7 +286,12 @@ class AccessController extends BaseAccessController
             $request,
             $confirmationToken,
             function ($form, $entity) {
-                return $this->redirectToRoute("administration_organisation_new");
+                /* @var FrontendUser $entity */
+                if ($entity->getPerson()->getMembers()->count() == 0) {
+                    return $this->redirectToRoute("administration_organisation_new");
+                } else {
+                    return $this->redirectToRoute("dashboard_index");
+                }
             },
             function ($form) {
                 /* @var FormInterface $form */
