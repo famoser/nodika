@@ -15,6 +15,7 @@ use AppBundle\Enum\EventGenerationServicePersistResponse;
 use AppBundle\Enum\NodikaStatusCode;
 use AppBundle\Enum\RoundRobinStatusCode;
 use AppBundle\Helper\StaticMessageHelper;
+use AppBundle\Model\EventGenerationService\IdealQueueMember;
 use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
 use AppBundle\Model\EventLineGeneration\Base\BaseMemberConfiguration;
 use AppBundle\Model\EventLineGeneration\GeneratedEvent;
@@ -624,7 +625,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         }
 
-        /* @var EventTypeConfiguration $eventTypeDistributions */
+        /* @var EventTypeConfiguration[] $eventTypeDistributions */
         $eventTypeDistributions = [];
         foreach ($nodikaConfiguration->memberEventTypeDistributions as $memberEventTypeDistribution) {
             $eventTypeDistributions[$memberEventTypeDistribution->newMemberConfiguration->id] = clone($memberEventTypeDistribution->eventTypeAssignment);
@@ -636,6 +637,46 @@ class EventGenerationService implements EventGenerationServiceInterface
          * create ideal stack, then traverse it, possibly repairing events in the past?
          */
 
+        $idealQueue = clone($nodikaConfiguration->beforeEvents);
+        /* @var IdealQueueMember[] $idealQueueMembers */
+        $idealQueueMembers = [];
+        foreach ($members as $member) {
+            $idealQueueMember = new IdealQueueMember();
+            $idealQueueMember->id = $member->id;
+            $idealQueueMember->totalEventCount =
+                $eventTypeDistributions[$member->id]->weekday +
+                $eventTypeDistributions[$member->id]->saturday +
+                $eventTypeDistributions[$member->id]->sunday +
+                $eventTypeDistributions[$member->id]->holiday;
+            foreach ($idealQueue as $item) {
+                if ($item == $member->id) {
+                    $idealQueueMember->totalEventCount++;
+                    $idealQueueMember->doneEventCount++;
+                }
+            }
+            $idealQueueMember->setPartDone();
+            $idealQueueMembers[] = $idealQueueMember;
+        }
+
+        //cut off beforeEvents again
+        $idealQueueMembers = [];
+        while (true) {
+            //find lowest part done
+            $lowestPartDone = 1;
+            $lowestIndex = 0;
+            foreach ($idealQueueMembers as $key => $value) {
+                if ($lowestPartDone > $value->partDone) {
+                    $lowestPartDone = $value->partDone;
+                    $lowestIndex = $key;
+                }
+            }
+
+            $myMember = $idealQueueMembers[$lowestIndex];
+
+            $idealQueueMembers[] = $myMember->id;
+            $myMember->doneEventCount++;
+            $myMember->partDone;
+        }
 
         $holidays = [];
         foreach ($nodikaConfiguration->holidays as $holiday) {
