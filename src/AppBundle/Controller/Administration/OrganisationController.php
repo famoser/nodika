@@ -304,7 +304,19 @@ class OrganisationController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $this->getDoctrine()->getRepository("AppBundle:ApplicationEvent")->registerEventOccurred($organisation, ApplicationEventType::VISITED_SETTINGS);
+        $organisationSetting = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($organisation);
 
+        $form = $this->handleCrudForm(
+            $request,
+            $organisationSetting,
+            SubmitButtonType::EDIT
+        );
+
+        if ($form instanceof Response) {
+            return $form;
+        }
+
+        $arr["settings_form"] = $form->createView();
         $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/settings.html.twig',

@@ -85,7 +85,9 @@ messages:
 settings:
   title: Einstellungen
   description: Konfigurieren Sie Ihre Anwendung
-  coming: Einstellungen werden in Kürze verfügbar
+  can_confirm_event_before_days_description: Der früheste mögliche Zeitpunkt wann ein Mitglied einen ihm zuegwiesenen Termin bestätigen kann
+  must_confirm_event_before_days_description: Der früheste mögliche Zeitpunkt wann ein Mitglied einen ihm zuegwiesenen Termin bestätigen kann. Danach wird der Administrator informiert, sowie ein Warnungsemail an das Mitglied gesendet.
+  send_confirm_event_email_days_description: Wie oft (in Tagen) eine Aufforderung an die Mitglieder versandt wird das sie wieder ihre Termine bestätigen sollen
 
 #members/invite page
 members_invite:

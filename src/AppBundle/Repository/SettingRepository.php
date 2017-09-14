@@ -2,6 +2,11 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\FrontendUser;
+use AppBundle\Entity\Person;
+use AppBundle\Entity\Setting;
+use AppBundle\Enum\SettingKey;
+
 /**
  * PersonRepository
  *
@@ -10,5 +15,26 @@ namespace AppBundle\Repository;
  */
 class SettingRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param FrontendUser $user
+     * @param $settingKey
+     * @return Setting
+     */
+    public function getByUser(FrontendUser $user, $settingKey)
+    {
+        $result = $this->findOneBy(["frontendUser" => $user->getId(), "key" => $settingKey]);
+        if ($result != null) {
+            return $result;
+        }
+        $result = new Setting();
+        $result->setFrontendUser($user);
+        $result->setKey($settingKey);
+        $result->setContent(SettingKey::getDefaultContent($settingKey));
 
+        $em = $this->getEntityManager();
+        $em->persist($result);
+        $em->flush();
+
+        return $result;
+    }
 }

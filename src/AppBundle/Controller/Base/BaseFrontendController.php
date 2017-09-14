@@ -13,6 +13,7 @@ use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
+use AppBundle\Enum\SettingKey;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Helper\CsvFileHelper;
 use AppBundle\Helper\NamingHelper;
@@ -37,16 +38,13 @@ class BaseFrontendController extends BaseController
             $session = $this->get("session");
             if ($session->has(SessionHelper::ACTIVE_MEMBER_ID)) {
                 $activeMemberId = $session->get(SessionHelper::ACTIVE_MEMBER_ID);
-                foreach ($person->getMembers() as $member) {
-                    if ($member->getId() == $activeMemberId) {
-                        return $member;
-                    }
-                }
             } else {
-                if ($person->getMembers()->count() > 0) {
-                    $activeMember = $person->getMembers()->first();
-                    $session->set(SessionHelper::ACTIVE_MEMBER_ID, $activeMember->getId());
-                    return $activeMember;
+                $setting = $this->getDoctrine()->getRepository("AppBundle:Setting")->getByUser($this->getUser(), SettingKey::ACTIVE_MEMBER_ID);
+                $activeMemberId = $setting->getContent();
+            }
+            foreach ($person->getMembers() as $member) {
+                if ($member->getId() == $activeMemberId) {
+                    return $member;
                 }
             }
         }
@@ -62,5 +60,8 @@ class BaseFrontendController extends BaseController
     {
         $session = $this->get("session");
         $session->set(SessionHelper::ACTIVE_MEMBER_ID, $member->getId());
+        $setting = $this->getDoctrine()->getRepository("AppBundle:Setting")->getByUser($this->getUser(), SettingKey::ACTIVE_MEMBER_ID);
+        $setting->setContent($member->getId());
+        $this->fastSave($setting);
     }
 }
