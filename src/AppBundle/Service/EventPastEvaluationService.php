@@ -93,7 +93,7 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
      * @param $eventChangeType
      * @return EventPast
      */
-    public function createEventPast(Person $changePerson, Event $oldEvent, Event $newEvent, $eventChangeType)
+    public function createEventPast(Person $changePerson, $oldEvent, Event $newEvent, $eventChangeType)
     {
         $eventPast = new EventPast();
         $eventPast->setEvent($newEvent);

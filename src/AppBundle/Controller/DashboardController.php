@@ -35,8 +35,14 @@ class DashboardController extends BaseFrontendController
             $arr["member"] = $member;
         }
 
+
+        $arr["person"] = $this->getPerson();
         $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
-        $arr["my_organisations"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
+        $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
+        unset($all[array_search($member->getOrganisation(), $all)]);
+        if (count($all) > 0) {
+            $arr["change_organisations"] = $all;
+        }
         return $this->render("dashboard/index.html.twig", $arr);
     }
 

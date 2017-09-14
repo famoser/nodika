@@ -226,7 +226,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         return function ($currentEventCount, $member) use ($conflictBuffer) {
             /* @var BaseMemberConfiguration $member */
-            return in_array($member->id, $conflictBuffer[$currentEventCount]);
+            return !in_array($member->id, $conflictBuffer[$currentEventCount]);
         };
     }
 
@@ -293,10 +293,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             if ($matchMember == null) {
                 $startIndex = $activeIndex;
                 while (true) {
-                    //wrap around index
-                    if ($activeIndex >= $totalMembers) {
-                        $activeIndex = 0;
-                    }
 
                     $myMember = $members[$activeIndex];
                     if ($memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $myMember) &&
@@ -307,10 +303,18 @@ class EventGenerationService implements EventGenerationServiceInterface
                     } else {
                         $priorityQueue[] = $myMember;
                         $activeIndex++;
+                        //wrap around index
+                        if ($activeIndex >= $totalMembers) {
+                            $activeIndex = 0;
+                        }
                         if ($startIndex == $activeIndex) {
                             return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER);
                         }
                     }
+                }
+                //wrap around index
+                if ($activeIndex >= $totalMembers) {
+                    $activeIndex = 0;
                 }
             }
 

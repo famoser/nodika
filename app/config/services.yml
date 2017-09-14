@@ -54,7 +54,7 @@ services:
 
     app.event_generation_service:
         class:  AppBundle\Service\EventGenerationService
-        arguments: ["@doctrine","@translator","@session"]
+        arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
 
     listener.entity.remove:
         class: AppBundle\Listener\DoctrinePreFlushListener

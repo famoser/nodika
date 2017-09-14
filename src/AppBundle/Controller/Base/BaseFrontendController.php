@@ -47,6 +47,11 @@ class BaseFrontendController extends BaseController
                     return $member;
                 }
             }
+            if ($person->getMembers()->count() > 0) {
+                $member = $person->getMembers()->first();
+                $this->setMember($member);
+                return $member;
+            }
         }
         return null;
     }

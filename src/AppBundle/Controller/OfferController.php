@@ -159,7 +159,6 @@ class OfferController extends BaseFrontendController
 
 
         $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
-
         $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
         $arr["myEventLineModels"] = $repo->findEventLineModels($ownMember->getOrganisation(), $threshHold, $eventOffer->getOfferedByMember(), $eventOffer->getOfferedByPerson());
         $arr["theirEventLineModels"] = $repo->findEventLineModels($ownMember->getOrganisation(), $threshHold, $eventOffer->getOfferedToMember(), $eventOffer->getOfferedToPerson());
@@ -195,6 +194,44 @@ class OfferController extends BaseFrontendController
     private function canCloseOffer(Member $member, Person $person, EventOffer $eventOffer)
     {
         return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_OPEN;
+    }
+
+    /**
+     * @param EventOffer $eventOffer
+     * @param $remove
+     * @return bool
+     */
+    private function hasInvalidEventOfferEntries(EventOffer $eventOffer, $remove)
+    {
+        $settingRepo = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting");
+        $ownMember = $this->getMember();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
+        $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
+        $found = false;
+        foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
+            if ($eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedByPerson() ||
+                $eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedToPerson()) {
+                if ($eventOfferEntry->getEvent()->getStartDateTime() > $threshHold) {
+                    $found = true;
+                    if ($remove) {
+                        $em->remove($eventOfferEntry);
+                    }
+                }
+            } else {
+                $found = true;
+                if ($remove) {
+                    $em->remove($eventOfferEntry);
+                }
+            }
+        }
+        if ($remove) {
+            $em->flush();
+        }
+
+        return $found;
     }
 
     /**

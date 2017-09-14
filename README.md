@@ -1,6 +1,13 @@
 Introduction
 ======
 
+todos:
+ - send email on offer accept
+ - implement invoice system
+ - view event past
+ - assign events to persons
+ - finish hasInvalidEventOfferEntries
+
 project build with symfony. Dependecy managers:
  - composer for php
  - bower for css/ js

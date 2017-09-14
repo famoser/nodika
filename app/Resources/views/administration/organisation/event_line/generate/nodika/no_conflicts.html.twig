@@ -12,9 +12,13 @@
     <form class="form"
           action="{{ path("administration_organisation_event_line_generate_nodika_no_conflicts", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
           method="post">
-        {% for eventLine in eventLineConfigurations %}
-            {{ kitchen_sink.toggle_form_field("event_line_" ~ eventLine.id, eventLine.isEnabled, eventLine.name) }}
-        {% endfor %}
+        {% if eventLineConfigurations|length == 0 %}
+            <p>{{ "no_conflicts.no_other_event_lines"|trans }}</p>
+        {% else %}
+            {% for eventLine in eventLineConfigurations %}
+                {{ kitchen_sink.toggle_form_field("event_line_" ~ eventLine.id, eventLine.isEnabled, eventLine.name) }}
+            {% endfor %}
+        {% endif %}
         {{ kitchen_sink.form_field("conflict_puffer_in_hours", conflictPufferInHours, "no_conflicts.conflict_puffer"|trans) }}
         {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>

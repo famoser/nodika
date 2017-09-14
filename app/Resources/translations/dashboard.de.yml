@@ -3,8 +3,10 @@ index:
   description: Alles Wichtige auf einem Blick
   administer_organisations: Meine Organisationen verwalten
   administer_organisations_description: Sie sind Administrator folgender Organisationen und können diese verwalten
-  my_organisations: Meine Organisationen
-  my_organisations_description: Sie sind Mitglied folgender Organisationen
+  change_organisation: Organisation wechseln
+  change_organisation_description: Sie sind Teil mehrerer Organisationen. Hier können Sie zu den anderen wechseln
+  your_profil: Ihr Profil
+  your_profil_description: So sind Sie authentifiziert
   no_event_lines: Noch keine Termingruppen
   to_organisation_administration: Organisation administrieren
   are_you_administrator: Sind Sie Adminstrator?

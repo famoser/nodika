@@ -138,10 +138,12 @@ class AccessController extends BaseAccessController
             }
             return $this->redirectToRoute("dashboard_index");
         }
-        $registerForm = $this->handleFormDoctrinePersist(
+        $person = new Person();
+        $person->setEmail($member->getEmail());
+        $inviteForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
             $request,
-            new Person(),
+            $person,
             function ($form, $person) use ($member) {
                 /* @var Person $person */
                 $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
@@ -161,13 +163,15 @@ class AccessController extends BaseAccessController
             }
         );
 
-        if ($registerForm instanceof RedirectResponse) {
-            return $registerForm;
+        if ($inviteForm instanceof RedirectResponse) {
+            return $inviteForm;
         }
 
-        $arr["register_form"] = $registerForm->createView();
+        $arr["member"] = $member;
+        $arr["organisation"] = $member->getOrganisation();
+        $arr["invite_form"] = $inviteForm->createView();
         return $this->render(
-            'access/register.html.twig', $arr
+            'access/invite.html.twig', $arr
         );
     }
 

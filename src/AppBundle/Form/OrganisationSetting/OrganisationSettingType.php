@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Event;
+namespace AppBundle\Form\OrganisationSetting;
 
 /**
  * Created by PhpStorm.
@@ -37,7 +37,7 @@ class OrganisationSettingType extends BaseCrudAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builderArray = ["translation_domain" => "organisation_setting"];
+        $builderArray = ["translation_domain" => "entity_organisation_setting"];
         $builder->add(
             "canConfirmEventBeforeDays",
             IntegerType::class,
@@ -54,6 +54,12 @@ class OrganisationSettingType extends BaseCrudAbstractType
             "sendConfirmEventEmailDays",
             IntegerType::class,
             $builderArray + NamingHelper::propertyToTranslationForBuilder("sendConfirmEventEmailDays")
+        );
+
+        $builder->add(
+            "tradeEventDays",
+            IntegerType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("tradeEventDays")
         );
 
         $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);

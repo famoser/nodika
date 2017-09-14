@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/organisation")
@@ -207,7 +208,7 @@ class OrganisationController extends BaseController
                 $member->setInvitationHash(HashHelper::createNewResetHash());
                 $variableMapping[$member->getId()] = [];
                 $variableMapping[$member->getId()]["LINK_REPLACE"] =
-                    $this->generateUrl("access_invite", ["invitationHash" => $member->getInvitationHash()]);
+                    $this->generateUrl("access_invite", ["invitationHash" => $member->getInvitationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
                 $variableMapping[$member->getId()]["MEMBER_NAME_REPLACE"] = $member->getName();
                 $variableMapping[$member->getId()]["FREE_1_REPLACE"] = "";
                 $variableMapping[$member->getId()]["FREE_2_REPLACE"] = "";

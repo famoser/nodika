@@ -29,6 +29,7 @@ no_conflicts:
     Ein Konflikt ist dann, wenn das selbe Mitglied zur gleichen Zeit mehrere Termine übernehmen soll
   no_match_warning: Zuordnung vielleicht unmöglich
   no_match_warning_description: Je nach Einstellung hier kann es sein das die Zurodnung nicht mehr möglich ist!
+  no_other_event_lines: Sie haben keine anderen Termingruppen.
   conflict_puffer: Puffer
   conflict_puffer_description: >
     Mindestabstand in Stunden zwischen Terminen der anderen Termingruppen und den generierten Terminen.

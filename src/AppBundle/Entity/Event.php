@@ -35,7 +35,7 @@ class Event extends BaseEntity
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $isConfirmed;
+    private $isConfirmed = false;
 
     /**
      * @ORM\Column(type="datetime")
@@ -292,7 +292,7 @@ class Event extends BaseEntity
     /**
      * @return mixed
      */
-    public function getisConfirmed()
+    public function getIsConfirmed()
     {
         return $this->isConfirmed;
     }

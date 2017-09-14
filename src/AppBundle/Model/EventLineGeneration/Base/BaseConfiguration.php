@@ -29,7 +29,7 @@ class BaseConfiguration
             //default values
             $this->startDateTime = new \DateTime();
             $this->endDateTime = new \DateTime('now + 1 year');
-            $this->lengthInHours = 12;
+            $this->lengthInHours = 24;
             $this->eventLineConfiguration = [];
         }
     }

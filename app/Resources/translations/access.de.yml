@@ -29,6 +29,22 @@ register:
     Die einmalige Registrierungsgebühr beträgt %register_fee% CHF und die Jahresgebühr ist %yearly_fee% CHF.
   register_action: Erstellen Sie zuerst einen persönlichen Account
 
+#invite page
+invite:
+  title: Willkomen auf nodika!
+  description: Registrieren Sie sich um die Einladung anzunehmen
+  register_form_header: Registrierungsformular
+  account_register: Zugang für %member% registrieren
+  account_register_description: 'Willkommen auf nodika! Erstellen Sie hier einen Zugang für Ihr Mitglied %member% der Organisation %organisation%'
+  register: Registrieren
+  register_description: >
+    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen.
+    Danach können Sie die Webseite in vollem Umfang nutzen
+  personal_data: Persönliche Daten
+  personal_data_description: >
+    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
+    Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
+
 #register/thanks page
 register_thanks:
   title: Vielen Dank für die Registrierung
