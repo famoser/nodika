@@ -1,0 +1,32 @@
+index:
+  title: Tauschen
+  description: Termine tauschen
+  author_of_offers: Von Ihnen gestellte Tauschanfragen
+  open_offers: Offene Anfragen
+  accepted_offers: Von Ihnen akzeptierten Tauschanfragen
+
+new:
+  title: Neue Tauschanfrage erstellen
+  description: erstellen Sie eine neue Tauschanfrage
+  choose_person: Wählen Sie den Empfänger / die Empfängerin Ihrer Tauschanfrage aus
+
+choose_events:
+  title: Termine auswählen
+  description: Wählen Sie dei Termine aus die Sie tauschen möchten
+  your_events: Ihre Termine
+  your_events_description: Die von Ihnen zu tauschenden Termine
+  their_events: Termine des Empfängers / der Empfängerin
+  their_events_description: Die zu tauschenden Termine des Empfängers / der Empfängerin
+  message: Nachricht
+  message_description: Verfassen Sie eine kurze Nachricht an den Empfänger / die Empfängerin der Tauschanfrage
+
+review_offer:
+  title: Tauschanfrage akzeptieren
+  description: Diese Termine tauschen
+  your_events_for_receiver: Ihre alten Termine
+  your_events_for_receiver_description: Diese Termine wird Ihr Tauschpartner / Ihre Tauschpartnerin neu übernehmen
+  their_events_for_you: Ihre neuen Termine
+  their_events_for_you_description: Diese Termine werden neu Sie übernehmen
+  accept_offer: Tauschanfrage annehmen
+  reject_offer: Tauschanfrage ablehnen
+  close_offer: Tauschanfrage zurückziehen

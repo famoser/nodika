@@ -45,11 +45,12 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
      * @param Organisation $organisation
      * @param \DateTime $dateTime
      * @param Member|null $filterMember
+     * @param null $filterPerson
      * @param string $comparator
      * @param int $maxResults
      * @return EventLineModel[]
      */
-    public function findEventLineModels(Organisation $organisation, \DateTime $dateTime, $filterMember = null, $comparator = ">", $maxResults = 30)
+    public function findEventLineModels(Organisation $organisation, \DateTime $dateTime, $filterMember = null, $filterPerson = null, $comparator = ">", $maxResults = 30)
     {
         $res = [];
         foreach ($organisation->getEventLines() as $eventLine) {
@@ -67,6 +68,11 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
             if ($filterMember instanceof Member) {
                 $qb->andWhere("m = :member")
                     ->setParameter('member', $filterMember);
+            }
+
+            if ($filterPerson instanceof Person) {
+                $qb->andWhere("p = :person")
+                    ->setParameter('person', $filterPerson);
             }
 
             $qb->setParameter('startDateTime', $dateTime)

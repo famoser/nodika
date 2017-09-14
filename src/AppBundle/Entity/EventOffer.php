@@ -26,24 +26,29 @@ class EventOffer extends BaseEntity
     use IdTrait;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
      */
+    private $createDateTime;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $openDateTime;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $closeDateTime;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $status = OfferStatus::OFFER_OPEN;
+    private $status = OfferStatus::OFFER_CREATING;
 
     /**
      * @var Member
@@ -115,6 +120,30 @@ class EventOffer extends BaseEntity
     /**
      * Set openDateTime
      *
+     * @param \DateTime $createDateTime
+     *
+     * @return EventOffer
+     */
+    public function setCreateDateTime($createDateTime)
+    {
+        $this->createDateTime = $createDateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get openDateTime
+     *
+     * @return \DateTime
+     */
+    public function getCreateDateTime()
+    {
+        return $this->createDateTime;
+    }
+
+    /**
+     * Set closeDateTime
+     *
      * @param \DateTime $openDateTime
      *
      * @return EventOffer
@@ -127,37 +156,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get openDateTime
+     * Get closeDateTime
      *
      * @return \DateTime
      */
     public function getOpenDateTime()
     {
         return $this->openDateTime;
-    }
-
-    /**
-     * Set closeDateTime
-     *
-     * @param \DateTime $closeDateTime
-     *
-     * @return EventOffer
-     */
-    public function setCloseDateTime($closeDateTime)
-    {
-        $this->closeDateTime = $closeDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get closeDateTime
-     *
-     * @return \DateTime
-     */
-    public function getCloseDateTime()
-    {
-        return $this->closeDateTime;
     }
 
     /**
@@ -307,7 +312,7 @@ class EventOffer extends BaseEntity
     /**
      * Get eventOfferEntries
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|EventOfferEntry[]
      */
     public function getEventOfferEntries()
     {
@@ -322,5 +327,21 @@ class EventOffer extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getDescription();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCloseDateTime()
+    {
+        return $this->closeDateTime;
+    }
+
+    /**
+     * @param \DateTime $closeDateTime
+     */
+    public function setCloseDateTime($closeDateTime)
+    {
+        $this->closeDateTime = $closeDateTime;
     }
 }

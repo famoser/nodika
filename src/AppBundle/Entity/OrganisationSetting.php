@@ -61,6 +61,13 @@ class OrganisationSetting extends BaseEntity
     private $sendConfirmEventEmailDays = 30;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $tradeEventDays = 60;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -194,5 +201,21 @@ class OrganisationSetting extends BaseEntity
     public function setLastConfirmEventEmailSend($lastConfirmEventEmailSend)
     {
         $this->lastConfirmEventEmailSend = $lastConfirmEventEmailSend;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTradeEventDays()
+    {
+        return $this->tradeEventDays;
+    }
+
+    /**
+     * @param int $tradeEventDays
+     */
+    public function setTradeEventDays($tradeEventDays)
+    {
+        $this->tradeEventDays = $tradeEventDays;
     }
 }

@@ -41,7 +41,7 @@ class DashboardController extends BaseFrontendController
     }
 
     /**
-     * @Route("/mine", name="dashboard_index")
+     * @Route("/mine", name="dashboard_mine")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

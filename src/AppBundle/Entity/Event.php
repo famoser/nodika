@@ -158,11 +158,11 @@ class Event extends BaseEntity
     /**
      * Set member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      *
      * @return Event
      */
-    public function setMember(\AppBundle\Entity\Member $member = null)
+    public function setMember(Member $member = null)
     {
         $this->member = $member;
 
@@ -172,7 +172,7 @@ class Event extends BaseEntity
     /**
      * Get member
      *
-     * @return \AppBundle\Entity\Member
+     * @return Member
      */
     public function getMember()
     {
