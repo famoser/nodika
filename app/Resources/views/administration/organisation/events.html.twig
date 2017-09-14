@@ -18,13 +18,13 @@
         </p>
     {% else %}
         {% for eventLineModel in eventLineModels %}
+            <h3>
+                {{ eventLineModel.eventLine.name }}
+            </h3>
+            <p>{{ eventLineModel.eventLine.description }}</p>
             {% if eventLineModel.events|length == 0 %}
                 <p>{{ "events.no_events"|trans }}</p>
             {% else %}
-                <h3>
-                    {{ eventLineModel.eventLine.name }}
-                </h3>
-                <p>{{ eventLineModel.eventLine.description }}</p>
                 {{ events.show_table(organisation, eventLineModel.eventLine, eventLineModel.events) }}
             {% endif %}
             <p>

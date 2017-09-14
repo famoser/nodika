@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Event;
+use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
 use AppBundle\Enum\ApplicationEventType;
@@ -43,28 +44,36 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
     /**
      * @param Organisation $organisation
      * @param \DateTime $dateTime
+     * @param Member|null $filterMember
      * @param string $comparator
      * @param int $maxResults
      * @return EventLineModel[]
      */
-    public function findEventLineModels(Organisation $organisation, \DateTime $dateTime, $comparator = ">", $maxResults = 30)
+    public function findEventLineModels(Organisation $organisation, \DateTime $dateTime, $filterMember = null, $comparator = ">", $maxResults = 30)
     {
         $res = [];
         foreach ($organisation->getEventLines() as $eventLine) {
             $eventLineModel = new EventLineModel();
             $eventLineModel->eventLine = $eventLine;
-            $eventLineModel->events = $this->getEntityManager()->createQueryBuilder()
+            $qb = $this->getEntityManager()->createQueryBuilder()
                 ->select("e")
                 ->from("AppBundle:Event", "e")
                 ->join("e.eventLine", "el")
                 ->leftJoin("e.member", "m")
                 ->leftJoin("e.person", "p")
                 ->where("e.endDateTime $comparator :startDateTime")
-                ->andWhere("el = :eventLine")
-                ->setParameter('startDateTime', $dateTime)
+                ->andWhere("el = :eventLine");
+
+            if ($filterMember instanceof Member) {
+                $qb->andWhere("m = :member")
+                    ->setParameter('member', $filterMember);
+            }
+
+            $qb->setParameter('startDateTime', $dateTime)
                 ->setParameter('eventLine', $eventLine)
-                ->setMaxResults($maxResults)
-                ->getQuery()
+                ->setMaxResults($maxResults);
+
+            $eventLineModel->events = $qb->getQuery()
                 ->getResult();
             $res[] = $eventLineModel;
         }

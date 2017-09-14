@@ -322,11 +322,11 @@ class OrganisationController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $eventLines = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, new \DateTime(), ">");
+        $eventLineModels = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, new \DateTime());
         $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/events.html.twig',
-            $arr + ["eventLineModels" => $eventLines]
+            $arr + ["eventLineModels" => $eventLineModels]
         );
     }
 }

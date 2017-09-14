@@ -1,0 +1,81 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+{% import "macros/events.html.twig" as events %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "dashboard" %}
+
+{% block primary_content %}
+    <h2>{{ "entity.plural"|trans({}, "entity_event") }}</h2>
+
+    {% if eventLineModels|length == 0 %}
+        <p>
+            {{ "index.no_event_lines"|trans }}
+        </p>
+    {% else %}
+        {% for eventLineModel in eventLineModels %}
+            <h3>
+                {{ eventLineModel.eventLine.name }}
+            </h3>
+            <p>{{ eventLineModel.eventLine.description }}</p>
+
+            {% if eventLineModel.events|length == 0 %}
+                <p>{{ "index.no_events"|trans }}</p>
+            {% else %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+                        <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+                        <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                        <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>
+                                {{ event.startDateTime|myDateTime }}
+                            </td>
+                            <td>
+                                {{ event.endDateTime|myDateTime }}
+                            </td>
+                            <td>
+                                {{ event.member }}
+                            </td>
+                            <td>
+                                {{ event.person }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block secondary_content %}
+    <h3>{{ "index.my_organisations"|trans }}</h3>
+    <p>
+        {{ "index.my_organisations_description"|trans }}
+        <br/>
+        {% for organisation in leading_organisations %}
+            <a href="{{ path("administration_organisation_view", {"organisation" : organisation.id}) }}">{{ organisation.name }}</a>
+            <br/>
+        {% endfor %}
+    </p>
+    {% if leading_organisations|length > 0 %}
+        <h3>{{ "index.administer_organisations"|trans }}</h3>
+        <p>
+            {{ "index.administer_organisations_description"|trans }}
+            <br/>
+            {% for organisation in leading_organisations %}
+                <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">{{ organisation.name }}</a>
+                <br/>
+            {% endfor %}
+        </p>
+    {% endif %}
+{% endblock %}

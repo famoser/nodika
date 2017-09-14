@@ -1,8 +1,16 @@
 index:
   title: Dashboard
   description: Alles Wichtige auf einem Blick
-
   administer_organisations: Meine Organisationen verwalten
   administer_organisations_description: Sie sind Administrator folgender Organisationen und können diese verwalten
   my_organisations: Meine Organisationen
   my_organisations_description: Sie sind Mitglied folgender Organisationen
+  no_event_lines: Noch keine Termingruppen
+  to_organisation_administration: Organisation administrieren
+  are_you_administrator: Sind Sie Adminstrator?
+  to_event_line_administration: Termingruppe administrieren
+  no_events: Noch keine Termine
+
+index:
+  title: Meine Termine
+  description: Alle meine Termine auf einem Blick
