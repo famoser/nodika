@@ -49,7 +49,7 @@ class DashboardController extends BaseFrontendController
     {
         $member = $this->getMember();
         if ($member == null) {
-            $this->redirectToRoute("dashboard_index");
+            return $this->redirectToRoute("dashboard_index");
         }
         $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), $member);
         $arr["member"] = $member;

@@ -10,6 +10,7 @@ namespace AppBundle\Service\Interfaces;
 
 
 use AppBundle\Entity\EventLineGeneration;
+use AppBundle\Entity\Person;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaOutput;
@@ -43,9 +44,10 @@ interface EventGenerationServiceInterface
      *
      * @param EventLineGeneration $generation
      * @param GenerationResult $generationResult
+     * @param Person $person
      * @return bool
      */
-    public function persist(EventLineGeneration $generation, GenerationResult $generationResult);
+    public function persist(EventLineGeneration $generation, GenerationResult $generationResult, Person $person);
 
     /**
      * @param NodikaConfiguration $nodikaConfiguration

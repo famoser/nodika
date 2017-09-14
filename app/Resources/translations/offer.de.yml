@@ -30,3 +30,8 @@ review_offer:
   accept_offer: Tauschanfrage annehmen
   reject_offer: Tauschanfrage ablehnen
   close_offer: Tauschanfrage zurückziehen
+
+messages:
+  offer_accepted_successful: Der Tausch ist abgeschlossen!
+  offer_rejected_successful: Tausch abgeleht
+  offer_close_successful: Tauschanfrage zurückgezogen

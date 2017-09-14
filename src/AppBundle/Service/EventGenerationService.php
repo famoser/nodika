@@ -11,6 +11,8 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLineGeneration;
+use AppBundle\Entity\Person;
+use AppBundle\Enum\EventChangeType;
 use AppBundle\Enum\EventGenerationServicePersistResponse;
 use AppBundle\Enum\NodikaStatusCode;
 use AppBundle\Enum\RoundRobinStatusCode;
@@ -44,17 +46,21 @@ class EventGenerationService implements EventGenerationServiceInterface
     /* @var Session $session */
     private $session;
 
+    /* @var EventPastEvaluationService $eventPastEvaluationService */
+    private $eventPastEvaluationService;
+
     /* the accuracy of double comparision at critical points */
     const ACCURACY_THRESHOLD = 0.0001;
 
     /* the random accuracy used. must be a valid input for random_int. */
     const RANDOM_ACCURACY = 1000;
 
-    public function __construct($doctrine, $translator, $session)
+    public function __construct($doctrine, $translator, $session, $eventPastEvaluationService)
     {
         $this->doctrine = $doctrine;
         $this->translator = $translator;
         $this->session = $session;
+        $this->eventPastEvaluationService = $eventPastEvaluationService;
     }
 
     /**
@@ -335,9 +341,11 @@ class EventGenerationService implements EventGenerationServiceInterface
      * persist the events associated with this generation in the database
      *
      * @param EventLineGeneration $generation
+     * @param GenerationResult $generationResult
+     * @param Person $person
      * @return bool
      */
-    public function persist(EventLineGeneration $generation, GenerationResult $generationResult)
+    public function persist(EventLineGeneration $generation, GenerationResult $generationResult, Person $person)
     {
         $memberById = [];
         foreach ($this->doctrine->getRepository("AppBundle:Member")->findBy(["organisation" => $generation->getEventLine()->getOrganisation()->getId()]) as $item) {
@@ -351,6 +359,10 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $newEvent->setEndDateTime($event->endDateTime);
                 $newEvent->setEventLine($generation->getEventLine());
                 $newEvent->setMember($memberById[$event->memberId]);
+
+                $eventPast = $this->eventPastEvaluationService->createEventPast($person, null, $newEvent, EventChangeType::GENERATED_BY_ADMIN);
+                $em->persist($eventPast);
+
                 $em->persist($newEvent);
             } else {
                 $this->displayError(

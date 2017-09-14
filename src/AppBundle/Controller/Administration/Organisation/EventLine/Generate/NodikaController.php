@@ -634,7 +634,7 @@ class NodikaController extends BaseGenerationController
         $generationResult = $this->getGenerationResult($generation);
 
         $generationService = $this->get("app.event_generation_service");
-        $resp = $generationService->persist($generation, $generationResult);
+        $resp = $generationService->persist($generation, $generationResult, $this->getPerson());
         if ($resp == EventGenerationServicePersistResponse::SUCCESSFUL) {
             return $this->redirectToRoute(
                 "administration_organisation_event_line_administer",
