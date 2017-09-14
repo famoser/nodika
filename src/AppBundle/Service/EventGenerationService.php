@@ -612,8 +612,8 @@ class EventGenerationService implements EventGenerationServiceInterface
         $generationResult = new GenerationResult(null);
         $generationResult->generationDateTime = new \DateTime();
 
-        $roundRobinResult = new NodikaOutput();
-        $roundRobinResult->version = 1;
+        $nodikaOutput = new NodikaOutput();
+        $nodikaOutput->version = 1;
 
         $conflictCallable = $this->buildConflictBuffer($nodikaConfiguration);
 
@@ -631,35 +631,40 @@ class EventGenerationService implements EventGenerationServiceInterface
             $eventTypeDistributions[$memberEventTypeDistribution->newMemberConfiguration->id] = clone($memberEventTypeDistribution->eventTypeAssignment);
         }
 
-        /*
-         * todo:
-         * do generation!
-         * create ideal stack, then traverse it, possibly repairing events in the past?
-         */
+        $totalEvents = 0;
 
-        $idealQueue = clone($nodikaConfiguration->beforeEvents);
         /* @var IdealQueueMember[] $idealQueueMembers */
         $idealQueueMembers = [];
         foreach ($members as $member) {
             $idealQueueMember = new IdealQueueMember();
             $idealQueueMember->id = $member->id;
-            $idealQueueMember->totalEventCount =
-                $eventTypeDistributions[$member->id]->weekday +
-                $eventTypeDistributions[$member->id]->saturday +
-                $eventTypeDistributions[$member->id]->sunday +
-                $eventTypeDistributions[$member->id]->holiday;
+            $idealQueueMember->totalWeekdayCount = $eventTypeDistributions[$member->id]->weekday;
+            $idealQueueMember->totalSaturdayCount = $eventTypeDistributions[$member->id]->saturday;
+            $idealQueueMember->totalSundayCount = $eventTypeDistributions[$member->id]->sunday;
+            $idealQueueMember->totalHolidayCount = $eventTypeDistributions[$member->id]->holiday;
+            $idealQueueMember->calculateTotalEventCount();
+            $totalEvents += $idealQueueMember->totalEventCount;
+            $idealQueueMembers[$idealQueueMember->id] = $idealQueueMember;
+        }
+
+        $idealQueue = clone($nodikaConfiguration->beforeEvents);
+        if (count($idealQueue) > $totalEvents) {
+            //cut off too large beginning arrays
+            $idealQueue = array_slice($idealQueue, $totalEvents);
+        }
+
+        foreach ($idealQueueMembers as $idealQueueMember) {
             foreach ($idealQueue as $item) {
-                if ($item == $member->id) {
+                if ($item == $idealQueueMember->id) {
                     $idealQueueMember->totalEventCount++;
                     $idealQueueMember->doneEventCount++;
                 }
             }
-            $idealQueueMember->setPartDone();
-            $idealQueueMembers[] = $idealQueueMember;
+            $idealQueueMember->calculatePartDone();
         }
 
         //cut off beforeEvents again
-        $idealQueueMembers = [];
+        $idealQueue = [];
         while (true) {
             //find lowest part done
             $lowestPartDone = 1;
@@ -671,11 +676,16 @@ class EventGenerationService implements EventGenerationServiceInterface
                 }
             }
 
+            if ($lowestPartDone == 1) {
+                //all members have delivered all events
+                break;
+            }
+
             $myMember = $idealQueueMembers[$lowestIndex];
 
-            $idealQueueMembers[] = $myMember->id;
+            $idealQueue[] = $myMember->id;
             $myMember->doneEventCount++;
-            $myMember->partDone;
+            $myMember->calculatePartDone();
         }
 
         $holidays = [];
@@ -683,105 +693,170 @@ class EventGenerationService implements EventGenerationServiceInterface
             $holidays[(new \DateTime($holiday->format("d.m.Y")))->getTimestamp()] = 1;
         }
 
+        //this must be equal!
+        assert(count($idealQueue) == $totalEvents);
+
         $startDateTime = clone($nodikaConfiguration->startDateTime);
         $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
         $assignedEventCount = 0;
+        $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
             $day = new \DateTime($startDateTime->format("d.m.Y"));
             $endDate = clone($startDateTime);
             $endDate->add(new \DateInterval($dateIntervalAdd));
 
+
+            //create callable for each day type
+            $fitsFunc = function ($memberId) use (&$startDateTime, &$endDate, &$assignedEventCount, &$members, &$memberAllowedCallable, &$conflictCallable) {
+                return
+                    $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $members[$memberId]) &&
+                    $conflictCallable($assignedEventCount, $members[$memberId]);
+            };
+            $advancedFitsFunc = null;
+            $advancedFitSuccessful = null;
             if (isset($holidays[$day->getTimestamp()])) {
-                //holiday
+                $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
+                    /* @var IdealQueueMember $targetMember */
+                    return $targetMember->availableHolidayCount > 0 && $fitsFunc($targetMember->id);
+                };
+                $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
+                    /* @var IdealQueueMember $targetMember */
+                    $targetMember->assignHoliday($queueIndex);
+                };
             } else {
                 $dayOfWeek = $day->format('N');
                 if ($dayOfWeek == 7) {
                     //sunday
+                    $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
+                        /* @var IdealQueueMember $targetMember */
+                        return $targetMember->availableSundayCount > 0 && $fitsFunc($targetMember->id);
+                    };
+                    $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
+                        /* @var IdealQueueMember $targetMember */
+                        $targetMember->assignSunday($queueIndex);
+                    };
                 } else if ($dayOfWeek == 6) {
                     //saturday
+                    $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
+                        /* @var IdealQueueMember $targetMember */
+                        return $targetMember->availableSaturdayCount > 0 && $fitsFunc($targetMember->id);
+                    };
+                    $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
+                        /* @var IdealQueueMember $targetMember */
+                        $targetMember->assignSaturday($queueIndex);
+                    };
                 } else {
                     //weekday
+                    $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
+                        /* @var IdealQueueMember $targetMember */
+                        return $targetMember->availableWeekdayCount > 0 && $fitsFunc($targetMember->id);
+                    };
+                    $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
+                        /* @var IdealQueueMember $targetMember */
+                        $targetMember->assignWeekday($queueIndex);
+                    };
                 }
             }
 
-            $startDateTime->add(new \DateInterval($dateIntervalAdd));
+            $targetMember = $idealQueueMembers[$idealQueue[$queueIndex]];
+            if ($advancedFitsFunc($targetMember)) {
+                //the member fits yay; that was easy
+                $advancedFitSuccessful($targetMember);
+            } else {
+                //the search begins; look n to the right, then n to the left, then continue with n+1
+                //totalEvents as upper bound; this will not be reached probably
+                for ($i = 0; $i < $totalEvents; $i++) {
+                    //n to right
+                    $newIndex = $queueIndex + $i;
+                    if ($newIndex < $totalEvents) {
+                        $targetMember = $idealQueueMembers[$idealQueue[$newIndex]];
+                        if ($advancedFitsFunc($targetMember)) {
+                            //the member fits!
+                            //now correct the queue
+                            //this is in the future; so no further corrections necessary
+                            //we simply insert the new index at the required position
+                            //get the id
+                            $queueId = $idealQueue[$newIndex];
+                            //remove from queue
+                            unset($idealQueue[$newIndex]);
+                            //reset keys
+                            $idealQueue = array_values($idealQueue);
+                            //insert id at new place
+                            array_splice($idealQueue, $queueIndex, 0, $queueId);
+                            break;
+                        }
+                    }
+
+                    //n to left
+                    /*
+                     * skipped this implementation; problems:
+                     *  - too complex
+                     *  - unpredictable behaviour in large datasets (non termination!)
+                     */
+                    /*
+                    $newIndex = $queueIndex - $i;
+                    if ($newIndex >= 0) {
+                        $newTargetMember = $idealQueueMembers[$idealQueue[$newIndex]];
+                        if ($advancedFitsFunc($newTargetMember)) {
+                            //the member fits!
+                            //now correct the queue
+                            //this is in the past! so we need to do corrections
+                            //clear history
+                            for ($j = $newIndex; $j < $queueIndex; $j++) {
+                                $myTargetMember = $idealQueueMembers[$idealQueue[$newIndex]];
+                                $myTargetMember->removeAssignments($newIndex);
+                            }
+
+                            //get the id
+                            $queueId = $idealQueue[$newIndex];
+                            //remove from queue
+                            unset($idealQueue[$newIndex]);
+                            //reset keys
+                            $idealQueue = array_values($idealQueue);
+                            //insert id at new place
+                            array_splice($idealQueue, $queueIndex, 0, $queueId);
+
+                            $queueIndex = $newIndex;
+                            break;
+                        }
+                    }
+                    */
+                }
+            }
+
+            $queueIndex++;
             $assignedEventCount++;
+            $startDateTime->add(new \DateInterval($dateIntervalAdd));
         }
 
-        $assignedEventCount = 0;
-        $activeIndex = 0;
-        $totalMembers = count($members);
-        /* @var NMemberConfiguration[] $priorityQueue */
-        $priorityQueue = [];
+
         $startDateTime = clone($nodikaConfiguration->startDateTime);
         $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
+        $assignedEventCount = 0;
+        $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
             $endDate = clone($startDateTime);
             $endDate->add(new \DateInterval($dateIntervalAdd));
-            //check if something in priority queue
-            /* @var NMemberConfiguration $matchMember */
-            $matchMember = null;
-            if (count($priorityQueue) > 0) {
-                $i = 0;
-                for (; $i < count($priorityQueue); $i++) {
-                    if (
-                        $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
-                        $conflictCallable($assignedEventCount, $priorityQueue[$i])
-                    ) {
-                        $matchMember = $priorityQueue[$i];
-                        break;
-                    }
-                }
-                if ($matchMember != null) {
-                    unset($priorityQueue[$i]);
-                    //reset keys in array (0,1,2,3,4,...)
-                    $priorityQueue = array_values($priorityQueue);
-                }
-            }
-            if ($matchMember == null) {
-                $startIndex = $activeIndex;
-                while (true) {
-                    //wrap around index
-                    if ($activeIndex >= $totalMembers) {
-                        $activeIndex = 0;
-                    }
 
-                    $myMember = $members[$activeIndex];
-                    if ($memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $myMember) &&
-                        $conflictCallable($assignedEventCount, $myMember)) {
-                        $matchMember = $myMember;
-                        $activeIndex++;
-                        break;
-                    } else {
-                        $priorityQueue[] = $myMember;
-                        $activeIndex++;
-                        if ($startIndex == $activeIndex) {
-                            return $this->returnNodikaError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER);
-                        }
-                    }
-                }
-            }
+            $targetMember = $idealQueueMembers[$idealQueue[$queueIndex]];
 
-            if ($matchMember == null) {
-                throw new \Exception("cannot happen!");
-            } else {
-                $event = new GeneratedEvent();
-                $event->memberId = $matchMember->id;
-                $event->startDateTime = $startDateTime;
-                $event->endDateTime = $endDate;
-                $generationResult->events[] = $event;
-                $assignedEventCount++;
-            }
-            $startDateTime = clone($endDate);
+            $event = new GeneratedEvent();
+            $event->memberId = $targetMember->id;
+            $event->startDateTime = $startDateTime;
+            $event->endDateTime = $endDate;
+            $generationResult->events[] = $event;
+
+            $queueIndex++;
+            $assignedEventCount++;
+            $startDateTime->add(new \DateInterval($dateIntervalAdd));
         }
 
         //prepare RR result
-        $roundRobinResult->endDateTime = $startDateTime;
-        $roundRobinResult->lengthInHours = $nodikaConfiguration->lengthInHours;
-        $roundRobinResult->memberConfiguration = $members;
-        $roundRobinResult->priorityQueue = $priorityQueue;
-        $roundRobinResult->activeIndex = $activeIndex;
-        $roundRobinResult->generationResult = $generationResult;
-        return $this->returnNodikaSuccess($roundRobinResult);
+        $nodikaOutput->endDateTime = $startDateTime;
+        $nodikaOutput->lengthInHours = $nodikaConfiguration->lengthInHours;
+        $nodikaOutput->memberConfiguration = $members;
+        $nodikaOutput->beforeEvents = array_merge(clone($nodikaConfiguration->beforeEvents), $idealQueue);
+        $nodikaOutput->generationResult = $generationResult;
+        return $this->returnNodikaSuccess($nodikaOutput);
     }
 }

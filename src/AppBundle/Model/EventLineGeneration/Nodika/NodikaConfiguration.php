@@ -55,14 +55,14 @@ class NodikaConfiguration extends BaseConfiguration
     /* @var MemberEventTypeDistribution[] $memberEventTypeDistributions */
     public $memberEventTypeDistributions;
 
-    /* @var boolean $holidaysFilled */
-    public $holidaysFilled;
-
     /* @var boolean $memberEventTypeDistributionFilled */
     public $memberEventTypeDistributionFilled;
 
     /* @var \DateTime[] $holidays */
     public $holidays;
+
+    /* @var boolean $holidaysFilled */
+    public $holidaysFilled;
 
     /* @var int[] $beforeEvents */
     public $beforeEvents;
