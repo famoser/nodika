@@ -20,4 +20,5 @@ class EventChangeType extends BaseEnum
     const PERSON_ASSIGNED_BY_ADMIN = 5;
     const MEMBER_ASSIGNED_BY_ADMIN = 6;
     const TRADED_TO_NEW_MEMBER = 7;
+    const PERSON_ASSIGNED_BY_MEMBER = 8;
 }

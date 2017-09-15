@@ -35,3 +35,19 @@ messages:
   offer_accepted_successful: Der Tausch ist abgeschlossen!
   offer_rejected_successful: Tausch abgeleht
   offer_close_successful: Tauschanfrage zurückgezogen
+  offer_remove_successful: Tauschanfrage entfernt
+  has_invalid_entries: Einer oder mehr der Termine dieser Tauschanfrage können nicht mehr getauscht werden. Bitte korrigieren Sie die Tauschanfrage
+  has_invalid_entries_rejected: Einer oder mehr der Termine dieser Tauschanfrage können nicht mehr getauscht werden. Die Tauschanfrage wurde autoamtisch zurückgezogen
+  offer_open: Die Tauschanfrage wurde erfolgreich erstellt. Der Empfänger wurde benachrichtigt
+  no_access_anymore: Sie haben keinen Zugriff (mehr) auf diese Tauschanfrage. Sie wurde vielleicht zurückgezogen oder entfernt.
+
+emails:
+  offer_accepted:
+    subject: Tauschanfrage angenommen
+    message: 'Ihre Tauschanfrage auf nodika wurde angenommen: %link%'
+  offer_rejected:
+    subject: Tauschanfrage abgelehnt
+    message: 'Ihre Tauschanfrage auf nodika wurde abgelehnt: %link%'
+  new_offer:
+    subject: Neue Tauschanfrage
+    message: 'Sie haben eine neue Tauschanfrage auf nodika: %link%'

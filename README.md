@@ -6,7 +6,9 @@ todos:
  - implement invoice system
  - view event past
  - assign events to persons
- - finish hasInvalidEventOfferEntries
+ - frontend offer
+ - admin management
+ - frontend event past
 
 project build with symfony. Dependecy managers:
  - composer for php

@@ -24,6 +24,7 @@ use AppBundle\Helper\DateTimeConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/offer")
@@ -85,6 +86,10 @@ class OfferController extends BaseFrontendController
 
         if ($ownMember->getOrganisation()->getId() != $member->getOrganisation()->getId() ||
             !$member->getPersons()->contains($person)) {
+
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
+
             return $this->redirectToRoute("offer_index");
         }
 
@@ -115,6 +120,10 @@ class OfferController extends BaseFrontendController
 
         if ($ownMember->getId() != $eventOffer->getOfferedByMember()->getId() ||
             !in_array($eventOffer->getStatus(), [OfferStatus::OFFER_CREATING, OfferStatus::OFFER_OPEN, OfferStatus::OFFER_CLOSED])) {
+
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
+
             return $this->redirectToRoute("offer_index");
         }
 
@@ -154,6 +163,20 @@ class OfferController extends BaseFrontendController
             $eventOffer->setOpenDateTime(new \DateTime());
             $em->persist($eventOffer);
             $em->flush();
+
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.offer_open", [], "offer"));
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject($translator->trans("emails.new_offer.subject", [], "offer"))
+                ->setFrom($this->getParameter("mailer_email"))
+                ->setTo($eventOffer->getOfferedToPerson()->getEmail())
+                ->setBody($translator->trans(
+                    "emails.new_offer.message",
+                    ["%link%" => $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
+                    "offer"));
+            $this->get('mailer')->send($message);
+
             return $this->redirectToRoute("offer_index");
         }
 
@@ -170,77 +193,24 @@ class OfferController extends BaseFrontendController
         }
         $arr["offered"] = $offered;
 
+
+        $invalids = $this->getInvalidEventOfferEntries($eventOffer, false);
+        if (count($invalids) > 0) {
+            $translator = $this->get("translator");
+            $this->displayError($translator->trans("messages.has_invalid_entries", [], "offer"));
+            $arr["invalids"] = $invalids;
+        }
+
         return $this->render("dashboard/index.html.twig", $arr);
     }
 
     /**
-     * @param Member $member
-     * @param Person $person
-     * @param EventOffer $eventOffer
-     * @return bool
-     */
-    private function canAcceptOrRejectOffer(Member $member, Person $person, EventOffer $eventOffer)
-    {
-        return $member->getId() == $eventOffer->getOfferedToMember()->getId() && $person->getId() == $eventOffer->getOfferedToPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_OPEN;
-    }
-
-
-    /**
-     * @param Member $member
-     * @param Person $person
-     * @param EventOffer $eventOffer
-     * @return bool
-     */
-    private function canCloseOffer(Member $member, Person $person, EventOffer $eventOffer)
-    {
-        return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_OPEN;
-    }
-
-    /**
-     * @param EventOffer $eventOffer
-     * @param $remove
-     * @return bool
-     */
-    private function hasInvalidEventOfferEntries(EventOffer $eventOffer, $remove)
-    {
-        $settingRepo = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting");
-        $ownMember = $this->getMember();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
-        $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
-        $found = false;
-        foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
-            if ($eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedByPerson() ||
-                $eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedToPerson()) {
-                if ($eventOfferEntry->getEvent()->getStartDateTime() > $threshHold) {
-                    $found = true;
-                    if ($remove) {
-                        $em->remove($eventOfferEntry);
-                    }
-                }
-            } else {
-                $found = true;
-                if ($remove) {
-                    $em->remove($eventOfferEntry);
-                }
-            }
-        }
-        if ($remove) {
-            $em->flush();
-        }
-
-        return $found;
-    }
-
-    /**
-     * @Route("/review_offer/{eventOffer}", name="offer_review_offer")
+     * @Route("/{eventOffer}/review", name="offer_review")
      * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function reviewOfferAction(Request $request, EventOffer $eventOffer)
+    public function reviewAction(Request $request, EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -251,7 +221,24 @@ class OfferController extends BaseFrontendController
         $acceptReject = $this->canAcceptOrRejectOffer($ownMember, $ownPerson, $eventOffer);
         $close = $this->canCloseOffer($ownMember, $ownPerson, $eventOffer);
         if (!($acceptReject || $close)) {
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
+
             return $this->redirectToRoute("offer_index");
+        }
+
+        $invalids = $this->getInvalidEventOfferEntries($eventOffer, false);
+        if (count($invalids) > 0) {
+            $translator = $this->get("translator");
+            if ($close) {
+                //can close, therefore can edit
+                return $this->redirectToRoute("offer_choose_events", ["eventOffer" => $eventOffer->getId()]);
+            } else {
+                $eventOffer->setStatus(OfferStatus::OFFER_CREATING);
+                $this->fastSave($eventOffer);
+                $this->displayError($translator->trans("messages.has_invalid_entries_rejected", [], "offer"));
+                return $this->redirectToRoute("offer_index");
+            }
         }
 
         $arr["acceptRejectActions"] = $acceptReject;
@@ -278,18 +265,18 @@ class OfferController extends BaseFrontendController
 
         $arr["myEvents"] = $myEvents;
         $arr["otherEvents"] = $otherEvents;
-
+        $arr["invalids"] = $this->getInvalidEventOfferEntries($eventOffer, false);
 
         return $this->render("dashboard/index.html.twig", $arr);
     }
 
     /**
-     * @Route("/{eventOffer}/accept_offer", name="offer_accept_offer")
+     * @Route("/{eventOffer}/accept", name="offer_accept")
      * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function acceptOfferAction(Request $request, EventOffer $eventOffer)
+    public function acceptAction(Request $request, EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -300,6 +287,15 @@ class OfferController extends BaseFrontendController
 
         $acceptReject = $this->canAcceptOrRejectOffer($ownMember, $ownPerson, $eventOffer);
         if ($acceptReject) {
+            $invalids = $this->getInvalidEventOfferEntries($eventOffer, false);
+            if (count($invalids) > 0) {
+                $translator = $this->get("translator");
+                $eventOffer->setStatus(OfferStatus::OFFER_CREATING);
+                $this->fastSave($eventOffer);
+                $this->displayError($translator->trans("messages.has_invalid_entries_rejected", [], "offer"));
+                return $this->redirectToRoute("offer_index");
+            }
+
             $em = $this->getDoctrine()->getManager();
 
             $eventOffer->setStatus(OfferStatus::OFFER_ACCEPTED);
@@ -337,17 +333,32 @@ class OfferController extends BaseFrontendController
             $em->flush();
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_accepted_successful", [], "offer"));
+
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject($translator->trans("emails.offer_accepted.subject", [], "offer"))
+                ->setFrom($this->getParameter("mailer_email"))
+                ->setTo($eventOffer->getOfferedByPerson()->getEmail())
+                ->setBody($translator->trans(
+                    "emails.offer_accepted.message",
+                    ["%link%" => $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
+                    "offer"));
+            $this->get('mailer')->send($message);
+
+        } else {
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
         }
         return $this->redirectToRoute("offer_index");
     }
 
     /**
-     * @Route("/{eventOffer}/reject_offer", name="offer_reject_offer")
+     * @Route("/{eventOffer}/reject", name="offer_reject")
      * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function rejectOfferAction(Request $request, EventOffer $eventOffer)
+    public function rejectAction(Request $request, EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -363,17 +374,30 @@ class OfferController extends BaseFrontendController
             $this->fastSave($eventOffer);
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_rejected_successful", [], "offer"));
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject($translator->trans("emails.offer_rejected.subject", [], "offer"))
+                ->setFrom($this->getParameter("mailer_email"))
+                ->setTo($eventOffer->getOfferedByPerson()->getEmail())
+                ->setBody($translator->trans(
+                    "emails.offer_rejected.message",
+                    ["%link%" => $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
+                    "offer"));
+            $this->get('mailer')->send($message);
+        } else {
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
         }
         return $this->redirectToRoute("offer_index");
     }
 
     /**
-     * @Route("/{eventOffer}/close_offer", name="offer_close_offer")
+     * @Route("/{eventOffer}/close", name="offer_close")
      * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function closeOfferAction(Request $request, EventOffer $eventOffer)
+    public function closeAction(Request $request, EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -389,7 +413,113 @@ class OfferController extends BaseFrontendController
             $this->fastSave($eventOffer);
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_close_successful", [], "offer"));
+        } else {
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
         }
         return $this->redirectToRoute("offer_index");
+    }
+
+    /**
+     * @Route("/{eventOffer}/remove", name="offer_remove")
+     * @param Request $request
+     * @param EventOffer $eventOffer
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function removeAction(Request $request, EventOffer $eventOffer)
+    {
+        $ownMember = $this->getMember();
+        if ($ownMember == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $ownPerson = $this->getPerson();
+
+        $canRemove = $this->canRemoveOffer($ownMember, $ownPerson, $eventOffer);
+        if ($canRemove) {
+            $this->fastRemove($eventOffer);
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.offer_remove_successful", [], "offer"));
+        } else {
+            $translator = $this->get("translator");
+            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
+        }
+        return $this->redirectToRoute("offer_index");
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @param EventOffer $eventOffer
+     * @return bool
+     */
+    private function canAcceptOrRejectOffer(Member $member, Person $person, EventOffer $eventOffer)
+    {
+        return $member->getId() == $eventOffer->getOfferedToMember()->getId() && $person->getId() == $eventOffer->getOfferedToPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_OPEN;
+    }
+
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @param EventOffer $eventOffer
+     * @return bool
+     */
+    private function canCloseOffer(Member $member, Person $person, EventOffer $eventOffer)
+    {
+        return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_OPEN;
+    }
+
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @param EventOffer $eventOffer
+     * @return bool
+     */
+    private function canRemoveOffer(Member $member, Person $person, EventOffer $eventOffer)
+    {
+        return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_CREATING;
+    }
+
+    /**
+     * @param EventOffer $eventOffer
+     * @param $remove
+     * @return EventOfferEntry[]
+     */
+    private function getInvalidEventOfferEntries(EventOffer $eventOffer, $remove = false)
+    {
+        $settingRepo = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting");
+        $ownMember = $this->getMember();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
+        $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
+
+        /* @var EventOfferEntry[] $invalids */
+        $invalids = [];
+
+        foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
+            if ($eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedByPerson() ||
+                $eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedToPerson()) {
+                if ($eventOfferEntry->getEvent()->getStartDateTime() > $threshHold) {
+                    $invalids[] = $eventOfferEntry;
+                    if ($remove) {
+                        $em->remove($eventOfferEntry);
+                    }
+                }
+            } else {
+                $invalids[] = $eventOfferEntry;
+                if ($remove) {
+                    $em->remove($eventOfferEntry);
+                }
+            }
+        }
+        if ($remove) {
+            $em->flush();
+        }
+
+        return $invalids;
     }
 }

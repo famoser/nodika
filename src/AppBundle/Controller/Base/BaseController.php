@@ -285,6 +285,25 @@ class BaseController extends Controller
     }
 
     /**
+     * removes entity to database
+     *
+     * @param BaseEntity $entity
+     * @param BaseEntity|null $entity2
+     * @param BaseEntity|null $entity3
+     */
+    protected function fastRemove($entity, $entity2 = null, $entity3 = null)
+    {
+        $mgr = $this->getDoctrine()->getManager();
+        $mgr->remove($entity);
+        if ($entity2 != null)
+            $mgr->remove($entity2);
+        if ($entity3 != null)
+            $mgr->remove($entity3);
+        $mgr->persist($entity);
+        $mgr->flush();
+    }
+
+    /**
      * @param Organisation $organisation
      * @param int $applicationEventType
      * @return bool
