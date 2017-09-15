@@ -13,10 +13,9 @@ set('writable_dirs', array_merge(get('writable_dirs'), ["web/public"]));
 inventory('servers.yml');
 
 //stages: dev, testing, production
-set('default_stage', 'testing');
+set('default_stage', 'dev');
 /*
 set('writable_use_sudo', false);
-set('http_user', 'floria74');
 */
 
 /*
@@ -25,19 +24,23 @@ set(
     'composer_options',
     '{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader --ignore-platform-reqs'
 );
-set(
-    'bin/php',
-    "bin/php71"
-);
 */
 
+set(
+    'bin/php',
+    '/usr/local/php71/bin/php'
+);
 
 /**
  * Rebuild test data in dev
  */
 task('database:fixtures', function () {
-    if (env('branch') == "develop") {
-        run('{{bin/php}} {{bin/console}} doctrine:fixtures:load {{console_options}} --allow-no-migration');
+    if (get('branch') == "develop") {
+        //ensure dev
+        $before = get("symfony_env");
+        set('symfony_env', 'dev');
+        run('{{bin/php}} {{bin/console}} doctrine:fixtures:load {{console_options}}');
+        set('symfony_env', $before);
     }
 })->desc('Initializing example data');
 
