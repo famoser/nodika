@@ -61,6 +61,7 @@ class EventVoter extends EventLineVoter
 
         switch ($attribute) {
             case self::VIEW:
+                return parent::voteOnAttribute(self::VIEW, $eventLine, $token);
             case self::EDIT:
             case self::REMOVE:
                 return parent::voteOnAttribute(self::ADMINISTRATE, $eventLine, $token);

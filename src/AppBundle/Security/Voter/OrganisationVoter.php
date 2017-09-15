@@ -90,10 +90,14 @@ class OrganisationVoter extends CrudVoter
         }
 
         $members = $user->getPerson()->getMembers();
-        return $organisation->getMembers()->forAll(function ($key, $member) use ($members) {
-            /* @var Member $member */
-            return $members->contains($member);
-        });
+        foreach ($organisation->getMembers() as $organisationMember) {
+            foreach ($members as $member) {
+                if ($organisationMember->getId() == $member->getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

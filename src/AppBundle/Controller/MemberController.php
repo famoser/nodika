@@ -26,6 +26,12 @@ class MemberController extends BaseFrontendController
      */
     public function indexAction(Request $request)
     {
-        return $this->render("dashboard/index.html.twig");
+        $member = $this->getMember();
+        if ($member == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $arr["member"] = $member;
+        return $this->render("dashboard/index.html.twig", $arr);
     }
 }

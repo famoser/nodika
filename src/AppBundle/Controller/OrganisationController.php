@@ -39,6 +39,12 @@ class OrganisationController extends BaseFrontendController
      */
     public function indexAction(Request $request)
     {
+        $member = $this->getMember();
+        if ($member == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $arr["organisation"] = $member->getOrganisation();
         return $this->render("dashboard/index.html.twig");
     }
 

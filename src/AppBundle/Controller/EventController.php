@@ -12,6 +12,7 @@ use AppBundle\Controller\Base\BaseFrontendController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Person;
 use AppBundle\Enum\EventChangeType;
+use AppBundle\Security\Voter\EventVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +31,14 @@ class EventController extends BaseFrontendController
      */
     public function viewAction(Request $request, Event $event)
     {
+        $member = $this->getMember();
+        if ($member == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
+
+        $arr["event"] = $event;
         return $this->render("dashboard/index.html.twig");
     }
 
