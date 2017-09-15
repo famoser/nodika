@@ -1,5 +1,6 @@
 {% extends "single_content_base.html.twig" %}
 {% import "macros/events.html.twig" as events %}
+{% import "macros/event_line_models.html.twig" as event_line_model_macro %}
 
 {% block title %}{{ "index.title"|trans }}{% endblock %}
 {% block description %}{{ "index.description"|trans }}{% endblock %}
@@ -20,60 +21,10 @@
                     </a>
                 </p>
             {% else %}
-                {% for eventLineModel in eventLineModels %}
-                    <h3>
-                        {{ eventLineModel.eventLine.name }}
-                    </h3>
-                    <p>{{ eventLineModel.eventLine.description }}</p>
-
-                    {% if eventLineModel.events|length == 0 %}
-                        <p>{{ "index.no_events"|trans }}</p>
-                    {% else %}
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
-                                <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
-                                <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
-                                <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for event in eventLineModel.events %}
-                                {% if event.member == member %}
-                                    <tr class="bold">
-                                {% else %}
-                                    <tr>
-                                {% endif %}
-                                <td>
-                                    {{ event.startDateTime|myDateTime }}
-                                </td>
-                                <td>
-                                    {{ event.endDateTime|myDateTime }}
-                                </td>
-                                <td>
-                                    {{ event.member }}
-                                </td>
-                                <td>
-                                    {{ event.person }}
-                                </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-
-                    {% endif %}
-                    <p>
-                        {{ "index.are_you_administrator"|trans }}
-                        <a href="{{ path("administration_organisation_event_line_administer", {"organisation" : organisation.id, "eventLine" : eventLineModel.eventLine.id}) }}">
-                            {{ "index.to_event_line_administration"|trans }}
-                        </a>
-                    </p>
-                {% endfor %}
+                {{ event_line_model_macro.show_full_table(eventLineModels, member) }}
             {% endif %}
         </div>
         <div class="col-md-3">
-
             <h3>{{ "index.your_profil"|trans }}</h3>
             <p>
                 {{ "index.your_profil_description"|trans }}
@@ -94,6 +45,22 @@
                 <a href="{{ path("person_view") }}">
                     {{ person.fullName }}</a>
                 <br/>
+            </p>
+
+            <h3>{{ "index.important_links"|trans }}</h3>
+            <p>
+                <a href="{{ path("offer_index") }}">
+                    {{ "index.trade_events"|trans }}
+                </a><br/>
+                <a href="{{ path("event_assign") }}">
+                    {{ "index.assign_events"|trans }}
+                </a><br/>
+                <a href="{{ path("dashboard_mine") }}">
+                    {{ "index.all_my_events"|trans }}
+                </a><br/>
+                <a href="{{ path("dashboard_all") }}">
+                    {{ "index.all_events"|trans }}
+                </a>
             </p>
 
             {% if change_organisations is defined %}

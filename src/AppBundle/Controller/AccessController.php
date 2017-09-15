@@ -249,7 +249,7 @@ class AccessController extends BaseAccessController
                             "email_access"));
                     $this->get('mailer')->send($message);
                 } else {
-                    $this->get("logger")->error("tried to reset password for non-existing user " . $existingUser->getEmail());
+                    $this->get("logger")->error("tried to reset password for non-existing user " . $entity->getEmail());
                 }
                 return $this->redirectToRoute("access_reset_done");
             }

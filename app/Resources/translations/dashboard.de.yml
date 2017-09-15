@@ -7,11 +7,17 @@ index:
   change_organisation_description: Sie sind Teil mehrerer Organisationen. Hier können Sie zu den anderen wechseln
   your_profil: Ihr Profil
   your_profil_description: So sind Sie authentifiziert
+  important_links: Wichtige Links
+  trade_events: Termine tauschen
+  assign_events: Termine zuweisen
   no_event_lines: Noch keine Termingruppen
   to_organisation_administration: Organisation administrieren
   are_you_administrator: Sind Sie Adminstrator?
   to_event_line_administration: Termingruppe administrieren
   no_events: Noch keine Termine
+  all_my_events: Alle meine Termine
+  all_events: Alle Termine
+  all_organisation_events: Alle Termine meiner Organsiation
 
 mine:
   title: Meine Termine

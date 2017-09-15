@@ -1,0 +1,24 @@
+{% extends ':layout:base.html.twig' %}
+
+{% block content %}
+<section class="content {{ color_class }}">
+    {% include "layout/parts/menu.html.twig" %}
+    {% include "layout/parts/flashbag.html.twig" %}
+
+    {% set _counter = 0 %}
+    {% set condition = true %}
+    {% for i in 0..10000 if condition %}
+        {% if block('list_content_' ~ _counter) is defined %}
+            {% set _block = block('list_content_' ~ _counter) %}
+            {% if _block is not empty %}
+                <div class="container index-container default-color">
+                    {{ _block|raw }}
+                </div>
+            {% else %}
+                {% set condition = false %}
+            {% endif %}
+        {% else %}
+            {% set condition = false %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}

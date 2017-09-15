@@ -1,0 +1,45 @@
+{% macro show_full_table(eventLineModels, activeMember = null) %}
+    {% for eventLineModel in eventLineModels %}
+        <h3>
+            {{ eventLineModel.eventLine.name }}
+        </h3>
+        <p>{{ eventLineModel.eventLine.description }}</p>
+
+        {% if eventLineModel.events|length == 0 %}
+            <p>{{ "index.no_events"|trans({}, "dashboard") }}</p>
+        {% else %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+                    <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+                    <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                    <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in eventLineModel.events %}
+                    {% if event.member == activeMember %}
+                        <tr class="bold">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                    <td>
+                        {{ event.startDateTime|myDateTime }}
+                    </td>
+                    <td>
+                        {{ event.endDateTime|myDateTime }}
+                    </td>
+                    <td>
+                        {{ event.member }}
+                    </td>
+                    <td>
+                        {{ event.person }}
+                    </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

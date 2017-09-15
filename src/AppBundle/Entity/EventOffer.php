@@ -48,7 +48,7 @@ class EventOffer extends BaseEntity
     /**
      * @ORM\Column(type="integer")
      */
-    private $status = OfferStatus::OFFER_CREATING;
+    private $status = OfferStatus::CREATING;
 
     /**
      * @var Member
@@ -187,6 +187,16 @@ class EventOffer extends BaseEntity
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatusText()
+    {
+        return OfferStatus::getTranslation($this->status);
     }
 
     /**

@@ -1,0 +1,20 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+{% set color_class = globals_color_class_event %}
+
+{% block title %}{{ "new.title"|trans }}{% endblock %}
+{% block description %}{{ "new.description"|trans }}{% endblock %}
+
+{% trans_default_domain "offer" %}
+
+{% block primary_content %}
+    <h3>{{ "new.choose_person"|trans }}</h3>
+    <p>
+        {% for member in members %}
+            {% for person in member.persons %}
+                <a href="{{ path("offer_start", {"person" : person.id, "member": member.id }) }}">
+                    {{ member.name }} ({{ person.fullName }})
+                </a><br/>
+            {% endfor %}
+        {% endfor %}
+    </p>
+{% endblock %}

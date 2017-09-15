@@ -46,3 +46,22 @@
         </tbody>
     </table>
 {% endmacro %}
+
+{% macro no_details_table(events) %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+            <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.startDateTime|myDateTime }}</td>
+                <td>{{ event.endDateTime|myDateTime }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}

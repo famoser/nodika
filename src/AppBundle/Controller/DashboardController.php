@@ -29,17 +29,18 @@ class DashboardController extends BaseFrontendController
     public function indexAction(Request $request)
     {
         $member = $this->getMember();
-        if ($member != null) {
-            $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime());
-            $arr["organisation"] = $member->getOrganisation();
-            $arr["member"] = $member;
-        }
-
 
         $arr["person"] = $this->getPerson();
         $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
         $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
-        unset($all[array_search($member->getOrganisation(), $all)]);
+
+        if ($member != null) {
+            $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime());
+            $arr["organisation"] = $member->getOrganisation();
+            $arr["member"] = $member;
+            unset($all[array_search($member->getOrganisation(), $all)]);
+        }
+
         if (count($all) > 0) {
             $arr["change_organisations"] = $all;
         }
@@ -57,9 +58,38 @@ class DashboardController extends BaseFrontendController
         if ($member == null) {
             return $this->redirectToRoute("dashboard_index");
         }
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), $member);
-        $arr["member"] = $member;
+
+        $arr["person"] = $this->getPerson();
+        $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
+        $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
+
+        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), $member, null, ">", 4000);
         $arr["organisation"] = $member->getOrganisation();
-        return $this->render("dashboard/mine.html.twig", $arr);
+        $arr["member"] = $member;
+        unset($all[array_search($member->getOrganisation(), $all)]);
+        return $this->render("dashboard/index.html.twig", $arr);
+    }
+
+    /**
+     * @Route("/all", name="dashboard_all")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function allAction(Request $request)
+    {
+        $member = $this->getMember();
+        if ($member == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $arr["person"] = $this->getPerson();
+        $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
+        $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
+
+        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, null, ">", 4000);
+        $arr["organisation"] = $member->getOrganisation();
+        $arr["member"] = $member;
+        unset($all[array_search($member->getOrganisation(), $all)]);
+        return $this->render("dashboard/index.html.twig", $arr);
     }
 }

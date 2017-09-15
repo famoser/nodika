@@ -1,0 +1,30 @@
+{% extends "single_content_base.html.twig" %}
+{% set color_class = globals_color_class_event %}
+{% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
+{% import "macros/events.html.twig" as events_macro %}
+
+{% block title %}{{ "review_offer.title"|trans }}{% endblock %}
+{% block description %}{{ "review_offer.description"|trans }}{% endblock %}
+
+{% trans_default_domain "offer" %}
+
+{% block single_content %}
+    <h3> {{ "review_offer.their_events_for_you"|trans }}</h3>
+    {{ events_macro.no_details_table(otherEvents) }}
+    <h3> {{ "review_offer.your_events_for_receiver"|trans }}</h3>
+    {{ events_macro.no_details_table(myEvents) }}
+    <h3> {{ "review_offer.message"|trans }}</h3>
+    {{ eventOffer.description }}
+    {% if closeActions %}
+        <p>
+            <a href="{{ path("offer_close", {"eventOffer" : eventOffer.id}) }}">{{ "review_offer.close_offer"|trans }}</a>
+        </p>
+    {% endif %}
+    {% if acceptRejectActions %}
+        <p>
+            <a href="{{ path("offer_accept", {"eventOffer" : eventOffer.id}) }}">{{ "review_offer.accept_offer"|trans }}</a><br/>
+            <a href="{{ path("offer_reject", {"eventOffer" : eventOffer.id}) }}">{{ "review_offer.reject_offer"|trans }}</a><br/>
+        </p>
+    {% endif %}
+
+{% endblock %}

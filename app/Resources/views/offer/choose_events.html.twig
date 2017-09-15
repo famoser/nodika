@@ -1,0 +1,43 @@
+{% extends "single_content_base.html.twig" %}
+{% set color_class = globals_color_class_event %}
+{% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
+
+{% block title %}{{ "choose_events.title"|trans }}{% endblock %}
+{% block description %}{{ "choose_events.description"|trans }}{% endblock %}
+
+{% trans_default_domain "offer" %}
+
+{% block single_content %}
+    <form class="form" action="{{ path("offer_choose_events", {"eventOffer" : eventOffer.id}) }}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>{{ "choose_events.your_events"|trans }}</h3>
+                <p>{{ "choose_events.your_events_description"|trans }}</p>
+                {% for myEventLineModel in myEventLineModels %}
+                    <h4>{{ myEventLineModel.eventLine.name }}</h4>
+                    {% for event in myEventLineModel.events %}
+                        {{ kitchen_sink.toggle_form_field("event_" ~ event.id, event.id in offered, event.startDateTime|myDateTime ~ " - " ~ event.endDateTime|myDateTime) }}
+                    {% endfor %}
+                {% endfor %}
+
+            </div>
+            <div class="col-md-6">
+                <h3>{{ "choose_events.their_events"|trans }}</h3>
+                <p>{{ "choose_events.their_events_description"|trans }}</p>
+                {% for theirEventLineModel in theirEventLineModels %}
+                    <h4>{{ theirEventLineModel.eventLine.name }}</h4>
+                    {% for event in theirEventLineModel.events %}
+                        {{ kitchen_sink.toggle_form_field("event_" ~ event.id, event.id in offered, event.startDateTime|myDateTime ~ " - " ~ event.endDateTime|myDateTime) }}
+                    {% endfor %}
+                {% endfor %}
+
+            </div>
+            <div class="col-md-12">
+                <h3>{{ "choose_events.message"|trans }}</h3>
+                <p>{{ "choose_events.message_description"|trans }}</p>
+                {{ kitchen_sink.textarea_form_field("description", description_form, "description"|trans({}, "entity_event_offer")) }}
+                {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -280,7 +280,6 @@ class BaseController extends Controller
             $mgr->persist($entity2);
         if ($entity3 != null)
             $mgr->persist($entity3);
-        $mgr->persist($entity);
         $mgr->flush();
     }
 
@@ -299,7 +298,6 @@ class BaseController extends Controller
             $mgr->remove($entity2);
         if ($entity3 != null)
             $mgr->remove($entity3);
-        $mgr->persist($entity);
         $mgr->flush();
     }
 

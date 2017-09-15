@@ -46,9 +46,9 @@ class OfferController extends BaseFrontendController
 
         $repo = $this->getDoctrine()->getRepository("AppBundle:EventOffer");
         $arr["author_of_offers"] = $repo->findBy(["offeredByMember" => $member->getId(), "offeredByPerson" => $this->getPerson()->getId()]);
-        $arr["accepted_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::OFFER_ACCEPTED]);
-        $arr["open_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::OFFER_OPEN]);
-        return $this->render("dashboard/index.html.twig", $arr);
+        $arr["accepted_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::ACCEPTED]);
+        $arr["open_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::OPEN]);
+        return $this->render("offer/index.html.twig", $arr);
     }
 
     /**
@@ -63,11 +63,8 @@ class OfferController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $repo = $this->getDoctrine()->getRepository("AppBundle:EventOffer");
-        $arr["author_of_offers"] = $repo->findBy(["offeredByMember" => $member->getId(), "offeredByPerson" => $this->getPerson()->getId()]);
-        $arr["accepted_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::OFFER_ACCEPTED]);
-        $arr["open_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::OFFER_OPEN]);
-        return $this->render("dashboard/index.html.twig", $arr);
+        $arr["members"] = $member->getOrganisation()->getMembers();
+        return $this->render("offer/new.html.twig", $arr);
     }
 
     /**
@@ -119,7 +116,7 @@ class OfferController extends BaseFrontendController
         }
 
         if ($ownMember->getId() != $eventOffer->getOfferedByMember()->getId() ||
-            !in_array($eventOffer->getStatus(), [OfferStatus::OFFER_CREATING, OfferStatus::OFFER_OPEN, OfferStatus::OFFER_CLOSED])) {
+            !in_array($eventOffer->getStatus(), [OfferStatus::CREATING, OfferStatus::OPEN, OfferStatus::CLOSED])) {
 
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
@@ -139,8 +136,8 @@ class OfferController extends BaseFrontendController
                     $eventId = substr($key, 6); //cut off event_
                     $event = $eventRepo->find($eventId);
                     if (
-                        $event->getMember()->getId() == $eventOffer->getOfferedByMember() && $event->getPerson()->getId() == $eventOffer->getOfferedByPerson() ||
-                        $event->getMember()->getId() == $eventOffer->getOfferedToMember() && $event->getPerson()->getId() == $eventOffer->getOfferedToPerson()
+                        $event->getMember()->getId() == $eventOffer->getOfferedByMember()->getId() && $event->getPerson()->getId() == $eventOffer->getOfferedByPerson()->getId() ||
+                        $event->getMember()->getId() == $eventOffer->getOfferedToMember()->getId() && $event->getPerson()->getId() == $eventOffer->getOfferedToPerson()->getId()
                     ) {
                         $events[] = $event;
                     }
@@ -159,7 +156,7 @@ class OfferController extends BaseFrontendController
                 $eventOfferEntry->setEventOffer($eventOffer);
                 $em->persist($eventOfferEntry);
             }
-            $eventOffer->setStatus(OfferStatus::OFFER_OPEN);
+            $eventOffer->setStatus(OfferStatus::OPEN);
             $eventOffer->setOpenDateTime(new \DateTime());
             $em->persist($eventOffer);
             $em->flush();
@@ -185,7 +182,7 @@ class OfferController extends BaseFrontendController
         $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
         $arr["myEventLineModels"] = $repo->findEventLineModels($ownMember->getOrganisation(), $threshHold, $eventOffer->getOfferedByMember(), $eventOffer->getOfferedByPerson());
         $arr["theirEventLineModels"] = $repo->findEventLineModels($ownMember->getOrganisation(), $threshHold, $eventOffer->getOfferedToMember(), $eventOffer->getOfferedToPerson());
-        $arr["description"] = $eventOffer->getDescription();
+        $arr["description_form"] = $eventOffer->getDescription();
 
         $offered = [];
         foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
@@ -201,7 +198,9 @@ class OfferController extends BaseFrontendController
             $arr["invalids"] = $invalids;
         }
 
-        return $this->render("dashboard/index.html.twig", $arr);
+        $arr["eventOffer"] = $eventOffer;
+
+        return $this->render("offer/choose_events.html.twig", $arr);
     }
 
     /**
@@ -234,7 +233,7 @@ class OfferController extends BaseFrontendController
                 //can close, therefore can edit
                 return $this->redirectToRoute("offer_choose_events", ["eventOffer" => $eventOffer->getId()]);
             } else {
-                $eventOffer->setStatus(OfferStatus::OFFER_CREATING);
+                $eventOffer->setStatus(OfferStatus::CREATING);
                 $this->fastSave($eventOffer);
                 $this->displayError($translator->trans("messages.has_invalid_entries_rejected", [], "offer"));
                 return $this->redirectToRoute("offer_index");
@@ -266,8 +265,9 @@ class OfferController extends BaseFrontendController
         $arr["myEvents"] = $myEvents;
         $arr["otherEvents"] = $otherEvents;
         $arr["invalids"] = $this->getInvalidEventOfferEntries($eventOffer, false);
+        $arr["eventOffer"] = $eventOffer;
 
-        return $this->render("dashboard/index.html.twig", $arr);
+        return $this->render("offer/review.html.twig", $arr);
     }
 
     /**
@@ -290,7 +290,7 @@ class OfferController extends BaseFrontendController
             $invalids = $this->getInvalidEventOfferEntries($eventOffer, false);
             if (count($invalids) > 0) {
                 $translator = $this->get("translator");
-                $eventOffer->setStatus(OfferStatus::OFFER_CREATING);
+                $eventOffer->setStatus(OfferStatus::CREATING);
                 $this->fastSave($eventOffer);
                 $this->displayError($translator->trans("messages.has_invalid_entries_rejected", [], "offer"));
                 return $this->redirectToRoute("offer_index");
@@ -298,9 +298,9 @@ class OfferController extends BaseFrontendController
 
             $em = $this->getDoctrine()->getManager();
 
-            $eventOffer->setStatus(OfferStatus::OFFER_ACCEPTED);
+            $eventOffer->setStatus(OfferStatus::ACCEPTED);
             foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
-                if ($eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedByPerson()) {
+                if ($eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedByPerson()->getId()) {
                     $event = $eventOfferEntry->getEvent();
                     $oldEvent = clone($event);
                     $event->setIsConfirmed(false);
@@ -369,7 +369,7 @@ class OfferController extends BaseFrontendController
 
         $acceptReject = $this->canAcceptOrRejectOffer($ownMember, $ownPerson, $eventOffer);
         if ($acceptReject) {
-            $eventOffer->setStatus(OfferStatus::OFFER_REJECTED);
+            $eventOffer->setStatus(OfferStatus::REJECTED);
             $eventOffer->setCloseDateTime(new \DateTime());
             $this->fastSave($eventOffer);
             $translator = $this->get("translator");
@@ -408,7 +408,7 @@ class OfferController extends BaseFrontendController
 
         $canClose = $this->canCloseOffer($ownMember, $ownPerson, $eventOffer);
         if ($canClose) {
-            $eventOffer->setStatus(OfferStatus::OFFER_CLOSED);
+            $eventOffer->setStatus(OfferStatus::CLOSED);
             $eventOffer->setCloseDateTime(new \DateTime());
             $this->fastSave($eventOffer);
             $translator = $this->get("translator");
@@ -455,7 +455,7 @@ class OfferController extends BaseFrontendController
      */
     private function canAcceptOrRejectOffer(Member $member, Person $person, EventOffer $eventOffer)
     {
-        return $member->getId() == $eventOffer->getOfferedToMember()->getId() && $person->getId() == $eventOffer->getOfferedToPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_OPEN;
+        return $member->getId() == $eventOffer->getOfferedToMember()->getId() && $person->getId() == $eventOffer->getOfferedToPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OPEN;
     }
 
 
@@ -467,7 +467,7 @@ class OfferController extends BaseFrontendController
      */
     private function canCloseOffer(Member $member, Person $person, EventOffer $eventOffer)
     {
-        return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_OPEN;
+        return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OPEN;
     }
 
 
@@ -479,7 +479,7 @@ class OfferController extends BaseFrontendController
      */
     private function canRemoveOffer(Member $member, Person $person, EventOffer $eventOffer)
     {
-        return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::OFFER_CREATING;
+        return $member->getId() == $eventOffer->getOfferedByMember()->getId() && $person->getId() == $eventOffer->getOfferedByPerson()->getId() && $eventOffer->getStatus() == OfferStatus::CREATING;
     }
 
     /**
@@ -501,9 +501,9 @@ class OfferController extends BaseFrontendController
         $invalids = [];
 
         foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
-            if ($eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedByPerson() ||
-                $eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedToPerson()) {
-                if ($eventOfferEntry->getEvent()->getStartDateTime() > $threshHold) {
+            if ($eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedByPerson()->getId() ||
+                $eventOfferEntry->getEvent()->getPerson()->getId() == $eventOffer->getOfferedToPerson()->getId()) {
+                if ($eventOfferEntry->getEvent()->getStartDateTime() < $threshHold) {
                     $invalids[] = $eventOfferEntry;
                     if ($remove) {
                         $em->remove($eventOfferEntry);

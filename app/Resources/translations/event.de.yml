@@ -2,3 +2,16 @@ index:
   title: Termin ansehen
   description: Nähere Informationen zu diesem Termin
   history: Änderungen an diesem Termin
+
+message:
+  event_assigned: Termin zugewiesen
+  all_events_assigned: Alle Termin zugewiesen
+
+assign:
+  title: Termine zuweisen
+  description: Termine den Accounts zuweisen
+  all_to_own_account: Alle Termine diesem Account zuweisen
+  unassigned_events: Nicht zugewiesene Termine
+  unassigned_events_description: >
+    Weisen Sie Termine einem Account zu.
+    Erinnerungsemails zu den jeweiligen Terminen können so an den richtigen Empfänger zugestellt werden. Ausserdem können Sie diese Termine dann tauschen.
