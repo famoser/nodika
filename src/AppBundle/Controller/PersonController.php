@@ -208,7 +208,7 @@ class PersonController extends BaseFrontendController
         $trans = $this->get("translator");
         if ($found != null) {
             $member->removePerson($found);
-            $this->fastSave($member);
+            $this->fastSave($member, $found);
             $this->displaySuccess($trans->trans("remove_member.messages.remove_successfully", [], "person"));
             return $this->redirectToRoute("access_logout");
         } else {
