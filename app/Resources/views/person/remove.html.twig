@@ -2,12 +2,12 @@
 
 {% block title %}{{ "remove.title"|trans }}{% endblock %}
 {% block description %}{{ "remove.description"|trans }}{% endblock %}
-{% set color_class = globals_color_class_event %}
+{% set color_class = globals_color_class_person %}
 
-{% trans_default_domain "administration_organisation_event_line" %}
+{% trans_default_domain "person" %}
 
 {% block primary_content %}
-    <h3>{{ "remove_title"|trans({"%name%" : eventLine.name}, "remove") }}</h3>
+    <h3>{{ "remove_title"|trans({"%name%" : person}, "remove") }}</h3>
     {{ form(remove_form) }}
 {% endblock %}
 

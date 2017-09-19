@@ -4,7 +4,7 @@
 {% block title %}{{ "setup.title"|trans }}{% endblock %}
 {% block description %}{{ "setup.description"|trans }}{% endblock %}
 
-{% trans_default_domain "organisation" %}
+{% trans_default_domain "administration_organisation" %}
 
 {% block primary_content %}
     <h2>{{ "setup.setup_step_1"|trans }} {% if setupStatus.hasMembers %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>

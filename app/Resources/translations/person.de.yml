@@ -4,3 +4,43 @@ index:
   change_password: Passwort ändern
   change_address: Persönliche Daten ändern
   change_email: Email ändern
+
+#edit_personal page
+edit_personal:
+  title: Persönliche Daten ändern
+  description: Editieren Sie Ihre persönlichen Daten
+  person_edit_form: Account ändern
+  person_add_form: Account erfassen
+  about: Account
+  about_description: Dieser Account gehört Ihnen und weist Sie als Mitglied Ihrer Praxis aus.
+  person_address: Adresse
+  person_address_description: Ihre persönliche Adresse.
+  person_contact: Kontaktinformationen
+  person_contact_description: An diese hinterlegte E-Mail werden Ihre persönlichen E-Mails versandt (z.B. zu Terminerinnerungen)
+  not_login_email: Nicht die Login-Email!
+  not_login_email_description: >
+    Die hier hinterlegte E-Mail dient zum Versenden der Benachrichtigungen, und muss nicht die selbe sein wie die Login E-Mail.
+    Um die Login-Email zu ändern gehen Sie zurück in Ihr Profil und wählen den Menupunkt E-Mail ändern
+
+#edit_password page
+edit_password:
+  title: Passwort ändern
+  description: Änderung Sie Ihr Passwort
+  choose_safe: Sicheres Passwort
+  choose_safe_description: >
+    Wählen Sie ein sicheres Passwort. Ein sicheres Passwort ist möglich lange (mehr als 8 Stellen)
+    und besteht aus ungewöhnlichen Wort- und Zahlenkombinationen
+
+#edit_email page
+edit_email:
+  title: Neu E-Mail setzen
+  description: Neue Login E-Mail setzen
+  change_email_form: Neue E-Mail
+  login_email: Login E-Mail
+  login_email_description: >
+    Dies ist die E-Mail die Sie als Login verwenden. Diese darf in unserem System nur einmal vorkommen.
+    Entfernen Sie den Account und damit alle seine verbundenen Daten.
+  no_personal_email: Nicht die persönliche E-Mail!
+  no_personal_email_description: >
+    Die hier hinterlegte E-Mail dient als Login-Email, und muss nicht die selbe sein wie die persönliche E-Mail.
+    Um die persönliche Email zu ändern gehen Sie zurück in Ihr Profil und wählen den Menupunkt Persönliche Daten ändern
