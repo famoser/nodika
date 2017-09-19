@@ -45,22 +45,24 @@ class OrganisationController extends BaseFrontendController
         }
 
         $arr["organisation"] = $member->getOrganisation();
-        return $this->render("dashboard/index.html.twig");
+        return $this->render("organisation/index.html.twig", $arr);
     }
 
     /**
-     * @Route("/{organisation}/change_to", name="organisation_change_to")
+     * @Route("/change_to/{organisation}", name="organisation_change_to")
      * @param Request $request
-     * @param Organisation $organisation
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function changeToAction(Request $request, Organisation $organisation)
     {
-        foreach ($this->getPerson()->getMembers() as $member) {
+        //check if part of organisation
+        $person = $this->getPerson();
+        foreach ($person->getMembers() as $member) {
             if ($member->getOrganisation()->getId() == $organisation->getId()) {
                 $this->setMember($member);
             }
         }
+
         return $this->redirectToRoute("dashboard_index");
     }
 }

@@ -59,15 +59,8 @@ class DashboardController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $arr["person"] = $this->getPerson();
-        $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
-        $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
-
         $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), $member, null, ">", 4000);
-        $arr["organisation"] = $member->getOrganisation();
-        $arr["member"] = $member;
-        unset($all[array_search($member->getOrganisation(), $all)]);
-        return $this->render("dashboard/index.html.twig", $arr);
+        return $this->render("dashboard/mine.html.twig", $arr);
     }
 
     /**
@@ -82,14 +75,8 @@ class DashboardController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $arr["person"] = $this->getPerson();
-        $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
-        $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
-
         $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, null, ">", 4000);
-        $arr["organisation"] = $member->getOrganisation();
         $arr["member"] = $member;
-        unset($all[array_search($member->getOrganisation(), $all)]);
         return $this->render("dashboard/index.html.twig", $arr);
     }
 }

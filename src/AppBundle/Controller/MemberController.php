@@ -68,7 +68,7 @@ class MemberController extends BaseFrontendController
         $arr["person"] = $person;
         $arr["edit_form"] = $myForm->createView();
         return $this->render(
-            'member/edit.cmdhtml.twig', $arr
+            'member/edit.html.twig', $arr
         );
     }
 
