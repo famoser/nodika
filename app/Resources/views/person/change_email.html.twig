@@ -1,0 +1,19 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+
+{% block title %}{{ "change_email.title"|trans }}{% endblock %}
+{% block description %}{{ "change_email.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_person %}
+
+{% trans_default_domain "person" %}
+
+{% block primary_content %}
+    <h3>{{ "change_email.change_email_form"|trans }}</h3>
+    {{ form(edit_form) }}
+{% endblock %}
+
+{% block secondary_content %}
+    <h3>{{ "change_email.login_email"|trans }}</h3>
+    <p>{{ "change_email.login_email_description"|trans }}</p>
+    <h3>{{ "change_email.no_personal_email"|trans }}</h3>
+    <p>{{ "change_email.no_personal_email_description"|trans }}</p>
+{% endblock %}

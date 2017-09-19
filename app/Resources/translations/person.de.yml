@@ -1,16 +1,20 @@
 index:
   title: Ihr Acount
-  description: Nähere Informationen zu Ihrem Account
+  description: Ihr Account verwalten
+  manage_self: Verwalten
   change_password: Passwort ändern
-  change_address: Persönliche Daten ändern
+  change_personal: Persönliche Daten ändern
+  no_members: Sie sind noch nicht Teil einer Praxis. Fragen Sie Ihren Administrator ob er Ihnen eine Einladung zur einer Praxus zusenden kann.
   change_email: Email ändern
+  your_members: Sie sind Teil folgender Praxen
+  remove_itself: Zugriff entfernen
+  remove_itself_description: Sie können sich selbst den Zugriff einer Praxis wieder entfernen (weil Sie z.B. nicht mehr dort arbeiten)
 
 #edit_personal page
 edit_personal:
   title: Persönliche Daten ändern
   description: Editieren Sie Ihre persönlichen Daten
   person_edit_form: Account ändern
-  person_add_form: Account erfassen
   about: Account
   about_description: Dieser Account gehört Ihnen und weist Sie als Mitglied Ihrer Praxis aus.
   person_address: Adresse
@@ -23,16 +27,17 @@ edit_personal:
     Um die Login-Email zu ändern gehen Sie zurück in Ihr Profil und wählen den Menupunkt E-Mail ändern
 
 #edit_password page
-edit_password:
+change_password:
   title: Passwort ändern
   description: Änderung Sie Ihr Passwort
+  change_password_form: Passwort setzen
   choose_safe: Sicheres Passwort
   choose_safe_description: >
     Wählen Sie ein sicheres Passwort. Ein sicheres Passwort ist möglich lange (mehr als 8 Stellen)
     und besteht aus ungewöhnlichen Wort- und Zahlenkombinationen
 
 #edit_email page
-edit_email:
+change_email:
   title: Neu E-Mail setzen
   description: Neue Login E-Mail setzen
   change_email_form: Neue E-Mail
@@ -44,3 +49,21 @@ edit_email:
   no_personal_email_description: >
     Die hier hinterlegte E-Mail dient als Login-Email, und muss nicht die selbe sein wie die persönliche E-Mail.
     Um die persönliche Email zu ändern gehen Sie zurück in Ihr Profil und wählen den Menupunkt Persönliche Daten ändern
+  messages:
+    changed_successfully: Ihre Login E-Mail wurde erfolgreich geändert.
+    email_already_picked: Diese E-Mail wird bereits verwendet.
+
+#remove_member page
+remove_member:
+  title: Praxis entfernen
+  description: Möchten Sie sich von dieser Praxis entfernen?
+  really_remove: Ich möchte mich wirklich als Praxismitglied entfernen. Ich verstehe die damit verbunden Konsequenzen.
+  really_remove_confirm: Bestätigen
+  change_email_form: Neue E-Mail
+  remove_member: Von der Praxis entfernen
+  remove_member_description: >
+    Entfernen Sie sich von dieser Praxis haben Sie keinen Zugriff mehr auf deren Termine und Funktionen.
+    Sie werden automatisch ausgeloggt.
+  messages:
+    remove_successfully: Sie wurden erfolgreich als Praxismitglied entfernt
+    not_part_of_member: Sie sind nicht Teil dieser Praxis

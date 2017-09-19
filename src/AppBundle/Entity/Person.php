@@ -48,11 +48,11 @@ class Person extends BaseEntity
     private $members;
 
     /**
-     * @var FrontendUser[]
+     * @var FrontendUser
      *
-     * @ORM\OneToMany(targetEntity="FrontendUser", mappedBy="person")
+     * @ORM\OneToOne(targetEntity="FrontendUser", mappedBy="person")
      */
-    private $frontendUsers;
+    private $frontendUser;
 
     /**
      * @var Event[]
@@ -68,7 +68,6 @@ class Person extends BaseEntity
     {
         $this->leaderOf = new ArrayCollection();
         $this->members = new ArrayCollection();
-        $this->frontendUsers = new ArrayCollection();
         $this->events = new ArrayCollection();
     }
 
@@ -141,40 +140,6 @@ class Person extends BaseEntity
     }
 
     /**
-     * Add user
-     *
-     * @param \AppBundle\Entity\FrontendUser $user
-     *
-     * @return Person
-     */
-    public function addUser(\AppBundle\Entity\FrontendUser $user)
-    {
-        $this->frontendUsers[] = $user;
-
-        return $this;
-    }
-
-    /**
-     * Remove user
-     *
-     * @param \AppBundle\Entity\FrontendUser $user
-     */
-    public function removeUser(\AppBundle\Entity\FrontendUser $user)
-    {
-        $this->frontendUsers->removeElement($user);
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFrontendUsers()
-    {
-        return $this->frontendUsers;
-    }
-
-    /**
      * Add event
      *
      * @param \AppBundle\Entity\Event $event
@@ -216,5 +181,21 @@ class Person extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getFullName();
+    }
+
+    /**
+     * @return FrontendUser
+     */
+    public function getFrontendUser()
+    {
+        return $this->frontendUser;
+    }
+
+    /**
+     * @param FrontendUser $frontendUser
+     */
+    public function setFrontendUser($frontendUser)
+    {
+        $this->frontendUser = $frontendUser;
     }
 }

@@ -30,7 +30,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     /**
      * @var Person
      *
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="frontendUsers")
+     * @ORM\OneToOne(targetEntity="Person", inversedBy="frontendUser")
      */
     private $person;
 
