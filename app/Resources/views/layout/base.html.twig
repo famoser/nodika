@@ -30,10 +30,21 @@
         <div class="logo-wrapper">
             <img src="{{ asset("dist/logo/nodika.svg") }}" class="logo-img">
         </div>
-        <h1>{{ title }}</h1>
-        <p class="h1-description">{{ description }}</p>
-        {% block header %}
-        {% endblock %}
+
+        <div class="header-content">
+            <h1>{{ title }}</h1>
+            <p class="h1-description">{{ description }}</p>
+            {% block header %}
+            {% endblock %}
+        </div>
+
+        <div class="goto-dashboard">
+            {% if show_login is defined %}
+                <a href="{{ path("dashboard_index") }}">{{ "menu.login"|trans({}, "content_base") }}</a>
+            {% elseif hide_dashboard is not defined %}
+                <a href="{{ path("dashboard_index") }}">{{ "menu.dashboard"|trans({}, "content_base") }}</a>
+            {% endif %}
+        </div>
     </div>
 </header>
 {% block content %}

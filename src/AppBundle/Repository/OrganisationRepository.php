@@ -43,14 +43,15 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * @param Organisation $organisation
-     * @param \DateTime $dateTime
+     * @param \DateTime $startDateTime
+     * @param \DateTime|null $endDateTime
      * @param Member|null $filterMember
      * @param null $filterPerson
-     * @param string $comparator
      * @param int $maxResults
      * @return EventLineModel[]
+     * @internal param string $comparator
      */
-    public function findEventLineModels(Organisation $organisation, \DateTime $dateTime, $filterMember = null, $filterPerson = null, $comparator = ">", $maxResults = 30)
+    public function findEventLineModels(Organisation $organisation, \DateTime $startDateTime, \DateTime $endDateTime = null, $filterMember = null, $filterPerson = null, $maxResults = 30)
     {
         $res = [];
         foreach ($organisation->getEventLines() as $eventLine) {
@@ -62,8 +63,16 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
                 ->join("e.eventLine", "el")
                 ->leftJoin("e.member", "m")
                 ->leftJoin("e.person", "p")
-                ->where("e.endDateTime $comparator :startDateTime")
-                ->andWhere("el = :eventLine");
+                ->where("el = :eventLine")
+                ->setParameter('eventLine', $eventLine);
+
+            $qb->andWhere("e.startDateTime > :startDateTime")
+                ->setParameter('startDateTime', $startDateTime);
+
+            if ($endDateTime instanceof \DateTime) {
+                $qb->andWhere("e.endDateTime < :endDateTime")
+                    ->setParameter('endDateTime', $endDateTime);
+            }
 
             if ($filterMember instanceof Member) {
                 $qb->andWhere("m = :member")
@@ -75,9 +84,7 @@ class OrganisationRepository extends \Doctrine\ORM\EntityRepository
                     ->setParameter('person', $filterPerson);
             }
 
-            $qb->setParameter('startDateTime', $dateTime)
-                ->setParameter('eventLine', $eventLine)
-                ->setMaxResults($maxResults);
+            $qb->setMaxResults($maxResults);
 
             $eventLineModel->events = $qb->getQuery()
                 ->getResult();

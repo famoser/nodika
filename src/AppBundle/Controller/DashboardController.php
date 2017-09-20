@@ -59,7 +59,7 @@ class DashboardController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), $member, null, ">", 4000);
+        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, $member, null, 4000);
         return $this->render("dashboard/mine.html.twig", $arr);
     }
 
@@ -75,7 +75,55 @@ class DashboardController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, null, ">", 4000);
+        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, null, null, 4000);
+        $arr["member"] = $member;
+        return $this->render("dashboard/index.html.twig", $arr);
+    }
+
+    /**
+     * @Route("/search", name="dashboard_search")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function searchAction(Request $request)
+    {
+        $member = $this->getMember();
+        if ($member == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $organisation = $member->getOrganisation();
+
+        $startQuery = $request->query->get("start");
+        $startDateTime = false;
+        if ($startQuery != "") {
+            $startDateTime = strtotime($startQuery);
+        }
+        if (!$startDateTime) {
+            $startDateTime = new \DateTime();
+        }
+
+        $endQuery = $request->query->get("end");
+        $endDateTime = false;
+        if ($endQuery != "") {
+            $endDateTime = strtotime($endQuery);
+        }
+        if (!$endDateTime) {
+            $endDateTime = clone($startDateTime)->add(new \DateInterval("PT30D"));
+        }
+
+        $memberQuery = $request->query->get("membery");
+        $member = null;
+        if (is_numeric($memberQuery)) {
+            foreach ($organisation->getMembers() as $organisationMember) {
+                if ($organisationMember->getId() == $memberQuery) {
+                    $member = $organisationMember;
+                }
+            }
+        }
+
+
+        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, $startDateTime, null, $member, null, 4000);
         $arr["member"] = $member;
         return $this->render("dashboard/index.html.twig", $arr);
     }
