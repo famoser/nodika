@@ -10805,6 +10805,8 @@ blockquote.testimonial footer cite {
   color: #efefef;
   padding: 23px;
   display: block; }
+  .goto-dashboard > a:hover {
+    color: #efefef; }
 
 .logo-img {
   display: block;
@@ -10827,6 +10829,13 @@ section {
 .index-container {
   padding: 40px;
   position: relative; }
+
+.list-container {
+  margin-bottom: 20px; }
+
+.message-container {
+  border: 1px solid #efefef;
+  margin-bottom: 20px; }
 
 @media (max-width: 1030px) {
   .index-container {

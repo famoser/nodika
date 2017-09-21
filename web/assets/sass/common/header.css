@@ -17,6 +17,8 @@
   color: #efefef;
   padding: 23px;
   display: block; }
+  .goto-dashboard > a:hover {
+    color: #efefef; }
 
 .logo-img {
   display: block;

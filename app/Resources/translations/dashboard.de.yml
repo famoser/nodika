@@ -18,6 +18,7 @@ index:
   all_my_events: Alle meine Termine
   all_events: Alle Termine
   all_organisation_events: Alle Termine meiner Organsiation
+  not_part_of_organisation: Sie sind nicht Teil einer Organisation und sehen daher hier keine Termine
 
 mine:
   title: Meine Termine

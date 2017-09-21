@@ -13,17 +13,20 @@
 {% block single_content %}
     <div class="row">
         <div class="col-md-9">
-
-            {% if eventLineModels|length == 0 %}
-                <p>{{ "index.no_event_lines"|trans }}
-                    <br/>
-                    {{ "index.are_you_administrator"|trans }}
-                    <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">
-                        {{ "index.to_organisation_administration"|trans }}
-                    </a>
-                </p>
+            {% if eventLineModels is defined %}
+                {% if eventLineModels|length == 0 %}
+                    <p>{{ "index.no_event_lines"|trans }}
+                        <br/>
+                        {{ "index.are_you_administrator"|trans }}
+                        <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">
+                            {{ "index.to_organisation_administration"|trans }}
+                        </a>
+                    </p>
+                {% else %}
+                    {{ event_line_model_macro.show_full_table(eventLineModels, member) }}
+                {% endif %}
             {% else %}
-                {{ event_line_model_macro.show_full_table(eventLineModels, member) }}
+                <p>{{ "index.not_part_of_organisation"|trans }}</p>
             {% endif %}
         </div>
         <div class="col-md-3">

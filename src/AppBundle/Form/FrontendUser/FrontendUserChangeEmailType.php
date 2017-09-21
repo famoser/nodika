@@ -9,6 +9,7 @@
 namespace AppBundle\Form\FrontendUser;
 
 
+use AppBundle\Entity\FrontendUser;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
 use AppBundle\Helper\NamingHelper;
@@ -22,9 +23,9 @@ class FrontendUserChangeEmailType extends BaseAbstractType
     {
         $builderArray = ["translation_domain" => "entity_frontend_user"];
         $builder->add(
-            "newEmail",
+            "email",
             EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("newEmail")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
         );
 
         $this->addSubmit($builder, SubmitButtonType::APPLY);
@@ -33,7 +34,7 @@ class FrontendUserChangeEmailType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => null,
+            'data_class' => FrontendUser::class,
         ));
     }
 }

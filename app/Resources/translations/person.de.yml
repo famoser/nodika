@@ -33,7 +33,7 @@ change_password:
   change_password_form: Passwort setzen
   choose_safe: Sicheres Passwort
   choose_safe_description: >
-    Wählen Sie ein sicheres Passwort. Ein sicheres Passwort ist möglich lange (mehr als 8 Stellen)
+    Wählen Sie ein sicheres Passwort. Ein sicheres Passwort ist möglichst lange (mehr als 8 Stellen)
     und besteht aus ungewöhnlichen Wort- und Zahlenkombinationen
 
 #edit_email page

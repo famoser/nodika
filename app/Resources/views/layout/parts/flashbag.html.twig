@@ -1,5 +1,5 @@
 {% for type, messages in app.session.flashbag.all() %}
-    <div class="container index-container {{ type }}-color">
+    <div class="container index-container {{ type }}-color message-container">
         {% for message in messages %}
             <p class="no-margin">
                 {{ message|raw }}

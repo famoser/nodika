@@ -9,14 +9,14 @@
 {% block primary_content %}
     <h3>{{ "index.manage_self"|trans }}</h3>
     <p>
-        <a href="">{{ "index.change_personal"|trans }}</a><br/>
-        <a href="">{{ "index.change_email"|trans }}</a><br/>
-        <a href="">{{ "index.change_password"|trans }}</a><br/>
+        <a href="{{ path("person_change_personal") }}">{{ "index.change_personal"|trans }}</a><br/>
+        <a href="{{ path("person_change_email") }}">{{ "index.change_email"|trans }}</a><br/>
+        <a href="{{ path("person_change_password") }}">{{ "index.change_password"|trans }}</a><br/>
     </p>
 
     <h3>{{ "index.your_members"|trans }}</h3>
     {% if person.members|length > 0 %}
-        <table>
+        <table class="table">
             <thead>
             <tr>
                 <th>{{ "entity.name"|trans({}, "entity_member") }}</th>

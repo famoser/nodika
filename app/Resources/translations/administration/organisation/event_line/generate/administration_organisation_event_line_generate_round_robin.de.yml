@@ -22,7 +22,7 @@ choose_period:
 #no_conflicts page
 no_conflicts:
   title: Konflikte verhindern
-  description: Verhinden Sie Terminkonflikte
+  description: Verhindern Sie Terminkonflikte
   no_conflicts: Konflikte verhindern
   no_conflicts_description: >
     Aktivieren Sie hier alle Termingruppen mit denen es keine Konflikte geben darf.

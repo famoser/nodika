@@ -7,8 +7,8 @@
 {% trans_default_domain "member" %}
 
 {% block primary_content %}
-    <p>{{ "remove_person.really_remove"|trans }}<br/>
-        <a href="{{ path("member_remove_person", {"person" => person.id}) }}" class="btn btn-primary">
+    <p>{{ "remove_person.really_remove"|trans }}
+        <a href="{{ path("member_remove_person", {"person" : person.id}) }}">
             {{ "remove_person.really_remove_confirm"|trans }}
         </a>
     </p>

@@ -9,15 +9,15 @@
 {% block primary_content %}
     <h3>{{ "index.manage_self"|trans }}</h3>
     <p>
-        <a href="">{{ "index.edit"|trans }}</a>
+        <a href="{{ path("member_edit") }}">{{ "index.edit"|trans }}</a>
     </p>
 
     <h3>{{ "index.your_persons"|trans }}</h3>
     {% if member.persons|length > 0 %}
-        <table>
+        <table class="table">
             <thead>
             <tr>
-                <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
                 <th>{{ "entity.name"|trans({}, "entity_organisation") }}</th>
                 <th></th>
             </tr>

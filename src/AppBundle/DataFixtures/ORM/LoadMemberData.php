@@ -11,6 +11,7 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\Member;
+use AppBundle\Entity\Person;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadMemberData extends BaseFixture
@@ -39,18 +40,33 @@ class LoadMemberData extends BaseFixture
     {
         $member = $this->getAllRandomInstance();
         $member->setOrganisation($this->getReference("organisation-1"));
-        $member->addPerson($this->getReference("person-1"));
+        $member->setName("Mitglied 1");
+        /* @var Person $person */
+        $person = $this->getReference("person-1");
+        $member->addPerson($person);
+        $person->addMember($member);
         $manager->persist($member);
+        $manager->persist($person);
 
         $member = $this->getAllRandomInstance();
         $member->setOrganisation($this->getReference("organisation-1"));
-        $member->addPerson($this->getReference("person-2"));
+        $member->setName("Mitglied 2");
+        /* @var Person $person */
+        $person = $this->getReference("person-2");
+        $member->addPerson($person);
+        $person->addMember($member);
         $manager->persist($member);
+        $manager->persist($person);
 
         $member = $this->getAllRandomInstance();
         $member->setOrganisation($this->getReference("organisation-1"));
-        $member->addPerson($this->getReference("person-3"));
+        $member->setName("Mitglied 3");
+        /* @var Person $person */
+        $person = $this->getReference("person-3");
+        $member->addPerson($person);
+        $person->addMember($member);
         $manager->persist($member);
+        $manager->persist($person);
 
         $manager->flush();
     }

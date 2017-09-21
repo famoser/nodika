@@ -9,7 +9,7 @@
 {% block primary_content %}
     <h3>{{ "index.the_members"|trans }}</h3>
     {% if organisation.members|length > 0 %}
-        <table>
+        <table class="table">
             <thead>
             <tr>
                 <th>{{ "entity.name"|trans({}, "entity_member") }}</th>

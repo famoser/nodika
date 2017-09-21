@@ -1,8 +1,8 @@
 entity:
-  name: Mitglied
+  name: Praxis
   description: >
-    Einem Mitglied Ihrer Organisation wird Terminen zugeteilt.
-    Jedes Mitglied kann beliebig viele Zugänge (Accounts) für verschiedene Personen auf der Webseite einrichten.
+    Einer Praxis Ihrer Organisation werden Terminen zugeteilt.
+    Jede Praxis kann beliebig viele Praxismitglieder für verschiedene Personen auf der Webseite einrichten.
   plural: Mitglieder
 
 id: Id

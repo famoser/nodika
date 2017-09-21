@@ -1,6 +1,5 @@
 {% macro show_full_table(eventLineModels, activeMember = null) %}
     {% import _self as event_lines %}
-    {{ buttons.base_button(link, "row.edit"|trans({}, "common_table")) }}
     {% for eventLineModel in eventLineModels %}
         {{ event_lines.show_full_table_single(eventLineModel, activeMember) }}
     {% endfor %}

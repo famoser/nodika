@@ -663,7 +663,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $idealQueueMembers[$idealQueueMember->id] = $idealQueueMember;
         }
 
-        $idealQueue = clone($nodikaConfiguration->beforeEvents);
+        $idealQueue = (array)($nodikaConfiguration->beforeEvents);
         if (count($idealQueue) > $totalEvents) {
             //cut off too large beginning arrays
             $idealQueue = array_slice($idealQueue, $totalEvents);
@@ -720,7 +720,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             $day = new \DateTime($startDateTime->format("d.m.Y"));
             $endDate = clone($startDateTime);
             $endDate->add(new \DateInterval($dateIntervalAdd));
-
 
             //create callable for each day type
             $fitsFunc = function ($memberId) use (&$startDateTime, &$endDate, &$assignedEventCount, &$members, &$memberAllowedCallable, &$conflictCallable) {
@@ -843,6 +842,10 @@ class EventGenerationService implements EventGenerationServiceInterface
             $queueIndex++;
             $assignedEventCount++;
             $startDateTime->add(new \DateInterval($dateIntervalAdd));
+
+            if (!($queueIndex < $totalEvents)) {
+                break;
+            }
         }
 
 
@@ -864,14 +867,19 @@ class EventGenerationService implements EventGenerationServiceInterface
 
             $queueIndex++;
             $assignedEventCount++;
+            $startDateTime = clone($startDateTime);
             $startDateTime->add(new \DateInterval($dateIntervalAdd));
+
+            if (!($queueIndex < $totalEvents)) {
+                break;
+            }
         }
 
         //prepare RR result
         $nodikaOutput->endDateTime = $startDateTime;
         $nodikaOutput->lengthInHours = $nodikaConfiguration->lengthInHours;
         $nodikaOutput->memberConfiguration = $members;
-        $nodikaOutput->beforeEvents = array_merge(clone($nodikaConfiguration->beforeEvents), $idealQueue);
+        $nodikaOutput->beforeEvents = array_merge((array)($nodikaConfiguration->beforeEvents), $idealQueue);
         $nodikaOutput->generationResult = $generationResult;
         return $this->returnNodikaSuccess($nodikaOutput);
     }
