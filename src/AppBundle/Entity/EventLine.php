@@ -11,6 +11,7 @@ namespace AppBundle\Entity;
 use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\ThingTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -59,18 +60,18 @@ class EventLine extends BaseEntity
      */
     public function __construct()
     {
-        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->eventLineGenerations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->eventLineGenerations = new ArrayCollection();
     }
 
     /**
      * Set organisation
      *
-     * @param \AppBundle\Entity\Organisation $organisation
+     * @param Organisation $organisation
      *
      * @return EventLine
      */
-    public function setOrganisation(\AppBundle\Entity\Organisation $organisation = null)
+    public function setOrganisation(Organisation $organisation = null)
     {
         $this->organisation = $organisation;
 
@@ -80,7 +81,7 @@ class EventLine extends BaseEntity
     /**
      * Get organisation
      *
-     * @return \AppBundle\Entity\Organisation
+     * @return Organisation
      */
     public function getOrganisation()
     {
@@ -90,11 +91,11 @@ class EventLine extends BaseEntity
     /**
      * Add event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      *
      * @return EventLine
      */
-    public function addEvent(\AppBundle\Entity\Event $event)
+    public function addEvent(Event $event)
     {
         $this->events[] = $event;
 
@@ -104,9 +105,9 @@ class EventLine extends BaseEntity
     /**
      * Remove event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      */
-    public function removeEvent(\AppBundle\Entity\Event $event)
+    public function removeEvent(Event $event)
     {
         $this->events->removeElement($event);
     }
@@ -124,11 +125,11 @@ class EventLine extends BaseEntity
     /**
      * Add eventLineGeneration
      *
-     * @param \AppBundle\Entity\EventLineGeneration $eventLineGeneration
+     * @param EventLineGeneration $eventLineGeneration
      *
      * @return EventLine
      */
-    public function addEventLineGeneration(\AppBundle\Entity\EventLineGeneration $eventLineGeneration)
+    public function addEventLineGeneration(EventLineGeneration $eventLineGeneration)
     {
         $this->eventLineGenerations[] = $eventLineGeneration;
 
@@ -138,9 +139,9 @@ class EventLine extends BaseEntity
     /**
      * Remove eventLineGeneration
      *
-     * @param \AppBundle\Entity\EventLineGeneration $eventLineGeneration
+     * @param EventLineGeneration $eventLineGeneration
      */
-    public function removeEventLineGeneration(\AppBundle\Entity\EventLineGeneration $eventLineGeneration)
+    public function removeEventLineGeneration(EventLineGeneration $eventLineGeneration)
     {
         $this->eventLineGenerations->removeElement($eventLineGeneration);
     }

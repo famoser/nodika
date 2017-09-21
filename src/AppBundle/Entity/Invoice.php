@@ -186,11 +186,11 @@ class Invoice extends BaseEntity
     /**
      * Set organisation
      *
-     * @param \AppBundle\Entity\Organisation $organisation
+     * @param Organisation $organisation
      *
      * @return Invoice
      */
-    public function setOrganisation(\AppBundle\Entity\Organisation $organisation = null)
+    public function setOrganisation(Organisation $organisation = null)
     {
         $this->organisation = $organisation;
 
@@ -200,7 +200,7 @@ class Invoice extends BaseEntity
     /**
      * Get organisation
      *
-     * @return \AppBundle\Entity\Organisation
+     * @return Organisation
      */
     public function getOrganisation()
     {

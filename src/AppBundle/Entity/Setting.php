@@ -92,11 +92,11 @@ class Setting extends BaseEntity
     /**
      * Set user
      *
-     * @param \AppBundle\Entity\FrontendUser $frontendUser
+     * @param FrontendUser $frontendUser
      *
      * @return Setting
      */
-    public function setFrontendUser(\AppBundle\Entity\FrontendUser $frontendUser = null)
+    public function setFrontendUser(FrontendUser $frontendUser = null)
     {
         $this->frontendUser = $frontendUser;
 
@@ -106,7 +106,7 @@ class Setting extends BaseEntity
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\FrontendUser
+     * @return FrontendUser
      */
     public function getFrontendUser()
     {

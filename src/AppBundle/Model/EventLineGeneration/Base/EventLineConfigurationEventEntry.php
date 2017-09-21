@@ -10,7 +10,6 @@ namespace AppBundle\Model\EventLineGeneration\Base;
 
 
 use AppBundle\Entity\Event;
-use AppBundle\Entity\Member;
 
 class EventLineConfigurationEventEntry
 {

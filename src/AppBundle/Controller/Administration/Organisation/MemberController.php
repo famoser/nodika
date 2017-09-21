@@ -85,7 +85,7 @@ class MemberController extends BaseController
         if (!$isPartOfOrganisation) {
             $translator = $this->get("translator");
             $this->displayInfo(
-                $translator->trans("administer.not_part_of_organisation_yet", [], "member"),
+                $translator->trans("administer.not_part_of_organisation_yet", [], "administration_organisation_member"),
                 $this->generateUrl("administration_organisation_member_add_self", ["organisation" => $organisation->getId(), "member" => $member->getId()])
             );
         }

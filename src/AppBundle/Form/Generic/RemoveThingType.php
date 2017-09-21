@@ -9,12 +9,10 @@
 namespace AppBundle\Form\Generic;
 
 
-use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
 use AppBundle\Helper\NamingHelper;
 use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

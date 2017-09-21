@@ -341,7 +341,7 @@ class NodikaController extends BaseGenerationController
                             $submissionFailure = true;
                             $foundInvalid = true;
                             $translator = $this->get("translator");
-                            $this->displayError($translator->trans("error.date_format_invalid", ["%date%" => $part], "nodika"));
+                            $this->displayError($translator->trans("error.date_format_invalid", ["%date%" => $part], "administration_organisation_event_line_generate_nodika"));
                         } else {
                             $sanitizedParts[] = $part;
                         }
@@ -483,7 +483,7 @@ class NodikaController extends BaseGenerationController
                         if (!is_numeric($part)) {
                             $submissionFailure = true;
                             $foundInvalid = true;
-                            $this->displayError($translator->trans("error.member_format_invalid", ["%part%" => $part], "nodika"));
+                            $this->displayError($translator->trans("error.member_format_invalid", ["%part%" => $part], "administration_organisation_event_line_generate_nodika"));
                         } else {
                             $sanitizedParts[] = $part;
                         }
@@ -491,7 +491,7 @@ class NodikaController extends BaseGenerationController
                     if (!$foundInvalid) {
                         foreach ($sanitizedParts as $sanitizedPart) {
                             if ($sanitizedPart != 0 && !isset($memberConfigurations[$sanitizedPart])) {
-                                $this->displayError($translator->trans("error.member_not_found", ["%id%" => $sanitizedPart], "nodika"));
+                                $this->displayError($translator->trans("error.member_not_found", ["%id%" => $sanitizedPart], "administration_organisation_event_line_generate_nodika"));
                                 $submissionFailure = true;
                                 $foundInvalid = true;
                                 break;
@@ -534,7 +534,6 @@ class NodikaController extends BaseGenerationController
     public function startGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
-        $config = $this->getDistributionConfiguration($generation, $organisation);
 
         $arr = [];
         $arr["organisation"] = $organisation;
@@ -600,7 +599,6 @@ class NodikaController extends BaseGenerationController
     public function confirmGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
-        $config = $this->getDistributionConfiguration($generation, $organisation);
         $generationResult = $this->getGenerationResult($generation);
 
         $memberById = [];

@@ -73,7 +73,7 @@ class OrganisationController extends BaseController
         if (!$setupStatus->getAllDone()) {
             $translator = $this->get("translator");
             $this->displayInfo(
-                $translator->trans("messages.not_fully_setup", [], "organisation"),
+                $translator->trans("messages.not_fully_setup", [], "administration_organisation"),
                 $this->generateUrl("administration_organisation_setup", ["organisation" => $organisation->getId()])
             );
         }
@@ -133,12 +133,12 @@ class OrganisationController extends BaseController
 
         if ($organisationSetting->getInviteEmailSubject() == "") {
             $organisationSetting->setInviteEmailSubject(
-                $this->get("translator")->trans("members_invite.email.default_subject", [], "organisation")
+                $this->get("translator")->trans("members_invite.email.default_subject", [], "administration_organisation")
             );
         }
         if ($organisationSetting->getInviteEmailMessage() == "") {
             $organisationSetting->setInviteEmailMessage(
-                $this->get("translator")->trans("members_invite.email.default_message", [], "organisation")
+                $this->get("translator")->trans("members_invite.email.default_message", [], "administration_organisation")
             );
         }
 
@@ -156,7 +156,7 @@ class OrganisationController extends BaseController
                 } else if ($key == "message") {
                     $organisationSetting->setInviteEmailMessage($value);
                     if (!strpos($value, "LINK_REPLACE")) {
-                        $this->get("translator")->trans("members_invite.error.no_link_replace_in_message", [], "organisation");
+                        $this->get("translator")->trans("members_invite.error.no_link_replace_in_message", [], "administration_organisation");
                         $canForward = false;
                     }
                 }
@@ -246,7 +246,7 @@ class OrganisationController extends BaseController
                 $this->fastSave($member);
             }
 
-            $this->displaySuccess($this->get("translator")->trans("members_invite.successful.emails_send", ["%count%" => count($notInvitedMembers)], "organisation"));
+            $this->displaySuccess($this->get("translator")->trans("members_invite.successful.emails_send", ["%count%" => count($notInvitedMembers)], "administration_organisation"));
 
             return $this->redirectToRoute("administration_organisation_members", ["organisation" => $organisation->getId()]);
         }

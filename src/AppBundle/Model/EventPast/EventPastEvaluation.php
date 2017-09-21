@@ -18,6 +18,7 @@ class EventPastEvaluation
      * EventPastEvaluation constructor.
      * @param \DateTime $changedAtDateTime
      * @param Person $changedByPerson
+     * @param int $eventChangeType
      */
     public function __construct(\DateTime $changedAtDateTime, Person $changedByPerson, $eventChangeType)
     {

@@ -5,13 +5,21 @@
 
 .header-container
   padding: 0
-
-.header-content
-  float: left
+  position: relative
 
 .goto-dashboard
-  float: right
+  position: absolute
+  right: 0
+  bottom: 35px
+  background-color: $color-secondary-1-0
+  &:hover
+    background-color: $color-secondary-1-2
 
+
+.goto-dashboard > a
+  color: $grey-light
+  padding: 23px
+  display: block
 
 .logo-img
   display: block

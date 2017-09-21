@@ -9,7 +9,6 @@
 namespace AppBundle\Extension;
 
 use AppBundle\Helper\DateTimeFormatter;
-use AppBundle\Service\Interfaces\ISessionService;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 

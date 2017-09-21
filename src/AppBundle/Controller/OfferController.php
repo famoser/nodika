@@ -9,8 +9,6 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Controller\Administration\Organisation\MemberController;
-use AppBundle\Controller\Base\BaseController;
 use AppBundle\Controller\Base\BaseFrontendController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventOffer;

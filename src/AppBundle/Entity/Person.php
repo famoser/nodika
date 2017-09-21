@@ -74,11 +74,11 @@ class Person extends BaseEntity
     /**
      * Add leaderOf
      *
-     * @param \AppBundle\Entity\Organisation $leaderOf
+     * @param Organisation $leaderOf
      *
      * @return Person
      */
-    public function addLeaderOf(\AppBundle\Entity\Organisation $leaderOf)
+    public function addLeaderOf(Organisation $leaderOf)
     {
         $this->leaderOf[] = $leaderOf;
 
@@ -88,9 +88,9 @@ class Person extends BaseEntity
     /**
      * Remove leaderOf
      *
-     * @param \AppBundle\Entity\Organisation $leaderOf
+     * @param Organisation $leaderOf
      */
-    public function removeLeaderOf(\AppBundle\Entity\Organisation $leaderOf)
+    public function removeLeaderOf(Organisation $leaderOf)
     {
         $this->leaderOf->removeElement($leaderOf);
     }
@@ -108,11 +108,11 @@ class Person extends BaseEntity
     /**
      * Add member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      *
      * @return Person
      */
-    public function addMember(\AppBundle\Entity\Member $member)
+    public function addMember(Member $member)
     {
         $this->members[] = $member;
 
@@ -122,9 +122,9 @@ class Person extends BaseEntity
     /**
      * Remove member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      */
-    public function removeMember(\AppBundle\Entity\Member $member)
+    public function removeMember(Member $member)
     {
         $this->members->removeElement($member);
     }
@@ -142,11 +142,11 @@ class Person extends BaseEntity
     /**
      * Add event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      *
      * @return Person
      */
-    public function addEvent(\AppBundle\Entity\Event $event)
+    public function addEvent(Event $event)
     {
         $this->events[] = $event;
 
@@ -156,9 +156,9 @@ class Person extends BaseEntity
     /**
      * Remove event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      */
-    public function removeEvent(\AppBundle\Entity\Event $event)
+    public function removeEvent(Event $event)
     {
         $this->events->removeElement($event);
     }

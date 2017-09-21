@@ -10,7 +10,6 @@ namespace AppBundle\Controller\Base;
 
 
 use AppBundle\Entity\Traits\UserTrait;
-use AppBundle\Form\Generic\LoginType;
 use AppBundle\Helper\HashHelper;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -31,7 +30,7 @@ class BaseAccessController extends BaseController
      * @param Request $request
      * @param UserTrait $user
      * @param FormInterface $loginForm
-     * @return Form
+     * @return FormInterface
      */
     protected function getLoginForm(Request $request, $user, FormInterface $loginForm)
     {

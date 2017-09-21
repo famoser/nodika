@@ -9,8 +9,6 @@
 namespace AppBundle\Model\EventLineGeneration\Nodika;
 
 
-use AppBundle\Model\EventLineGeneration\Nodika\MemberConfiguration;
-
 class MemberEventTypeDistribution
 {
     /**

@@ -11,7 +11,6 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\AdminUser;
-use AppBundle\Entity\FrontendUser;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadAdminUserData extends BaseFixture

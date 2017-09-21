@@ -9,7 +9,6 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Controller\Base\BaseController;
 use AppBundle\Controller\Base\BaseFrontendController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -123,7 +122,7 @@ class DashboardController extends BaseFrontendController
         }
 
 
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, $startDateTime, null, $member, null, 4000);
+        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, $startDateTime, $endDateTime, $member, null, 4000);
         $arr["member"] = $member;
         return $this->render("dashboard/index.html.twig", $arr);
     }

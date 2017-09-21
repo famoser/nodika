@@ -41,11 +41,11 @@ class EventOfferEntry extends BaseEntity
     /**
      * Set eventOffer
      *
-     * @param \AppBundle\Entity\EventOffer $eventOffer
+     * @param EventOffer $eventOffer
      *
      * @return EventOfferEntry
      */
-    public function setEventOffer(\AppBundle\Entity\EventOffer $eventOffer = null)
+    public function setEventOffer(EventOffer $eventOffer = null)
     {
         $this->eventOffer = $eventOffer;
 
@@ -55,7 +55,7 @@ class EventOfferEntry extends BaseEntity
     /**
      * Get eventOffer
      *
-     * @return \AppBundle\Entity\EventOffer
+     * @return EventOffer
      */
     public function getEventOffer()
     {
@@ -65,11 +65,11 @@ class EventOfferEntry extends BaseEntity
     /**
      * Set event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      *
      * @return EventOfferEntry
      */
-    public function setEvent(\AppBundle\Entity\Event $event = null)
+    public function setEvent(Event $event = null)
     {
         $this->event = $event;
 
@@ -79,7 +79,7 @@ class EventOfferEntry extends BaseEntity
     /**
      * Get event
      *
-     * @return \AppBundle\Entity\Event
+     * @return Event
      */
     public function getEvent()
     {

@@ -69,10 +69,10 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
      */
     private function eventChangeOccurred(EventPastEvaluation $evaluation, Event $beforeEvent, Event $afterEvent)
     {
-        if ($beforeEvent->getMember() != $afterEvent->getMember()) {
+        if ($beforeEvent->getMember()->getId() != $afterEvent->getMember()->getId()) {
             $evaluation->setMemberChanged($beforeEvent->getMember(), $afterEvent->getMember());
         }
-        if ($beforeEvent->getPerson() != $afterEvent->getPerson()) {
+        if ($beforeEvent->getPerson()->getId() != $afterEvent->getPerson()->getId()) {
             $evaluation->setPersonChanged($beforeEvent->getPerson(), $afterEvent->getPerson());
         }
         if ($beforeEvent->getStartDateTime() != $afterEvent->getEndDateTime()) {

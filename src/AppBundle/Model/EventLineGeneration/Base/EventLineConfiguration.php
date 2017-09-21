@@ -11,7 +11,6 @@ namespace AppBundle\Model\EventLineGeneration\Base;
 
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
-use AppBundle\Entity\Member;
 
 class EventLineConfiguration
 {

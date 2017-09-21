@@ -79,11 +79,11 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     /**
      * Set person
      *
-     * @param \AppBundle\Entity\Person $person
+     * @param Person $person
      *
      * @return FrontendUser
      */
-    public function setPerson(\AppBundle\Entity\Person $person = null)
+    public function setPerson(Person $person = null)
     {
         $this->person = $person;
 
@@ -93,7 +93,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     /**
      * Get person
      *
-     * @return \AppBundle\Entity\Person
+     * @return Person
      */
     public function getPerson()
     {

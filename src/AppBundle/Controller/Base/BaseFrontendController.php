@@ -8,21 +8,9 @@
 
 namespace AppBundle\Controller\Base;
 
-use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Member;
-use AppBundle\Entity\Organisation;
-use AppBundle\Entity\Person;
 use AppBundle\Enum\SettingKey;
-use AppBundle\Enum\SubmitButtonType;
-use AppBundle\Helper\CsvFileHelper;
-use AppBundle\Helper\NamingHelper;
 use AppBundle\Helper\SessionHelper;
-use AppBundle\Helper\StaticMessageHelper;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BaseFrontendController extends BaseController
 {

@@ -12,9 +12,6 @@ namespace AppBundle\Form\Generic;
 use AppBundle\Entity\Traits\UserTrait;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 abstract class SetPasswordType extends BaseAbstractType

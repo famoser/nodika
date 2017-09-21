@@ -11,7 +11,6 @@ namespace AppBundle\Controller;
 use AppBundle\Controller\Base\BaseFrontendController;
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Member;
-use AppBundle\Entity\Person;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\FrontendUser\FrontendUserChangeEmailType;
 use AppBundle\Form\FrontendUser\FrontendUserSetPasswordType;

@@ -11,26 +11,12 @@ namespace AppBundle\Controller\Administration\Organisation\EventLine\Generate\Ba
 
 
 use AppBundle\Controller\Base\BaseController;
-use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\EventLineGeneration;
-use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
-use AppBundle\Enum\DistributionType;
-use AppBundle\Enum\NodikaStatusCode;
-use AppBundle\Form\EventLineGeneration\Nodika\ChoosePeriodType;
 use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
 use AppBundle\Model\EventLineGeneration\Base\EventLineConfiguration;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
-use AppBundle\Model\EventLineGeneration\Nodika\MemberConfiguration;
-use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
-use AppBundle\Model\EventLineGeneration\Nodika\NodikaOutput;
-use AppBundle\Security\Voter\EventLineGenerationVoter;
-use AppBundle\Security\Voter\EventLineVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class BaseGenerationController extends BaseController
 {

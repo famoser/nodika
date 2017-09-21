@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use function Couchbase\defaultDecoder;
 
 class SettingKey extends BaseEnum
 {

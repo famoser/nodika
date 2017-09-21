@@ -182,11 +182,11 @@ class Event extends BaseEntity
     /**
      * Set person
      *
-     * @param \AppBundle\Entity\Person $person
+     * @param Person $person
      *
      * @return Event
      */
-    public function setPerson(\AppBundle\Entity\Person $person = null)
+    public function setPerson(Person $person = null)
     {
         $this->person = $person;
 
@@ -196,7 +196,7 @@ class Event extends BaseEntity
     /**
      * Get person
      *
-     * @return \AppBundle\Entity\Person
+     * @return Person
      */
     public function getPerson()
     {
@@ -206,11 +206,11 @@ class Event extends BaseEntity
     /**
      * Set eventLine
      *
-     * @param \AppBundle\Entity\EventLine $eventLine
+     * @param EventLine $eventLine
      *
      * @return Event
      */
-    public function setEventLine(\AppBundle\Entity\EventLine $eventLine = null)
+    public function setEventLine(EventLine $eventLine = null)
     {
         $this->eventLine = $eventLine;
 
@@ -220,7 +220,7 @@ class Event extends BaseEntity
     /**
      * Get eventLine
      *
-     * @return \AppBundle\Entity\EventLine
+     * @return EventLine
      */
     public function getEventLine()
     {
@@ -230,11 +230,11 @@ class Event extends BaseEntity
     /**
      * Add eventPast
      *
-     * @param \AppBundle\Entity\EventPast $eventPast
+     * @param EventPast $eventPast
      *
      * @return Event
      */
-    public function addEventPast(\AppBundle\Entity\EventPast $eventPast)
+    public function addEventPast(EventPast $eventPast)
     {
         $this->eventPast[] = $eventPast;
 
@@ -244,9 +244,9 @@ class Event extends BaseEntity
     /**
      * Remove eventPast
      *
-     * @param \AppBundle\Entity\EventPast $eventPast
+     * @param EventPast $eventPast
      */
-    public function removeEventPast(\AppBundle\Entity\EventPast $eventPast)
+    public function removeEventPast(EventPast $eventPast)
     {
         $this->eventPast->removeElement($eventPast);
     }

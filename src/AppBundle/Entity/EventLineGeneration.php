@@ -232,11 +232,11 @@ class EventLineGeneration extends BaseEntity
     /**
      * Set eventLine
      *
-     * @param \AppBundle\Entity\EventLine $eventLine
+     * @param EventLine $eventLine
      *
      * @return EventLineGeneration
      */
-    public function setEventLine(\AppBundle\Entity\EventLine $eventLine = null)
+    public function setEventLine(EventLine $eventLine = null)
     {
         $this->eventLine = $eventLine;
 
@@ -246,7 +246,7 @@ class EventLineGeneration extends BaseEntity
     /**
      * Get eventLine
      *
-     * @return \AppBundle\Entity\EventLine
+     * @return EventLine
      */
     public function getEventLine()
     {

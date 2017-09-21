@@ -303,7 +303,6 @@ class RoundRobinController extends BaseGenerationController
     public function startGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
-        $config = $this->getDistributionConfiguration($generation, $organisation);
 
         $arr = [];
         $arr["organisation"] = $organisation;
@@ -369,7 +368,6 @@ class RoundRobinController extends BaseGenerationController
     public function confirmGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
-        $config = $this->getDistributionConfiguration($generation, $organisation);
         $generationResult = $this->getGenerationResult($generation);
 
         $memberById = [];

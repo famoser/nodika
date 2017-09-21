@@ -10,17 +10,13 @@ namespace AppBundle\Form\Event;
  */
 
 use AppBundle\Entity\Event;
-use AppBundle\Entity\EventLine;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseCrudAbstractType;
 use AppBundle\Helper\StaticMessageHelper;
-use AppBundle\Repository\EventLineRepository;
 use AppBundle\Repository\MemberRepository;
-use function GuzzleHttp\Psr7\parse_header;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;

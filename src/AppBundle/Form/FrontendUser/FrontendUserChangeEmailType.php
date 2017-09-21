@@ -9,14 +9,10 @@
 namespace AppBundle\Form\FrontendUser;
 
 
-use AppBundle\Entity\FrontendUser;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\BaseAbstractType;
-use AppBundle\Form\Generic\SetPasswordType;
 use AppBundle\Helper\NamingHelper;
-use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

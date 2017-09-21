@@ -2,13 +2,21 @@
   padding-top: 0; }
 
 .header-container {
-  padding: 0; }
-
-.header-content {
-  float: left; }
+  padding: 0;
+  position: relative; }
 
 .goto-dashboard {
-  float: right; }
+  position: absolute;
+  right: 0;
+  bottom: 35px;
+  background-color: #555F76; }
+  .goto-dashboard:hover {
+    background-color: #737B8E; }
+
+.goto-dashboard > a {
+  color: #efefef;
+  padding: 23px;
+  display: block; }
 
 .logo-img {
   display: block;

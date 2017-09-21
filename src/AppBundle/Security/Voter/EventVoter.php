@@ -12,7 +12,6 @@ namespace AppBundle\Security\Voter;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Entity\Organisation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class EventVoter extends EventLineVoter
