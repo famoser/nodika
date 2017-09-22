@@ -37,4 +37,21 @@ class MemberRepository extends EntityRepository
         }
         return $res;
     }
+
+    /**
+     * @param Member $member
+     * @return int
+     */
+    public function countUnassignedEvents(Member $member)
+    {
+        $qb = $this->createQueryBuilder('t');
+        return $qb
+            ->select('count(e.id)')
+            ->join("t.events", "e")
+            ->where($qb->expr()->isNull('e.person'))
+            ->andWhere("t = :member")
+            ->setParameter(":member", $member)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

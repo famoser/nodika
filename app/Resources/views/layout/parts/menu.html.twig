@@ -12,62 +12,128 @@
         <div class="menu-entries-container navigation">
             <h3>{{ "menu.menu"|trans({}, "content_base") }}</h3>
             <ul class="menu-entries">
-                {% if is_granted("ROLE_USER") %}
-                    <li class="menu-group-header">
-                        <span>{{ "entity.name"|trans({}, "entity_organisation") }}</span>
-                    </li>
-                    {% if organisation is defined %}
+                {% if is_granted("ROLE_ADMIN") %}
+                {% elseif is_granted("ROLE_USER") %}
+                    {# adminitration menu #}
+                    {% if ("administration" in app.request.attributes.get("_route")) %}
+                        <li class="menu-group-header">
+                            <span>{{ "entity.name"|trans({}, "entity_organisation") }}</span>
+                        </li>
+                        {% if organisation is defined %}
+                            <li>
+                                <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">{{ "menu.admin.administer"|trans({}, "content_base") }}</a>
+                            </li>
+                        {% endif %}
                         <li>
-                            <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">{{ "menu.administer"|trans({}, "content_base") }}</a>
+                            <a href="{{ path("administration_organisation_new") }}">{{ "menu.admin.add_organisation"|trans({}, "content_base") }}</a>
+                        </li>
+
+                        {% if organisation is defined %}
+                            <li class="menu-group-header">
+                                <span>{{ "entity.name"|trans({}, "entity_member") }}</span>
+                            </li>
+                            {% if member is defined %}
+                                <li>
+                                    <a href="{{ path("administration_organisation_member_administer", {"organisation" : organisation.id, "member" : member.id}) }}">{{ "menu.admin.administer"|trans({}, "content_base") }}</a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "menu.admin.add_member"|trans({}, "content_base") }}</a>
+                            </li>
+                            {% if member is defined %}
+                                <li class="menu-group-header">
+                                    <span>{{ "entity.name"|trans({}, "entity_person") }}</span>
+                                </li>
+                                <li>
+                                    <a href="{{ path("administration_organisation_member_person_new", {"organisation" : organisation.id, "member" : member.id}) }}">{{ "menu.admin.add_person"|trans({}, "content_base") }}</a>
+                                </li>
+                            {% endif %}
+
+                            <li class="menu-group-header">
+                                <span>{{ "entity.name"|trans({}, "entity_event_line") }}</span>
+                            </li>
+                            {% if eventLine is defined %}
+                                <li>
+                                    <a href="{{ path("administration_organisation_event_line_administer", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "menu.admin.administer"|trans({}, "content_base") }}</a>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "menu.admin.add_event_line"|trans({}, "content_base") }}</a>
+                            </li>
+                            {% if event is defined %}
+                                <li class="menu-group-header">
+                                    <span>{{ "entity.name"|trans({}, "entity_event") }}</span>
+                                </li>
+                                <li>
+                                    <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id, "eventLine" : event.id}) }}">{{ "menu.admin.add_event"|trans({}, "content_base") }}</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {# user menu #}
+                        {% if menu_organisation is defined %}
+                            <li class="menu-group-header">
+                                <span>{{ "entity.name"|trans({}, "entity_organisation") }}</span>
+                            </li>
+                            <li>
+                                <a href="{{ path("organisation_view") }}">
+                                    {{ menu_organisation.name }}
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if menu_member is defined %}
+                            <li class="menu-group-header">
+                                {{ "entity.plural"|trans({}, "entity_event") }}
+                            </li>
+                            <li>
+                                <a href="{{ path("event_assign") }}">
+                                    {{ "menu.user.assign_events"|trans({}, "content_base") }}
+                                    ({{ menu_unassigned_events_count }})
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path("event_search", {"member" : menu_member.id}) }}">
+                                    {{ "menu.user.my_member_events"|trans({}, "content_base") }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path("event_search", {"person" : menu_person.id}) }}">
+                                    {{ "menu.user.my_person_events"|trans({}, "content_base") }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path("event_search") }}">
+                                    {{ "menu.user.search_events"|trans({}, "content_base") }}
+                                </a>
+                            </li>
+
+                            <li class="menu-group-header">
+                                {{ "entity.name"|trans({}, "entity_member") }}
+                            </li>
+                            <li>
+                                <a href="{{ path("member_view") }}">
+                                    {{ menu_member.name }}
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="menu-group-header">
+                            {{ "entity.name"|trans({}, "entity_person") }}
+                        </li>
+                        <li>
+                            <a href="{{ path("person_view") }}">
+                                {{ menu_person.fullName }}
+                            </a>
+                        </li>
+
+                        <li class="menu-group-header">
+                            <span>{{ "menu.user.advanced"|trans({}, "content_base") }}</span>
+                        </li>
+                        <li>
+                            <a href="{{ path("administration_organisation_new") }}">
+                                {{ "menu.user.add_own_organisation"|trans({}, "content_base") }}
+                            </a>
                         </li>
                     {% endif %}
-                    <li>
-                        <a href="{{ path("administration_organisation_new") }}">{{ "menu.add_organisation"|trans({}, "content_base") }}</a>
-                    </li>
-
-                    {% if organisation is defined %}
-                        <li class="menu-group-header">
-                            <span>{{ "entity.name"|trans({}, "entity_member") }}</span>
-                        </li>
-                        {% if member is defined %}
-                            <li>
-                                <a href="{{ path("administration_organisation_member_administer", {"organisation" : organisation.id, "member" : member.id}) }}">{{ "menu.administer"|trans({}, "content_base") }}</a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "menu.add_member"|trans({}, "content_base") }}</a>
-                        </li>
-                        {% if member is defined %}
-                            <li class="menu-group-header">
-                                <span>{{ "entity.name"|trans({}, "entity_person") }}</span>
-                            </li>
-                            <li>
-                                <a href="{{ path("administration_organisation_member_person_new", {"organisation" : organisation.id, "member" : member.id}) }}">{{ "menu.add_person"|trans({}, "content_base") }}</a>
-                            </li>
-                        {% endif %}
-
-                        <li class="menu-group-header">
-                            <span>{{ "entity.name"|trans({}, "entity_event_line") }}</span>
-                        </li>
-                        {% if eventLine is defined %}
-                            <li>
-                                <a href="{{ path("administration_organisation_event_line_administer", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "menu.administer"|trans({}, "content_base") }}</a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "menu.add_event_line"|trans({}, "content_base") }}</a>
-                        </li>
-                        {% if event is defined %}
-                            <li class="menu-group-header">
-                                <span>{{ "entity.name"|trans({}, "entity_event") }}</span>
-                            </li>
-                            <li>
-                                <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id, "eventLine" : event.id}) }}">{{ "menu.add_event"|trans({}, "content_base") }}</a>
-                            </li>
-                        {% endif %}
-                    {% endif %}
-                {% elseif is_granted("ROLE_ADMIN") %}
-
                 {% endif %}
             </ul>
         </div>

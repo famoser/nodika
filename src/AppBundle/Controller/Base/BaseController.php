@@ -329,16 +329,6 @@ class BaseController extends Controller
     }
 
     /**
-     * @param string|null $backUrl
-     * @return bool
-     */
-    private function getShowDashboard($backUrl = null)
-    {
-        $request = $this->get("request_stack")->getCurrentRequest();
-        return $this->getUser() instanceof FrontendUser && $request->get("_route") != "dashboard_index" && $backUrl != "/dashboard/";
-    }
-
-    /**
      * Renders a view.
      *
      * @param string $view The view name
@@ -351,5 +341,15 @@ class BaseController extends Controller
     {
         $parameters["show_dashboard"] = $this->getShowDashboard();
         return parent::render($view, $parameters, $response);
+    }
+
+    /**
+     * @param string|null $backUrl
+     * @return bool
+     */
+    private function getShowDashboard($backUrl = null)
+    {
+        $request = $this->get("request_stack")->getCurrentRequest();
+        return $this->getUser() instanceof FrontendUser && $request->get("_route") != "dashboard_index" && $backUrl != "/dashboard/";
     }
 }

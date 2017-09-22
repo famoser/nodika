@@ -17,6 +17,24 @@
     </div>
 {% endmacro %}
 
+{% macro select_form_field(name, value, enumeration, description, empty, classes = "") %}
+    <div class="form-group {{ classes }}">
+        {% if description is not null %}
+            <label class="control-label" for="{{ name }}">{{ description }}</label>
+        {% endif %}
+        <select class="form-control" name="{{ name }}" id="{{ name }}">
+            {% if empty %}
+                <option value="-" {% if value == null %}selected{% endif %}>-</option>
+            {% endif %}
+            {% for item in enumeration %}
+                <option value="{{ item.id }}" {% if value != null and value.id == item.id %}selected{% endif %}>
+                    {{ item }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}
+
 {% macro form_field(name, value, description = null, type = "text", classes = "") %}
     <div class="form-group {{ classes }}">
         {% if description is not null %}

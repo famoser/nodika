@@ -28,47 +28,6 @@
             {% endif %}
         </div>
         <div class="col-md-3">
-            <h3>{{ "index.your_profil"|trans }}</h3>
-            <p>
-                {{ "index.your_profil_description"|trans }}
-                <br/>
-                {% if organisation is defined %}
-                    {{ "entity.name"|trans({}, "entity_organisation") }}:
-                    <a href="{{ path("organisation_view") }}">
-                        {{ organisation.name }}</a>
-                    <br/>
-                {% endif %}
-                {% if member is defined %}
-                    {{ "entity.name"|trans({}, "entity_member") }}:
-                    <a href="{{ path("member_view") }}">
-                        {{ member.name }}</a>
-                    <br/>
-                {% endif %}
-                {{ "entity.name"|trans({}, "entity_person") }}:
-                <a href="{{ path("person_view") }}">
-                    {{ person.fullName }}</a>
-                <br/>
-            </p>
-
-            <h3>{{ "index.important_links"|trans }}</h3>
-            <p>
-                <a href="{{ path("offer_index") }}">
-                    {{ "index.trade_events"|trans }}
-                </a><br/>
-                <a href="{{ path("event_assign") }}">
-                    {{ "index.assign_events"|trans }}
-                </a><br/>
-                <a href="{{ path("dashboard_mine") }}">
-                    {{ "index.all_my_events"|trans }}
-                </a><br/>
-                <a href="{{ path("dashboard_all") }}">
-                    {{ "index.all_events"|trans }}
-                </a><br/>
-                <a href="{{ path("help_admins") }}">
-                    {{ "index.help_nodika_users"|trans }}
-                </a>
-            </p>
-
             {% if change_organisations is defined %}
                 <h3>{{ "index.change_organisation"|trans }}</h3>
                 <p>

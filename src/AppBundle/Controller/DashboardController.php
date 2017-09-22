@@ -28,7 +28,6 @@ class DashboardController extends BaseFrontendController
     public function indexAction(Request $request)
     {
         $member = $this->getMember();
-
         $arr["person"] = $this->getPerson();
         $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
         $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
@@ -46,84 +45,4 @@ class DashboardController extends BaseFrontendController
         return $this->renderNoBackUrl("dashboard/index.html.twig", $arr, "dashboard!");
     }
 
-    /**
-     * @Route("/mine", name="dashboard_mine")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function mineAction(Request $request)
-    {
-        $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
-        }
-
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, $member, null, 4000);
-        return $this->renderWithBackUrl("dashboard/mine.html.twig", $arr, $this->generateUrl("dashboard_index"));
-    }
-
-    /**
-     * @Route("/all", name="dashboard_all")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function allAction(Request $request)
-    {
-        $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
-        }
-
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, null, null, 4000);
-        $arr["member"] = $member;
-        return $this->renderWithBackUrl("dashboard/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
-    }
-
-    /**
-     * @Route("/search", name="dashboard_search")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function searchAction(Request $request)
-    {
-        $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
-        }
-
-        $organisation = $member->getOrganisation();
-
-        $startQuery = $request->query->get("start");
-        $startDateTime = false;
-        if ($startQuery != "") {
-            $startDateTime = strtotime($startQuery);
-        }
-        if (!$startDateTime) {
-            $startDateTime = new \DateTime();
-        }
-
-        $endQuery = $request->query->get("end");
-        $endDateTime = false;
-        if ($endQuery != "") {
-            $endDateTime = strtotime($endQuery);
-        }
-        if (!$endDateTime) {
-            $endDateTime = clone($startDateTime)->add(new \DateInterval("PT30D"));
-        }
-
-        $memberQuery = $request->query->get("membery");
-        $member = null;
-        if (is_numeric($memberQuery)) {
-            foreach ($organisation->getMembers() as $organisationMember) {
-                if ($organisationMember->getId() == $memberQuery) {
-                    $member = $organisationMember;
-                }
-            }
-        }
-
-
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, $startDateTime, $endDateTime, $member, null, 4000);
-        $arr["member"] = $member;
-        return $this->renderWithBackUrl("dashboard/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
-    }
 }

@@ -5,8 +5,6 @@ index:
   administer_organisations_description: Sie sind Administrator folgender Organisationen und können diese verwalten
   change_organisation: Organisation wechseln
   change_organisation_description: Sie sind Teil mehrerer Organisationen. Hier können Sie zu den anderen wechseln
-  your_profil: Ihr Profil
-  your_profil_description: So sind Sie authentifiziert
   important_links: Wichtige Links
   trade_events: Termine tauschen
   assign_events: Termine zuweisen
@@ -20,11 +18,3 @@ index:
   all_organisation_events: Alle Termine meiner Organsiation
   not_part_of_organisation: Sie sind nicht Teil einer Organisation und sehen daher hier keine Termine
   help_nodika_users: Hilfe zu nodika
-
-mine:
-  title: Meine Termine
-  description: Alle meine Termine auf einem Blick
-
-all:
-  title: Alle Termine
-  description: Alle Termine auf einem Blick

@@ -1,12 +1,22 @@
 menu:
   menu: Menu
-  add_organisation: neue erstellen
-  add_member: neues erstellen
-  add_event_line: neue erstellen
-  add_event: neuer erstellen
-  add_person: neuer erstellen
-  administer: verwalten
-  settings: Einstellungen
+  admin:
+    add_organisation: neue erstellen
+    add_member: neues erstellen
+    add_event_line: neue erstellen
+    add_event: neuer erstellen
+    add_person: neuer erstellen
+    administer: verwalten
+  user:
+    advanced: Erweiterte Funktionen
+    add_own_organisation: Eigene Organisation erstellen
+    assign_events: Termine zuweisen
+    my_member_events: Termine meiner Praxis
+    my_person_events: Eigene Termine
+    search_events: Terminsuche
+
+navigation:
   dashboard: zum Dashboard
   login: login
   go_back: zurück
+

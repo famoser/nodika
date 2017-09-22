@@ -11136,6 +11136,9 @@ input:checked + .slider:before {
   vertical-align: top;
   cursor: pointer; }
 
+tr.bold > td {
+  font-weight: bold; }
+
 .color-background {
   position: absolute;
   height: 20px;

@@ -2,15 +2,16 @@ Introduction
 ======
 
 todos:
- - implement invoice system
  - view event past
- - assign events to persons better
- - admin management
- - event accept
+ - event accept notification
  - send event remainders
  - finish search
+ - assign events to persons better
  - finish EventController
+ - Member, Person, Organisation view
+ - admin management
  - continue generation
+ - implement invoice system
 
 project build with symfony. Dependecy managers:
  - composer for php

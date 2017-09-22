@@ -15,3 +15,10 @@ assign:
   unassigned_events_description: >
     Weisen Sie Termine einem Account zu.
     Erinnerungsemails zu den jeweiligen Terminen können so an den richtigen Empfänger zugestellt werden. Ausserdem können Sie diese Termine dann tauschen.
+
+search:
+  title: Termine
+  description: Kalender durchsuchen
+  no_event_lines: Keine Termine gefunden
+  filter: Filter
+  do_filter: Suchen
