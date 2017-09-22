@@ -2,12 +2,11 @@ Introduction
 ======
 
 todos:
- - view event past
  - event accept notification
  - send event remainders
- - finish search
  - assign events to persons better
  - finish EventController
+ - export & print events in search
  - Member, Person, Organisation view
  - admin management
  - continue generation
