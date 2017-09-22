@@ -50,9 +50,9 @@
     <div class="row">
         <div class="col-md-6">
             <p>
-                <a href="{{ path("administration_organisation_edit") }}">{{ "administer.edit_organisation"|trans }}</a><br/>
-                <a href="{{ path("administration_organisation_settings") }}">{{ "administer.settings_organisation"|trans }}</a><br/>
-                <a href="{{ path("help_users") }}">{{ "administer.help_nodika_administraotrs"|trans }}</a>
+                <a href="{{ path("administration_organisation_edit", {"organisation" : organisation}) }}">{{ "administer.edit_organisation"|trans }}</a><br/>
+                <a href="{{ path("administration_organisation_settings", {"organisation" : organisation}) }}">{{ "administer.settings_organisation"|trans }}</a><br/>
+                <a href="{{ path("help_admins") }}">{{ "administer.help_nodika_administraotrs"|trans }}</a>
             </p>
 
         </div>

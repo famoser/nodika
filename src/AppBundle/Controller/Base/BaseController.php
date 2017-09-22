@@ -321,10 +321,21 @@ class BaseController extends Controller
      * @param Response $response A response instance
      * @return Response A Response instance
      */
-    protected function render($view, array $parameters, $backUrl, Response $response = null)
+    protected function renderWithBackUrl($view, array $parameters, $backUrl, Response $response = null)
     {
+        $parameters["show_dashboard"] = $this->getShowDashboard($backUrl);
         $parameters["back_url"] = $backUrl;
         return parent::render($view, $parameters, $response);
+    }
+
+    /**
+     * @param string|null $backUrl
+     * @return bool
+     */
+    private function getShowDashboard($backUrl = null)
+    {
+        $request = $this->get("request_stack")->getCurrentRequest();
+        return $this->getUser() instanceof FrontendUser && $request->get("_route") != "dashboard_index" && $backUrl != "/dashboard/";
     }
 
     /**
@@ -338,6 +349,7 @@ class BaseController extends Controller
      */
     protected function renderNoBackUrl($view, array $parameters, $justification, Response $response = null)
     {
+        $parameters["show_dashboard"] = $this->getShowDashboard();
         return parent::render($view, $parameters, $response);
     }
 }

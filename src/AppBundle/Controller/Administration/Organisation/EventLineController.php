@@ -62,7 +62,7 @@ class EventLineController extends BaseController
 
         $arr["organisation"] = $organisation;
         $arr["new_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/new.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_lines", ["organisation" => $organisation->getId()])
@@ -98,7 +98,7 @@ class EventLineController extends BaseController
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         $arr["edit_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/edit.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
@@ -135,7 +135,7 @@ class EventLineController extends BaseController
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         $arr["remove_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/remove.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
@@ -156,7 +156,7 @@ class EventLineController extends BaseController
 
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/administer.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_lines", ["organisation" => $organisation->getId()])
@@ -260,7 +260,7 @@ class EventLineController extends BaseController
         $arr["eventLine"] = $eventLine;
         $arr["import_form"] = $importForm->createView();
 
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/import.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_lines", ["organisation" => $organisation->getId()])

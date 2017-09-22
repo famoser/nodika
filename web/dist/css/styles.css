@@ -10793,20 +10793,24 @@ blockquote.testimonial footer cite {
   padding: 0;
   position: relative; }
 
-.goto-dashboard {
+.go-buttons {
   position: absolute;
-  right: 0;
   bottom: 35px;
-  background-color: #555F76; }
-  .goto-dashboard:hover {
-    background-color: #737B8E; }
+  right: 0; }
 
-.goto-dashboard > a {
-  color: #efefef;
+.go-button {
   padding: 23px;
-  display: block; }
-  .goto-dashboard > a:hover {
+  display: block;
+  float: left;
+  margin: 0 0 0 10px; }
+  .go-button:hover {
     color: #efefef; }
+
+.go-dashboard {
+  right: 0; }
+
+.go-back {
+  right: 170px; }
 
 .logo-img {
   display: block;
@@ -10937,31 +10941,50 @@ p.h1-description, p.h2-description {
   margin-top: 0.5em; }
 
 .blue-background, .info-color {
-  background-color: #555F76;
-  color: #efefef; }
+  background-color: #555F76; }
+
+a.blue-background:hover, a.info-color:hover {
+  background-color: #737B8E; }
 
 .brown-background, .warning-color {
-  background-color: #B19E7A;
-  color: #efefef; }
+  background-color: #B19E7A; }
+
+a.brown-background:hover, a.warning-color:hover {
+  background-color: #D4C5A7; }
 
 .green-background, .success-color {
-  background-color: #618D61;
-  color: #efefef; }
+  background-color: #618D61; }
+
+a.green-background:hover, a.success-color:hover {
+  background-color: #86AA86; }
 
 .green2-background {
   background-color: #496A6A; }
 
+a.green2-background:hover {
+  background-color: #647F7F; }
+
 .red-background, .error-color {
-  background-color: #B17A7A;
-  color: #efefef; }
+  background-color: #B17A7A; }
+
+a.red-background:hover, a.error-color:hover {
+  background-color: #D4A7A7; }
 
 .gray-background, .default-color {
   background-color: #efefef;
   color: #555555; }
 
+a.gray-background:hover, a.default-color:hover {
+  background-color: #efefef; }
+
 .warning-color a, .info-color a, .error-color a, .success-color a {
   color: #efefef;
   text-decoration: underline; }
+
+.blue-background, .info-color, .brown-background, .warning-color, .green-background, .success-color, .green2-background, .red-background, .error-color {
+  color: #efefef; }
+  .blue-background:hover, .blue-background:active, .blue-background:focus, .info-color:hover, .info-color:active, .info-color:focus, .brown-background:hover, .brown-background:active, .brown-background:focus, .warning-color:hover, .warning-color:active, .warning-color:focus, .green-background:hover, .green-background:active, .green-background:focus, .success-color:hover, .success-color:active, .success-color:focus, .green2-background:hover, .green2-background:active, .green2-background:focus, .red-background:hover, .red-background:active, .red-background:focus, .error-color:hover, .error-color:active, .error-color:focus {
+    color: #efefef; }
 
 .nav-icon {
   width: 20px;

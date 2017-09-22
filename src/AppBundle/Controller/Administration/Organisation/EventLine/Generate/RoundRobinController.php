@@ -49,10 +49,10 @@ class RoundRobinController extends BaseGenerationController
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/generate/round_robin/new.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_event_line_generate_choose", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId())
+            $this->generateUrl("administration_organisation_event_line_generate_choose", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
         );
     }
 
@@ -122,7 +122,7 @@ class RoundRobinController extends BaseGenerationController
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
         $arr["choosePeriodForm"] = $form->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/generate/round_robin/choose_period.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
@@ -172,31 +172,10 @@ class RoundRobinController extends BaseGenerationController
         $arr["conflictPufferInHours"] = $config->conflictPufferInHours;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/generate/round_robin/no_conflicts.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_line_generate_round_robin_choose_period", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
-        );
-    }
-    
-    /**
-     * @Route("/{generation}/randomize_member_order", name="administration_organisation_event_line_generate_round_robin_randomize_member_order")
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
-     * @return Response
-     */
-    public function randomizeMemberOrderAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
-    {
-        $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
-        $config = $this->getDistributionConfiguration($generation, $organisation);
-
-        $this->randomizeMemberOrder($config);
-        $this->saveDistributionConfiguration($generation, $config);
-        return $this->redirectToRoute(
-            "administration_organisation_event_line_generate_round_robin_set_order",
-            ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
         );
     }
 
@@ -241,8 +220,31 @@ class RoundRobinController extends BaseGenerationController
         $arr["memberConfigurations"] = $config->memberConfigurations;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
-            'administration/organisation/event_line/generate/round_robin/choose_members.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/round_robin/choose_members.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_round_robin_choose_period", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
+        );
+    }
+
+    /**
+     * @Route("/{generation}/randomize_member_order", name="administration_organisation_event_line_generate_round_robin_randomize_member_order")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
+     * @return Response
+     */
+    public function randomizeMemberOrderAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    {
+        $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
+        $config = $this->getDistributionConfiguration($generation, $organisation);
+
+        $this->randomizeMemberOrder($config);
+        $this->saveDistributionConfiguration($generation, $config);
+        return $this->redirectToRoute(
+            "administration_organisation_event_line_generate_round_robin_set_order",
+            ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
         );
     }
 
@@ -293,8 +295,10 @@ class RoundRobinController extends BaseGenerationController
         $arr["memberConfigurations"] = $onlyEnabled;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
-            'administration/organisation/event_line/generate/round_robin/set_order.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/round_robin/set_order.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_round_robin_choose_members", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -314,8 +318,10 @@ class RoundRobinController extends BaseGenerationController
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
-            'administration/organisation/event_line/generate/round_robin/start_generation.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/round_robin/start_generation.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_round_robin_set_order", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -388,8 +394,10 @@ class RoundRobinController extends BaseGenerationController
         $arr["generationResult"] = $generationResult;
         $arr["memberById"] = $memberById;
 
-        return $this->render(
-            'administration/organisation/event_line/generate/round_robin/confirm_generation.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/round_robin/confirm_generation.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_round_robin_start_generation", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 

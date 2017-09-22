@@ -29,6 +29,6 @@ class DashboardController extends BaseController
     {
         $arr = [];
         $arr["organisations"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findAll();
-        return $this->render("backend/dashboard/index.html.twig", $arr, "this is the dashboard");
+        return $this->renderWithBackUrl("backend/dashboard/index.html.twig", $arr, "this is the dashboard");
     }
 }

@@ -50,8 +50,10 @@ class NodikaController extends BaseGenerationController
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/new.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/new.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_choose", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
         );
     }
 
@@ -122,8 +124,10 @@ class NodikaController extends BaseGenerationController
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
         $arr["choosePeriodForm"] = $form->createView();
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/choose_period.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/choose_period.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_new", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
         );
     }
 
@@ -171,8 +175,10 @@ class NodikaController extends BaseGenerationController
         $arr["conflictPufferInHours"] = $config->conflictPufferInHours;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/no_conflicts.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/no_conflicts.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_choose_period", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -218,8 +224,10 @@ class NodikaController extends BaseGenerationController
         $arr["memberConfigurations"] = $config->memberConfigurations;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/choose_members.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/choose_members.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_no_conflicts", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -276,8 +284,10 @@ class NodikaController extends BaseGenerationController
         $arr["memberConfigurations"] = $onlyEnabled;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/relative_distribution.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/relative_distribution.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_choose_members", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -384,8 +394,10 @@ class NodikaController extends BaseGenerationController
         $arr["eventLineGeneration"] = $generation;
         $arr["eventTypeConfiguration"] = $config->eventTypeConfiguration;
         $arr["holidayString"] = $holidayString;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/distribution_settings.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/distribution_settings.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_relative_distribution", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -432,8 +444,10 @@ class NodikaController extends BaseGenerationController
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
         $arr["memberEventTypeDistributions"] = $config->memberEventTypeDistributions;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/distribution_confirm.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/distribution_confirm.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_distribution_settings", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -518,8 +532,10 @@ class NodikaController extends BaseGenerationController
         $arr["eventLineGeneration"] = $generation;
         $arr["memberConfigurations"] = $config->memberConfigurations;
         $arr["beforeEventsString"] = $beforeEventsString;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/assignment_settings.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/assignment_settings.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_distribution_confirm", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -539,8 +555,10 @@ class NodikaController extends BaseGenerationController
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/start_generation.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/start_generation.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_assignment_settings", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 
@@ -613,8 +631,10 @@ class NodikaController extends BaseGenerationController
         $arr["generationResult"] = $generationResult;
         $arr["memberById"] = $memberById;
 
-        return $this->render(
-            'administration/organisation/event_line/generate/nodika/confirm_generation.html.twig', $arr
+        return $this->renderWithBackUrl(
+            'administration/organisation/event_line/generate/nodika/confirm_generation.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_generate_nodika_start_generation", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()])
         );
     }
 

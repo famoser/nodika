@@ -47,7 +47,7 @@ class EventController extends BaseFrontendController
         $arr["events"] = $events;
         $arr["member"] = $member;
         $arr["person"] = $this->getPerson();
-        return $this->render("event/assign.html.twig", $arr);
+        return $this->renderWithBackUrl("event/assign.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
     /**
@@ -66,7 +66,7 @@ class EventController extends BaseFrontendController
         $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
 
         $arr["event"] = $event;
-        return $this->render("dashboard/index.html.twig");
+        return $this->renderWithBackUrl("dashboard/index.html.twig");
     }
 
 

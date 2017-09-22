@@ -60,7 +60,7 @@ class PersonController extends BaseController
         $arr["organisation"] = $organisation;
         $arr["member"] = $member;
         $arr["new_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/person/new.html.twig', $arr
         );
     }
@@ -96,7 +96,7 @@ class PersonController extends BaseController
         $arr["member"] = $member;
         $arr["person"] = $person;
         $arr["edit_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/person/edit.html.twig', $arr
         );
     }
@@ -132,7 +132,7 @@ class PersonController extends BaseController
         $arr["member"] = $member;
         $arr["person"] = $person;
         $arr["remove_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/person/remove.html.twig', $arr
         );
     }

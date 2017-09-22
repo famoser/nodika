@@ -34,7 +34,7 @@ class GenerateController extends BaseController
     {
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/event_line/generate/choose.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])

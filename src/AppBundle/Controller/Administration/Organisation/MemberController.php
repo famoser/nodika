@@ -60,7 +60,7 @@ class MemberController extends BaseController
 
         $arr["organisation"] = $organisation;
         $arr["new_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/new.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
@@ -93,7 +93,7 @@ class MemberController extends BaseController
 
         $arr["organisation"] = $organisation;
         $arr["member"] = $member;
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/administer.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
@@ -145,7 +145,7 @@ class MemberController extends BaseController
         $arr["organisation"] = $organisation;
         $arr["member"] = $member;
         $arr["edit_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/edit.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
@@ -181,7 +181,7 @@ class MemberController extends BaseController
         $arr["organisation"] = $organisation;
         $arr["member"] = $member;
         $arr["remove_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/remove.html.twig', $arr,
             $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
         );
@@ -243,7 +243,7 @@ class MemberController extends BaseController
         $arr["import_form"] = $importForm->createView();
         $arr["organisation"] = $organisation;
 
-        return $this->render(
+        return $this->renderWithBackUrl(
             'administration/organisation/member/import.html.twig',
             $arr + ["organisation" => $organisation],
             $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])

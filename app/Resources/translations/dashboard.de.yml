@@ -19,6 +19,7 @@ index:
   all_events: Alle Termine
   all_organisation_events: Alle Termine meiner Organsiation
   not_part_of_organisation: Sie sind nicht Teil einer Organisation und sehen daher hier keine Termine
+  help_nodika_users: Hilfe zu nodika
 
 mine:
   title: Meine Termine

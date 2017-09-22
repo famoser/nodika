@@ -35,7 +35,7 @@ class MemberController extends BaseFrontendController
         }
 
         $arr["member"] = $member;
-        return $this->render("member/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
+        return $this->renderWithBackUrl("member/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
     /**
@@ -50,7 +50,6 @@ class MemberController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $person = $this->getPerson();
         $myForm = $this->handleCrudForm(
             $request,
             $member,
@@ -65,9 +64,9 @@ class MemberController extends BaseFrontendController
         }
 
         $arr["member"] = $member;
-        $arr["person"] = $person;
+        $arr["person"] = $this->getPerson();;
         $arr["edit_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'member/edit.html.twig', $arr, $this->generateUrl("member_view")
         );
     }
@@ -86,7 +85,7 @@ class MemberController extends BaseFrontendController
         }
 
         $myPerson = $this->getPerson();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'member/remove_person.html.twig', ["person" => $person, "my_person" => $myPerson], $this->generateUrl("member_view")
         );
     }

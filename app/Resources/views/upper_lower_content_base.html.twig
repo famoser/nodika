@@ -1,5 +1,7 @@
 {% extends ':layout:base.html.twig' %}
 
+{% set color_class = color_class_lower %}
+
 {% block content %}
     <section class="content {{ color_class_upper }}">
         {% include "layout/parts/menu.html.twig" %}

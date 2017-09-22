@@ -38,11 +38,18 @@
             {% endblock %}
         </div>
 
-        <div class="goto-dashboard">
+        <div class="go-buttons">
+            {% if back_url is defined %}
+                <a href="{{ back_url }}"
+                   class="{{ color_class }} go-button">{{ "menu.go_back"|trans({}, "content_base") }}</a>
+            {% endif %}
             {% if show_login is defined %}
-                <a href="{{ path("dashboard_index") }}">{{ "menu.login"|trans({}, "content_base") }}</a>
-            {% elseif hide_dashboard is not defined %}
-                <a href="{{ path("dashboard_index") }}">{{ "menu.dashboard"|trans({}, "content_base") }}</a>
+                <a href="{{ path("dashboard_index") }}"
+                   class="{{ color_class }} go-button">{{ "menu.login"|trans({}, "content_base") }}</a>
+            {% endif %}
+            {% if show_dashboard %}
+                <a href="{{ path("dashboard_index") }}"
+                   class="{{ color_class }} go-button">{{ "menu.dashboard"|trans({}, "content_base") }}</a>
             {% endif %}
         </div>
     </div>

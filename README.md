@@ -10,6 +10,7 @@ todos:
  - send event remainders
  - finish search
  - finish EventController
+ - continue generation
 
 project build with symfony. Dependecy managers:
  - composer for php

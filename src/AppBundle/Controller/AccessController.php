@@ -46,7 +46,7 @@ class AccessController extends BaseAccessController
         }
         $arr["login_form"] = $form->createView();
 
-        return $this->render(
+        return $this->renderWithBackUrl(
             'access/login.html.twig', $arr, $this->generateUrl("homepage")
         );
     }
@@ -83,7 +83,7 @@ class AccessController extends BaseAccessController
         }
 
         $arr["register_form"] = $registerForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'access/register.html.twig', $arr, $this->generateUrl("access_login")
         );
     }
@@ -98,7 +98,7 @@ class AccessController extends BaseAccessController
     {
         $member = $this->getDoctrine()->getRepository("AppBundle:Member")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$member instanceof Member) {
-            return $this->render(
+            return $this->renderWithBackUrl(
                 'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
             );
         }
@@ -170,7 +170,7 @@ class AccessController extends BaseAccessController
         $arr["member"] = $member;
         $arr["organisation"] = $member->getOrganisation();
         $arr["invite_form"] = $inviteForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'access/invite.html.twig', $arr, $this->generateUrl("access_login")
         );
     }
@@ -261,7 +261,7 @@ class AccessController extends BaseAccessController
 
         $arr = [];
         $arr["reset_form"] = $myForm->createView();
-        return $this->render(
+        return $this->renderWithBackUrl(
             'access/reset.html.twig', $arr, $this->generateUrl("access_login")
         );
     }

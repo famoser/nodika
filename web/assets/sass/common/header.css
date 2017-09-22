@@ -5,20 +5,24 @@
   padding: 0;
   position: relative; }
 
-.goto-dashboard {
+.go-buttons {
   position: absolute;
-  right: 0;
   bottom: 35px;
-  background-color: #555F76; }
-  .goto-dashboard:hover {
-    background-color: #737B8E; }
+  right: 0; }
 
-.goto-dashboard > a {
-  color: #efefef;
+.go-button {
   padding: 23px;
-  display: block; }
-  .goto-dashboard > a:hover {
+  display: block;
+  float: left;
+  margin: 0 0 0 10px; }
+  .go-button:hover {
     color: #efefef; }
+
+.go-dashboard {
+  right: 0; }
+
+.go-back {
+  right: 170px; }
 
 .logo-img {
   display: block;

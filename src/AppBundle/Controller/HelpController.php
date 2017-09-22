@@ -28,7 +28,11 @@ class HelpController extends BaseController
     public function usersAction(Request $request)
     {
         //todo
-        return $this->render("event/assign.html.twig", []);
+        return $this->renderWithBackUrl(
+            "event/assign.html.twig",
+            [],
+            $this->generateUrl("dashboard_index")
+        );
     }
 
     /**
@@ -39,6 +43,10 @@ class HelpController extends BaseController
     public function adminsAction(Request $request)
     {
         //todo
-        return $this->render("event/assign.html.twig", []);
+        return $this->renderWithBackUrl(
+            "event/assign.html.twig",
+            [],
+            $this->generateUrl("dashboard_index")
+        );
     }
 }
