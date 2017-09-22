@@ -47,7 +47,7 @@ class AccessController extends BaseAccessController
         $arr["login_form"] = $form->createView();
 
         return $this->render(
-            'access/login.html.twig', $arr
+            'access/login.html.twig', $arr, $this->generateUrl("homepage")
         );
     }
 
@@ -84,7 +84,7 @@ class AccessController extends BaseAccessController
 
         $arr["register_form"] = $registerForm->createView();
         return $this->render(
-            'access/register.html.twig', $arr
+            'access/register.html.twig', $arr, $this->generateUrl("access_login")
         );
     }
 
@@ -99,7 +99,7 @@ class AccessController extends BaseAccessController
         $member = $this->getDoctrine()->getRepository("AppBundle:Member")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$member instanceof Member) {
             return $this->render(
-                'access/invitation_hash_invalid.html.twig', []
+                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
             );
         }
 
@@ -171,7 +171,7 @@ class AccessController extends BaseAccessController
         $arr["organisation"] = $member->getOrganisation();
         $arr["invite_form"] = $inviteForm->createView();
         return $this->render(
-            'access/invite.html.twig', $arr
+            'access/invite.html.twig', $arr, $this->generateUrl("access_login")
         );
     }
 
@@ -205,8 +205,8 @@ class AccessController extends BaseAccessController
      */
     public function registerThanksAction(Request $request)
     {
-        return $this->render(
-            'access/register_thanks.html.twig'
+        return $this->renderNoBackUrl(
+            'access/register_thanks.html.twig', [], "user needs to check email and continue there"
         );
     }
 
@@ -262,7 +262,7 @@ class AccessController extends BaseAccessController
         $arr = [];
         $arr["reset_form"] = $myForm->createView();
         return $this->render(
-            'access/reset.html.twig', $arr
+            'access/reset.html.twig', $arr, $this->generateUrl("access_login")
         );
     }
 
@@ -273,8 +273,8 @@ class AccessController extends BaseAccessController
      */
     public function resetDoneAction(Request $request)
     {
-        return $this->render(
-            'access/reset_done.html.twig'
+        return $this->renderNoBackUrl(
+            'access/reset_done.html.twig', [], "user needs to check email"
         );
     }
 
@@ -300,8 +300,8 @@ class AccessController extends BaseAccessController
             function ($form) {
                 /* @var FormInterface $form */
                 $outputArray["set_password_form"] = $form->createView();
-                return $this->render(
-                    'access/register_confirm.html.twig', $outputArray
+                return $this->renderNoBackUrl(
+                    'access/register_confirm.html.twig', $outputArray, "reset was successful, user should press on dashboard"
                 );
             }
         );
@@ -324,8 +324,8 @@ class AccessController extends BaseAccessController
             function ($form) {
                 /* @var FormInterface $form */
                 $outputArray["reset_password_form"] = $form->createView();
-                return $this->render(
-                    'access/reset_confirm.html.twig', $outputArray
+                return $this->renderNoBackUrl(
+                    'access/reset_confirm.html.twig', $outputArray, "user can now reset password, it does not make sense to go back"
                 );
             }
         );
@@ -342,8 +342,8 @@ class AccessController extends BaseAccessController
     {
         $user = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
-            return $this->render(
-                'access/hash_invalid.html.twig'
+            return $this->renderNoBackUrl(
+                'access/hash_invalid.html.twig', [], $this->generateUrl("access_login")
             );
         }
 

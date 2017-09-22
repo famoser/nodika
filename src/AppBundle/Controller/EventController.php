@@ -51,7 +51,7 @@ class EventController extends BaseFrontendController
     }
 
     /**
-     * @Route("/{event}", name="event_view")
+     * @Route("/{event}/view", name="event_view")
      * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response

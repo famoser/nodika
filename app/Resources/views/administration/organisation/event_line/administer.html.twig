@@ -18,7 +18,7 @@
     </p>
     {{ events.show_table(organisation, eventLine, eventLine.events, true) }}
     <p>
-        <a href="{{ path("administration_organisation_event_line_generate", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "administer.generate_events_actions"|trans }}</a><br/>
+        <a href="{{ path("administration_organisation_event_line_generate_choose", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "administer.generate_events_actions"|trans }}</a><br/>
         <a href="{{ path("administration_organisation_event_line_import", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "administer.import_events_actions"|trans }}</a><br/>
         <a href="{{ path("administration_organisation_event_line_event_new", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "administer.add_event_action"|trans }}</a><br/>
     </p>

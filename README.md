@@ -2,13 +2,14 @@ Introduction
 ======
 
 todos:
- - send email on offer accept
  - implement invoice system
  - view event past
- - assign events to persons
- - frontend offer
+ - assign events to persons better
  - admin management
- - frontend event past
+ - event accept
+ - send event remainders
+ - finish search
+ - finish EventController
 
 project build with symfony. Dependecy managers:
  - composer for php

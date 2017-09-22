@@ -34,7 +34,7 @@ class OrganisationController extends BaseFrontendController
         }
 
         $arr["organisation"] = $member->getOrganisation();
-        return $this->render("organisation/index.html.twig", $arr);
+        return $this->render("organisation/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
     /**

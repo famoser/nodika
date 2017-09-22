@@ -56,7 +56,7 @@ class OrganisationController extends BaseController
 
         $arr["new_organisation_form"] = $newOrganisationForm->createView();
         return $this->render(
-            'administration/organisation/new.html.twig', $arr
+            'administration/organisation/new.html.twig', $arr, $this->generateUrl("dashboard_index")
         );
     }
 
@@ -81,7 +81,39 @@ class OrganisationController extends BaseController
         $arr["organisation"] = $organisation;
         $setupStatus = $this->getDoctrine()->getRepository("AppBundle:Organisation")->getSetupStatus($organisation);
         return $this->render(
-            'administration/organisation/administer.html.twig', $arr + ["organisation" => $organisation, "setupStatus" => $setupStatus]
+            'administration/organisation/administer.html.twig',
+            $arr + ["organisation" => $organisation, "setupStatus" => $setupStatus],
+            $this->generateUrl("dashboard_index")
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/edit", name="administration_organisation_edit")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function editAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+
+        $myForm = $this->handleCrudForm(
+            $request,
+            $organisation,
+            SubmitButtonType::EDIT,
+            function ($form, $entity) {
+                return $this->redirectToRoute("member_view");
+            }
+        );
+
+        if ($myForm instanceof Response) {
+            return $myForm;
+        }
+        $arr["edit_form"] = $myForm->createView();
+        return $this->render(
+            'administration/organisation/edit.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -99,7 +131,9 @@ class OrganisationController extends BaseController
 
         $arr["organisation"] = $organisation;
         return $this->render(
-            'administration/organisation/setup.html.twig', $arr + ["setupStatus" => $setupStatus]
+            'administration/organisation/setup.html.twig',
+            $arr + ["setupStatus" => $setupStatus],
+            $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -116,7 +150,8 @@ class OrganisationController extends BaseController
         $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/members.html.twig',
-            $arr
+            $arr,
+            $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -177,7 +212,8 @@ class OrganisationController extends BaseController
                 "subject" => $organisationSetting->getInviteEmailSubject(),
                 "message" => $organisationSetting->getInviteEmailMessage(),
                 "hasPendingMember" => $hasPendingMember
-            ]
+            ],
+            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -274,7 +310,8 @@ class OrganisationController extends BaseController
         $arr["message"] = $organisationSetting->getInviteEmailMessage();
         return $this->render(
             'administration/organisation/members_invite_preview.html.twig',
-            $arr
+            $arr,
+            $this->generateUrl("administration_organisation_members_invite", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -291,7 +328,8 @@ class OrganisationController extends BaseController
         $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/event_lines.html.twig',
-            $arr
+            $arr,
+            $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -321,7 +359,8 @@ class OrganisationController extends BaseController
         $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/settings.html.twig',
-            $arr
+            $arr,
+            $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -339,7 +378,8 @@ class OrganisationController extends BaseController
         $arr["organisation"] = $organisation;
         return $this->render(
             'administration/organisation/events.html.twig',
-            $arr + ["eventLineModels" => $eventLineModels]
+            $arr + ["eventLineModels" => $eventLineModels],
+            $this->generateUrl("administration_organisation_administer", ["organisation" => $organisation->getId()])
         );
     }
 }

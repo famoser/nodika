@@ -43,7 +43,7 @@ class DashboardController extends BaseFrontendController
         if (count($all) > 0) {
             $arr["change_organisations"] = $all;
         }
-        return $this->render("dashboard/index.html.twig", $arr);
+        return $this->renderNoBackUrl("dashboard/index.html.twig", $arr, "dashboard!");
     }
 
     /**
@@ -59,7 +59,7 @@ class DashboardController extends BaseFrontendController
         }
 
         $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, $member, null, 4000);
-        return $this->render("dashboard/mine.html.twig", $arr);
+        return $this->render("dashboard/mine.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
     /**
@@ -76,7 +76,7 @@ class DashboardController extends BaseFrontendController
 
         $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime(), null, null, null, 4000);
         $arr["member"] = $member;
-        return $this->render("dashboard/index.html.twig", $arr);
+        return $this->render("dashboard/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
     /**
@@ -124,6 +124,6 @@ class DashboardController extends BaseFrontendController
 
         $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, $startDateTime, $endDateTime, $member, null, 4000);
         $arr["member"] = $member;
-        return $this->render("dashboard/index.html.twig", $arr);
+        return $this->render("dashboard/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 }

@@ -38,7 +38,7 @@ class PersonController extends BaseFrontendController
         }
 
         $arr["person"] = $this->getPerson();
-        return $this->render("person/index.html.twig", $arr);
+        return $this->render("person/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
     /**
@@ -71,7 +71,7 @@ class PersonController extends BaseFrontendController
         $arr["person"] = $person;
         $arr["edit_form"] = $myForm->createView();
         return $this->render(
-            'person/edit.html.twig', $arr
+            'person/edit.html.twig', $arr, $this->generateUrl("person_view")
         );
     }
 
@@ -115,7 +115,7 @@ class PersonController extends BaseFrontendController
 
         $arr["change_email_form"] = $myForm->createView();
         return $this->render(
-            'person/change_email.html.twig', $arr
+            'person/change_email.html.twig', $arr, $this->generateUrl("person_view")
         );
     }
 
@@ -162,7 +162,7 @@ class PersonController extends BaseFrontendController
 
         $arr["change_password_form"] = $myForm->createView();
         return $this->render(
-            'person/change_password.html.twig', $arr
+            'person/change_password.html.twig', $arr, $this->generateUrl("person_view")
         );
     }
 
@@ -180,7 +180,7 @@ class PersonController extends BaseFrontendController
         }
 
         return $this->render(
-            'person/remove_member.html.twig', ["member" => $member]
+            'person/remove_member.html.twig', ["member" => $member], $this->generateUrl("person_view")
         );
     }
 

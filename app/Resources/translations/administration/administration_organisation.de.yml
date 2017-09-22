@@ -16,6 +16,11 @@ administer:
   event_line_overview: Termingruppen
   event_line_overview_description: Die Termingruppen Ihrer Organisation
   event_line_administration_action: Zur Termingruppenverwaltung
+  more: Weiteres
+  edit_organisation: Daten der Organisation bearbeiten
+  settings_organisation: Zu den Einstellungen der Organisation
+  help_nodika_administraotrs: Hilfe zu nodika.ch für Administratoren
+  more_description: Weitere nützliche Links
 
 #new page
 new:
@@ -25,6 +30,12 @@ new:
   address_description: Die Adresse der Organisation ist die Rechnungsadresse der Registrierungs- und Jahresgebühr. Sie muss nicht mit Ihrer eigenen Adresse übereinstimmen.
   contact: Kontaktinformationen Ihrer Organisation
   contact_description: Die Kontaktinformationen der Organisation werden dazu benützt, Ihnen wichtige Nachrichten über die Mitglieder der Organisation zuzustellen
+
+#edit page
+edit:
+  title: Organisation ändern
+  description: Editieren Sie die Daten Ihrer Organisation
+  organisation_edit_form: Organisation ändern
 
 #setup page
 setup:

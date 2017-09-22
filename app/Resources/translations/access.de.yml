@@ -62,7 +62,7 @@ register_confirm:
 #reset page
 reset:
   title: Passwort zurücksetzen
-  description: Setzten Sie Ihr Passwort mit Ihrer E-Mail zurück
+  description: Setzen Sie Ihr Passwort mit Ihrer E-Mail zurück
   set_email_form_description: Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.
 
 #reset/done page

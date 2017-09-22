@@ -46,7 +46,7 @@ class OfferController extends BaseFrontendController
         $arr["author_of_offers"] = $repo->findBy(["offeredByMember" => $member->getId(), "offeredByPerson" => $this->getPerson()->getId()]);
         $arr["accepted_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::ACCEPTED]);
         $arr["open_offers"] = $repo->findBy(["offeredToMember" => $member->getId(), "offeredToPerson" => $this->getPerson()->getId(), "status" => OfferStatus::OPEN]);
-        return $this->render("offer/index.html.twig", $arr);
+        return $this->render("offer/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
     /**
@@ -62,7 +62,7 @@ class OfferController extends BaseFrontendController
         }
 
         $arr["members"] = $member->getOrganisation()->getMembers();
-        return $this->render("offer/new.html.twig", $arr);
+        return $this->render("offer/new.html.twig", $arr, $this->generateUrl("offer_index"));
     }
 
     /**
@@ -198,7 +198,7 @@ class OfferController extends BaseFrontendController
 
         $arr["eventOffer"] = $eventOffer;
 
-        return $this->render("offer/choose_events.html.twig", $arr);
+        return $this->render("offer/choose_events.html.twig", $arr, $this->generateUrl("offer_index"));
     }
 
     /**
@@ -265,7 +265,7 @@ class OfferController extends BaseFrontendController
         $arr["invalids"] = $this->getInvalidEventOfferEntries($eventOffer, false);
         $arr["eventOffer"] = $eventOffer;
 
-        return $this->render("offer/review.html.twig", $arr);
+        return $this->render("offer/review.html.twig", $arr, $this->generateUrl("offer_index"));
     }
 
     /**

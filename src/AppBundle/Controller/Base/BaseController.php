@@ -19,6 +19,7 @@ use AppBundle\Helper\StaticMessageHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BaseController extends Controller
@@ -309,5 +310,34 @@ class BaseController extends Controller
     protected function getHasEventOccurred(Organisation $organisation, $applicationEventType)
     {
         return $this->getDoctrine()->getRepository("AppBundle:ApplicationEvent")->hasEventOccurred($organisation, $applicationEventType);
+    }
+
+    /**
+     * Renders a view.
+     *
+     * @param string $view The view name
+     * @param array $parameters An array of parameters to pass to the view
+     * @param string $backUrl
+     * @param Response $response A response instance
+     * @return Response A Response instance
+     */
+    protected function render($view, array $parameters, $backUrl, Response $response = null)
+    {
+        $parameters["back_url"] = $backUrl;
+        return parent::render($view, $parameters, $response);
+    }
+
+    /**
+     * Renders a view.
+     *
+     * @param string $view The view name
+     * @param array $parameters An array of parameters to pass to the view
+     * @param string $justification why no backbutton
+     * @param Response $response A response instance
+     * @return Response A Response instance
+     */
+    protected function renderNoBackUrl($view, array $parameters, $justification, Response $response = null)
+    {
+        return parent::render($view, $parameters, $response);
     }
 }

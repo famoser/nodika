@@ -59,8 +59,8 @@ class StaticController extends BaseController
         $arr["newsletter_form"] = $form->createView();
 
 
-        return $this->render(
-            'static/index.html.twig', $arr
+        return $this->renderNoBackUrl(
+            'static/index.html.twig', $arr, "this is the homepage"
         );
     }
 }

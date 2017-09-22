@@ -38,7 +38,7 @@ class AccessController extends BaseAccessController
         $arr["login_form"] = $form->createView();
 
         return $this->render(
-            'backend/access/login.html.twig', $arr
+            'backend/access/login.html.twig', $arr, $this->generateUrl("homepage")
         );
     }
 

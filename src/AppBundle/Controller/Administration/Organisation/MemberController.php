@@ -62,7 +62,8 @@ class MemberController extends BaseController
         $arr["new_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/member/new.html.twig',
-            $arr
+            $arr,
+            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -94,7 +95,8 @@ class MemberController extends BaseController
         $arr["member"] = $member;
         return $this->render(
             'administration/organisation/member/administer.html.twig',
-            $arr
+            $arr,
+            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -145,7 +147,8 @@ class MemberController extends BaseController
         $arr["edit_form"] = $myForm->createView();
         return $this->render(
             'administration/organisation/member/edit.html.twig',
-            $arr
+            $arr,
+            $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
         );
     }
 
@@ -179,7 +182,8 @@ class MemberController extends BaseController
         $arr["member"] = $member;
         $arr["remove_form"] = $myForm->createView();
         return $this->render(
-            'administration/organisation/member/remove.html.twig', $arr
+            'administration/organisation/member/remove.html.twig', $arr,
+            $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
         );
     }
 
@@ -240,7 +244,9 @@ class MemberController extends BaseController
         $arr["organisation"] = $organisation;
 
         return $this->render(
-            'administration/organisation/member/import.html.twig', $arr + ["organisation" => $organisation]
+            'administration/organisation/member/import.html.twig',
+            $arr + ["organisation" => $organisation],
+            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
         );
     }
 }

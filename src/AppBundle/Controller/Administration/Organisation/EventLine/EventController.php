@@ -65,7 +65,9 @@ class EventController extends BaseController
         $arr["eventLine"] = $eventLine;
         $arr["new_form"] = $myForm->createView();
         return $this->render(
-            'administration/organisation/event_line/event/new.html.twig', $arr
+            'administration/organisation/event_line/event/new.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
         );
     }
 
@@ -106,7 +108,9 @@ class EventController extends BaseController
         $arr["event"] = $event;
         $arr["edit_form"] = $myForm->createView();
         return $this->render(
-            'administration/organisation/event_line/event/edit.html.twig', $arr
+            'administration/organisation/event_line/event/edit.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_event_view", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "event" => $event->getId()])
         );
     }
 
@@ -146,7 +150,9 @@ class EventController extends BaseController
         $arr["event"] = $event;
         $arr["remove_form"] = $myForm->createView();
         return $this->render(
-            'administration/organisation/event_line/event/remove.html.twig', $arr
+            'administration/organisation/event_line/event/remove.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_event_view", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "event" => $event->getId()])
         );
     }
 
@@ -166,7 +172,9 @@ class EventController extends BaseController
         $arr["eventLine"] = $eventLine;
         $arr["event"] = $event;
         return $this->render(
-            'administration/organisation/event_line/event/view.html.twig', $arr
+            'administration/organisation/event_line/event/view.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
         );
     }
 }
