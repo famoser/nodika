@@ -38,6 +38,11 @@ class Event extends BaseEntity
     private $isConfirmed = false;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $isConfirmedDateTime;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $endDateTime;
@@ -303,5 +308,21 @@ class Event extends BaseEntity
     public function setIsConfirmed($isConfirmed)
     {
         $this->isConfirmed = $isConfirmed;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getIsConfirmedDateTime()
+    {
+        return $this->isConfirmedDateTime;
+    }
+
+    /**
+     * @param \DateTime $isConfirmedDateTime
+     */
+    public function setIsConfirmedDateTime($isConfirmedDateTime)
+    {
+        $this->isConfirmedDateTime = $isConfirmedDateTime;
     }
 }

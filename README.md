@@ -2,13 +2,10 @@ Introduction
 ======
 
 todos:
- - event accept notification
  - send event remainders
- - assign events to persons better
- - finish EventController
- - export & print events in search
  - Member, Person, Organisation view
- - admin management
+ - export & print events in search
+ - admin management (add any person by email, new invite possibility)
  - continue generation
  - implement invoice system
 

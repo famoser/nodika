@@ -92,6 +92,12 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ path("event_confirm") }}">
+                                    {{ "menu.user.confirm_events"|trans({}, "content_base") }}
+                                    ({{ menu_unconfirmed_events_count }})
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ path("event_search", {"member" : menu_member.id}) }}">
                                     {{ "menu.user.my_member_events"|trans({}, "content_base") }}
                                 </a>

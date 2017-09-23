@@ -2,8 +2,10 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Event;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Person;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -40,18 +42,125 @@ class MemberRepository extends EntityRepository
 
     /**
      * @param Member $member
+     * @param $singleScalar
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getAssignableEventsQueryBuilder(Member $member, $singleScalar = false)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        if ($singleScalar) {
+            $qb->select("COUNT(e)");
+        } else {
+            $qb->select("e");
+        }
+
+        $qb
+            ->from("AppBundle:Event", "e")
+            ->join("e.eventLine", "el")
+            ->leftJoin("e.member", "m")
+            ->where("m = :member")
+            ->setParameter('member', $member);
+
+        $qb->andWhere("e.startDateTime > :startDateTime")
+            ->setParameter('startDateTime', new \DateTime());
+
+        return $qb;
+    }
+
+    /**
+     * @param Member $member
      * @return int
      */
     public function countUnassignedEvents(Member $member)
     {
-        $qb = $this->createQueryBuilder('t');
-        return $qb
-            ->select('count(e.id)')
-            ->join("t.events", "e")
-            ->where($qb->expr()->isNull('e.person'))
-            ->andWhere("t = :member")
-            ->setParameter(":member", $member)
+        return $this->getAssignableEventsQueryBuilder($member, true)
+            ->andWhere("e.person IS NULL")
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @param Member $member
+     * @return array
+     */
+    public function findAssignableEventsAsIdArray(Member $member)
+    {
+        $qb = $this->getAssignableEventsQueryBuilder($member);
+        /* @var Event[] $eventsRaw */
+        $eventsRaw = $qb->getQuery()->getResult();
+        $events = [];
+        foreach ($eventsRaw as $item) {
+            $events[$item->getId()] = $item;
+        }
+        return $events;
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @param bool $singleScalar
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getUnconfirmedEventsQueryBuilder(Member $member, Person $person, $singleScalar = false)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+        $threshHold = new \DateInterval("P" . $organisationSetting->getCanConfirmEventBeforeDays() . "D");
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        if ($singleScalar) {
+            $qb->select("COUNT(e)");
+        } else {
+            $qb->select("e");
+        }
+
+        $qb->from("AppBundle:Event", "e")
+            ->join("e.eventLine", "el")
+            ->leftJoin("e.member", "m")
+            ->where("m = :member")
+            ->setParameter('member', $member)
+            ->andWhere("e.person IS NULL OR e.person = :person")
+            ->setParameter('person', $person);
+
+        $now = new \DateTime();
+        $maxStartTime = $now->add($threshHold);
+        $qb->andWhere("e.startDateTime < :startDateTime")
+            ->setParameter('startDateTime', $maxStartTime);
+        $qb->andWhere("e.isConfirmed = :isConfirmed")
+            ->setParameter('isConfirmed', false);
+
+        return $qb;
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @return int
+     * @internal param \DateInterval $threshHold
+     */
+    public function countUnconfirmedEvents(Member $member, Person $person)
+    {
+        return $this->getUnconfirmedEventsQueryBuilder($member, $person, true)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @return Event[]
+     * @internal param \DateInterval $threshHold
+     */
+    public function findUnconfirmedEvents(Member $member, Person $person)
+    {
+        $qb = $this->getUnconfirmedEventsQueryBuilder($member, $person);
+        /* @var Event[] $eventsRaw */
+        $eventsRaw = $qb->getQuery()->getResult();
+        $events = [];
+        foreach ($eventsRaw as $item) {
+            $events[$item->getId()] = $item;
+        }
+        return $events;
     }
 }

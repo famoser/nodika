@@ -11,6 +11,7 @@ menu:
     advanced: Erweiterte Funktionen
     add_own_organisation: Eigene Organisation erstellen
     assign_events: Termine zuweisen
+    confirm_events: Termine bestätigen
     my_member_events: Termine meiner Praxis
     my_person_events: Eigene Termine
     search_events: Terminsuche

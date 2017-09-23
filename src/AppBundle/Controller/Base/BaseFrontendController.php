@@ -123,6 +123,7 @@ class BaseFrontendController extends BaseController
         $member = $this->getMember();
         $parameters["menu_member"] = $member;
         $parameters["menu_unassigned_events_count"] = ($member != null) ? $this->getDoctrine()->getRepository("AppBundle:Member")->countUnassignedEvents($member) : 0;
+        $parameters["menu_unconfirmed_events_count"] = ($member != null) ? $this->getDoctrine()->getRepository("AppBundle:Member")->countUnconfirmedEvents($member, $this->getPerson()) : 0;
         $parameters["menu_organisation"] = $this->getOrganisation();
     }
 }

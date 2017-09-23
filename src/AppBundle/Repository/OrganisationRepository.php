@@ -44,32 +44,6 @@ class OrganisationRepository extends EntityRepository
     }
 
     /**
-     * @param Member $member
-     * @return array
-     */
-    public function findAssignableEventsAsIdArray(Member $member)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select("e")
-            ->from("AppBundle:Event", "e")
-            ->join("e.eventLine", "el")
-            ->leftJoin("e.member", "m")
-            ->where("m = :member")
-            ->setParameter('member', $member);
-
-        $qb->andWhere("e.startDateTime > :startDateTime")
-            ->setParameter('startDateTime', new \DateTime());
-
-        /* @var Event[] $eventsRaw */
-        $eventsRaw = $qb->getQuery()->getResult();
-        $events = [];
-        foreach ($eventsRaw as $item) {
-            $events[$item->getId()] = $item;
-        }
-        return $events;
-    }
-
-    /**
      * @param Organisation $organisation
      * @param \DateTime $startDateTime
      * @param \DateTime|null $endDateTime
