@@ -23,6 +23,7 @@ class OrganisationSettingRepository extends EntityRepository
         }
         $result = new OrganisationSetting();
         $result->setOrganisation($organisation);
+        $result->setReceiverOfRemainders($organisation->getLeaders()->count() > 0 ? $organisation->getLeaders()->first() : null);
         $this->getEntityManager()->persist($result);
         $this->getEntityManager()->flush();
         return $result;

@@ -35,7 +35,6 @@ confirm:
     confirm_successful: Termin erfolgreich bestätigt
     confirm_all_successful: '%count% Termine erfolgreich bestätigt'
 
-
 search:
   title: Termine
   description: Kalender durchsuchen

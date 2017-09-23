@@ -58,14 +58,14 @@ class OrganisationSetting extends BaseEntity
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $sendConfirmEventEmailDays = 30;
+    private $sendConfirmEventEmailDays = 14;
 
     /**
      * @var int
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $tradeEventDays = 60;
+    private $tradeEventDays = 45;
 
     /**
      * @var \DateTime
@@ -80,6 +80,13 @@ class OrganisationSetting extends BaseEntity
      * @ORM\OneToOne(targetEntity="Organisation")
      */
     private $organisation;
+
+    /**
+     * @var Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     */
+    private $receiverOfRemainders;
 
     /**
      * returns a string representation of this entity
@@ -217,5 +224,21 @@ class OrganisationSetting extends BaseEntity
     public function setTradeEventDays($tradeEventDays)
     {
         $this->tradeEventDays = $tradeEventDays;
+    }
+
+    /**
+     * @return Person
+     */
+    public function getReceiverOfRemainders()
+    {
+        return $this->receiverOfRemainders;
+    }
+
+    /**
+     * @param Person $receiverOfRemainders
+     */
+    public function setReceiverOfRemainders($receiverOfRemainders)
+    {
+        $this->receiverOfRemainders = $receiverOfRemainders;
     }
 }

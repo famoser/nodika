@@ -99,13 +99,13 @@ class MemberRepository extends EntityRepository
     /**
      * @param Member $member
      * @param Person $person
+     * @param $dayThreshold
      * @param bool $singleScalar
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function getUnconfirmedEventsQueryBuilder(Member $member, Person $person, $singleScalar = false)
+    private function getUnconfirmedEventsQueryBuilder(Member $member, $dayThreshold, Person $person = null, $singleScalar = false)
     {
-        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
-        $threshHold = new \DateInterval("P" . $organisationSetting->getCanConfirmEventBeforeDays() . "D");
+        $threshHold = new \DateInterval("P" . $dayThreshold . "D");
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -119,12 +119,15 @@ class MemberRepository extends EntityRepository
             ->join("e.eventLine", "el")
             ->leftJoin("e.member", "m")
             ->where("m = :member")
-            ->setParameter('member', $member)
-            ->andWhere("e.person IS NULL OR e.person = :person")
-            ->setParameter('person', $person);
+            ->setParameter('member', $member);
 
-        $now = new \DateTime();
-        $maxStartTime = $now->add($threshHold);
+        if ($person instanceof Person) {
+            $qb->andWhere("e.person IS NULL OR e.person = :person")
+                ->setParameter('person', $person);
+        }
+
+        $maxStartTime = new \DateTime();
+        $maxStartTime->add($threshHold);
         $qb->andWhere("e.startDateTime < :startDateTime")
             ->setParameter('startDateTime', $maxStartTime);
         $qb->andWhere("e.isConfirmed = :isConfirmed")
@@ -134,14 +137,34 @@ class MemberRepository extends EntityRepository
     }
 
     /**
+     * counts the events which are currently unconfirmed
+     *
      * @param Member $member
      * @param Person $person
      * @return int
      * @internal param \DateInterval $threshHold
      */
-    public function countUnconfirmedEvents(Member $member, Person $person)
+    public function countUnconfirmedEvents(Member $member, Person $person = null)
     {
-        return $this->getUnconfirmedEventsQueryBuilder($member, $person, true)
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+
+        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person, true)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * counts the events which are not confirmed yet, but should be
+     * @param Member $member
+     * @param Person|null $person
+     * @return int
+     * @internal param \DateInterval $threshHold
+     */
+    public function countLateUnconfirmedEvents(Member $member, Person $person = null)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+
+        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person, true)
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -152,9 +175,10 @@ class MemberRepository extends EntityRepository
      * @return Event[]
      * @internal param \DateInterval $threshHold
      */
-    public function findUnconfirmedEvents(Member $member, Person $person)
+    public function findUnconfirmedEvents(Member $member, Person $person = null)
     {
-        $qb = $this->getUnconfirmedEventsQueryBuilder($member, $person);
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+        $qb = $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person);
         /* @var Event[] $eventsRaw */
         $eventsRaw = $qb->getQuery()->getResult();
         $events = [];
@@ -162,5 +186,20 @@ class MemberRepository extends EntityRepository
             $events[$item->getId()] = $item;
         }
         return $events;
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @return Event[]
+     * @internal param \DateInterval $threshHold
+     */
+    public function findLateUnconfirmedEvents(Member $member, Person $person = null)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+
+        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person, true)
+            ->getQuery()
+            ->getResult();
     }
 }
