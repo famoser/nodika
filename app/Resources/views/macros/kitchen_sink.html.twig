@@ -1,11 +1,13 @@
-{% macro toggle_form_field(name, value, description, classes = "") %}
+{% macro toggle_form_field(name, value, description = null, classes = "") %}
     <div class="form-group {{ classes }}">
         <label class="switch" for="{{ name }}">
             <input class="form-control" type="checkbox" name="{{ name }}" id="{{ name }}"
                    {% if value %}checked="checked"{% endif %}>
             <span class="slider"></span>
         </label>
-        <label class="switch-description" for="{{ name }}">{{ description }}</label>
+        {% if description != null %}
+            <label class="switch-description" for="{{ name }}">{{ description }}</label>
+        {% endif %}
     </div>
 {% endmacro %}
 

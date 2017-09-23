@@ -36,19 +36,76 @@ class EventController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $events = [];
-        foreach ($member->getOrganisation()->getMembers() as $member) {
-            foreach ($member->getEvents() as $event) {
-                if ($event->getPerson() == null) {
-                    $events[] = $event;
+        $assignableEvents = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findAssignableEventsAsIdArray($member);
+        $persons = $member->getPersons();
+        $selectedPerson = $this->getPerson();
+
+        if ($request->getMethod() == "POST") {
+            /* @var Event[] $events */
+            $events = [];
+            /* @var Person $selectedPerson */
+            $selectedPerson = null;
+            foreach ($request->request->all() as $key => $value) {
+                if (strpos($key, "event_") === 0) {
+                    $eventId = substr($key, 6); //cut off event_
+                    if (isset($assignableEvents[$eventId])) {
+                        $events[] = $assignableEvents[$eventId];
+                    }
+                } else if ($key == "selected_person") {
+                    $selectedPersonId = $value;
+                    foreach ($persons as $person) {
+                        if ($person->getId() == $selectedPersonId) {
+                            $selectedPerson = $person;
+                        }
+                    }
                 }
             }
+
+            $trans = $this->get("translator");
+            if (count($events) > 0) {
+                if ($selectedPerson != null) {
+                    $eventPastService = $this->get("app.event_past_evaluation_service");
+                    $count = 0;
+                    foreach ($events as $event) {
+                        $oldEvent = clone ($event);
+                        $event->setPerson($selectedPerson);
+                        $eventPast = $eventPastService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::PERSON_ASSIGNED_BY_MEMBER);
+                        $this->fastSave($eventPast, $event);
+                        $count++;
+                    }
+                    $this->displaySuccess($trans->trans("assign.messages.assigned", ["%count%" => $count], "event"));
+                } else {
+                    $this->displayError($trans->trans("assign.messages.no_person", [], "event"));
+                }
+            } else {
+                $this->displayError($trans->trans("assign.messages.no_events", [], "event"));
+            }
+
         }
 
-        $arr["events"] = $events;
+
+        $arr["events"] = $assignableEvents;
         $arr["member"] = $member;
-        $arr["person"] = $this->getPerson();
+        $arr["person"] = $selectedPerson;
+        $arr["persons"] = $persons;
         return $this->renderWithBackUrl("event/assign.html.twig", $arr, $this->generateUrl("dashboard_index"));
+    }
+
+    /**
+     * @Route("/confirm", name="event_confirm")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function confirmAction(Request $request)
+    {
+        $member = $this->getMember();
+        if ($member == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        //todo
+        $arr["events"] = [];
+        return $this->renderWithBackUrl("event/confirm.html.twig", $arr, $this->generateUrl("dashboard_index"));
     }
 
 
@@ -120,87 +177,5 @@ class EventController extends BaseFrontendController
         $arr["endDateTime"] = $endDateTime->format(DateTimeFormatter::DATE_TIME_FORMAT);
 
         return $this->renderWithBackUrl("event/search.html.twig", $arr, $this->generateUrl("dashboard_index"));
-    }
-
-    /**
-     * @Route("/{event}/view", name="event_view")
-     * @param Request $request
-     * @param Event $event
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function viewAction(Request $request, Event $event)
-    {
-        $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
-        }
-
-        $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
-
-        $arr["event"] = $event;
-        return $this->renderWithBackUrl("dashboard/index.html.twig");
-    }
-
-
-    /**
-     * @Route("/{event}/assign/{person}", name="event_assign_event")
-     * @param Request $request
-     * @param Event $event
-     * @param Person $person
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function assignEventAction(Request $request, Event $event, Person $person)
-    {
-        $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
-        }
-
-        if ($member->getId() == $event->getMember()) {
-            foreach ($event->getMember()->getPersons() as $eventPerson) {
-                if ($eventPerson->getId() == $person->getId()) {
-                    $oldEvent = clone($event);
-                    $event->setPerson($person);
-                    $service = $this->get("app.event_past_evaluation_service");
-                    $past = $service->createEventPast($this->getPerson(), $oldEvent, $$event, EventChangeType::PERSON_ASSIGNED_BY_MEMBER);
-                    $this->fastSave($past, $event);
-
-                    $translator = $this->get("translator");
-                    $this->displaySuccess($translator->trans("message.event_assigned", [], "event"));
-                }
-            }
-        }
-
-        return $this->redirectToRoute("event_view", ["event" => $event]);
-    }
-
-    /**
-     * @Route("/assignAll/{person}", name="event_assign_all")
-     * @param Request $request
-     * @param Person $person
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function assignAllAction(Request $request, Person $person)
-    {
-        $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
-        }
-
-        if ($person->getMembers()->contains($member)) {
-            $em = $this->getDoctrine()->getManager();
-            foreach ($member->getEvents() as $event) {
-                if ($event->getPerson() == null) {
-                    $event->setPerson($person);
-                    $em->persist($event);
-                }
-            }
-            $em->flush();
-
-            $translator = $this->get("translator");
-            $this->displaySuccess($translator->trans("message.all_events_assigned", [], "event"));
-        }
-
-        return $this->redirectToRoute("dashboard_index");
     }
 }

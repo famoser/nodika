@@ -3,18 +3,22 @@ index:
   description: Nähere Informationen zu diesem Termin
   history: Änderungen an diesem Termin
 
-message:
-  event_assigned: Termin zugewiesen
-  all_events_assigned: Alle Termin zugewiesen
-
 assign:
   title: Termine zuweisen
-  description: Termine den Accounts zuweisen
-  all_to_own_account: Alle Termine diesem Account zuweisen
-  unassigned_events: Nicht zugewiesene Termine
-  unassigned_events_description: >
-    Weisen Sie Termine einem Account zu.
-    Erinnerungsemails zu den jeweiligen Terminen können so an den richtigen Empfänger zugestellt werden. Ausserdem können Sie diese Termine dann tauschen.
+  description: Termine einem Praxismitglied zuordnen
+  assigned_person: Zugewiesenes Praxismitglied
+  no_assigned_person: Noch keinem Praxismitglied zugewiesen
+  choose_person: Praxismitglied auswählen
+  no_events_can_be_assigned: Zurzeit können Sie keine Termine zuweisen
+  assign_event: Termine zuweisen
+  assign_events_description: Markieren Sie Termine und wählen Sie ein Praxismitglied aus. Drücken Sie danach auf "zuweisen" um die Änderung zu bestätigen
+  assign_why: Warum Termine zuweisen?
+  assign_why_desription: Zugewiesene Termine können dann vom zugewiesenen Praxismitglied getauscht werden. Zudem kommen Erinnerungsemails für den spezifischen Termin dann an die vom Praxismitglied angegebene E-Mail an
+  messages:
+    no_events: Keine Termine ausgewählt
+    no_person: Kein Praxismitglied ausgewählt
+    assigned: 'Erfolgreich %count% Termine zugewiesen'
+
 
 search:
   title: Termine
