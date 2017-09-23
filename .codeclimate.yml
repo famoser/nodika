@@ -1,0 +1,25 @@
+---
+engines:
+  fixme:
+    enabled: true
+  phpcodesniffer:
+    enabled: true
+    checks:
+        #disable Namespaces NamespaceDeclaration BlankLineAfter check as it does not work properly
+        Namespaces/NamespaceDeclarationSniff:
+            enabled: false
+  phpmd:
+    enabled: true  
+    checks:
+      #disable else expression checks, #savetheelse
+      CleanCode/ElseExpression:
+        enabled: false
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - php
+
+
+ratings:
+  paths: ["src/AppBundle/**/*"]
