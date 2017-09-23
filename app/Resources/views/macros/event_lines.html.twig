@@ -1,0 +1,39 @@
+{% macro show_table(organisation, eventLines, show_edit = false) %}
+    {% import "macros/buttons.html.twig" as buttons %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ "display_order"|trans({}, "entity_event_line") }}</th>
+            <th>{{ "entity.name"|trans({}, "entity_event_line") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_event") }}</th>
+            {% if show_edit %}
+                <th>{{ "column.administer"|trans({}, "common_table") }}</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for eventLine in eventLines %}
+            <tr>
+                <td>
+                    {{ eventLine.displayOrder }}
+                </td>
+                <td>
+                    {{ eventLine.name }}<br/>
+                    <span class="secondary">
+                    {{ eventLine.description }}
+                </span>
+                </td>
+                <td>
+                    {{ eventLine.events.count }}
+                </td>
+                {% if show_edit %}
+                    <td>
+                        {{ buttons.administer_button(path("administration_organisation_event_line_administer", {"organisation": organisation.id, "eventLine": eventLine.id})) }}
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}

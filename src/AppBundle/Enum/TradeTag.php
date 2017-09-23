@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\ToChoicesArrayTrait;
 
 class TradeTag extends BaseEnum
 {
@@ -18,28 +17,4 @@ class TradeTag extends BaseEnum
     const MAYBE_TRADE = 2;
     const WANT_TRADE = 3;
     const MUST_TRADE = 4;
-
-    /**
-     * enum value to string
-     *
-     * @param $enumValue
-     * @return string
-     */
-    public function toString($enumValue)
-    {
-        switch ($enumValue) {
-            case static::NO_TRADE:
-                return "trade_tag.no_trade";
-            case static::MAYBE_TRADE:
-                return "maybe trade";
-            case static::WANT_TRADE:
-                return "want trade";
-            case static::MUST_TRADE:
-                return "must trade";
-            default:
-                return "unknown";
-        }
-    }
-
-    use ToChoicesArrayTrait;
 }

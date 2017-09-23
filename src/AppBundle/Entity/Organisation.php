@@ -8,10 +8,10 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\IdTrait;
-use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -132,11 +132,11 @@ class Organisation extends BaseEntity
     /**
      * Add leader
      *
-     * @param \AppBundle\Entity\Person $leader
+     * @param Person $leader
      *
      * @return Organisation
      */
-    public function addLeader(\AppBundle\Entity\Person $leader)
+    public function addLeader(Person $leader)
     {
         $this->leaders[] = $leader;
 
@@ -146,9 +146,9 @@ class Organisation extends BaseEntity
     /**
      * Remove leader
      *
-     * @param \AppBundle\Entity\Person $leader
+     * @param Person $leader
      */
-    public function removeLeader(\AppBundle\Entity\Person $leader)
+    public function removeLeader(Person $leader)
     {
         $this->leaders->removeElement($leader);
     }
@@ -166,11 +166,11 @@ class Organisation extends BaseEntity
     /**
      * Add member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      *
      * @return Organisation
      */
-    public function addMember(\AppBundle\Entity\Member $member)
+    public function addMember(Member $member)
     {
         $this->members[] = $member;
 
@@ -180,9 +180,9 @@ class Organisation extends BaseEntity
     /**
      * Remove member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      */
-    public function removeMember(\AppBundle\Entity\Member $member)
+    public function removeMember(Member $member)
     {
         $this->members->removeElement($member);
     }
@@ -200,11 +200,11 @@ class Organisation extends BaseEntity
     /**
      * Add invoice
      *
-     * @param \AppBundle\Entity\Invoice $invoice
+     * @param Invoice $invoice
      *
      * @return Organisation
      */
-    public function addInvoice(\AppBundle\Entity\Invoice $invoice)
+    public function addInvoice(Invoice $invoice)
     {
         $this->invoices[] = $invoice;
 
@@ -214,9 +214,9 @@ class Organisation extends BaseEntity
     /**
      * Remove invoice
      *
-     * @param \AppBundle\Entity\Invoice $invoice
+     * @param Invoice $invoice
      */
-    public function removeInvoice(\AppBundle\Entity\Invoice $invoice)
+    public function removeInvoice(Invoice $invoice)
     {
         $this->invoices->removeElement($invoice);
     }

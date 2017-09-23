@@ -1,0 +1,60 @@
+index:
+  title: Tauschen
+  description: Termine tauschen
+  author_of_offers: Von Ihnen gestellte Tauschanfragen
+  open_offers: Offene Anfragen
+  accepted_offers: Von Ihnen akzeptierten Tauschanfragen
+  review_offer: Anfrage beantworten
+  edit_offer: Anfrage bearbeiten
+  remove_offer: Anfrage löschen
+  new_offer: Neue Anfrage erstellen
+  no_entries: Noch keine Einträge
+
+new:
+  title: Neue Tauschanfrage erstellen
+  description: erstellen Sie eine neue Tauschanfrage
+  choose_person: Wählen Sie den Empfänger / die Empfängerin Ihrer Tauschanfrage aus
+  choose_person_description: Sie können Termine austauschen die Ihrem Account zugeordnet sind, mit den Terminen die dem Account Ihres Empfängers zugeordnet sind
+
+choose_events:
+  title: Termine auswählen
+  description: Wählen Sie die Termine aus die Sie tauschen möchten
+  your_events: Ihre Termine
+  your_events_description: Die von Ihnen zu tauschenden Termine
+  their_events: Termine des Empfängers / der Empfängerin
+  their_events_description: Die zu tauschenden Termine des Empfängers / der Empfängerin
+  message: Nachricht
+  message_description: Verfassen Sie eine kurze Nachricht an den Empfänger / die Empfängerin der Tauschanfrage
+
+review_offer:
+  title: Tauschanfrage ansehen
+  description: Diese Termine tauschen
+  your_events_for_receiver: Ihre alten Termine
+  your_events_for_receiver_description: Diese Termine wird Ihr Tauschpartner / Ihre Tauschpartnerin neu übernehmen
+  their_events_for_you: Ihre neuen Termine
+  their_events_for_you_description: Diese Termine werden neu Sie übernehmen
+  message: Nachricht
+  accept_offer: Tauschanfrage annehmen
+  reject_offer: Tauschanfrage ablehnen
+  close_offer: Tauschanfrage zurückziehen
+
+messages:
+  offer_accepted_successful: Der Tausch ist abgeschlossen!
+  offer_rejected_successful: Tausch abgeleht
+  offer_close_successful: Tauschanfrage zurückgezogen
+  offer_remove_successful: Tauschanfrage entfernt
+  has_invalid_entries: Einer oder mehr der Termine dieser Tauschanfrage können nicht mehr getauscht werden. Bitte korrigieren Sie die Tauschanfrage
+  has_invalid_entries_rejected: Einer oder mehr der Termine dieser Tauschanfrage können nicht mehr getauscht werden. Die Tauschanfrage wurde automatisch zurückgezogen
+  offer_open: Die Tauschanfrage wurde erfolgreich erstellt. Der Empfänger wurde benachrichtigt
+  no_access_anymore: Sie haben keinen Zugriff (mehr) auf diese Tauschanfrage. Sie wurde vielleicht zurückgezogen oder entfernt.
+
+emails:
+  offer_accepted:
+    subject: Tauschanfrage angenommen
+    message: 'Ihre Tauschanfrage auf nodika wurde angenommen: %link%'
+  offer_rejected:
+    subject: Tauschanfrage abgelehnt
+    message: 'Ihre Tauschanfrage auf nodika wurde abgelehnt: %link%'
+  new_offer:
+    subject: Neue Tauschanfrage
+    message: 'Sie haben eine neue Tauschanfrage auf nodika: %link%'

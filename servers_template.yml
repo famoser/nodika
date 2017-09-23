@@ -1,26 +1,18 @@
-production:
-  host: myurl.ch.inn.host.ch
-  port: 2121
-  user: myurl
-  password: password
+.base: &base
+  hostname: ftp.HOST.ch
+  user: USER
+  http_user: USER
   branch: master
-  stage: production
-  deploy_path: ~/myurl.ch/prod
-
-testing:
-  host: myurl.ch.inn.host.ch
-  port: 2121
-  user: myurl
-  password: password
-  branch: master
-  stage: testing
-  deploy_path: ~/myurl.ch/testing
+  deploy_path: ~/www/deploy/nodika.ch/{{stage}}
+  sshOptions:
+    StrictHostKeyChecking: no
 
 dev:
-  host: myurl.ch.inn.host.ch
-  port: 2121
-  user: myurl
-  password: password
-  branch: develop
+  <<: *base
   stage: dev
-  deploy_path: ~/myurl.ch/dev
+  branch: develop
+
+production:
+  <<: *base
+  stage: production
+  branch: master

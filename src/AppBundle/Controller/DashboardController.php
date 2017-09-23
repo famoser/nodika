@@ -9,25 +9,40 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Controller\Base\BaseController;
+use AppBundle\Controller\Base\BaseFrontendController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/start")
+ * @Route("/dashboard")
  * @Security("has_role('ROLE_USER')")
  */
-class DashboardController extends BaseController
+class DashboardController extends BaseFrontendController
 {
     /**
-     * @Route("/", name="dashboard_start")
+     * @Route("/", name="dashboard_index")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function startAction(Request $request)
+    public function indexAction(Request $request)
     {
-        $arr = [];
+        $member = $this->getMember();
+        $arr["person"] = $this->getPerson();
         $arr["leading_organisations"] = $this->getPerson()->getLeaderOf();
-        $arr["my_organisations"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
-        return $this->render("dashboard/start.html.twig", $arr);
+        $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
+
+        if ($member != null) {
+            $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime());
+            $arr["organisation"] = $member->getOrganisation();
+            $arr["member"] = $member;
+            unset($all[array_search($member->getOrganisation(), $all)]);
+        }
+
+        if (count($all) > 0) {
+            $arr["change_organisations"] = $all;
+        }
+        return $this->renderNoBackUrl("dashboard/index.html.twig", $arr, "dashboard!");
     }
+
 }

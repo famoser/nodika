@@ -8,13 +8,10 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Entity\Traits\ThingTrait;
+use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Enum\OfferStatus;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -30,24 +27,29 @@ class EventOffer extends BaseEntity
     use IdTrait;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
      */
+    private $createDateTime;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $openDateTime;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $closeDateTime;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $status = OfferStatus::OFFER_OPEN;
+    private $status = OfferStatus::CREATING;
 
     /**
      * @var Member
@@ -89,7 +91,7 @@ class EventOffer extends BaseEntity
      */
     public function __construct()
     {
-        $this->eventOfferEntries = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->eventOfferEntries = new ArrayCollection();
     }
 
     /**
@@ -119,6 +121,30 @@ class EventOffer extends BaseEntity
     /**
      * Set openDateTime
      *
+     * @param \DateTime $createDateTime
+     *
+     * @return EventOffer
+     */
+    public function setCreateDateTime($createDateTime)
+    {
+        $this->createDateTime = $createDateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get openDateTime
+     *
+     * @return \DateTime
+     */
+    public function getCreateDateTime()
+    {
+        return $this->createDateTime;
+    }
+
+    /**
+     * Set closeDateTime
+     *
      * @param \DateTime $openDateTime
      *
      * @return EventOffer
@@ -131,37 +157,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get openDateTime
+     * Get closeDateTime
      *
      * @return \DateTime
      */
     public function getOpenDateTime()
     {
         return $this->openDateTime;
-    }
-
-    /**
-     * Set closeDateTime
-     *
-     * @param \DateTime $closeDateTime
-     *
-     * @return EventOffer
-     */
-    public function setCloseDateTime($closeDateTime)
-    {
-        $this->closeDateTime = $closeDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get closeDateTime
-     *
-     * @return \DateTime
-     */
-    public function getCloseDateTime()
-    {
-        return $this->closeDateTime;
     }
 
     /**
@@ -189,13 +191,23 @@ class EventOffer extends BaseEntity
     }
 
     /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatusText()
+    {
+        return OfferStatus::getTranslation($this->status);
+    }
+
+    /**
      * Set offeredByMember
      *
-     * @param \AppBundle\Entity\Member $offeredByMember
+     * @param Member $offeredByMember
      *
      * @return EventOffer
      */
-    public function setOfferedByMember(\AppBundle\Entity\Member $offeredByMember = null)
+    public function setOfferedByMember(Member $offeredByMember = null)
     {
         $this->offeredByMember = $offeredByMember;
 
@@ -205,7 +217,7 @@ class EventOffer extends BaseEntity
     /**
      * Get offeredByMember
      *
-     * @return \AppBundle\Entity\Member
+     * @return Member
      */
     public function getOfferedByMember()
     {
@@ -215,11 +227,11 @@ class EventOffer extends BaseEntity
     /**
      * Set offeredByPerson
      *
-     * @param \AppBundle\Entity\Person $offeredByPerson
+     * @param Person $offeredByPerson
      *
      * @return EventOffer
      */
-    public function setOfferedByPerson(\AppBundle\Entity\Person $offeredByPerson = null)
+    public function setOfferedByPerson(Person $offeredByPerson = null)
     {
         $this->offeredByPerson = $offeredByPerson;
 
@@ -229,7 +241,7 @@ class EventOffer extends BaseEntity
     /**
      * Get offeredByPerson
      *
-     * @return \AppBundle\Entity\Person
+     * @return Person
      */
     public function getOfferedByPerson()
     {
@@ -239,11 +251,11 @@ class EventOffer extends BaseEntity
     /**
      * Set offeredToMember
      *
-     * @param \AppBundle\Entity\Member $offeredToMember
+     * @param Member $offeredToMember
      *
      * @return EventOffer
      */
-    public function setOfferedToMember(\AppBundle\Entity\Member $offeredToMember = null)
+    public function setOfferedToMember(Member $offeredToMember = null)
     {
         $this->offeredToMember = $offeredToMember;
 
@@ -253,7 +265,7 @@ class EventOffer extends BaseEntity
     /**
      * Get offeredToMember
      *
-     * @return \AppBundle\Entity\Member
+     * @return Member
      */
     public function getOfferedToMember()
     {
@@ -263,11 +275,11 @@ class EventOffer extends BaseEntity
     /**
      * Set offeredToPerson
      *
-     * @param \AppBundle\Entity\Person $offeredToPerson
+     * @param Person $offeredToPerson
      *
      * @return EventOffer
      */
-    public function setOfferedToPerson(\AppBundle\Entity\Person $offeredToPerson = null)
+    public function setOfferedToPerson(Person $offeredToPerson = null)
     {
         $this->offeredToPerson = $offeredToPerson;
 
@@ -277,7 +289,7 @@ class EventOffer extends BaseEntity
     /**
      * Get offeredToPerson
      *
-     * @return \AppBundle\Entity\Person
+     * @return Person
      */
     public function getOfferedToPerson()
     {
@@ -287,11 +299,11 @@ class EventOffer extends BaseEntity
     /**
      * Add eventOfferEntry
      *
-     * @param \AppBundle\Entity\EventOfferEntry $eventOfferEntry
+     * @param EventOfferEntry $eventOfferEntry
      *
      * @return EventOffer
      */
-    public function addEventOfferEntry(\AppBundle\Entity\EventOfferEntry $eventOfferEntry)
+    public function addEventOfferEntry(EventOfferEntry $eventOfferEntry)
     {
         $this->eventOfferEntries[] = $eventOfferEntry;
 
@@ -301,9 +313,9 @@ class EventOffer extends BaseEntity
     /**
      * Remove eventOfferEntry
      *
-     * @param \AppBundle\Entity\EventOfferEntry $eventOfferEntry
+     * @param EventOfferEntry $eventOfferEntry
      */
-    public function removeEventOfferEntry(\AppBundle\Entity\EventOfferEntry $eventOfferEntry)
+    public function removeEventOfferEntry(EventOfferEntry $eventOfferEntry)
     {
         $this->eventOfferEntries->removeElement($eventOfferEntry);
     }
@@ -311,7 +323,7 @@ class EventOffer extends BaseEntity
     /**
      * Get eventOfferEntries
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|EventOfferEntry[]
      */
     public function getEventOfferEntries()
     {
@@ -326,5 +338,21 @@ class EventOffer extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getDescription();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCloseDateTime()
+    {
+        return $this->closeDateTime;
+    }
+
+    /**
+     * @param \DateTime $closeDateTime
+     */
+    public function setCloseDateTime($closeDateTime)
+    {
+        $this->closeDateTime = $closeDateTime;
     }
 }

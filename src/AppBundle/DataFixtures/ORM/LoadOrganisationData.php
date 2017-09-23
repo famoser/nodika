@@ -38,11 +38,14 @@ class LoadOrganisationData extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $organisation = $this->getAllRandomInstance();
+        $organisation->setName("Notfalldienstorganisation");
         $organisation->addLeader($this->getReference("person-1"));
         $organisation->setIsActive(true);
         $organisation->setActiveEnd(new \DateTime("now + 1 month"));
         $manager->persist($organisation);
         $manager->flush();
+
+        $this->setReference("organisation-1", $organisation);
     }
 
     /**

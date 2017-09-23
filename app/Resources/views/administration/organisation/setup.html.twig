@@ -1,42 +1,57 @@
-{% extends "divided_content_base.html.twig" %}
+{% extends "primary_secondary_content_base.html.twig" %}
+{% set color_class = globals_color_class_organisation %}
 
-{% block title %}{{ "setup"|trans }}{% endblock %}
-{% block description %}{{ "setup_action"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% block title %}{{ "setup.title"|trans }}{% endblock %}
+{% block description %}{{ "setup.description"|trans }}{% endblock %}
 
-{% trans_default_domain "organisation" %}
+{% trans_default_domain "administration_organisation" %}
 
 {% block primary_content %}
-    <h2>{{ "setup_step_1"|trans }} {% if setupStatus.stepOneDone %}{{ "setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_1"|trans }} {% if setupStatus.hasMembers %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
+        {{ "setup.setup_step_1_description"|trans }} <br/>
         <a href="{{ path("administration_organisation_members", {"organisation" : organisation.id}) }}">
-            {{ "setup_add_members"|trans }}
+            {{ "setup.setup_step_1_action"|trans }}
         </a>
     </p>
-    <h2>{{ "setup_step_2"|trans }}{% if setupStatus.stepTwoDone %}{{ "setup_step_done"|trans }}{% endif %}</h2>
+    <h2>{{ "setup.setup_step_2"|trans }}{% if setupStatus.hasEventLines %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
     <p>
-        <a href="{{ path("administration_organisation_events", {"organisation" : organisation.id}) }}">
-            {{ "setup_add_events"|trans }}
+        {{ "setup.setup_step_2_description"|trans }} <br/>
+        <a href="{{ path("administration_organisation_event_lines", {"organisation" : organisation.id}) }}">
+            {{ "setup.setup_step_2_action"|trans }}
         </a>
     </p>
-    <h2>{{ "setup_step_3"|trans }}
-        {% if setupStatus.stepThreeDone %}{{ "setup_step_done"|trans }}{% else %}{{ "setup_step_voluntary"|trans }}{% endif %}
-    </h2>
-    <p>{{ "setup_configure_settings"|trans }}</p>
-    <h2>{{ "setup_step_4"|trans }}
-        {% if setupStatus.stepFourDone %}{{ "setup_step_done"|trans }}{% endif %}
-    </h2>
-    <p>{{ "setup_invite_members"|trans }}</p>
 
-{% endblock primary_content %}
+    <h2>{{ "setup.setup_step_3"|trans }}{% if setupStatus.hasEvents %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <p>
+        {{ "setup.setup_step_3_description"|trans }} <br/>
+        <a href="{{ path("administration_organisation_events", {"organisation" : organisation.id}) }}">
+            {{ "setup.setup_step_3_action"|trans }}
+        </a>
+    </p>
+
+    <h2>{{ "setup.setup_step_4"|trans }}{% if setupStatus.hasVisitedSettings %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <p>
+        {{ "setup.setup_step_4_description"|trans }} <br/>
+        <a href="{{ path("administration_organisation_settings", {"organisation" : organisation.id}) }}">
+            {{ "setup.setup_step_4_action"|trans }}
+        </a>
+    </p>
+
+    <h2>{{ "setup.setup_step_5"|trans }}{% if setupStatus.hasInvitedMembers %} {{ "setup.setup_step_done"|trans }}{% endif %}</h2>
+    <p>
+        {{ "setup.setup_step_5_description"|trans }} <br/>
+        <a href="{{ path("administration_organisation_members_invite", {"organisation" : organisation.id}) }}">
+            {{ "setup.setup_step_5_action"|trans }}
+        </a>
+    </p>
+
+
+{% endblock %}
 
 {% block secondary_content %}
-    <h3>{{ "setup_add_members"|trans }}</h3>
-    <p>{{ "setup_add_members_description"|trans }}</p>
-    <h3>{{ "setup_add_events"|trans }}</h3>
-    <p>{{ "setup_add_events_description"|trans }}</p>
-    <h3>{{ "setup_configure_settings"|trans }}</h3>
-    <p>{{ "setup_configure_settings_description"|trans }}</p>
-    <h3>{{ "setup_invite_members"|trans }}</h3>
-    <p>{{ "setup_invite_members_description"|trans }}</p>
-{% endblock secondary_content %}
+    <h3>{{ "setup.five_steps"|trans }}</h3>
+    <p>{{ "setup.five_steps_description"|trans }}</p>
+    <h3>{{ "setup.setup"|trans }}</h3>
+    <p>{{ "setup.setup_description"|trans }}</p>
+{% endblock %}

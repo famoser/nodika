@@ -1,0 +1,42 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+{% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
+
+{% block title %}{{ "assignment_settings.title"|trans }}{% endblock %}
+{% block description %}{{ "assignment_settings.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_event_line %}
+
+{% trans_default_domain "administration_organisation_event_line_generate_nodika" %}
+
+{% block primary_content %}
+    <h3>{{ "assignment_settings.title"|trans }}</h3>
+    <form class="form"
+          action="{{ path("administration_organisation_event_line_generate_nodika_assignment_settings", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
+          method="post">
+        {{ kitchen_sink.textarea_form_field("before_events", beforeEventsString, "assignment_settings.before_data"|trans) }}
+        {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+    </form>
+
+    <h3>{{ "assignment_settings.members_table"|trans }}</h3>
+    <p>{{ "assignment_settings.members_table_description"|trans }}</p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ "id"|trans({}, "entity_member") }}</th>
+            <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for member in memberConfigurations %}
+            <tr>
+                <td>{{ member.id }}</td>
+                <td>{{ member.name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+        {% block secondary_content %}
+            <h3>{{ "assignment_settings.before_data"|trans }}</h3>
+            <p>{{ "assignment_settings.before_data_description"|trans }}</p>
+        {% endblock %}

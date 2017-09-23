@@ -1,27 +1,25 @@
-{% extends "divided_content_base.html.twig" %}
+{% extends "primary_secondary_content_base.html.twig" %}
 
-{% block title %}{{ "import_members"|trans }}{% endblock %}
-{% block description %}{{ "import_members_action"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% block title %}{{ "import.title"|trans }}{% endblock %}
+{% block description %}{{ "import.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_member %}
 
-{% trans_default_domain "member" %}
+{% trans_default_domain "administration_organisation_member" %}
 
 {% block primary_content %}
-    {{ form_start(import_members_form) }}
-    {{ form_errors(import_members_form) }}
-    {{ form_end(import_members_form) }}
-{% endblock primary_content %}
+    {{ form(import_form) }}
+{% endblock %}
 
 {% block secondary_content %}
-    <h3>{{ "import_members"|trans }}</h3>
+    <h3>{{ "import.import_members"|trans }}</h3>
     <p>
-        {{ "import_members_description"|trans }}
+        {{ "import.import_members_description"|trans }}
         <br/>
         <a href="{{ path("administration_organisation_member_import_download_template", { "organisation" : organisation.id}) }}">
-            {{ "import_members_template_download"|trans }}
+            {{ "import.import_members_template_download"|trans }}
         </a>
     </p>
-    <h3>{{ "import_members_required"|trans }}</h3>
-    <p>{{ "import_members_required_description"|trans }}</p>
 
-{% endblock secondary_content %}
+    <h3>{{ "import.import_members_required"|trans }}</h3>
+    <p>{{ "import.import_members_required_description"|trans }}</p>
+{% endblock %}

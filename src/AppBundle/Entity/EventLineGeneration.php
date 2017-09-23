@@ -8,14 +8,13 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Entity\Traits\ThingTrait;
+use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Enum\DistributionType;
 use AppBundle\Helper\DateTimeFormatter;
+use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
+use AppBundle\Model\EventLineGeneration\Base\BaseOutput;
+use AppBundle\Model\EventLineGeneration\GenerationResult;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -33,12 +32,12 @@ class EventLineGeneration extends BaseEntity
     /**
      * @ORM\Column(type="datetime")
      */
-    private $generationDate;
+    private $createdAtDateTime;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $distributionType = DistributionType::FAIR;
+    private $distributionType = DistributionType::NODIKA;
 
     /**
      * the input to the algorithm
@@ -69,15 +68,22 @@ class EventLineGeneration extends BaseEntity
     private $eventLine;
 
     /**
+     * @var Person
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Person")
+     */
+    private $createdByPerson;
+
+    /**
      * Set generationDate
      *
-     * @param \DateTime $generationDate
+     * @param \DateTime $createdAtDateTime
      *
      * @return EventLineGeneration
      */
-    public function setGenerationDate($generationDate)
+    public function setCreatedAtDateTime($createdAtDateTime)
     {
-        $this->generationDate = $generationDate;
+        $this->createdAtDateTime = $createdAtDateTime;
 
         return $this;
     }
@@ -87,9 +93,9 @@ class EventLineGeneration extends BaseEntity
      *
      * @return \DateTime
      */
-    public function getGenerationDate()
+    public function getCreatedAtDateTime()
     {
-        return $this->generationDate;
+        return $this->createdAtDateTime;
     }
 
     /**
@@ -131,6 +137,18 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
+     * Set distributionConfiguration
+     *
+     * @param BaseConfiguration $distributionConfiguration
+     *
+     * @return EventLineGeneration
+     */
+    public function setDistributionConfiguration(BaseConfiguration $distributionConfiguration)
+    {
+        return $this->setDistributionConfigurationJson(json_encode($distributionConfiguration));
+    }
+
+    /**
      * Get distributionConfigurationJson
      *
      * @return string
@@ -152,6 +170,17 @@ class EventLineGeneration extends BaseEntity
         $this->distributionOutputJson = $distributionOutputJson;
 
         return $this;
+    }
+
+    /**
+     * Set distributionOutput
+     *
+     * @param BaseOutput $distributionOutput
+     * @return EventLineGeneration
+     */
+    public function setDistributionOutput(BaseOutput $distributionOutput)
+    {
+        return $this->setDistributionOutputJson(json_encode($distributionOutput));
     }
 
     /**
@@ -179,6 +208,18 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
+     * Set generationResultJson
+     *
+     * @param GenerationResult $generationResult
+     *
+     * @return EventLineGeneration
+     */
+    public function setGenerationResult(GenerationResult $generationResult)
+    {
+        return $this->setGenerationResultJson(json_encode($generationResult));
+    }
+
+    /**
      * Get generationResultJson
      *
      * @return string
@@ -191,11 +232,11 @@ class EventLineGeneration extends BaseEntity
     /**
      * Set eventLine
      *
-     * @param \AppBundle\Entity\EventLine $eventLine
+     * @param EventLine $eventLine
      *
      * @return EventLineGeneration
      */
-    public function setEventLine(\AppBundle\Entity\EventLine $eventLine = null)
+    public function setEventLine(EventLine $eventLine = null)
     {
         $this->eventLine = $eventLine;
 
@@ -205,7 +246,7 @@ class EventLineGeneration extends BaseEntity
     /**
      * Get eventLine
      *
-     * @return \AppBundle\Entity\EventLine
+     * @return EventLine
      */
     public function getEventLine()
     {
@@ -219,6 +260,22 @@ class EventLineGeneration extends BaseEntity
      */
     public function getFullIdentifier()
     {
-        return $this->getGenerationDate()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        return $this->getCreatedAtDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+    }
+
+    /**
+     * @return Person
+     */
+    public function getCreatedByPerson()
+    {
+        return $this->createdByPerson;
+    }
+
+    /**
+     * @param Person $createdByPerson
+     */
+    public function setCreatedByPerson($createdByPerson)
+    {
+        $this->createdByPerson = $createdByPerson;
     }
 }

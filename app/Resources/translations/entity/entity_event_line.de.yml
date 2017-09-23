@@ -1,0 +1,7 @@
+entity:
+  name: Termingruppe
+  description: Termine werden Termingruppen zugeteilt, die dann jeweils einzeln administriert werden können. Für jede Termingruppe können Termine auf verschiedene Arten importiert oder generiert werden.
+  plural: Termingruppen
+
+events: Termine
+display_order: Reihenfolge

@@ -1,23 +1,19 @@
-{% extends "divided_content_base.html.twig" %}
+{% extends "primary_secondary_content_base.html.twig" %}
 
-{% block title %}{{ "new"|trans }}{% endblock %}
-{% block description %}{{ "new_action"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% block title %}{{ "new.title"|trans }}{% endblock %}
+{% block description %}{{ "new.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_member %}
 
-{% trans_default_domain "member" %}
+{% trans_default_domain "administration_organisation_member" %}
 
 {% block primary_content %}
-    {{ form_start(new_member_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
-    {{ form_errors(new_member_form) }}
-    {{ form_end(new_member_form) }}
-{% endblock primary_content %}
+    <h3>{{ "new.member_add_form"|trans }}</h3>
+    {{ form(new_form) }}
+{% endblock %}
 
 {% block secondary_content %}
-    <h3>{{ "new"|trans }}</h3>
-    <p>{{ "new_description"|trans }}</p>
-    <h3>{{ "member_address"|trans }}</h3>
-    <p>{{ "member_address_description"|trans }}</p>
-    <h3>{{ "member_contact"|trans }}</h3>
-    <p>{{ "member_contact_description"|trans }}</p>
-
-{% endblock secondary_content %}
+    <h3>{{ "new.member_address"|trans }}</h3>
+    <p>{{ "new.member_address_description"|trans }}</p>
+    <h3>{{ "new.member_contact"|trans }}</h3>
+    <p>{{ "new.member_contact_description"|trans }}</p>
+{% endblock %}

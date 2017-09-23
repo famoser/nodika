@@ -1,0 +1,27 @@
+{% extends 'upper_lower_content_base.html.twig' %}
+
+{% block content_upper %}
+    <div class="row">
+        <div class="col-md-6">
+            {% block primary_content_upper %}
+            {% endblock primary_content_upper %}
+        </div>
+        <div class="col-md-6">
+            {% block secondary_content_upper %}
+            {% endblock secondary_content_upper %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_lower %}
+    <div class="row">
+        <div class="col-md-6">
+            {% block primary_content_lower %}
+            {% endblock primary_content_lower %}
+        </div>
+        <div class="col-md-6">
+            {% block secondary_content_lower %}
+            {% endblock secondary_content_lower %}
+        </div>
+    </div>
+{% endblock %}

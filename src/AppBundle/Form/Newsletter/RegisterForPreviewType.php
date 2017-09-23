@@ -10,28 +10,28 @@ namespace AppBundle\Form\Newsletter;
 
 
 use AppBundle\Entity\Newsletter;
-use AppBundle\Enum\NewsletterChoice;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use AppBundle\Entity\Traits\CommunicationTrait;
+use AppBundle\Entity\Traits\PersonTrait;
+use AppBundle\Enum\SubmitButtonType;
+use AppBundle\Form\BaseAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Choice;
 
-class RegisterForPreviewType extends AbstractType
+class RegisterForPreviewType extends BaseAbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add("choice", ChoiceType::class, ["choices" => NewsletterChoice::toChoicesArray()])
-            ->add("email", EmailType::class)
-            ->add("givenName", TextType::class)
-            ->add("familyName", TextType::class)
-            ->add("message", TextareaType::class)
-            ->add("submit", SubmitType::class, ["label" => "Send"]);
+        $builder = Newsletter::getBuilderStatic($builder);
+
+        $this->addTrait($builder, PersonTrait::class);
+        $this->addTrait($builder, CommunicationTrait::class);
+
+
+        $this->addSubmit($builder, SubmitButtonType::SEND);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -12,5 +12,10 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            akewbiawbvc82wocq127q238d78qwb3daudzaub
-    free_period_days: 31
     contact_email: ~
+    admin_emails: ["info@nodika.ch"]
+
+    # application settings
+    free_period_days: 31
+    register_fee: 1500
+    yearly_fee: 500

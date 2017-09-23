@@ -12,11 +12,9 @@ namespace AppBundle\Security\Voter;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\FrontendUser;
-use AppBundle\Entity\Organisation;
-use AppBundle\Repository\EventLineRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class EventVoter extends OrganisationVoter
+class EventVoter extends EventLineVoter
 {
     /**
      * @param string $attribute An attribute
@@ -55,16 +53,17 @@ class EventVoter extends OrganisationVoter
             return false;
         }
 
-        $organisation = $subject->getEventLine()->getOrganisation();
-        if (!$organisation instanceof Organisation) {
+        $eventLine = $subject->getEventLine();
+        if (!$eventLine instanceof EventLine) {
             return false;
         }
 
         switch ($attribute) {
             case self::VIEW:
+                return parent::voteOnAttribute(self::VIEW, $eventLine, $token);
             case self::EDIT:
             case self::REMOVE:
-                return parent::voteOnAttribute(self::ADMINISTRATE, $organisation, $token);
+                return parent::voteOnAttribute(self::ADMINISTRATE, $eventLine, $token);
         }
 
         throw new \LogicException('This code should not be reached!');

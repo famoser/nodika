@@ -1,71 +1,107 @@
-#login form
-Username: Email
-Password: Passwort
-Login: Einloggen
+#login page
+login:
+  title: Login
+  description: In einen existierenden Account einloggen
+  login_form_header: Login
+  forgot_password_action: Passwort vergessen
+  register_action: Neu registrieren
+  no_account: Noch keinen Account?
+  no_account_description: Fragen Sie den Leiter Ihrer Organisation um Zugangsdaten oder erstellen Sie registrieren Sie sich um für Ihre eigene Organisation einen Kalender zu erstellen
+  forgot_password: Passwort vergessen?
+  forgot_password_description: Drücken Sie auf "Passwort vergessen" unterhalb des Loginformulars und verifizieren Sie sich mit der hinterlegten E-Mail
 
-#login description
-forgot_password_action: Passwort vergessen
-create_organisation_action: Neue Organisation registrieren
-internal_area: Interner Bereich
-internal_area_action: Loggen Sie sich ein
-internal_area_description: Loggen Sie sich ein um Zugriff zum Terminkalender und weitere Funktionen zu erhalten
-no_account_question: Noch keinen Account?
-no_account_description: Fragen Sie den Leiter Ihrer Organisation oder erstellen Sie eine neue Organisation um den Kalender zu nutzen
-forgot_password_question: Passwort vergessen?
-forgot_password_description: Drücken Sie auf Passwort vergessen links und verifizieren Sie sich mit der hinterlegten E-Mail
+#register page
+register:
+  title: Registrieren
+  description: Mitglied auf nodika.ch werden
+  register_form_header: Registrierungsformular
+  register: Registrieren
+  register_description: >
+    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen.
+    Danach können Sie mit der Einrichtung Ihrer Organisation beginnen
+  personal_data: Persönliche Daten
+  personal_data_description: >
+    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
+    Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
+  pricing: Kosten
+  pricing_description: >
+    Nach der gratis %free_period_days%-tägigen Testphase können Sie ein Abo für Ihre Organisation lösen.
+    Die einmalige Registrierungsgebühr beträgt %register_fee% CHF und die Jahresgebühr ist %yearly_fee% CHF.
+  register_action: Erstellen Sie zuerst einen persönlichen Account
 
-#register form
-Person: Name
-Address: Adresse
-Communication: Kontaktinformationen
-Register: registrieren
+#invite page
+invite:
+  title: Willkomen auf nodika!
+  description: Registrieren Sie sich um die Einladung anzunehmen
+  register_form_header: Registrierungsformular
+  account_register: Zugang für %member% registrieren
+  account_register_description: 'Willkommen auf nodika! Erstellen Sie hier einen Zugang für Ihr Mitglied %member% der Organisation %organisation%'
+  register: Registrieren
+  register_description: >
+    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen.
+    Danach können Sie die Webseite in vollem Umfang nutzen
+  personal_data: Persönliche Daten
+  personal_data_description: >
+    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
+    Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
 
-#register description
-register: Registrieren
-register_action: Erstellen Sie zuerst einen persönlichen Account
-register_description: Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen. Danach können Sie mit der Einrichtung Ihrer Organisation beginnen
-personal_data: Persönliche Daten
-personal_data_description: Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben. Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
+#register/thanks page
+register_thanks:
+  title: Vielen Dank für die Registrierung
+  description: Account erfolgreich erstellt
+  message: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail. Besuchen Sie den darin enthaltenen Link um die Registrierung abzuschliessen.
 
-#register thanks
-register_thanks: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail.
-register_thanks_action: Account erfolgreich erstellt
+#register/confirm page
+register_confirm:
+  title: Registrierung abschliessen
+  description: Setzten Sie das Passwort für Ihren Account
+  email_verified: Email verifiziert
+  email_verified_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account, danach können Sie mit der Einrichtung Ihrer Organisation loslegen
+  set_password_form: Passwort setzen
 
-#register confirm
-register_confirm: Registrierung abschliessen
-register_confirm_action: Setzten Sie das Passwort für Ihren Account
-register_confirm_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account. Danach können Sie mit der Einrichtung Ihrer Organisation loslegen
+#reset page
+reset:
+  title: Passwort zurücksetzen
+  description: Setzen Sie Ihr Passwort mit Ihrer E-Mail zurück
+  set_email_form_description: Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.
 
-#register confirm form
-Set passwort: Passwort setzten
+#reset/done page
+reset_done:
+  title: Passwort zurücksetzen
+  description: E-Mail wurde versandt
+  message: Sofern diese E-Mail in unserem System gefunden wurde haben wir Ihnen soeben eine E-Mail gesendet mit einem Link, um Ihr Passwort zurückzusetzen
 
-#hash invalid
-hash_invalid: Link ungültig
-hash_invalid_action: Der aufgerufene Link ist ungültig
-hash_invalid_description: Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann.
+#reset/confirm page
+reset_confirm:
+  title: Passwort zurücksetzen
+  description: Setzen Sie Ihr neues Passwort
+  reset_password_form_description: Setzen Sie Ihr neues Passwort
 
-#reset form
-Email: Email
-Reset: zurücksetzten
+#displayed if hash from link is invalid
+hash_invalid:
+  title: Link ungültig
+  description: Der aufgerufene Link ist ungültig
+  message: Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann.
 
-#reset description
-reset: Passwort zurücksetzten
-reset_action: Setzten Sie Ihr Passwort mit Ihrer E-Mail zurück
-reset_description: Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzten können.
+#displayed if invitation hash from link is invalid
+invitation_hash_invalid:
+  title: Link ungültig
+  description: Der aufgerufene Link ist ungültig
+  message: Dieser Link ist ungültig (haben Sie den Link richtig in den Browser kopiert?).
 
-#reset done
-reset_done: Passwort zurücksetzten
-reset_done_action: E-Mail wurde versandt
-reset_done_description: Sofern Ihre E-Mail in unserem System gefunden wurde haben wir Ihnen soeben eine E-Mail gesendet mit einem Link, um das Passwort zurückzusetzten
+invite:
+  messages:
+    already_part_of_member: 'Sie sind bereits als Zugang des Mitglieds "%member%" der Organisation "%organisation%" registriert'
+    now_part_of_member: 'Sie wurden erfolgreich als Zugang des Mitglieds "%member%" der Organisation "%organisation%" hinzugefügt'
 
-#reset confirm
-reset_confirm: Passwort zurücksetzten
-reset_confirm_action: Setzten Sie Ihr neues Passwort
-reset_confirm_description: Setzten Sie Ihr neues Passwort
 
+#errors
 error:
-  email_already_registered: Diese E-Mail ist bereits vergeben.
+  email_already_registered: Diese E-Mail ist bereits vergeben. Loggen Sie sich ein oder setzen Sie das Passwort zurück.
   passwords_do_not_match: Die Passwörter stimmen nicht überein
   new_password_not_valid: Das Passwort ist nicht sicher genug. Bitte verwenden Sie mindestens ein 8 stelliges Passwort
   login_failed: Login fehlgeschlagen
+  must_accept_agb: Sie müssen die AGB's akzeptieren um fortzufahren
 
+success:
+  password_set: Neues Passwort erfolgreich gesetzt

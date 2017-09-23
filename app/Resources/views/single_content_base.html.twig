@@ -1,0 +1,16 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block content %}
+    <section class="content {{ color_class }}">
+        {% include "layout/parts/menu.html.twig" %}
+        {% include "layout/parts/flashbag.html.twig" %}
+        <div class="container index-container default-color">
+            <div class="row">
+                <div class="col-md-12">
+                    {% block single_content %}
+                    {% endblock single_content %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

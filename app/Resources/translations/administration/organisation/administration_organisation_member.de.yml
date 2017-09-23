@@ -1,0 +1,55 @@
+#index
+index:
+  title: Mitgliederverwaltung
+  description: Verwalten Sie hier die Mitglieder Ihrer Organisation
+  import: Mitglieder importieren
+  import_description: Sie können Mitglieder aus einer .csv (Excel) Datei importieren
+  persons: Zugänge
+  no_members_yet: Noch keine Mitglieder erfasst
+  leaders: Administratoren
+  member_add: Mitglied hinzufügen
+  members_no_person: Ein Mitglied ist keine Person
+  members_no_person_description: Ein Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden. Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
+
+#new page
+new:
+  title: Neues Mitglied
+  description: Fügen Sie ein neues Mitglied zu Ihrer Organisation hinzu
+  member_add_form: Mitglied erfassen
+  member_address: Adresse des Mitglieds
+  member_address_description: Sie können auch nur den Namen ausfüllen, und Ihre Mitglieder ergänzen dann selber die fehlenden Informationen
+  member_contact: Kontaktinformationen Ihres Mitglieds
+  member_contact_description: An diese hinterlegte E-Mail werden die E-Mails versandt (z.B. zu Registrierung oder Terminerinnerungen)
+
+#edit page
+edit:
+  title: Mitglied bearbeiten
+  description: Editieren Sie das Mitglied Ihrer Organisation
+  member_edit_form: Mitglied ändern
+
+#remove description
+remove:
+  title: Mitglied entfernen
+  description: Löschen Sie das Mitglied und alle damit verbundenen Daten
+  member_remove_form: Mitglied entfernen
+  remove: Mitglied entfernen
+  remove_description: Entfernen Sie das Mitglied und damit alle seine verbundenen Daten.
+
+#import page
+import:
+  title: Mitglieder importieren
+  description: Laden Sie eine .csv (Excel) Datei hoch mit den Mitgliedern
+  import_members: Mitglieder importieren
+  import_members_description: Laden Sie die Musterdatei herunter, und fügen Sie die Daten Ihrer Mitglieder (ohne die Spaltenreihenfolge zu ändern) ein. Danach kehren Sie hier zurück, und laden die .csv (Excel) Datei hoch
+  import_members_template_download: Musterdatei herunterladen
+  import_members_required: Zwingend und optionale Felder
+  import_members_required_description: Zwingend erfolderlich ist für jedes Mitglied nur der Name und die E-Mail. Weitere Daten können Sie leer lassen, diese können dann direkt vom Mitglied ergänzt werden
+
+#administer page
+administer:
+  new_person_action: neuer Account hinzufügen
+  remove_member_action: Mitglied entfernen
+  edit_member_action: Mitglied bearbeiten
+  title: Mitglied
+  description: Mitglied verwalten
+  not_part_of_organisation_yet: Ihr Account ist noch keinem Mitglied Ihrer Organisation zugeordnet. Möchten Sie Ihren Account dem jetzt ausgewählten Mitglied zuordnen klicken Sie einfach hier.

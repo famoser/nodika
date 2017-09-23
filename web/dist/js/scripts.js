@@ -12190,3 +12190,23 @@ if (typeof jQuery === 'undefined') {
   })
 
 }(jQuery);
+
+function boot_general_usability() {
+    $("form").on("submit", function () {
+        var $form = $(this);
+        var $btns = $(".btn", $form);
+        $btns.addClass("disabled");
+    })
+}
+//this function is called on document.ready
+function boot() {
+    boot_general_usability();
+    boot_navigation();
+}
+
+function boot_navigation() {
+    $('#nav-toggle').click(function () {
+        $(".navigation").toggleClass('open');
+    });
+
+}

@@ -1,25 +1,21 @@
-{% extends "divided_content_base.html.twig" %}
+{% extends "primary_secondary_content_base.html.twig" %}
+{% set color_class = globals_color_class_organisation %}
 
-{% block title %}{{ "new"|trans }}{% endblock %}
-{% block description %}{{ "new_action"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% block title %}{{ "new.title"|trans }}{% endblock %}
+{% block description %}{{ "new.description"|trans }}{% endblock %}
 
-{% trans_default_domain "organisation" %}
+{% trans_default_domain "administration_organisation" %}
 
 {% block primary_content %}
-    {{ form_start(new_organisation_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
-    {{ form_errors(new_organisation_form) }}
-    {{ form_end(new_organisation_form) }}
-{% endblock primary_content %}
+    <h3>{{ "new.title"|trans }}</h3>
+    {{ form(new_organisation_form) }}
+{% endblock %}
 
 {% block secondary_content %}
-    <h3>{{ "new"|trans }}</h3>
-    <p>{{ "new_description"|trans }}</p>
-    <h3>{{ "organisation_address"|trans }}</h3>
-    <p>{{ "organisation_address_description"|trans }}</p>
-    <h3>{{ "organisation.trial_period"|trans({}, "pricing") }}</h3>
-    <p>{{ "organisation.trial_period_description"|trans({}, "pricing") }}</p>
-    <h3>{{ "organisation_contact"|trans }}</h3>
-    <p>{{ "organisation_contact_description"|trans }}</p>
-
-{% endblock secondary_content %}
+    <h3>{{ "new.address"|trans }}</h3>
+    <p>{{ "new.address_description"|trans }}</p>
+    <h3>{{ "new.contact"|trans }}</h3>
+    <p>{{ "new.contact_description"|trans }}</p>
+    <h3>{{ "register.pricing"|trans({}, "access") }}</h3>
+    <p>{{ "register.pricing_description"|trans({"%free_period_days%" : globals_free_period_days, "%yearly_fee%" : globals_yearly_fee, "%register_fee%" : globals_register_fee}, "access") }}</p>
+{% endblock %}

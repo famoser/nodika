@@ -1,6 +1,14 @@
 Introduction
 ======
 
+todos:
+ - send event remainders
+ - Member, Person, Organisation view
+ - export & print events in search
+ - admin management (add any person by email, new invite possibility)
+ - continue generation
+ - implement invoice system
+
 project build with symfony. Dependecy managers:
  - composer for php
  - bower for css/ js
@@ -53,8 +61,9 @@ if you want to deploy
  - you may want to login with ssh and prepare the database data with `php bin/console doctrine:fixtures:load --fixtures=src/AppBundle/DataFixtures/ORM/Production -q` (execute from active release root)
  
 if you're setting up deployment on a new server
- - connect with an ssh agent (for example putty)
- - `cat ~/.ssh/id_rsa.pub` to display you ssh key, if you have none, follow the next 3 steps
+ - add own ssh key `ssh-copy-id -i ~/.ssh/id_rsa.pub famoser@famoser.ch` 
+ - connect to server with `ssh famoser@famoser.ch`
+ - `cat ~/.ssh/id_rsa.pub` to display the sever ssh key, if none:
     - `ssh-keygen -t rsa -b 4096 -C "info@famoser.ch"` generate a new key
     - `eval $(ssh-agent -s)` start the ssh agent
     - `ssh-add ~/.ssh/id_rsa` add the new key

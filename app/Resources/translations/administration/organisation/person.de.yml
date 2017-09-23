@@ -1,8 +1,0 @@
-#general
-person: Person
-persons: Personen
-persons_description: Eine Person gehört zu einem Mitglied, und besitzt einen Login.
-Thing: Person
-
-#new form
-Create: erstellen

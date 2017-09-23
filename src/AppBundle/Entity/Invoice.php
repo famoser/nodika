@@ -8,15 +8,12 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
+use AppBundle\Entity\Traits\AddressTrait;
+use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Enum\InvoiceType;
 use AppBundle\Enum\PaymentStatus;
-use AppBundle\Enum\TradeTag;
 use AppBundle\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -189,11 +186,11 @@ class Invoice extends BaseEntity
     /**
      * Set organisation
      *
-     * @param \AppBundle\Entity\Organisation $organisation
+     * @param Organisation $organisation
      *
      * @return Invoice
      */
-    public function setOrganisation(\AppBundle\Entity\Organisation $organisation = null)
+    public function setOrganisation(Organisation $organisation = null)
     {
         $this->organisation = $organisation;
 
@@ -203,7 +200,7 @@ class Invoice extends BaseEntity
     /**
      * Get organisation
      *
-     * @return \AppBundle\Entity\Organisation
+     * @return Organisation
      */
     public function getOrganisation()
     {

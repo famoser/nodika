@@ -1,18 +1,17 @@
-{% extends "divided_content_base.html.twig" %}
+{% extends "primary_secondary_content_base.html.twig" %}
 
-{% block title %}{{ "register_confirm"|trans }}{% endblock %}
-{% block description %}{{ "register_confirm_action"|trans }}{% endblock %}
+{% block title %}{{ "register_confirm.title"|trans }}{% endblock %}
+{% block description %}{{ "register_confirm.description"|trans }}{% endblock %}
 {% set color_class = "brown-background" %}
 
 {% trans_default_domain "access" %}
 
 {% block primary_content %}
-    {{ form_start(register_confirm_form) }}
-    {{ form_errors(register_confirm_form) }}
-    {{ form_end(register_confirm_form) }}
-{% endblock primary_content %}
+    <h3>{{ "register_confirm.set_password_form"|trans }}</h3>
+    {{ form(set_password_form) }}
+{% endblock %}
 
 {% block secondary_content %}
-    <h3>{{ "register_confirm"|trans }}</h3>
-    <p>{{ "register_confirm_description"|trans }}</p>
-{% endblock secondary_content %}
+    <h3>{{ "register_confirm.email_verified"|trans }}</h3>
+    <p>{{ "register_confirm.email_verified_description"|trans }}</p>
+{% endblock %}

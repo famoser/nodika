@@ -1,5 +1,4 @@
 <?php
-use AppBundle\Entity\Traits\IdTrait;
 
 /**
  * Created by PhpStorm.
@@ -11,6 +10,7 @@ use AppBundle\Entity\Traits\IdTrait;
 namespace AppBundle\Listener;
 
 
+use AppBundle\Entity\Traits\IdTrait;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;

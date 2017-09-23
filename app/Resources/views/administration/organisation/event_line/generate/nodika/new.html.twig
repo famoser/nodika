@@ -1,0 +1,18 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "new.title"|trans }}{% endblock %}
+{% block description %}{{ "new.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_event_line %}
+
+{% trans_default_domain "administration_organisation_event_line_generate_nodika" %}
+
+{% block single_content %}
+    <p>
+        {{ "new.help"|trans }}
+    </p>
+    <p>
+        <a href="{{ path("administration_organisation_event_line_generate_nodika_start", {"organisation":organisation.id, "eventLine":eventLine.id}) }}">
+            {{ "new.new_action"|trans }}
+        </a>
+    </p>
+{% endblock %}

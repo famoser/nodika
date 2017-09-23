@@ -1,0 +1,19 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+
+{% block title %}{{ "edit.title"|trans }}{% endblock %}
+{% block description %}{{ "edit.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_person %}
+
+{% trans_default_domain "administration_organisation" %}
+
+{% block primary_content %}
+    <h3>{{ "edit.organisation_edit_form"|trans }}</h3>
+    {{ form(edit_form) }}
+{% endblock %}
+
+{% block secondary_content %}
+    <h3>{{ "new.address"|trans }}</h3>
+    <p>{{ "new.address_description"|trans }}</p>
+    <h3>{{ "new.contact"|trans }}</h3>
+    <p>{{ "new.contact_description"|trans }}</p>
+{% endblock %}

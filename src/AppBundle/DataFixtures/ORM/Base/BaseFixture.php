@@ -9,7 +9,6 @@
 namespace AppBundle\DataFixtures\ORM\Base;
 
 
-use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\PersonTrait;

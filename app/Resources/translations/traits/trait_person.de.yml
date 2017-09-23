@@ -1,0 +1,11 @@
+#name
+trait:
+  name: zu Ihrer Person
+
+#properties
+job_title: Titel (freiwillig)
+given_name: Vorname
+family_name: Nachname
+
+#methods
+full_name: Name

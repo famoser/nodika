@@ -8,44 +8,104 @@
 
 namespace AppBundle\Enum\Base;
 
+use AppBundle\Framework\TranslatableObject;
+use AppBundle\Helper\NamingHelper;
 use ReflectionClass;
 
-abstract class BaseEnum
+abstract class BaseEnum extends TranslatableObject
 {
-    protected static function toChoicesArrayInternal($parentClass)
+    /**
+     * generates an array to be used in form fields
+     *
+     * @return array
+     */
+    protected function getChoicesForBuilderInternal()
     {
-        $reflection = new ReflectionClass($parentClass);
-        $instance = $reflection->newInstanceWithoutConstructor();
-
+        $reflection = new ReflectionClass(get_class($this));
         $choices = $reflection->getConstants();
-        $toString = $reflection->getMethod('toString');
 
         $res = [];
-        foreach ($choices as $choice) {
-            $res[$toString->invoke($instance, $choice)] = $choice;
+        foreach ($choices as $name => $value) {
+            $res[NamingHelper::constantToTranslation($name)] = $value;
         }
-        return $res;
+        return ["choices" => $res, 'choice_translation_domain' => $this->getTranslationDomain()];
     }
 
     /**
-     * enum value to string
+     * translate enum value
+     *
+     * @param $enumValue
+     * @return bool|string
+     */
+    protected function getTranslationInternal($enumValue)
+    {
+        $reflection = new ReflectionClass(get_class($this));
+        $choices = $reflection->getConstants();
+
+        foreach ($choices as $name => $value) {
+            if ($value == $enumValue) {
+                return NamingHelper::constantToTranslation($name);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * translate enum value
+     *
+     * @param $enumValue
+     * @return array
+     */
+    protected function getTranslationForBuilderInternal($enumValue)
+    {
+        $trans = $this->getTranslationInternal($enumValue);
+        if ($trans === false) {
+            return ["translation_domain" => "common_error", "label" => "enum.invalid_constant"];
+        }
+        return ["translation_domain" => $this->getTranslationDomain(), "label" => $trans];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTranslationDomainPrefix()
+    {
+        return "enum";
+    }
+
+
+    /**
+     * returns an array fit to be used by the ChoiceType
+     *
+     * @return array
+     */
+    public static function getChoicesForBuilder()
+    {
+        $elem = new static();
+        return $elem->getChoicesForBuilderInternal();
+    }
+
+    /**
+     * translate enum value
+     *
+     * @param $enumValue
+     * @return array
+     */
+    public static function getTranslationForBuilder($enumValue)
+    {
+        $elem = new static();
+        return $elem->getTranslationForBuilderInternal($enumValue);
+    }
+
+    /**
+     * translate enum value
      *
      * @param $enumValue
      * @return string
      */
-    public abstract function toString($enumValue);
-
-
-
-    /**
-     * returns an array used by the ChoiceType
-     *
-     * @return array
-     */
-    /* PASE THIS IN PARENT CLASSES
-    public static function toChoicesArray()
+    public static function getTranslation($enumValue)
     {
-        return parent::toChoicesArrayInternal(static::class);
+        $elem = new static();
+        return $elem->getTranslationInternal($enumValue);
     }
-    */
 }

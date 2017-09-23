@@ -1,0 +1,8 @@
+#name
+trait:
+  name: Kontaktinformationen
+
+#properties
+phone: Telefonnummer (freiwillig)
+email: Email
+webpage: Webseite (freiwillig)

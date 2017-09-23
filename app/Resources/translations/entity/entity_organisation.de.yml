@@ -1,0 +1,6 @@
+entity:
+  name: Organisation
+  description: Eine Organisation ist ein Zusammenschluss verschiedener Tierarztpraxen, die zusammen den Notfalldienst in einer bestimmten Region organisiert
+
+active_end: Ende der Aktivierungsperiode
+is_active: Freigeschaltet

@@ -1,0 +1,102 @@
+@import "../imports/variables"
+
+//navicon
+
+.nav-icon
+  width: 20px
+  height: 19px
+  position: relative
+  -webkit-transform: rotate(0deg)
+  -moz-transform: rotate(0deg)
+  -o-transform: rotate(0deg)
+  transform: rotate(0deg)
+  -webkit-transition: .5s ease-in-out
+  -moz-transition: .5s ease-in-out
+  -o-transition: .5s ease-in-out
+  transition: .5s ease-in-out
+  cursor: pointer
+
+
+.nav-icon span
+  display: block
+  position: absolute
+  height: 3px
+  width: 100%
+  background: $grey-dark
+  border-radius: 0
+  opacity: 1
+  left: 0
+  -webkit-transform: rotate(0deg)
+  -moz-transform: rotate(0deg)
+  -o-transform: rotate(0deg)
+  transform: rotate(0deg)
+  -webkit-transition: .25s ease-in-out
+  -moz-transition: .25s ease-in-out
+  -o-transition: .25s ease-in-out
+  transition: .25s ease-in-out
+
+.nav-icon span:nth-child(1)
+  top: 0
+
+.nav-icon span:nth-child(2)
+  top: 8px
+
+.nav-icon span:nth-child(3)
+  top: 16px
+
+.nav-icon.open span:nth-child(1)
+  top: 6px
+  -webkit-transform: rotate(135deg)
+  -moz-transform: rotate(135deg)
+  -o-transform: rotate(135deg)
+  transform: rotate(135deg)
+
+.nav-icon.open span:nth-child(2)
+  opacity: 0
+  left: -50px
+
+.nav-icon.open span:nth-child(3)
+  top: 6px
+  -webkit-transform: rotate(-135deg)
+  -moz-transform: rotate(-135deg)
+  -o-transform: rotate(-135deg)
+  transform: rotate(-135deg)
+
+.menu-container
+ position: relative
+ color: $grey-dark
+
+.menu-toggle-container
+  position: absolute
+  z-index: 100
+  top: -60px
+  background-color: $grey-light
+  margin: -18px 0px 0px -15px
+  padding: 20px 20px 20px 40px
+
+.menu-entries-container
+  background-color: $white
+  width: 50%
+  display: none
+  position: absolute
+  top: 0
+  margin-left: -15px
+  padding: 40px
+  z-index: 100
+
+.menu-entries-container.open
+  display: block
+
+.menu-entries
+  font-size: $small-font-size
+  line-height: $large-font-leading
+  list-style: none
+
+.menu-entries .menu-group-header
+  font-size: $small-font-size
+  margin-top: 1.5em
+
+.back-button-wrapper
+  position: absolute
+  right: 40px
+  top: 10px

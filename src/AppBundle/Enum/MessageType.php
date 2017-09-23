@@ -10,7 +10,6 @@ namespace AppBundle\Enum;
 
 
 use AppBundle\Enum\Base\BaseEnum;
-use AppBundle\Enum\Base\ToChoicesArrayTrait;
 
 class MessageType extends BaseEnum
 {
@@ -18,28 +17,4 @@ class MessageType extends BaseEnum
     const WARNING = 1;
     const ERROR = 2;
     const FATAL = 3;
-
-    /**
-     * enum value to string
-     *
-     * @param $enumValue
-     * @return string
-     */
-    public function toString($enumValue)
-    {
-        switch ($enumValue) {
-            case static::INFO:
-                return "info";
-            case static::WARNING:
-                return "warning";
-            case static::ERROR:
-                return "error";
-            case static::FATAL:
-                return "fatal";
-            default:
-                return "unknown";
-        }
-    }
-
-    use ToChoicesArrayTrait;
 }

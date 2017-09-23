@@ -1,0 +1,25 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+{% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
+
+{% block title %}{{ "choose_members.title"|trans }}{% endblock %}
+{% block description %}{{ "choose_members.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_event_line %}
+
+{% trans_default_domain "administration_organisation_event_line_generate_nodika" %}
+
+{% block primary_content %}
+    <p>{{ "choose_members.help"|trans }}</p>
+    <form class="form"
+          action="{{ path("administration_organisation_event_line_generate_nodika_choose_members", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
+          method="post">
+        {% for member in memberConfigurations %}
+            {{ kitchen_sink.toggle_form_field("member_" ~ member.id, member.isEnabled, member.name) }}
+        {% endfor %}
+        {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+    </form>
+{% endblock %}
+
+{% block secondary_content %}
+    <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
+    <p>{{ "entity.description"|trans({}, "entity_member") }}</p>
+{% endblock %}

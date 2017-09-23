@@ -9,9 +9,8 @@
 namespace AppBundle\Entity\Traits;
 
 
+use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -239,25 +238,40 @@ trait AddressTrait
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray)
+    public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        return static::mapAddressFields($builder, $defaultArray);
-    }
-
-    /**
-     * @param FormBuilderInterface|FormMapper $mapper
-     * @param $defaultArray
-     * @return FormBuilderInterface|FormMapper
-     */
-    private static function mapAddressFields($mapper, $defaultArray)
-    {
-        return $mapper
-            ->add("street", TextType::class, $defaultArray)
-            ->add("streetNr", NumberType::class, $defaultArray)
-            ->add("addressLine", TextType::class, $defaultArray + ["required" => false])
-            ->add("postalCode", NumberType::class, $defaultArray)
-            ->add("city", TextType::class, $defaultArray)
-            ->add("country", CountryType::class, $defaultArray);
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(AddressTrait::class)] + $defaultArray;
+        $builder->add(
+            "street",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("street")
+        );
+        $builder->add(
+            "streetNr",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("streetNr")
+        );
+        $builder->add(
+            "addressLine",
+            TextType::class,
+            ["required" => false] + $builderArray + NamingHelper::propertyToTranslationForBuilder("addressLine")
+        );
+        $builder->add(
+            "postalCode",
+            NumberType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("postalCode")
+        );
+        $builder->add(
+            "city",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("city")
+        );
+        $builder->add(
+            "country",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("country")
+        );
+        return $builder;
     }
 
     /**

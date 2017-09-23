@@ -1,0 +1,4 @@
+entity:
+  name: Praxismitglied
+  description: Ein Praxismitglied gehört einer Person und ist einer Praxis zugeordnet
+  plural: Praxismitglieder

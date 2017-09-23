@@ -1,0 +1,62 @@
+{% extends "single_content_base.html.twig" %}
+{% set color_class = globals_color_class_event %}
+{% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
+{% import "macros/events.html.twig" as events_macro %}
+
+{% block title %}{{ "assign.title"|trans }}{% endblock %}
+{% block description %}{{ "assign.description"|trans }}{% endblock %}
+
+{% trans_default_domain "event" %}
+
+{% block single_content %}
+    <div class="row">
+        <div class="col-md-9">
+            <h3>{{ "assign.assign_events"|trans }}</h3>
+
+            {% if events|length > 0 %}
+                <form class="form"
+                      action="{{ path("event_assign") }}"
+                      method="post">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>{{ "entity.name"|trans({}, "entity_event_line") }}</th>
+                            <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+                            <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+                            <th>{{ "assign.assigned_person"|trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td>{{ kitchen_sink.toggle_form_field("event_" ~ event.id, event.person == null) }}</td>
+                                <td>{{ event.eventLine.name }}</td>
+                                <td>{{ event.startDateTime|myDateTime }}</td>
+                                <td>{{ event.endDateTime|myDateTime }}</td>
+                                <td>
+                                    {% if (event.person == null) %}
+                                        {{ "assign.no_assigned_person"|trans }}
+                                    {% else %}
+                                        {{ event.person.fullName }}
+                                    {% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {{ kitchen_sink.select_form_field("selected_person", person, persons, "assign.choose_person"|trans) }}
+                    {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+                </form>
+            {% else %}
+                <p>{{ "assign.no_events_can_be_assigned"|trans }}</p>
+            {% endif %}
+
+        </div>
+        <div class="col-md-3">
+            <h3>{{ "assign.assign_events"|trans }}</h3>
+            <p>{{ "assign.assign_events_description"|trans }}</p>
+            <h3>{{ "assign.assign_why"|trans }}</h3>
+            <p>{{ "assign.assign_why_desription"|trans }}</p>
+        </div>
+    </div>
+{% endblock %}

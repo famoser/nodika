@@ -1,18 +1,16 @@
-{% extends "divided_content_base.html.twig" %}
+{% extends "primary_secondary_content_base.html.twig" %}
 
-{% block title %}{{ "edit"|trans }}{% endblock %}
-{% block description %}{{ "edit_action"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
+{% block title %}{{ "edit.title"|trans }}{% endblock %}
+{% block description %}{{ "edit.description"|trans }}{% endblock %}
+{% set color_class = globals_color_class_event_line %}
 
-{% trans_default_domain "event_line" %}
+{% trans_default_domain "administration_organisation_event_line" %}
 
 {% block primary_content %}
-    {{ form_start(edit_event_line_form, { 'attr': {'class': 'two-dimensional-form'} }) }}
-    {{ form_errors(edit_event_line_form) }}
-    {{ form_end(edit_event_line_form) }}
-{% endblock primary_content %}
+    <h3>{{ "edit.edit_form"|trans }}</h3>
+    {{ form(edit_form) }}
+{% endblock %}
 
 {% block secondary_content %}
-    <h3>{{ "edit"|trans }}</h3>
-    <p>{{ "edit_description"|trans }}</p>
-{% endblock secondary_content %}
+
+{% endblock %}

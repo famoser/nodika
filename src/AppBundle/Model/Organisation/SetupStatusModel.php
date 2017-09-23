@@ -11,73 +11,90 @@ namespace AppBundle\Model\Organisation;
 
 class SetupStatusModel
 {
-    private $stepOneDone;
-    private $stepTwoDone;
-    private $stepThreeDone;
-    private $stepFourDone;
+    private $hasMembers;
+    private $hasEventLines;
+    private $hasEvents;
+    private $hasVisitedSettings;
+    private $hasInvitedMembers;
 
     /**
      * @return boolean
      */
-    public function getStepOneDone()
+    public function getHasMembers()
     {
-        return $this->stepOneDone;
+        return $this->hasMembers;
     }
 
     /**
-     * @param boolean $stepOneDone
+     * @param boolean $hasMembers
      */
-    public function setStepOneDone($stepOneDone)
+    public function setHasMembers($hasMembers)
     {
-        $this->stepOneDone = $stepOneDone;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getStepTwoDone()
-    {
-        return $this->stepTwoDone;
-    }
-
-    /**
-     * @param boolean $stepTwoDone
-     */
-    public function setStepTwoDone($stepTwoDone)
-    {
-        $this->stepTwoDone = $stepTwoDone;
+        $this->hasMembers = $hasMembers;
     }
 
     /**
      * @return boolean
      */
-    public function getStepThreeDone()
+    public function getHasEventLines()
     {
-        return $this->stepThreeDone;
+        return $this->hasEventLines;
     }
 
     /**
-     * @param boolean $stepThreeDone
+     * @param boolean $hasEventLines
      */
-    public function setStepThreeDone($stepThreeDone)
+    public function setHasEventLines($hasEventLines)
     {
-        $this->stepThreeDone = $stepThreeDone;
+        $this->hasEventLines = $hasEventLines;
     }
 
     /**
      * @return boolean
      */
-    public function getStepFourDone()
+    public function getHasEvents()
     {
-        return $this->stepFourDone;
+        return $this->hasEvents;
     }
 
     /**
-     * @param boolean $stepFourDone
+     * @param boolean $hasEvents
      */
-    public function setStepFourDone($stepFourDone)
+    public function setHasEvents($hasEvents)
     {
-        $this->stepFourDone = $stepFourDone;
+        $this->hasEvents = $hasEvents;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasVisitedSettings()
+    {
+        return $this->hasVisitedSettings;
+    }
+
+    /**
+     * @param boolean $hasVisitedSettings
+     */
+    public function setHasVisitedSettings($hasVisitedSettings)
+    {
+        $this->hasVisitedSettings = $hasVisitedSettings;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasInvitedMembers()
+    {
+        return $this->hasInvitedMembers;
+    }
+
+    /**
+     * @param boolean $hasInvitedMembers
+     */
+    public function setHasInvitedMembers($hasInvitedMembers)
+    {
+        $this->hasInvitedMembers = $hasInvitedMembers;
     }
 
     /**
@@ -85,6 +102,6 @@ class SetupStatusModel
      */
     public function getAllDone()
     {
-        return $this->getStepOneDone() && $this->getStepTwoDone() && $this->getStepThreeDone() && $this->getStepFourDone();
+        return $this->getHasMembers() && $this->getHasEventLines() && $this->getHasEvents() && $this->getHasVisitedSettings() && $this->getHasInvitedMembers();
     }
 }

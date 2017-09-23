@@ -1,13 +1,11 @@
 services:
-    admin.content.users:
-        class: AppBundle\Admin\UserAdmin
-        arguments: [~, AppBundle\Entity\User, ~]
-        tags:
-            - { name: sonata.admin, manager_type: orm, group: content, label: Benutzer }
-
-    app.user_provider:
-        class: AppBundle\Security\UserProvider
+    app.frontend_user_provider:
+        class: AppBundle\Security\FrontendUserProvider
         arguments: ["@doctrine"]
+
+    app.admin_user_provider:
+        class: AppBundle\Security\AdminUserProvider
+        arguments: ["@doctrine", "%admin_emails%"]
 
     #voters
     app.voter.organisation:
@@ -16,16 +14,32 @@ services:
             - { name: security.voter }
         public: false
 
-    #voters
+    app.voter.member:
+        class:  AppBundle\Security\Voter\MemberVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
+    app.voter.person:
+        class:  AppBundle\Security\Voter\PersonVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
     app.voter.event:
         class:  AppBundle\Security\Voter\EventVoter
         tags:
             - { name: security.voter }
         public: false
 
-    #voters
     app.voter.event_line:
         class:  AppBundle\Security\Voter\EventLineVoter
+        tags:
+            - { name: security.voter }
+        public: false
+
+    app.voter.event_line_generation:
+        class:  AppBundle\Security\Voter\EventLineGenerationVoter
         tags:
             - { name: security.voter }
         public: false
@@ -34,7 +48,23 @@ services:
         class:  AppBundle\Service\ExchangeService
         arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
 
+    app.event_past_evaluation_service:
+        class:  AppBundle\Service\EventPastEvaluationService
+        arguments: []
+
+    app.event_generation_service:
+        class:  AppBundle\Service\EventGenerationService
+        arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
+
     listener.entity.remove:
         class: AppBundle\Listener\DoctrinePreFlushListener
         tags:
             - { name: doctrine.event_listener, event: preFlush }
+
+    #twig extensions
+    app.extension.twig:
+        class: AppBundle\Extension\MyTwigExtension
+        tags:
+          - { name: twig.extension }
+        arguments:
+          ["@translator"]

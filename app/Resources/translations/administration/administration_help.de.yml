@@ -1,0 +1,11 @@
+index:
+  title: Hilfe
+  description: Wie funktioniert nodika?
+  setup: Aufbau der Anwendung
+
+  recommended_setup: >
+    Eine "Notfalldienst" und eine "Wochentelefon" Gruppe.
+    Mitglied ist keine Person, sondern idealerweise eine Praxis, der Termine zugeteilt werden.
+    Das Mitglied kann dann diese Termine selbständig an die zuständigen Personen zuordnen (die jeweils einen eigenen Zugang besitzen).
+
+

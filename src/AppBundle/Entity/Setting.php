@@ -8,13 +8,8 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Entity\Traits\ThingTrait;
-use AppBundle\Enum\TradeTag;
+use AppBundle\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -97,11 +92,11 @@ class Setting extends BaseEntity
     /**
      * Set user
      *
-     * @param \AppBundle\Entity\FrontendUser $frontendUser
+     * @param FrontendUser $frontendUser
      *
      * @return Setting
      */
-    public function setFrontendUser(\AppBundle\Entity\FrontendUser $frontendUser = null)
+    public function setFrontendUser(FrontendUser $frontendUser = null)
     {
         $this->frontendUser = $frontendUser;
 
@@ -111,7 +106,7 @@ class Setting extends BaseEntity
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\FrontendUser
+     * @return FrontendUser
      */
     public function getFrontendUser()
     {

@@ -9,8 +9,8 @@
 namespace AppBundle\Entity\Traits;
 
 
+use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -112,22 +112,25 @@ trait PersonTrait
      * @param $defaultArray
      * @return FormBuilderInterface
      */
-    public static function getPersonBuilder(FormBuilderInterface $builder, $defaultArray)
+    public static function getPersonBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        return static::mapPersonFields($builder, $defaultArray);
-    }
-
-    /**
-     * @param FormBuilderInterface|FormMapper $mapper
-     * @param $defaultArray
-     * @return FormBuilderInterface|FormMapper
-     */
-    private static function mapPersonFields($mapper, $defaultArray)
-    {
-        return $mapper
-            ->add("jobTitle", TextType::class, $defaultArray + ["required" => false])
-            ->add("givenName", TextType::class, $defaultArray)
-            ->add("familyName", TextType::class, $defaultArray);
+        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(PersonTrait::class)] + $defaultArray;
+        $builder->add(
+            "jobTitle",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("jobTitle") + ["required" => false]
+        );
+        $builder->add(
+            "givenName",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("givenName")
+        );
+        $builder->add(
+            "familyName",
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("familyName")
+        );
+        return $builder;
     }
 
     /**

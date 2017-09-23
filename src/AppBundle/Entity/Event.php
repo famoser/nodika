@@ -8,12 +8,8 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\CommunicationTrait;
-use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Entity\Traits\ThingTrait;
+use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Enum\TradeTag;
 use AppBundle\Helper\DateTimeFormatter;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,6 +31,16 @@ class Event extends BaseEntity
      * @ORM\Column(type="datetime")
      */
     private $startDateTime;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isConfirmed = false;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $isConfirmedDateTime;
 
     /**
      * @ORM\Column(type="datetime")
@@ -157,11 +163,11 @@ class Event extends BaseEntity
     /**
      * Set member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      *
      * @return Event
      */
-    public function setMember(\AppBundle\Entity\Member $member = null)
+    public function setMember(Member $member = null)
     {
         $this->member = $member;
 
@@ -171,7 +177,7 @@ class Event extends BaseEntity
     /**
      * Get member
      *
-     * @return \AppBundle\Entity\Member
+     * @return Member
      */
     public function getMember()
     {
@@ -181,11 +187,11 @@ class Event extends BaseEntity
     /**
      * Set person
      *
-     * @param \AppBundle\Entity\Person $person
+     * @param Person $person
      *
      * @return Event
      */
-    public function setPerson(\AppBundle\Entity\Person $person = null)
+    public function setPerson(Person $person = null)
     {
         $this->person = $person;
 
@@ -195,7 +201,7 @@ class Event extends BaseEntity
     /**
      * Get person
      *
-     * @return \AppBundle\Entity\Person
+     * @return Person
      */
     public function getPerson()
     {
@@ -205,11 +211,11 @@ class Event extends BaseEntity
     /**
      * Set eventLine
      *
-     * @param \AppBundle\Entity\EventLine $eventLine
+     * @param EventLine $eventLine
      *
      * @return Event
      */
-    public function setEventLine(\AppBundle\Entity\EventLine $eventLine = null)
+    public function setEventLine(EventLine $eventLine = null)
     {
         $this->eventLine = $eventLine;
 
@@ -219,7 +225,7 @@ class Event extends BaseEntity
     /**
      * Get eventLine
      *
-     * @return \AppBundle\Entity\EventLine
+     * @return EventLine
      */
     public function getEventLine()
     {
@@ -229,11 +235,11 @@ class Event extends BaseEntity
     /**
      * Add eventPast
      *
-     * @param \AppBundle\Entity\EventPast $eventPast
+     * @param EventPast $eventPast
      *
      * @return Event
      */
-    public function addEventPast(\AppBundle\Entity\EventPast $eventPast)
+    public function addEventPast(EventPast $eventPast)
     {
         $this->eventPast[] = $eventPast;
 
@@ -243,9 +249,9 @@ class Event extends BaseEntity
     /**
      * Remove eventPast
      *
-     * @param \AppBundle\Entity\EventPast $eventPast
+     * @param EventPast $eventPast
      */
-    public function removeEventPast(\AppBundle\Entity\EventPast $eventPast)
+    public function removeEventPast(EventPast $eventPast)
     {
         $this->eventPast->removeElement($eventPast);
     }
@@ -253,7 +259,7 @@ class Event extends BaseEntity
     /**
      * Get eventPast
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|EventPast[]
      */
     public function getEventPast()
     {
@@ -281,10 +287,42 @@ class Event extends BaseEntity
         $pseudoObject->id = $this->getId();
         $pseudoObject->startDateTime = $this->getStartDateTime();
         $pseudoObject->endDateTime = $this->getEndDateTime();
-        $pseudoObject->eventLineId = $this->getEventLine()->getId();
-        $pseudoObject->memberId = $this->getMember()->getId();
-        $pseudoObject->personId = $this->getPerson()->getId();
+        $pseudoObject->eventLineId = $this->getEventLine() != null ? $this->getEventLine()->getId() : null;
+        $pseudoObject->memberId = $this->getMember() != null ? $this->getMember()->getId() : null;
+        $pseudoObject->personId = $this->getPerson() != null ? $this->getPerson()->getId() : null;
         $pseudoObject->tradeTag = $this->getTradeTag();
         return json_encode($pseudoObject);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsConfirmed()
+    {
+        return $this->isConfirmed;
+    }
+
+    /**
+     * @param mixed $isConfirmed
+     */
+    public function setIsConfirmed($isConfirmed)
+    {
+        $this->isConfirmed = $isConfirmed;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getIsConfirmedDateTime()
+    {
+        return $this->isConfirmedDateTime;
+    }
+
+    /**
+     * @param \DateTime $isConfirmedDateTime
+     */
+    public function setIsConfirmedDateTime($isConfirmedDateTime)
+    {
+        $this->isConfirmedDateTime = $isConfirmedDateTime;
     }
 }

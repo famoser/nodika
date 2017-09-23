@@ -1,0 +1,43 @@
+index:
+  title: Termin ansehen
+  description: Nähere Informationen zu diesem Termin
+  history: Änderungen an diesem Termin
+
+assign:
+  title: Termine zuweisen
+  description: Termine einem Praxismitglied zuordnen
+  assigned_person: Zugewiesenes Praxismitglied
+  no_assigned_person: Noch keinem Praxismitglied zugewiesen
+  choose_person: Praxismitglied auswählen
+  no_events_can_be_assigned: Zurzeit können Sie keine Termine zuweisen
+  assign_events: Termine zuweisen
+  assign_events_description: Wählen Sie ein Praxismitglied aus, und markieren Sie dann alle Termine die Sie zuweisen wollen. Drücken Sie danach auf "zuweisen" um die Änderung zu bestätigen.
+  assign_why: Warum Termine zuweisen?
+  assign_why_desription: Zugewiesene Termine können dann vom zugewiesenen Praxismitglied getauscht werden. Zudem kommen Erinnerungsemails für den spezifischen Termin dann an die vom Praxismitglied angegebene E-Mail an
+  messages:
+    no_events: Keine Termine ausgewählt
+    no_person: Kein Praxismitglied ausgewählt
+    assigned: 'Erfolgreich %count% Termine zugewiesen'
+
+confirm:
+  title: Termine bestätigen
+  description: Bestätigen Sie die demnächst kommenden Termine
+  no_person_assigned: -
+  assigned_to_member: Ihrer Praxis zugewiesene Termine
+  assigned_to_person: Ihnen zugewiesene Termine
+  confirm_events: Termine bestätigen
+  confirm_events_description: Bitte bestätigen Sie defintiv Ihre nächsten kommenden Termine
+  no_events: Alle demnächst kommenden Termine erfolgreich bestätigt!
+  do_confirm: Bestätigen
+  do_confirm_all: Alle Termine bestätigen
+  messages:
+    no_access: Sie können diesen Termin nicht bestätigen
+    confirm_successful: Termin erfolgreich bestätigt
+    confirm_all_successful: '%count% Termine erfolgreich bestätigt'
+
+search:
+  title: Termine
+  description: Kalender durchsuchen
+  no_event_lines: Keine Termine gefunden
+  filter: Filter
+  do_filter: Suchen

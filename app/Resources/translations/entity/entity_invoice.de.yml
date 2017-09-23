@@ -1,0 +1,3 @@
+entity:
+  name: Rechnung
+  description: Rechnungen werden an eine Organisation ausgestellt und enthalten Registrierungs- und Jahresgebühren

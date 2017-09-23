@@ -8,12 +8,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\IdTrait;
-use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\PersonTrait;
-use AppBundle\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -49,11 +48,11 @@ class Person extends BaseEntity
     private $members;
 
     /**
-     * @var FrontendUser[]
+     * @var FrontendUser
      *
-     * @ORM\OneToMany(targetEntity="FrontendUser", mappedBy="person")
+     * @ORM\OneToOne(targetEntity="FrontendUser", mappedBy="person")
      */
-    private $frontendUsers;
+    private $frontendUser;
 
     /**
      * @var Event[]
@@ -69,18 +68,17 @@ class Person extends BaseEntity
     {
         $this->leaderOf = new ArrayCollection();
         $this->members = new ArrayCollection();
-        $this->frontendUsers = new ArrayCollection();
         $this->events = new ArrayCollection();
     }
 
     /**
      * Add leaderOf
      *
-     * @param \AppBundle\Entity\Organisation $leaderOf
+     * @param Organisation $leaderOf
      *
      * @return Person
      */
-    public function addLeaderOf(\AppBundle\Entity\Organisation $leaderOf)
+    public function addLeaderOf(Organisation $leaderOf)
     {
         $this->leaderOf[] = $leaderOf;
 
@@ -90,9 +88,9 @@ class Person extends BaseEntity
     /**
      * Remove leaderOf
      *
-     * @param \AppBundle\Entity\Organisation $leaderOf
+     * @param Organisation $leaderOf
      */
-    public function removeLeaderOf(\AppBundle\Entity\Organisation $leaderOf)
+    public function removeLeaderOf(Organisation $leaderOf)
     {
         $this->leaderOf->removeElement($leaderOf);
     }
@@ -110,11 +108,11 @@ class Person extends BaseEntity
     /**
      * Add member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      *
      * @return Person
      */
-    public function addMember(\AppBundle\Entity\Member $member)
+    public function addMember(Member $member)
     {
         $this->members[] = $member;
 
@@ -124,9 +122,9 @@ class Person extends BaseEntity
     /**
      * Remove member
      *
-     * @param \AppBundle\Entity\Member $member
+     * @param Member $member
      */
-    public function removeMember(\AppBundle\Entity\Member $member)
+    public function removeMember(Member $member)
     {
         $this->members->removeElement($member);
     }
@@ -134,7 +132,7 @@ class Person extends BaseEntity
     /**
      * Get members
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Member[]
      */
     public function getMembers()
     {
@@ -142,47 +140,13 @@ class Person extends BaseEntity
     }
 
     /**
-     * Add user
-     *
-     * @param \AppBundle\Entity\FrontendUser $user
-     *
-     * @return Person
-     */
-    public function addUser(\AppBundle\Entity\FrontendUser $user)
-    {
-        $this->frontendUsers[] = $user;
-
-        return $this;
-    }
-
-    /**
-     * Remove user
-     *
-     * @param \AppBundle\Entity\FrontendUser $user
-     */
-    public function removeUser(\AppBundle\Entity\FrontendUser $user)
-    {
-        $this->frontendUsers->removeElement($user);
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFrontendUsers()
-    {
-        return $this->frontendUsers;
-    }
-
-    /**
      * Add event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      *
      * @return Person
      */
-    public function addEvent(\AppBundle\Entity\Event $event)
+    public function addEvent(Event $event)
     {
         $this->events[] = $event;
 
@@ -192,9 +156,9 @@ class Person extends BaseEntity
     /**
      * Remove event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      */
-    public function removeEvent(\AppBundle\Entity\Event $event)
+    public function removeEvent(Event $event)
     {
         $this->events->removeElement($event);
     }
@@ -217,5 +181,21 @@ class Person extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getFullName();
+    }
+
+    /**
+     * @return FrontendUser
+     */
+    public function getFrontendUser()
+    {
+        return $this->frontendUser;
+    }
+
+    /**
+     * @param FrontendUser $frontendUser
+     */
+    public function setFrontendUser($frontendUser)
+    {
+        $this->frontendUser = $frontendUser;
     }
 }

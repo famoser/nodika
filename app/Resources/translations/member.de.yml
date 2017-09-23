@@ -1,0 +1,33 @@
+index:
+  title: Praxis ansehen
+  description: Nähere Informationen zu Ihrem Mitglied
+  manage_self: Verwalten
+  edit: Daten ändern
+  no_persons: Diese Praxis hat keine zugeordneten Praxismitglieder. Fragen Sie Ihren Administrator nach einer Einladung zur dieser Praxis.
+  your_persons: Ihre Praxismitglieder
+  remove_person: Zugriff entfernen
+  remove_person_description: Sie können Praxismitglieder den Zugriff zu dieser Praxis entziehen (weil sie z.B. nicht mehr dort arbeiten)
+
+#edit page
+edit:
+  title: Praxis ändern
+  description: Editieren Sie die Daten Ihrer Praxis
+  member_edit_form: Praxis ändern
+  member_address: Adresse
+  member_address_description: Die Adresse Ihrer Praxis.
+  member_contact: Kontaktinformationen
+  member_contact_description: An diese hinterlegte E-Mail werden die Nachrichten an Ihre Praxis versandt, sowie Erinnerungen für nicht zugeordnete Termine
+
+#remove_person page
+remove_person:
+  title: Praxismitglied entfernen
+  description: Möchten Sie dieses Praxismitglied wirklich von dieser Praxis entfernen?
+  really_remove: Ich möchte dieses Praxismitglied wirklich von meiner Praxis entfernen. Ich verstehe die damit verbunden Konsequenzen.
+  really_remove_confirm: Bestätigen
+  remove_person: Von der Praxis entfernen
+  remove_person_description: >
+    Entfernen Sie dieses Praxismitglied von dieser Praxis.
+    Damit verliert diese Person den Zugriff auf die Praxis und dessen Termine.
+  messages:
+    remove_successfully: Das Praxismitglied wurde erfolgreich entfernt
+    not_part_of_member: Dieses Praxismitglied ist nicht Teil der Praxis

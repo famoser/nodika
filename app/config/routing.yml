@@ -7,11 +7,28 @@ app_administration:
     type:     annotation
     prefix:   /administration
 
-admin_area:
-    resource: "@SonataAdminBundle/Resources/config/routing/sonata_admin.xml"
-    prefix: /admin
+app_administration_organisation:
+    resource: "@AppBundle/Controller/Administration/Organisation"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}
 
-_sonata_admin:
-    resource: .
-    type: sonata_admin
-    prefix: /admin
+app_administration_organisation_event_line:
+    resource: "@AppBundle/Controller/Administration/Organisation/EventLine"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}/event_line/{eventLine}
+
+app_administration_organisation_event_line_generate:
+    resource: "@AppBundle/Controller/Administration/Organisation/EventLine/Generate"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}/event_line/{eventLine}/generate
+
+app_administration_organisation_member:
+    resource: "@AppBundle/Controller/Administration/Organisation/Member"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}/member/{member}
+
+app_backend:
+    resource: "@AppBundle/Controller/Backend/"
+    type:     annotation
+    prefix:   /backend
+

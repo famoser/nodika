@@ -11,7 +11,6 @@ namespace AppBundle\Security\Voter;
 
 use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Member;
-use AppBundle\Security\Voter\Base\CrudVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MemberVoter extends OrganisationVoter

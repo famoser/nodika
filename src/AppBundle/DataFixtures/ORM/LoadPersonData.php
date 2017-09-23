@@ -10,9 +10,7 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
-use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
-use AppBundle\Entity\Traits\PersonTrait;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadPersonData extends BaseFixture
@@ -39,14 +37,25 @@ class LoadPersonData extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $person = $this->getAllRandomInstance();
-        /* @var FrontendUser $user */
-        $user = $this->getReference("user-1");
-        $user->setPerson($person);
-        $manager->persist($user);
+        $person->setEmail("info@nodika.ch");
         $manager->persist($person);
         $manager->flush();
 
         $this->setReference("person-1", $person);
+
+        $person = $this->getAllRandomInstance();
+        $person->setEmail("info@mymember1.ch");
+        $manager->persist($person);
+        $manager->flush();
+
+        $this->setReference("person-2", $person);
+
+        $person = $this->getAllRandomInstance();
+        $person->setEmail("info@mymeber2.ch");
+        $manager->persist($person);
+        $manager->flush();
+
+        $this->setReference("person-3", $person);
     }
 
     /**

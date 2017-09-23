@@ -1,0 +1,8 @@
+entity:
+  name: Termin
+  description: Ein Termin hat einen Start- und einen Endzeitpunkt sowie ein Verantwortlicher
+  plural: Termine
+
+start_date_time: Start
+end_date_time: Ende
+member_id: Mitglied Id

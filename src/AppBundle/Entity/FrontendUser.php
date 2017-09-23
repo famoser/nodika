@@ -7,7 +7,6 @@ use AppBundle\Entity\Traits\IdTrait;
 use AppBundle\Entity\Traits\UserTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,7 +30,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     /**
      * @var Person
      *
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="frontendUsers")
+     * @ORM\OneToOne(targetEntity="Person", inversedBy="frontendUser")
      */
     private $person;
 
@@ -80,11 +79,11 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     /**
      * Set person
      *
-     * @param \AppBundle\Entity\Person $person
+     * @param Person $person
      *
      * @return FrontendUser
      */
-    public function setPerson(\AppBundle\Entity\Person $person = null)
+    public function setPerson(Person $person = null)
     {
         $this->person = $person;
 
@@ -94,7 +93,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     /**
      * Get person
      *
-     * @return \AppBundle\Entity\Person
+     * @return Person
      */
     public function getPerson()
     {
@@ -149,8 +148,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
      */
     public static function createFromPerson(Person $person)
     {
-        $user = new static();
-        $user->initializeUserWithEmail($person->getEmail());
+        $user = static::createUserFromEmail($person->getEmail());
         $user->setPerson($person);
         return $user;
     }

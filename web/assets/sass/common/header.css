@@ -2,7 +2,27 @@
   padding-top: 0; }
 
 .header-container {
-  padding: 0; }
+  padding: 0;
+  position: relative; }
+
+.go-buttons {
+  position: absolute;
+  bottom: 35px;
+  right: 0; }
+
+.go-button {
+  padding: 23px;
+  display: block;
+  float: left;
+  margin: 0 0 0 10px; }
+  .go-button:hover {
+    color: #efefef; }
+
+.go-dashboard {
+  right: 0; }
+
+.go-back {
+  right: 170px; }
 
 .logo-img {
   display: block;

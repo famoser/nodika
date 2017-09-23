@@ -8,12 +8,12 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Base\BaseEntity;
 use AppBundle\Entity\Traits\AddressTrait;
 use AppBundle\Entity\Traits\CommunicationTrait;
 use AppBundle\Entity\Traits\IdTrait;
-use AppBundle\Entity\Base\BaseEntity;
-use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\ThingTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -30,6 +30,16 @@ class Member extends BaseEntity
     use ThingTrait;
     use AddressTrait;
     use CommunicationTrait;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $hasBeenInvited = false;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $invitationHash = null;
 
     /**
      * @var Person[]
@@ -57,18 +67,18 @@ class Member extends BaseEntity
      */
     public function __construct()
     {
-        $this->persons = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->persons = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     /**
      * Add person
      *
-     * @param \AppBundle\Entity\Person $person
+     * @param Person $person
      *
      * @return Member
      */
-    public function addPerson(\AppBundle\Entity\Person $person)
+    public function addPerson(Person $person)
     {
         $this->persons[] = $person;
 
@@ -78,9 +88,9 @@ class Member extends BaseEntity
     /**
      * Remove person
      *
-     * @param \AppBundle\Entity\Person $person
+     * @param Person $person
      */
-    public function removePerson(\AppBundle\Entity\Person $person)
+    public function removePerson(Person $person)
     {
         $this->persons->removeElement($person);
     }
@@ -88,7 +98,7 @@ class Member extends BaseEntity
     /**
      * Get persons
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Person[]
      */
     public function getPersons()
     {
@@ -98,11 +108,11 @@ class Member extends BaseEntity
     /**
      * Set organisation
      *
-     * @param \AppBundle\Entity\Organisation $organisation
+     * @param Organisation $organisation
      *
      * @return Member
      */
-    public function setOrganisation(\AppBundle\Entity\Organisation $organisation = null)
+    public function setOrganisation(Organisation $organisation = null)
     {
         $this->organisation = $organisation;
 
@@ -112,7 +122,7 @@ class Member extends BaseEntity
     /**
      * Get organisation
      *
-     * @return \AppBundle\Entity\Organisation
+     * @return Organisation
      */
     public function getOrganisation()
     {
@@ -122,11 +132,11 @@ class Member extends BaseEntity
     /**
      * Add event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      *
      * @return Member
      */
-    public function addEvent(\AppBundle\Entity\Event $event)
+    public function addEvent(Event $event)
     {
         $this->events[] = $event;
 
@@ -136,9 +146,9 @@ class Member extends BaseEntity
     /**
      * Remove event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      */
-    public function removeEvent(\AppBundle\Entity\Event $event)
+    public function removeEvent(Event $event)
     {
         $this->events->removeElement($event);
     }
@@ -146,7 +156,7 @@ class Member extends BaseEntity
     /**
      * Get events
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Event[]
      */
     public function getEvents()
     {
@@ -161,5 +171,37 @@ class Member extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getName();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHasBeenInvited()
+    {
+        return $this->hasBeenInvited;
+    }
+
+    /**
+     * @param bool $hasBeenInvited
+     */
+    public function setHasBeenInvited($hasBeenInvited)
+    {
+        $this->hasBeenInvited = $hasBeenInvited;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvitationHash()
+    {
+        return $this->invitationHash;
+    }
+
+    /**
+     * @param string $invitationHash
+     */
+    public function setInvitationHash($invitationHash)
+    {
+        $this->invitationHash = $invitationHash;
     }
 }

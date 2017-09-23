@@ -8,7 +8,10 @@
 
 namespace AppBundle\Entity\Base;
 
-abstract class BaseEntity
+use AppBundle\Framework\TranslatableObject;
+use Symfony\Component\Form\FormBuilderInterface;
+
+abstract class BaseEntity extends TranslatableObject
 {
     /**
      * @return string
@@ -24,4 +27,37 @@ abstract class BaseEntity
      * @return string
      */
     public abstract function getFullIdentifier();
+
+    /**
+     * @return string
+     */
+    protected function getTranslationDomainPrefix()
+    {
+        return "entity";
+    }
+
+    /**
+     * returns the builder with all flat fields from the entity
+     *
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return FormBuilderInterface
+     */
+    protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
+    {
+        return $builder;
+    }
+
+    /**
+     * returns the builder with all fields from the entity
+     *
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     * @return mixed
+     */
+    public static function getBuilderStatic(FormBuilderInterface $builder, $defaultArray = [])
+    {
+        $instance = new static();
+        return $instance->getBuilder($builder, $defaultArray);
+    }
 }

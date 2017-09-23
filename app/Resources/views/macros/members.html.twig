@@ -1,0 +1,35 @@
+{% macro show_table(organisation, members, show_edit = false) %}
+    {% import "macros/buttons.html.twig" as buttons %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_person") }}</th>
+            {% if show_edit %}
+                <th>{{ "column.administer"|trans({}, "common_table") }}</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for member in members %}
+            <tr>
+                <td>
+                    {{ member.name }} <br/>
+                    <span class="secondary">
+                    {{ member.description }}
+                </span>
+                </td>
+                <td>
+                    {{ member.persons.count }}
+                </td>
+                {% if show_edit %}
+                    <td>
+                        {{ buttons.administer_button(path("administration_organisation_member_administer", {"organisation": organisation.id, "member": member.id})) }}
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}

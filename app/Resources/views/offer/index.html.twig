@@ -1,0 +1,111 @@
+{% extends "single_content_base.html.twig" %}
+{% set color_class = globals_color_class_event %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "offer" %}
+
+{% block single_content %}
+    <h3>{{ "index.open_offers"|trans }}</h3>
+    {% if open_offers|length > 0 %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{ "offered_by_member"|trans({}, "entity_event_offer") }}</th>
+                <th>{{ "offered_by_person"|trans({}, "entity_event_offer") }}</th>
+                <th>{{ "event_offer_entries"|trans({}, "entity_event_offer") }}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for offer in open_offers %}
+                <tr>
+                    <td>{{ offer.offeredByMember.name }}</td>
+                    <td>{{ offer.offeredByPerson.fullName }}</td>
+                    <td>{{ offer.eventOfferEntries.count }}</td>
+                    <td>
+                        <a href="{{ path("offer_review", {"eventOffer" : offer.id}) }}">
+                            {{ "index.review_offer"|trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        {{ "index.no_entries"|trans }}
+    {% endif %}
+
+
+    <h3>{{ "index.author_of_offers"|trans }}</h3>
+    <span>
+        <a href="{{ path("offer_new") }}">{{ "index.new_offer"|trans }}</a><br/>
+    </span>
+    {% if author_of_offers|length > 0 %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{ "offered_to_member"|trans({}, "entity_event_offer") }}</th>
+                <th>{{ "offered_to_person"|trans({}, "entity_event_offer") }}</th>
+                <th>{{ "event_offer_entries"|trans({}, "entity_event_offer") }}</th>
+                <th>{{ "status"|trans({}, "entity_event_offer") }}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for offer in author_of_offers %}
+                <tr>
+                    <td>{{ offer.offeredToMember.name }}</td>
+                    <td>{{ offer.offeredToPerson.fullName }}</td>
+                    <td>{{ offer.eventOfferEntries.count }}</td>
+                    <td>{{ offer.statusText|trans({}, "enum_offer_status_type") }}</td>
+                    <td>
+                        {% if offer.status == 1 or offer.status == 0 %}
+                            <a href="{{ path("offer_choose_events", {"eventOffer" : offer.id}) }}">
+                                {{ "index.edit_offer"|trans }}
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if offer.status == 1 or offer.status == 0 %}
+                            <a href="{{ path("offer_remove", {"eventOffer" : offer.id}) }}">
+                                {{ "index.remove_offer"|trans }}
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        {{ "index.no_entries"|trans }}
+    {% endif %}
+
+
+
+    <h3>{{ "index.accepted_offers"|trans }}</h3>
+    {% if accepted_offers|length > 0 %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{{ "offered_by_member"|trans({}, "entity_event_offer") }}</th>
+                <th>{{ "offered_by_person"|trans({}, "entity_event_offer") }}</th>
+                <th>{{ "event_offer_entries"|trans({}, "entity_event_offer") }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for offer in accepted_offers %}
+                <tr>
+                    <td>{{ offer.offeredByMember.name }}</td>
+                    <td>{{ offer.offeredByPerson.fullName }}</td>
+                    <td>{{ offer.eventOfferEntries.count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        {{ "index.no_entries"|trans }}
+    {% endif %}
+
+{% endblock %}
