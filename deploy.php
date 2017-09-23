@@ -14,35 +14,23 @@ inventory('servers.yml');
 
 //stages: dev, testing, production
 set('default_stage', 'dev');
-/*
-set('writable_use_sudo', false);
-*/
 
-/*
-//I need this config for my hoster
-set(
-    'composer_options',
-    '{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader --ignore-platform-reqs'
-);
-*/
-
+//use php 7.1
 set(
     'bin/php',
     '/usr/local/php71/bin/php'
 );
 
-/**
- * Rebuild test data in dev
- */
+//load fixtures for dev
 task('database:fixtures', function () {
-    if (get('branch') == "develop") {
+    if (get('stage') == "dev") {
         //ensure dev
         $before = get("symfony_env");
         set('symfony_env', 'dev');
         run('{{bin/php}} {{bin/console}} doctrine:fixtures:load {{console_options}}');
         set('symfony_env', $before);
     }
-})->desc('Initializing example data');
+})->desc('Initializing example data if on dev stage');
 
 // kill php processes to ensure symlinks are refreshed
 task('deploy:refresh_symlink', function () {

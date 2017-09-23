@@ -37,8 +37,8 @@ index:
     reason_6_name: 'Transparent'
     reason_6_description: >
       Alle Veränderungen am Terminkalender werden gespeichert und zugänglich gemacht
-    reason_6_name: 'Individuell'
-    reason_6_description: >
+    reason_7_name: 'Individuell'
+    reason_7_description: >
       Sorgsam ausgewählte Standarteinstellungen können vom Administrator überschrieben werden
   promises:
     header: 'Chancen'

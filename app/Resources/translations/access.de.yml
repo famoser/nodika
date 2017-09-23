@@ -44,6 +44,9 @@ invite:
   personal_data_description: >
     Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
     Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
+  messages:
+    already_part_of_member: 'Sie sind bereits als Zugang des Mitglieds "%member%" der Organisation "%organisation%" registriert'
+    now_part_of_member: 'Sie wurden erfolgreich als Zugang des Mitglieds "%member%" der Organisation "%organisation%" hinzugefügt'
 
 #register/thanks page
 register_thanks:
@@ -88,12 +91,6 @@ invitation_hash_invalid:
   title: Link ungültig
   description: Der aufgerufene Link ist ungültig
   message: Dieser Link ist ungültig (haben Sie den Link richtig in den Browser kopiert?).
-
-invite:
-  messages:
-    already_part_of_member: 'Sie sind bereits als Zugang des Mitglieds "%member%" der Organisation "%organisation%" registriert'
-    now_part_of_member: 'Sie wurden erfolgreich als Zugang des Mitglieds "%member%" der Organisation "%organisation%" hinzugefügt'
-
 
 #errors
 error:

@@ -1,13 +1,23 @@
 Introduction
 ======
 
-todos:
- - send event remainders
- - Member, Person, Organisation view
+[![Travis Build Status](https://travis-ci.org/famoser/nodika.svg?branch=master)](https://travis-ci.org/famoser/nodika)
+[![Code Climate](https://codeclimate.com/github/famoser/nodika/badges/gpa.svg)](https://codeclimate.com/github/famoser/nodika)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0049282fe1b3437ba8321ec244a3ea93)](https://www.codacy.com/app/famoser/SyncApi-Webpage?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=famoser/nodika&amp;utm_campaign=Badge_Grade)
+[![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
+
+for release 1.0:
+ - add help pages
+ - add better first time workflow
+
+for release 1.1:
+ - refactor hotspots as said by code climate
+ - Member, Person, Organisation better view
  - export & print events in search
  - admin management (add any person by email, new invite possibility)
- - continue generation
+ - add continue generation option
  - implement invoice system
+
 
 project build with symfony. Dependecy managers:
  - composer for php
