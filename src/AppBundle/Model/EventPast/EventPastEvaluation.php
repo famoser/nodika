@@ -11,6 +11,7 @@ namespace AppBundle\Model\EventPast;
 
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Person;
+use AppBundle\Enum\EventChangeType;
 
 class EventPastEvaluation
 {
@@ -37,7 +38,7 @@ class EventPastEvaluation
      * @param Member $oldMember
      * @param Member $newMember
      */
-    public function setMemberChanged(Member $oldMember, Member $newMember)
+    public function setMemberChanged(Member $oldMember = null, Member $newMember)
     {
         $this->hasChangedMember = true;
         $this->oldMember = $oldMember;
@@ -53,7 +54,7 @@ class EventPastEvaluation
      * @param Person $oldPerson
      * @param Person $newPerson
      */
-    public function setPersonChanged(Person $oldPerson, Person $newPerson)
+    public function setPersonChanged(Person $oldPerson = null, Person $newPerson)
     {
         $this->hasChangedPerson = true;
         $this->oldPerson = $oldPerson;
@@ -69,7 +70,7 @@ class EventPastEvaluation
      * @param \DateTime $oldStartDateTime
      * @param \DateTime $newStartDateTime
      */
-    public function setStartDateTimeChanged(\DateTime $oldStartDateTime, \DateTime $newStartDateTime)
+    public function setStartDateTimeChanged(\DateTime $oldStartDateTime = null, \DateTime $newStartDateTime)
     {
         $this->hasChangedStartDateTime = true;
         $this->oldStartDateTime = $oldStartDateTime;
@@ -85,7 +86,7 @@ class EventPastEvaluation
      * @param \DateTime $oldEndDateTime
      * @param \DateTime $newEndDateTime
      */
-    public function setEndDateTimeChanged(\DateTime $oldEndDateTime, \DateTime $newEndDateTime)
+    public function setEndDateTimeChanged(\DateTime $oldEndDateTime = null, \DateTime $newEndDateTime)
     {
         $this->hasChangedEndDateTime = true;
         $this->oldEndDateTime = $oldEndDateTime;
@@ -110,6 +111,14 @@ class EventPastEvaluation
     public function getChangedByPerson()
     {
         return $this->changedByPerson;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEventChangeTypeText()
+    {
+        return EventChangeType::getTranslation($this->eventChangeType);
     }
 
     /**
@@ -206,13 +215,5 @@ class EventPastEvaluation
     public function getNewEndDateTime()
     {
         return $this->newEndDateTime;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEventChangeType()
-    {
-        return $this->eventChangeType;
     }
 }

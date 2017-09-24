@@ -36,7 +36,10 @@ class MyTwigExtension extends Twig_Extension
      */
     public function dateFilter($date)
     {
-        return $date->format(DateTimeFormatter::DATE_FORMAT);
+        if ($date instanceof \DateTime) {
+            return $date->format(DateTimeFormatter::DATE_FORMAT);
+        }
+        return "-";
     }
 
     /**
@@ -45,7 +48,10 @@ class MyTwigExtension extends Twig_Extension
      */
     public function dateTimeFilter($date)
     {
-        return $date->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        if ($date instanceof \DateTime) {
+            return $date->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        }
+        return "-";
     }
 
     /**

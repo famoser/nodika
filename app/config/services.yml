@@ -50,7 +50,7 @@ services:
 
     app.event_past_evaluation_service:
         class:  AppBundle\Service\EventPastEvaluationService
-        arguments: []
+        arguments: ["@doctrine"]
 
     app.event_generation_service:
         class:  AppBundle\Service\EventGenerationService

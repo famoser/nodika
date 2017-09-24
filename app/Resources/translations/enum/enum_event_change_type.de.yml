@@ -1,5 +1,10 @@
-created_by_admin: vom Administrator erstellt
-changed_by_admin: vom Administrator modifiziert
-removed_by_admin: vom Administrator entfernt
-person_assigned: Person zugeteilt
-changed_owener: Inhaber geändert
+manually_created_by_admin: vom Administrator erstellt
+generated_by_admin: vom Administrator erstellt
+manually_changed_by_admin: vom Administrator modifiziert
+manually_removed_by_admin: vom Administrator entfernt
+person_assigned_by_admin: Praxismitglied vom Administrator zugeordnet
+member_assigned_by_admin: Praxis vom Administrator zugeordnet
+traded_to_new_member: Neuem Mitglied zugeteilt durch einen Tauschvorgang
+person_assigned_by_member: Praxismitglied von Praxis zugeordnet
+confirmed_by_member: Durch Praxis bestätigt
+confirmed_by_person: Durch Praxismitglied bestätigt
