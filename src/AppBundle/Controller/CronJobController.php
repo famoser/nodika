@@ -70,7 +70,12 @@ class CronJobController extends BaseFrontendController
             $adminEmail = $settings->getReceiverOfRemainders() != null ? $settings->getReceiverOfRemainders()->getEmail() : null;
 
             $now = new \DateTime();
-            $threshHold = clone($settings->getLastConfirmEventEmailSend());
+            if ($settings->getLastConfirmEventEmailSend() instanceof \DateTime) {
+                $threshHold = clone($settings->getLastConfirmEventEmailSend());
+            } else {
+                //the first schedule is skipped
+                $threshHold = new \DateTime("now");
+            }
             //add -1 days + 22 hours because processing this also needs time (but probably not more than 2 hours)
             $threshHold->add(new \DateInterval("P" . ($settings->getSendConfirmEventEmailDays() - 1) . "DT22H"));
             $sendRemainderEmails = $threshHold <= $now;

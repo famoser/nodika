@@ -18,7 +18,7 @@ class ChoosePeriodType extends BaseChoosePeriodType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addFields($builder, ["translation_domain" => "nodika"]);
+        $this->addFields($builder, ["translation_domain" => "administration_organisation_event_line_generate_nodika"]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

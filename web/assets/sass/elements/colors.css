@@ -30,7 +30,10 @@ a.red-background:hover, a.error-color:hover {
 
 .gray-background, .default-color {
   background-color: #efefef;
-  color: #555555; }
+  color: #555555;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16); }
 
 a.gray-background:hover, a.default-color:hover {
   background-color: #efefef; }

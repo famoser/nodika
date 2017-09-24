@@ -40,3 +40,11 @@ remove:
 view:
   title: Termininformationen
   description: Mehr Informationen über diesen Termin
+  changed_member: Praxis geändert
+  changed_person: Praxismitglied geändert
+  changed_start_date_time: Anfangszeitpunkt geändert
+  changed_end_date_time: Endzeitpunkt geändert
+  yes_part_1: 'Ja, von "'
+  yes_part_2: '" zu "'
+  yes_part_3: '"'
+  no_part_1: 'Nein'

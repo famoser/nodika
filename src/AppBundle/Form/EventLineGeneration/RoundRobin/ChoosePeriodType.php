@@ -18,7 +18,7 @@ class ChoosePeriodType extends BaseChoosePeriodType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addFields($builder, ["translation_domain" => "round_robin"]);
+        $this->addFields($builder, ["translation_domain" => "administration_organisation_event_line_generate_round_robin"]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
