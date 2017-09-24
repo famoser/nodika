@@ -17,6 +17,9 @@ for release 1.1:
  - admin management (add any person by email, new invite possibility)
  - add continue generation option
  - implement invoice system
+ - event generation stats
+ - add info about confirmation status to event overview
+ - add event search to admin
 
 
 project build with symfony. Dependecy managers:

@@ -71,13 +71,15 @@
 
 .menu-entries-container {
   background-color: #ffffff;
-  width: 50%;
   display: none;
   position: absolute;
   top: 0;
   margin-left: -15px;
   padding: 40px;
-  z-index: 100; }
+  z-index: 100;
+  -webkit-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.16); }
 
 .menu-entries-container.open {
   display: block; }
