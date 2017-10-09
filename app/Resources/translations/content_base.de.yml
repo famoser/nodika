@@ -20,6 +20,7 @@ navigation:
   dashboard: zum Dashboard
   login: login
   go_back: zurück
+  register: registrieren
 
 help:
   help: Hilfe

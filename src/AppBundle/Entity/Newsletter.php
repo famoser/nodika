@@ -35,7 +35,7 @@ class Newsletter extends BaseEntity
     /**
      * @ORM\Column(type="integer")
      */
-    private $choice = NewsletterChoice::REGISTER;
+    private $choice = NewsletterChoice::QUESTION;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -108,12 +108,6 @@ class Newsletter extends BaseEntity
     protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
     {
         $builderArray = $this->getTranslationDomainForBuilder() + $defaultArray;
-        $builder->add(
-            "choice",
-            ChoiceType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("choice") +
-            NewsletterChoice::getChoicesForBuilder()
-        );
         $builder->add(
             "message",
             TextareaType::class,
