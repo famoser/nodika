@@ -2,8 +2,8 @@ entity:
   name: Praxis
   description: >
     Einer Praxis Ihrer Organisation werden Terminen zugeteilt.
-    Jede Praxis kann beliebig viele Praxismitglieder für verschiedene Personen auf der Webseite einrichten.
-  plural: Mitglieder
+    Jedes Miglied kann beliebig vielen Mitarbeiter Zugriff auf die Webseite gewähren.
+  plural: Praxen
 
 id: Id
 persons: Zugänge

@@ -17,8 +17,11 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
+use Pimple\Container;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInterface
+abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
      * @return \Faker\Generator
@@ -26,6 +29,22 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
     protected function getFaker()
     {
         return Factory::create("de_CH");
+    }
+
+    /* @var ContainerInterface $container */
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @return \AppBundle\Service\EventGenerationService
+     */
+    protected function getEventGenerationService()
+    {
+        return $this->container->get("app.event_generation_service");
     }
 
     /**

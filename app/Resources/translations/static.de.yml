@@ -9,7 +9,7 @@ index:
     header_description: 'Das webbasierte Tool übernimmt die Administration und Organisation von Notfalldiensten'
     paragraph_1: >
       Das Tool wird per 01.10.2017 für knbu (Kleintier-Notfalldienst Basel und Umgebung) erstellt, und erlaubt dem Verein die Administrationskosten erheblich zu reduzieren.
-      Gleichzeitig wird die Information der Mitglieder verbessert und die Verteilung der Termine transparenter.
+      Gleichzeitig wird die Information der Praxen verbessert und die Verteilung der Termine transparenter.
     paragraph_2: >
       Das Tool wird so erstellt das auch weitere Vereine dieses benutzen können. Die sorgfältig erstellte Standartkonfiguration kann auch an andere Organisationsformen angepasst werden.
     register_action: 'Registrieren Sie sich und sichern Sie sich einen Early Bird Rabatt!'
@@ -23,7 +23,7 @@ index:
     reason_2_name: 'Fair'
     reason_2_description: >
       Neue Termine werden mit ausgeklügelten konfigurierbaren Algorithmen auf die verschiedenen
-      Mitglieder verteilt
+      Praxen verteilt
     reason_3_name: 'Praktisch'
     reason_3_description: >
       Termine können einfach mit anderen Benutzern getauscht werden
@@ -43,7 +43,7 @@ index:
   promises:
     header: 'Chancen'
     header_description: >
-      Reduzieren Sie den Verwaltungsaufwand, während gleichzeitig die Organisation der Mitglieder verbessert wird.
+      Reduzieren Sie den Verwaltungsaufwand, während gleichzeitig die Organisation der Praxen verbessert wird.
     promise_1_name: 'Zeit und Kosten sparen'
     promise_1_description: >
       Verwatungsaufwand Ihres Vereins erheblich reduzieren'

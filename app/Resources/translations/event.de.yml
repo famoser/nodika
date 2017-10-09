@@ -5,18 +5,18 @@ index:
 
 assign:
   title: Termine zuweisen
-  description: Termine einem Praxismitglied zuordnen
-  assigned_person: Zugewiesenes Praxismitglied
-  no_assigned_person: Noch keinem Praxismitglied zugewiesen
-  choose_person: Praxismitglied auswählen
+  description: Termine einem Mitarbeiter zuordnen
+  assigned_person: Zugewiesenes Mitarbeiter
+  no_assigned_person: Noch keinem Mitarbeiter zugewiesen
+  choose_person: Mitarbeiter auswählen
   no_events_can_be_assigned: Zurzeit können Sie keine Termine zuweisen
   assign_events: Termine zuweisen
-  assign_events_description: Wählen Sie ein Praxismitglied aus, und markieren Sie dann alle Termine die Sie zuweisen wollen. Drücken Sie danach auf "zuweisen" um die Änderung zu bestätigen.
+  assign_events_description: Wählen Sie ein Mitarbeiter aus, und markieren Sie dann alle Termine die Sie zuweisen wollen. Drücken Sie danach auf "zuweisen" um die Änderung zu bestätigen.
   assign_why: Warum Termine zuweisen?
-  assign_why_desription: Zugewiesene Termine können dann vom zugewiesenen Praxismitglied getauscht werden. Zudem kommen Erinnerungsemails für den spezifischen Termin dann an die vom Praxismitglied angegebene E-Mail an
+  assign_why_desription: Zugewiesene Termine können dann vom zugewiesenen Mitarbeiter getauscht werden. Zudem kommen Erinnerungsemails für den spezifischen Termin dann an die vom Mitarbeiter angegebene E-Mail an
   messages:
     no_events: Keine Termine ausgewählt
-    no_person: Kein Praxismitglied ausgewählt
+    no_person: Kein Mitarbeiter ausgewählt
     assigned: 'Erfolgreich %count% Termine zugewiesen'
 
 confirm:

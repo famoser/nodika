@@ -25,10 +25,12 @@ help:
   help: Hilfe
   help_description: Ein kurzer Überblick über die Anwendung
   architecture: Aufbau
-  architecture_description_1: 'Sie haben Zugriff als %person% und sind dem Mitglied %member% zugeteilt'
-  architecture_description_2: 'Ihrem Mitglied werden als Teil der Organisation %organisation% Termine zugeteilt'
+  architecture_description_1: 'Mit Ihrem Account erhalten Sie Zugriff auf die Termine Ihrer Praxis'
+  architecture_description_2: 'Ihrer Praxis wird als Teil der Organisation Termine zugeteilt'
+  architecture_description_1_alternative: 'Sie haben Zugriff als %person% und sind der Praxis %member% zugeteilt'
+  architecture_description_2_alternative: 'Ihrer Praxis wird als Teil der Organisation %organisation% Termine zugeteilt'
   functions: Funktionen
   functions_description_1: Im Dashboard sehen sie alle demnächst kommenden Termine
   functions_description_2: Über das Menu links finden Sie weitere Funtionen um Termine zu suchen und zu tauschen
   administration: Administration
-  administration_description: Sie können Ihre persönlichen Daten und die Ihres Mitglieds ändern
+  administration_description: Sie können Ihre persönlichen Daten und die Ihrer Praxis ändern
