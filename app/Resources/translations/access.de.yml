@@ -6,7 +6,7 @@ login:
   forgot_password_action: Passwort vergessen
   register_action: Neu registrieren
   no_account: Noch keinen Account?
-  no_account_description: Fragen Sie den Leiter Ihrer Organisation um Zugangsdaten oder erstellen Sie registrieren Sie sich um für Ihre eigene Organisation einen Kalender zu erstellen
+  no_account_description: Fragen Sie den Leiter Ihrer Organisation um Zugangsdaten oder registrieren Sie sich, um für Ihre eigene Organisation einen Kalender zu erstellen
   forgot_password: Passwort vergessen?
   forgot_password_description: Drücken Sie auf "Passwort vergessen" unterhalb des Loginformulars und verifizieren Sie sich mit der hinterlegten E-Mail
 
