@@ -157,9 +157,17 @@
         <p>{{ "help.help_description"|trans({}, "content_base") }}</p>
         <h3>{{ "help.architecture"|trans({}, "content_base") }}</h3>
         <p>
-            {{ "help.architecture_description_1"|trans({"%member%" : member.name, "%person%" : person.fullName}, "content_base") }}
+            {% if member is defined and person is defined %}
+                {{ "help.architecture_description_1"|trans({"%member%" : member.name, "%person%" : person.fullName}, "content_base") }}
+            {% else %}
+                {{ "help.architecture_description_1_alternative"|trans({}, "content_base") }}
+            {% endif %}
             <br/>
-            {{ "help.architecture_description_2"|trans({"%organisation%": organisation.name}, "content_base") }}<br/>
+            {% if organisation is defined %}
+                {{ "help.architecture_description_2"|trans({"%organisation%": organisation.name}, "content_base") }}
+            {% else %}
+                {{ "help.architecture_description_2_alternative"|trans({}, "content_base") }}
+            {% endif %}
         </p>
         <h3>{{ "help.functions"|trans({}, "content_base") }}</h3>
         <p>
