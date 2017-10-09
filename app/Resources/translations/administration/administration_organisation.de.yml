@@ -10,9 +10,9 @@ administer:
   setup: Checkliste
   setup_description: Richten Sie Ihre Organisation ein mit dieser praktischen Checkliste
   setup_action: zur Checkliste
-  member_overview: Mitglieder
-  member_overview_description: Die Mitglieder Ihrer Organisation
-  member_administration_action: Zur Mitgliederverwaltung
+  member_overview: Praxen
+  member_overview_description: Die Praxen Ihrer Organisation
+  member_administration_action: Zur Praxenverwaltung
   event_line_overview: Termingruppen
   event_line_overview_description: Die Termingruppen Ihrer Organisation
   event_line_administration_action: Zur Termingruppenverwaltung
@@ -29,7 +29,7 @@ new:
   address: Adresse Ihrer Organisation
   address_description: Die Adresse der Organisation ist die Rechnungsadresse der Registrierungs- und Jahresgebühr. Sie muss nicht mit Ihrer eigenen Adresse übereinstimmen.
   contact: Kontaktinformationen Ihrer Organisation
-  contact_description: Die Kontaktinformationen der Organisation werden dazu benützt, Ihnen wichtige Nachrichten über die Mitglieder der Organisation zuzustellen
+  contact_description: Die Kontaktinformationen der Organisation werden dazu benützt, Ihnen wichtige Nachrichten über die Praxen der Organisation zuzustellen
 
 #edit page
 edit:
@@ -41,9 +41,9 @@ edit:
 setup:
   title: Organisation einrichten
   description: Richten Sie Ihre Organisation ein
-  setup_step_1: Mitglieder hinzufügen
-  setup_step_1_description: Importieren Sie Mitglieder von einer .csv (Excel) Datei oder fügen Sie sie direkt online hinzu
-  setup_step_1_action: zur Mitgliederverwaltung
+  setup_step_1: Praxen hinzufügen
+  setup_step_1_description: Importieren Sie Praxen von einer .csv (Excel) Datei oder fügen Sie sie direkt online hinzu
+  setup_step_1_action: zur Praxenverwaltung
   setup_step_2: Termingruppen hinzufügen
   setup_step_2_description: Erstellen Sie Termingruppen
   setup_step_2_action: zu den Termingruppen
@@ -53,9 +53,9 @@ setup:
   setup_step_4: Einstellungen anpassen
   setup_step_4_description: Verändern Sie die Standarteinstellungen um die Anwendungen spezifischen Bedürfnissen anzupassen
   setup_step_4_action: zu den Einstellungen
-  setup_step_5: Mitglieder einladen
-  setup_step_5_description: Senden Sie eine E-Mail an Ihre Mitglieder damit sie sich hier registrieren können
-  setup_step_5_action: Mitglieder einladen
+  setup_step_5: Praxen einladen
+  setup_step_5_description: Senden Sie eine E-Mail an Ihre Praxen damit sie sich hier registrieren können
+  setup_step_5_action: Praxen einladen
   setup_step_done: (erledigt)
   setup_step_voluntary: (freiwillig)
   five_steps: Fünf Schritte zur vollständigen Einrichtung
@@ -82,11 +82,11 @@ events:
 
 #members page
 members:
-  title: Mitgliederverwaltung
-  description: Verwalten Sie Ihre Mitglieder
-  new_action: neues Mitglied hinzufügen
-  import_action: Mitglieder importieren
-  invite_action: Mitglieder hier einladen
+  title: Praxenverwaltung
+  description: Verwalten Sie Ihre Praxen
+  new_action: neue Praxis hinzufügen
+  import_action: Praxen importieren
+  invite_action: Praxen hier einladen
 
 #messages page
 messages:
@@ -96,31 +96,31 @@ messages:
 settings:
   title: Einstellungen
   description: Konfigurieren Sie Ihre Anwendung
-  can_confirm_event_before_days_description: Der früheste mögliche Zeitpunkt wann ein Mitglied einen ihm zuegwiesenen Termin bestätigen kann
+  can_confirm_event_before_days_description: Der früheste mögliche Zeitpunkt wann ein zugewiesener Termin bestätigen werden kann
   must_confirm_event_before_days_description: >
-    Der letzte mögliche Zeitpunkt wann ein Mitglied einen ihm zuegwiesenen Termin regulär bestätigen kann.
-    Danach wird täglich der Administrator informiert, sowie ein Warnungsemail an das Mitglied gesendet, bis das Mitglied den Termin bestätigt hat.
-  send_confirm_event_email_days_description: Wie oft (in Tagen) eine Aufforderung an die Mitglieder versandt wird das sie wieder ihre Termine bestätigen sollen
-  trade_event_days_description: Der letzte mögliche Zeitpunkt wann ein Mitglied einen ihm zugewiesenen Termin tauschen kann.
+    Der letzte mögliche Zeitpunkt zudem ein zuegwiesener Termin regulär bestätigen werden kann.
+    Danach wird täglich der Administrator informiert, sowie ein Warnungsemail an die Praxis gesendet, bis die Praxis den Termin bestätigt hat.
+  send_confirm_event_email_days_description: Wie oft (in Tagen) eine Aufforderung an die Praxen versandt wird das sie wieder ihre Termine bestätigen sollen
+  trade_event_days_description: Der letzte mögliche Zeitpunkt zudem ein zugewiesener Termin getauscht werden kann.
 
 #members/invite page
 members_invite:
-  title: Mitglieder einladen
-  description: Mitglieder zu nodika einladen
+  title: Praxen einladen
+  description: Praxen zu nodika einladen
   invite: Einladung versenden
-  invite_description: Versenden Sie eine E-Mail an Ihre Mitglieder. Mit dem darin enthaltenen Link können diese hier Accounts erstellen
+  invite_description: Versenden Sie eine E-Mail an Ihre Praxen. Mit dem darin enthaltenen Link können diese hier Accounts für ihre Mitarbieter erstellen
   subject: Betreff
   message: Nachricht
   customize_message: E-Mail personalisieren
   customize_message_description: >
     Sie können die versendete E-Mail hier anpassen. Folgende Variablen können Sie verwenden die dann automatisch durch das zutreffende ersetzt werden:
-  customize_message_variable_1: LINK_REPLACE enthält den Link durch den sich das Mitglied registrieren kann
-  customize_message_variable_2: MEMBER_NAME_REPLACE enthält den Namen des Mitglieds
-  customize_message_variable_3: FREE_1_REPLACE ist eine Variable die sie im nächsten Schritt für jedes Mitglied einzeln setzen können
-  customize_message_variable_4: FREE_2_REPLACE ist eine Variable die sie im nächsten Schritt für jedes Mitglied einzeln setzen können
-  customize_message_variable_5: FREE_3_REPLACE ist eine Variable die sie im nächsten Schritt für jedes Mitglied einzeln setzen können
+  customize_message_variable_1: LINK_REPLACE enthält den Link durch den sich die Praxis registrieren kann
+  customize_message_variable_2: MEMBER_NAME_REPLACE enthält den Namen der Praxis
+  customize_message_variable_3: FREE_1_REPLACE ist eine Variable die sie im nächsten Schritt für jede Praxis einzeln setzen können
+  customize_message_variable_4: FREE_2_REPLACE ist eine Variable die sie im nächsten Schritt für jede Praxis einzeln setzen können
+  customize_message_variable_5: FREE_3_REPLACE ist eine Variable die sie im nächsten Schritt für jede Praxis einzeln setzen können
   error:
-    no_link_replace_in_message: Ihre E-Mail muss zwingend LINK_REPLACE endhalten, da sich das Mitglied sonst gar nicht registrieren kann
+    no_link_replace_in_message: Ihre E-Mail muss zwingend LINK_REPLACE endhalten, da sich die Praxis sonst gar nicht registrieren kann
   email:
     default_subject: Einladung zum Notfalldienstkalender
     default_message: |
@@ -130,7 +130,7 @@ members_invite:
 
       Der Administrator dankt.
   successful:
-    emails_send: Die Einladung wurde an %count% Mitglieder versandt
+    emails_send: Die Einladung wurde an %count% Praxen versandt
 
 members_invite_preview:
   title: E-Mail versenden
@@ -139,7 +139,7 @@ members_invite_preview:
   subject: Betreff
   message: Nachricht
   free_variables: Freie Variablen
-  free_variables_description: Sofern in Ihrer E-Mail gefunden können Sie hier für jedes Mitglied die freien Variablen setzen.
+  free_variables_description: Sofern in Ihrer E-Mail gefunden können Sie hier für jede Praxis die freien Variablen setzen.
   member_name_replace: MEMBER_NAME_REPLACE
   free_1_replace: FREE_1_REPLACE
   free_2_replace: FREE_2_REPLACE

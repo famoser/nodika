@@ -67,6 +67,7 @@ class Organisation extends BaseEntity
      * @var EventLine[]
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\EventLine", mappedBy="organisation")
+     * @ORM\OrderBy({"displayOrder" = "DESC"})
      */
     private $eventLines;
 

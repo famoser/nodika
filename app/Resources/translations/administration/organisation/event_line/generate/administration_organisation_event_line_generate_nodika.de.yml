@@ -4,11 +4,11 @@ new:
   description: Generieren Sie Termine mit dem Nodika Algorithmus
   help: >
     Der Nodika Algorithmus basiert auf den Erfahrungen eines grösseren Notfalldienstvereines.
-    Die Grundannahme sind das nicht alle Mitglieder gleich viel Notfalldienst leisten, und das Termine an Feiertage und Wochenenden anders gewichtet werden sollen wie Termine an Wochentagen.
+    Die Grundannahme sind das nicht alle Praxen gleich viel Notfalldienst leisten, und das Termine an Feiertage und Wochenenden anders gewichtet werden sollen wie Termine an Wochentagen.
     Der Algorithmus ist in zwei Teile unterteilt:
-    Der erste Teil macht die Terminverteilung, vergibt also die Anzahl Termine an die Mitglieder.
+    Der erste Teil macht die Terminverteilung, vergibt also die Anzahl Termine an die Praxen.
     Der zweite Teil ordnet die vergebenen Termine konkreten Daten zu.
-    Sie definieren in den folgenden Schritten den Zeitraum der Generierung, die teilnehmenden Mitglieder, deren zu leistenden Anteil sowie weitere Einstellungen.
+    Sie definieren in den folgenden Schritten den Zeitraum der Generierung, die teilnehmenden Praxen, deren zu leistenden Anteil sowie weitere Einstellungen.
   new_action: starten
 
 #choose_period page
@@ -29,7 +29,7 @@ no_conflicts:
   no_conflicts: Konflikte verhindern
   no_conflicts_description: >
     Aktivieren Sie hier alle Termingruppen mit denen es keine Konflikte geben darf.
-    Ein Konflikt ist dann, wenn das selbe Mitglied zur gleichen Zeit mehrere Termine übernehmen soll
+    Ein Konflikt ist dann, wenn die selbe Praxis zur gleichen Zeit mehrere Termine übernehmen soll
   no_match_warning: Zuordnung vielleicht unmöglich
   no_match_warning_description: Je nach Einstellung hier kann es sein das die Zurodnung nicht mehr möglich ist!
   no_other_event_lines: Sie haben keine anderen Termingruppen.
@@ -40,23 +40,23 @@ no_conflicts:
 
 #choose_members page
 choose_members:
-  title: Mitglieder wählen
-  description: Wählen Sie aus Ihren aktiven Mitgliedern die aus, die Termine zugeteilt bekommen sollen
-  help: Deaktivieren Sie die Mitglieder die nicht beachtet werden sollen bei der Generierung
+  title: Praxen wählen
+  description: Wählen Sie aus Ihren aktiven Praxen die aus, die Termine zugeteilt bekommen sollen
+  help: Deaktivieren Sie die Praxen die nicht beachtet werden sollen bei der Generierung
 
 #relative_distribution page
 relative_distribution:
-  title: Relative Verteilung an die Mitglieder
-  description: Bestimmen Sie wieviel Termine das Mitglied übernehmen soll
-  member_points: Mitgliederpunkte
+  title: Relative Verteilung an die Praxen
+  description: Bestimmen Sie wieviel Termine die Praxis übernehmen soll
+  member_points: Praxenpunkte
   member_points_description:
-    Ein Mitgliederpunkt definiert wieviele Termine das Mitglied relativ zu den anderen übernehmen soll.
+    Ein Praxenpunkt definiert wieviele Termine die Praxis relativ zu den anderen übernehmen soll.
     Der Wert muss eine Zahl grösser / gleich 0 sein.
-    Ist der Wert eines Mitgliedes verglichen zu einem anderen verdoppelt, wird das entsprechende Mitglied auch doppelt so viele Tage zugewiesen bekommen
+    Ist der Wert einer Praxis verglichen zu einem anderen verdoppelt, wird die entsprechende Praxis auch doppelt so viele Tage zugewiesen bekommen
   member_lucky_score: Lucky Score
   member_lucky_score_description:
-    Da die Generierung oft nicht die Termine ganz fair verteilen kann (zum Beispiel weil zwei Mitglieder drei Termine übernehmen müssen)
-    wird der Unterschied als "Lucky Score" gespeichert. Es ist also eine Zahl die angibt, wieviel Glück das Mitglied bei der letzten Generierung hatte.
+    Da die Generierung oft nicht die Termine ganz fair verteilen kann (zum Beispiel weil zwei Praxen drei Termine übernehmen müssen)
+    wird der Unterschied als "Lucky Score" gespeichert. Es ist also eine Zahl die angibt, wieviel Glück die Praxis bei der letzten Generierung hatte.
     Wird diese Generierung zum ersten Mal durchgeführt kann sie einfach 0 gelassen werden
 
 #distribution_settings page
@@ -77,7 +77,7 @@ distribution_settings:
 #distribution_confirm page
 distribution_confirm:
   title: Terminverteilung bestätigen
-  description: Die Verteilung der Termine an die Mitglieder
+  description: Die Verteilung der Termine an die Praxen
   help: >
     Überprüfen Sie die Terminverteilung. Ist alles so in Ordnung kann mit der Generierung fortgefahren werden.
     Sie werden in den folgenden Schritten nun die Zuordnung der Termine auf konkrete Daten konfigurieren
@@ -89,8 +89,8 @@ distribution_confirm:
   continue_action: Weiter
   random_days: Faire, zufällige Zuteilung
   random_days_description: >
-    Diese Zuteilung ist so fair wie möglich. Bei Entscheidungen die keinen eindeutigen Ausgang hatten (wie zwei Mitglieder, ein Termin) hat der Algorithmus
-    zufällig ein Mitglied ausgewählt. Sie können diese zufälligen Entscheidungen wiederholen:
+    Diese Zuteilung ist so fair wie möglich. Bei Entscheidungen die keinen eindeutigen Ausgang hatten (wie zwei Praxen, ein Termin) hat der Algorithmus
+    zufällig eine Praxis ausgewählt. Sie können diese zufälligen Entscheidungen wiederholen:
   random_days_retry: Generierung wiederholen
 
 #assignment_settings page
@@ -101,11 +101,11 @@ assignment_settings:
   before_data_description: >
     Geben Sie hier eventuell bereits vorhandene Termine an unmittelbar vor der Generierung des Termines.
     Ist die Generierung ab 01.01 mit folgender Verteilung:
-    Mitglied A mit der ID 98 ist am 29.12. zugeordnet, Mitglied B mit der ID 62 ist am 30.12. zugeordnet und Mitglied c mit der ID 86 am 31.12.
+    Praxis A mit der ID 98 ist am 29.12. zugeordnet, Praxis B mit der ID 62 ist am 30.12. zugeordnet und Praxis c mit der ID 86 am 31.12.
     Dann füllen Sie in die Liste mit 98,62,86 aus.
-    Sie können zudem die "0" als Platzhalter verwenden. Möchten Sie also nur den Termin vom Mitglied B definieren dann füllen Sie das Feld mit 62,0 aus
-  members_table: Mitglieder
-  members_table_description: Eine Tabelle aller Mitglieder mit ihren jeweiligen Ids
+    Sie können zudem die "0" als Platzhalter verwenden. Möchten Sie also nur den Termin der Praxis B definieren dann füllen Sie das Feld mit 62,0 aus
+  members_table: Praxen
+  members_table_description: Eine Tabelle aller Praxen mit ihren jeweiligen Ids
 
 #start_generation page
 start_generation:
@@ -123,13 +123,13 @@ confirm_generation:
     Scrollen Sie nach unten und speichern Sie die Termine wenn alles in Ordnung ist,
     oder gehen Sie zurück und versuchen Sie die Generierung von Neuem
   persist_now: Termine speichern
-  member_name: Mitglied
+  member_name: Praxis
   start_date_time: Anfangszeit
   end_date_time: Endzeit
 
 #erros
 error:
-  member_not_found_anymore: Ein Mitglied das einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Mitglieder
+  member_not_found_anymore: Eine Praxis die einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Praxen
   date_format_invalid: 'Das Datum %date% ist nicht korrekt formatiert. Bitte formatieren Sie das Datum gemäss dd.mm.yyyy, also zum Beispiel 01.01.1995'
-  member_format_invalid: 'Die bestehenden Termine sind nicht korrekt formatiert (an der Stelle %part%). Bitte stellen Sie sicher das Sie die Ids der Mitglieder als Identifizierung verwenden.'
-  member_not_found: 'Das Mitglied mit der ID %id% wurde nicht gefunden. Bitte stellen Sie sicher das Sie die Ids der Mitglieder als Identifizierung verwenden.'
+  member_format_invalid: 'Die bestehenden Termine sind nicht korrekt formatiert (an der Stelle %part%). Bitte stellen Sie sicher das Sie die Ids der Praxen als Identifizierung verwenden.'
+  member_not_found: 'Die Praxis mit der ID %id% wurde nicht gefunden. Bitte stellen Sie sicher das Sie die Ids der Praxen als Identifizierung verwenden.'

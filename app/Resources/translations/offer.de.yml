@@ -14,7 +14,7 @@ new:
   title: Neue Tauschanfrage erstellen
   description: erstellen Sie eine neue Tauschanfrage
   choose_person: Wählen Sie den Empfänger / die Empfängerin Ihrer Tauschanfrage aus
-  choose_person_description: Sie können Termine austauschen die Ihrem Account zugeordnet sind, mit den Terminen die dem Account Ihres Empfängers zugeordnet sind
+  choose_person_description: Sie können Termine austauschen die Ihnen zugeordnet sind, mit Terminen, die Ihrem Empfänger zugeordnet sind
 
 choose_events:
   title: Termine auswählen

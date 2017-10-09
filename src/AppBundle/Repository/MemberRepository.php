@@ -198,7 +198,7 @@ class MemberRepository extends EntityRepository
     {
         $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
 
-        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person, true)
+        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person)
             ->getQuery()
             ->getResult();
     }

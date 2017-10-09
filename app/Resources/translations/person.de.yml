@@ -16,7 +16,7 @@ edit_personal:
   description: Editieren Sie Ihre persönlichen Daten
   person_edit_form: Account ändern
   about: Account
-  about_description: Dieser Account gehört Ihnen und weist Sie als Mitglied Ihrer Praxis aus.
+  about_description: Dieser Account gehört Ihnen und weist Sie als Mitarbeiter Ihrer Praxis aus.
   person_address: Adresse
   person_address_description: Ihre persönliche Adresse.
   person_contact: Kontaktinformationen
@@ -57,7 +57,7 @@ change_email:
 remove_member:
   title: Praxis entfernen
   description: Möchten Sie sich von dieser Praxis entfernen?
-  really_remove: Ich möchte mich wirklich als Praxismitglied entfernen. Ich verstehe die damit verbunden Konsequenzen.
+  really_remove: Ich möchte mich wirklich als Mitarbeiter entfernen. Ich verstehe die damit verbunden Konsequenzen.
   really_remove_confirm: Bestätigen
   change_email_form: Neue E-Mail
   remove_member: Von der Praxis entfernen
@@ -65,5 +65,5 @@ remove_member:
     Entfernen Sie sich von dieser Praxis haben Sie keinen Zugriff mehr auf deren Termine und Funktionen.
     Sie werden automatisch ausgeloggt.
   messages:
-    remove_successfully: Sie wurden erfolgreich als Praxismitglied entfernt
+    remove_successfully: Sie wurden erfolgreich als Mitarbeiter entfernt
     not_part_of_member: Sie sind nicht Teil dieser Praxis

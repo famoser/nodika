@@ -31,6 +31,7 @@ class BaseConfiguration
             $this->endDateTime = new \DateTime('now + 1 year');
             $this->lengthInHours = 24;
             $this->eventLineConfiguration = [];
+            $this->conflictPufferInHours = 2;
         }
     }
 

@@ -1,4 +1,4 @@
 entity:
-  name: Praxismitglied
-  description: Ein Praxismitglied gehört einer Person und ist einer Praxis zugeordnet
-  plural: Praxismitglieder
+  name: Mitarbeiter
+  description: Ein Mitarbeiter gehört einer Person und ist einer Praxis zugeordnet
+  plural: Mitarbeiter

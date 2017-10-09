@@ -38,12 +38,16 @@ class LoadEventLineData extends BaseFixture
         $eventLine = $this->getAllRandomInstance();
         $eventLine->setOrganisation($this->getReference("organisation-1"));
         $eventLine->setName("Notfalldienst");
+        $eventLine->setDescription("Sie kümmern sich um die Notfälle und nehmen die Anrufe der Notfalldienstnummer entgegen");
         $manager->persist($eventLine);
+        $this->setReference("event-line-1", $eventLine);
 
         $eventLine = $this->getAllRandomInstance();
         $eventLine->setOrganisation($this->getReference("organisation-1"));
         $eventLine->setName("Wochentelefon");
+        $eventLine->setDescription("Sie kümmern sich um das Wochentelefon");
         $manager->persist($eventLine);
+        $this->setReference("event-line-2", $eventLine);
 
         $manager->flush();
     }

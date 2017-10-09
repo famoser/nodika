@@ -1,15 +1,15 @@
 {% if is_granted("ROLE_USER") or is_granted("ROLE_ADMIN") %}
     <div class="container menu-container">
         <div class="menu-toggle-container">
-            <div class="menu-toggle">
-                <div class="nav-icon navigation" id="nav-toggle">
+            <div class="menu-toggle" id="menu-toggle">
+                <div class="nav-icon navigation">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
             </div>
         </div>
-        <div class="menu-entries-container navigation">
+        <div class="menu-entries-container menu-content">
             <h3>{{ "menu.menu"|trans({}, "content_base") }}</h3>
             <ul class="menu-entries">
                 {% if is_granted("ROLE_ADMIN") %}
@@ -145,3 +145,38 @@
         </div>
     </div>
 {% endif %}
+
+<div class="container help-container">
+    <div class="help-toggle-container">
+        <div class="help-toggle" id="help-toggle">
+            <h3>{{ "help.help"|trans({}, "content_base") }}</h3>
+        </div>
+    </div>
+    <div class="help-content-container help-content">
+        <h3>{{ "help.help"|trans({}, "content_base") }}</h3>
+        <p>{{ "help.help_description"|trans({}, "content_base") }}</p>
+        <h3>{{ "help.architecture"|trans({}, "content_base") }}</h3>
+        <p>
+            {% if member is defined and person is defined %}
+                {{ "help.architecture_description_1"|trans({"%member%" : member.name, "%person%" : person.fullName}, "content_base") }}
+            {% else %}
+                {{ "help.architecture_description_1_alternative"|trans({}, "content_base") }}
+            {% endif %}
+            <br/>
+            {% if organisation is defined %}
+                {{ "help.architecture_description_2"|trans({"%organisation%": organisation.name}, "content_base") }}
+            {% else %}
+                {{ "help.architecture_description_2_alternative"|trans({}, "content_base") }}
+            {% endif %}
+        </p>
+        <h3>{{ "help.functions"|trans({}, "content_base") }}</h3>
+        <p>
+            {{ "help.functions_description_1"|trans({}, "content_base") }}<br/>
+            {{ "help.functions_description_2"|trans({}, "content_base") }}
+        </p>
+        <h3>{{ "help.administration"|trans({}, "content_base") }}</h3>
+        <p>
+            {{ "help.administration_description"|trans({}, "content_base") }}
+        </p>
+    </div>
+</div>

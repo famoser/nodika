@@ -41,7 +41,7 @@ import:
   import_events_template_description: Laden Sie die Musterdatei herunter, und fügen Sie die Termine (ohne die Spaltenreihenfolge zu ändern) ein. Danach kehren Sie hier zurück, und laden die .csv (Excel) Datei wieder hoch
   import_events_template_download: Musterdatei herunterladen
   import_events_required: Zwingende Felder
-  import_events_required_description: Zwingend erfolderlich ist für jeden Termin Anfang- und Enddatum und das zugehörige Mitglied
+  import_events_required_description: Zwingend erfolderlich ist für jeden Termin Anfang- und Enddatum und die zugehörige Praxis
   no_members: Sie haben nocht keine Mitglider hinzugefügt
 
 #generate page
@@ -50,11 +50,11 @@ generate:
   description: Wählen Sie den Algorythmus aus, der die Termine generieren soll
   help: Wählen Sie den Algorythmus aus, der die Termine generieren soll. Danach können noch Algorythmus spezifische Parameter eingestellt werden.
   generation_explanation: Ablauf Generierung
-  generation_explanation_description: Nachdem Sie sich für einen Algorythmus entschieden haben, und ihn entsprechend konfiguriert haben, kann die Generierung beginnen. Nach der Generierung können Sie das Zwischenresultat begutachten. Ist alles in Ordnung können Sie die Termine speichern und Ihre Mitglieder informieren.
+  generation_explanation_description: Nachdem Sie sich für einen Algorythmus entschieden haben, und ihn entsprechend konfiguriert haben, kann die Generierung beginnen. Nach der Generierung können Sie das Zwischenresultat begutachten. Ist alles in Ordnung können Sie die Termine speichern und Ihre Praxen informieren.
   common_paramters: Algorythmus übergreifende Merkmale
   common_paramters_description: Bei jeder Generierung können Sie die Zeitspanne angeben, Anfangs- und Endzeitpunkt sowie die Länge der Termine.
   round_robin: Round Robin Verfahren
-  round_robin_description: Definieren Sie eine Reihenfolge der Mitglieder, und verteilen Sie die Termine der Reihe nach
+  round_robin_description: Definieren Sie eine Reihenfolge der Praxen, und verteilen Sie die Termine der Reihe nach
   round_robin_action: Round Robin wählen
   nodika_algorithmus: Nodika Algorythmus
   nodika_algorithmus_description: Dieser komplexe Algorithmus versucht die Termine zufällig aber trotzdem möglichst fair zu verteilen. Er wurde speziell für dieses Tool entwickelt, und ist der empfohlene Weg Termine zu verteilen. Zahlreiche Konfigurierungsparameter stehen zur Verfügung.

@@ -6,7 +6,7 @@ login:
   forgot_password_action: Passwort vergessen
   register_action: Neu registrieren
   no_account: Noch keinen Account?
-  no_account_description: Fragen Sie den Leiter Ihrer Organisation um Zugangsdaten oder erstellen Sie registrieren Sie sich um für Ihre eigene Organisation einen Kalender zu erstellen
+  no_account_description: Fragen Sie den Leiter Ihrer Organisation um Zugangsdaten oder registrieren Sie sich, um für Ihre eigene Organisation einen Kalender zu erstellen
   forgot_password: Passwort vergessen?
   forgot_password_description: Drücken Sie auf "Passwort vergessen" unterhalb des Loginformulars und verifizieren Sie sich mit der hinterlegten E-Mail
 
@@ -35,7 +35,7 @@ invite:
   description: Registrieren Sie sich um die Einladung anzunehmen
   register_form_header: Registrierungsformular
   account_register: Zugang für %member% registrieren
-  account_register_description: 'Willkommen auf nodika! Erstellen Sie hier einen Zugang für Ihr Mitglied %member% der Organisation %organisation%'
+  account_register_description: 'Willkommen auf nodika! Erstellen Sie hier einen Zugang für Ihre Praxis %member% der Organisation %organisation%'
   register: Registrieren
   register_description: >
     Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen.
@@ -45,8 +45,8 @@ invite:
     Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
     Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
   messages:
-    already_part_of_member: 'Sie sind bereits als Zugang des Mitglieds "%member%" der Organisation "%organisation%" registriert'
-    now_part_of_member: 'Sie wurden erfolgreich als Zugang des Mitglieds "%member%" der Organisation "%organisation%" hinzugefügt'
+    already_part_of_member: 'Sie sind bereits als Zugang der Praxis "%member%" der Organisation "%organisation%" registriert'
+    now_part_of_member: 'Sie wurden erfolgreich als Zugang der Praxis "%member%" der Organisation "%organisation%" hinzugefügt'
 
 #register/thanks page
 register_thanks:
@@ -57,7 +57,7 @@ register_thanks:
 #register/confirm page
 register_confirm:
   title: Registrierung abschliessen
-  description: Setzten Sie das Passwort für Ihren Account
+  description: Setzen Sie das Passwort für Ihren Account
   email_verified: Email verifiziert
   email_verified_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account, danach können Sie mit der Einrichtung Ihrer Organisation loslegen
   set_password_form: Passwort setzen

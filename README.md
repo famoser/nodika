@@ -17,6 +17,9 @@ for release 1.1:
  - admin management (add any person by email, new invite possibility)
  - add continue generation option
  - implement invoice system
+ - event generation stats
+ - add info about confirmation status to event overview
+ - add event search to admin
 
 
 project build with symfony. Dependecy managers:
@@ -71,13 +74,14 @@ if you want to deploy
  - you may want to login with ssh and prepare the database data with `php bin/console doctrine:fixtures:load --fixtures=src/AppBundle/DataFixtures/ORM/Production -q` (execute from active release root)
  
 if you're setting up deployment on a new server
- - add own ssh key `ssh-copy-id -i ~/.ssh/id_rsa.pub famoser@famoser.ch` 
- - connect to server with `ssh famoser@famoser.ch`
- - `cat ~/.ssh/id_rsa.pub` to display the sever ssh key, if none:
+ - `cat ~/.ssh/id_rsa.pub` to ensure you already have created an ssh key for yourself, if none:
     - `ssh-keygen -t rsa -b 4096 -C "info@famoser.ch"` generate a new key
     - `eval $(ssh-agent -s)` start the ssh agent
     - `ssh-add ~/.ssh/id_rsa` add the new key
- - go to https://github.com/famoser/nodika/deploy_keys and add your ssh key
+ - add own ssh key to the server with `ssh-copy-id -i ~/.ssh/id_rsa.pub username@server.domain` 
+ - connect to server with `ssh username@server.domain`
+ - `cat ~/.ssh/id_rsa.pub` to display the sever ssh key, if none see above on how to create one
+ - go to https://github.com/famoser/nodika/deploy_keys and add the server ssh key
  - point the web directory to `~/myurl.ch/ENV/current/web`
  - deploy!
  - you may want to check with `php bin/symfony_requirements` if your server does support symfony

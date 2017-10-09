@@ -2,10 +2,10 @@ entity:
   name: Termintauschvorschlag
   description: Ein Termintauschvorschlag enthält Termine die zwischen zwei Personen getauscht werden können
 
-offered_by_member: Offert von Mitglied
-offered_by_person: Offert von Account
-offered_to_member: Offert an Mitglied
-offered_to_person: Offert an Account
+offered_by_member: Offerte der Praxis
+offered_by_person: Offert von Mitarbeiter
+offered_to_member: Offerte an Praxis
+offered_to_person: Offerte an Mitarbeiter
 event_offer_entries: Anzahl Termine
 status: Status
 description: Nachricht

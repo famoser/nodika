@@ -16,7 +16,6 @@
   transition: .5s ease-in-out
   cursor: pointer
 
-
 .nav-icon span
   display: block
   position: absolute
@@ -62,29 +61,45 @@
   -o-transform: rotate(-135deg)
   transform: rotate(-135deg)
 
-.menu-container
- position: relative
- color: $grey-dark
+.menu-container, .help-container
+  position: relative
+  color: $grey-dark
 
-.menu-toggle-container
+.menu-toggle, .help-toggle
+  cursor: pointer
+
+.help-toggle > h3
+  margin: 0
+
+.menu-toggle-container, .help-toggle-container
   position: absolute
   z-index: 100
   top: -60px
   background-color: $grey-light
   margin: -18px 0px 0px -15px
+
+.menu-toggle-container
   padding: 20px 20px 20px 40px
 
-.menu-entries-container
+.help-toggle-container
+  right: 0
+  padding: 20px 40px 20px 20px
+
+.menu-entries-container, .help-content-container
   background-color: $white
-  width: 50%
-  display: none
   position: absolute
   top: 0
   margin-left: -15px
   padding: 40px
   z-index: 100
+  -webkit-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.16)
+  -moz-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.16)
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.16)
 
-.menu-entries-container.open
+.menu-content, .help-content
+  display: none
+
+.menu-content.open, .help-content.open
   display: block
 
 .menu-entries

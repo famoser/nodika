@@ -15,6 +15,7 @@ use AppBundle\Entity\EventLine;
 use AppBundle\Entity\Organisation;
 use AppBundle\Enum\EventChangeType;
 use AppBundle\Enum\SubmitButtonType;
+use AppBundle\Model\EventPast\EventPastEvaluation;
 use AppBundle\Security\Voter\EventLineVoter;
 use AppBundle\Security\Voter\EventVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -171,6 +172,16 @@ class EventController extends BaseController
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         $arr["event"] = $event;
+
+        $pasts = $event->getEventPast();
+        $eventPastService = $this->get("app.event_past_evaluation_service");
+        /* @var EventPastEvaluation[] $displayPasts */
+        $displayPasts = [];
+        foreach ($pasts as $past) {
+            $displayPasts[] = $eventPastService->createEventPastEvaluation($past);
+        }
+        $arr["eventPasts"] = $displayPasts;
+
         return $this->renderWithBackUrl(
             'administration/organisation/event_line/event/view.html.twig',
             $arr,

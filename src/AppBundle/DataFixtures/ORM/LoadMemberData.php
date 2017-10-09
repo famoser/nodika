@@ -40,33 +40,36 @@ class LoadMemberData extends BaseFixture
     {
         $member = $this->getAllRandomInstance();
         $member->setOrganisation($this->getReference("organisation-1"));
-        $member->setName("Mitglied 1");
+        $member->setName("Kleintierpraxis baselwest");
         /* @var Person $person */
         $person = $this->getReference("person-1");
         $member->addPerson($person);
         $person->addMember($member);
         $manager->persist($member);
         $manager->persist($person);
+        $this->setReference("member-1", $member);
 
         $member = $this->getAllRandomInstance();
         $member->setOrganisation($this->getReference("organisation-1"));
-        $member->setName("Mitglied 2");
+        $member->setName("Kleintierpraxis am Ring");
         /* @var Person $person */
         $person = $this->getReference("person-2");
         $member->addPerson($person);
         $person->addMember($member);
         $manager->persist($member);
         $manager->persist($person);
+        $this->setReference("member-2", $member);
 
         $member = $this->getAllRandomInstance();
         $member->setOrganisation($this->getReference("organisation-1"));
-        $member->setName("Mitglied 3");
+        $member->setName("VET 4 PET");
         /* @var Person $person */
         $person = $this->getReference("person-3");
         $member->addPerson($person);
         $person->addMember($member);
         $manager->persist($member);
         $manager->persist($person);
+        $this->setReference("member-3", $member);
 
         $manager->flush();
     }

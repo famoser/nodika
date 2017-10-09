@@ -13,11 +13,21 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\EventPast;
 use AppBundle\Entity\Person;
 use AppBundle\Enum\EventChangeType;
+use AppBundle\Model\Event\DeserializedEvent;
 use AppBundle\Model\EventPast\EventPastEvaluation;
 use AppBundle\Service\Interfaces\EventPastEvaluationServiceInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class EventPastEvaluationService implements EventPastEvaluationServiceInterface
 {
+    /* @var RegistryInterface $doctrine */
+    private $doctrine;
+
+    public function __construct(RegistryInterface $registry)
+    {
+        $this->doctrine = $registry;
+    }
+
     /**
      * evaluates the EventPast
      *
@@ -43,19 +53,19 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
      * if only a new event is in the history
      *
      * @param EventPastEvaluation $evaluation
-     * @param Event $event
+     * @param DeserializedEvent $event
      * @return EventPastEvaluation
      */
-    private function eventNewOccurred(EventPastEvaluation $evaluation, Event $event)
+    private function eventNewOccurred(EventPastEvaluation $evaluation, $event)
     {
-        if ($event->getMember() != null) {
-            $evaluation->setMemberChanged(null, $event->getMember());
+        if ($event->memberId != null) {
+            $this->setMemberChanged($evaluation, null, $event->memberId);
         }
-        if ($event->getPerson() != null) {
-            $evaluation->setPersonChanged(null, $event->getPerson());
+        if ($event->personId != null) {
+            $this->setPersonChanged($evaluation, null, $event->personId);
         }
-        $evaluation->setStartDateTimeChanged(null, $event->getStartDateTime());
-        $evaluation->setEndDateTimeChanged(null, $event->getEndDateTime());
+        $evaluation->setStartDateTimeChanged(null, new \DateTime($event->startDateTime->date));
+        $evaluation->setEndDateTimeChanged(null, new \DateTime($event->endDateTime->date));
         return $evaluation;
     }
 
@@ -63,25 +73,51 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
      * if only a new event is in the history
      *
      * @param EventPastEvaluation $evaluation
-     * @param Event $beforeEvent
-     * @param Event $afterEvent
+     * @param DeserializedEvent $beforeEvent
+     * @param DeserializedEvent $afterEvent
      * @return EventPastEvaluation
      */
-    private function eventChangeOccurred(EventPastEvaluation $evaluation, Event $beforeEvent, Event $afterEvent)
+    private function eventChangeOccurred(EventPastEvaluation $evaluation, $beforeEvent, $afterEvent)
     {
-        if ($beforeEvent->getMember()->getId() != $afterEvent->getMember()->getId()) {
-            $evaluation->setMemberChanged($beforeEvent->getMember(), $afterEvent->getMember());
+        if ($beforeEvent->memberId != $afterEvent->memberId) {
+            $this->setMemberChanged($evaluation, $beforeEvent->memberId, $afterEvent->memberId);
         }
-        if ($beforeEvent->getPerson()->getId() != $afterEvent->getPerson()->getId()) {
-            $evaluation->setPersonChanged($beforeEvent->getPerson(), $afterEvent->getPerson());
+        if ($beforeEvent->personId != $afterEvent->personId) {
+            $this->setPersonChanged($evaluation, $beforeEvent->personId, $afterEvent->personId);
         }
-        if ($beforeEvent->getStartDateTime() != $afterEvent->getEndDateTime()) {
-            $evaluation->setStartDateTimeChanged($beforeEvent->getStartDateTime(), $afterEvent->getEndDateTime());
+        if ($beforeEvent->startDateTime->date != $afterEvent->startDateTime->date) {
+            $evaluation->setStartDateTimeChanged(new \DateTime($beforeEvent->startDateTime->date), new \DateTime($afterEvent->startDateTime->date));
         }
-        if ($beforeEvent->getEndDateTime() != $afterEvent->getEndDateTime()) {
-            $evaluation->setEndDateTimeChanged($beforeEvent->getEndDateTime(), $afterEvent->getEndDateTime());
+        if ($beforeEvent->endDateTime->date != $afterEvent->endDateTime->date) {
+            $evaluation->setStartDateTimeChanged(new \DateTime($beforeEvent->endDateTime->date), new \DateTime($afterEvent->endDateTime->date));
         }
         return $evaluation;
+    }
+
+    /**
+     * @param EventPastEvaluation $evaluation
+     * @param $oldMemberId
+     * @param $newMemberId
+     */
+    private function setMemberChanged(EventPastEvaluation $evaluation, $oldMemberId, $newMemberId)
+    {
+        $memberRepo = $this->doctrine->getRepository("AppBundle:Member");
+        $oldMember = is_numeric($oldMemberId) ? $memberRepo->find($oldMemberId) : null;
+        $newMember = is_numeric($newMemberId) ? $memberRepo->find($newMemberId) : null;
+        $evaluation->setMemberChanged($oldMember, $newMember);
+    }
+
+    /**
+     * @param EventPastEvaluation $evaluation
+     * @param $oldPersonId
+     * @param $newPersonId
+     */
+    private function setPersonChanged(EventPastEvaluation $evaluation, $oldPersonId, $newPersonId)
+    {
+        $personRepo = $this->doctrine->getRepository("AppBundle:Person");
+        $oldPerson = is_numeric($oldPersonId) ? $personRepo->find($oldPersonId) : null;
+        $newPerson = is_numeric($newPersonId) ? $personRepo->find($newPersonId) : null;
+        $evaluation->setPersonChanged($oldPerson, $newPerson);
     }
 
     /**
@@ -104,4 +140,5 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
         $eventPast->setChangedByPerson($changePerson);
         return $eventPast;
     }
+
 }

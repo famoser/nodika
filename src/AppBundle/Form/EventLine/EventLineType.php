@@ -12,6 +12,7 @@ namespace AppBundle\Form\EventLine;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\Traits\ThingTrait;
 use AppBundle\Form\BaseCrudAbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,6 +20,8 @@ class EventLineType extends BaseCrudAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $transArray = ["translation_domain" => "event_line"];
+        $builder->add("displayOrder", NumberType::class, $transArray);
         $this->addTrait($builder, ThingTrait::class, ["translation_domain" => "entity_event_line", "label" => "entity.name"]);
         parent::buildForm($builder, $options);
     }
