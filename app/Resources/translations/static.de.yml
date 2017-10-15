@@ -8,11 +8,10 @@ index:
     header: 'Überblick'
     header_description: 'Das webbasierte Tool übernimmt die Administration und Organisation von Notfalldiensten'
     paragraph_1: >
-      Das Tool wird per 01.10.2017 für knbu (Kleintier-Notfalldienst Basel und Umgebung) erstellt, und erlaubt dem Verein die Administrationskosten erheblich zu reduzieren.
-      Gleichzeitig wird die Information der Praxen verbessert und die Verteilung der Termine transparenter.
+      Nodika übernimmt den Grossteil der Verwaltungsaufgaben eines Notfalldienstverbandes.
     paragraph_2: >
-      Das Tool wird so erstellt das auch weitere Vereine dieses benutzen können. Die sorgfältig erstellte Standartkonfiguration kann auch an andere Organisationsformen angepasst werden.
-    register_action: 'Registrieren Sie sich und sichern Sie sich einen Early Bird Rabatt!'
+      Informieren Sie sich hier über die genauen Funktionen, oder probieren Sie es einfach kostenlos und unverbindlich aus.
+    register_action: 'Registrieren Sie sich!'
   features:
     header: 'Funktionen'
     header_description: >
@@ -71,26 +70,13 @@ index:
       Der jährliche Betrag von CHF %yearly_fee% deckt den Rest der Entwicklungskosten, und ermöglicht die Wartung und das Hosting der Platform
     aspect_3_name: 'Support'
     aspect_3_description: >
-       Wird mit 100 CHF/h seperat vergütet'
+       Wird mit 100 CHF/h seperat vergütet
     aspect_4_name: 'Gratis Testphase'
     aspect_4_description: >
-      Nach der Registrierung sind alle Funktionen der Platform für einen Monat gratis
+      Alle Funktionen von nodika sind für einen Monat unbeschränkt und gratis verfügbar.
   contact:
-    header: 'Interesse geweckt?'
+    header: 'Noch Fragen?'
     header_description: >
-      Jetzt Early Bird werden!
-    early_bird_description: 'Tragen Sie sich in die Early Bird Liste ein. Ihre Vorteile: '
-    reason_1_name: '20% Rabatt'
-    reason_1_description: >
-      Als kleines Dankeschön für das Vertrauen wird die Registrierungsgebühr und die erste Jahresgebühr um 20% reduziert
-    reason_2_name: 'Extra Funktionen'
-    reason_2_description: >
-      Sofern möglich werden zusätzliche Funktionen programmiert um Ihrem Verein die Integration einfacher zu machen
-    reason_3_name: 'Kein Risiko'
-    reason_3_description: >
-      Es wird keine Rechnung versandt bis das Tool mit allen versprochenen Funktionen veröffentlicht ist
-    early_bird_conditions: >
-      Mit dem Eintrag in die Early Bird Liste akzeptieren Sie die AGBs und erwerben das erste Jahr plus Registrierungsgebühr
-    download_agb: 'AGB herunterladen'
+      Kontaktieren Sie uns!
     contact_form_header: 'Kontaktformular'
   thanks_for_contact_form: 'Vielen Dank für die Kontaktaufnahme. Wir melden uns.'

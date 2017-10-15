@@ -30,7 +30,6 @@ class RegisterForPreviewType extends BaseAbstractType
         $this->addTrait($builder, PersonTrait::class);
         $this->addTrait($builder, CommunicationTrait::class);
 
-
         $this->addSubmit($builder, SubmitButtonType::SEND);
     }
 

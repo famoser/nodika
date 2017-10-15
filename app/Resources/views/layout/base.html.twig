@@ -37,13 +37,14 @@
             {% block header %}
             {% endblock %}
         </div>
-
         <div class="go-buttons">
             {% if back_url is defined %}
                 <a href="{{ back_url }}"
                    class="{{ color_class }} go-button">{{ "navigation.go_back"|trans({}, "content_base") }}</a>
             {% endif %}
             {% if show_login is defined %}
+                <a href="{{ path("access_register") }}"
+                   class="{{ color_class }} go-button">{{ "navigation.register"|trans({}, "content_base") }}</a>
                 <a href="{{ path("dashboard_index") }}"
                    class="{{ color_class }} go-button">{{ "navigation.login"|trans({}, "content_base") }}</a>
             {% endif %}
