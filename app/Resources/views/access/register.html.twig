@@ -6,6 +6,8 @@
 
 {% trans_default_domain "access" %}
 
+{% set show_help = false %}
+
 {% block primary_content %}
     <h3>{{ "register.register_form_header"|trans }}</h3>
     {{ form(register_form) }}

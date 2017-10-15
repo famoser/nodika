@@ -1,15 +1,21 @@
-{% extends 'content_base.html.twig' %}
+{% extends 'single_content_base.html.twig' %}
 
-{% block title %}500{% endblock %}
-{% block description %}Seite konnte nicht geladen werden{% endblock %}
+{% block title %}{{ "error.title"|trans }}{% endblock %}
+{% block description %}{{ "error.description"|trans }}{% endblock %}
 
-{% set color_class = "error" %}
+{% trans_default_domain "static" %}
 
-{% block content %}
-    <h2>Ein Problem hat verhindert dass diese Anfrage ausgeführt werden konnte</h2>
-    <p>Denken Sie dies ist ein Fehler? Probieren Sie es doch einfach nocheinmal. <br/>Tritt der Fehler weiterhin auf
-        kontaktieren Sie mich am Besten direkt unter <a href="mailto:critical@famoser.ch">critical@famoser.ch</a> mit
-        einer genauen Beschreibung wie der Fehler passiert ist.</p>
-    <p>Hier gehts zurück auf die <a href="{{ path("homepage") }}">Startseite</a></p>
+{% set show_login = false %}
+{% set show_help = false %}
+{% set show_dashboard = false %}
+{% set color_class = globals_color_class_error %}
 
+{% block single_content %}
+    {% if block('additional_error_info') is defined %}
+        {% set _block = block('additional_error_info') %}
+        {{ _block|raw }}
+    {% else %}
+        <p>{{ "error.fallback"|trans }}</p>
+    {% endif %}
+    <p><a href="{{ path("homepage") }}">{{ "error.back_to_homepage"|trans }}</a></p>
 {% endblock %}
