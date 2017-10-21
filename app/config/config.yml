@@ -49,6 +49,7 @@ twig:
       globals_color_class_event_line: "green-background"
       globals_color_class_event: "green2-background"
       globals_color_class_person: "red-background"
+      globals_color_class_error: "red-background"
 
 # Doctrine Configuration
 doctrine:
