@@ -175,7 +175,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     $eventLineEvents[$eventEntry->startDateTime->getTimestamp()][] = $myArr;
                 }
                 ksort($eventLineEvents);
-                $allEventLineEvents[] = call_user_func_array('array_merge', $eventLineEvents);;
+                $collapsedArray = call_user_func_array('array_merge', $eventLineEvents);
+                $allEventLineEvents[] = $collapsedArray;
             }
         }
 
@@ -205,16 +206,23 @@ class EventGenerationService implements EventGenerationServiceInterface
                         //not in critical zone yet
                         $activeIndexes[$i]++;
                     } else {
-                        if ($currentEvent["start"] <= $startTimeStamp && $currentEvent["end"] >= $startTimeStamp) {
-                            //start overlap
-                            $currentConflictBuffer[] = $currentEvent["id"];
-                        } else if ($currentEvent["end"] <= $endTimeStamp && $currentEvent["end"] >= $endTimeStamp) {
-                            //end overlap
-                            $currentConflictBuffer[] = $currentEvent["id"];
-                        } else {
-                            //no overlap anymore
-                            break;
+                        //our active event begins before $currentEvent
+                        if ($currentEvent["start"] >= $startTimeStamp) {
+                            //so it must end inside or after $currentEvent
+                            if (($currentEvent["start"] <= $endTimeStamp && $currentEvent["end"] >= $endTimeStamp) ||
+                                $currentEvent["end"] <= $endTimeStamp) {
+                                $currentConflictBuffer[] = $currentEvent["id"];
+                                continue;
+                            }
                         }
+                        //our active events begins between $currentEvent
+                        if ($currentEvent["start"] <= $startTimeStamp && $currentEvent["end"] >= $startTimeStamp) {
+                            $currentConflictBuffer[] = $currentEvent["id"];
+                            continue;
+                        }
+
+                        //no more assignment found; stop loop
+                        break;
                     }
                 }
             }
@@ -224,10 +232,14 @@ class EventGenerationService implements EventGenerationServiceInterface
             $currentDate = $endDate;
         }
 
-        return function ($currentEventCount, $member) use ($conflictBuffer) {
+        dump($conflictBuffer);
+
+        $myFunc = function ($currentEventCount, $member) use ($conflictBuffer) {
             /* @var BaseMemberConfiguration $member */
             return !in_array($member->id, $conflictBuffer[$currentEventCount]);
         };
+
+        return $myFunc;
     }
 
     /**
