@@ -1,6 +1,6 @@
-index:
+﻿index:
   title: Dashboard
-  description: Alles Wichtige auf einem Blick
+  description: Alles Wichtige auf einen Blick
   administer_organisations: Meine Organisationen verwalten
   administer_organisations_description: Sie sind Administrator folgender Organisationen und können diese verwalten
   change_organisation: Organisation wechseln

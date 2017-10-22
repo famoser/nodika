@@ -1,4 +1,4 @@
-menu:
+﻿menu:
   menu: Menu
   admin:
     add_organisation: neue erstellen
@@ -32,6 +32,6 @@ help:
   architecture_description_2_alternative: 'Ihrer Praxis wird als Teil der Organisation Termine zugeteilt'
   functions: Funktionen
   functions_description_1: Im Dashboard sehen sie alle demnächst kommenden Termine
-  functions_description_2: Über das Menu links finden Sie weitere Funtionen um Termine zu suchen und zu tauschen
+  functions_description_2: Über das Menu links finden Sie weitere Funtionen, um Termine zu suchen und zu tauschen
   administration: Administration
-  administration_description: Sie können Ihre persönlichen Daten und die Ihrer Praxis ändern
+  administration_description: Sie können Ihre persönlichen Daten und die Daten Ihrer Praxis ändern

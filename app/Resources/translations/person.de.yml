@@ -1,14 +1,14 @@
-index:
-  title: Ihr Acount
+﻿index:
+  title: Ihr Account
   description: Ihr Account verwalten
   manage_self: Verwalten
   change_password: Passwort ändern
   change_personal: Persönliche Daten ändern
-  no_members: Sie sind noch nicht Teil einer Praxis. Fragen Sie Ihren Administrator ob er Ihnen eine Einladung zur einer Praxis zusenden kann.
+  no_members: Sie sind noch nicht Teil einer Praxis. Fragen Sie Ihren Administrator, ob er Ihnen eine Einladung zu Ihrer Praxis zusenden kann.
   change_email: Email ändern
-  your_members: Sie sind Teil folgender Praxen
+  your_members: Sie sind Teil folgender Praxis (oder Praxen)
   remove_itself: Zugriff entfernen
-  remove_itself_description: Sie können sich selbst den Zugriff einer Praxis wieder entfernen (weil Sie z.B. nicht mehr dort arbeiten)
+  remove_itself_description: Sie können sich selbst den Zugriff zu Ihrer Praxis wieder entfernen (weil Sie z.B. nicht mehr dort arbeiten)
 
 #edit_personal page
 edit_personal:
@@ -18,18 +18,18 @@ edit_personal:
   about: Account
   about_description: Dieser Account gehört Ihnen und weist Sie als Mitarbeiter Ihrer Praxis aus.
   person_address: Adresse
-  person_address_description: Ihre persönliche Adresse.
+  person_address_description: Ihre persönliche Adresse
   person_contact: Kontaktinformationen
   person_contact_description: An diese hinterlegte E-Mail werden Ihre persönlichen E-Mails versandt (z.B. zu Terminerinnerungen)
   not_login_email: Nicht die Login-Email!
   not_login_email_description: >
-    Die hier hinterlegte E-Mail dient zum Versenden der Benachrichtigungen, und muss nicht die selbe sein wie die Login E-Mail.
-    Um die Login-Email zu ändern gehen Sie zurück in Ihr Profil und wählen den Menupunkt E-Mail ändern
+    Die hier hinterlegte E-Mail dient zum Versenden der Benachrichtigungen und muss nicht dieselbe sein wie die Login E-Mail.
+    Um die Login-Email zu ändern, gehen Sie zurück in Ihr Profil und wählen den Menupunkt E-Mail ändern
 
 #edit_password page
 change_password:
   title: Passwort ändern
-  description: Änderung Sie Ihr Passwort
+  description: Änderung Ihres Passwortes
   change_password_form: Passwort setzen
   choose_safe: Sicheres Passwort
   choose_safe_description: >
@@ -43,12 +43,12 @@ change_email:
   change_email_form: Neue E-Mail
   login_email: Login E-Mail
   login_email_description: >
-    Dies ist die E-Mail die Sie als Login verwenden. Diese darf in unserem System nur einmal vorkommen.
+    Dies ist die E-Mail, die Sie als Login verwenden. Diese darf in unserem System nur einmal vorkommen.
     Entfernen Sie den Account und damit alle seine verbundenen Daten.
   no_personal_email: Nicht die persönliche E-Mail!
   no_personal_email_description: >
-    Die hier hinterlegte E-Mail dient als Login-Email, und muss nicht die selbe sein wie die persönliche E-Mail.
-    Um die persönliche Email zu ändern gehen Sie zurück in Ihr Profil und wählen den Menupunkt Persönliche Daten ändern
+    Die hier hinterlegte E-Mail dient als Login-Email, und muss nicht dieselbe sein wie die persönliche E-Mail.
+    Um die persönliche Email zu ändern, gehen Sie zurück in Ihr Profil und wählen den Menupunkt Persönliche Daten ändern
   messages:
     changed_successfully: Ihre Login E-Mail wurde erfolgreich geändert.
     email_already_picked: Diese E-Mail wird bereits verwendet.
@@ -57,12 +57,12 @@ change_email:
 remove_member:
   title: Praxis entfernen
   description: Möchten Sie sich von dieser Praxis entfernen?
-  really_remove: Ich möchte mich wirklich als Mitarbeiter entfernen. Ich verstehe die damit verbunden Konsequenzen.
+  really_remove: Ich möchte mich wirklich als Mitarbeiter entfernen. Ich verstehe die damit entstehenden Konsequenzen.
   really_remove_confirm: Bestätigen
   change_email_form: Neue E-Mail
   remove_member: Von der Praxis entfernen
   remove_member_description: >
-    Entfernen Sie sich von dieser Praxis haben Sie keinen Zugriff mehr auf deren Termine und Funktionen.
+    Entfernen Sie sich von dieser Praxis, haben Sie keinen Zugriff mehr auf deren Termine und Funktionen.
     Sie werden automatisch ausgeloggt.
   messages:
     remove_successfully: Sie wurden erfolgreich als Mitarbeiter entfernt

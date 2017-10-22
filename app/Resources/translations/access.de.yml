@@ -1,4 +1,4 @@
-#login page
+﻿#login page
 login:
   title: Login
   description: In einen existierenden Account einloggen
@@ -17,11 +17,11 @@ register:
   register_form_header: Registrierungsformular
   register: Registrieren
   register_description: >
-    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen.
+    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link, um die Registrierung abzuschliessen.
     Danach können Sie mit der Einrichtung Ihrer Organisation beginnen
   personal_data: Persönliche Daten
   personal_data_description: >
-    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
+    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt und werden selbstverständlich nicht an Dritte weitergegeben.
     Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
   pricing: Kosten
   pricing_description: >
@@ -38,11 +38,11 @@ invite:
   account_register_description: 'Willkommen auf nodika! Erstellen Sie hier einen Zugang für Ihre Praxis %member% der Organisation %organisation%'
   register: Registrieren
   register_description: >
-    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link um die Registrierung abzuschliessen.
+    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link, um die Registrierung abzuschliessen.
     Danach können Sie die Webseite in vollem Umfang nutzen
   personal_data: Persönliche Daten
   personal_data_description: >
-    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt, und werden selbstverständlich nicht an Dritte weitergegeben.
+    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt und werden selbstverständlich nicht an Dritte weitergegeben.
     Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
   messages:
     already_part_of_member: 'Sie sind bereits als Zugang der Praxis "%member%" der Organisation "%organisation%" registriert'
@@ -52,14 +52,14 @@ invite:
 register_thanks:
   title: Vielen Dank für die Registrierung
   description: Account erfolgreich erstellt
-  message: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail. Besuchen Sie den darin enthaltenen Link um die Registrierung abzuschliessen.
+  message: Vielen Dank für die Erstellung des Accounts. In Ihrem Posteingang finden Sie nun die Bestätigungsemail. Besuchen Sie den darin enthaltenen Link, um die Registrierung abzuschliessen.
 
 #register/confirm page
 register_confirm:
   title: Registrierung abschliessen
   description: Setzen Sie das Passwort für Ihren Account
   email_verified: Email verifiziert
-  email_verified_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzten Sie nun das Passwort für Ihren Account, danach können Sie mit der Einrichtung Ihrer Organisation loslegen
+  email_verified_description: Vielen Dank für die Bestätigung Ihrer E-Mail. Setzen Sie nun das Passwort für Ihren Account, danach können Sie mit der Einrichtung Ihrer Organisation starten
   set_password_form: Passwort setzen
 
 #reset page
@@ -72,7 +72,7 @@ reset:
 reset_done:
   title: Passwort zurücksetzen
   description: E-Mail wurde versandt
-  message: Sofern diese E-Mail in unserem System gefunden wurde haben wir Ihnen soeben eine E-Mail gesendet mit einem Link, um Ihr Passwort zurückzusetzen
+  message: Sofern diese E-Mail in unserem System gefunden wurde, haben wir Ihnen soeben eine E-Mail gesendet mit einem Link, um Ihr Passwort zurückzusetzen
 
 #reset/confirm page
 reset_confirm:
