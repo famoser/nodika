@@ -1,9 +1,9 @@
-﻿index:
+index:
   title: 'nodika.ch'
   description: 'Der Notfalldienst Kalender erlaubt eine schnelle, transparente und einfache Absprache über die Verteilung von Notfalldiensten'
   returning:
     welcome_back: 'Willkommen zurück!'
-    to_dashboard: 'hier geht's zum Dashboard'
+    to_dashboard: 'hier geht''s zum Dashboard'
   introduction:
     header: 'Überblick'
     header_description: 'Das webbasierte Tool übernimmt die Administration und Organisation von Notfalldiensten'

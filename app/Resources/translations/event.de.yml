@@ -1,4 +1,4 @@
-﻿index:
+index:
   title: Termin ansehen
   description: Nähere Informationen zu diesem Termin
   history: Änderungen an diesem Termin
@@ -11,9 +11,9 @@ assign:
   choose_person: Mitarbeiter auswählen
   no_events_can_be_assigned: Zurzeit können Sie keine Termine zuweisen
   assign_events: Termine zuweisen
-  assign_events_description: Wählen Sie einen Mitarbeiter aus und markieren Sie danach alle Termine, die Sie diesem Mitarbeiter zuweisen wollen. Drücken Sie danach auf "zuweisen", um die Änderung zu bestätigen. NB: Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt 
+  assign_events_description: Wählen Sie einen Mitarbeiter aus und markieren Sie danach alle Termine, die Sie diesem Mitarbeiter zuweisen wollen. Drücken Sie danach auf "zuweisen", um die Änderung zu bestätigen. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt 
   assign_why: Warum Termine zuweisen?
-  assign_why_desription: Zugewiesene Termine können nur vom zugewiesenen Mitarbeiter getauscht werden. NB: Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt
+  assign_why_desription: Zugewiesene Termine können nur vom zugewiesenen Mitarbeiter getauscht werden. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt
   messages:
     no_events: Keine Termine ausgewählt
     no_person: Kein Mitarbeiter ausgewählt
@@ -22,7 +22,7 @@ assign:
 confirm:
   title: Termine bestätigen
   description: Bestätigen Sie die demnächst kommenden Termine
-  no_person_assigned: -
+  no_person_assigned: kein Mitarbeiter zugewiesen 
   assigned_to_member: Ihrer Praxis zugewiesene Termine
   assigned_to_person: Ihnen zugewiesene Termine
   confirm_events: Termine bestätigen
