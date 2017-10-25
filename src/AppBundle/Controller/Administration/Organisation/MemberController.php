@@ -80,8 +80,8 @@ class MemberController extends BaseController
 
         //show message to add itself to member
         $isPartOfOrganisation = false;
-        foreach ($this->getPerson()->getMembers() as $member) {
-            $isPartOfOrganisation = $isPartOfOrganisation || $member->getOrganisation()->getId() == $organisation->getId();
+        foreach ($this->getPerson()->getMembers() as $itMember) {
+            $isPartOfOrganisation = $isPartOfOrganisation || $itMember->getOrganisation()->getId() == $organisation->getId();
         }
         if (!$isPartOfOrganisation) {
             $translator = $this->get("translator");
