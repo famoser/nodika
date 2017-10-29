@@ -36,6 +36,7 @@ class Person extends BaseEntity
      *
      * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="leaders")
      * @ORM\JoinTable(name="person_organisations")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $leaderOf;
 
@@ -44,6 +45,7 @@ class Person extends BaseEntity
      *
      * @ORM\ManyToMany(targetEntity="Member", inversedBy="persons")
      * @ORM\JoinTable(name="person_members")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $members;
 
@@ -58,6 +60,7 @@ class Person extends BaseEntity
      * @var Event[]
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="person")
+     * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
     private $events;
 

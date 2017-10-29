@@ -46,6 +46,7 @@ class Organisation extends BaseEntity
      * @var Person[]
      *
      * @ORM\ManyToMany(targetEntity="Person", inversedBy="leaderOf")
+     * @ORM\OrderBy({"familyName" = "ASC", "givenName" = "ASC"})
      */
     private $leaders;
 
@@ -53,6 +54,7 @@ class Organisation extends BaseEntity
      * @var Member[]
      *
      * @ORM\OneToMany(targetEntity="Member", mappedBy="organisation")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $members;
 
@@ -60,6 +62,7 @@ class Organisation extends BaseEntity
      * @var Invoice[]
      *
      * @ORM\OneToMany(targetEntity="Invoice", mappedBy="organisation")
+     * @ORM\OrderBy({"invoiceDateTime" = "DESC"})
      */
     private $invoices;
 
