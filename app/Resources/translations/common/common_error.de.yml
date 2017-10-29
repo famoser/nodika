@@ -1,2 +1,2 @@
 enum:
-  invalid_constant: diese Wert ist ungültig
+  invalid_constant: 'diese Wert ist ungültig'

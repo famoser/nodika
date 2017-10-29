@@ -1,49 +1,49 @@
 #index
 index:
-  title: Termineverwaltung
-  description: Verwalten Sie hier die Termine Ihrer Praxen
-  event_import: Termine importieren
-  event_import_description: Sie können Termine aus einer .csv (Excel) Datei importieren
-  event_generate: Termine generieren
-  event_generate_description: Sie können Termine generieren lassen
-  event_generation: Termine generieren
-  event_generation_description: Termine online generieren
-  event_add: Termin hinzufügen
-  event_lines_add: Termingruppe hinzufügen
-  no_event_lines_yet: Noch keine Termine erfasst
+  title: 'Terminverwaltung'
+  description: 'Verwalten Sie hier die Termine Ihrer Praxen'
+  event_import: 'Termine importieren'
+  event_import_description: 'Sie können Termine aus einer .csv (Excel) Datei importieren'
+  event_generate: 'Termine generieren'
+  event_generate_description: 'Sie können Termine generieren lassen'
+  event_generation: 'Termine generieren'
+  event_generation_description: 'Termine online generieren'
+  event_add: 'Termin hinzufügen'
+  event_lines_add: 'Termingruppe hinzufügen'
+  no_event_lines_yet: 'Noch keine Termine erfasst'
 
 #new page
 new:
-  title: Neuer Termin
-  description: Fügen Sie einen neuen Termin hinzu
-  help: Generierung / Import Funktionen
-  help_description: Benützen Sie die umfangreichen Import- und Generierungsoptionen um Zeit zu sparen
-  add_form: Termin hinzufügen
+  title: 'Neuer Termin'
+  description: 'Fügen Sie einen neuen Termin hinzu'
+  help: 'Generierung / Import Funktionen'
+  help_description: 'Benützen Sie die umfangreichen Import- und Generierungsoptionen um Zeit zu sparen'
+  add_form: 'Termin hinzufügen'
 
 #edit page
 edit:
-  title: Termin bearbeiten
-  description: Editieren Sie den Termin
-  edit_form: Termin bearbeiten
-  changes_persisted: Änderungen werden gespeichert
-  changes_persisted_description: Alle Änderungen werden gespeichert und sind für Ihre Praxen einsehbar.
+  title: 'Termin bearbeiten'
+  description: 'Editieren Sie den Termin'
+  edit_form: 'Termin bearbeiten'
+  changes_persisted: 'Änderungen werden gespeichert'
+  changes_persisted_description: 'Alle Änderungen werden gespeichert und sind für Ihre Praxen einsehbar.'
 
 #remove page
 remove:
-  title: Termin entfernen
-  description: Löschen Sie den Termin und alle damit verbundenen Daten
-  remove_form: Termin entfernen
-  remove: Endgültig entfernen
-  remove_description: Gelöschte Termine können nicht wiederhergestellt werden
+  title: 'Termin entfernen'
+  description: 'Löschen Sie den Termin und alle damit verbundenen Daten'
+  remove_form: 'Termin entfernen'
+  remove: 'Endgültig entfernen'
+  remove_description: 'Gelöschte Termine können nicht wiederhergestellt werden'
 
 #view page
 view:
-  title: Termininformationen
-  description: Mehr Informationen über diesen Termin
-  changed_member: Praxis geändert
-  changed_person: Mitarbeiter geändert
-  changed_start_date_time: Anfangszeitpunkt geändert
-  changed_end_date_time: Endzeitpunkt geändert
+  title: 'Termininformationen'
+  description: 'Mehr Informationen über diesen Termin'
+  changed_member: 'Praxis geändert'
+  changed_person: 'Mitarbeiter geändert'
+  changed_start_date_time: 'Anfangszeitpunkt geändert'
+  changed_end_date_time: 'Endzeitpunkt geändert'
   yes_part_1: 'Ja, von "'
   yes_part_2: '" zu "'
   yes_part_3: '"'

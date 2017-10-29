@@ -1,4 +1,4 @@
 entity:
-  name: Mitarbeiter
-  description: Ein Mitarbeiter gehört einer Person und ist einer Praxis zugeordnet
-  plural: Mitarbeiter
+  name: 'Mitarbeiter'
+  description: 'Ein Mitarbeiter gehört einer Person und ist einer Praxis zugeordnet'
+  plural: 'Mitarbeiter'

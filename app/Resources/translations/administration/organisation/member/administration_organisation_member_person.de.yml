@@ -1,26 +1,26 @@
 #new page
 new:
-  title: Neuer Mitarbiter
-  description: Fügen Sie einen neuen Mitarbiter zur Praxis hinzu
-  person_add_form: Mitarbiter erfassen
-  about: Mitarbiter
-  about_description: Ein Mitarbiter gehört einer Person.
-  person_address: Adresse
-  person_address_description: Adresse des Mitarbieters. Sie können auch nur den Namen der Person ausfüllen, und sie ergänzt dann selber die fehlenden Informationen
-  person_contact: Kontaktinformationen
-  person_contact_description: An diese hinterlegte E-Mail werden die E-Mails versandt (z.B. zu Registrierung oder Terminerinnerungen)
+  title: 'Neuer Mitarbeiter'
+  description: 'Fügen Sie einen neuen Mitarbeiter zur Praxis hinzu'
+  person_add_form: 'Mitarbeiter erfassen'
+  about: 'Mitarbeiter'
+  about_description: 'Ein Mitarbeiter ist Teil einer Praxis.'
+  person_address: 'Adresse'
+  person_address_description: 'Adresse des Mitarbeiter. Sie können auch nur den Namen der Person ausfüllen, und sie ergänzt dann selber die fehlenden Informationen'
+  person_contact: 'Kontaktinformationen'
+  person_contact_description: 'An diese hinterlegte E-Mail werden die E-Mails versandt (z.B. zu Registrierung oder Terminerinnerungen)'
 
 #edit page
 edit:
-  title: Mitarbiter bearbeiten
-  description: Editieren Sie diesen Mitarbiter
-  person_edit_form: Mitarbiter ändern
+  title: 'Mitarbeiter bearbeiten'
+  description: 'Editieren Sie diesen Mitarbeiter'
+  person_edit_form: 'Mitarbeiter ändern'
 
 #remove description
 remove:
-  title: Mitarbiter entfernen
-  description: Löschen Sie den Mitarbiter und alle damit verbundenen Daten
-  person_remove_form: Mitarbiter entfernen
-  remove: Mitarbiter entfernen
-  remove_description: Entfernen Sie den Mitarbiter und damit alle seine verbundenen Daten.
+  title: 'Mitarbeiter entfernen'
+  description: 'Löschen Sie den Mitarbeiter und alle damit verbundenen Daten'
+  person_remove_form: 'Mitarbeiter entfernen'
+  remove: 'Mitarbeiter entfernen'
+  remove_description: 'Entfernen Sie den Mitarbeiter und damit alle seine verbundenen Daten.'
   

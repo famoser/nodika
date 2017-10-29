@@ -1,11 +1,11 @@
 column:
-  edit: ""
-  delete: ""
-  administer: ""
+  edit: ''
+  delete: ''
+  administer: ''
   view: ''
 
 row:
-  edit: bearbeiten
-  delete: entfernen
-  administer: verwalten
-  view: anzeigen
+  edit: 'bearbeiten'
+  delete: 'entfernen'
+  administer: 'verwalten'
+  view: 'anzeigen'

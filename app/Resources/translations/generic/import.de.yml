@@ -4,9 +4,9 @@ Is correct format: Ich bestätige, das die ausgewählte Datei in der gleichen Fo
 Import: importieren
 
 error:
-  file_upload_failed: Datei konnte nicht hochgeladen werden
-  file_open_failed: Datei konnte nicht geöffnet werden
-  file_wrong_format: Die Datei hat das falsche Format. Bitte laden Sie die Musterdatei herunter, ergänzen Sie sie mit Ihrem eigenen Informationen, und benützen diese für den Import
+  file_upload_failed: 'Datei konnte nicht hochgeladen werden'
+  file_open_failed: 'Datei konnte nicht geöffnet werden'
+  file_wrong_format: 'Die Datei hat das falsche Format. Bitte laden Sie die Musterdatei herunter, ergänzen Sie sie mit Ihrem eigenen Informationen, und benützen diese für den Import'
   failure_occurred_at: "Die Datei ist fehlerhaft in der Zeile %number%, der Error lautet: %error%"
   creation_failure_occurred_at: "Die Datei ist fehlerhaft in der Zeile %number%, bitte überprüfen Sie ob alle benötigten Felder gesetzt sind, und das Format der Einträge gleich ist wie in der Musterdatei"
   file_empty: "Die Datei ist leer"

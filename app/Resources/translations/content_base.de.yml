@@ -1,37 +1,37 @@
 menu:
-  menu: Menu
+  menu: 'Menu'
   admin:
-    add_organisation: neue erstellen
-    add_member: neues erstellen
-    add_event_line: neue erstellen
-    add_event: neuer erstellen
-    add_person: neuer erstellen
-    administer: verwalten
+    add_organisation: 'neue erstellen'
+    add_member: 'neues erstellen'
+    add_event_line: 'neue erstellen'
+    add_event: 'neuer erstellen'
+    add_person: 'neuer erstellen'
+    administer: 'verwalten'
   user:
-    advanced: Erweiterte Funktionen
-    add_own_organisation: Eigene Organisation erstellen
-    assign_events: Termine zuweisen
-    confirm_events: Termine bestätigen
-    my_member_events: Termine meiner Praxis
-    my_person_events: Eigene Termine
-    search_events: Terminsuche
+    advanced: 'Erweiterte Funktionen'
+    add_own_organisation: 'Eigene Organisation erstellen'
+    assign_events: 'Termine zuweisen'
+    confirm_events: 'Termine bestätigen'
+    my_member_events: 'Termine meiner Praxis'
+    my_person_events: 'Eigene Termine'
+    search_events: 'Terminsuche'
 
 navigation:
-  dashboard: zum Dashboard
-  login: login
-  go_back: zurück
-  register: registrieren
+  dashboard: 'zum Dashboard'
+  login: 'login'
+  go_back: 'zurück'
+  register: 'registrieren'
 
 help:
-  help: Hilfe
-  help_description: Nodika hilft beim Organisieren von Terminen
-  architecture: Aufbau
+  help: 'Hilfe'
+  help_description: 'Nodika hilft beim Organisieren von Terminen'
+  architecture: 'Aufbau'
   architecture_description_1: 'Sie haben Zugriff als %person% und sind der Praxis %member% zugeteilt'
   architecture_description_2: 'Ihrer Praxis wird als Teil der Organisation %organisation% Termine zugeteilt'
   architecture_description_1_alternative: 'Mit Ihrem Account erhalten Sie Zugriff auf die Termine Ihrer Praxis'
   architecture_description_2_alternative: 'Ihrer Praxis wird als Teil der Organisation Termine zugeteilt'
-  functions: Funktionen
-  functions_description_1: Im Dashboard sehen sie alle demnächst kommenden Termine
-  functions_description_2: Über das Menu links finden Sie weitere Funtionen, um Termine zu suchen und zu tauschen
-  administration: Administration
-  administration_description: Sie können Ihre persönlichen Daten und die Daten Ihrer Praxis ändern
+  functions: 'Funktionen'
+  functions_description_1: 'Im Dashboard sehen sie alle demnächst kommenden Termine'
+  functions_description_2: 'Über das Menu links finden Sie weitere Funktionen, um Termine zu suchen und zu tauschen'
+  administration: 'Administration'
+  administration_description: 'Sie können Ihre persönlichen Daten und die Daten Ihrer Praxis ändern'
