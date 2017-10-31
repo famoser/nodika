@@ -1,20 +1,23 @@
 index:
-  title: Dashboard
-  description: Alles Wichtige auf einem Blick
-  administer_organisations: Meine Organisationen verwalten
-  administer_organisations_description: Sie sind Administrator folgender Organisationen und können diese verwalten
-  change_organisation: Organisation wechseln
-  change_organisation_description: Sie sind Teil mehrerer Organisationen. Hier können Sie zu den anderen wechseln
-  important_links: Wichtige Links
-  trade_events: Termine tauschen
-  assign_events: Termine zuweisen
-  no_event_lines: Noch keine Termingruppen
-  to_organisation_administration: Organisation administrieren
-  are_you_administrator: Sind Sie Adminstrator?
-  to_event_line_administration: Termingruppe administrieren
-  no_events: Noch keine Termine
-  all_my_events: Alle meine Termine
-  all_events: Alle Termine
-  all_organisation_events: Alle Termine meiner Organsiation
-  not_part_of_organisation: Sie sind nicht Teil einer Organisation und sehen daher hier keine Termine
-  help_nodika_users: Hilfe zu nodika
+  title: 'Dashboard'
+  description: 'Alles Wichtige auf einen Blick'
+  administer_organisations: 'Meine Organisationen verwalten'
+  administer_organisations_description: 'Sie sind Administrator folgender Organisationen und können diese verwalten'
+  change_organisation: 'Organisation wechseln'
+  change_organisation_description: 'Sie sind Teil mehrerer Organisationen. Hier können Sie zu den anderen wechseln'
+  important_links: 'Wichtige Links'
+  trade_events: 'Termine tauschen'
+  assign_events: 'Termine zuweisen'
+  no_event_lines: 'Noch keine Termingruppen'
+  to_organisation_administration: 'Organisation administrieren'
+  are_you_administrator: 'Sind Sie Administrator?'
+  to_event_line_administration: 'Termingruppe administrieren'
+  no_events: 'Noch keine Termine'
+  all_my_events: 'Alle meine Termine'
+  all_events: 'Alle Termine'
+  all_organisation_events: 'Alle Termine meiner Organisation'
+  not_part_of_organisation: 'Sie sind nicht Teil einer Organisation und sehen daher hier keine Termine'
+  help_nodika_users: 'Hilfe zu nodika'
+  welcome: 'Willkommen auf nodika.ch!'
+  welcome_description: 'Sie können hier Ihre Termine verwalten und tauschen. Öffnen Sie das Menu links um eine Übersicht über alle verfügbaren Funktionen zu bekommen'
+  trade_events_description: 'Um Termine zu tauschen gehen Sie zuerst zu "Termine zuweisen" im Menu und weisen Sie sich Ihre Termine zu. Danach können Sie zu "Termine tauschen" und Ihre Tauschanfrage starten'

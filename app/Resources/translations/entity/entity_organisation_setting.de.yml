@@ -1,6 +1,6 @@
 entity:
-  name: Organisation Einstellungen
-  description: Konfigurieren Sie das Verhalten der Applikation für alle Praxen Ihrer Organisation
+  name: 'Organisation Einstellungen'
+  description: 'Konfigurieren Sie das Verhalten der Applikation für alle Praxen Ihrer Organisation'
 
 can_confirm_event_before_days: früheste mögliche Terminbestätigung in Tagen
 must_confirm_event_before_days: letzte mögliche Terminbestätigung in Tagen

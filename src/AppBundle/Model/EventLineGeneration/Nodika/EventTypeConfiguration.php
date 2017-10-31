@@ -24,7 +24,7 @@ class EventTypeConfiguration
             $this->holiday = $data->holiday;
         } else {
             $this->weekday = 1.0;
-            $this->saturday = 1.5;
+            $this->saturday = 1.2;
             $this->sunday = 1.5;
             $this->holiday = 2.0;
         }

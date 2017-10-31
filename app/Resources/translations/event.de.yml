@@ -1,43 +1,43 @@
 index:
-  title: Termin ansehen
-  description: Nähere Informationen zu diesem Termin
-  history: Änderungen an diesem Termin
+  title: 'Termin ansehen'
+  description: 'Nähere Informationen zu diesem Termin'
+  history: 'Änderungen an diesem Termin'
 
 assign:
-  title: Termine zuweisen
-  description: Termine einem Mitarbeiter zuordnen
-  assigned_person: Zugewiesenes Mitarbeiter
-  no_assigned_person: Noch keinem Mitarbeiter zugewiesen
-  choose_person: Mitarbeiter auswählen
-  no_events_can_be_assigned: Zurzeit können Sie keine Termine zuweisen
-  assign_events: Termine zuweisen
-  assign_events_description: Wählen Sie ein Mitarbeiter aus, und markieren Sie dann alle Termine die Sie zuweisen wollen. Drücken Sie danach auf "zuweisen" um die Änderung zu bestätigen.
-  assign_why: Warum Termine zuweisen?
-  assign_why_desription: Zugewiesene Termine können dann vom zugewiesenen Mitarbeiter getauscht werden. Zudem kommen Erinnerungsemails für den spezifischen Termin dann an die vom Mitarbeiter angegebene E-Mail an
+  title: 'Termine zuweisen'
+  description: 'Termine einem Mitarbeiter zuordnen'
+  assigned_person: 'Zugewiesener Mitarbeiter'
+  no_assigned_person: 'Noch keinem Mitarbeiter zugewiesen'
+  choose_person: 'Mitarbeiter auswählen'
+  no_events_can_be_assigned: 'Zurzeit können Sie keine Termine zuweisen'
+  assign_events: 'Termine zuweisen'
+  assign_events_description: 'Wählen Sie einen Mitarbeiter aus und markieren Sie danach alle Termine, die Sie diesem Mitarbeiter zuweisen wollen. Drücken Sie danach auf "zuweisen", um die Änderung zu bestätigen. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt'
+  assign_why: 'Warum Termine zuweisen?'
+  assign_why_desription: 'Zugewiesene Termine können nur vom zugewiesenen Mitarbeiter getauscht werden. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt'
   messages:
-    no_events: Keine Termine ausgewählt
-    no_person: Kein Mitarbeiter ausgewählt
+    no_events: 'Keine Termine ausgewählt'
+    no_person: 'Kein Mitarbeiter ausgewählt'
     assigned: 'Erfolgreich %count% Termine zugewiesen'
 
 confirm:
-  title: Termine bestätigen
-  description: Bestätigen Sie die demnächst kommenden Termine
-  no_person_assigned: -
-  assigned_to_member: Ihrer Praxis zugewiesene Termine
-  assigned_to_person: Ihnen zugewiesene Termine
-  confirm_events: Termine bestätigen
-  confirm_events_description: Bitte bestätigen Sie defintiv Ihre nächsten kommenden Termine
-  no_events: Alle demnächst kommenden Termine erfolgreich bestätigt!
-  do_confirm: Bestätigen
-  do_confirm_all: Alle Termine bestätigen
+  title: 'Termine bestätigen'
+  description: 'Bestätigen Sie die demnächst kommenden Termine'
+  no_person_assigned: 'kein Mitarbeiter zugewiesen '
+  assigned_to_member: 'Ihrer Praxis zugewiesene Termine'
+  assigned_to_person: 'Ihnen zugewiesene Termine'
+  confirm_events: 'Termine bestätigen'
+  confirm_events_description: 'Bitte bestätigen Sie definitiv Ihre nächsten kommenden Termine'
+  no_events: 'Alle demnächst kommenden Termine erfolgreich bestätigt!'
+  do_confirm: 'Bestätigen'
+  do_confirm_all: 'Alle Termine bestätigen'
   messages:
-    no_access: Sie können diesen Termin nicht bestätigen
-    confirm_successful: Termin erfolgreich bestätigt
+    no_access: 'Sie können diesen Termin nicht bestätigen'
+    confirm_successful: 'Termin erfolgreich bestätigt'
     confirm_all_successful: '%count% Termine erfolgreich bestätigt'
 
 search:
-  title: Termine
-  description: Kalender durchsuchen
-  no_event_lines: Keine Termine gefunden
-  filter: Filter
-  do_filter: Suchen
+  title: 'Termine'
+  description: 'Kalender durchsuchen'
+  no_event_lines: 'Keine Termine gefunden'
+  filter: 'Filter'
+  do_filter: 'Suchen'

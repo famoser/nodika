@@ -45,6 +45,7 @@ class Member extends BaseEntity
      * @var Person[]
      *
      * @ORM\ManyToMany(targetEntity="Person", mappedBy="members")
+     * @ORM\OrderBy({"familyName" = "ASC", "givenName" = "ASC"})
      */
     private $persons;
 
@@ -59,6 +60,7 @@ class Member extends BaseEntity
      * @var Event[]
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="member")
+     * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
     private $events;
 

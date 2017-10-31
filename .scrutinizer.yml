@@ -4,4 +4,4 @@ checks:
         duplication: true
 
 filter:
-    paths: ["src/AppBundle/**/*"]
+    paths: ["src/*"]

@@ -1,6 +1,6 @@
 entity:
-  name: Newsletter
-  description: Eingetragene Personen haben sich als Early Bird registriert
+  name: 'Newsletter'
+  description: 'Eingetragene Personen haben sich als Early Bird registriert'
 
 choice: Auswahl
 message: Nachricht

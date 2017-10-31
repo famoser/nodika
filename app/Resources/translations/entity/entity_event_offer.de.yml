@@ -1,6 +1,6 @@
 entity:
-  name: Termintauschvorschlag
-  description: Ein Termintauschvorschlag enthält Termine die zwischen zwei Personen getauscht werden können
+  name: 'Termintauschvorschlag'
+  description: 'Ein Termintauschvorschlag enthält Termine, die zwischen zwei Personen getauscht werden können'
 
 offered_by_member: Offerte der Praxis
 offered_by_person: Offert von Mitarbeiter
