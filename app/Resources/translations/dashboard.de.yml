@@ -18,3 +18,6 @@ index:
   all_organisation_events: 'Alle Termine meiner Organisation'
   not_part_of_organisation: 'Sie sind nicht Teil einer Organisation und sehen daher hier keine Termine'
   help_nodika_users: 'Hilfe zu nodika'
+  welcome: 'Willkommen auf nodika.ch!'
+  welcome_description: 'Sie können hier Ihre Termine verwalten und tauschen. Öffnen Sie das Menu links um eine Übersicht über alle verfügbaren Funktionen zu bekommen'
+  trade_events_description: 'Um Termine zu tauschen gehen Sie zuerst zu "Termine zuweisen" im Menu und weisen Sie sich Ihre Termine zu. Danach können Sie zu "Termine tauschen" und Ihre Tauschanfrage starten'

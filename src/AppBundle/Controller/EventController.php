@@ -274,13 +274,15 @@ class EventController extends BaseFrontendController
         }
 
         $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, $startDateTime, $endDateTime, $member, $person, 4000);
-        $arr["member"] = $member;
+        $arr["selected_member"] = $member;
         $arr["members"] = $this->getOrganisation()->getMembers();
         $persons = [];
-        foreach ($this->getOrganisation()->getMembers() as $member) {
-            $persons[$member->getId()] = $member;
+        foreach ($this->getOrganisation()->getMembers() as $lMember) {
+            foreach ($lMember->getPersons() as $lPerson) {
+                $persons[$lPerson->getId()] = $lPerson;
+            }
         }
-        $arr["person"] = $person;
+        $arr["selected_person"] = $person;
         $arr["persons"] = $persons;
         $arr["startDateTime"] = $startDateTime->format(DateTimeFormatter::DATE_TIME_FORMAT);
         $arr["endDateTime"] = $endDateTime->format(DateTimeFormatter::DATE_TIME_FORMAT);

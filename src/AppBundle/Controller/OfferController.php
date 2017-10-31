@@ -61,7 +61,9 @@ class OfferController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
-        $arr["members"] = $member->getOrganisation()->getMembers();
+        $memberColl = $member->getOrganisation()->getMembers();
+        $memberColl->removeElement($member);
+        $arr["members"] = $memberColl;
         return $this->renderWithBackUrl("offer/new.html.twig", $arr, $this->generateUrl("offer_index"));
     }
 
