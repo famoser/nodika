@@ -14,6 +14,8 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Person;
 use AppBundle\Enum\EventChangeType;
 use AppBundle\Helper\DateTimeFormatter;
+use AppBundle\Model\Event\SearchEventModel;
+use AppBundle\Model\EventLine\EventLineModel;
 use AppBundle\Security\Voter\EventVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -217,19 +219,13 @@ class EventController extends BaseFrontendController
         return $this->redirectToRoute("event_confirm");
     }
 
-
     /**
-     * @Route("/search", name="event_search")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Member $member
+     * @return SearchEventModel
      */
-    public function searchAction(Request $request)
+    private function resolveSearchEventModel(Request $request, Member $member)
     {
-        $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
-        }
-
         $organisation = $member->getOrganisation();
 
         $startQuery = $request->query->get("start");
@@ -273,20 +269,93 @@ class EventController extends BaseFrontendController
             }
         }
 
-        $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, $startDateTime, $endDateTime, $member, $person, 4000);
-        $arr["selected_member"] = $member;
-        $arr["members"] = $this->getOrganisation()->getMembers();
-        $persons = [];
-        foreach ($this->getOrganisation()->getMembers() as $lMember) {
-            foreach ($lMember->getPersons() as $lPerson) {
-                $persons[$lPerson->getId()] = $lPerson;
-            }
-        }
-        $arr["selected_person"] = $person;
-        $arr["persons"] = $persons;
-        $arr["startDateTime"] = $startDateTime->format(DateTimeFormatter::DATE_TIME_FORMAT);
-        $arr["endDateTime"] = $endDateTime->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        $searchEventModel = new SearchEventModel($organisation, $startDateTime);
+        $searchEventModel->setEndDateTime($endDateTime);
+        $searchEventModel->setFilterMember($member);
+        $searchEventModel->setFilterPerson($person);
 
-        return $this->renderWithBackUrl("event/search.html.twig", $arr, $this->generateUrl("dashboard_index"));
+
+        return $searchEventModel;
+    }
+
+
+    /**
+     * @Route("/search", name="event_search")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function searchAction(Request $request)
+    {
+        $member = $this->getMember();
+        if ($member == null) {
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $organisationRepo = $this->getDoctrine()->getRepository("AppBundle:Organisation");
+
+        $searchEventModel = $this->resolveSearchEventModel($request, $member);
+        $eventLineModels = $organisationRepo->findEventLineModels($searchEventModel);
+
+        if ($request->query->get("view") == "csv") {
+            return $this->exportAsCsv($eventLineModels);
+        } else {
+            $arr["eventLineModels"] = $eventLineModels;
+            $arr["members"] = $this->getOrganisation()->getMembers();
+            $persons = [];
+            foreach ($this->getOrganisation()->getMembers() as $lMember) {
+                foreach ($lMember->getPersons() as $lPerson) {
+                    $persons[$lPerson->getId()] = $lPerson;
+                }
+            }
+            $arr["persons"] = $persons;
+
+            $arr["selected_member"] = $searchEventModel->getFilterMember();
+            $arr["selected_person"] = $searchEventModel->getFilterPerson();
+            $arr["startDateTime"] = $searchEventModel->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+            $arr["endDateTime"] = $searchEventModel->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+
+            return $this->renderWithBackUrl("event/search.html.twig", $arr, $this->generateUrl("dashboard_index"));
+        }
+    }
+
+    /**
+     * @param EventLineModel[] $eventModels
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    private function exportAsCsv($eventModels)
+    {
+        $data = [];
+        foreach ($eventModels as $eventModel) {
+            $row = [];
+            $row[] = $eventModel->eventLine->getName();
+            $row[] = $eventModel->eventLine->getDescription();
+            $data[] = $row;
+            $data[] = $this->getEventsHeader();
+            foreach ($eventModel->events as $event) {
+                $row = [];
+                $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+                $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+                $row[] = $event->getMember()->getName();
+                if ($event->getPerson() instanceof Person) {
+                    $row[] = $event->getPerson()->getFullName();
+                }
+                $data[] = $row;
+            }
+            $data[] = [];
+        }
+
+        return $this->renderCsv("export.csv", $data);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getEventsHeader()
+    {
+        $start = $this->get("translator")->trans("start_date_time", [], "entity_event");
+        $end = $this->get("translator")->trans("end_date_time", [], "entity_event");
+        $member = $this->get("translator")->trans("entity.name", [], "entity_member");
+        $person = $this->get("translator")->trans("entity.name", [], "entity_person");
+        return [$start, $end, $member, $person];
     }
 }

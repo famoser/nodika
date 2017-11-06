@@ -16,6 +16,7 @@ use AppBundle\Enum\ApplicationEventType;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\Organisation\OrganisationType;
 use AppBundle\Helper\HashHelper;
+use AppBundle\Model\Event\SearchEventModel;
 use AppBundle\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -374,7 +375,9 @@ class OrganisationController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $eventLineModels = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($organisation, new \DateTime());
+        $eventSearchModel = new SearchEventModel($organisation, new \DateTime());
+
+        $eventLineModels = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($eventSearchModel);
         $arr["organisation"] = $organisation;
         return $this->renderWithBackUrl(
             'administration/organisation/events.html.twig',

@@ -15,9 +15,9 @@
         {{ kitchen_sink.form_field("subject", subject, "members_invite.subject"|trans) }}
         {{ kitchen_sink.textarea_form_field("message", message, "members_invite.message"|trans) }}
         {% if hasPendingMember %}
-            {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+            {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
         {% else %}
-            {{ kitchen_sink.submit_form_field("submit", "edit"|trans({}, "enum_submit_button_type")) }}
+            {{ kitchen_sink.submit_form_button("submit", "edit"|trans({}, "enum_submit_button_type")) }}
         {% endif %}
 
     </form>

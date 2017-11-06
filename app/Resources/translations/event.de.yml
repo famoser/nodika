@@ -39,5 +39,6 @@ search:
   title: 'Termine'
   description: 'Kalender durchsuchen'
   no_event_lines: 'Keine Termine gefunden'
-  filter: 'Filter'
+  filter: 'Filtern'
   do_filter: 'Suchen'
+  export: 'Exportieren'

@@ -19,6 +19,7 @@ use AppBundle\Enum\EventChangeType;
 use AppBundle\Enum\OfferStatus;
 use AppBundle\Enum\TradeTag;
 use AppBundle\Helper\DateTimeConverter;
+use AppBundle\Model\Event\SearchEventModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -180,8 +181,16 @@ class OfferController extends BaseFrontendController
 
         $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
         $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
-        $arr["myEventLineModels"] = $repo->findEventLineModels($ownMember->getOrganisation(), $threshHold, null, $eventOffer->getOfferedByMember(), $eventOffer->getOfferedByPerson());
-        $arr["theirEventLineModels"] = $repo->findEventLineModels($ownMember->getOrganisation(), $threshHold, null, $eventOffer->getOfferedToMember(), $eventOffer->getOfferedToPerson());
+        $myEvents = new SearchEventModel($ownMember->getOrganisation(), $threshHold);
+        $myEvents->setFilterMember($eventOffer->getOfferedByMember());
+        $myEvents->setFilterPerson($eventOffer->getOfferedByPerson());
+        $arr["myEventLineModels"] = $repo->findEventLineModels($myEvents);
+
+        $theirEvents = new SearchEventModel($ownMember->getOrganisation(), $threshHold);
+        $theirEvents->setFilterMember($eventOffer->getOfferedToMember());
+        $theirEvents->setFilterPerson($eventOffer->getOfferedToPerson());
+        $arr["theirEventLineModels"] = $repo->findEventLineModels($theirEvents);
+
         $arr["description_form"] = $eventOffer->getDescription();
 
         $offered = [];

@@ -100,7 +100,7 @@ class NodikaController extends BaseGenerationController
         $form = $this->handleForm(
             $this->createForm(ChoosePeriodType::class),
             $request,
-            new NodikaConfiguration(null),
+            $config,
             function ($form, $entity) use ($organisation, $eventLine, $generation, $config) {
                 /* @var NodikaConfiguration $entity */
                 $config->lengthInHours = $entity->lengthInHours;

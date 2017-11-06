@@ -45,7 +45,7 @@
                         </tbody>
                     </table>
                     {{ kitchen_sink.select_form_field("selected_person", person, persons, "assign.choose_person"|trans) }}
-                    {{ kitchen_sink.submit_form_field("submit", "assign.assign_events"|trans) }}
+                    {{ kitchen_sink.submit_form_button("submit", "assign.assign_events"|trans) }}
                 </form>
             {% else %}
                 <p>{{ "assign.no_events_can_be_assigned"|trans }}</p>

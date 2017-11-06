@@ -13,10 +13,10 @@
           action="{{ path("administration_organisation_event_line_generate_round_robin_set_order", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
           method="post">
         {% for member in memberConfigurations %}
-            {{ kitchen_sink.horizontal_form_field("order_" ~ member.id, member.order, member.name) }}
+            {{ kitchen_sink.horizontal_form_field("member_" ~ member.id, member.order, member.name) }}
         {% endfor %}
 
-        {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+        {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>
 {% endblock %}
 
