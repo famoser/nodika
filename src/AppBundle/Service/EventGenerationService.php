@@ -232,8 +232,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             $currentDate = $endDate;
         }
 
-        dump($conflictBuffer);
-
         $myFunc = function ($currentEventCount, $member) use ($conflictBuffer) {
             /* @var BaseMemberConfiguration $member */
             return !in_array($member->id, $conflictBuffer[$currentEventCount]);
