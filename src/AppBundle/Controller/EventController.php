@@ -15,6 +15,7 @@ use AppBundle\Entity\Person;
 use AppBundle\Enum\EventChangeType;
 use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Model\Event\SearchEventModel;
+use AppBundle\Model\EventLine\EventLineModel;
 use AppBundle\Security\Voter\EventVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -290,12 +291,15 @@ class EventController extends BaseFrontendController
             return $this->redirectToRoute("dashboard_index");
         }
 
+        $organisationRepo = $this->getDoctrine()->getRepository("AppBundle:Organisation");
+
         $searchEventModel = $this->resolveSearchEventModel($request, $member);
+        $eventLineModels = $organisationRepo->findEventLineModels($searchEventModel);
 
         if ($request->query->get("view") == "csv") {
-            return $this->exportAsCsv($searchEventModel);
+            return $this->exportAsCsv($eventLineModels);
         } else {
-            $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($searchEventModel);
+            $arr["eventLineModels"] = $eventLineModels;
             $arr["members"] = $this->getOrganisation()->getMembers();
             $persons = [];
             foreach ($this->getOrganisation()->getMembers() as $lMember) {
@@ -315,13 +319,11 @@ class EventController extends BaseFrontendController
     }
 
     /**
-     * @param SearchEventModel $searchEventModel
+     * @param EventLineModel[] $eventModels
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    private function exportAsCsv(SearchEventModel $searchEventModel)
+    private function exportAsCsv($eventModels)
     {
-        $eventModels = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($searchEventModel);
-
         $data = [];
         foreach ($eventModels as $eventModel) {
             $row = [];

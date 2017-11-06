@@ -277,17 +277,17 @@ class RoundRobinController extends BaseGenerationController
             }
 
             //first sort by order
-            $orderedMemberConfigurations = [];
+            $ordered = [];
             $count = 1;
             foreach ($memberConfigurations as $memberConfiguration) {
-                $orderedMemberConfigurations[$memberConfiguration->order][] = $memberConfiguration;
+                $ordered[$memberConfiguration->order][] = $memberConfiguration;
             }
-            ksort($orderedMemberConfigurations);
+            ksort($ordered);
 
             //collapse array & normalize order
             $memberConfigurations = [];
-            foreach ($orderedMemberConfigurations as $orderedMemberConfiguration) {
-                foreach ($orderedMemberConfiguration as $entry) {
+            foreach ($ordered as $orderEntry) {
+                foreach ($orderEntry as $entry) {
                     $entry->order = $count++;
                     $memberConfigurations[] = $entry;
                 }

@@ -35,7 +35,9 @@ class DashboardController extends BaseFrontendController
 
         if ($member != null) {
             $searchModel = new SearchEventModel($member->getOrganisation(), new \DateTime());
-            $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($searchModel);
+            $organisationRepo = $this->getDoctrine()->getRepository("AppBundle:Organisation");
+
+            $arr["eventLineModels"] = $organisationRepo->findEventLineModels($searchModel);
             $arr["organisation"] = $member->getOrganisation();
             $arr["member"] = $member;
             unset($all[array_search($member->getOrganisation(), $all)]);
