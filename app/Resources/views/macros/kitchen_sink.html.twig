@@ -11,9 +11,17 @@
     </div>
 {% endmacro %}
 
-{% macro submit_form_field(name, text) %}
+{% macro submit_form_button(name, text) %}
     <div class="form-group">
         <button type="submit" id="{{ name }}" name="{{ name }}" class="btn-default btn">
+            {{ text }}
+        </button>
+    </div>
+{% endmacro %}
+
+{% macro submit_form_field(name, value, text) %}
+    <div class="form-group">
+        <button type="submit" id="{{ name }}" name="{{ name }}" value="{{ value }}" class="btn-default btn">
             {{ text }}
         </button>
     </div>

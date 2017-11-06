@@ -99,7 +99,7 @@ class RoundRobinController extends BaseGenerationController
         $form = $this->handleForm(
             $this->createForm(ChoosePeriodType::class),
             $request,
-            new RoundRobinConfiguration(null),
+            $config,
             function ($form, $entity) use ($organisation, $eventLine, $generation, $config) {
                 /* @var RoundRobinConfiguration $entity */
                 $config->lengthInHours = $entity->lengthInHours;
@@ -273,6 +273,23 @@ class RoundRobinController extends BaseGenerationController
                     if (isset($memberConfigurations[$memberId])) {
                         $memberConfigurations[$memberId]->order = $value;
                     }
+                }
+            }
+
+            //first sort by order
+            $orderedMemberConfigurations = [];
+            $count = 1;
+            foreach ($memberConfigurations as $memberConfiguration) {
+                $orderedMemberConfigurations[$memberConfiguration->order][] = $memberConfiguration;
+            }
+            ksort($orderedMemberConfigurations);
+
+            //collapse array & normalize order
+            $memberConfigurations = [];
+            foreach ($orderedMemberConfigurations as $orderedMemberConfiguration) {
+                foreach ($orderedMemberConfiguration as $entry) {
+                    $entry->order = $count++;
+                    $memberConfigurations[] = $entry;
                 }
             }
             $config->memberConfigurations = $memberConfigurations;

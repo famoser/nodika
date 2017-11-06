@@ -13,7 +13,7 @@
           action="{{ path("administration_organisation_event_line_generate_nodika_assignment_settings", {"organisation" : organisation.id, "eventLine": eventLine.id, "generation": eventLineGeneration.id}) }}"
           method="post">
         {{ kitchen_sink.textarea_form_field("before_events", beforeEventsString, "assignment_settings.before_data"|trans) }}
-        {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+        {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>
 
     <h3>{{ "assignment_settings.members_table"|trans }}</h3>

@@ -20,7 +20,7 @@
             {% endfor %}
         {% endif %}
         {{ kitchen_sink.form_field("conflict_puffer_in_hours", conflictPufferInHours, "no_conflicts.conflict_puffer"|trans) }}
-        {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+        {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>
 {% endblock %}
 

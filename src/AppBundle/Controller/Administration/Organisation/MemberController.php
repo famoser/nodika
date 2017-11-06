@@ -202,7 +202,7 @@ class MemberController extends BaseController
         $newMemberForm = $this->createForm(MemberType::class);
         $exchangeService = $this->get("app.exchange_service");
 
-        return $this->renderCsv($memberTrans . ".csv", $exchangeService->getCsvHeader($newMemberForm), []);
+        return $this->renderCsv($memberTrans . ".csv", [], $exchangeService->getCsvHeader($newMemberForm));
     }
 
 

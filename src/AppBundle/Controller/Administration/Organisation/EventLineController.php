@@ -181,14 +181,14 @@ class EventLineController extends BaseController
 
         return $this->renderCsv(
             $eventTrans . ".csv",
-            $this->getImportFileHeader(),
             [
                 [
                     (new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT),
                     (new \DateTime("now + 1 day"))->format(DateTimeFormatter::DATE_TIME_FORMAT),
                     $firstMemberId
                 ]
-            ]
+            ],
+            $this->getImportFileHeader()
         );
     }
 

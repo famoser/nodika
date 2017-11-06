@@ -27,7 +27,8 @@
                 {{ kitchen.select_form_field("person", selected_person, persons, "entity.name"|trans({}, "entity_person"), true) }}
                 {{ kitchen.form_field("start", startDateTime, "start_date_time"|trans({}, "entity_event", "datetime")) }}
                 {{ kitchen.form_field("end", endDateTime, "end_date_time"|trans({}, "entity_event", "datetime")) }}
-                {{ kitchen.submit_form_field("submit", "search.filter"|trans) }}
+                {{ kitchen.submit_form_field("view", "search", "search.filter"|trans) }}
+                {{ kitchen.submit_form_field("view", "csv", "search.export"|trans) }}
             </form>
         </div>
     </div>

@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Controller\Base\BaseFrontendController;
+use AppBundle\Model\Event\SearchEventModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +34,8 @@ class DashboardController extends BaseFrontendController
         $all = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findByPerson($this->getPerson());
 
         if ($member != null) {
-            $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($member->getOrganisation(), new \DateTime());
+            $searchModel = new SearchEventModel($member->getOrganisation(), new \DateTime());
+            $arr["eventLineModels"] = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findEventLineModels($searchModel);
             $arr["organisation"] = $member->getOrganisation();
             $arr["member"] = $member;
             unset($all[array_search($member->getOrganisation(), $all)]);

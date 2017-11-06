@@ -20,6 +20,7 @@ for release 1.1:
  - event generation stats
  - add info about confirmation status to event overview
  - add event search to admin
+ - add pagination to large tables
 
 
 project build with symfony. Dependecy managers:

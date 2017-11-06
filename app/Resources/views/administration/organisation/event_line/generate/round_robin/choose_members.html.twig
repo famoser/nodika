@@ -15,7 +15,7 @@
         {% for member in memberConfigurations %}
             {{ kitchen_sink.toggle_form_field("member_" ~ member.id, member.isEnabled, member.name) }}
         {% endfor %}
-        {{ kitchen_sink.submit_form_field("submit", "next"|trans({}, "enum_submit_button_type")) }}
+        {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
     </form>
 {% endblock %}
 

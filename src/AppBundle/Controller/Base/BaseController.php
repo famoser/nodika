@@ -166,14 +166,19 @@ class BaseController extends Controller
      * @param array $data
      * @return StreamedResponse
      */
-    protected function renderCsv($filename, $header, $data)
+    protected function renderCsv($filename, $data, $header = null)
     {
         $response = new StreamedResponse();
         $response->setCallback(function () use ($header, $data) {
             $handle = fopen('php://output', 'w+');
 
-            // Add the header of the CSV file
-            fputcsv($handle, $header, CsvFileHelper::DELIMITER);
+            //UTF-8 BOM
+            fputs( $handle, "\xEF\xBB\xBF" );
+
+            if (is_array($header)) {
+                // Add the header of the CSV file
+                fputcsv($handle, $header, CsvFileHelper::DELIMITER);
+            }
 
             //add the data
             foreach ($data as $row) {

@@ -8,6 +8,7 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Person;
 use AppBundle\Enum\ApplicationEventType;
+use AppBundle\Model\Event\SearchEventModel;
 use AppBundle\Model\EventLine\EventLineModel;
 use AppBundle\Model\Organisation\SetupStatusModel;
 use Doctrine\ORM\EntityRepository;
@@ -44,19 +45,13 @@ class OrganisationRepository extends EntityRepository
     }
 
     /**
-     * @param Organisation $organisation
-     * @param \DateTime $startDateTime
-     * @param \DateTime|null $endDateTime
-     * @param Member|null $filterMember
-     * @param null $filterPerson
-     * @param int $maxResults
+     * @param SearchEventModel $searchEventModel
      * @return EventLineModel[]
-     * @internal param string $comparator
      */
-    public function findEventLineModels(Organisation $organisation, \DateTime $startDateTime, \DateTime $endDateTime = null, $filterMember = null, $filterPerson = null, $maxResults = 30)
+    public function findEventLineModels(SearchEventModel $searchEventModel)
     {
         $res = [];
-        foreach ($organisation->getEventLines() as $eventLine) {
+        foreach ($searchEventModel->getOrganisation()->getEventLines() as $eventLine) {
             $eventLineModel = new EventLineModel();
             $eventLineModel->eventLine = $eventLine;
             $qb = $this->getEntityManager()->createQueryBuilder()
@@ -69,24 +64,24 @@ class OrganisationRepository extends EntityRepository
                 ->setParameter('eventLine', $eventLine);
 
             $qb->andWhere("e.startDateTime > :startDateTime")
-                ->setParameter('startDateTime', $startDateTime);
+                ->setParameter('startDateTime', $searchEventModel->getStartDateTime());
 
-            if ($endDateTime instanceof \DateTime) {
+            if ($searchEventModel->getEndDateTime() instanceof \DateTime) {
                 $qb->andWhere("e.endDateTime < :endDateTime")
-                    ->setParameter('endDateTime', $endDateTime);
+                    ->setParameter('endDateTime', $searchEventModel->getEndDateTime());
             }
 
-            if ($filterMember instanceof Member) {
+            if ($searchEventModel->getFilterMember() instanceof Member) {
                 $qb->andWhere("m = :member")
-                    ->setParameter('member', $filterMember);
+                    ->setParameter('member', $searchEventModel->getFilterMember());
             }
 
-            if ($filterPerson instanceof Person) {
+            if ($searchEventModel->getFilterPerson() instanceof Person) {
                 $qb->andWhere("p = :person")
-                    ->setParameter('person', $filterPerson);
+                    ->setParameter('person', $searchEventModel->getFilterPerson());
             }
 
-            $qb->setMaxResults($maxResults);
+            $qb->setMaxResults($searchEventModel->getMaxResults());
 
             $eventLineModel->events = $qb->getQuery()
                 ->getResult();
