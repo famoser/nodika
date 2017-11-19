@@ -466,10 +466,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             $distributedDaysArray[$memberConfiguration->id][3] = 0;
         }
 
-        dump($partiesArray);
-        dump($holidayCount);
-        dump("1");
-
         //distribute days to parties
         $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->holiday, $holidayCount, 3);
         $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->sunday, $sundayCount, 2);
@@ -562,6 +558,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $totalSize += $partySize;
         }
 
+        //bucket behaves differently depending if more parties or more space is available
         if ($bucketsCount < count($parties)) {
             krsort($sizes);
         } else {
@@ -576,7 +573,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             $remainingBucketSizes[$i] = $bucketSize;
             $bucketMembers[$i] = [];
         }
-
 
         //distribute parties to buckets
         foreach ($sizes as $partySize => $parties) {

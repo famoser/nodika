@@ -102,3 +102,4 @@ error:
 
 success:
   password_set: 'Neues Passwort erfolgreich gesetzt'
+  welcome: 'Registrierung erfolgreich. Willkommen!'
