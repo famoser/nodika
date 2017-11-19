@@ -466,6 +466,10 @@ class EventGenerationService implements EventGenerationServiceInterface
             $distributedDaysArray[$memberConfiguration->id][3] = 0;
         }
 
+        dump($partiesArray);
+        dump($holidayCount);
+        dump("1");
+
         //distribute days to parties
         $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->holiday, $holidayCount, 3);
         $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->sunday, $sundayCount, 2);
@@ -477,9 +481,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         foreach ($enabledMembers as $enabledMember) {
             $memberEventTypeDistribution = new MemberEventTypeDistribution(null);
             $member = clone($enabledMember);
-            $member->endScore = $partiesArray[$enabledMember->id];
-            $member->luckyScore = $this->convertToLuckyScore($totalPoints, $member->points);
-            $memberEventTypeDistribution->newMemberConfiguration = $enabledMember;
+            $member->endScore = round($partiesArray[$enabledMember->id], 2);
+            $member->luckyScore = round($this->convertToLuckyScore($totalPoints, $member->points), 2);
+            $memberEventTypeDistribution->newMemberConfiguration = $member;
 
             $eventTypeAssignment = new EventTypeConfiguration(null);
             $eventTypeAssignment->holiday = $distributedDaysArray[$enabledMember->id][3];
@@ -557,7 +561,12 @@ class EventGenerationService implements EventGenerationServiceInterface
             $sizes[$partySize][] = $partyId;
             $totalSize += $partySize;
         }
-        ksort($sizes);
+
+        if ($bucketsCount < count($parties)) {
+            krsort($sizes);
+        } else {
+            ksort($sizes);
+        }
 
         //prepare buckets
         $bucketSize = $totalSize / $bucketsCount;
@@ -567,6 +576,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $remainingBucketSizes[$i] = $bucketSize;
             $bucketMembers[$i] = [];
         }
+
 
         //distribute parties to buckets
         foreach ($sizes as $partySize => $parties) {
@@ -584,14 +594,19 @@ class EventGenerationService implements EventGenerationServiceInterface
                     }
 
                     if ($biggestRemaining > $myPartSize) {
-                        $biggestRemaining -= $myPartSize;
-                        $remainingBucketSizes[$biggestRemainingIndex] = $biggestRemaining;
-                        $myPartSize = 0;
+                        //party is fully resolved
+                        $bucketMembers[$biggestRemainingIndex][$party] = $myPartSize;
+
+                        //adapt bucket sizes
+                        $remainingBucketSizes[$biggestRemainingIndex] -= $myPartSize;
+                        break;
                     } else {
+                        $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
+
+                        //adapt bucket sizes
                         $myPartSize -= $biggestRemaining;
                         $remainingBucketSizes[$biggestRemainingIndex] = 0;
                     }
-                    $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
                 }
             }
         }
