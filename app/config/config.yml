@@ -50,6 +50,7 @@ twig:
       globals_color_class_event: "green2-background"
       globals_color_class_person: "red-background"
       globals_color_class_error: "red-background"
+      globals_tawk_id: "%tawk_id%"
 
 # Doctrine Configuration
 doctrine:

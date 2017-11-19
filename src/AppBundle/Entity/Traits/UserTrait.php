@@ -398,12 +398,13 @@ trait UserTrait
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
         static::getEmailBuilder($builder, $builderArray);
         static::getPlainPasswordBuilder($builder, $builderArray);
-        if ($agb)
+        if ($agb) {
             $builder->add(
                 "agbAccepted",
                 CheckboxType::class,
                 $builderArray + NamingHelper::propertyToTranslationForBuilder("agbAccepted")
             );
+        }
         return $builder;
     }
 
