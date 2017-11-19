@@ -389,19 +389,22 @@ trait UserTrait
 
     /**
      * @param FormBuilderInterface $builder
-     * @param $defaultArray
+     * @param array $defaultArray
+     * @param bool $agb
      * @return FormBuilderInterface
      */
-    public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [], $agb = true)
     {
         $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
         static::getEmailBuilder($builder, $builderArray);
         static::getPlainPasswordBuilder($builder, $builderArray);
-        $builder->add(
-            "agbAccepted",
-            CheckboxType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("agbAccepted")
-        );
+        if ($agb) {
+            $builder->add(
+                "agbAccepted",
+                CheckboxType::class,
+                $builderArray + NamingHelper::propertyToTranslationForBuilder("agbAccepted")
+            );
+        }
         return $builder;
     }
 

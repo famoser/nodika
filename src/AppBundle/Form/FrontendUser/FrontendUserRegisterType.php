@@ -24,7 +24,7 @@ class FrontendUserRegisterType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = UserTrait::getRegisterUserBuilder($builder);
+        $builder = UserTrait::getRegisterUserBuilder($builder, [], $options["agb"]);
 
         $this->addSubmit($builder, SubmitButtonType::REGISTER);
     }
@@ -36,6 +36,7 @@ class FrontendUserRegisterType extends BaseAbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => FrontendUser::class,
+            'agb' => true
         ));
     }
 }

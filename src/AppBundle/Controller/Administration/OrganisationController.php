@@ -241,12 +241,7 @@ class OrganisationController extends BaseController
         if ($request->getMethod() == "POST") {
             $variableMapping = [];
             foreach ($notInvitedMembers as $member) {
-                $member->setHasBeenInvited(true);
-                $member->setInvitationHash(HashHelper::createNewResetHash());
                 $variableMapping[$member->getId()] = [];
-                $variableMapping[$member->getId()]["LINK_REPLACE"] =
-                    $this->generateUrl("access_invite", ["invitationHash" => $member->getInvitationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
-                $variableMapping[$member->getId()]["MEMBER_NAME_REPLACE"] = $member->getName();
                 $variableMapping[$member->getId()]["FREE_1_REPLACE"] = "";
                 $variableMapping[$member->getId()]["FREE_2_REPLACE"] = "";
                 $variableMapping[$member->getId()]["FREE_3_REPLACE"] = "";
@@ -256,30 +251,38 @@ class OrganisationController extends BaseController
                     $memberId = (int)substr($key, 7); //to cut off free_1_
                     $variableMapping[$memberId]["FREE_1_REPLACE"] = $value;
                 } else if (strpos($key, "free_2_") === 0) {
-                    $memberId = (int)substr($key, 7); //to cut off free_1_
+                    $memberId = (int)substr($key, 7); //to cut off free_2_
                     $variableMapping[$memberId]["FREE_2_REPLACE"] = $value;
                 } else if (strpos($key, "free_3_") === 0) {
-                    $memberId = (int)substr($key, 7); //to cut off free_1_
+                    $memberId = (int)substr($key, 7); //to cut off free_3_
                     $variableMapping[$memberId]["FREE_3_REPLACE"] = $value;
                 }
             }
 
             foreach ($notInvitedMembers as $member) {
                 $subject = $organisationSetting->getInviteEmailSubject();
-                $message = $organisationSetting->getInviteEmailMessage();
+                $body = $organisationSetting->getInviteEmailMessage();
+
+                $member->setInvitationHash(HashHelper::createNewResetHash());
+                $variableMapping[$member->getId()]["LINK_REPLACE"] =
+                    $this->generateUrl("access_invite", ["invitationHash" => $member->getInvitationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
+                $variableMapping[$member->getId()]["MEMBER_NAME_REPLACE"] = $member->getName();
+
 
                 foreach ($variableMapping[$member->getId()] as $search => $replace) {
                     $subject = str_replace($search, $replace, $subject);
-                    $message = str_replace($search, $replace, $message);
+                    $body = str_replace($search, $replace, $body);
                 }
+
 
                 $message = \Swift_Message::newInstance()
                     ->setSubject($subject)
                     ->setFrom($this->getParameter("mailer_email"))
                     ->setTo($member->getEmail())
-                    ->setBody($message);
+                    ->setBody($body);
                 $this->get('mailer')->send($message);
 
+                $member->setHasBeenInvited(true);
                 $this->fastSave($member);
             }
 
