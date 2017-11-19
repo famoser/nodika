@@ -21,3 +21,5 @@ index:
   welcome: 'Willkommen auf nodika.ch!'
   welcome_description: 'Sie können hier Ihre Termine verwalten und tauschen. Öffnen Sie das Menu links um eine Übersicht über alle verfügbaren Funktionen zu bekommen'
   trade_events_description: 'Um Termine zu tauschen gehen Sie zuerst zu "Termine zuweisen" im Menu und weisen Sie sich Ihre Termine zu. Danach können Sie zu "Termine tauschen" und Ihre Tauschanfrage starten'
+  questions: 'Anregungen oder Fragen?'
+  questions_description: 'Schreiben Sie mir eine E-Mail an '
