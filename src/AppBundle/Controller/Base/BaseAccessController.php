@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-class BaseAccessController extends BaseController
+class BaseAccessController extends BaseFrontendController
 {
     /**
      * @param Request $request

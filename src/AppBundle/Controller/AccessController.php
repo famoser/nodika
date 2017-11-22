@@ -17,6 +17,7 @@ use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\FrontendUser\FrontendUserLoginType;
 use AppBundle\Form\FrontendUser\FrontendUserResetType;
 use AppBundle\Form\FrontendUser\FrontendUserSetPasswordType;
+use AppBundle\Form\Member\InviteType;
 use AppBundle\Form\Person\PersonType;
 use AppBundle\Helper\HashHelper;
 use Symfony\Component\Form\FormInterface;
@@ -140,11 +141,11 @@ class AccessController extends BaseAccessController
         }
         $person = new Person();
         $person->setEmail($member->getEmail());
-        $inviteForm = $this->handleFormDoctrinePersist(
-            $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
+        $inviteForm = $this->handleForm(
+            $this->createForm(InviteType::class),
             $request,
             $person,
-            function ($form, $person) use ($member) {
+            function ($form, $person) use ($member, $request) {
                 /* @var Person $person */
                 $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
                 if ($existingUser != null) {
@@ -154,11 +155,17 @@ class AccessController extends BaseAccessController
                     $person->addMember($member);
                     $member->addPerson($person);
 
-                    $user = FrontendUser::createFromPerson($person);
-                    $this->fastSave($user, $person, $member);
+                    $user = $person->getFrontendUser();
+                    $user->persistNewPassword();
+                    $user->setIsActive(true);
+                    $user->setRegistrationDate(new \DateTime());
+                    $person->setEmail($user->getEmail());
 
-                    $this->sendRegisterConfirmEmail($user);
-                    return $this->redirectToRoute("access_register_thanks");
+                    $this->fastSave($person, $member);
+
+                    $this->loginUser($request, $person->getFrontendUser());
+                    $this->displaySuccess($this->get("translator")->trans("success.welcome", [], "access"));
+                    return $this->redirectToRoute("dashboard_index");
                 }
             }
         );

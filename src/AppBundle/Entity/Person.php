@@ -52,7 +52,7 @@ class Person extends BaseEntity
     /**
      * @var FrontendUser
      *
-     * @ORM\OneToOne(targetEntity="FrontendUser", mappedBy="person")
+     * @ORM\OneToOne(targetEntity="FrontendUser", mappedBy="person", cascade={"persist"})
      */
     private $frontendUser;
 
@@ -200,5 +200,6 @@ class Person extends BaseEntity
     public function setFrontendUser($frontendUser)
     {
         $this->frontendUser = $frontendUser;
+        $frontendUser->setPerson($this);
     }
 }

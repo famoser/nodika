@@ -19,3 +19,5 @@ parameters:
     free_period_days: 31
     register_fee: 1500
     yearly_fee: 500
+
+    tawk_id: FAKE_ID
