@@ -730,6 +730,11 @@ class EventGenerationService implements EventGenerationServiceInterface
             $myMember->calculatePartDone();
         }
 
+        //set available to correct value
+        foreach ($idealQueueMembers as $idealQueueMember) {
+            $idealQueueMember->setAllAvailable();
+        }
+
         $holidays = [];
         foreach ($nodikaConfiguration->holidays as $holiday) {
             $holidays[(new \DateTime($holiday->format("d.m.Y")))->getTimestamp()] = 1;
@@ -751,6 +756,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $res =
                     $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $members[$memberId]) &&
                     $conflictCallable($assignedEventCount, $members[$memberId]);
+                dump($res);
                 return $res;
             };
             $advancedFitsFunc = null;
@@ -813,7 +819,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                     if ($newIndex < $totalEvents) {
                         $targetMember = $idealQueueMembers[$idealQueue[$newIndex]];
                         if ($advancedFitsFunc($targetMember)) {
-                            $assignedEventCount = true;
+                            $assignmentFound = true;
                             //the member fits!
                             //now correct the queue
                             //this is in the future; so no further corrections necessary
@@ -826,8 +832,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                             //reset keys
                             $idealQueue = array_values($idealQueue);
                             //insert id at new place
-                            $idealQueue = array_splice($idealQueue, $queueIndex, 0, $queueId);
-
+                            array_splice($idealQueue, $queueIndex, 0, $queueId);
+                            
                             break;
                         }
                     }
