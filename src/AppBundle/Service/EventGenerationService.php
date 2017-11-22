@@ -548,23 +548,39 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     private function bucketsAlgorithm($parties, $bucketsCount)
     {
+        //prepare party sizes
+        $myParties = [];
+        foreach ($parties as $partyId => $partySize) {
+            $myParties[$partyId] = (int)($partySize * 10000);
+        }
+
         //prepare parties (and sort by size)
         $sizes = [];
         $totalSize = 0;
-        foreach ($parties as $partyId => $partySize) {
+        foreach ($myParties as $partyId => $partySize) {
             $sizes[$partySize][] = $partyId;
             $totalSize += $partySize;
         }
 
+
+        $totalSize2 = 0;
+        foreach ($sizes as $size => $val) {
+            $totalSize2 += $size * count($val);
+        }
+
         //bucket behaves differently depending if more parties or more space is available
-        if ($bucketsCount < count($parties)) {
+        if ($bucketsCount < count($myParties)) {
             krsort($sizes);
+
+            //issue: if one small party is the last, he will have to distribute over multiple buckets!
         } else {
             ksort($sizes);
         }
 
+
         //prepare buckets
-        $bucketSize = $totalSize / $bucketsCount;
+        $bucketSize = (double)$totalSize / $bucketsCount;
+
         $remainingBucketSizes = [];
         $bucketMembers = [];
         for ($i = 0; $i < $bucketsCount; $i++) {
@@ -572,34 +588,50 @@ class EventGenerationService implements EventGenerationServiceInterface
             $bucketMembers[$i] = [];
         }
 
+        $bucketsAssigned = 0;
+        $totalSizes = 0;
         //distribute parties to buckets
-        foreach ($sizes as $partySize => $parties) {
-            foreach ($parties as $party) {
+        foreach ($sizes as $partySize => $partiesOfThisSize) {
+            foreach ($partiesOfThisSize as $party) {
+                $totalSizes += $partySize;
                 $myPartSize = $partySize;
-                while ($myPartSize > static::ACCURACY_THRESHOLD) {
+                $max = 10000;
+                while ($myPartSize + static::ACCURACY_THRESHOLD > 0) {
+                    if ($max-- <= 0) {
+                        //wops, no way! terminate I guess?
+                        break;
+                    }
+
                     //find biggest remaining bucket
                     $biggestRemaining = 0;
                     $biggestRemainingIndex = 0;
                     for ($i = 0; $i < $bucketsCount; $i++) {
                         if ($biggestRemaining < $remainingBucketSizes[$i]) {
-                            $biggestRemainingIndex = $i;
                             $biggestRemaining = $remainingBucketSizes[$i];
+                            $biggestRemainingIndex = $i;
+                            if ($biggestRemaining == $bucketSize) {
+                                break;
+                            }
                         }
                     }
 
-                    if ($biggestRemaining > $myPartSize) {
+                    if ($biggestRemaining + static::ACCURACY_THRESHOLD > $myPartSize) {
                         //party is fully resolved
                         $bucketMembers[$biggestRemainingIndex][$party] = $myPartSize;
 
                         //adapt bucket sizes
                         $remainingBucketSizes[$biggestRemainingIndex] -= $myPartSize;
+                        $bucketsAssigned++;
+
+                        $myPartSize -= $biggestRemaining;
                         break;
                     } else {
                         $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
-
                         //adapt bucket sizes
                         $myPartSize -= $biggestRemaining;
                         $remainingBucketSizes[$biggestRemainingIndex] = 0;
+
+                        $bucketsAssigned++;
                     }
                 }
             }
@@ -610,26 +642,27 @@ class EventGenerationService implements EventGenerationServiceInterface
         foreach ($bucketMembers as $bucketIndex => $members) {
             if (count($members) == 1) {
                 //fully filled out!
-                reset($members);
-                $winnerPerBucket[$bucketIndex] = key($members);
-            }
-            //we need to choose randomly!
-            $randomValue = random_int(0, static::RANDOM_ACCURACY);
-            asort($members);
-            foreach ($members as $memberId => $memberPart) {
-                $bucketPercentage = $memberPart / $bucketSize;
-                //convert to int on RANDOM_ACCURACY scala. +0.5 because of rounding
-                $memberValue = (int)($bucketPercentage * static::RANDOM_ACCURACY + 0.5);
+                $winnerPerBucket[$bucketIndex] = array_keys($members)[0];
+            } else {
+                //we need to choose randomly!
+                $randomValue = random_int(0, $bucketSize * 1000);
+                $randomValue = $randomValue / 1000.0;
 
-                //set this as the winner so we have a match for sure
-                $winnerPerBucket[$bucketIndex] = $memberId;
+                asort($members);
+                $totalPart = 0;
+                foreach ($members as $memberId => $memberPart) {
+                    //directly set a winner, so we have a match for sure
+                    $winnerPerBucket[$bucketIndex] = $memberId;
 
-                //smaller/equal cause it starts at 0
-                if ($memberValue <= $randomValue) {
-                    break;
+                    $totalPart += $memberPart;
+                    if ($totalPart > $randomValue) {
+                        // "winner" found
+                        break;
+                    }
                 }
             }
         }
+
         return $winnerPerBucket;
     }
 
@@ -756,7 +789,6 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $res =
                     $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $members[$memberId]) &&
                     $conflictCallable($assignedEventCount, $members[$memberId]);
-                dump($res);
                 return $res;
             };
             $advancedFitsFunc = null;
@@ -764,7 +796,8 @@ class EventGenerationService implements EventGenerationServiceInterface
             if (isset($holidays[$day->getTimestamp()])) {
                 $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                     /* @var IdealQueueMember $targetMember */
-                    return $targetMember->availableHolidayCount > 0 && $fitsFunc($targetMember->id);
+                    $res = $targetMember->availableHolidayCount > 0 && $fitsFunc($targetMember->id);
+                    return $res;
                 };
                 $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                     /* @var IdealQueueMember $targetMember */
@@ -776,7 +809,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //sunday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
-                        return $targetMember->availableSundayCount > 0 && $fitsFunc($targetMember->id);
+                        $res = $targetMember->availableSundayCount > 0 && $fitsFunc($targetMember->id);
+                        return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                         /* @var IdealQueueMember $targetMember */
@@ -786,7 +820,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //saturday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
-                        return $targetMember->availableSaturdayCount > 0 && $fitsFunc($targetMember->id);
+                        $res = $targetMember->availableSaturdayCount > 0 && $fitsFunc($targetMember->id);
+                        return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                         /* @var IdealQueueMember $targetMember */
@@ -796,7 +831,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //weekday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
-                        return $targetMember->availableWeekdayCount > 0 && $fitsFunc($targetMember->id);
+                        $res = $targetMember->availableWeekdayCount > 0 && $fitsFunc($targetMember->id);
+                        return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                         /* @var IdealQueueMember $targetMember */
@@ -813,19 +849,20 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $assignmentFound = false;
                 //the search begins; look n to the right, then continue with n+1
                 //totalEvents as upper bound; this will not be reached probably
-                for ($i = 0; $i < $totalEvents; $i++) {
+                for ($i = 1; $i < $totalEvents; $i++) {
                     //n to right
                     $newIndex = $queueIndex + $i;
                     if ($newIndex < $totalEvents) {
                         $targetMember = $idealQueueMembers[$idealQueue[$newIndex]];
                         if ($advancedFitsFunc($targetMember)) {
-                            $assignmentFound = true;
                             //the member fits!
+                            $advancedFitSuccessful($targetMember);
+                            $assignmentFound = true;
+
                             //now correct the queue
                             //this is in the future; so no further corrections necessary
                             //we simply insert the new index at the required position
                             //get the id
-
                             $queueId = $idealQueue[$newIndex];
                             //remove from queue
                             unset($idealQueue[$newIndex]);
@@ -833,7 +870,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                             $idealQueue = array_values($idealQueue);
                             //insert id at new place
                             array_splice($idealQueue, $queueIndex, 0, $queueId);
-                            
+
                             break;
                         }
                     }
