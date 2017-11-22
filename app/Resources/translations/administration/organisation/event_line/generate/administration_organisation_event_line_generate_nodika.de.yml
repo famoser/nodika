@@ -92,6 +92,11 @@ distribution_confirm:
     Diese Zuteilung ist so fair wie möglich. Bei Entscheidungen die keinen eindeutigen Ausgang hatten (wie zwei Praxen, ein Termin) hat der Algorithmus
     zufällig eine Praxis ausgewählt. Sie können diese zufälligen Entscheidungen wiederholen:
   random_days_retry: 'Generierung wiederholen'
+  total_weekdays: 'Anzahl Wochentage'
+  total_saturday: 'Anzahl Samstage'
+  total_sunday: 'Anzahl Sonntage'
+  total_holiday: 'Anzahl Feiertage'
+  total_days: 'Anzahl Tage insgesamt'
 
 #assignment_settings page
 assignment_settings:

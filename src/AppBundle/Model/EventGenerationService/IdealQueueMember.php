@@ -86,7 +86,7 @@ class IdealQueueMember
      */
     public function calculatePartDone()
     {
-        $this->partDone = $this->doneEventCount / $this->totalEventCount;
+        $this->partDone = (double)$this->doneEventCount / (double)$this->totalEventCount;
     }
 
     /**

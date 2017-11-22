@@ -454,7 +454,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         //initialize partiesArray to distribute days with the bucket algorithm
         $partiesArray = [];
         $distributedDaysArray = [];
-        foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
+        foreach ($enabledMembers as $memberConfiguration) {
             $partiesArray[$memberConfiguration->id] = $pointsPerMemberPoint * $memberConfiguration->points;
             $partiesArray[$memberConfiguration->id] += $this->convertFromLuckyScore($totalPoints, $memberConfiguration->luckyScore);
             $distributedDaysArray[$memberConfiguration->id] = [];
@@ -646,7 +646,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     {
         /**
          * BUGS:
-         * 24h -> 1d
          * not generated till end
          * wrong weekdays assigned
          */
@@ -749,9 +748,10 @@ class EventGenerationService implements EventGenerationServiceInterface
 
             //create callable for each day type
             $fitsFunc = function ($memberId) use (&$startDateTime, &$endDate, &$assignedEventCount, &$members, &$memberAllowedCallable, &$conflictCallable) {
-                return
+                $res =
                     $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $members[$memberId]) &&
                     $conflictCallable($assignedEventCount, $members[$memberId]);
+                return $res;
             };
             $advancedFitsFunc = null;
             $advancedFitSuccessful = null;
@@ -804,6 +804,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 //the member fits yay; that was easy
                 $advancedFitSuccessful($targetMember);
             } else {
+                $assignmentFound = false;
                 //the search begins; look n to the right, then continue with n+1
                 //totalEvents as upper bound; this will not be reached probably
                 for ($i = 0; $i < $totalEvents; $i++) {
@@ -812,11 +813,13 @@ class EventGenerationService implements EventGenerationServiceInterface
                     if ($newIndex < $totalEvents) {
                         $targetMember = $idealQueueMembers[$idealQueue[$newIndex]];
                         if ($advancedFitsFunc($targetMember)) {
+                            $assignedEventCount = true;
                             //the member fits!
                             //now correct the queue
                             //this is in the future; so no further corrections necessary
                             //we simply insert the new index at the required position
                             //get the id
+
                             $queueId = $idealQueue[$newIndex];
                             //remove from queue
                             unset($idealQueue[$newIndex]);
@@ -824,6 +827,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                             $idealQueue = array_values($idealQueue);
                             //insert id at new place
                             $idealQueue = array_splice($idealQueue, $queueIndex, 0, $queueId);
+
                             break;
                         }
                     }
@@ -862,6 +866,9 @@ class EventGenerationService implements EventGenerationServiceInterface
                         }
                     }
                     */
+                }
+                if (!$assignmentFound) {
+                    return $this->returnNodikaError($nodikaOutput, NodikaStatusCode::NO_ALLOWED_MEMBER_FOR_EVENT);
                 }
             }
 

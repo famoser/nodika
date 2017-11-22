@@ -10,6 +10,14 @@
     <p>
         {{ "confirm_generation.help"|trans }}
     </p>
+
+    <p>
+        <a class="btn"
+           href="{{ path("administration_organisation_event_line_generate_nodika_apply_generation", {"organisation":organisation.id, "eventLine":eventLine.id, "generation": eventLineGeneration.id}) }}">
+            {{ "confirm_generation.persist_now"|trans }}
+        </a>
+    </p>
+
     <table class="table">
         <thead>
         <tr>
@@ -28,10 +36,5 @@
         {% endfor %}
         </tbody>
     </table>
-    <p>
-        <a href="{{ path("administration_organisation_event_line_generate_nodika_apply_generation", {"organisation":organisation.id, "eventLine":eventLine.id, "generation": eventLineGeneration.id}) }}">
-            {{ "confirm_generation.persist_now"|trans }}
-        </a>
-    </p>
 
 {% endblock %}

@@ -1,3 +1,4 @@
 successful: Generierung erfolgreich
 no_matching_member: Keine konfliktfreie Zuordnung gefunden
+no_allowed_member_for_event: Keine Zuordnung für einen bestimmten Tag gefunden
 unknown_error: Unbekannter Fehler

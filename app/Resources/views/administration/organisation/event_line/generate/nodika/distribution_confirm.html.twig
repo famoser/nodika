@@ -10,6 +10,14 @@
     <p>
         {{ "distribution_confirm.help"|trans }}
     </p>
+
+
+    <p>
+        <a class="btn btn-primary"
+           href="{{ path("administration_organisation_event_line_generate_nodika_assignment_settings", {"organisation":organisation.id, "eventLine":eventLine.id, "generation": eventLineGeneration.id}) }}">
+            {{ "distribution_confirm.continue_action"|trans }}
+        </a>
+    </p>
     <table class="table">
         <thead>
         <tr>
@@ -46,11 +54,12 @@
         {% endfor %}
         </tbody>
     </table>
-
     <p>
-        <a href="{{ path("administration_organisation_event_line_generate_nodika_assignment_settings", {"organisation":organisation.id, "eventLine":eventLine.id, "generation": eventLineGeneration.id}) }}">
-            {{ "distribution_confirm.continue_action"|trans }}
-        </a>
+        {{ "distribution_confirm.total_weekdays"|trans }}: {{ eventTypeAssignmentTotal.weekday }} <br/>
+        {{ "distribution_confirm.total_saturday"|trans }}: {{ eventTypeAssignmentTotal.saturday }} <br/>
+        {{ "distribution_confirm.total_sunday"|trans }}: {{ eventTypeAssignmentTotal.sunday }} <br/>
+        {{ "distribution_confirm.total_holiday"|trans }}: {{ eventTypeAssignmentTotal.holiday }} <br/>
+        <b>{{ "distribution_confirm.total_days"|trans }}: {{ eventTypeAssignmentTotal.sumOfDays }}</b>
     </p>
 
     <hr/>
