@@ -9,6 +9,7 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Person;
@@ -192,10 +193,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         $assignedEventCount = 0;
 
         $currentDate = clone($configuration->startDateTime);
-        $dateIntervalAdd = "PT" . $configuration->lengthInHours . "H";
         while ($currentDate < $configuration->endDateTime) {
             $endDate = clone($currentDate);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $configuration);
             $startTimeStamp = $currentDate->getTimestamp();
             $endTimeStamp = $endDate->getTimestamp();
             $currentConflictBuffer = [];
@@ -276,10 +276,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         /* @var RRMemberConfiguration[] $priorityQueue */
         $priorityQueue = [];
         $currentDate = clone($roundRobinConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $roundRobinConfiguration->lengthInHours . "H";
         while ($currentDate < $roundRobinConfiguration->endDateTime) {
             $endDate = clone($currentDate);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $roundRobinConfiguration);
             //check if something in priority queue
             /* @var RRMemberConfiguration $matchMember */
             $matchMember = null;
@@ -419,7 +418,6 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         $currentDate = clone($nodikaConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
         $oneMore = 1;
         while ($currentDate < $nodikaConfiguration->endDateTime || $oneMore--) {
             $day = new \DateTime($currentDate->format("d.m.Y"));
@@ -436,7 +434,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 }
             }
 
-            $currentDate->add(new \DateInterval($dateIntervalAdd));
+            $currentDate = $this->addInterval($currentDate, $nodikaConfiguration);
         }
 
         //count total points
@@ -635,6 +633,14 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable)
     {
+        /**
+         * BUGS:
+         * 24h -> 1d
+         * not generated till end
+         * wrong weekdays assigned
+         */
+
+
         $generationResult = new GenerationResult(null);
         $generationResult->generationDateTime = new \DateTime();
 
@@ -723,13 +729,12 @@ class EventGenerationService implements EventGenerationServiceInterface
         assert(count($idealQueue) == $totalEvents);
 
         $startDateTime = clone($nodikaConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
         $assignedEventCount = 0;
         $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
             $day = new \DateTime($startDateTime->format("d.m.Y"));
             $endDate = clone($startDateTime);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $nodikaConfiguration);
 
             //create callable for each day type
             $fitsFunc = function ($memberId) use (&$startDateTime, &$endDate, &$assignedEventCount, &$members, &$memberAllowedCallable, &$conflictCallable) {
@@ -788,7 +793,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 //the member fits yay; that was easy
                 $advancedFitSuccessful($targetMember);
             } else {
-                //the search begins; look n to the right, then n to the left, then continue with n+1
+                //the search begins; look n to the right, then continue with n+1
                 //totalEvents as upper bound; this will not be reached probably
                 for ($i = 0; $i < $totalEvents; $i++) {
                     //n to right
@@ -807,7 +812,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                             //reset keys
                             $idealQueue = array_values($idealQueue);
                             //insert id at new place
-                            array_splice($idealQueue, $queueIndex, 0, $queueId);
+                            $idealQueue = array_splice($idealQueue, $queueIndex, 0, $queueId);
                             break;
                         }
                     }
@@ -851,7 +856,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
             $queueIndex++;
             $assignedEventCount++;
-            $startDateTime->add(new \DateInterval($dateIntervalAdd));
+            $startDateTime = $this->addInterval($startDateTime, $nodikaConfiguration);
 
             if (!($queueIndex < $totalEvents)) {
                 break;
@@ -860,12 +865,12 @@ class EventGenerationService implements EventGenerationServiceInterface
 
 
         $startDateTime = clone($nodikaConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
+
         $assignedEventCount = 0;
         $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
             $endDate = clone($startDateTime);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $nodikaConfiguration);
 
             $targetMember = $idealQueueMembers[$idealQueue[$queueIndex]];
 
@@ -878,7 +883,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $queueIndex++;
             $assignedEventCount++;
             $startDateTime = clone($startDateTime);
-            $startDateTime->add(new \DateInterval($dateIntervalAdd));
+            $startDateTime = $this->addInterval($startDateTime, $nodikaConfiguration);
 
             if (!($queueIndex < $totalEvents)) {
                 break;
@@ -892,5 +897,35 @@ class EventGenerationService implements EventGenerationServiceInterface
         $nodikaOutput->beforeEvents = array_merge((array)($nodikaConfiguration->beforeEvents), $idealQueue);
         $nodikaOutput->generationResult = $generationResult;
         return $this->returnNodikaSuccess($nodikaOutput);
+    }
+
+
+    private function addInterval(\DateTime $dateTime, BaseConfiguration $configuration)
+    {
+        $hours = $configuration->lengthInHours;
+        $days = 0;
+        while ($hours >= 24) {
+            $days++;
+            $hours -= 24;
+        }
+
+        if ($hours >= 12) {
+            $days++;
+            $hours = 24 - $hours;
+            $daysAddInterval = new \DateInterval("P" . $days . "D");
+            $dateTime->add($daysAddInterval);
+            $hoursRemoveInterval = new \DateInterval("PT" . $hours . "H");
+            $dateTime->sub($hoursRemoveInterval);
+        } else {
+            if ($days > 0) {
+                $daysAddInterval = new \DateInterval("P" . $days . "D");
+                $dateTime->add($daysAddInterval);
+            }
+            if ($hours > 0) {
+                $hoursAddInterval = new \DateInterval("PT" . $hours . "H");
+                $dateTime->sub($hoursAddInterval);
+            }
+        }
+        return $dateTime;
     }
 }
