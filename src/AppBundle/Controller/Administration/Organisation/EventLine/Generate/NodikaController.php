@@ -22,6 +22,7 @@ use AppBundle\Form\EventLineGeneration\Nodika\ChoosePeriodType;
 use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Model\EventLineGeneration\Base\EventLineConfiguration;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
+use AppBundle\Model\EventLineGeneration\Nodika\EventTypeConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\MemberConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use AppBundle\Model\EventLineGeneration\Nodika\NodikaOutput;
@@ -439,11 +440,21 @@ class NodikaController extends BaseGenerationController
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
+
+        $eventTypeAssignment = new EventTypeConfiguration(null);
+        foreach ($config->memberEventTypeDistributions as $distribution) {
+            $eventTypeAssignment->holiday += $distribution->eventTypeAssignment->holiday;
+            $eventTypeAssignment->sunday += $distribution->eventTypeAssignment->sunday;
+            $eventTypeAssignment->saturday += $distribution->eventTypeAssignment->saturday;
+            $eventTypeAssignment->weekday += $distribution->eventTypeAssignment->weekday;
+        }
+
         $arr = [];
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;
         $arr["eventLineGeneration"] = $generation;
         $arr["memberEventTypeDistributions"] = $config->memberEventTypeDistributions;
+        $arr["eventTypeAssignmentTotal"] = $eventTypeAssignment;
         return $this->renderWithBackUrl(
             'administration/organisation/event_line/generate/nodika/distribution_confirm.html.twig',
             $arr,

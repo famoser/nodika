@@ -40,6 +40,10 @@ class NodikaConfiguration extends BaseConfiguration
             $this->eventTypeConfiguration = new EventTypeConfiguration($data->eventTypeConfiguration);
         } else {
             $this->eventTypeConfiguration = new EventTypeConfiguration(null);
+            $this->eventTypeConfiguration->weekday = 1.0;
+            $this->eventTypeConfiguration->saturday = 1.2;
+            $this->eventTypeConfiguration->sunday = 1.5;
+            $this->eventTypeConfiguration->holiday = 2.0;
             $this->holidaysFilled = false;
             $this->memberEventTypeDistributionFilled = false;
         }

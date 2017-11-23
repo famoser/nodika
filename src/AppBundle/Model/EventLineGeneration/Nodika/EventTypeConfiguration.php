@@ -23,10 +23,10 @@ class EventTypeConfiguration
             $this->sunday = $data->sunday;
             $this->holiday = $data->holiday;
         } else {
-            $this->weekday = 1.0;
-            $this->saturday = 1.2;
-            $this->sunday = 1.5;
-            $this->holiday = 2.0;
+            $this->weekday = 0;
+            $this->saturday = 0;
+            $this->sunday = 0;
+            $this->holiday = 0;
         }
     }
 
@@ -39,6 +39,11 @@ class EventTypeConfiguration
     /* @var double $sunday */
     public $sunday;
 
-    /* @var double $holiday*/
+    /* @var double $holiday */
     public $holiday;
+
+    public function getSumOfDays()
+    {
+        return $this->weekday + $this->saturday + $this->sunday + $this->holiday;
+    }
 }

@@ -9,6 +9,7 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Person;
@@ -192,10 +193,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         $assignedEventCount = 0;
 
         $currentDate = clone($configuration->startDateTime);
-        $dateIntervalAdd = "PT" . $configuration->lengthInHours . "H";
         while ($currentDate < $configuration->endDateTime) {
             $endDate = clone($currentDate);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $configuration);
             $startTimeStamp = $currentDate->getTimestamp();
             $endTimeStamp = $endDate->getTimestamp();
             $currentConflictBuffer = [];
@@ -276,10 +276,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         /* @var RRMemberConfiguration[] $priorityQueue */
         $priorityQueue = [];
         $currentDate = clone($roundRobinConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $roundRobinConfiguration->lengthInHours . "H";
         while ($currentDate < $roundRobinConfiguration->endDateTime) {
             $endDate = clone($currentDate);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $roundRobinConfiguration);
             //check if something in priority queue
             /* @var RRMemberConfiguration $matchMember */
             $matchMember = null;
@@ -419,7 +418,6 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         $currentDate = clone($nodikaConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
         $oneMore = 1;
         while ($currentDate < $nodikaConfiguration->endDateTime || $oneMore--) {
             $day = new \DateTime($currentDate->format("d.m.Y"));
@@ -436,7 +434,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 }
             }
 
-            $currentDate->add(new \DateInterval($dateIntervalAdd));
+            $currentDate = $this->addInterval($currentDate, $nodikaConfiguration);
         }
 
         //count total points
@@ -456,7 +454,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         //initialize partiesArray to distribute days with the bucket algorithm
         $partiesArray = [];
         $distributedDaysArray = [];
-        foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
+        foreach ($enabledMembers as $memberConfiguration) {
             $partiesArray[$memberConfiguration->id] = $pointsPerMemberPoint * $memberConfiguration->points;
             $partiesArray[$memberConfiguration->id] += $this->convertFromLuckyScore($totalPoints, $memberConfiguration->luckyScore);
             $distributedDaysArray[$memberConfiguration->id] = [];
@@ -550,23 +548,39 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     private function bucketsAlgorithm($parties, $bucketsCount)
     {
+        //prepare party sizes
+        $myParties = [];
+        foreach ($parties as $partyId => $partySize) {
+            $myParties[$partyId] = (int)($partySize * 10000);
+        }
+
         //prepare parties (and sort by size)
         $sizes = [];
         $totalSize = 0;
-        foreach ($parties as $partyId => $partySize) {
+        foreach ($myParties as $partyId => $partySize) {
             $sizes[$partySize][] = $partyId;
             $totalSize += $partySize;
         }
 
+
+        $totalSize2 = 0;
+        foreach ($sizes as $size => $val) {
+            $totalSize2 += $size * count($val);
+        }
+
         //bucket behaves differently depending if more parties or more space is available
-        if ($bucketsCount < count($parties)) {
+        if ($bucketsCount < count($myParties)) {
             krsort($sizes);
+
+            //issue: if one small party is the last, he will have to distribute over multiple buckets!
         } else {
             ksort($sizes);
         }
 
+
         //prepare buckets
-        $bucketSize = $totalSize / $bucketsCount;
+        $bucketSize = (double)$totalSize / $bucketsCount;
+
         $remainingBucketSizes = [];
         $bucketMembers = [];
         for ($i = 0; $i < $bucketsCount; $i++) {
@@ -574,34 +588,50 @@ class EventGenerationService implements EventGenerationServiceInterface
             $bucketMembers[$i] = [];
         }
 
+        $bucketsAssigned = 0;
+        $totalSizes = 0;
         //distribute parties to buckets
-        foreach ($sizes as $partySize => $parties) {
-            foreach ($parties as $party) {
+        foreach ($sizes as $partySize => $partiesOfThisSize) {
+            foreach ($partiesOfThisSize as $party) {
+                $totalSizes += $partySize;
                 $myPartSize = $partySize;
-                while ($myPartSize > static::ACCURACY_THRESHOLD) {
+                $max = 10000;
+                while ($myPartSize + static::ACCURACY_THRESHOLD > 0) {
+                    if ($max-- <= 0) {
+                        //wops, no way! terminate I guess?
+                        break;
+                    }
+
                     //find biggest remaining bucket
                     $biggestRemaining = 0;
                     $biggestRemainingIndex = 0;
                     for ($i = 0; $i < $bucketsCount; $i++) {
                         if ($biggestRemaining < $remainingBucketSizes[$i]) {
-                            $biggestRemainingIndex = $i;
                             $biggestRemaining = $remainingBucketSizes[$i];
+                            $biggestRemainingIndex = $i;
+                            if ($biggestRemaining == $bucketSize) {
+                                break;
+                            }
                         }
                     }
 
-                    if ($biggestRemaining > $myPartSize) {
+                    if ($biggestRemaining + static::ACCURACY_THRESHOLD > $myPartSize) {
                         //party is fully resolved
                         $bucketMembers[$biggestRemainingIndex][$party] = $myPartSize;
 
                         //adapt bucket sizes
                         $remainingBucketSizes[$biggestRemainingIndex] -= $myPartSize;
+                        $bucketsAssigned++;
+
+                        $myPartSize -= $biggestRemaining;
                         break;
                     } else {
                         $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
-
                         //adapt bucket sizes
                         $myPartSize -= $biggestRemaining;
                         $remainingBucketSizes[$biggestRemainingIndex] = 0;
+
+                        $bucketsAssigned++;
                     }
                 }
             }
@@ -612,26 +642,27 @@ class EventGenerationService implements EventGenerationServiceInterface
         foreach ($bucketMembers as $bucketIndex => $members) {
             if (count($members) == 1) {
                 //fully filled out!
-                reset($members);
-                $winnerPerBucket[$bucketIndex] = key($members);
-            }
-            //we need to choose randomly!
-            $randomValue = random_int(0, static::RANDOM_ACCURACY);
-            asort($members);
-            foreach ($members as $memberId => $memberPart) {
-                $bucketPercentage = $memberPart / $bucketSize;
-                //convert to int on RANDOM_ACCURACY scala. +0.5 because of rounding
-                $memberValue = (int)($bucketPercentage * static::RANDOM_ACCURACY + 0.5);
+                $winnerPerBucket[$bucketIndex] = array_keys($members)[0];
+            } else {
+                //we need to choose randomly!
+                $randomValue = random_int(0, $bucketSize * 1000);
+                $randomValue = $randomValue / 1000.0;
 
-                //set this as the winner so we have a match for sure
-                $winnerPerBucket[$bucketIndex] = $memberId;
+                asort($members);
+                $totalPart = 0;
+                foreach ($members as $memberId => $memberPart) {
+                    //directly set a winner, so we have a match for sure
+                    $winnerPerBucket[$bucketIndex] = $memberId;
 
-                //smaller/equal cause it starts at 0
-                if ($memberValue <= $randomValue) {
-                    break;
+                    $totalPart += $memberPart;
+                    if ($totalPart > $randomValue) {
+                        // "winner" found
+                        break;
+                    }
                 }
             }
         }
+
         return $winnerPerBucket;
     }
 
@@ -646,6 +677,13 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable)
     {
+        /**
+         * BUGS:
+         * not generated till end
+         * wrong weekdays assigned
+         */
+
+
         $generationResult = new GenerationResult(null);
         $generationResult->generationDateTime = new \DateTime();
 
@@ -725,6 +763,11 @@ class EventGenerationService implements EventGenerationServiceInterface
             $myMember->calculatePartDone();
         }
 
+        //set available to correct value
+        foreach ($idealQueueMembers as $idealQueueMember) {
+            $idealQueueMember->setAllAvailable();
+        }
+
         $holidays = [];
         foreach ($nodikaConfiguration->holidays as $holiday) {
             $holidays[(new \DateTime($holiday->format("d.m.Y")))->getTimestamp()] = 1;
@@ -734,26 +777,27 @@ class EventGenerationService implements EventGenerationServiceInterface
         assert(count($idealQueue) == $totalEvents);
 
         $startDateTime = clone($nodikaConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
         $assignedEventCount = 0;
         $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
             $day = new \DateTime($startDateTime->format("d.m.Y"));
             $endDate = clone($startDateTime);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $nodikaConfiguration);
 
             //create callable for each day type
             $fitsFunc = function ($memberId) use (&$startDateTime, &$endDate, &$assignedEventCount, &$members, &$memberAllowedCallable, &$conflictCallable) {
-                return
+                $res =
                     $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $members[$memberId]) &&
                     $conflictCallable($assignedEventCount, $members[$memberId]);
+                return $res;
             };
             $advancedFitsFunc = null;
             $advancedFitSuccessful = null;
             if (isset($holidays[$day->getTimestamp()])) {
                 $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                     /* @var IdealQueueMember $targetMember */
-                    return $targetMember->availableHolidayCount > 0 && $fitsFunc($targetMember->id);
+                    $res = $targetMember->availableHolidayCount > 0 && $fitsFunc($targetMember->id);
+                    return $res;
                 };
                 $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                     /* @var IdealQueueMember $targetMember */
@@ -765,7 +809,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //sunday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
-                        return $targetMember->availableSundayCount > 0 && $fitsFunc($targetMember->id);
+                        $res = $targetMember->availableSundayCount > 0 && $fitsFunc($targetMember->id);
+                        return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                         /* @var IdealQueueMember $targetMember */
@@ -775,7 +820,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //saturday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
-                        return $targetMember->availableSaturdayCount > 0 && $fitsFunc($targetMember->id);
+                        $res = $targetMember->availableSaturdayCount > 0 && $fitsFunc($targetMember->id);
+                        return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                         /* @var IdealQueueMember $targetMember */
@@ -785,7 +831,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //weekday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
-                        return $targetMember->availableWeekdayCount > 0 && $fitsFunc($targetMember->id);
+                        $res = $targetMember->availableWeekdayCount > 0 && $fitsFunc($targetMember->id);
+                        return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                         /* @var IdealQueueMember $targetMember */
@@ -799,15 +846,19 @@ class EventGenerationService implements EventGenerationServiceInterface
                 //the member fits yay; that was easy
                 $advancedFitSuccessful($targetMember);
             } else {
-                //the search begins; look n to the right, then n to the left, then continue with n+1
+                $assignmentFound = false;
+                //the search begins; look n to the right, then continue with n+1
                 //totalEvents as upper bound; this will not be reached probably
-                for ($i = 0; $i < $totalEvents; $i++) {
+                for ($i = 1; $i < $totalEvents; $i++) {
                     //n to right
                     $newIndex = $queueIndex + $i;
                     if ($newIndex < $totalEvents) {
                         $targetMember = $idealQueueMembers[$idealQueue[$newIndex]];
                         if ($advancedFitsFunc($targetMember)) {
                             //the member fits!
+                            $advancedFitSuccessful($targetMember);
+                            $assignmentFound = true;
+
                             //now correct the queue
                             //this is in the future; so no further corrections necessary
                             //we simply insert the new index at the required position
@@ -819,6 +870,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                             $idealQueue = array_values($idealQueue);
                             //insert id at new place
                             array_splice($idealQueue, $queueIndex, 0, $queueId);
+
                             break;
                         }
                     }
@@ -858,11 +910,14 @@ class EventGenerationService implements EventGenerationServiceInterface
                     }
                     */
                 }
+                if (!$assignmentFound) {
+                    return $this->returnNodikaError($nodikaOutput, NodikaStatusCode::NO_ALLOWED_MEMBER_FOR_EVENT);
+                }
             }
 
             $queueIndex++;
             $assignedEventCount++;
-            $startDateTime->add(new \DateInterval($dateIntervalAdd));
+            $startDateTime = $this->addInterval($startDateTime, $nodikaConfiguration);
 
             if (!($queueIndex < $totalEvents)) {
                 break;
@@ -871,12 +926,12 @@ class EventGenerationService implements EventGenerationServiceInterface
 
 
         $startDateTime = clone($nodikaConfiguration->startDateTime);
-        $dateIntervalAdd = "PT" . $nodikaConfiguration->lengthInHours . "H";
+
         $assignedEventCount = 0;
         $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
             $endDate = clone($startDateTime);
-            $endDate->add(new \DateInterval($dateIntervalAdd));
+            $endDate = $this->addInterval($endDate, $nodikaConfiguration);
 
             $targetMember = $idealQueueMembers[$idealQueue[$queueIndex]];
 
@@ -889,7 +944,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $queueIndex++;
             $assignedEventCount++;
             $startDateTime = clone($startDateTime);
-            $startDateTime->add(new \DateInterval($dateIntervalAdd));
+            $startDateTime = $this->addInterval($startDateTime, $nodikaConfiguration);
 
             if (!($queueIndex < $totalEvents)) {
                 break;
@@ -903,5 +958,35 @@ class EventGenerationService implements EventGenerationServiceInterface
         $nodikaOutput->beforeEvents = array_merge((array)($nodikaConfiguration->beforeEvents), $idealQueue);
         $nodikaOutput->generationResult = $generationResult;
         return $this->returnNodikaSuccess($nodikaOutput);
+    }
+
+
+    private function addInterval(\DateTime $dateTime, BaseConfiguration $configuration)
+    {
+        $hours = $configuration->lengthInHours;
+        $days = 0;
+        while ($hours >= 24) {
+            $days++;
+            $hours -= 24;
+        }
+
+        if ($hours >= 12) {
+            $days++;
+            $hours = 24 - $hours;
+            $daysAddInterval = new \DateInterval("P" . $days . "D");
+            $dateTime->add($daysAddInterval);
+            $hoursRemoveInterval = new \DateInterval("PT" . $hours . "H");
+            $dateTime->sub($hoursRemoveInterval);
+        } else {
+            if ($days > 0) {
+                $daysAddInterval = new \DateInterval("P" . $days . "D");
+                $dateTime->add($daysAddInterval);
+            }
+            if ($hours > 0) {
+                $hoursAddInterval = new \DateInterval("PT" . $hours . "H");
+                $dateTime->sub($hoursAddInterval);
+            }
+        }
+        return $dateTime;
     }
 }
