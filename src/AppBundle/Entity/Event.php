@@ -81,6 +81,18 @@ class Event extends BaseEntity
     private $eventPast;
 
     /**
+     * @var EventLineGeneration
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventLineGeneration", inversedBy="events")
+     */
+    private $generatedBy;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastRemainderEmailSent;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -324,5 +336,37 @@ class Event extends BaseEntity
     public function setIsConfirmedDateTime($isConfirmedDateTime)
     {
         $this->isConfirmedDateTime = $isConfirmedDateTime;
+    }
+
+    /**
+     * @return EventLineGeneration
+     */
+    public function getGeneratedBy()
+    {
+        return $this->generatedBy;
+    }
+
+    /**
+     * @param EventLineGeneration $generatedBy
+     */
+    public function setGeneratedBy(EventLineGeneration $generatedBy)
+    {
+        $this->generatedBy = $generatedBy;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastRemainderEmailSent()
+    {
+        return $this->lastRemainderEmailSent;
+    }
+
+    /**
+     * @param \DateTime $lastRemainderEmailSent
+     */
+    public function setLastRemainderEmailSent($lastRemainderEmailSent)
+    {
+        $this->lastRemainderEmailSent = $lastRemainderEmailSent;
     }
 }

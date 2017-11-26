@@ -32,26 +32,30 @@
         </div>
 
         <div class="header-content">
-            <h1>{{ title }}</h1>
-            <p class="h1-description">{{ description }}</p>
-            {% block header %}
-            {% endblock %}
-        </div>
-        <div class="go-buttons">
-            {% if back_url is defined %}
-                <a href="{{ back_url }}"
-                   class="{{ color_class }} go-button">{{ "navigation.go_back"|trans({}, "content_base") }}</a>
-            {% endif %}
-            {% if show_login is defined %}
-                <a href="{{ path("access_register") }}"
-                   class="{{ color_class }} go-button">{{ "navigation.register"|trans({}, "content_base") }}</a>
-                <a href="{{ path("dashboard_index") }}"
-                   class="{{ color_class }} go-button">{{ "navigation.login"|trans({}, "content_base") }}</a>
-            {% endif %}
-            {% if show_dashboard %}
-                <a href="{{ path("dashboard_index") }}"
-                   class="{{ color_class }} go-button">{{ "navigation.dashboard"|trans({}, "content_base") }}</a>
-            {% endif %}
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>{{ title }}</h1>
+                    <p class="h1-description">{{ description }}</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="go-buttons">
+                        {% if back_url is defined %}
+                            <a href="{{ back_url }}"
+                               class="{{ color_class }} go-button">{{ "navigation.go_back"|trans({}, "content_base") }}</a>
+                        {% endif %}
+                        {% if show_login is defined %}
+                            <a href="{{ path("access_register") }}"
+                               class="{{ color_class }} go-button">{{ "navigation.register"|trans({}, "content_base") }}</a>
+                            <a href="{{ path("dashboard_index") }}"
+                               class="{{ color_class }} go-button">{{ "navigation.login"|trans({}, "content_base") }}</a>
+                        {% endif %}
+                        {% if show_dashboard %}
+                            <a href="{{ path("dashboard_index") }}"
+                               class="{{ color_class }} go-button">{{ "navigation.dashboard"|trans({}, "content_base") }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </header>
@@ -73,14 +77,14 @@
 
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/{{ globals_tawk_id }}/default';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/{{ globals_tawk_id }}/default';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
     })();
 </script>
 <!--End of Tawk.to Script-->

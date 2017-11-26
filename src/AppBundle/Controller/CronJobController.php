@@ -66,109 +66,118 @@ class CronJobController extends BaseFrontendController
         $organisations = $this->getDoctrine()->getRepository("AppBundle:Organisation")->findAll();
         foreach ($organisations as $organisation) {
             $settings = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($organisation);
-
             $adminEmail = $settings->getReceiverOfRemainders() != null ? $settings->getReceiverOfRemainders()->getEmail() : null;
 
-            $now = new \DateTime();
-            if ($settings->getLastConfirmEventEmailSend() instanceof \DateTime) {
-                $threshHold = clone($settings->getLastConfirmEventEmailSend());
-            } else {
-                //the first schedule is skipped
-                $threshHold = new \DateTime("now");
-            }
-            //add -1 days + 22 hours because processing this also needs time (but probably not more than 2 hours)
-            $threshHold->add(new \DateInterval("P" . ($settings->getSendConfirmEventEmailDays() - 1) . "DT22H"));
-            $sendRemainderEmails = $threshHold <= $now;
+            //first time email is skipped
+            $remainderThreshold = new \DateTime("now + " . ($settings->getCanConfirmEventBeforeDays() - $settings->getSendConfirmEventEmailDays()) . " days");
+            $tooLateThreshold = new \DateTime("now + " . $settings->getMustConfirmEventBeforeDays() . " days");
+            $remainderSendBlock = new \DateTime("now - " . $settings->getSendConfirmEventEmailDays() . " days");
 
             foreach ($organisation->getMembers() as $member) {
                 /* @var Member $member */
-                $unconfirmed = $memberRepo->countUnconfirmedEvents($member);
-                $lateUnconfirmed = $memberRepo->countLateUnconfirmedEvents($member);
-                if ($unconfirmed > 0 && $sendRemainderEmails && $lateUnconfirmed == 0) {
-                    $unconfirmedEvents = $memberRepo->findUnconfirmedEvents($member);
+                $unconfirmedEvents = $memberRepo->findUnconfirmedEventsByMember($member, $remainderThreshold);
 
-                    $memberCount = 0;
-                    /* @var Person[] $persons */
-                    $persons = [];
-                    $personCount = [];
-                    foreach ($unconfirmedEvents as $unconfirmedEvent) {
-                        if ($unconfirmedEvent->getPerson() == null) {
-                            $memberCount++;
-                        } else {
-                            if (!isset($personCount[$unconfirmedEvent->getPerson()->getId()])) {
-                                $personCount[$unconfirmedEvent->getPerson()->getId()] = 0;
-                                $persons[$unconfirmedEvent->getPerson()->getId()] = $unconfirmedEvent->getPerson();
-                            }
-                        }
-                    }
+                $memberRemainderCount = 0;
+                $sendRemainderToMember = true;
 
-                    if ($memberCount > 0) {
-                        //send email to member
-                        $message = \Swift_Message::newInstance()
-                            ->setSubject($trans->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
-                            ->setFrom($this->getParameter("mailer_email"))
-                            ->setTo($member->getEmail())
-                            ->setBody($trans->trans(
-                                "member_event_confirm_remainder.message",
-                                [
-                                    "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                                    "%count%" => $unconfirmed
-                                ],
-                                "email_cronjob"));
-                        $mailer->send($message);
-                    }
-                    foreach ($persons as $key => $val) {
-                        //send remainder to person
-                        $message = \Swift_Message::newInstance()
-                            ->setSubject($trans->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
-                            ->setFrom($this->getParameter("mailer_email"))
-                            ->setTo($val->getEmail())
-                            ->setBody($trans->trans(
-                                "member_event_confirm_remainder.message",
-                                [
-                                    "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                                    "%count%" => $personCount[$key]
-                                ],
-                                "email_cronjob"));
-                        $mailer->send($message);
-                    }
-                }
-                if ($lateUnconfirmed > 0) {
-                    $lateUnconfirmedEvents = $memberRepo->findLateUnconfirmedEvents($member);
-                    foreach ($lateUnconfirmedEvents as $lateUnconfirmedEvent) {
-                        //send email both to admin & member, annoying him into confirming it
-                        //send remainder
-                        if ($lateUnconfirmedEvent->getPerson() instanceof Person) {
-                            $owner = $lateUnconfirmedEvent->getPerson()->getFullName();
-                            $ownerEmail = $lateUnconfirmedEvent->getPerson()->getEmail();
-                        } else {
-                            $owner = $lateUnconfirmedEvent->getMember()->getName();
-                            $ownerEmail = $lateUnconfirmedEvent->getMember()->getEmail();
-                        }
+                /* @var Person[] $sendRemainderToPerson */
+                $sendRemainderToPerson = [];
+                $personRemainderCount = [];
+                $sendRemainderToPersonDisabled = [];
+                foreach ($unconfirmedEvents as $unconfirmedEvent) {
+                    if ($unconfirmedEvent->getStartDateTime() < $tooLateThreshold) {
+                        //member has confirmed too late!
 
                         $message = \Swift_Message::newInstance()
                             ->setSubject($trans->trans("member_event_confirm_too_late_remainder.subject", [], "email_cronjob"))
-                            ->setFrom($this->getParameter("mailer_email"))
-                            ->setTo($ownerEmail)
-                            ->setBody($trans->trans(
-                                "member_event_confirm_too_late_remainder.message",
-                                [
-                                    "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                                    "%event_short%" => $lateUnconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . " - " . $lateUnconfirmedEvent->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT),
-                                    "%owner%" => $owner
-                                ],
-                                "email_cronjob"));
+                            ->setFrom($this->getParameter("mailer_email"));
+
+                        if ($unconfirmedEvent->getPerson() != null) {
+                            $message->setTo($unconfirmedEvent->getPerson()->getEmail());
+                            $message->addCc($member->getEmail());
+                            $owner = $unconfirmedEvent->getPerson()->getFullName();
+                        } else {
+                            $message->setTo($member->getEmail());
+                            $owner = $member->getName();
+                        }
+
+                        $message->setBody($trans->trans(
+                            "member_event_confirm_too_late_remainder.message",
+                            [
+                                "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
+                                "%event_short%" => $unconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . " - " . $unconfirmedEvent->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT),
+                                "%owner%" => $owner
+                            ],
+                            "email_cronjob"));
 
                         if ($adminEmail != null) {
                             $message->addCc($adminEmail);
                         }
                         $mailer->send($message);
+
+                    } else {
+                        //can confirm
+                        $disable = $unconfirmedEvent->getLastRemainderEmailSent() != null && $unconfirmedEvent->getLastRemainderEmailSent() > $remainderSendBlock;
+
+                        $memberRemainderCount++;
+                        if ($unconfirmedEvent->getPerson() != null) {
+                            $person = $unconfirmedEvent->getPerson();
+
+                            $sendRemainderToPerson[$person->getId()] = $person;
+
+                            if (!isset($personRemainderCount[$person->getId()])) {
+                                $personRemainderCount[$person->getId()] = 0;
+                            }
+                            $personRemainderCount[$person->getId()]++;
+
+                            if ($disable) {
+                                $sendRemainderToPersonDisabled[$person->getId()] = true;
+                            }
+                        } else {
+                            $memberRemainderCount++;
+                            if ($disable) {
+                                $sendRemainderToMember = false;
+                            }
+                        }
                     }
                 }
-            }
 
-            $settings->setLastConfirmEventEmailSend(new \DateTime());
-            $this->fastSave($settings);
+                if ($sendRemainderToMember) {
+                    //send email to member
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($trans->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($member->getEmail())
+                        ->setBody($trans->trans(
+                            "member_event_confirm_remainder.message",
+                            [
+                                "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
+                                "%count%" => $unconfirmedEvents
+                            ],
+                            "email_cronjob"));
+                    $mailer->send($message);
+                }
+
+                foreach ($sendRemainderToPerson as $person) {
+                    if (isset($sendRemainderToPersonDisabled[$person->getId()])) {
+                        //skip
+                        continue;
+                    }
+
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($trans->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
+                        ->setFrom($this->getParameter("mailer_email"))
+                        ->setTo($person->getEmail())
+                        ->setBody($trans->trans(
+                            "member_event_confirm_remainder.message",
+                            [
+                                "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
+                                "%count%" => $personRemainderCount[$person->getId()]
+                            ],
+                            "email_cronjob"));
+                    $mailer->send($message);
+                }
+            }
         }
         return new Response("finished");
     }
@@ -179,7 +188,8 @@ class CronJobController extends BaseFrontendController
      * @param $secret
      * @return Response
      */
-    public function weeklyAction(Request $request, $secret)
+    public
+    function weeklyAction(Request $request, $secret)
     {
         return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
     }

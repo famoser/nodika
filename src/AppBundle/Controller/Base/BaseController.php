@@ -173,7 +173,8 @@ class BaseController extends Controller
             $handle = fopen('php://output', 'w+');
 
             //UTF-8 BOM
-            fputs( $handle, "\xEF\xBB\xBF" );
+            fputs($handle, "\xEF\xBB\xBF");
+            fputs($handle, "sep=,\n");
 
             if (is_array($header)) {
                 // Add the header of the CSV file

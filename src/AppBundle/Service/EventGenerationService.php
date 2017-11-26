@@ -372,6 +372,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $newEvent->setEndDateTime($event->endDateTime);
                 $newEvent->setEventLine($generation->getEventLine());
                 $newEvent->setMember($memberById[$event->memberId]);
+                $newEvent->setGeneratedBy($generation);
 
                 $eventPast = $this->eventPastEvaluationService->createEventPast($person, null, $newEvent, EventChangeType::GENERATED_BY_ADMIN);
                 $em->persist($eventPast);

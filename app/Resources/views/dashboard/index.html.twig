@@ -21,25 +21,16 @@
                         </a>
                     </p>
                 {% else %}
-                    {{ event_line_model_macro.show_full_table(eventLineModels, member) }}
+                    {% for eventLineModel in eventLineModels %}
+                        {{ event_line_model_macro.show_full_table_single(eventLineModel, member) }}
+                        <p><a href="{{ path("event_search") }}">{{ "index.show_all_events"|trans }}</a></p>
+                    {% endfor %}
                 {% endif %}
             {% else %}
                 <p>{{ "index.not_part_of_organisation"|trans }}</p>
             {% endif %}
         </div>
         <div class="col-md-3">
-            <h3>{{ "index.welcome"|trans }}</h3>
-            <p>
-                {{ "index.welcome_description"|trans }}
-            </p>
-            <h3>{{ "index.trade_events"|trans }}</h3>
-            <p>
-                {{ "index.trade_events_description"|trans }}
-            </p>
-            <h3>{{ "index.questions"|trans }}</h3>
-            <p>
-                {{ "index.questions_description"|trans }} <a href="mailto:support@nodika.ch">support@nodika.ch</a>
-            </p>
             {% if change_organisations is defined %}
                 <h3>{{ "index.change_organisation"|trans }}</h3>
                 <p>
@@ -62,6 +53,19 @@
                     {% endfor %}
                 </p>
             {% endif %}
+            <h3>{{ "index.welcome"|trans }}</h3>
+            <p>
+                {{ "index.welcome_description"|trans }}
+            </p>
+            <h3>{{ "index.trade_events"|trans }}</h3>
+            <p>
+                {{ "index.trade_events_description"|trans }}
+            </p>
+            <h3>{{ "index.questions"|trans }}</h3>
+            <p>
+                {{ "index.questions_description"|trans }} <a href="mailto:support@nodika.ch">support@nodika.ch</a>
+            </p>
+
         </div>
     </div>
 {% endblock %}
