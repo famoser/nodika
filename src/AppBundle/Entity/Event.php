@@ -83,7 +83,7 @@ class Event extends BaseEntity
     /**
      * @var EventLineGeneration
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventLineGeneration", inversedBy="events")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventLineGeneration", inversedBy="generatedEvents")
      */
     private $generatedBy;
 

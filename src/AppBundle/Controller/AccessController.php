@@ -17,7 +17,8 @@ use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\FrontendUser\FrontendUserLoginType;
 use AppBundle\Form\FrontendUser\FrontendUserResetType;
 use AppBundle\Form\FrontendUser\FrontendUserSetPasswordType;
-use AppBundle\Form\Member\InviteType;
+use AppBundle\Form\Member\MemberInviteType;
+use AppBundle\Form\Person\PersonInviteType;
 use AppBundle\Form\Person\PersonType;
 use AppBundle\Helper\HashHelper;
 use Symfony\Component\Form\FormInterface;
@@ -142,7 +143,7 @@ class AccessController extends BaseAccessController
         $person = new Person();
         $person->setEmail($member->getEmail());
         $inviteForm = $this->handleForm(
-            $this->createForm(InviteType::class),
+            $this->createForm(MemberInviteType::class),
             $request,
             $person,
             function ($form, $person) use ($member, $request) {
@@ -190,6 +191,11 @@ class AccessController extends BaseAccessController
      */
     public function invitePersonAction(Request $request, $invitationHash)
     {
+        if ($this->getUser() instanceof FrontendUser) {
+            $this->displayError($this->get("translator")->trans("error.already_logged_in", [], "access"));
+            return $this->redirectToRoute("dashboard_index");
+        }
+
         $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$person instanceof Person) {
             return $this->renderWithBackUrl(
@@ -205,11 +211,14 @@ class AccessController extends BaseAccessController
             );
         }
 
+        $user = FrontendUser::createFromPerson($person);
+        $person->setFrontendUser($user);
+
         $inviteForm = $this->handleForm(
-            $this->createForm(InviteType::class),
+            $this->createForm(PersonInviteType::class),
             $request,
             $person,
-            function ($form, $person) use ($person, $request) {
+            function ($form, $person) use ($request) {
                 /* @var Person $person */
                 $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
                 if ($existingUser != null) {
@@ -236,7 +245,10 @@ class AccessController extends BaseAccessController
         }
 
         $arr["person"] = $person;
-        $arr["organisation"] = $person->getOrganisation();
+        if ($person->getMembers()->count() > 0) {
+            $arr["member"] = $person->getMembers()->first();
+            $arr["organisation"] = $person->getMembers()->first()->getOrganisation();
+        }
         $arr["invite_form"] = $inviteForm->createView();
         return $this->renderWithBackUrl(
             'access/invite.html.twig', $arr, $this->generateUrl("access_login")

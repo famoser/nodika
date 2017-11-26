@@ -125,4 +125,111 @@ class MemberRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @param $dayThreshold
+     * @param bool $singleScalar
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getUnconfirmedEventsQueryBuilder(Member $member, $dayThreshold, Person $person = null, $singleScalar = false)
+    {
+        $threshHold = new \DateInterval("P" . $dayThreshold . "D");
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        if ($singleScalar) {
+            $qb->select("COUNT(e)");
+        } else {
+            $qb->select("e");
+        }
+
+        $qb->from("AppBundle:Event", "e")
+            ->join("e.eventLine", "el")
+            ->leftJoin("e.member", "m")
+            ->where("m = :member")
+            ->setParameter('member', $member);
+
+        if ($person instanceof Person) {
+            $qb->andWhere("e.person IS NULL OR e.person = :person")
+                ->setParameter('person', $person);
+        }
+
+        $maxStartTime = new \DateTime();
+        $maxStartTime->add($threshHold);
+        $qb->andWhere("e.startDateTime < :startDateTime")
+            ->setParameter('startDateTime', $maxStartTime);
+        $qb->andWhere("e.isConfirmed = :isConfirmed")
+            ->setParameter('isConfirmed', false);
+
+        return $qb;
+    }
+
+    /**
+     * counts the events which are currently unconfirmed
+     *
+     * @param Member $member
+     * @param Person $person
+     * @return int
+     * @internal param \DateInterval $threshHold
+     */
+    public function countUnconfirmedEvents(Member $member, Person $person = null)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+
+        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person, true)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * counts the events which are not confirmed yet, but should be
+     * @param Member $member
+     * @param Person|null $person
+     * @return int
+     * @internal param \DateInterval $threshHold
+     */
+    public function countLateUnconfirmedEvents(Member $member, Person $person = null)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+
+        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person, true)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @return Event[]
+     * @internal param \DateInterval $threshHold
+     */
+    public function findUnconfirmedEvents(Member $member, Person $person = null)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+        $qb = $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person);
+        /* @var Event[] $eventsRaw */
+        $eventsRaw = $qb->getQuery()->getResult();
+        $events = [];
+        foreach ($eventsRaw as $item) {
+            $events[$item->getId()] = $item;
+        }
+        return $events;
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @return Event[]
+     * @internal param \DateInterval $threshHold
+     */
+    public function findLateUnconfirmedEvents(Member $member, Person $person = null)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($member->getOrganisation());
+
+        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -36,10 +36,6 @@ invite:
   register_form_header: 'Registrierungsformular'
   account_register: 'Zugang für %member% registrieren'
   account_register_description: 'Willkommen auf nodika! Erstellen Sie hier einen Zugang für Ihre Praxis %member% der Organisation %organisation%'
-  register: 'Registrieren'
-  register_description: >
-    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link, um die Registrierung abzuschliessen.
-    Danach können Sie die Webseite in vollem Umfang nutzen
   personal_data: 'Persönliche Daten'
   personal_data_description: >
     Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt und werden selbstverständlich nicht an Dritte weitergegeben.
@@ -95,6 +91,7 @@ invitation_hash_invalid:
 #errors
 error:
   email_already_registered: 'Diese E-Mail ist bereits vergeben. Loggen Sie sich ein oder setzen Sie das Passwort zurück.'
+  already_logged_in: 'Sie sind bereits eingeloggt. Loggen Sie sich aus um die Einladung annehmen zu können.'
   passwords_do_not_match: 'Die Passwörter stimmen nicht überein'
   new_password_not_valid: 'Das Passwort ist nicht sicher genug. Bitte verwenden Sie mindestens ein 8 stelliges Passwort'
   login_failed: 'Login fehlgeschlagen'

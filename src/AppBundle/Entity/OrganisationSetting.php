@@ -259,7 +259,7 @@ class OrganisationSetting extends BaseEntity
     /**
      * @return string
      */
-    public function getPersonInviteEmailSubject(): string
+    public function getPersonInviteEmailSubject()
     {
         return $this->personInviteEmailSubject;
     }
@@ -275,7 +275,7 @@ class OrganisationSetting extends BaseEntity
     /**
      * @return string
      */
-    public function getPersonInviteEmailMessage(): string
+    public function getPersonInviteEmailMessage()
     {
         return $this->personInviteEmailMessage;
     }

@@ -42,7 +42,7 @@
             {% for person in persons %}
                 <tr>
                     <td>{{ person.email }}</td>
-                    <td>{{ person.name }}</td>
+                    <td>{{ person.fullName }}</td>
                     {% if showFree1 %}
                         <td>{{ kitchen_sink.form_field("free_1_" ~ person.id, "") }}</td>
                     {% endif %}

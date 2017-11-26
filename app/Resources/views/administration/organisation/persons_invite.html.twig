@@ -35,19 +35,13 @@
         {% for person in persons %}
             <tr>
                 <td>
-                    {{ person.name }} <br/>
-                    <span class="secondary">
-                    {{ person.description }}
-                </span>
+                    {{ person.fullName }}
                 </td>
                 <td>
-                    {{ person.hasBeenInvited|myBoolean }}
+                    {{ (person.hasBeenInvited or person.frontendUser != null)|myBoolean }}
                 </td>
                 <td>
                     {{ person.email }}
-                </td>
-                <td>
-                    {{ person.persons.count }}
                 </td>
             </tr>
         {% endfor %}

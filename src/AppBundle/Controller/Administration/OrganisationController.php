@@ -389,7 +389,7 @@ class OrganisationController extends BaseController
                 "message" => $organisationSetting->getPersonInviteEmailMessage(),
                 "hasPendingPerson" => $hasPendingPerson
             ],
-            $this->generateUrl("administration_organisation_persons", ["organisation" => $organisation->getId()])
+            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
         );
     }
 
@@ -445,7 +445,7 @@ class OrganisationController extends BaseController
                 $person->setInvitationDateTime(new \DateTime());
 
                 $variableMapping[$person->getId()]["LINK_REPLACE"] =
-                    $this->generateUrl("access_invite", ["invitationHash" => $person->getInvitationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $this->generateUrl("access_invite_person", ["invitationHash" => $person->getInvitationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
                 $variableMapping[$person->getId()]["PERSON_NAME_REPLACE"] = $person->getFullName();
 
 
@@ -460,6 +460,7 @@ class OrganisationController extends BaseController
                     ->setFrom($this->getParameter("mailer_email"))
                     ->setTo($person->getEmail())
                     ->setBody($body);
+
                 $this->get('mailer')->send($message);
 
                 $this->fastSave($person);
@@ -467,7 +468,7 @@ class OrganisationController extends BaseController
 
             $this->displaySuccess($this->get("translator")->trans("persons_invite.successful.emails_send", ["%count%" => count($notInvitedPersons)], "administration_organisation"));
 
-            return $this->redirectToRoute("administration_organisation_persons", ["organisation" => $organisation->getId()]);
+            return $this->redirectToRoute("administration_organisation_members", ["organisation" => $organisation->getId()]);
         }
 
         $arr = [];
