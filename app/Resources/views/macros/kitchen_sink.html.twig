@@ -19,9 +19,9 @@
     </div>
 {% endmacro %}
 
-{% macro submit_form_field(name, value, text) %}
+{% macro submit_form_field(name, value, text, classes = null) %}
     <div class="form-group">
-        <button type="submit" id="{{ name }}" name="{{ name }}" value="{{ value }}" class="btn-default btn">
+        <button type="submit" id="{{ name }}" name="{{ name }}" value="{{ value }}" class="btn-default btn {{ classes }}">
             {{ text }}
         </button>
     </div>

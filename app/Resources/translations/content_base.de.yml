@@ -8,7 +8,9 @@ menu:
     add_person: 'neuer erstellen'
     administer: 'verwalten'
   user:
-    advanced: 'Erweiterte Funktionen'
+    advanced: 'Sonstiges'
+    logout: "abmelden"
+    contact_support: "support kontaktieren"
     add_own_organisation: 'Eigene Organisation erstellen'
     assign_events: 'Termine zuweisen'
     confirm_events: 'Termine bestätigen'

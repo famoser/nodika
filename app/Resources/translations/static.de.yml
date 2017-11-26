@@ -26,18 +26,15 @@ index:
     reason_3_name: 'Praktisch'
     reason_3_description: >
       Termine können einfach mit anderen Benutzern getauscht werden
-    reason_4_name: 'Übersichtlich'
+    reason_4_name: 'Erinnernd'
     reason_4_description: >
-      Sofortiger Einblick in kommende eigene Termine und Rückblick der vergangenen Termine
-    reason_5_name: 'Erinnernd'
+      Bevor ein Termin stattfindet, wird der Benutzer daran erinnert. Bestätigt er den Erhalt
+      der Erinnerung nicht, wird automatisch der Administrator informiert
+    reason_5_name: 'Transparent'
     reason_5_description: >
-      Kurz bevor ein Termin stattfindet, wird der Benutzer daran erinnert. Bestätigt er den Erhalt
-      der Erinnerung nicht, wird automatisch ein Administrator informiert
-    reason_6_name: 'Transparent'
+      Alle Veränderungen am Terminkalender werden gespeichert
+    reason_6_name: 'Individuell'
     reason_6_description: >
-      Alle Veränderungen am Terminkalender werden gespeichert und zugänglich gemacht
-    reason_7_name: 'Individuell'
-    reason_7_description: >
       Sorgsam ausgewählte Standardeinstellungen können vom Administrator überschrieben werden
   promises:
     header: 'Chancen'

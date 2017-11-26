@@ -98,6 +98,36 @@ class MemberRepository extends EntityRepository
 
     /**
      * @param Member $member
+     * @param $threshHold
+     * @return Event[]
+     */
+    public function findUnconfirmedEventsByMember(Member $member, \DateTime $threshHold)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select("e")
+            ->from("AppBundle:Event", "e")
+            ->join("e.eventLine", "el")
+            ->leftJoin("e.member", "m")
+            ->where("m = :member")
+            ->setParameter('member', $member);
+
+
+        $qb->orderBy("e.startDateTime");
+
+        $now = new \DateTime();
+        $qb->andWhere("e.startDateTime < :startDateTime")
+            ->setParameter('startDateTime', $threshHold);
+        $qb->andWhere("e.startDateTime > :now")
+            ->setParameter('now', $now);
+        $qb->andWhere("e.isConfirmed = :isConfirmed")
+            ->setParameter('isConfirmed', false);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param Member $member
      * @param Person $person
      * @param $dayThreshold
      * @param bool $singleScalar

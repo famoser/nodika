@@ -1,3 +1,5 @@
 entity:
   name: 'Benutzer'
   description: 'Ein Benutzer der Applikation mit E-Mail und Passwort als Login'
+
+email: Email

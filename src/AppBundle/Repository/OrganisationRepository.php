@@ -123,7 +123,16 @@ class OrganisationRepository extends EntityRepository
         $setupStatus->setHasEvents($hasEvents);
         $hasInvitedMembers = false;
         foreach ($organisation->getMembers() as $member) {
-            $hasInvitedMembers = $hasInvitedMembers || $member->getHasBeenInvited();
+            if ($member->getInvitationDateTime() != null) {
+                $hasInvitedMembers = true;
+                break;
+            }
+            foreach ($member->getPersons() as $person) {
+                if ($person->getInvitationDateTime() != null) {
+                    $hasInvitedMembers = true;
+                    break;
+                }
+            }
         }
         $setupStatus->setHasInvitedMembers($hasInvitedMembers);
         $applicationEventRepo = $this->getEntityManager()->getRepository("AppBundle:ApplicationEvent");

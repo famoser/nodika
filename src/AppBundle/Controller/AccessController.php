@@ -17,7 +17,8 @@ use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\FrontendUser\FrontendUserLoginType;
 use AppBundle\Form\FrontendUser\FrontendUserResetType;
 use AppBundle\Form\FrontendUser\FrontendUserSetPasswordType;
-use AppBundle\Form\Member\InviteType;
+use AppBundle\Form\Member\MemberInviteType;
+use AppBundle\Form\Person\PersonInviteType;
 use AppBundle\Form\Person\PersonType;
 use AppBundle\Helper\HashHelper;
 use Symfony\Component\Form\FormInterface;
@@ -142,7 +143,7 @@ class AccessController extends BaseAccessController
         $person = new Person();
         $person->setEmail($member->getEmail());
         $inviteForm = $this->handleForm(
-            $this->createForm(InviteType::class),
+            $this->createForm(MemberInviteType::class),
             $request,
             $person,
             function ($form, $person) use ($member, $request) {
@@ -176,6 +177,78 @@ class AccessController extends BaseAccessController
 
         $arr["member"] = $member;
         $arr["organisation"] = $member->getOrganisation();
+        $arr["invite_form"] = $inviteForm->createView();
+        return $this->renderWithBackUrl(
+            'access/invite.html.twig', $arr, $this->generateUrl("access_login")
+        );
+    }
+
+    /**
+     * @Route("/invite/person/{invitationHash}", name="access_invite_person")
+     * @param Request $request
+     * @param $invitationHash
+     * @return FormInterface|Response
+     */
+    public function invitePersonAction(Request $request, $invitationHash)
+    {
+        if ($this->getUser() instanceof FrontendUser) {
+            $this->displayError($this->get("translator")->trans("error.already_logged_in", [], "access"));
+            return $this->redirectToRoute("dashboard_index");
+        }
+
+        $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["invitationHash" => $invitationHash]);
+        if (!$person instanceof Person) {
+            return $this->renderWithBackUrl(
+                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
+            );
+        }
+
+        $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
+        if ($existingUser != null) {
+            $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
+            return $this->renderWithBackUrl(
+                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
+            );
+        }
+
+        $user = FrontendUser::createFromPerson($person);
+        $person->setFrontendUser($user);
+
+        $inviteForm = $this->handleForm(
+            $this->createForm(PersonInviteType::class),
+            $request,
+            $person,
+            function ($form, $person) use ($request) {
+                /* @var Person $person */
+                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
+                if ($existingUser != null) {
+                    $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
+                    return $form;
+                } else {
+                    $user = $person->getFrontendUser();
+                    $user->persistNewPassword();
+                    $user->setIsActive(true);
+                    $user->setRegistrationDate(new \DateTime());
+                    $person->setEmail($user->getEmail());
+
+                    $this->fastSave($person, $person);
+
+                    $this->loginUser($request, $person->getFrontendUser());
+                    $this->displaySuccess($this->get("translator")->trans("success.welcome", [], "access"));
+                    return $this->redirectToRoute("dashboard_index");
+                }
+            }
+        );
+
+        if ($inviteForm instanceof RedirectResponse) {
+            return $inviteForm;
+        }
+
+        $arr["person"] = $person;
+        if ($person->getMembers()->count() > 0) {
+            $arr["member"] = $person->getMembers()->first();
+            $arr["organisation"] = $person->getMembers()->first()->getOrganisation();
+        }
         $arr["invite_form"] = $inviteForm->createView();
         return $this->renderWithBackUrl(
             'access/invite.html.twig', $arr, $this->generateUrl("access_login")

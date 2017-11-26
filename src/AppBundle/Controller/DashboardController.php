@@ -35,6 +35,8 @@ class DashboardController extends BaseFrontendController
 
         if ($member != null) {
             $searchModel = new SearchEventModel($member->getOrganisation(), new \DateTime());
+            $searchModel->setEndDateTime(new \DateTime("today + 2 month"));
+
             $organisationRepo = $this->getDoctrine()->getRepository("AppBundle:Organisation");
 
             $arr["eventLineModels"] = $organisationRepo->findEventLineModels($searchModel);

@@ -6,7 +6,7 @@
  * Time: 19:11
  */
 
-namespace AppBundle\Form\Member;
+namespace AppBundle\Form\Person;
 
 
 use AppBundle\Entity\FrontendUser;
@@ -19,12 +19,10 @@ use AppBundle\Helper\NamingHelper;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class InviteType extends BaseAbstractType
+class PersonInviteType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addTrait($builder, PersonTrait::class);
-
         $builder->add($builder->create(
             "frontendUser",
             FrontendUserRegisterType::class, ["agb" => false] + NamingHelper::traitNameToTranslationForBuilder(UserTrait::class) +

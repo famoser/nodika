@@ -14,8 +14,12 @@
     </p>
     {{ members.show_table(organisation, organisation.members, true) }}
     <p>
-        <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "members.new_action"|trans }}</a> <br/>
-        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "members.import_action"|trans }}</a><br/>
+        <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "members.new_action"|trans }}</a>
+        <br/>
+        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "members.import_action"|trans }}</a>
+        <br/>
         <a href="{{ path("administration_organisation_members_invite", {"organisation" : organisation.id}) }}">{{ "members.invite_action"|trans }}</a>
+        <br/>
+        <a href="{{ path("administration_organisation_persons_invite", {"organisation" : organisation.id}) }}">{{ "members.invite_person_action"|trans }}</a>
     </p>
 {% endblock %}

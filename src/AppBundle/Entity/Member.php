@@ -32,9 +32,9 @@ class Member extends BaseEntity
     use CommunicationTrait;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $hasBeenInvited = false;
+    private $invitationDateTime = null;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -180,15 +180,7 @@ class Member extends BaseEntity
      */
     public function getHasBeenInvited()
     {
-        return $this->hasBeenInvited;
-    }
-
-    /**
-     * @param bool $hasBeenInvited
-     */
-    public function setHasBeenInvited($hasBeenInvited)
-    {
-        $this->hasBeenInvited = $hasBeenInvited;
+        return $this->getInvitationDateTime() != null;
     }
 
     /**
@@ -205,5 +197,21 @@ class Member extends BaseEntity
     public function setInvitationHash($invitationHash)
     {
         $this->invitationHash = $invitationHash;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getInvitationDateTime()
+    {
+        return $this->invitationDateTime;
+    }
+
+    /**
+     * @param mixed $invitationDateTime
+     */
+    public function setInvitationDateTime($invitationDateTime)
+    {
+        $this->invitationDateTime = $invitationDateTime;
     }
 }

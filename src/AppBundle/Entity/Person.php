@@ -31,6 +31,17 @@ class Person extends BaseEntity
     use AddressTrait;
     use CommunicationTrait;
 
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $invitationDateTime = null;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $invitationHash = null;
+
     /**
      * @var Organisation[]
      *
@@ -201,5 +212,45 @@ class Person extends BaseEntity
     {
         $this->frontendUser = $frontendUser;
         $frontendUser->setPerson($this);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getInvitationDateTime()
+    {
+        return $this->invitationDateTime;
+    }
+
+    /**
+     * @param mixed $invitationDateTime
+     */
+    public function setInvitationDateTime($invitationDateTime)
+    {
+        $this->invitationDateTime = $invitationDateTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvitationHash()
+    {
+        return $this->invitationHash;
+    }
+
+    /**
+     * @param mixed $invitationHash
+     */
+    public function setInvitationHash($invitationHash)
+    {
+        $this->invitationHash = $invitationHash;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHasBeenInvited()
+    {
+        return $this->getInvitationDateTime() != null;
     }
 }

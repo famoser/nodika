@@ -15,6 +15,7 @@ use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Model\EventLineGeneration\Base\BaseConfiguration;
 use AppBundle\Model\EventLineGeneration\Base\BaseOutput;
 use AppBundle\Model\EventLineGeneration\GenerationResult;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -33,6 +34,11 @@ class EventLineGeneration extends BaseEntity
      * @ORM\Column(type="datetime")
      */
     private $createdAtDateTime;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : false})
+     */
+    private $applied;
 
     /**
      * @ORM\Column(type="integer")
@@ -73,6 +79,19 @@ class EventLineGeneration extends BaseEntity
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Person")
      */
     private $createdByPerson;
+
+    /**
+     * @var Event[]
+     *
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="generatedBy")
+     * @ORM\OrderBy({"startDateTime" = "ASC"})
+     */
+    private $generatedEvents;
+
+    public function __construct()
+    {
+        $this->generatedEvents = new ArrayCollection();
+    }
 
     /**
      * Set generationDate
@@ -277,5 +296,29 @@ class EventLineGeneration extends BaseEntity
     public function setCreatedByPerson($createdByPerson)
     {
         $this->createdByPerson = $createdByPerson;
+    }
+
+    /**
+     * @return Event[]
+     */
+    public function getGeneratedEvents(): array
+    {
+        return $this->generatedEvents;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getApplied()
+    {
+        return $this->applied;
+    }
+
+    /**
+     * @param boolean $applied
+     */
+    public function setApplied($applied)
+    {
+        $this->applied = $applied;
     }
 }

@@ -1,0 +1,65 @@
+{% extends "primary_secondary_content_base.html.twig" %}
+{% set color_class = globals_color_class_person %}
+{% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
+
+{% block title %}{{ "persons_invite.title"|trans }}{% endblock %}
+{% block description %}{{ "persons_invite.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_organisation" %}
+
+{% block primary_content %}
+    <h3>{{ "persons_invite.customize_message"|trans }}</h3>
+    <form class="form"
+          action="{{ path("administration_organisation_persons_invite", {"organisation" : organisation.id}) }}"
+          method="post">
+        {{ kitchen_sink.form_field("subject", subject, "persons_invite.subject"|trans) }}
+        {{ kitchen_sink.textarea_form_field("message", message, "persons_invite.message"|trans) }}
+        {% if hasPendingPerson %}
+            {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
+        {% else %}
+            {{ kitchen_sink.submit_form_button("submit", "edit"|trans({}, "enum_submit_button_type")) }}
+        {% endif %}
+
+    </form>
+
+    <h3>{{ "entity.plural"|trans({}, "entity_person") }}</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
+            <th>{{ "has_been_invited"|trans({}, "entity_person") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_person") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for person in persons %}
+            <tr>
+                <td>
+                    {{ person.fullName }}
+                </td>
+                <td>
+                    {{ (person.hasBeenInvited or person.frontendUser != null)|myBoolean }}
+                </td>
+                <td>
+                    {{ person.email }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+{% block secondary_content %}
+    <h3>{{ "persons_invite.invite"|trans }}</h3>
+    <p>{{ "persons_invite.invite_description"|trans }}</p>
+    <h3>{{ "persons_invite.customize_message"|trans }}</h3>
+    <p>
+        {{ "persons_invite.customize_message_description"|trans }}<br/>
+        {{ "persons_invite.customize_message_variable_1"|trans }}<br/>
+        {{ "persons_invite.customize_message_variable_2"|trans }}<br/>
+        {{ "persons_invite.customize_message_variable_3"|trans }}<br/>
+        {{ "persons_invite.customize_message_variable_4"|trans }}<br/>
+        {{ "persons_invite.customize_message_variable_5"|trans }}
+    </p>
+{% endblock %}
