@@ -38,7 +38,7 @@ class EventLineGeneration extends BaseEntity
     /**
      * @ORM\Column(type="boolean", options={"default" : false})
      */
-    private $applied;
+    private $applied = false;
 
     /**
      * @ORM\Column(type="integer")
