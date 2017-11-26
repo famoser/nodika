@@ -87,6 +87,7 @@ members:
   new_action: 'neue Praxis hinzufügen'
   import_action: 'Praxen importieren'
   invite_action: 'Praxen hier einladen'
+  invite_person_action: 'Mitarbeiter der Praxen einladen'
 
 #messages page
 messages:
@@ -132,6 +133,7 @@ members_invite:
   successful:
     emails_send: 'Die Einladung wurde an %count% Praxen versandt'
 
+#members/invite/preview page
 members_invite_preview:
   title: 'E-Mail versenden'
   description: 'E-Mail Versand konfigurieren'
@@ -141,6 +143,50 @@ members_invite_preview:
   free_variables: 'Freie Variablen'
   free_variables_description: 'Sofern in Ihrer E-Mail gefunden können Sie hier für jede Praxis die freien Variablen setzen.'
   member_name_replace: 'MEMBER_NAME_REPLACE'
+  free_1_replace: 'FREE_1_REPLACE'
+  free_2_replace: 'FREE_2_REPLACE'
+  free_3_replace: 'FREE_3_REPLACE'
+  send_messages_action: 'E-Mails versenden'
+
+#persons/invite page
+persons_invite:
+  title: 'Mitarbeiter einladen'
+  description: 'Mitarbeiter zu nodika einladen'
+  invite: 'Einladung versenden'
+  invite_description: 'Versenden Sie eine E-Mail an alle Mitarbeiter die noch einen Account erstellt haben.'
+  subject: 'Betreff'
+  message: 'Nachricht'
+  customize_message: 'E-Mail personalisieren'
+  customize_message_description: >
+    Sie können die versendete E-Mail hier anpassen. Folgende Variablen können Sie verwenden, die dann automatisch durch das zutreffende ersetzt werden:
+  customize_message_variable_1: 'LINK_REPLACE enthält den Link durch den sich der Mitarbeiter registrieren kann'
+  customize_message_variable_2: 'PERSON_NAME_REPLACE enthält den Namen des Mitarbeiters'
+  customize_message_variable_3: 'FREE_1_REPLACE ist eine Variable die sie im nächsten Schritt für jeden Mitarbeiter einzeln setzen können'
+  customize_message_variable_4: 'FREE_2_REPLACE ist eine Variable die sie im nächsten Schritt für jeden Mitarbeiter einzeln setzen können'
+  customize_message_variable_5: 'FREE_3_REPLACE ist eine Variable die sie im nächsten Schritt für jeden Mitarbeiter einzeln setzen können'
+  error:
+    no_link_replace_in_message: 'Ihre E-Mail muss zwingend LINK_REPLACE enthalten, da sich der Mitarbeiter sonst gar nicht registrieren kann'
+  email:
+    default_subject: 'Einladung zum Notfalldienstkalender'
+    default_message: |
+      Guten Tag,
+
+      Dies ist eine Einladung zum neuen Notfalldienstkalender. Bitte setzten Sie das Passwort für Ihren Account indem Sie diesen Link besuchen: LINK_REPLACE
+
+      Der Administrator dankt.
+  successful:
+    emails_send: 'Die Einladung wurde an %count% Mitarbeiter versandt'
+
+#persons/invite/preview page
+persons_invite_preview:
+  title: 'E-Mail versenden'
+  description: 'E-Mail Versand konfigurieren'
+  your_email: 'Ihre E-Mail'
+  subject: 'Betreff'
+  message: 'Nachricht'
+  free_variables: 'Freie Variablen'
+  free_variables_description: 'Sofern in Ihrer E-Mail gefunden, können Sie hier für jeden Mitarbeiter die freien Variablen setzen.'
+  person_name_replace: 'PERSON_NAME_REPLACE'
   free_1_replace: 'FREE_1_REPLACE'
   free_2_replace: 'FREE_2_REPLACE'
   free_3_replace: 'FREE_3_REPLACE'

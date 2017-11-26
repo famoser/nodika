@@ -12,6 +12,7 @@ namespace AppBundle\Controller\Administration;
 use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Person;
 use AppBundle\Enum\ApplicationEventType;
 use AppBundle\Enum\SubmitButtonType;
 use AppBundle\Form\Organisation\OrganisationType;
@@ -167,13 +168,13 @@ class OrganisationController extends BaseController
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $organisationSetting = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($organisation);
 
-        if ($organisationSetting->getInviteEmailSubject() == "") {
-            $organisationSetting->setInviteEmailSubject(
+        if ($organisationSetting->getMemberInviteEmailSubject() == "") {
+            $organisationSetting->setMemberInviteEmailSubject(
                 $this->get("translator")->trans("members_invite.email.default_subject", [], "administration_organisation")
             );
         }
-        if ($organisationSetting->getInviteEmailMessage() == "") {
-            $organisationSetting->setInviteEmailMessage(
+        if ($organisationSetting->getMemberInviteEmailMessage() == "") {
+            $organisationSetting->setMemberInviteEmailMessage(
                 $this->get("translator")->trans("members_invite.email.default_message", [], "administration_organisation")
             );
         }
@@ -181,16 +182,18 @@ class OrganisationController extends BaseController
 
         $hasPendingMember = false;
         foreach ($organisation->getMembers() as $member) {
-            $hasPendingMember |= !$member->getHasBeenInvited();
+            if ($member->getInvitationDateTime() == null) {
+                $hasPendingMember = true;
+            }
         }
 
         if ($request->getMethod() == "POST") {
             $canForward = $hasPendingMember;
             foreach ($request->request->all() as $key => $value) {
                 if (strpos($key, "subject") === 0) {
-                    $organisationSetting->setInviteEmailSubject($value);
+                    $organisationSetting->setMemberInviteEmailSubject($value);
                 } else if ($key == "message") {
-                    $organisationSetting->setInviteEmailMessage($value);
+                    $organisationSetting->setMemberInviteEmailMessage($value);
                     if (!strpos($value, "LINK_REPLACE")) {
                         $this->get("translator")->trans("members_invite.error.no_link_replace_in_message", [], "administration_organisation");
                         $canForward = false;
@@ -210,8 +213,8 @@ class OrganisationController extends BaseController
             $arr +
             [
                 "members" => $organisation->getMembers(),
-                "subject" => $organisationSetting->getInviteEmailSubject(),
-                "message" => $organisationSetting->getInviteEmailMessage(),
+                "subject" => $organisationSetting->getMemberInviteEmailSubject(),
+                "message" => $organisationSetting->getMemberInviteEmailMessage(),
                 "hasPendingMember" => $hasPendingMember
             ],
             $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
@@ -232,11 +235,13 @@ class OrganisationController extends BaseController
 
         /* @var Member[] $notInvitedMembers */
         $notInvitedMembers = [];
+
         foreach ($organisation->getMembers() as $member) {
-            if (!$member->getHasBeenInvited()) {
+            if ($member->getInvitationDateTime() == null) {
                 $notInvitedMembers[] = $member;
             }
         }
+
 
         if ($request->getMethod() == "POST") {
             $variableMapping = [];
@@ -260,10 +265,12 @@ class OrganisationController extends BaseController
             }
 
             foreach ($notInvitedMembers as $member) {
-                $subject = $organisationSetting->getInviteEmailSubject();
-                $body = $organisationSetting->getInviteEmailMessage();
+                $subject = $organisationSetting->getMemberInviteEmailSubject();
+                $body = $organisationSetting->getMemberInviteEmailMessage();
 
                 $member->setInvitationHash(HashHelper::createNewResetHash());
+                $member->setInvitationDateTime(new \DateTime());
+
                 $variableMapping[$member->getId()]["LINK_REPLACE"] =
                     $this->generateUrl("access_invite", ["invitationHash" => $member->getInvitationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
                 $variableMapping[$member->getId()]["MEMBER_NAME_REPLACE"] = $member->getName();
@@ -282,7 +289,6 @@ class OrganisationController extends BaseController
                     ->setBody($body);
                 $this->get('mailer')->send($message);
 
-                $member->setHasBeenInvited(true);
                 $this->fastSave($member);
             }
 
@@ -294,28 +300,201 @@ class OrganisationController extends BaseController
         $arr = [];
 
         $showFree1 =
-            strpos($organisationSetting->getInviteEmailSubject(), "FREE_1_REPLACE") ||
-            strpos($organisationSetting->getInviteEmailMessage(), "FREE_1_REPLACE");
+            strpos($organisationSetting->getMemberInviteEmailSubject(), "FREE_1_REPLACE") ||
+            strpos($organisationSetting->getMemberInviteEmailMessage(), "FREE_1_REPLACE");
 
         $showFree2 =
-            strpos($organisationSetting->getInviteEmailSubject(), "FREE_2_REPLACE") ||
-            strpos($organisationSetting->getInviteEmailMessage(), "FREE_2_REPLACE");
+            strpos($organisationSetting->getMemberInviteEmailSubject(), "FREE_2_REPLACE") ||
+            strpos($organisationSetting->getMemberInviteEmailMessage(), "FREE_2_REPLACE");
 
         $showFree3 =
-            strpos($organisationSetting->getInviteEmailSubject(), "FREE_3_REPLACE") ||
-            strpos($organisationSetting->getInviteEmailMessage(), "FREE_3_REPLACE");
+            strpos($organisationSetting->getMemberInviteEmailSubject(), "FREE_3_REPLACE") ||
+            strpos($organisationSetting->getMemberInviteEmailMessage(), "FREE_3_REPLACE");
 
         $arr["showFree1"] = $showFree1;
         $arr["showFree2"] = $showFree2;
         $arr["showFree3"] = $showFree3;
         $arr["organisation"] = $organisation;
         $arr["members"] = $notInvitedMembers;
-        $arr["subject"] = $organisationSetting->getInviteEmailSubject();
-        $arr["message"] = $organisationSetting->getInviteEmailMessage();
+        $arr["subject"] = $organisationSetting->getMemberInviteEmailSubject();
+        $arr["message"] = $organisationSetting->getMemberInviteEmailMessage();
         return $this->renderWithBackUrl(
             'administration/organisation/members_invite_preview.html.twig',
             $arr,
             $this->generateUrl("administration_organisation_members_invite", ["organisation" => $organisation->getId()])
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/persons/invite", name="administration_organisation_persons_invite")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function personsInviteAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $organisationSetting = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($organisation);
+
+        if ($organisationSetting->getPersonInviteEmailSubject() == "") {
+            $organisationSetting->setPersonInviteEmailSubject(
+                $this->get("translator")->trans("persons_invite.email.default_subject", [], "administration_organisation")
+            );
+        }
+        if ($organisationSetting->getPersonInviteEmailMessage() == "") {
+            $organisationSetting->setPersonInviteEmailMessage(
+                $this->get("translator")->trans("persons_invite.email.default_message", [], "administration_organisation")
+            );
+        }
+
+
+        $hasPendingPerson = false;
+        $persons = [];
+        foreach ($organisation->getMembers() as $member) {
+            foreach ($member->getPersons() as $person) {
+                if ($person->getFrontendUser() == null) {
+                    $hasPendingPerson = true;
+                }
+                $persons[$person->getId()] = $person;
+            }
+        }
+
+        if ($request->getMethod() == "POST") {
+            $canForward = $hasPendingPerson;
+            foreach ($request->request->all() as $key => $value) {
+                if (strpos($key, "subject") === 0) {
+                    $organisationSetting->setPersonInviteEmailSubject($value);
+                } else if ($key == "message") {
+                    $organisationSetting->setPersonInviteEmailMessage($value);
+                    if (!strpos($value, "LINK_REPLACE")) {
+                        $this->get("translator")->trans("persons_invite.error.no_link_replace_in_message", [], "administration_organisation");
+                        $canForward = false;
+                    }
+                }
+            }
+            $this->fastSave($organisationSetting);
+
+            if ($canForward) {
+                return $this->redirectToRoute("administration_organisation_persons_invite_preview", ["organisation" => $organisation->getId()]);
+            }
+        }
+
+        $arr["organisation"] = $organisation;
+        return $this->renderWithBackUrl(
+            'administration/organisation/persons_invite.html.twig',
+            $arr +
+            [
+                "persons" => $persons,
+                "subject" => $organisationSetting->getPersonInviteEmailSubject(),
+                "message" => $organisationSetting->getPersonInviteEmailMessage(),
+                "hasPendingPerson" => $hasPendingPerson
+            ],
+            $this->generateUrl("administration_organisation_persons", ["organisation" => $organisation->getId()])
+        );
+    }
+
+    /**
+     * @Route("/{organisation}/persons/invite/preview", name="administration_organisation_persons_invite_preview")
+     * @param Request $request
+     * @param Organisation $organisation
+     * @return Response
+     */
+    public function personsInvitePreviewAction(Request $request, Organisation $organisation)
+    {
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $organisationSetting = $this->getDoctrine()->getRepository("AppBundle:OrganisationSetting")->getByOrganisation($organisation);
+
+
+        /* @var Person[] $notInvitedPersons */
+        $notInvitedPersons = [];
+        foreach ($organisation->getMembers() as $member) {
+            foreach ($member->getPersons() as $person) {
+                if ($person->getFrontendUser() == null) {
+                    $notInvitedPersons[$person->getId()] = $person;
+                }
+            }
+        }
+
+
+        if ($request->getMethod() == "POST") {
+            $variableMapping = [];
+            foreach ($notInvitedPersons as $person) {
+                $variableMapping[$person->getId()] = [];
+                $variableMapping[$person->getId()]["FREE_1_REPLACE"] = "";
+                $variableMapping[$person->getId()]["FREE_2_REPLACE"] = "";
+                $variableMapping[$person->getId()]["FREE_3_REPLACE"] = "";
+            }
+            foreach ($request->request->all() as $key => $value) {
+                if (strpos($key, "free_1_") === 0) {
+                    $personId = (int)substr($key, 7); //to cut off free_1_
+                    $variableMapping[$personId]["FREE_1_REPLACE"] = $value;
+                } else if (strpos($key, "free_2_") === 0) {
+                    $personId = (int)substr($key, 7); //to cut off free_2_
+                    $variableMapping[$personId]["FREE_2_REPLACE"] = $value;
+                } else if (strpos($key, "free_3_") === 0) {
+                    $personId = (int)substr($key, 7); //to cut off free_3_
+                    $variableMapping[$personId]["FREE_3_REPLACE"] = $value;
+                }
+            }
+
+            foreach ($notInvitedPersons as $person) {
+                $subject = $organisationSetting->getPersonInviteEmailSubject();
+                $body = $organisationSetting->getPersonInviteEmailMessage();
+
+                $person->setInvitationHash(HashHelper::createNewResetHash());
+                $person->setInvitationDateTime(new \DateTime());
+
+                $variableMapping[$person->getId()]["LINK_REPLACE"] =
+                    $this->generateUrl("access_invite", ["invitationHash" => $person->getInvitationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
+                $variableMapping[$person->getId()]["PERSON_NAME_REPLACE"] = $person->getFullName();
+
+
+                foreach ($variableMapping[$person->getId()] as $search => $replace) {
+                    $subject = str_replace($search, $replace, $subject);
+                    $body = str_replace($search, $replace, $body);
+                }
+
+
+                $message = \Swift_Message::newInstance()
+                    ->setSubject($subject)
+                    ->setFrom($this->getParameter("mailer_email"))
+                    ->setTo($person->getEmail())
+                    ->setBody($body);
+                $this->get('mailer')->send($message);
+
+                $this->fastSave($person);
+            }
+
+            $this->displaySuccess($this->get("translator")->trans("persons_invite.successful.emails_send", ["%count%" => count($notInvitedPersons)], "administration_organisation"));
+
+            return $this->redirectToRoute("administration_organisation_persons", ["organisation" => $organisation->getId()]);
+        }
+
+        $arr = [];
+
+        $showFree1 =
+            strpos($organisationSetting->getPersonInviteEmailSubject(), "FREE_1_REPLACE") ||
+            strpos($organisationSetting->getPersonInviteEmailMessage(), "FREE_1_REPLACE");
+
+        $showFree2 =
+            strpos($organisationSetting->getPersonInviteEmailSubject(), "FREE_2_REPLACE") ||
+            strpos($organisationSetting->getPersonInviteEmailMessage(), "FREE_2_REPLACE");
+
+        $showFree3 =
+            strpos($organisationSetting->getPersonInviteEmailSubject(), "FREE_3_REPLACE") ||
+            strpos($organisationSetting->getPersonInviteEmailMessage(), "FREE_3_REPLACE");
+
+        $arr["showFree1"] = $showFree1;
+        $arr["showFree2"] = $showFree2;
+        $arr["showFree3"] = $showFree3;
+        $arr["organisation"] = $organisation;
+        $arr["persons"] = $notInvitedPersons;
+        $arr["subject"] = $organisationSetting->getPersonInviteEmailSubject();
+        $arr["message"] = $organisationSetting->getPersonInviteEmailMessage();
+        return $this->renderWithBackUrl(
+            'administration/organisation/persons_invite_preview.html.twig',
+            $arr,
+            $this->generateUrl("administration_organisation_persons_invite", ["organisation" => $organisation->getId()])
         );
     }
 

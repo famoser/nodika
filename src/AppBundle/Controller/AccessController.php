@@ -183,6 +183,67 @@ class AccessController extends BaseAccessController
     }
 
     /**
+     * @Route("/invite/person/{invitationHash}", name="access_invite_person")
+     * @param Request $request
+     * @param $invitationHash
+     * @return FormInterface|Response
+     */
+    public function invitePersonAction(Request $request, $invitationHash)
+    {
+        $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["invitationHash" => $invitationHash]);
+        if (!$person instanceof Person) {
+            return $this->renderWithBackUrl(
+                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
+            );
+        }
+
+        $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
+        if ($existingUser != null) {
+            $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
+            return $this->renderWithBackUrl(
+                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
+            );
+        }
+
+        $inviteForm = $this->handleForm(
+            $this->createForm(InviteType::class),
+            $request,
+            $person,
+            function ($form, $person) use ($person, $request) {
+                /* @var Person $person */
+                $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
+                if ($existingUser != null) {
+                    $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
+                    return $form;
+                } else {
+                    $user = $person->getFrontendUser();
+                    $user->persistNewPassword();
+                    $user->setIsActive(true);
+                    $user->setRegistrationDate(new \DateTime());
+                    $person->setEmail($user->getEmail());
+
+                    $this->fastSave($person, $person);
+
+                    $this->loginUser($request, $person->getFrontendUser());
+                    $this->displaySuccess($this->get("translator")->trans("success.welcome", [], "access"));
+                    return $this->redirectToRoute("dashboard_index");
+                }
+            }
+        );
+
+        if ($inviteForm instanceof RedirectResponse) {
+            return $inviteForm;
+        }
+
+        $arr["person"] = $person;
+        $arr["organisation"] = $person->getOrganisation();
+        $arr["invite_form"] = $inviteForm->createView();
+        return $this->renderWithBackUrl(
+            'access/invite.html.twig', $arr, $this->generateUrl("access_login")
+        );
+    }
+
+    /**
      * @param FrontendUser $user
      */
     private function sendRegisterConfirmEmail(FrontendUser $user)

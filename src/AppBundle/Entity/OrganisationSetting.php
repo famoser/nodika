@@ -30,14 +30,28 @@ class OrganisationSetting extends BaseEntity
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $inviteEmailSubject = "";
+    private $memberInviteEmailSubject = "";
 
     /**
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $inviteEmailMessage = "";
+    private $memberInviteEmailMessage = "";
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $personInviteEmailSubject = "";
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $personInviteEmailMessage = "";
 
     /**
      * @var int
@@ -117,33 +131,33 @@ class OrganisationSetting extends BaseEntity
     /**
      * @return string
      */
-    public function getInviteEmailSubject()
+    public function getMemberInviteEmailSubject()
     {
-        return $this->inviteEmailSubject;
+        return $this->memberInviteEmailSubject;
     }
 
     /**
-     * @param string $inviteEmailSubject
+     * @param string $memberInviteEmailSubject
      */
-    public function setInviteEmailSubject($inviteEmailSubject)
+    public function setMemberInviteEmailSubject($memberInviteEmailSubject)
     {
-        $this->inviteEmailSubject = $inviteEmailSubject;
+        $this->memberInviteEmailSubject = $memberInviteEmailSubject;
     }
 
     /**
      * @return string
      */
-    public function getInviteEmailMessage()
+    public function getMemberInviteEmailMessage()
     {
-        return $this->inviteEmailMessage;
+        return $this->memberInviteEmailMessage;
     }
 
     /**
-     * @param string $inviteEmailMessage
+     * @param string $memberInviteEmailMessage
      */
-    public function setInviteEmailMessage($inviteEmailMessage)
+    public function setMemberInviteEmailMessage($memberInviteEmailMessage)
     {
-        $this->inviteEmailMessage = $inviteEmailMessage;
+        $this->memberInviteEmailMessage = $memberInviteEmailMessage;
     }
 
     /**
@@ -240,5 +254,37 @@ class OrganisationSetting extends BaseEntity
     public function setReceiverOfRemainders($receiverOfRemainders)
     {
         $this->receiverOfRemainders = $receiverOfRemainders;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPersonInviteEmailSubject(): string
+    {
+        return $this->personInviteEmailSubject;
+    }
+
+    /**
+     * @param string $personInviteEmailSubject
+     */
+    public function setPersonInviteEmailSubject(string $personInviteEmailSubject)
+    {
+        $this->personInviteEmailSubject = $personInviteEmailSubject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPersonInviteEmailMessage(): string
+    {
+        return $this->personInviteEmailMessage;
+    }
+
+    /**
+     * @param string $personInviteEmailMessage
+     */
+    public function setPersonInviteEmailMessage(string $personInviteEmailMessage)
+    {
+        $this->personInviteEmailMessage = $personInviteEmailMessage;
     }
 }

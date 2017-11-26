@@ -2,3 +2,5 @@ entity:
   name: 'Mitarbeiter'
   description: 'Ein Mitarbeiter gehört einer Person und ist einer Praxis zugeordnet'
   plural: 'Mitarbeiter'
+
+has_been_invited: bereits eingeladen
