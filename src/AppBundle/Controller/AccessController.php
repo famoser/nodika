@@ -200,9 +200,14 @@ class AccessController extends BaseAccessController
 
         if ($this->getUser() instanceof FrontendUser) {
             if ($this->getUser()->getEmail() == $person->getEmail()) {
-                $this->getUser()->setPerson($person);
-                $this->getPerson()->setFrontendUser($this->getUser());
-                $this->displayError($this->get("translator")->trans("success.person_assigned", [], "access"));
+                if ($this->getUser()->getPerson()->getId() != $person->getId()) {
+                    $this->getUser()->setPerson($person);
+                    $person->setFrontendUser($this->getUser());
+                    $this->fastSave($this->getUser(), $person);
+                    $this->displaySuccess($this->get("translator")->trans("success.person_assigned", [], "access"));
+                } else {
+                    $this->displayInfo($this->get("translator")->trans("info.already_accepted_invite", [], "access"));
+                }
                 return $this->redirectToRoute("dashboard_index");
             } else {
                 $this->displayError($this->get("translator")->trans("error.already_logged_in", [], "access"));

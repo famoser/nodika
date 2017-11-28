@@ -28,6 +28,8 @@ register:
     Nach der gratis %free_period_days%-tägigen Testphase können Sie ein Abo für Ihre Organisation lösen.
     Die einmalige Registrierungsgebühr beträgt %register_fee% CHF und die Jahresgebühr ist %yearly_fee% CHF.
   register_action: 'Erstellen Sie zuerst einen persönlichen Account'
+  register_disclaimer: 'Achtung!'
+  register_disclaimer_description: 'Registrieren Sie sich nur hier, falls sie der Organisator sind. Sind Sie ein Mitglied einer Organisation haben Sie eine Einladung in Ihrem E-Mail Postfach bekommen (schauen Sie beim Spam, oder fragen Sie Ihren Administrator, falls Sie das E-Mail nicht finden können)'
 
 #invite page
 invite:
@@ -101,5 +103,7 @@ success:
   password_set: 'Neues Passwort erfolgreich gesetzt'
   person_assigned: 'Sie haben die Einladung angenommen'
   welcome: 'Registrierung erfolgreich. Willkommen!'
+
 info:
   login_with_email: 'Haben Sie sich ausversehen bereits mit dieser E-Mail registriert? Loggen Sie sich ein, und rufen Sie den Einladungslink nocheinmal auf. Wir verbinden Sie dann mit Ihrer Organisation!'
+  already_accepted_invite: 'Sie haben diese Einladung bereits angenommen'
