@@ -389,6 +389,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                 return EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE;
             }
         }
+        $generation->setApplied(true);
+        $em->persist($generation);
         $em->flush();
         return EventGenerationServicePersistResponse::SUCCESSFUL;
     }

@@ -81,6 +81,7 @@ class LoadEventData extends BaseFixture
         $eventLineGeneration->setDistributionOutput($output);
         $eventLineGeneration->setDistributionType(DistributionType::ROUND_ROBIN);
         $eventLineGeneration->setGenerationResult($output->generationResult);
+        $manager->persist($eventLineGeneration);
         $generation->persist($eventLineGeneration, $output->generationResult, $admin);
 
         $manager->flush();
