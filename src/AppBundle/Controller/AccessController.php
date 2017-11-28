@@ -191,11 +191,6 @@ class AccessController extends BaseAccessController
      */
     public function invitePersonAction(Request $request, $invitationHash)
     {
-        if ($this->getUser() instanceof FrontendUser) {
-            $this->displayError($this->get("translator")->trans("error.already_logged_in", [], "access"));
-            return $this->redirectToRoute("dashboard_index");
-        }
-
         $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$person instanceof Person) {
             return $this->renderWithBackUrl(
@@ -203,12 +198,24 @@ class AccessController extends BaseAccessController
             );
         }
 
+        if ($this->getUser() instanceof FrontendUser) {
+            if ($this->getUser()->getEmail() == $person->getEmail()) {
+                $this->getUser()->setPerson($person);
+                $this->getPerson()->setFrontendUser($this->getUser());
+                $this->displayError($this->get("translator")->trans("success.person_assigned", [], "access"));
+                return $this->redirectToRoute("dashboard_index");
+            } else {
+                $this->displayError($this->get("translator")->trans("error.already_logged_in", [], "access"));
+                return $this->redirectToRoute("dashboard_index");
+            }
+        }
+
+
         $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
         if ($existingUser != null) {
             $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
-            return $this->renderWithBackUrl(
-                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
-            );
+            $this->displayInfo($this->get("translator")->trans("info.login_with_email", [], "access"));
+            return $this->redirectToRoute("access_login");
         }
 
         $user = FrontendUser::createFromPerson($person);
