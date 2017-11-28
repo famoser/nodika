@@ -215,7 +215,6 @@ class AccessController extends BaseAccessController
             }
         }
 
-
         $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $person->getEmail()]);
         if ($existingUser != null) {
             $this->displayError($this->get("translator")->trans("error.email_already_registered", [], "access"));
