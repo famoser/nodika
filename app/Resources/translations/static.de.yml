@@ -64,10 +64,10 @@ index:
       Einmalige Registrierungsgebühr %register_fee% CHF zur teilweisen Deckung der Entwicklungskosten
     aspect_2_name: 'Jährlicher Betrag'
     aspect_2_description: >
-      Der jährliche Betrag von CHF %yearly_fee% deckt den Rest der Entwicklungskosten, und ermöglicht die Wartung und das Hosting der Platform
+      Der jährliche Betrag von CHF %yearly_fee% deckt den Rest der Entwicklungskosten, und ermöglicht die Wartung und das Hosting der Plattform
     aspect_3_name: 'Support'
     aspect_3_description: >
-       Wird mit 100 CHF/h seperat vergütet
+       Wird mit 100 CHF/h separat vergütet
     aspect_4_name: 'Gratis Testphase'
     aspect_4_description: >
       Alle Funktionen von nodika sind für einen Monat unbeschränkt und gratis verfügbar.
@@ -85,4 +85,4 @@ error:
   fallback: 'Ein Problem hat verhindert dass diese Anfrage ausgeführt werden konnte'
   500: 'Ein kritischer Fehler ist bei der Ausführung Ihrer Anfrage aufgetreten. Probieren sie es am Besten einfach noch einmal. Besteht das Problem weiterhin, schreiben Sie uns eine E-Mail an'
   500_email: 'info@nodika.ch'
-  back_to_homepage: 'Hier geht''s zurück zur Starteite'
+  back_to_homepage: 'Hier geht''s zurück zur Startseite'
