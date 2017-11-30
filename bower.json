@@ -16,6 +16,7 @@
     "jquery": "^2",
     "bootstrap": "^3",
     "bootstrap-flat": "*",
-    "components-font-awesome": "^4"
+    "components-font-awesome": "^4",
+    "Ionicons": "ionicons#^2.0.1"
   }
 }

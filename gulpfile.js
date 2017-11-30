@@ -70,7 +70,7 @@ var config = {
         path.bower_path + "components-font-awesome/css/font-awesome.css",
         path.bower_path + "bootstrap-flat/css/bootstrap-flat.css",
         path.bower_path + "bootstrap-flat/css/bootstrap-flat-extras.css",
-        path.bower_path + "ionicons/css/ionicons.css",
+        path.bower_path + "Ionicons/css/ionicons.css",
         "web/assets/css/**/*.css"
     ],
     css_bundle_name: "_bundle.css",
@@ -79,7 +79,7 @@ var config = {
     font_src_dirs: [
         path.bower_path + "bootstrap/dist/fonts/**/*",
         path.bower_path + "components-font-awesome/fonts/**/*",
-        path.bower_path + "ionicons/fonts/**/*"
+        path.bower_path + "Ionicons/fonts/**/*"
     ],
     font_target_dir: deploy_paths.fonts + "pre/",
 
