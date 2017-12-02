@@ -36,7 +36,12 @@
 .logo-wrapper {
   margin-bottom: 50px; }
 
-@media (max-width: 1030px) {
+@media (max-width: 991px) {
+  .header-container {
+    padding-left: 20px;
+    padding-right: 20px; } }
+
+@media (max-width: 760px) {
   .header-container {
     padding-left: 20px;
     padding-right: 20px; } }
