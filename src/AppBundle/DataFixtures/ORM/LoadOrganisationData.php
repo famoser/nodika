@@ -11,6 +11,7 @@ namespace AppBundle\DataFixtures\ORM\Production;
 
 use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Person;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadOrganisationData extends BaseFixture
@@ -39,7 +40,10 @@ class LoadOrganisationData extends BaseFixture
     {
         $organisation = $this->getAllRandomInstance();
         $organisation->setName("knbu.ch");
-        $organisation->addLeader($this->getReference("person-1"));
+        /* @var Person $person */
+        $person = $this->getReference("person-1");
+        $organisation->addLeader($person);
+
         $organisation->setIsActive(true);
         $organisation->setActiveEnd(new \DateTime("now + 1 month"));
         $manager->persist($organisation);

@@ -275,36 +275,28 @@ class BaseController extends Controller
     /**
      * saves entity to database
      *
-     * @param BaseEntity $entity
-     * @param BaseEntity|null $entity2
-     * @param BaseEntity|null $entity3
+     * @param BaseEntity[] $entities
      */
-    protected function fastSave($entity, $entity2 = null, $entity3 = null)
+    protected function fastSave(...$entities)
     {
         $mgr = $this->getDoctrine()->getManager();
-        $mgr->persist($entity);
-        if ($entity2 != null)
-            $mgr->persist($entity2);
-        if ($entity3 != null)
-            $mgr->persist($entity3);
+        foreach ($entities as $item) {
+            $mgr->persist($item);
+        }
         $mgr->flush();
     }
 
     /**
      * removes entity to database
      *
-     * @param BaseEntity $entity
-     * @param BaseEntity|null $entity2
-     * @param BaseEntity|null $entity3
+     * @param BaseEntity[] $entities
      */
-    protected function fastRemove($entity, $entity2 = null, $entity3 = null)
+    protected function fastRemove(...$entities)
     {
         $mgr = $this->getDoctrine()->getManager();
-        $mgr->remove($entity);
-        if ($entity2 != null)
-            $mgr->remove($entity2);
-        if ($entity3 != null)
-            $mgr->remove($entity3);
+        foreach ($entities as $item) {
+            $mgr->remove($item);
+        }
         $mgr->flush();
     }
 

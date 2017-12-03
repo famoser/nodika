@@ -186,8 +186,8 @@ class BaseAccessController extends BaseFrontendController
         /* @var $user AdvancedUserInterface|UserTrait */
         $user = $repository->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
-            return $this->renderWithBackUrl(
-                'access/hash_invalid.html.twig'
+            return $this->renderNoBackUrl(
+                'access/hash_invalid.html.twig', [], "this is for login"
             );
         }
         $setPasswordForm->setData($user);

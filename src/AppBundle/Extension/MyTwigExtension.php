@@ -12,6 +12,7 @@ use AppBundle\Helper\DateTimeFormatter;
 use DateTime;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
+use Twig_SimpleFilter;
 
 class MyTwigExtension extends Twig_Extension
 {
@@ -25,9 +26,9 @@ class MyTwigExtension extends Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('myDate', array($this, 'dateFilter')),
-            new \Twig_SimpleFilter('myDateTime', array($this, 'dateTimeFilter')),
-            new \Twig_SimpleFilter('myBoolean', array($this, 'booleanFilter'))
+            new Twig_SimpleFilter('myDate', array($this, 'dateFilter')),
+            new Twig_SimpleFilter('myDateTime', array($this, 'dateTimeFilter')),
+            new Twig_SimpleFilter('myBoolean', array($this, 'booleanFilter'))
         );
     }
 

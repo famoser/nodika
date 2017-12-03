@@ -9,7 +9,6 @@
 namespace AppBundle\Service;
 
 
-use AppBundle\Controller\Base\BaseController;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Person;
@@ -626,7 +625,6 @@ class EventGenerationService implements EventGenerationServiceInterface
                         $remainingBucketSizes[$biggestRemainingIndex] -= $myPartSize;
                         $bucketsAssigned++;
 
-                        $myPartSize -= $biggestRemaining;
                         break;
                     } else {
                         $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;

@@ -267,7 +267,7 @@ class OrganisationSetting extends BaseEntity
     /**
      * @param string $personInviteEmailSubject
      */
-    public function setPersonInviteEmailSubject(string $personInviteEmailSubject)
+    public function setPersonInviteEmailSubject($personInviteEmailSubject)
     {
         $this->personInviteEmailSubject = $personInviteEmailSubject;
     }
@@ -283,7 +283,7 @@ class OrganisationSetting extends BaseEntity
     /**
      * @param string $personInviteEmailMessage
      */
-    public function setPersonInviteEmailMessage(string $personInviteEmailMessage)
+    public function setPersonInviteEmailMessage($personInviteEmailMessage)
     {
         $this->personInviteEmailMessage = $personInviteEmailMessage;
     }

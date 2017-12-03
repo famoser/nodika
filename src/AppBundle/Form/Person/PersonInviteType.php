@@ -9,9 +9,7 @@
 namespace AppBundle\Form\Person;
 
 
-use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
-use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\UserTrait;
 use AppBundle\Form\BaseAbstractType;
 use AppBundle\Form\FrontendUser\FrontendUserRegisterType;

@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /*
  * the id used in the entities
  */
+
 trait IdTrait
 {
     /**

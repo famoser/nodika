@@ -94,7 +94,7 @@ trait ThingTrait
         $builder->add(
             "description",
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("description") +  ["required" => false]
+            $builderArray + NamingHelper::propertyToTranslationForBuilder("description") + ["required" => false]
         );
         return $builder;
     }

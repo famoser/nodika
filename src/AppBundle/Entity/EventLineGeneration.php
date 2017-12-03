@@ -301,7 +301,7 @@ class EventLineGeneration extends BaseEntity
     /**
      * @return Event[]
      */
-    public function getGeneratedEvents(): array
+    public function getGeneratedEvents()
     {
         return $this->generatedEvents;
     }
