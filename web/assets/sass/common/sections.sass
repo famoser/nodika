@@ -20,7 +20,20 @@ section
 @media (max-width: $break-tablet)
   .index-container
     padding: 20px
+  section
+    padding: 40px 0
+  .go-buttons
+    position: inherit
+    padding-bottom: 20px
+    margin-top: -10px
+    &:after
+      content: "."
+      clear: both
+      display: block
+      visibility: hidden
+      height: 0
+
 
 @media (max-width: $break-mobile)
   section
-    padding: 40px 0
+    padding: 20px 0

@@ -15,10 +15,22 @@ section {
   border: 1px solid #efefef;
   margin-bottom: 20px; }
 
-@media (max-width: 1030px) {
+@media (max-width: 991px) {
   .index-container {
-    padding: 20px; } }
+    padding: 20px; }
+  section {
+    padding: 40px 0; }
+  .go-buttons {
+    position: inherit;
+    padding-bottom: 20px;
+    margin-top: -10px; }
+    .go-buttons:after {
+      content: ".";
+      clear: both;
+      display: block;
+      visibility: hidden;
+      height: 0; } }
 
 @media (max-width: 760px) {
   section {
-    padding: 40px 0; } }
+    padding: 20px 0; } }

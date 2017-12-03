@@ -6,3 +6,4 @@ entity:
 start_date_time: Start
 end_date_time: Ende
 member_id: Praxis Id
+is_confirmed: Bestätigt

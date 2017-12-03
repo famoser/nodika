@@ -21,6 +21,7 @@
                     <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
                     <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
                     <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
+                    <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,6 +42,11 @@
                     </td>
                     <td>
                         {{ event.person }}
+                    </td>
+                    <td>
+                        {% if event.isConfirmed %}
+                            <i class="icon ion-checkmark"></i>
+                        {% endif %}
                     </td>
                     </tr>
                 {% endfor %}
