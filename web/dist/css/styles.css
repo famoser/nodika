@@ -12321,7 +12321,12 @@ blockquote.testimonial footer cite {
 .logo-wrapper {
   margin-bottom: 50px; }
 
-@media (max-width: 1030px) {
+@media (max-width: 991px) {
+  .header-container {
+    padding-left: 20px;
+    padding-right: 20px; } }
+
+@media (max-width: 760px) {
   .header-container {
     padding-left: 20px;
     padding-right: 20px; } }
@@ -12343,13 +12348,25 @@ section {
   border: 1px solid #efefef;
   margin-bottom: 20px; }
 
-@media (max-width: 1030px) {
+@media (max-width: 991px) {
   .index-container {
-    padding: 20px; } }
+    padding: 20px; }
+  section {
+    padding: 40px 0; }
+  .go-buttons {
+    position: inherit;
+    padding-bottom: 20px;
+    margin-top: -10px; }
+    .go-buttons:after {
+      content: ".";
+      clear: both;
+      display: block;
+      visibility: hidden;
+      height: 0; } }
 
 @media (max-width: 760px) {
   section {
-    padding: 40px 0; } }
+    padding: 20px 0; } }
 
 .full-width {
   width: 100%; }
@@ -12604,6 +12621,15 @@ a.gray-background:hover, a.default-color:hover {
   position: absolute;
   right: 40px;
   top: 10px; }
+
+@media (max-width: 991px) {
+  .menu-toggle-container {
+    position: relative;
+    width: 75px;
+    top: 15px;
+    margin-bottom: 33px; }
+  .menu-entries-container {
+    top: 75px; } }
 
 /* The switch - the box around the slider */
 .switch {
