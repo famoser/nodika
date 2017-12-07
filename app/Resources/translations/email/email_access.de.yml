@@ -5,3 +5,7 @@ register:
 reset:
   subject: 'Passwort zurücksetzen'
   message: 'Klicken Sie auf den folgenden Link um Ihr Passwort zurückzusetzen: %reset_link%'
+
+resend_invitation:
+  subject: "Einladung auf nodika"
+  message: "Auf Ihren Wunsch senden wir Ihnen erneut die Einladung für nodika zu. Klicken Sie auf den folgenden Link, um sich zu registrieren: %invite_link%"

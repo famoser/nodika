@@ -98,19 +98,9 @@ class BaseAccessController extends BaseFrontendController
                             $em->persist($user);
                             $em->flush();
 
-                            $translate = $this->get("translator");
                             $registerLink = $generateRegisterConfirmLink($user);
 
-
-                            $message = \Swift_Message::newInstance()
-                                ->setSubject($translate->trans("register.subject", [], "email_access"))
-                                ->setFrom($this->getParameter("mailer_email"))
-                                ->setTo($user->getEmail())
-                                ->setBody($translate->trans(
-                                    "register.message",
-                                    ["%register_link%" => $registerLink],
-                                    "email_access"));
-                            $this->get('mailer')->send($message);
+                            $this->get("app.email_service")->sendRegister($user, $registerLink);
                             return $generateRegisterThanksLink($user);
                         }
                     }
@@ -153,18 +143,8 @@ class BaseAccessController extends BaseFrontendController
                     $this->getDoctrine()->getManager()->persist($existingUser);
                     $this->getDoctrine()->getManager()->flush();
 
-                    $translate = $this->get("translator");
                     $resetLink = $generateResetLink($existingUser);
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("reset.subject", [], "email_access"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($existingUser->getEmail())
-                        ->setBody($translate->trans(
-                            "reset.message",
-                            ["%reset_link%" => $resetLink],
-                            "email_access"));
-                    $this->get('mailer')->send($message);
+                    $this->get("app.email_service")->sendReset($existingUser, $resetLink);
                 }
                 return $generateResetDoneLink($existingUser);
             } else {
@@ -186,8 +166,8 @@ class BaseAccessController extends BaseFrontendController
         /* @var $user AdvancedUserInterface|UserTrait */
         $user = $repository->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
-            return $this->renderWithBackUrl(
-                'access/hash_invalid.html.twig'
+            return $this->renderNoBackUrl(
+                'access/hash_invalid.html.twig', [], "no confirmation token"
             );
         }
         $setPasswordForm->setData($user);

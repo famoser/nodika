@@ -58,7 +58,7 @@ services:
 
     app.email_service:
         class:  AppBundle\Service\EmailService
-        arguments: ["@mailer", "@router", ]
+        arguments: ["@mailer", "@router","@translator", "%mailer_email%", "%contact_email%"]
 
     listener.entity.remove:
         class: AppBundle\Listener\DoctrinePreFlushListener

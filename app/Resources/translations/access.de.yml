@@ -50,6 +50,20 @@ register_check:
   resend_email: "Einladung verpasst? Lassen Sie sich die Einladung erneut zustellen"
   resend_email_action: "Einladung erneut senden"
 
+invite_resend:
+  title: "Einladung erneut versenden"
+  description: "Lassen Sie sich eine verpasste Einladung neu zustellen"
+  help: "Geben Sie hier Ihre E-Mail ein. Wurde an diese E-Mail eine Einladung versandt, die noch nicht angenommen wurde, versenden wir sie erneut."
+  email_not_received: "Email nicht erhalten: Mögliche Ursachen"
+  email_not_received_description: "Überprüfen Sie, dass Ihr Postfach nicht voll ist und dass unser E-Mail nicht im Spam Ordner gelandet ist."
+  success:
+    email_send: "E-Mail erfolgreich versandt. Vergessen Sie nicht, Ihrem Spam Ordner zu überprüfen."
+  error:
+    invitation_already_accepted: "Einladung wurde bereits akzeptiert, Sie können sich mit dieser E-Mail einloggen."
+    no_invitation_sent_yet: "An Sie wurde noch keine Einladung versandt. Bitte Sie Ihren Administrator dies zu tun."
+    email_not_found: "Diese E-Mail wurde nicht gefunden. Kontaktieren Sie Ihren Administrator."
+
+
 #invite page
 invite:
   title: 'Willkomen auf nodika!'

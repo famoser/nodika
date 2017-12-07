@@ -56,7 +56,6 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/register/check", name="access_register_check")
      * @param Request $request
-     * @param $invitationHash
      * @return FormInterface|Response
      */
     public function registerCheckAction(Request $request)
@@ -107,15 +106,71 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/invite/resend", name="access_invite_resend")
      * @param Request $request
-     * @param $invitationHash
      * @return FormInterface|Response
      */
     public function inviteResendAction(Request $request)
     {
+        if ($request->getMethod() == "POST") {
+            $email = $request->get("email");
+            $translator = $this->get("translator");
+
+            $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["email" => $email]);
+            if ($person != null) {
+                if ($person->getFrontendUser() == null) {
+                    if ($person->getHasBeenInvited()) {
+                        //resend invite email
+                        $subject = $translator->trans("resend_invitation.subject", [], "email_access");
+                        $body = $translator->trans("resend_invitation.message",
+                            [
+                                "%invite_link%" => $this->generateUrl(
+                                    "access_invite_person",
+                                    ["invitationHash" => $person->getInvitationHash()],
+                                    UrlGeneratorInterface::ABSOLUTE_URL),
+                            ],
+                            "email_access"
+                        );
+                        $this->get("app.email_service")->sendTextEmail($person->getEmail(), $subject, $body);
+
+                        $this->displaySuccess($translator->trans("invite_resend.success.email_send", [], "access"));
+                    } else {
+                        $this->displayError($translator->trans("invite_resend.error.no_invitation_sent_yet", [], "access"));
+                    }
+                } else {
+                    $this->displayError($translator->trans("invite_resend.error.invitation_already_accepted", [], "access"));
+                }
+            }
+
+            $member = $this->getDoctrine()->getRepository("AppBundle:Member")->findOneBy(["email" => $email]);
+            if ($member != null) {
+                if ($member->getHasBeenInvited()) {
+                    //resend member invite email
+
+                    $subject = $translator->trans("resend_invitation.subject", [], "email_access");
+                    $body = $translator->trans("resend_invitation.message",
+                        [
+                            "%invite_link%" => $this->generateUrl(
+                                "access_invite",
+                                ["invitationHash" => $member->getInvitationHash()],
+                                UrlGeneratorInterface::ABSOLUTE_URL),
+                        ],
+                        "email_access"
+                    );
+                    $this->get("app.email_service")->sendTextEmail($person->getEmail(), $subject, $body);
+
+                    $this->displaySuccess($translator->trans("invite_resend.success.email_send", [], "access"));
+                } else {
+                    $this->displayError($translator->trans("invite_resend.error.no_invitation_sent_yet", [], "access"));
+                }
+            }
+
+            if ($member == null && $person == null) {
+                $this->displayError($translator->trans("invite_resend.error.email_not_found", [], "access"));
+            }
+        }
 
 
         return $this->renderWithBackUrl(
-            'access/invite_request.html.twig', [], $this->generateUrl("access_login")
+            'access/invite_resend.html.twig', [], $this->generateUrl("access_login")
         );
     }
 
@@ -125,7 +180,8 @@ class AccessController extends BaseAccessController
      * @param $invitationHash
      * @return FormInterface|Response
      */
-    public function inviteAction(Request $request, $invitationHash)
+    public
+    function inviteAction(Request $request, $invitationHash)
     {
         $member = $this->getDoctrine()->getRepository("AppBundle:Member")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$member instanceof Member) {
@@ -219,7 +275,8 @@ class AccessController extends BaseAccessController
      * @param $invitationHash
      * @return FormInterface|Response
      */
-    public function invitePersonAction(Request $request, $invitationHash)
+    public
+    function invitePersonAction(Request $request, $invitationHash)
     {
         $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$person instanceof Person) {
@@ -301,7 +358,8 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @return Response
      */
-    public function registerThanksAction(Request $request)
+    public
+    function registerThanksAction(Request $request)
     {
         return $this->renderNoBackUrl(
             'access/register_thanks.html.twig', [], "user needs to check email and continue there"
@@ -313,7 +371,8 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @return Response
      */
-    public function resetAction(Request $request)
+    public
+    function resetAction(Request $request)
     {
         $myForm = $this->handleForm(
             $this->createForm(FrontendUserResetType::class),
@@ -369,7 +428,8 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @return Response
      */
-    public function resetDoneAction(Request $request)
+    public
+    function resetDoneAction(Request $request)
     {
         return $this->renderNoBackUrl(
             'access/reset_done.html.twig', [], "user needs to check email"
@@ -382,7 +442,8 @@ class AccessController extends BaseAccessController
      * @param $confirmationToken
      * @return Response
      */
-    public function registerConfirmAction(Request $request, $confirmationToken)
+    public
+    function registerConfirmAction(Request $request, $confirmationToken)
     {
         return $this->handleResetPasswordAction(
             $request,
@@ -411,7 +472,8 @@ class AccessController extends BaseAccessController
      * @param $confirmationToken
      * @return Response
      */
-    public function resetConfirmAction(Request $request, $confirmationToken)
+    public
+    function resetConfirmAction(Request $request, $confirmationToken)
     {
         return $this->handleResetPasswordAction(
             $request,
@@ -436,7 +498,8 @@ class AccessController extends BaseAccessController
      * @param callable $responseCallable with $form as argument
      * @return FormInterface|Response
      */
-    protected function handleResetPasswordAction(Request $request, $confirmationToken, $onSuccessCallable, $responseCallable)
+    protected
+    function handleResetPasswordAction(Request $request, $confirmationToken, $onSuccessCallable, $responseCallable)
     {
         $user = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
@@ -479,7 +542,8 @@ class AccessController extends BaseAccessController
      * @Route("/login_check", name="access_login_check")
      * @param Request $request
      */
-    public function loginCheck(Request $request)
+    public
+    function loginCheck(Request $request)
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
@@ -488,7 +552,8 @@ class AccessController extends BaseAccessController
      * @Route("/logout", name="access_logout")
      * @param Request $request
      */
-    public function logoutAction(Request $request)
+    public
+    function logoutAction(Request $request)
     {
         throw new \RuntimeException('You must configure the logout path to be handled by the firewall using form_login.logout in your security firewall configuration.');
     }

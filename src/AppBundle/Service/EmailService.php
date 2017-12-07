@@ -15,6 +15,7 @@ use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Newsletter;
 use AppBundle\Entity\Person;
+use AppBundle\Entity\Traits\UserTrait;
 use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Service\Interfaces\EmailServiceInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -167,6 +168,40 @@ class EmailService implements EmailServiceInterface
         $this->mailer->send($message);
     }
 
+    /**
+     * @param UserTrait $frontendUser
+     * @param $resetLink
+     */
+    public function sendReset($frontendUser, $resetLink)
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->translator->trans("reset.subject", [], "email_access"))
+            ->setFrom($this->mailerEmail)
+            ->setTo($frontendUser->getEmail())
+            ->setBody($this->translator->trans(
+                "reset.message",
+                ["%reset_link%" => $resetLink],
+                "email_access"));
+        $this->mailer->send($message);
+    }
+
+    /**
+     * @param UserTrait $frontendUser
+     * @param $registerLink
+     */
+    public function sendRegister($frontendUser, $registerLink)
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->translator->trans("register.subject", [], "email_access"))
+            ->setFrom($this->mailerEmail)
+            ->setTo($frontendUser->getEmail())
+            ->setBody($this->translator->trans(
+                "register.message",
+                ["%register_link%" => $registerLink],
+                "email_access"));
+        $this->mailer->send($message);
+    }
+
     public function sendEventOfferRejected(EventOffer $eventOffer)
     {
         $message = \Swift_Message::newInstance()
@@ -205,6 +240,16 @@ class EmailService implements EmailServiceInterface
                 "\nVorname: " . $newsletter->getGivenName() .
                 "\nNachname: " . $newsletter->getFamilyName() .
                 "\nNachricht: " . $newsletter->getMessage());
+        $this->mailer->send($message);
+    }
+
+    public function sendTextEmail($receiver, $subject, $body)
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($this->mailerEmail)
+            ->setTo($receiver)
+            ->setBody($body);
         $this->mailer->send($message);
     }
 }
