@@ -13,19 +13,10 @@ use AppBundle\DataFixtures\ORM\Base\BaseFixture;
 use AppBundle\Entity\EventLine;
 use AppBundle\Entity\EventLineGeneration;
 use AppBundle\Entity\Person;
-use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Enum\DistributionType;
-use AppBundle\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
 use AppBundle\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
-use AppBundle\Service\EventGenerationService;
-use AppBundle\Service\EventPastEvaluationService;
-use AppBundle\Service\Interfaces\EventGenerationServiceInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class LoadEventData extends BaseFixture
 {

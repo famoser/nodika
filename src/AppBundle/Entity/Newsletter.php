@@ -15,7 +15,6 @@ use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Enum\NewsletterChoice;
 use AppBundle\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 

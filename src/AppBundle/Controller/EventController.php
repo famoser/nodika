@@ -16,7 +16,6 @@ use AppBundle\Enum\EventChangeType;
 use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Model\Event\SearchEventModel;
 use AppBundle\Model\EventLine\EventLineModel;
-use AppBundle\Security\Voter\EventVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -159,6 +158,7 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/confirm/member/{event}", name="event_confirm_member")
      * @param Request $request
+     * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmMemberAction(Request $request, Event $event)

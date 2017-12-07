@@ -59,7 +59,7 @@ class SearchEventModel
     /**
      * @return Organisation
      */
-    public function getOrganisation(): Organisation
+    public function getOrganisation()
     {
         return $this->organisation;
     }
@@ -123,7 +123,7 @@ class SearchEventModel
     /**
      * @return int
      */
-    public function getMaxResults(): int
+    public function getMaxResults()
     {
         return $this->maxResults;
     }
@@ -131,7 +131,7 @@ class SearchEventModel
     /**
      * @param int $maxResults
      */
-    public function setMaxResults(int $maxResults)
+    public function setMaxResults($maxResults)
     {
         $this->maxResults = $maxResults;
     }

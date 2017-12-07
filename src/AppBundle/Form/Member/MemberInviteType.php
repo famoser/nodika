@@ -9,7 +9,6 @@
 namespace AppBundle\Form\Member;
 
 
-use AppBundle\Entity\FrontendUser;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Traits\PersonTrait;
 use AppBundle\Entity\Traits\UserTrait;

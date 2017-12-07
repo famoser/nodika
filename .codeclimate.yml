@@ -20,6 +20,11 @@ engines:
       languages:
       - php
 
-
-ratings:
-  paths: ["src/AppBundle/**/*"]
+exclude_patterns:
+  - "app/"
+  - "bin"
+  - "concept"
+  - "resources"
+  - "tests"
+  - "var"
+  - "web/dist"

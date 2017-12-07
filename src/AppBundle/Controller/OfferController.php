@@ -135,11 +135,18 @@ class OfferController extends BaseFrontendController
             foreach ($request->request->all() as $key => $value) {
                 if (strpos($key, "event_") === 0) {
                     $eventId = substr($key, 6); //cut off event_
+                    /* @var Event $event */
                     $event = $eventRepo->find($eventId);
-                    if (
-                        $event->getMember()->getId() == $eventOffer->getOfferedByMember()->getId() && $event->getPerson()->getId() == $eventOffer->getOfferedByPerson()->getId() ||
-                        $event->getMember()->getId() == $eventOffer->getOfferedToMember()->getId() && $event->getPerson()->getId() == $eventOffer->getOfferedToPerson()->getId()
-                    ) {
+
+
+                    $isValidPossibility1 =
+                        $event->getMember()->getId() == $eventOffer->getOfferedByMember()->getId() &&
+                        $event->getPerson()->getId() == $eventOffer->getOfferedByPerson()->getId();
+
+                    $isValidPossibility2 =
+                        $event->getMember()->getId() == $eventOffer->getOfferedToMember()->getId() &&
+                        $event->getPerson()->getId() == $eventOffer->getOfferedToPerson()->getId();
+                    if ($isValidPossibility1 || $isValidPossibility2) {
                         $events[] = $event;
                     }
                 } else if ($key == "description") {
