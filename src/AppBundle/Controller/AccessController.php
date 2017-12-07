@@ -54,6 +54,19 @@ class AccessController extends BaseAccessController
     }
 
     /**
+     * @Route("/register/check", name="access_register_check")
+     * @param Request $request
+     * @param $invitationHash
+     * @return FormInterface|Response
+     */
+    public function registerCheckAction(Request $request)
+    {
+        return $this->renderWithBackUrl(
+            'access/register_check.html.twig', [], $this->generateUrl("access_login")
+        );
+    }
+
+    /**
      * @Route("/register", name="access_register")
      * @param Request $request
      * @return FormInterface|Response
@@ -87,6 +100,22 @@ class AccessController extends BaseAccessController
         $arr["register_form"] = $registerForm->createView();
         return $this->renderWithBackUrl(
             'access/register.html.twig', $arr, $this->generateUrl("access_login")
+        );
+    }
+
+
+    /**
+     * @Route("/invite/resend", name="access_invite_resend")
+     * @param Request $request
+     * @param $invitationHash
+     * @return FormInterface|Response
+     */
+    public function inviteResendAction(Request $request)
+    {
+
+
+        return $this->renderWithBackUrl(
+            'access/invite_request.html.twig', [], $this->generateUrl("access_login")
         );
     }
 
@@ -182,6 +211,7 @@ class AccessController extends BaseAccessController
             'access/invite.html.twig', $arr, $this->generateUrl("access_login")
         );
     }
+
 
     /**
      * @Route("/invite/person/{invitationHash}", name="access_invite_person")
