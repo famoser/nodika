@@ -56,6 +56,10 @@ services:
         class:  AppBundle\Service\EventGenerationService
         arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
 
+    app.email_service:
+        class:  AppBundle\Service\EmailService
+        arguments: ["@mailer", "@router", ]
+
     listener.entity.remove:
         class: AppBundle\Listener\DoctrinePreFlushListener
         tags:

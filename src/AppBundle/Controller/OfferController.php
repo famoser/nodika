@@ -165,15 +165,7 @@ class OfferController extends BaseFrontendController
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_open", [], "offer"));
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject($translator->trans("emails.new_offer.subject", [], "offer"))
-                ->setFrom($this->getParameter("mailer_email"))
-                ->setTo($eventOffer->getOfferedToPerson()->getEmail())
-                ->setBody($translator->trans(
-                    "emails.new_offer.message",
-                    ["%link%" => $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
-                    "offer"));
-            $this->get('mailer')->send($message);
+            $this->get("app.email_service")->sendNewOfferReceived($eventOffer);
 
             return $this->redirectToRoute("offer_index");
         }
@@ -338,25 +330,15 @@ class OfferController extends BaseFrontendController
                 }
             }
             $eventOffer->setCloseDateTime(new \DateTime());
-            $em->persist($eventOffer);
-            $em->flush();
+            $this->fastSave($eventOffer);
+
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_accepted_successful", [], "offer"));
 
-
-            $message = \Swift_Message::newInstance()
-                ->setSubject($translator->trans("emails.offer_accepted.subject", [], "offer"))
-                ->setFrom($this->getParameter("mailer_email"))
-                ->setTo($eventOffer->getOfferedByPerson()->getEmail())
-                ->setBody($translator->trans(
-                    "emails.offer_accepted.message",
-                    ["%link%" => $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
-                    "offer"));
-            $this->get('mailer')->send($message);
-
+            $this->get("app.email_service")->sendEventOfferAccepted($eventOffer);
         } else {
             $translator = $this->get("translator");
-            $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
+            $this->displayError($translator->trans("messages.no_access_anymore", [], "offer"));
         }
         return $this->redirectToRoute("offer_index");
     }
@@ -384,15 +366,8 @@ class OfferController extends BaseFrontendController
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_rejected_successful", [], "offer"));
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject($translator->trans("emails.offer_rejected.subject", [], "offer"))
-                ->setFrom($this->getParameter("mailer_email"))
-                ->setTo($eventOffer->getOfferedByPerson()->getEmail())
-                ->setBody($translator->trans(
-                    "emails.offer_rejected.message",
-                    ["%link%" => $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
-                    "offer"));
-            $this->get('mailer')->send($message);
+            $this->get("app.email_service")->sendEventOfferRejected($eventOffer);
+
         } else {
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));

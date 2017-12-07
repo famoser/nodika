@@ -87,37 +87,7 @@ class CronJobController extends BaseFrontendController
                 foreach ($unconfirmedEvents as $unconfirmedEvent) {
                     if ($unconfirmedEvent->getStartDateTime() < $tooLateThreshold) {
                         //member has confirmed too late!
-
-                        $message = \Swift_Message::newInstance()
-                            ->setSubject($trans->trans("member_event_confirm_too_late_remainder.subject", [], "email_cronjob"))
-                            ->setFrom($this->getParameter("mailer_email"));
-
-                        if ($unconfirmedEvent->getPerson() != null) {
-                            $message->setTo($unconfirmedEvent->getPerson()->getEmail());
-                            $message->addCc($member->getEmail());
-                            $owner = $unconfirmedEvent->getPerson()->getFullName();
-                        } else {
-                            $message->setTo($member->getEmail());
-                            $owner = $member->getName();
-                        }
-
-                        $message->setBody($trans->trans(
-                            "member_event_confirm_too_late_remainder.message",
-                            [
-                                "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                                "%event_short%" =>
-                                    $unconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) .
-                                    " - " .
-                                    $unconfirmedEvent->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT),
-                                "%owner%" => $owner
-                            ],
-                            "email_cronjob"));
-
-                        if ($adminEmail != null) {
-                            $message->addCc($adminEmail);
-                        }
-                        $mailer->send($message);
-
+                        $this->get("app.email_service")->sendConfirmLate($unconfirmedEvent, $adminEmail);
                     } else {
 
                         $disable =
@@ -151,18 +121,7 @@ class CronJobController extends BaseFrontendController
 
                 if ($sendRemainderToMember) {
                     //send email to member
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($trans->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($member->getEmail())
-                        ->setBody($trans->trans(
-                            "member_event_confirm_remainder.message",
-                            [
-                                "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                                "%count%" => $memberRemainderCount
-                            ],
-                            "email_cronjob"));
-                    $mailer->send($message);
+                    $this->get("app.email_service")->sendScheduledConfirmToMember($member, $memberRemainderCount);
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
                         if ($unconfirmedEvent->getPerson() == null) {
@@ -178,18 +137,8 @@ class CronJobController extends BaseFrontendController
                         continue;
                     }
 
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($trans->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($person->getEmail())
-                        ->setBody($trans->trans(
-                            "member_event_confirm_remainder.message",
-                            [
-                                "%link%" => $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                                "%count%" => $personRemainderCount[$person->getId()]
-                            ],
-                            "email_cronjob"));
-                    $mailer->send($message);
+                    $this->get("app.email_service")->sendScheduledConfirmToPerson($person, $personRemainderCount[$person->getId()]);
+
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
                         if ($unconfirmedEvent->getPerson() != null && $unconfirmedEvent->getPerson()->getId() == $person->getId()) {

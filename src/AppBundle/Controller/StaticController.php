@@ -37,18 +37,7 @@ class StaticController extends BaseController
             function ($form, $entity) {
                 /* @var FormInterface $form */
                 /* @var Newsletter $entity */
-
-                $message = \Swift_Message::newInstance()
-                    ->setSubject("Nachricht auf nodika")
-                    ->setFrom($this->getParameter("mailer_email"))
-                    ->setTo($this->getParameter("contact_email"))
-                    ->setBody("Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
-                        "\nListe: " . $entity->getChoice() .
-                        "\nEmail: " . $entity->getEmail() .
-                        "\nVorname: " . $entity->getGivenName() .
-                        "\nNachname: " . $entity->getFamilyName() .
-                        "\nNachricht: " . $entity->getMessage());
-                $this->get('mailer')->send($message);
+                $this->get("app.email_service")->sendContactMessage($entity);
 
                 $translator = $this->get("translator");
 

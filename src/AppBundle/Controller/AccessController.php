@@ -74,7 +74,7 @@ class AccessController extends BaseAccessController
                     $user = FrontendUser::createFromPerson($person);
                     $this->fastSave($person, $user);
 
-                    $this->sendRegisterConfirmEmail($user);
+                    $this->get("app.email_service")->sendRegisterConfirm($user);
                     return $this->redirectToRoute("access_register_thanks");
                 }
             }
@@ -264,29 +264,6 @@ class AccessController extends BaseAccessController
         return $this->renderWithBackUrl(
             'access/invite.html.twig', $arr, $this->generateUrl("access_login")
         );
-    }
-
-    /**
-     * @param FrontendUser $user
-     */
-    private function sendRegisterConfirmEmail(FrontendUser $user)
-    {
-        $translate = $this->get("translator");
-        $registerLink = $this->generateUrl(
-            "access_register_confirm",
-            ["confirmationToken" => $user->getResetHash()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject($translate->trans("register.subject", [], "email_access"))
-            ->setFrom($this->getParameter("mailer_email"))
-            ->setTo($user->getEmail())
-            ->setBody($translate->trans(
-                "register.message",
-                ["%register_link%" => $registerLink],
-                "email_access"));
-        $this->get('mailer')->send($message);
     }
 
     /**
