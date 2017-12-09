@@ -10,5 +10,5 @@ reset:
 
 resend_invitation:
   subject: "Einladung für nodika"
-  message: "Sie wurden auf nodika eingeladen. Folgen Sie dem Link um die Einladung anzunehmen"
+  message: "Sie wurden auf nodika eingeladen. Folgen Sie dem Link, um die Einladung anzunehmen"
   action_text: 'Jetzt Einladung annehmen'

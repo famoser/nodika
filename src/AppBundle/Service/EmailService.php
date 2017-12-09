@@ -19,6 +19,7 @@ use AppBundle\Entity\Person;
 use AppBundle\Entity\Traits\UserTrait;
 use AppBundle\Enum\EmailType;
 use AppBundle\Helper\DateTimeFormatter;
+use AppBundle\Helper\HashHelper;
 use AppBundle\Service\Interfaces\EmailServiceInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -58,7 +59,7 @@ class EmailService implements EmailServiceInterface
     {
         $this->mailer = $mailer;
         $this->doctrine = $registry;
-        $this->twig = $this;
+        $this->twig = $twig;
         $this->mailerEmail = $mailerEmail;
     }
 
@@ -68,6 +69,7 @@ class EmailService implements EmailServiceInterface
     private function processEmail(Email $email)
     {
         $email->setSentDateTime(new \DateTime());
+        $email->setIdentifier(HashHelper::createNewResetHash());
 
         $manager = $this->doctrine->getManager();
         $manager->persist($email);
@@ -79,18 +81,20 @@ class EmailService implements EmailServiceInterface
             ->setFrom($this->mailerEmail)
             ->setTo($email->getReceiver());
 
-        if ($email->getEmailType() != EmailType::PLAIN_EMAIL) {
-            $message->setBody(
-                $this->twig->render(
-                    "email/email.html.twig", ["email" => $email]
-                ),
-                'text/html');
-        }
+
         $body = $email->getBody();
         if ($email->getActionLink() != null) {
             $body .= "\n\n" . $email->getActionText() . ": " . $email->getActionLink();
         }
         $message->setBody($body, 'text/plain');
+
+        if ($email->getEmailType() != EmailType::PLAIN_EMAIL) {
+            $message->addPart(
+                $this->twig->render(
+                    "email/email.html.twig", ["email" => $email]
+                ),
+                'text/html');
+        }
 
         if ($email->getCarbonCopy() != null) {
             $message->addCc($email->getCarbonCopy());

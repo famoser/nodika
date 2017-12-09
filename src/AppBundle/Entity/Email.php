@@ -37,6 +37,13 @@ class Email extends BaseEntity
      *
      * @ORM\Column(type="text")
      */
+    private $identifier;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
     private $subject;
 
     /**
@@ -84,7 +91,7 @@ class Email extends BaseEntity
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $visitedDateTime;
 
@@ -179,7 +186,7 @@ class Email extends BaseEntity
     /**
      * @param string $carbonCopy
      */
-    public function setCarbonCopy(string $carbonCopy)
+    public function setCarbonCopy($carbonCopy)
     {
         $this->carbonCopy = $carbonCopy;
     }
@@ -240,5 +247,21 @@ class Email extends BaseEntity
     public function setEmailType(int $emailType)
     {
         $this->emailType = $emailType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @param string $identifier
+     */
+    public function setIdentifier(string $identifier)
+    {
+        $this->identifier = $identifier;
     }
 }

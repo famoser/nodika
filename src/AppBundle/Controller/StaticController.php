@@ -15,6 +15,8 @@ use AppBundle\Entity\Newsletter;
 use AppBundle\Form\Newsletter\RegisterForPreviewType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -60,5 +62,20 @@ class StaticController extends BaseController
         return $this->renderNoBackUrl(
             'static/index.html.twig', $arr, "this is the homepage"
         );
+    }
+
+    /**
+     * @Route("/email/{identifier}", name="view_email")
+     * @param Request $request
+     * @return Response
+     */
+    public function emailAction(Request $request, $identifier)
+    {
+        $email = $this->getDoctrine()->getRepository("AppBundle:Email")->findOneBy(["identifier" => $identifier]);
+        if ($email == null) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->render("email/email.html.twig", ["email" => $email]);
     }
 }
