@@ -188,7 +188,7 @@ class CronJobController extends BaseFrontendController
                     }
                 }
 
-                $manager->flush()
+                $manager->flush();
             }
         }
         return new Response("finished");
