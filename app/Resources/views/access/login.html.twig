@@ -14,7 +14,7 @@
     {{ form_end(login_form) }}
     <p>
         <a href="{{ path("access_reset") }}">{{ "login.forgot_password_action"|trans }}</a><br/>
-        <a href="{{ path("access_register") }}">{{ "login.register_action"|trans }}</a>
+        <a href="{{ path("access_register_check") }}">{{ "login.register_action"|trans }}</a>
     </p>
 {% endblock %}
 
@@ -23,5 +23,10 @@
     <p>{{ "login.no_account_description"|trans }}</p>
     <h3>{{ "login.forgot_password"|trans }}</h3>
     <p>{{ "login.forgot_password_description"|trans }}</p>
+    <h3>{{ "login.invitation_not_received"|trans }}</h3>
+    <p>
+        {{ "login.invitation_not_received_description"|trans }}<br/>
+        <a href="{{ path("access_invite_resend") }}">{{ "login.invitation_not_received_action"|trans }}</a>
+    </p>
 
 {% endblock %}

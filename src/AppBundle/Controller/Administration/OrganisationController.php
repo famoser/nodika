@@ -281,13 +281,7 @@ class OrganisationController extends BaseController
                     $body = str_replace($search, $replace, $body);
                 }
 
-
-                $message = \Swift_Message::newInstance()
-                    ->setSubject($subject)
-                    ->setFrom($this->getParameter("mailer_email"))
-                    ->setTo($member->getEmail())
-                    ->setBody($body);
-                $this->get('mailer')->send($message);
+                $this->get("app.email_service")->sendPlainEmail($member->getEmail(), $subject, $body);
 
                 $this->fastSave($member);
             }
@@ -409,7 +403,7 @@ class OrganisationController extends BaseController
         $notInvitedPersons = [];
         foreach ($organisation->getMembers() as $member) {
             foreach ($member->getPersons() as $person) {
-                if ($person->getFrontendUser() == null) {
+                if (!$person->getHasBeenInvited() && $person->getFrontendUser() == null) {
                     $notInvitedPersons[$person->getId()] = $person;
                 }
             }
@@ -454,15 +448,7 @@ class OrganisationController extends BaseController
                     $body = str_replace($search, $replace, $body);
                 }
 
-
-                $message = \Swift_Message::newInstance()
-                    ->setSubject($subject)
-                    ->setFrom($this->getParameter("mailer_email"))
-                    ->setTo($person->getEmail())
-                    ->setBody($body);
-
-                $this->get('mailer')->send($message);
-
+                $this->get("app.email_service")->sendPlainEmail($person->getEmail(), $subject, $body);
                 $this->fastSave($person);
             }
 

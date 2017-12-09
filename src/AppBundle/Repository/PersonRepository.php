@@ -21,7 +21,7 @@ class PersonRepository extends EntityRepository
      */
     public function getEventLinePreview(Person $person, \DateTime $dateTime, $comparator = ">")
     {
-        $qb =$this->getEntityManager()->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         return $qb->select("el")
             ->from("AppBundle:EventLine", "el")
             ->from("AppBundle:Event", "e")

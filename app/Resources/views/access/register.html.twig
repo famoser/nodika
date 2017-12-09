@@ -15,7 +15,11 @@
 
 {% block secondary_content %}
     <h3>{{ "register.register_disclaimer"|trans }}</h3>
-    <p>{{ "register.register_disclaimer_description"|trans }}</p>
+    <p>
+        {{ "register.register_disclaimer_description"|trans }}
+        <br/>
+        <a href="{{ path("access_invite_resend") }}">{{ "register.resend_invitation"|trans }}</a>
+    </p>
     <h3>{{ "register.register"|trans }}</h3>
     <p>{{ "register.register_description"|trans }}</p>
     <h3>{{ "register.personal_data"|trans }}</h3>

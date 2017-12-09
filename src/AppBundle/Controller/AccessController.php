@@ -54,6 +54,18 @@ class AccessController extends BaseAccessController
     }
 
     /**
+     * @Route("/register/check", name="access_register_check")
+     * @param Request $request
+     * @return FormInterface|Response
+     */
+    public function registerCheckAction(Request $request)
+    {
+        return $this->renderWithBackUrl(
+            'access/register_check.html.twig', [], $this->generateUrl("access_login")
+        );
+    }
+
+    /**
      * @Route("/register", name="access_register")
      * @param Request $request
      * @return FormInterface|Response
@@ -74,7 +86,18 @@ class AccessController extends BaseAccessController
                     $user = FrontendUser::createFromPerson($person);
                     $this->fastSave($person, $user);
 
-                    $this->sendRegisterConfirmEmail($user);
+
+                    $translator = $this->get("translator");
+                    $subject = $translator->trans("register.subject", [], "email_access");
+                    $receiver = $existingUser->getEmail();
+                    $body = $translator->trans("register.message", [], "email_access");
+                    $actionText = $translator->trans("register.action_text", [], "email_access");
+                    $actionLink = $this->generateUrl(
+                        "access_register_confirm",
+                        ["confirmationToken" => $user->getResetHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                     return $this->redirectToRoute("access_register_thanks");
                 }
             }
@@ -87,6 +110,74 @@ class AccessController extends BaseAccessController
         $arr["register_form"] = $registerForm->createView();
         return $this->renderWithBackUrl(
             'access/register.html.twig', $arr, $this->generateUrl("access_login")
+        );
+    }
+
+
+    /**
+     * @Route("/invite/resend", name="access_invite_resend")
+     * @param Request $request
+     * @return FormInterface|Response
+     */
+    public function inviteResendAction(Request $request)
+    {
+        if ($request->getMethod() == "POST") {
+            $email = $request->get("email");
+            $translator = $this->get("translator");
+
+            $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["email" => $email]);
+            if ($person != null) {
+                if ($person->getFrontendUser() == null) {
+                    if ($person->getHasBeenInvited()) {
+                        //resend invite email
+                        $subject = $translator->trans("resend_invitation.subject", [], "email_access");
+                        $body = $translator->trans("resend_invitation.message", [], "email_access");
+                        $actionText = $translator->trans("resend_invitation.action_text", [], "email_access");
+                        $actionLink = $this->generateUrl(
+                            "access_invite_person",
+                            ["invitationHash" => $person->getInvitationHash()],
+                            UrlGeneratorInterface::ABSOLUTE_URL);
+
+                        $this->get("app.email_service")->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
+
+                        $this->displaySuccess($translator->trans("invite_resend.success.email_send", [], "access"));
+                    } else {
+                        $this->displayError($translator->trans("invite_resend.error.no_invitation_sent_yet", [], "access"));
+                    }
+                } else {
+                    $this->displayError($translator->trans("invite_resend.error.invitation_already_accepted", [], "access"));
+                }
+            }
+
+            $member = $this->getDoctrine()->getRepository("AppBundle:Member")->findOneBy(["email" => $email]);
+            if ($member != null) {
+                if ($member->getHasBeenInvited()) {
+                    //resend member invite email
+
+                    $subject = $translator->trans("resend_invitation.subject", [], "email_access");
+                    $body = $translator->trans("resend_invitation.message", [], "email_access");
+                    $actionText = $translator->trans("resend_invitation.action_text", [], "email_access");
+                    $actionLink = $this->generateUrl(
+                        "access_invite",
+                        ["invitationHash" => $member->getInvitationHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL);
+
+                    $this->get("app.email_service")->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
+
+                    $this->displaySuccess($translator->trans("invite_resend.success.email_send", [], "access"));
+                } else {
+                    $this->displayError($translator->trans("invite_resend.error.no_invitation_sent_yet", [], "access"));
+                }
+            }
+
+            if ($member == null && $person == null) {
+                $this->displayError($translator->trans("invite_resend.error.email_not_found", [], "access"));
+            }
+        }
+
+
+        return $this->renderWithBackUrl(
+            'access/invite_resend.html.twig', [], $this->generateUrl("access_login")
         );
     }
 
@@ -183,6 +274,7 @@ class AccessController extends BaseAccessController
         );
     }
 
+
     /**
      * @Route("/invite/person/{invitationHash}", name="access_invite_person")
      * @param Request $request
@@ -267,29 +359,6 @@ class AccessController extends BaseAccessController
     }
 
     /**
-     * @param FrontendUser $user
-     */
-    private function sendRegisterConfirmEmail(FrontendUser $user)
-    {
-        $translate = $this->get("translator");
-        $registerLink = $this->generateUrl(
-            "access_register_confirm",
-            ["confirmationToken" => $user->getResetHash()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject($translate->trans("register.subject", [], "email_access"))
-            ->setFrom($this->getParameter("mailer_email"))
-            ->setTo($user->getEmail())
-            ->setBody($translate->trans(
-                "register.message",
-                ["%register_link%" => $registerLink],
-                "email_access"));
-        $this->get('mailer')->send($message);
-    }
-
-    /**
      * @Route("/register/thanks", name="access_register_thanks")
      * @param Request $request
      * @return Response
@@ -319,26 +388,19 @@ class AccessController extends BaseAccessController
                 $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $entity->getEmail()]);
                 if ($existingUser != null) {
                     $existingUser->setResetHash(HashHelper::createNewResetHash());
+                    $this->fastSave($existingUser);
 
-                    $this->getDoctrine()->getManager()->persist($existingUser);
-                    $this->getDoctrine()->getManager()->flush();
-
-                    $translate = $this->get("translator");
-                    $resetLink = $this->generateUrl(
+                    $translator = $this->get("translator");
+                    $subject = $translator->trans("reset.subject", [], "email_access");
+                    $receiver = $existingUser->getEmail();
+                    $body = $translator->trans("reset.message", [], "email_access");
+                    $actionText = $translator->trans("reset.action_text", [], "email_access");
+                    $actionLink = $this->generateUrl(
                         "access_reset_confirm",
                         ["confirmationToken" => $existingUser->getResetHash()],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("reset.subject", [], "email_access"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($existingUser->getEmail())
-                        ->setBody($translate->trans(
-                            "reset.message",
-                            ["%reset_link%" => $resetLink],
-                            "email_access"));
-                    $this->get('mailer')->send($message);
+                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 } else {
                     $this->get("logger")->error("tried to reset password for non-existing user " . $entity->getEmail());
                 }

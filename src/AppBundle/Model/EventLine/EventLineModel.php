@@ -10,7 +10,6 @@ namespace AppBundle\Model\EventLine;
  */
 
 
-
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventLine;
 

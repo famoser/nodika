@@ -1,0 +1,34 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "register_check.title"|trans }}{% endblock %}
+{% block description %}{{ "register_check.description"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% trans_default_domain "access" %}
+
+{% set show_help = false %}
+
+{% block single_content %}
+    <h3>{{ "register_check.title"|trans }}</h3>
+    <p>{{ "register_check.help"|trans }}</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>{{ "register_check.am_administrator"|trans }}</h3>
+            <p>
+                {{ "register_check.now_register"|trans }}<br/>
+                <a href="{{ path("access_register") }}">
+                    {{ "register_check.now_register_action"|trans }}
+                </a>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h3>{{ "register_check.am_memeber"|trans }}</h3>
+            <p>
+                {{ "register_check.resend_email"|trans }}<br/>
+                <a href="{{ path("access_register_check") }}">
+                    {{ "register_check.resend_email_action"|trans }}
+                </a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

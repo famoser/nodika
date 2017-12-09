@@ -15,6 +15,8 @@ use AppBundle\Entity\Newsletter;
 use AppBundle\Form\Newsletter\RegisterForPreviewType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -34,21 +36,19 @@ class StaticController extends BaseController
             $this->createForm(RegisterForPreviewType::class),
             $request,
             new Newsletter(),
-            function ($form, $entity) {
+            function ($form, $newsletter) {
                 /* @var FormInterface $form */
-                /* @var Newsletter $entity */
-
-                $message = \Swift_Message::newInstance()
-                    ->setSubject("Nachricht auf nodika")
-                    ->setFrom($this->getParameter("mailer_email"))
-                    ->setTo($this->getParameter("contact_email"))
-                    ->setBody("Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
-                        "\nListe: " . $entity->getChoice() .
-                        "\nEmail: " . $entity->getEmail() .
-                        "\nVorname: " . $entity->getGivenName() .
-                        "\nNachname: " . $entity->getFamilyName() .
-                        "\nNachricht: " . $entity->getMessage());
-                $this->get('mailer')->send($message);
+                /* @var Newsletter $newsletter */
+                $this->get("app.email_service")->sendTextEmail(
+                    $this->getParameter("contact_email"),
+                    "Kontaktanfrage von nodika",
+                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
+                    "\nListe: " . $newsletter->getChoice() .
+                    "\nEmail: " . $newsletter->getEmail() .
+                    "\nVorname: " . $newsletter->getGivenName() .
+                    "\nNachname: " . $newsletter->getFamilyName() .
+                    "\nNachricht: " . $newsletter->getMessage()
+                );
 
                 $translator = $this->get("translator");
 
@@ -62,5 +62,20 @@ class StaticController extends BaseController
         return $this->renderNoBackUrl(
             'static/index.html.twig', $arr, "this is the homepage"
         );
+    }
+
+    /**
+     * @Route("/email/{identifier}", name="view_email")
+     * @param Request $request
+     * @return Response
+     */
+    public function emailAction(Request $request, $identifier)
+    {
+        $email = $this->getDoctrine()->getRepository("AppBundle:Email")->findOneBy(["identifier" => $identifier]);
+        if ($email == null) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->render("email/email.html.twig", ["email" => $email]);
     }
 }

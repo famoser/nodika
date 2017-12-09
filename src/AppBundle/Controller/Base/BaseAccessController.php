@@ -94,23 +94,16 @@ class BaseAccessController extends BaseFrontendController
                             $user->setResetHash(HashHelper::createNewResetHash());
                             $user->setRegistrationDate(new \DateTime());
 
-                            $em = $this->getDoctrine()->getManager();
-                            $em->persist($user);
-                            $em->flush();
+                            $this->fastSave($user);
 
-                            $translate = $this->get("translator");
-                            $registerLink = $generateRegisterConfirmLink($user);
+                            $translator = $this->get("translator");
+                            $subject = $translator->trans("register.subject", [], "email_access");
+                            $receiver = $user->getEmail();
+                            $body = $translator->trans("register.message", [], "email_access");
+                            $actionText = $translator->trans("register.action_text", [], "email_access");
+                            $actionLink = $generateRegisterConfirmLink($user);
+                            $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
-
-                            $message = \Swift_Message::newInstance()
-                                ->setSubject($translate->trans("register.subject", [], "email_access"))
-                                ->setFrom($this->getParameter("mailer_email"))
-                                ->setTo($user->getEmail())
-                                ->setBody($translate->trans(
-                                    "register.message",
-                                    ["%register_link%" => $registerLink],
-                                    "email_access"));
-                            $this->get('mailer')->send($message);
                             return $generateRegisterThanksLink($user);
                         }
                     }
@@ -150,21 +143,15 @@ class BaseAccessController extends BaseFrontendController
                 if ($existingUser != null) {
                     $existingUser->setResetHash(HashHelper::createNewResetHash());
 
-                    $this->getDoctrine()->getManager()->persist($existingUser);
-                    $this->getDoctrine()->getManager()->flush();
+                    $this->fastSave($existingUser);
 
-                    $translate = $this->get("translator");
-                    $resetLink = $generateResetLink($existingUser);
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("reset.subject", [], "email_access"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($existingUser->getEmail())
-                        ->setBody($translate->trans(
-                            "reset.message",
-                            ["%reset_link%" => $resetLink],
-                            "email_access"));
-                    $this->get('mailer')->send($message);
+                    $translator = $this->get("translator");
+                    $subject = $translator->trans("reset.subject", [], "email_access");
+                    $receiver = $existingUser->getEmail();
+                    $body = $translator->trans("reset.message", [], "email_access");
+                    $actionText = $translator->trans("reset.action_text", [], "email_access");
+                    $actionLink = $generateResetLink($existingUser);
+                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 }
                 return $generateResetDoneLink($existingUser);
             } else {
@@ -186,8 +173,8 @@ class BaseAccessController extends BaseFrontendController
         /* @var $user AdvancedUserInterface|UserTrait */
         $user = $repository->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
-            return $this->renderWithBackUrl(
-                'access/hash_invalid.html.twig'
+            return $this->renderNoBackUrl(
+                'access/hash_invalid.html.twig', [], "no confirmation token"
             );
         }
         $setPasswordForm->setData($user);

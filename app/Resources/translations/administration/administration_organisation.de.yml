@@ -171,7 +171,7 @@ persons_invite:
     default_message: |
       Guten Tag,
 
-      Dies ist eine Einladung zum neuen Notfalldienstkalender. Bitte setzten Sie das Passwort für Ihren Account indem Sie diesen Link besuchen: LINK_REPLACE
+      Dies ist eine Einladung zum neuen Notfalldienstkalender. Bitte setzen Sie das Passwort für Ihren Account indem Sie diesen Link besuchen: LINK_REPLACE
 
       Der Administrator dankt.
   successful:

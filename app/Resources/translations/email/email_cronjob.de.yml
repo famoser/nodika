@@ -1,21 +1,13 @@
 member_event_confirm_remainder:
-  subject: 'Unbestätigte Termine auf nodika'
+  subject: 'Unbestätigte Termine Ihrer Praxis auf nodika'
   message: >
-    Sie haben %count% unbestätigte Termine auf nodika. Besuchen Sie %link% und bestätigen Sie die Termine
-
-    Dies ist eine automatisch generierte E-Mail, bitte antworten Sie nicht darauf.
-    Wenden Sie sich bei Fragen an support@nodika.ch
+    Sie haben %count% unbestätigte Termine auf nodika.
+  action_text: 'Termine bestätigen'
 
 member_event_confirm_too_late_remainder:
   subject: 'Unbestätigter Termin auf nodika (Dringend)'
   message: >
     Der %owner% zugeordnete Termin im Zeitraum %event_short% ist noch unbestätigt, die Bestätigungsfrist wurde überschritten.
 
-    Besuchen Sie %link% und bestätigen Sie die Termine.
-
-
     Diese E-Mail empfangen Sie und der Administrator Ihrer Organisation täglich bis die betroffenen Termine bestätigt sind.
-
-
-    Dies ist eine automatisch generierte E-Mail, bitte antworten Sie nicht darauf.
-    Wenden Sie sich bei Fragen an support@nodika.ch
+  action_text: 'Termin jetzt bestätigen'
