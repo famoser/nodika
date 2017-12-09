@@ -1,5 +1,5 @@
 member_event_confirm_remainder:
-  subject: 'Unbestätigte Termine auf nodika'
+  subject: 'Unbestätigte Termine Ihrer Praxis auf nodika'
   message: >
     Sie haben %count% unbestätigte Termine auf nodika.
   action_text: 'Termine bestätigen'

@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/cron")
- * @Security("has_role('ROLE_USER')")
  */
 class CronJobController extends BaseFrontendController
 {
@@ -86,14 +85,11 @@ class CronJobController extends BaseFrontendController
                 foreach ($unconfirmedEvents as $unconfirmedEvent) {
                     if ($unconfirmedEvent->getStartDateTime() < $tooLateThreshold) {
                         //member has confirmed too late!
-                        $subject = $translator->trans("member_event_confirm_too_late_remainder.subject", [], "email_cronjob");
 
                         $receiver = null;
-                        $carbonCopy = null;
                         $member = $unconfirmedEvent->getMember();
                         if ($unconfirmedEvent->getPerson() != null) {
                             $receiver = $unconfirmedEvent->getPerson()->getEmail();
-                            $carbonCopy = $member->getEmail();
                             $owner = $unconfirmedEvent->getPerson()->getFullName();
                         } else {
                             $receiver = $member->getEmail();
@@ -111,16 +107,16 @@ class CronJobController extends BaseFrontendController
                             ],
                             "email_cronjob");
 
+                        $subject = $translator->trans("member_event_confirm_too_late_remainder.subject", [], "email_cronjob");
                         $actionText = $translator->trans("member_event_confirm_too_late_remainder.action_text", [], "email_cronjob");
                         $actionLink = $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL);
-                        $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy);
+                        $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $adminEmail);
                     } else {
 
                         $disable =
                             //disable email if already sent
                             ($unconfirmedEvent->getLastRemainderEmailSent() != null && $unconfirmedEvent->getLastRemainderEmailSent() > $remainderSendBlock);
 
-                        $memberRemainderCount++;
                         if ($unconfirmedEvent->getPerson() != null) {
                             $person = $unconfirmedEvent->getPerson();
 
@@ -145,16 +141,15 @@ class CronJobController extends BaseFrontendController
 
                 $manager = $this->getDoctrine()->getManager();
 
-                if ($sendRemainderToMember) {
+                if ($sendRemainderToMember && $memberRemainderCount > 0) {
                     //send email to member
                     $subject = $translator->trans("member_event_confirm_remainder.subject", [], "email_cronjob");
                     $receiver = $member->getEmail();
                     $body = $translator->trans(
                         "member_event_confirm_remainder.message",
-                        [
-                            "%count%" => $memberRemainderCount
-                        ],
-                        "email_cronjob");
+                        ["%count%" => $memberRemainderCount],
+                        "email_cronjob"
+                    );
 
                     $actionText = $translator->trans("member_event_confirm_too_late_remainder.action_text", [], "email_cronjob");
                     $actionLink = $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -168,8 +163,9 @@ class CronJobController extends BaseFrontendController
                     }
                 }
 
+
                 foreach ($sendRemainderToPerson as $person) {
-                    if (isset($sendRemainderToPersonDisabled[$person->getId()])) {
+                    if (isset($sendRemainderToPersonDisabled[$person->getId()]) || !isset($personRemainderCount[$person->getId()]) || !($personRemainderCount[$person->getId()] > 0)) {
                         //skip
                         continue;
                     }
@@ -192,7 +188,7 @@ class CronJobController extends BaseFrontendController
                     }
                 }
 
-                $manager->flush();
+                $manager->flush()
             }
         }
         return new Response("finished");
