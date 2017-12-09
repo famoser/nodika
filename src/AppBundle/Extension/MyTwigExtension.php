@@ -25,11 +25,11 @@ class MyTwigExtension extends Twig_Extension
 
     public function getFilters()
     {
-        return array(
-            new Twig_SimpleFilter('myDate', array($this, 'dateFilter')),
-            new Twig_SimpleFilter('myDateTime', array($this, 'dateTimeFilter')),
-            new Twig_SimpleFilter('myBoolean', array($this, 'booleanFilter'))
-        );
+        return [
+            new Twig_SimpleFilter('myDate', [$this, 'dateFilter']),
+            new Twig_SimpleFilter('myDateTime', [$this, 'dateTimeFilter']),
+            new Twig_SimpleFilter('myBoolean', [$this, 'booleanFilter'])
+        ];
     }
 
     private function prependDayName(DateTime $date)

@@ -176,7 +176,10 @@ class CronJobController extends BaseFrontendController
 
                     $receiver = $person->getEmail();
                     $subject = $translator->trans("member_event_confirm_remainder.subject", [], "email_cronjob");
-                    $body = $translator->trans("member_event_confirm_remainder.message", ["%count%" => $personRemainderCount[$person->getId()]], "email_cronjob");
+                    $body = $translator->trans("member_event_confirm_remainder.message",
+                        ["%count%" => $personRemainderCount[$person->getId()]],
+                        "email_cronjob"
+                    );
                     $actionText = $translator->trans("member_event_confirm_remainder.action_text", [], "email_cronjob");
                     $actionLink = $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL);
                     $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);

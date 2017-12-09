@@ -75,12 +75,10 @@ class EmailService implements EmailServiceInterface
         $manager->persist($email);
         $manager->flush();
 
-
         $message = \Swift_Message::newInstance()
             ->setSubject($email->getSubject())
             ->setFrom($this->mailerEmail)
             ->setTo($email->getReceiver());
-
 
         $body = $email->getBody();
         if ($email->getActionLink() != null) {
