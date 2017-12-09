@@ -1,11 +1,14 @@
 register:
   subject: 'Registrierung abschliessen'
-  message: 'Vielen Dank für Ihr Interesse! Klicken Sie auf den folgenden Link um die Registrierung abzuschliessen und Ihre Organisation einzurichten: %register_link%'
+  message: 'Vielen Dank für Ihr Interesse! Ihr Account wurde erstellt.'
+  action_text: 'Registrierung abschliessen'
 
 reset:
   subject: 'Passwort zurücksetzen'
-  message: 'Klicken Sie auf den folgenden Link um Ihr Passwort zurückzusetzen: %reset_link%'
+  message: 'Möchten Sie Ihr Passwort zurücksetzen?'
+  action_text: 'Jetzt Passwort zurücksetzen'
 
 resend_invitation:
-  subject: "Einladung auf nodika"
-  message: "Auf Ihren Wunsch senden wir Ihnen erneut die Einladung für nodika zu. Klicken Sie auf den folgenden Link, um sich zu registrieren: %invite_link%"
+  subject: "Einladung für nodika"
+  message: "Sie wurden auf nodika eingeladen. Folgen Sie dem Link um die Einladung anzunehmen"
+  action_text: 'Jetzt Einladung annehmen'

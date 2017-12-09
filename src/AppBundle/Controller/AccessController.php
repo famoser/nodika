@@ -86,7 +86,18 @@ class AccessController extends BaseAccessController
                     $user = FrontendUser::createFromPerson($person);
                     $this->fastSave($person, $user);
 
-                    $this->get("app.email_service")->sendRegisterConfirm($user);
+
+                    $translator = $this->get("translator");
+                    $subject = $translator->trans("register.subject", [], "email_access");
+                    $receiver = $existingUser->getEmail();
+                    $body = $translator->trans("register.message", [], "email_access");
+                    $actionText = $translator->trans("register.action_text", [], "email_access");
+                    $actionLink = $this->generateUrl(
+                        "access_register_confirm",
+                        ["confirmationToken" => $user->getResetHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                     return $this->redirectToRoute("access_register_thanks");
                 }
             }
@@ -120,16 +131,14 @@ class AccessController extends BaseAccessController
                     if ($person->getHasBeenInvited()) {
                         //resend invite email
                         $subject = $translator->trans("resend_invitation.subject", [], "email_access");
-                        $body = $translator->trans("resend_invitation.message",
-                            [
-                                "%invite_link%" => $this->generateUrl(
-                                    "access_invite_person",
-                                    ["invitationHash" => $person->getInvitationHash()],
-                                    UrlGeneratorInterface::ABSOLUTE_URL),
-                            ],
-                            "email_access"
-                        );
-                        $this->get("app.email_service")->sendTextEmail($person->getEmail(), $subject, $body);
+                        $body = $translator->trans("resend_invitation.message", [], "email_access");
+                        $actionText = $translator->trans("resend_invitation.action_text", [], "email_access");
+                        $actionLink = $this->generateUrl(
+                            "access_invite_person",
+                            ["invitationHash" => $person->getInvitationHash()],
+                            UrlGeneratorInterface::ABSOLUTE_URL);
+
+                        $this->get("app.email_service")->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
 
                         $this->displaySuccess($translator->trans("invite_resend.success.email_send", [], "access"));
                     } else {
@@ -146,16 +155,14 @@ class AccessController extends BaseAccessController
                     //resend member invite email
 
                     $subject = $translator->trans("resend_invitation.subject", [], "email_access");
-                    $body = $translator->trans("resend_invitation.message",
-                        [
-                            "%invite_link%" => $this->generateUrl(
-                                "access_invite",
-                                ["invitationHash" => $member->getInvitationHash()],
-                                UrlGeneratorInterface::ABSOLUTE_URL),
-                        ],
-                        "email_access"
-                    );
-                    $this->get("app.email_service")->sendTextEmail($person->getEmail(), $subject, $body);
+                    $body = $translator->trans("resend_invitation.message", [], "email_access");
+                    $actionText = $translator->trans("resend_invitation.action_text", [], "email_access");
+                    $actionLink = $this->generateUrl(
+                        "access_invite",
+                        ["invitationHash" => $member->getInvitationHash()],
+                        UrlGeneratorInterface::ABSOLUTE_URL);
+
+                    $this->get("app.email_service")->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
 
                     $this->displaySuccess($translator->trans("invite_resend.success.email_send", [], "access"));
                 } else {
@@ -180,8 +187,7 @@ class AccessController extends BaseAccessController
      * @param $invitationHash
      * @return FormInterface|Response
      */
-    public
-    function inviteAction(Request $request, $invitationHash)
+    public function inviteAction(Request $request, $invitationHash)
     {
         $member = $this->getDoctrine()->getRepository("AppBundle:Member")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$member instanceof Member) {
@@ -275,8 +281,7 @@ class AccessController extends BaseAccessController
      * @param $invitationHash
      * @return FormInterface|Response
      */
-    public
-    function invitePersonAction(Request $request, $invitationHash)
+    public function invitePersonAction(Request $request, $invitationHash)
     {
         $person = $this->getDoctrine()->getRepository("AppBundle:Person")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$person instanceof Person) {
@@ -358,8 +363,7 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @return Response
      */
-    public
-    function registerThanksAction(Request $request)
+    public function registerThanksAction(Request $request)
     {
         return $this->renderNoBackUrl(
             'access/register_thanks.html.twig', [], "user needs to check email and continue there"
@@ -371,8 +375,7 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @return Response
      */
-    public
-    function resetAction(Request $request)
+    public function resetAction(Request $request)
     {
         $myForm = $this->handleForm(
             $this->createForm(FrontendUserResetType::class),
@@ -385,26 +388,19 @@ class AccessController extends BaseAccessController
                 $existingUser = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["email" => $entity->getEmail()]);
                 if ($existingUser != null) {
                     $existingUser->setResetHash(HashHelper::createNewResetHash());
+                    $this->fastSave($existingUser);
 
-                    $this->getDoctrine()->getManager()->persist($existingUser);
-                    $this->getDoctrine()->getManager()->flush();
-
-                    $translate = $this->get("translator");
-                    $resetLink = $this->generateUrl(
+                    $translator = $this->get("translator");
+                    $subject = $translator->trans("reset.subject", [], "email_access");
+                    $receiver = $existingUser->getEmail();
+                    $body = $translator->trans("reset.message", [], "email_access");
+                    $actionText = $translator->trans("reset.action_text", [], "email_access");
+                    $actionLink = $this->generateUrl(
                         "access_reset_confirm",
                         ["confirmationToken" => $existingUser->getResetHash()],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
-
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($translate->trans("reset.subject", [], "email_access"))
-                        ->setFrom($this->getParameter("mailer_email"))
-                        ->setTo($existingUser->getEmail())
-                        ->setBody($translate->trans(
-                            "reset.message",
-                            ["%reset_link%" => $resetLink],
-                            "email_access"));
-                    $this->get('mailer')->send($message);
+                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 } else {
                     $this->get("logger")->error("tried to reset password for non-existing user " . $entity->getEmail());
                 }
@@ -428,8 +424,7 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @return Response
      */
-    public
-    function resetDoneAction(Request $request)
+    public function resetDoneAction(Request $request)
     {
         return $this->renderNoBackUrl(
             'access/reset_done.html.twig', [], "user needs to check email"
@@ -442,8 +437,7 @@ class AccessController extends BaseAccessController
      * @param $confirmationToken
      * @return Response
      */
-    public
-    function registerConfirmAction(Request $request, $confirmationToken)
+    public function registerConfirmAction(Request $request, $confirmationToken)
     {
         return $this->handleResetPasswordAction(
             $request,
@@ -472,8 +466,7 @@ class AccessController extends BaseAccessController
      * @param $confirmationToken
      * @return Response
      */
-    public
-    function resetConfirmAction(Request $request, $confirmationToken)
+    public function resetConfirmAction(Request $request, $confirmationToken)
     {
         return $this->handleResetPasswordAction(
             $request,
@@ -498,8 +491,7 @@ class AccessController extends BaseAccessController
      * @param callable $responseCallable with $form as argument
      * @return FormInterface|Response
      */
-    protected
-    function handleResetPasswordAction(Request $request, $confirmationToken, $onSuccessCallable, $responseCallable)
+    protected function handleResetPasswordAction(Request $request, $confirmationToken, $onSuccessCallable, $responseCallable)
     {
         $user = $this->getDoctrine()->getRepository("AppBundle:FrontendUser")->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
@@ -542,8 +534,7 @@ class AccessController extends BaseAccessController
      * @Route("/login_check", name="access_login_check")
      * @param Request $request
      */
-    public
-    function loginCheck(Request $request)
+    public function loginCheck(Request $request)
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
@@ -552,8 +543,7 @@ class AccessController extends BaseAccessController
      * @Route("/logout", name="access_logout")
      * @param Request $request
      */
-    public
-    function logoutAction(Request $request)
+    public function logoutAction(Request $request)
     {
         throw new \RuntimeException('You must configure the logout path to be handled by the firewall using form_login.logout in your security firewall configuration.');
     }

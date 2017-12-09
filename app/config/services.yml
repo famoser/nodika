@@ -58,7 +58,7 @@ services:
 
     app.email_service:
         class:  AppBundle\Service\EmailService
-        arguments: ["@mailer", "@router","@translator", "%mailer_email%", "%contact_email%"]
+        arguments: ["@mailer", "@doctrine", "@twig","%mailer_email%"]
 
     listener.entity.remove:
         class: AppBundle\Listener\DoctrinePreFlushListener

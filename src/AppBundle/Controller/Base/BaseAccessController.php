@@ -94,13 +94,16 @@ class BaseAccessController extends BaseFrontendController
                             $user->setResetHash(HashHelper::createNewResetHash());
                             $user->setRegistrationDate(new \DateTime());
 
-                            $em = $this->getDoctrine()->getManager();
-                            $em->persist($user);
-                            $em->flush();
+                            $this->fastSave($user);
 
-                            $registerLink = $generateRegisterConfirmLink($user);
+                            $translator = $this->get("translator");
+                            $subject = $translator->trans("register.subject", [], "email_access");
+                            $receiver = $user->getEmail();
+                            $body = $translator->trans("register.message", [], "email_access");
+                            $actionText = $translator->trans("register.action_text", [], "email_access");
+                            $actionLink = $generateRegisterConfirmLink($user);
+                            $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
-                            $this->get("app.email_service")->sendRegister($user, $registerLink);
                             return $generateRegisterThanksLink($user);
                         }
                     }
@@ -140,11 +143,15 @@ class BaseAccessController extends BaseFrontendController
                 if ($existingUser != null) {
                     $existingUser->setResetHash(HashHelper::createNewResetHash());
 
-                    $this->getDoctrine()->getManager()->persist($existingUser);
-                    $this->getDoctrine()->getManager()->flush();
+                    $this->fastSave($existingUser);
 
-                    $resetLink = $generateResetLink($existingUser);
-                    $this->get("app.email_service")->sendReset($existingUser, $resetLink);
+                    $translator = $this->get("translator");
+                    $subject = $translator->trans("reset.subject", [], "email_access");
+                    $receiver = $existingUser->getEmail();
+                    $body = $translator->trans("reset.message", [], "email_access");
+                    $actionText = $translator->trans("reset.action_text", [], "email_access");
+                    $actionLink = $generateResetLink($existingUser);
+                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 }
                 return $generateResetDoneLink($existingUser);
             } else {

@@ -60,10 +60,13 @@ messages:
 emails:
   offer_accepted:
     subject: 'Tauschanfrage angenommen'
-    message: 'Ihre Tauschanfrage auf nodika wurde angenommen: %link%'
+    message: 'Ihre Tauschanfrage auf nodika wurde angenommen'
+    action_text: "Ansehen"
   offer_rejected:
     subject: 'Tauschanfrage abgelehnt'
-    message: 'Ihre Tauschanfrage auf nodika wurde abgelehnt: %link%'
+    message: 'Ihre Tauschanfrage auf nodika wurde abgelehnt'
+    action_text: "Ansehen"
   new_offer:
     subject: 'Neue Tauschanfrage'
-    message: 'Sie haben eine neue Tauschanfrage auf nodika: %link%'
+    message: 'Sie haben eine neue Tauschanfrage auf nodika erhalten.'
+    action_text: "Jetzt beantworten"

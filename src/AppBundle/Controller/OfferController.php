@@ -172,7 +172,12 @@ class OfferController extends BaseFrontendController
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_open", [], "offer"));
 
-            $this->get("app.email_service")->sendNewOfferReceived($eventOffer);
+            $receiver = $eventOffer->getOfferedToPerson()->getEmail();
+            $body = $translator->trans("emails.new_offer.message", [], "offer");
+            $subject = $translator->trans("emails.new_offer.subject", [], "offer");
+            $actionText = $translator->trans("emails.new_offer.action_text", [], "offer");
+            $actionLink = $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
             return $this->redirectToRoute("offer_index");
         }
@@ -342,7 +347,12 @@ class OfferController extends BaseFrontendController
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_accepted_successful", [], "offer"));
 
-            $this->get("app.email_service")->sendEventOfferAccepted($eventOffer);
+            $receiver = $eventOffer->getOfferedByPerson()->getEmail();
+            $subject = $translator->trans("emails.offer_accepted.subject", [], "offer");
+            $body = $translator->trans("emails.offer_accepted.message", [], "offer");
+            $actionText = $translator->trans("emails.offer_accepted.action_text", [], "offer");
+            $actionLink = $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
         } else {
             $translator = $this->get("translator");
             $this->displayError($translator->trans("messages.no_access_anymore", [], "offer"));
@@ -373,7 +383,12 @@ class OfferController extends BaseFrontendController
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.offer_rejected_successful", [], "offer"));
 
-            $this->get("app.email_service")->sendEventOfferRejected($eventOffer);
+            $receiver = $eventOffer->getOfferedByPerson()->getEmail();
+            $subject = $translator->trans("emails.offer_rejected.subject", [], "offer");
+            $body = $translator->trans("emails.offer_rejected.message", [], "offer");
+            $actionText = $translator->trans("emails.offer_rejected.action_text", [], "offer");
+            $actionLink = $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
         } else {
             $translator = $this->get("translator");

@@ -9,6 +9,7 @@
 namespace AppBundle\Service;
 
 
+use AppBundle\Entity\Email;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventOffer;
 use AppBundle\Entity\FrontendUser;
@@ -16,11 +17,14 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Newsletter;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\Traits\UserTrait;
+use AppBundle\Enum\EmailType;
 use AppBundle\Helper\DateTimeFormatter;
 use AppBundle\Service\Interfaces\EmailServiceInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
 {
@@ -28,228 +32,127 @@ class EmailService implements EmailServiceInterface
      * @var \Swift_Mailer
      */
     private $mailer;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     /**
      * @var string
      */
     private $mailerEmail;
 
     /**
-     * @var string
+     * @var RegistryInterface
      */
-    private $contactEmail;
+    private $doctrine;
+
+    /**
+     * @var Environment
+     */
+    private $twig;
 
     /**
      * EmailService constructor.
      * @param \Swift_Mailer $mailer
-     * @param RouterInterface $router
-     * @param TranslatorInterface $translator
+     * @param RegistryInterface $registry
+     * @param Environment $twig
      * @param $mailerEmail
-     * @param $contactEmail
      */
-    public function __construct(\Swift_Mailer $mailer, RouterInterface $router, TranslatorInterface $translator, $mailerEmail, $contactEmail)
+    public function __construct(\Swift_Mailer $mailer, RegistryInterface $registry, Environment $twig, $mailerEmail)
     {
         $this->mailer = $mailer;
-        $this->router = $router;
-        $this->translator = $translator;
+        $this->doctrine = $registry;
+        $this->twig = $this;
         $this->mailerEmail = $mailerEmail;
-        $this->contactEmail = $contactEmail;
     }
 
-
-    public function sendRegisterConfirm(FrontendUser $user)
+    /**
+     * @param Email $email
+     */
+    private function processEmail(Email $email)
     {
-        $registerLink = $this->router->generate(
-            "access_register_confirm",
-            ["confirmationToken" => $user->getResetHash()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $email->setSentDateTime(new \DateTime());
+
+        $manager = $this->doctrine->getManager();
+        $manager->persist($email);
+        $manager->flush();
+
 
         $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("register.subject", [], "email_access"))
+            ->setSubject($email->getSubject())
             ->setFrom($this->mailerEmail)
-            ->setTo($user->getEmail())
-            ->setBody($this->translator->trans(
-                "register.message",
-                ["%register_link%" => $registerLink],
-                "email_access"));
-        $this->mailer->send($message);
-    }
+            ->setTo($email->getReceiver());
 
-    public function sendConfirmLate(Event $unconfirmedEvent, $adminEmail = null)
-    {
-        $member = $unconfirmedEvent->getMember();
-
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("member_event_confirm_too_late_remainder.subject", [], "email_cronjob"))
-            ->setFrom($this->mailerEmail);
-
-        if ($unconfirmedEvent->getPerson() != null) {
-            $message->setTo($unconfirmedEvent->getPerson()->getEmail());
-            $message->addCc($member->getEmail());
-            $owner = $unconfirmedEvent->getPerson()->getFullName();
-        } else {
-            $message->setTo($member->getEmail());
-            $owner = $member->getName();
+        if ($email->getEmailType() != EmailType::PLAIN_EMAIL) {
+            $message->setBody(
+                $this->twig->render(
+                    "email/email.html.twig", ["email" => $email]
+                ),
+                'text/html');
         }
+        $body = $email->getBody();
+        if ($email->getActionLink() != null) {
+            $body .= "\n\n" . $email->getActionText() . ": " . $email->getActionLink();
+        }
+        $message->setBody($body, 'text/plain');
 
-        $message->setBody($this->translator->trans(
-            "member_event_confirm_too_late_remainder.message",
-            [
-                "%link%" => $this->router->generate("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                "%event_short%" =>
-                    $unconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) .
-                    " - " .
-                    $unconfirmedEvent->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT),
-                "%owner%" => $owner
-            ],
-            "email_cronjob"));
-
-        if ($adminEmail != null) {
-            $message->addCc($adminEmail);
+        if ($email->getCarbonCopy() != null) {
+            $message->addCc($email->getCarbonCopy());
         }
         $this->mailer->send($message);
     }
 
-    public function sendScheduledConfirmToMember(Member $member, $unconfirmedEventCount)
+    /**
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
+     * @param string|null $carbonCopy
+     * @return boolean
+     */
+    public function sendTextEmail($receiver, $subject, $body, $carbonCopy = null)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
-            ->setFrom($this->mailerEmail)
-            ->setTo($member->getEmail())
-            ->setBody($this->translator->trans(
-                "member_event_confirm_remainder.message",
-                [
-                    "%link%" => $this->router->generate("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                    "%count%" => $unconfirmedEventCount
-                ],
-                "email_cronjob"));
-
-        $this->mailer->send($message);
-    }
-
-
-    public function sendScheduledConfirmToPerson(Person $person, $unconfirmedEventCount)
-    {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("member_event_confirm_remainder.subject", [], "email_cronjob"))
-            ->setFrom($this->mailerEmail)
-            ->setTo($person->getEmail())
-            ->setBody($this->translator->trans(
-                "member_event_confirm_remainder.message",
-                [
-                    "%link%" => $this->router->generate("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL),
-                    "%count%" => $unconfirmedEventCount
-                ],
-                "email_cronjob"));
-        $this->mailer->send($message);
-    }
-
-    public function sendEventOfferAccepted(EventOffer $eventOffer)
-    {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("emails.offer_accepted.subject", [], "offer"))
-            ->setFrom($this->mailerEmail)
-            ->setTo($eventOffer->getOfferedByPerson()->getEmail())
-            ->setBody($this->translator->trans(
-                "emails.offer_accepted.message",
-                ["%link%" => $this->router->generate("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
-                "offer"));
-        $this->mailer->send($message);
+        $email = new Email();
+        $email->setReceiver($receiver);
+        $email->setSubject($subject);
+        $email->setBody($body);
+        $email->setCarbonCopy($carbonCopy);
+        $email->setEmailType(EmailType::TEXT_EMAIL);
+        return $this->processEmail($email);
     }
 
     /**
-     * @param UserTrait $frontendUser
-     * @param $resetLink
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
+     * @param $actionText
+     * @param string $actionLink
+     * @param string|null $carbonCopy
+     * @return boolean
      */
-    public function sendReset($frontendUser, $resetLink)
+    public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = null)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("reset.subject", [], "email_access"))
-            ->setFrom($this->mailerEmail)
-            ->setTo($frontendUser->getEmail())
-            ->setBody($this->translator->trans(
-                "reset.message",
-                ["%reset_link%" => $resetLink],
-                "email_access"));
-        $this->mailer->send($message);
+        $email = new Email();
+        $email->setReceiver($receiver);
+        $email->setSubject($subject);
+        $email->setBody($body);
+        $email->setActionText($actionText);
+        $email->setActionLink($actionLink);
+        $email->setCarbonCopy($carbonCopy);
+        $email->setEmailType(EmailType::ACTION_EMAIL);
+        return $this->processEmail($email);
     }
 
     /**
-     * @param UserTrait $frontendUser
-     * @param $registerLink
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
+     * @param string|null $carbonCopy
+     * @return boolean
      */
-    public function sendRegister($frontendUser, $registerLink)
+    public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = null)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("register.subject", [], "email_access"))
-            ->setFrom($this->mailerEmail)
-            ->setTo($frontendUser->getEmail())
-            ->setBody($this->translator->trans(
-                "register.message",
-                ["%register_link%" => $registerLink],
-                "email_access"));
-        $this->mailer->send($message);
-    }
-
-    public function sendEventOfferRejected(EventOffer $eventOffer)
-    {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("emails.offer_rejected.subject", [], "offer"))
-            ->setFrom($this->mailerEmail)
-            ->setTo($eventOffer->getOfferedByPerson()->getEmail())
-            ->setBody($this->translator->trans(
-                "emails.offer_rejected.message",
-                ["%link%" => $this->router->generate("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
-                "offer"));
-        $this->mailer->send($message);
-    }
-
-    public function sendNewOfferReceived(EventOffer $eventOffer)
-    {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans("emails.new_offer.subject", [], "offer"))
-            ->setFrom($this->mailerEmail)
-            ->setTo($eventOffer->getOfferedToPerson()->getEmail())
-            ->setBody($this->translator->trans(
-                "emails.new_offer.message",
-                ["%link%" => $this->router->generate("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL)],
-                "offer"));
-        $this->mailer->send($message);
-    }
-
-    public function sendContactMessage(Newsletter $newsletter)
-    {
-        $message = \Swift_Message::newInstance()
-            ->setSubject("Nachricht auf nodika")
-            ->setFrom($this->mailerEmail)
-            ->setTo($this->contactEmail)
-            ->setBody("Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
-                "\nListe: " . $newsletter->getChoice() .
-                "\nEmail: " . $newsletter->getEmail() .
-                "\nVorname: " . $newsletter->getGivenName() .
-                "\nNachname: " . $newsletter->getFamilyName() .
-                "\nNachricht: " . $newsletter->getMessage());
-        $this->mailer->send($message);
-    }
-
-    public function sendTextEmail($receiver, $subject, $body)
-    {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($this->mailerEmail)
-            ->setTo($receiver)
-            ->setBody($body);
-        $this->mailer->send($message);
+        $email = new Email();
+        $email->setReceiver($receiver);
+        $email->setSubject($subject);
+        $email->setBody($body);
+        $email->setCarbonCopy($carbonCopy);
+        $email->setEmailType(EmailType::PLAIN_EMAIL);
+        return $this->processEmail($email);
     }
 }

@@ -34,10 +34,19 @@ class StaticController extends BaseController
             $this->createForm(RegisterForPreviewType::class),
             $request,
             new Newsletter(),
-            function ($form, $entity) {
+            function ($form, $newsletter) {
                 /* @var FormInterface $form */
-                /* @var Newsletter $entity */
-                $this->get("app.email_service")->sendContactMessage($entity);
+                /* @var Newsletter $newsletter */
+                $this->get("app.email_service")->sendTextEmail(
+                    $this->getParameter("contact_email"),
+                    "Kontaktanfrage von nodika",
+                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
+                    "\nListe: " . $newsletter->getChoice() .
+                    "\nEmail: " . $newsletter->getEmail() .
+                    "\nVorname: " . $newsletter->getGivenName() .
+                    "\nNachname: " . $newsletter->getFamilyName() .
+                    "\nNachricht: " . $newsletter->getMessage()
+                );
 
                 $translator = $this->get("translator");
 

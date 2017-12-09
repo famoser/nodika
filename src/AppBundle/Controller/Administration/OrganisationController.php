@@ -281,8 +281,7 @@ class OrganisationController extends BaseController
                     $body = str_replace($search, $replace, $body);
                 }
 
-
-                $this->get("app.email_service")->sendTextEmail($member->getEmail(), $subject, $body);
+                $this->get("app.email_service")->sendPlainEmail($member->getEmail(), $subject, $body);
 
                 $this->fastSave($member);
             }
@@ -449,8 +448,7 @@ class OrganisationController extends BaseController
                     $body = str_replace($search, $replace, $body);
                 }
 
-                $this->get("app.email_service")->sendTextEmail($person->getEmail(), $subject, $body);
-
+                $this->get("app.email_service")->sendPlainEmail($person->getEmail(), $subject, $body);
                 $this->fastSave($person);
             }
 
