@@ -200,8 +200,7 @@ class CronJobController extends BaseFrontendController
      * @param $secret
      * @return Response
      */
-    public
-    function weeklyAction(Request $request, $secret)
+    public function weeklyAction(Request $request, $secret)
     {
         return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
     }
