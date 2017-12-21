@@ -10,9 +10,10 @@
 .web-server-pid
 ###< symfony/web-server-bundle ###
  
-# Cache, session files and logs (Symfony3) 
+# cache, logs, data
 /var/cache/
 /var/logs/
+/var/data/
 
 # nodejs
 /node_modules/

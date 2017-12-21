@@ -20,7 +20,14 @@ doctrine:
             # A collection of different named entity managers (e.g. some_em, another_em)
             my_em:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
-                auto_mapping:         true
+                # auto_mapping:         true
+                mappings:
+                    App:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity'
+                        prefix: 'App\Entity'
+                        alias: App
                 filters:
                     delete_filter:
                         class:                App\Filter\DeleteFilter

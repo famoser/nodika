@@ -36,7 +36,7 @@ class AdminUserProvider extends BaseUserProvider
     public function __construct(RegistryInterface $registry, $adminEmails)
     {
         $this->registry = $registry;
-        $this->adminEmails = $adminEmails;
+        $this->adminEmails = explode(",", $adminEmails);
     }
 
     /**
