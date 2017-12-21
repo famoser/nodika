@@ -6,43 +6,6 @@ Introduction
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0049282fe1b3437ba8321ec244a3ea93)](https://www.codacy.com/app/famoser/SyncApi-Webpage?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=famoser/nodika&amp;utm_campaign=Badge_Grade)
 [![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
 
-for release 1.0:
- - add help pages
- - add better first time workflow
-
-for release 1.1:
- - refactor hotspots as said by code climate
- - Member, Person, Organisation better view
- - export & print events in search
- - admin management (add any person by email, new invite possibility)
- - add continue generation option
- - implement invoice system
- - event generation stats
- - add info about confirmation status to event overview
- - add event search to admin
- - add pagination to large tables
- - show event generation details history
-
-
-project build with symfony. Dependecy managers:
- - composer for php
- - bower for css/ js
- - npm for build tools (gulp)
- 
-please ensure you have:
- - php installation (7.1 recommended)
- - configured your IDE with the PSE coding standard
- - composer & npm installed
- 
-this release includes:
- - gulp: build & minify frontend like css & js. Separate build process for admin (sonata) and frontend
- - doctrine: DAL
- - doctrine migrations: keep database consistent with multiple developers
- - doctrine fixtures: create sample data
- - 404templates: preconfigured error templates
- - deployer: deploy you application with 0 downtime!
- - custom login to replace bad FOSUserBundle
- 
 after first pull, execute from project root:
  - `npm install` #installs npm dependencies
  - `npm install gulp -g` #installs gulp globally 

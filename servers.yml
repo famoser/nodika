@@ -1,0 +1,23 @@
+.base: &base
+  hostname: ftp.famoser.ch
+  user: floria74
+  http_user: floria74
+  branch: master
+  deploy_path: ~/www/deploy/nodika.ch/{{stage}}
+  sshOptions:
+    StrictHostKeyChecking: no
+
+dev:
+  <<: *base
+  stage: dev
+  branch: develop
+
+production:
+  <<: *base
+  stage: production
+  branch: master
+
+usability:
+  <<: *base
+  stage: usability
+  branch: usability-testing

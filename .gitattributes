@@ -1,2 +1,3 @@
-web/dist/**/*.css       -diff
-web/dist/**/*.js        -diff
+#exclude compiled css / js
+public/**/*.css       -diff
+public/**/*.js        -diff

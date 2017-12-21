@@ -21,10 +21,8 @@ engines:
       - php
 
 exclude_patterns:
-  - "app/"
+  - "config"
   - "bin"
-  - "concept"
-  - "resources"
+  - "public"
   - "tests"
   - "var"
-  - "web/dist"
