@@ -9,11 +9,6 @@
 ###> symfony/web-server-bundle ###
 .web-server-pid
 ###< symfony/web-server-bundle ###
- 
-# cache, logs, data
-/var/cache/
-/var/logs/
-/var/data/
 
 # nodejs
 /node_modules/
@@ -24,5 +19,5 @@
 #phar files
 *.phar
 
-#local data
-data/*
+#deployment info
+servers.yml
