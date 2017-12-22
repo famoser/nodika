@@ -5,6 +5,7 @@
         "php": "^7.0.8",
         "ext-iconv": "*",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
+        "fzaninotto/faker": "^1.7",
         "javiereguiluz/easyadmin-bundle": "^1.17",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/console": "^3.4",

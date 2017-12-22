@@ -6,8 +6,12 @@ Introduction
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0049282fe1b3437ba8321ec244a3ea93)](https://www.codacy.com/app/famoser/SyncApi-Webpage?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=famoser/nodika&amp;utm_campaign=Badge_Grade)
 [![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
 
+dependencies (you need this on your machine):
+ - `composer` https://getcomposer.org/download/
+ - `npm` https://nodejs.org/en/download/
+ - `yarn` https://yarnpkg.com/lang/en/docs/install/
 
-project build with tsymfony4, with the additional bundles:
+backend with symfony4, with the additional bundles:
  - `server` for a better symfony server
  - `doctrine` the database wrapper 
  - `migrations` to migrate between different versions of the database
@@ -16,8 +20,15 @@ project build with tsymfony4, with the additional bundles:
  - `annotation` to configure routes in the controller
  - `form` to easely manage html forms
  - `logger` who doesn't need logging?
-  - `profiler` to measure performance
-  - `mailer` to send mails via smtp
+ - `profiler` to measure performance
+ - `mailer` to send mails via smtp
+  
+frontend building tools:
+ - `@symfony/webpack-encore` for the encore provided by symfony
+ - `jquery` to simplify DOM access
+ - `bootstrap-sass` bootstrap for basic css styling
+ - `font-awesome` font with icons
+ - `sass-loader node-sass` to enable the sass precompiler
 
 after first pull, execute from project root:
  - `npm install` #installs npm dependencies

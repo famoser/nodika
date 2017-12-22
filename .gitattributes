@@ -1,3 +1,2 @@
-#exclude compiled css / js
-public/**/*.css       -diff
-public/**/*.js        -diff
+#exclude compiled sources
+public/build/**/* -diff

@@ -71,6 +71,9 @@
     "egulias/email-validator": {
         "version": "2.1.3"
     },
+    "fzaninotto/faker": {
+        "version": "v1.7.1"
+    },
     "javiereguiluz/easyadmin-bundle": {
         "version": "1.17",
         "recipe": {

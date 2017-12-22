@@ -1,0 +1,98 @@
+@import "variables"
+
+html, body
+  height: 100%
+
+.header
+  padding-top: 0
+
+.header-container
+  padding: 0
+  position: relative
+
+.header-content
+  position: relative
+
+.go-buttons
+  position: absolute
+  right: 15px
+
+.go-button
+  padding: 23px
+  display: block
+  float: left
+  margin: 0 0 0 10px
+  box-shadow: 5px 5px 0 0 rgba(0,0,0,0.16)
+  transition: all 0.2s
+  &:hover
+    color: $grey-light
+    box-shadow: 0 0 0 0 rgba(0,0,0,0.16)
+
+.go-dashboard
+  right: 0
+
+.go-back
+  right: 170px
+
+.logo-img
+  display: block
+  width: 100%
+
+.logo-wrapper
+  margin-bottom: 50px
+
+@media (max-width: $break-tablet)
+  .header-container
+    padding-left: 20px
+    padding-right: 20px
+
+
+@media (max-width: $break-mobile)
+  .header-container
+    padding-left: 20px
+    padding-right: 20px
+
+section
+  padding: 100px 0
+
+.content
+  min-height: calc(100% - 180px - 60px)
+
+.index-container
+  padding: 40px
+  position: relative
+
+.list-container
+  margin-bottom: 20px
+
+.message-container
+  border: 1px solid $grey-light
+  margin-bottom: 20px
+
+@media (max-width: $break-tablet)
+  .index-container
+    padding: 20px
+  section
+    padding: 40px 0
+  .go-buttons
+    position: inherit
+    padding-bottom: 20px
+    margin-top: -10px
+    &:after
+      content: "."
+      clear: both
+      display: block
+      visibility: hidden
+      height: 0
+
+
+@media (max-width: $break-mobile)
+  section
+    padding: 20px 0
+
+
+.footer-container
+  padding: 0
+
+.footer
+  padding: 20px
