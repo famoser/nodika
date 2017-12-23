@@ -14,4 +14,4 @@ twig:
         globals_color_class_event: 'green2-background'
         globals_color_class_person: 'red-background'
         globals_color_class_error: 'red-background'
-        globals_tawk_id: '%env(tawk_id)%'
+        globals_tawk_id: '%env(TAWK_ID)%'
