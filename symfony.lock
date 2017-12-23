@@ -146,6 +146,9 @@
             "ref": "aaddfdf43cdecd4cf91f992052d76c2cadc04543"
         }
     },
+    "sensiolabs/security-checker": {
+        "version": "v3.0.7"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.0.2"
     },
