@@ -8,7 +8,6 @@
 
 namespace App\Model\EventGenerationService;
 
-
 class IdealQueueMember
 {
     public $id;
@@ -70,11 +69,11 @@ class IdealQueueMember
             $val = $this->history[$removeKey];
             if ($val == 0) {
                 $this->availableWeekdayCount++;
-            } else if ($val == 1) {
+            } elseif ($val == 1) {
                 $this->availableSaturdayCount++;
-            } else if ($val == 2) {
+            } elseif ($val == 2) {
                 $this->availableSundayCount++;
-            } else if ($val == 3) {
+            } elseif ($val == 3) {
                 $this->availableHolidayCount++;
             }
             unset($this->history[$removeKey]);

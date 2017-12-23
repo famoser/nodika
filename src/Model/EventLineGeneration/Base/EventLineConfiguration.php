@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration\Base;
 
-
 use App\Entity\Event;
 use App\Entity\EventLine;
 

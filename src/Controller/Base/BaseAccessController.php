@@ -8,7 +8,6 @@
 
 namespace App\Controller\Base;
 
-
 use App\Entity\Traits\UserTrait;
 use App\Helper\HashHelper;
 use Doctrine\ORM\EntityRepository;
@@ -174,7 +173,9 @@ class BaseAccessController extends BaseFrontendController
         $user = $repository->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
             return $this->renderNoBackUrl(
-                'access/hash_invalid.html.twig', [], "no confirmation token"
+                'access/hash_invalid.html.twig',
+                [],
+                "no confirmation token"
             );
         }
         $setPasswordForm->setData($user);

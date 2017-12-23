@@ -8,7 +8,6 @@
 
 namespace App\Form\FrontendUser;
 
-
 use App\Entity\FrontendUser;
 use App\Enum\SubmitButtonType;
 use App\Form\BaseAbstractType;

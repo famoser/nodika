@@ -8,7 +8,6 @@
 
 namespace App\Entity\Traits;
 
-
 use App\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -97,12 +96,15 @@ trait CommunicationTrait
     public function getCommunicationLines()
     {
         $res = [];
-        if ($this->getPhone() != "")
+        if ($this->getPhone() != "") {
             $res[] = $this->getPhone();
-        if ($this->getEmail() != "")
+        }
+        if ($this->getEmail() != "") {
             $res[] = $this->getEmail();
-        if ($this->getWebpage() != "")
+        }
+        if ($this->getWebpage() != "") {
             $res[] = $this->getWebpage();
+        }
         return $res;
     }
 

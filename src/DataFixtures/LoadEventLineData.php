@@ -8,7 +8,6 @@
 
 namespace App\DataFixtures;
 
-
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventLine;
 use Doctrine\Common\Persistence\ObjectManager;

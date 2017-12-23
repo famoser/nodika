@@ -12,5 +12,4 @@ use App\Form\Generic\RemoveThingType;
 
 class RemoveEventLineType extends RemoveThingType
 {
-
 }

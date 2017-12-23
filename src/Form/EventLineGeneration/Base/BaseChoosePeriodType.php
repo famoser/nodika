@@ -8,7 +8,6 @@
 
 namespace App\Form\EventLineGeneration\Base;
 
-
 use App\Enum\SubmitButtonType;
 use App\Form\BaseAbstractType;
 use App\Model\EventLineGeneration\Base\BaseConfiguration;

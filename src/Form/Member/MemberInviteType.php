@@ -8,7 +8,6 @@
 
 namespace App\Form\Member;
 
-
 use App\Entity\Person;
 use App\Entity\Traits\PersonTrait;
 use App\Entity\Traits\UserTrait;
@@ -26,8 +25,10 @@ class MemberInviteType extends BaseAbstractType
 
         $builder->add($builder->create(
             "frontendUser",
-            FrontendUserRegisterType::class, ["agb" => false] + NamingHelper::traitNameToTranslationForBuilder(UserTrait::class) +
-            ["label_attr" => ["class" => "sub-form-label"], "attr" => ["class" => "sub-form-control"]]));
+            FrontendUserRegisterType::class,
+            ["agb" => false] + NamingHelper::traitNameToTranslationForBuilder(UserTrait::class) +
+            ["label_attr" => ["class" => "sub-form-label"], "attr" => ["class" => "sub-form-control"]]
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -26,7 +26,7 @@ abstract class BaseEntity extends TranslatableObject
      *
      * @return string
      */
-    public abstract function getFullIdentifier();
+    abstract public function getFullIdentifier();
 
     /**
      * @return string

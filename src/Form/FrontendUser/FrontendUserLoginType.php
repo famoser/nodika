@@ -8,7 +8,6 @@
 
 namespace App\Form\FrontendUser;
 
-
 use App\Entity\FrontendUser;
 use App\Form\Generic\LoginType;
 use Symfony\Component\OptionsResolver\OptionsResolver;

@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 use App\Controller\Base\BaseFrontendController;
 use App\Entity\Organisation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

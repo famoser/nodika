@@ -8,7 +8,6 @@
 
 namespace App\Form;
 
-
 use App\Enum\SubmitButtonType;
 use App\Helper\StaticMessageHelper;
 use Symfony\Component\Form\FormBuilderInterface;

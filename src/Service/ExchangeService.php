@@ -8,7 +8,6 @@
 
 namespace App\Service;
 
-
 use App\Helper\CsvFileHelper;
 use App\Helper\NamingHelper;
 use App\Helper\StaticMessageHelper;
@@ -95,7 +94,7 @@ class ExchangeService implements ExchangeServiceInterface
         if (($handle = fopen($importFileModel->getFullFilePath(), "r")) !== false) {
             $accessorNames = [];
             $em = $this->registry->getEntityManager();
-            while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== FALSE) {
+            while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== false) {
                 if ($row++ == 1) {
                     //validate header (poorly, but should be enough for the normal user)
                     if (count($data) != count($header)) {
@@ -160,7 +159,7 @@ class ExchangeService implements ExchangeServiceInterface
         $row = 1;
         if (($handle = fopen($importFileModel->getFullFilePath(), "r")) !== false) {
             $em = $this->registry->getEntityManager();
-            while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== FALSE) {
+            while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== false) {
                 if ($row++ == 1) {
                     //validate header skipped
                     if (!$validateHeaderClosure($data)) {

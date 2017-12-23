@@ -8,7 +8,6 @@
 
 namespace App\Model\Organisation;
 
-
 class SetupStatusModel
 {
     private $hasMembers;

@@ -8,7 +8,6 @@
 
 namespace App\Service\Interfaces;
 
-
 interface EmailServiceInterface
 {
     /**

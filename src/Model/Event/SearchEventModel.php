@@ -8,7 +8,6 @@
 
 namespace App\Model\Event;
 
-
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;

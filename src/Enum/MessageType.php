@@ -8,7 +8,6 @@
 
 namespace App\Enum;
 
-
 use App\Enum\Base\BaseEnum;
 
 class MessageType extends BaseEnum

@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 use App\Controller\Base\BaseController;
 use App\Entity\FrontendUser;
 use App\Entity\Newsletter;
@@ -18,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-
 
 class StaticController extends BaseController
 {
@@ -60,7 +58,9 @@ class StaticController extends BaseController
 
 
         return $this->renderNoBackUrl(
-            'static/index.html.twig', $arr, "this is the homepage"
+            'static/index.html.twig',
+            $arr,
+            "this is the homepage"
         );
     }
 

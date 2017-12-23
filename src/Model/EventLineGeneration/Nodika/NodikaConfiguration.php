@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration\Nodika;
 
-
 use App\Model\EventLineGeneration\Base\BaseConfiguration;
 
 class NodikaConfiguration extends BaseConfiguration

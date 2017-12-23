@@ -8,7 +8,6 @@
 
 namespace App\Form\Generic;
 
-
 use App\Entity\Traits\UserTrait;
 use App\Enum\SubmitButtonType;
 use App\Form\BaseAbstractType;

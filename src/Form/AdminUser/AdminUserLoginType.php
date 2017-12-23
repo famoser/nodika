@@ -8,7 +8,6 @@
 
 namespace App\Form\AdminUser;
 
-
 use App\Entity\AdminUser;
 use App\Form\Generic\LoginType;
 use Symfony\Component\OptionsResolver\OptionsResolver;

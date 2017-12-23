@@ -8,10 +8,8 @@
 
 namespace App\Form\Event;
 
-
 use App\Form\Generic\ImportFileType;
 
 class ImportEventsType extends ImportFileType
 {
-
 }

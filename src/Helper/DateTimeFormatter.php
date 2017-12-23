@@ -8,7 +8,6 @@
 
 namespace App\Helper;
 
-
 class DateTimeFormatter
 {
     const DATE_TIME_FORMAT = "d.m.Y H:i";

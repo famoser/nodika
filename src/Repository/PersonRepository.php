@@ -33,6 +33,5 @@ class PersonRepository extends EntityRepository
             ->setParameter("person", $person)
             ->getQuery()
             ->getResult();
-
     }
 }

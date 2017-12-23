@@ -8,7 +8,6 @@
 
 namespace App\Form\Organisation;
 
-
 use App\Entity\Organisation;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CommunicationTrait;

@@ -8,7 +8,6 @@
 
 namespace App\Security\Voter\Base;
 
-
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 abstract class CrudVoter extends Voter

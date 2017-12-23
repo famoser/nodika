@@ -9,7 +9,6 @@
 
 namespace App\Controller\Administration\Organisation\EventLine\Generate\Base;
 
-
 use App\Controller\Base\BaseController;
 use App\Entity\EventLine;
 use App\Entity\EventLineGeneration;

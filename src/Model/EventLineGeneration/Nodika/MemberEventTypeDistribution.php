@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration\Nodika;
 
-
 class MemberEventTypeDistribution
 {
     /**

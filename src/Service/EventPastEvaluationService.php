@@ -8,7 +8,6 @@
 
 namespace App\Service;
 
-
 use App\Entity\Event;
 use App\Entity\EventPast;
 use App\Entity\Person;
@@ -140,5 +139,4 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
         $eventPast->setChangedByPerson($changePerson);
         return $eventPast;
     }
-
 }

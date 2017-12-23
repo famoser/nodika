@@ -8,7 +8,6 @@
 
 namespace App\Controller\Administration;
 
-
 use App\Controller\Base\BaseController;
 use App\Entity\Member;
 use App\Entity\Organisation;
@@ -58,7 +57,9 @@ class OrganisationController extends BaseController
 
         $arr["new_organisation_form"] = $newOrganisationForm->createView();
         return $this->renderWithBackUrl(
-            'administration/organisation/new.html.twig', $arr, $this->generateUrl("dashboard_index")
+            'administration/organisation/new.html.twig',
+            $arr,
+            $this->generateUrl("dashboard_index")
         );
     }
 
@@ -192,7 +193,7 @@ class OrganisationController extends BaseController
             foreach ($request->request->all() as $key => $value) {
                 if (strpos($key, "subject") === 0) {
                     $organisationSetting->setMemberInviteEmailSubject($value);
-                } else if ($key == "message") {
+                } elseif ($key == "message") {
                     $organisationSetting->setMemberInviteEmailMessage($value);
                     if (!strpos($value, "LINK_REPLACE")) {
                         $this->get("translator")->trans("members_invite.error.no_link_replace_in_message", [], "administration_organisation");
@@ -255,10 +256,10 @@ class OrganisationController extends BaseController
                 if (strpos($key, "free_1_") === 0) {
                     $memberId = (int)substr($key, 7); //to cut off free_1_
                     $variableMapping[$memberId]["FREE_1_REPLACE"] = $value;
-                } else if (strpos($key, "free_2_") === 0) {
+                } elseif (strpos($key, "free_2_") === 0) {
                     $memberId = (int)substr($key, 7); //to cut off free_2_
                     $variableMapping[$memberId]["FREE_2_REPLACE"] = $value;
-                } else if (strpos($key, "free_3_") === 0) {
+                } elseif (strpos($key, "free_3_") === 0) {
                     $memberId = (int)substr($key, 7); //to cut off free_3_
                     $variableMapping[$memberId]["FREE_3_REPLACE"] = $value;
                 }
@@ -358,7 +359,7 @@ class OrganisationController extends BaseController
             foreach ($request->request->all() as $key => $value) {
                 if (strpos($key, "subject") === 0) {
                     $organisationSetting->setPersonInviteEmailSubject($value);
-                } else if ($key == "message") {
+                } elseif ($key == "message") {
                     $organisationSetting->setPersonInviteEmailMessage($value);
                     if (!strpos($value, "LINK_REPLACE")) {
                         $this->get("translator")->trans("persons_invite.error.no_link_replace_in_message", [], "administration_organisation");
@@ -422,10 +423,10 @@ class OrganisationController extends BaseController
                 if (strpos($key, "free_1_") === 0) {
                     $personId = (int)substr($key, 7); //to cut off free_1_
                     $variableMapping[$personId]["FREE_1_REPLACE"] = $value;
-                } else if (strpos($key, "free_2_") === 0) {
+                } elseif (strpos($key, "free_2_") === 0) {
                     $personId = (int)substr($key, 7); //to cut off free_2_
                     $variableMapping[$personId]["FREE_2_REPLACE"] = $value;
-                } else if (strpos($key, "free_3_") === 0) {
+                } elseif (strpos($key, "free_3_") === 0) {
                     $personId = (int)substr($key, 7); //to cut off free_3_
                     $variableMapping[$personId]["FREE_3_REPLACE"] = $value;
                 }

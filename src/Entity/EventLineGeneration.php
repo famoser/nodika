@@ -18,7 +18,6 @@ use App\Model\EventLineGeneration\GenerationResult;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * An EventLineGeneration is the result of one of the generation algorithms
  *

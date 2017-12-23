@@ -136,8 +136,9 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
      */
     public function isEqualTo(UserInterface $user)
     {
-        if (!($user instanceof static))
+        if (!($user instanceof static)) {
             return false;
+        }
 
         return $this->isEqualToUser($user);
     }

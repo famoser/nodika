@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 use App\Controller\Base\BaseFrontendController;
 use App\Entity\Member;
 use App\Entity\Person;
@@ -105,14 +104,14 @@ class CronJobController extends BaseFrontendController
                                     $unconfirmedEvent->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT),
                                 "%owner%" => $owner
                             ],
-                            "email_cronjob");
+                            "email_cronjob"
+                        );
 
                         $subject = $translator->trans("member_event_confirm_too_late_remainder.subject", [], "email_cronjob");
                         $actionText = $translator->trans("member_event_confirm_too_late_remainder.action_text", [], "email_cronjob");
                         $actionLink = $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL);
                         $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $adminEmail);
                     } else {
-
                         $disable =
                             //disable email if already sent
                             ($unconfirmedEvent->getLastRemainderEmailSent() != null && $unconfirmedEvent->getLastRemainderEmailSent() > $remainderSendBlock);
@@ -172,7 +171,8 @@ class CronJobController extends BaseFrontendController
 
                     $receiver = $person->getEmail();
                     $subject = $translator->trans("member_event_confirm_remainder.subject", [], "email_cronjob");
-                    $body = $translator->trans("member_event_confirm_remainder.message",
+                    $body = $translator->trans(
+                        "member_event_confirm_remainder.message",
                         ["%count%" => $personRemainderCount[$person->getId()]],
                         "email_cronjob"
                     );

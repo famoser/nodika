@@ -12,7 +12,6 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * An ApplicationEvent is an event which saves the actions of the organisation
  *

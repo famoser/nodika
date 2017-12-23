@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration\Base;
 
-
 use App\Entity\Member;
 
 class BaseMemberConfiguration

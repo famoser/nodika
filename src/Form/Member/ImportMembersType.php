@@ -8,10 +8,8 @@
 
 namespace App\Form\Member;
 
-
 use App\Form\Generic\ImportFileType;
 
 class ImportMembersType extends ImportFileType
 {
-
 }

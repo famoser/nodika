@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 use App\Controller\Base\BaseFrontendController;
 use App\Model\Event\SearchEventModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -50,5 +49,4 @@ class DashboardController extends BaseFrontendController
         }
         return $this->renderNoBackUrl("dashboard/index.html.twig", $arr, "dashboard!");
     }
-
 }

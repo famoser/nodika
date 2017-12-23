@@ -12,5 +12,4 @@ use App\Form\Generic\RemoveThingType;
 
 class RemoveEventType extends RemoveThingType
 {
-
 }

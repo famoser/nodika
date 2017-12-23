@@ -8,7 +8,6 @@
 
 namespace App\Security\Voter;
 
-
 use App\Entity\FrontendUser;
 use App\Entity\Organisation;
 use App\Security\Voter\Base\CrudVoter;
@@ -40,7 +39,6 @@ class OrganisationVoter extends CrudVoter
         }
 
         return true;
-
     }
 
     /**

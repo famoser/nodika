@@ -8,7 +8,6 @@
 
 namespace App\Form\Generic;
 
-
 use App\Form\BaseAbstractType;
 use App\Model\Form\ImportFileModel;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

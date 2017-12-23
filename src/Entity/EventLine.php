@@ -14,7 +14,6 @@ use App\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * An EventLine groups together events of the same category
  *

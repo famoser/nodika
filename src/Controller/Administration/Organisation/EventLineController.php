@@ -8,7 +8,6 @@
 
 namespace App\Controller\Administration\Organisation;
 
-
 use App\Controller\Base\BaseController;
 use App\Entity\Event;
 use App\Entity\EventLine;

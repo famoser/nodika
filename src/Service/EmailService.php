@@ -8,7 +8,6 @@
 
 namespace App\Service;
 
-
 use App\Entity\Email;
 use App\Entity\Event;
 use App\Entity\EventOffer;
@@ -89,9 +88,11 @@ class EmailService implements EmailServiceInterface
         if ($email->getEmailType() != EmailType::PLAIN_EMAIL) {
             $message->addPart(
                 $this->twig->render(
-                    "email/email.html.twig", ["email" => $email]
+                    "email/email.html.twig",
+                    ["email" => $email]
                 ),
-                'text/html');
+                'text/html'
+            );
         }
 
         if ($email->getCarbonCopy() != null) {

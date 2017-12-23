@@ -14,7 +14,6 @@ use App\Enum\EventChangeType;
 use App\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * An EventPast saves the state of the event when action occurred
  *

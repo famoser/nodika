@@ -8,7 +8,6 @@
 
 namespace App\Controller\Administration\Organisation\Member;
 
-
 use App\Controller\Base\BaseController;
 use App\Entity\Member;
 use App\Entity\Organisation;

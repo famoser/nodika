@@ -8,7 +8,6 @@
 
 namespace App\Helper;
 
-
 class SessionHelper
 {
     const ACTIVE_MEMBER_ID = 'active_member_id';

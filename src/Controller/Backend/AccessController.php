@@ -8,7 +8,6 @@
 
 namespace App\Controller\Backend;
 
-
 use App\Controller\Base\BaseAccessController;
 use App\Entity\AdminUser;
 use App\Form\AdminUser\AdminUserLoginType;
@@ -38,7 +37,9 @@ class AccessController extends BaseAccessController
         $arr["login_form"] = $form->createView();
 
         return $this->renderWithBackUrl(
-            'backend/access/login.html.twig', $arr, $this->generateUrl("homepage")
+            'backend/access/login.html.twig',
+            $arr,
+            $this->generateUrl("homepage")
         );
     }
 

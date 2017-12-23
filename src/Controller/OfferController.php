@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 use App\Controller\Base\BaseFrontendController;
 use App\Entity\Event;
 use App\Entity\EventOffer;
@@ -84,7 +83,6 @@ class OfferController extends BaseFrontendController
 
         if ($ownMember->getOrganisation()->getId() != $member->getOrganisation()->getId() ||
             !$member->getPersons()->contains($person)) {
-
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
 
@@ -118,7 +116,6 @@ class OfferController extends BaseFrontendController
 
         if ($ownMember->getId() != $eventOffer->getOfferedByMember()->getId() ||
             !in_array($eventOffer->getStatus(), [OfferStatus::CREATING, OfferStatus::OPEN, OfferStatus::CLOSED])) {
-
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));
 
@@ -149,7 +146,7 @@ class OfferController extends BaseFrontendController
                     if ($isValidPossibility1 || $isValidPossibility2) {
                         $events[] = $event;
                     }
-                } else if ($key == "description") {
+                } elseif ($key == "description") {
                     $eventOffer->setDescription($value);
                 }
             }
@@ -270,7 +267,7 @@ class OfferController extends BaseFrontendController
         foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
             if ($eventOfferEntry->getEvent()->getPerson()->getId() == $otherPersonId) {
                 $otherEvents[] = $eventOfferEntry->getEvent();
-            } else if ($eventOfferEntry->getEvent()->getPerson()->getId() == $ownPerson->getId()) {
+            } elseif ($eventOfferEntry->getEvent()->getPerson()->getId() == $ownPerson->getId()) {
                 $myEvents[] = $eventOfferEntry->getEvent();
             }
         }
@@ -326,7 +323,7 @@ class OfferController extends BaseFrontendController
                     $em->persist($eventPast);
 
                     $em->persist($event);
-                } else if ($eventOfferEntry->getEvent()->getPerson()->getId() == $ownPerson->getId()) {
+                } elseif ($eventOfferEntry->getEvent()->getPerson()->getId() == $ownPerson->getId()) {
                     $event = $eventOfferEntry->getEvent();
                     $oldEvent = clone($event);
                     $event->setIsConfirmed(false);
@@ -389,7 +386,6 @@ class OfferController extends BaseFrontendController
             $actionText = $translator->trans("emails.offer_rejected.action_text", [], "offer");
             $actionLink = $this->generateUrl("offer_review", ["eventOffer" => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
             $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
-
         } else {
             $translator = $this->get("translator");
             $this->displaySuccess($translator->trans("messages.no_access_anymore", [], "offer"));

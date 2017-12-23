@@ -281,11 +281,13 @@ trait UserTrait
     protected function isEqualToUser($user)
     {
         /* @var UserTrait $user */
-        if ($this->getUsername() != $user->getUsername())
+        if ($this->getUsername() != $user->getUsername()) {
             return false;
+        }
 
-        if ($this->getPasswordHash() != $user->getPasswordHash())
+        if ($this->getPasswordHash() != $user->getPasswordHash()) {
             return false;
+        }
 
         return true;
     }

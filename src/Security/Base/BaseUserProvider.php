@@ -8,7 +8,6 @@
 
 namespace App\Security\Base;
 
-
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,7 +27,7 @@ abstract class BaseUserProvider implements UserProviderInterface
      *
      * @throws UsernameNotFoundException if the user is not found
      */
-    public abstract function loadUserByUsername($username);
+    abstract public function loadUserByUsername($username);
 
     /**
      * Refreshes the user for the account interface.
@@ -44,7 +43,7 @@ abstract class BaseUserProvider implements UserProviderInterface
      *
      * @throws UnsupportedUserException if the account is not supported
      */
-    public abstract function refreshUser(UserInterface $user);
+    abstract public function refreshUser(UserInterface $user);
 
     /**
      * Whether this provider supports the given user class.
@@ -53,5 +52,5 @@ abstract class BaseUserProvider implements UserProviderInterface
      *
      * @return bool
      */
-    public abstract function supportsClass($class);
+    abstract public function supportsClass($class);
 }

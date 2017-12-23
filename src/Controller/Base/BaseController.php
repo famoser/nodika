@@ -79,7 +79,6 @@ class BaseController extends Controller
                 $data,
                 $myOnSuccessCallable
             );
-
         }
     }
 
@@ -214,7 +213,7 @@ class BaseController extends Controller
                 /* @var FormInterface $form */
                 /* @var BaseEntity $entity */
                 $this->fastSave($entity);
-                return $onSuccessCallable ($form, $entity);
+                return $onSuccessCallable($form, $entity);
             };
         } else {
             $myCallable = function ($form, $entity) use ($onSuccessCallable) {
@@ -246,7 +245,7 @@ class BaseController extends Controller
             }
             $em->remove($entity);
             $em->flush();
-            return $onRemoveCallable ($form, $entity);
+            return $onRemoveCallable($form, $entity);
         });
     }
 

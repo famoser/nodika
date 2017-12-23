@@ -8,7 +8,6 @@
 
 namespace App\Filter;
 
-
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 

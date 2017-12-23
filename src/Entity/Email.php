@@ -13,7 +13,6 @@ use App\Entity\Traits\IdTrait;
 use App\Enum\EmailType;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * An Email is a sent email to the specified receivers
  *

@@ -8,7 +8,6 @@
 
 namespace App\Form\EventLine;
 
-
 use App\Entity\EventLine;
 use App\Entity\Traits\ThingTrait;
 use App\Form\BaseCrudAbstractType;

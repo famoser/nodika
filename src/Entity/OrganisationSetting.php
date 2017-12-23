@@ -8,11 +8,9 @@
 
 namespace App\Entity;
 
-
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * OrganisationSetting saves the settings for an organisation

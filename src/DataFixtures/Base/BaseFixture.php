@@ -8,7 +8,6 @@
 
 namespace App\DataFixtures\Base;
 
-
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\PersonTrait;
@@ -51,7 +50,7 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
      *
      * @return mixed
      */
-    protected abstract function getAllRandomInstance();
+    abstract protected function getAllRandomInstance();
 
     /**
      * @param AddressTrait $obj
@@ -61,8 +60,9 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
         $faker = $this->getFaker();
         $obj->setStreet($faker->streetAddress);
         $obj->setStreetNr($faker->numberBetween(0, 300));
-        if ($faker->numberBetween(0, 10) > 8)
+        if ($faker->numberBetween(0, 10) > 8) {
             $obj->setAddressLine($faker->streetAddress);
+        }
         $obj->setPostalCode($faker->postcode);
         $obj->setCity($faker->city);
         $obj->setCountry($faker->countryCode);
@@ -75,10 +75,12 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
     {
         $faker = $this->getFaker();
         $obj->setEmail($faker->email);
-        if ($faker->numberBetween(0, 10) > 5)
+        if ($faker->numberBetween(0, 10) > 5) {
             $obj->setPhone($faker->phoneNumber);
-        if ($faker->numberBetween(0, 10) > 8)
+        }
+        if ($faker->numberBetween(0, 10) > 8) {
             $obj->setWebpage($faker->url);
+        }
     }
 
     /**
@@ -88,8 +90,9 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
     {
         $faker = $this->getFaker();
         $obj->setName($faker->text(50));
-        if ($faker->numberBetween(0, 10) > 5)
+        if ($faker->numberBetween(0, 10) > 5) {
             $obj->setDescription($faker->text(200));
+        }
     }
 
     /**
@@ -100,8 +103,9 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
         $faker = $this->getFaker();
         $obj->setGivenName($faker->firstName);
         $obj->setFamilyName($faker->lastName);
-        if ($faker->numberBetween(0, 10) > 5)
+        if ($faker->numberBetween(0, 10) > 5) {
             $obj->setJobTitle($faker->jobTitle);
+        }
     }
 
     /**

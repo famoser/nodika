@@ -8,7 +8,6 @@
 
 namespace App\Security;
 
-
 use App\Entity\FrontendUser;
 use App\Security\Base\BaseUserProvider;
 use Symfony\Bridge\Doctrine\RegistryInterface;

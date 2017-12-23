@@ -8,7 +8,6 @@
 
 namespace App\Entity;
 
-
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\UserTrait;
@@ -97,8 +96,9 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
      */
     public function isEqualTo(UserInterface $user)
     {
-        if (!($user instanceof static))
+        if (!($user instanceof static)) {
             return false;
+        }
 
         return $this->isEqualToUser($user);
     }
@@ -108,6 +108,5 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
      */
     public function __construct()
     {
-
     }
 }

@@ -8,10 +8,8 @@
 
 namespace App\Form\AdminUser;
 
-
 use App\Form\Generic\RemoveThingType;
 
 class RemoveAdminUser extends RemoveThingType
 {
-
 }

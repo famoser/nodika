@@ -8,7 +8,6 @@
 
 namespace App\DataFixtures;
 
-
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\Member;
 use App\Entity\Person;

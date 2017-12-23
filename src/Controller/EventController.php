@@ -53,7 +53,7 @@ class EventController extends BaseFrontendController
                     if (isset($assignableEvents[$eventId])) {
                         $events[] = $assignableEvents[$eventId];
                     }
-                } else if ($key == "selected_person") {
+                } elseif ($key == "selected_person") {
                     $selectedPersonId = $value;
                     foreach ($persons as $person) {
                         if ($person->getId() == $selectedPersonId) {
@@ -82,7 +82,6 @@ class EventController extends BaseFrontendController
             } else {
                 $this->displayError($trans->trans("assign.messages.no_events", [], "event"));
             }
-
         }
 
 

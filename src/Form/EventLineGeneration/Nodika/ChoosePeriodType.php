@@ -8,7 +8,6 @@
 
 namespace App\Form\EventLineGeneration\Nodika;
 
-
 use App\Form\EventLineGeneration\Base\BaseChoosePeriodType;
 use App\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use Symfony\Component\Form\FormBuilderInterface;

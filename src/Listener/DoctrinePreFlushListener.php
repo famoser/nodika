@@ -9,7 +9,6 @@
 
 namespace App\Listener;
 
-
 use App\Entity\Traits\IdTrait;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PreFlushEventArgs;

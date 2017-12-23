@@ -44,7 +44,6 @@ class MyTwigExtension extends Twig_Extension
     public function dateFilter($date)
     {
         if ($date instanceof \DateTime) {
-
             return $this->prependDayName($date) . ", " . $date->format(DateTimeFormatter::DATE_FORMAT);
         }
         return "-";

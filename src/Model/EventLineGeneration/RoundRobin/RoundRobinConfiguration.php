@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration\RoundRobin;
 
-
 use App\Model\EventLineGeneration\Base\BaseConfiguration;
 
 class RoundRobinConfiguration extends BaseConfiguration

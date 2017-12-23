@@ -8,7 +8,6 @@
 
 namespace App\Model\EventPast;
 
-
 use App\Entity\Member;
 use App\Entity\Person;
 use App\Enum\EventChangeType;

@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration\Base;
 
-
 use App\Model\EventLineGeneration\GenerationResult;
 
 class BaseOutput

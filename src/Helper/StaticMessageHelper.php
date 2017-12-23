@@ -8,7 +8,6 @@
 
 namespace App\Helper;
 
-
 class StaticMessageHelper
 {
     const FLASH_ERROR = 'error';

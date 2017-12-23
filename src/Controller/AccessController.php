@@ -8,7 +8,6 @@
 
 namespace App\Controller;
 
-
 use App\Controller\Base\BaseAccessController;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
@@ -49,7 +48,9 @@ class AccessController extends BaseAccessController
         $arr["login_form"] = $form->createView();
 
         return $this->renderWithBackUrl(
-            'access/login.html.twig', $arr, $this->generateUrl("homepage")
+            'access/login.html.twig',
+            $arr,
+            $this->generateUrl("homepage")
         );
     }
 
@@ -61,7 +62,9 @@ class AccessController extends BaseAccessController
     public function registerCheckAction(Request $request)
     {
         return $this->renderWithBackUrl(
-            'access/register_check.html.twig', [], $this->generateUrl("access_login")
+            'access/register_check.html.twig',
+            [],
+            $this->generateUrl("access_login")
         );
     }
 
@@ -109,7 +112,9 @@ class AccessController extends BaseAccessController
 
         $arr["register_form"] = $registerForm->createView();
         return $this->renderWithBackUrl(
-            'access/register.html.twig', $arr, $this->generateUrl("access_login")
+            'access/register.html.twig',
+            $arr,
+            $this->generateUrl("access_login")
         );
     }
 
@@ -136,7 +141,8 @@ class AccessController extends BaseAccessController
                         $actionLink = $this->generateUrl(
                             "access_invite_person",
                             ["invitationHash" => $person->getInvitationHash()],
-                            UrlGeneratorInterface::ABSOLUTE_URL);
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        );
 
                         $this->get("app.email_service")->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
 
@@ -160,7 +166,8 @@ class AccessController extends BaseAccessController
                     $actionLink = $this->generateUrl(
                         "access_invite",
                         ["invitationHash" => $member->getInvitationHash()],
-                        UrlGeneratorInterface::ABSOLUTE_URL);
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
 
                     $this->get("app.email_service")->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
 
@@ -177,7 +184,9 @@ class AccessController extends BaseAccessController
 
 
         return $this->renderWithBackUrl(
-            'access/invite_resend.html.twig', [], $this->generateUrl("access_login")
+            'access/invite_resend.html.twig',
+            [],
+            $this->generateUrl("access_login")
         );
     }
 
@@ -192,7 +201,9 @@ class AccessController extends BaseAccessController
         $member = $this->getDoctrine()->getRepository("App:Member")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$member instanceof Member) {
             return $this->renderWithBackUrl(
-                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
+                'access/invitation_hash_invalid.html.twig',
+                [],
+                $this->generateUrl("access_login")
             );
         }
 
@@ -270,7 +281,9 @@ class AccessController extends BaseAccessController
         $arr["organisation"] = $member->getOrganisation();
         $arr["invite_form"] = $inviteForm->createView();
         return $this->renderWithBackUrl(
-            'access/invite.html.twig', $arr, $this->generateUrl("access_login")
+            'access/invite.html.twig',
+            $arr,
+            $this->generateUrl("access_login")
         );
     }
 
@@ -286,7 +299,9 @@ class AccessController extends BaseAccessController
         $person = $this->getDoctrine()->getRepository("App:Person")->findOneBy(["invitationHash" => $invitationHash]);
         if (!$person instanceof Person) {
             return $this->renderWithBackUrl(
-                'access/invitation_hash_invalid.html.twig', [], $this->generateUrl("access_login")
+                'access/invitation_hash_invalid.html.twig',
+                [],
+                $this->generateUrl("access_login")
             );
         }
 
@@ -354,7 +369,9 @@ class AccessController extends BaseAccessController
         }
         $arr["invite_form"] = $inviteForm->createView();
         return $this->renderWithBackUrl(
-            'access/invite.html.twig', $arr, $this->generateUrl("access_login")
+            'access/invite.html.twig',
+            $arr,
+            $this->generateUrl("access_login")
         );
     }
 
@@ -366,7 +383,9 @@ class AccessController extends BaseAccessController
     public function registerThanksAction(Request $request)
     {
         return $this->renderNoBackUrl(
-            'access/register_thanks.html.twig', [], "user needs to check email and continue there"
+            'access/register_thanks.html.twig',
+            [],
+            "user needs to check email and continue there"
         );
     }
 
@@ -415,7 +434,9 @@ class AccessController extends BaseAccessController
         $arr = [];
         $arr["reset_form"] = $myForm->createView();
         return $this->renderWithBackUrl(
-            'access/reset.html.twig', $arr, $this->generateUrl("access_login")
+            'access/reset.html.twig',
+            $arr,
+            $this->generateUrl("access_login")
         );
     }
 
@@ -427,7 +448,9 @@ class AccessController extends BaseAccessController
     public function resetDoneAction(Request $request)
     {
         return $this->renderNoBackUrl(
-            'access/reset_done.html.twig', [], "user needs to check email"
+            'access/reset_done.html.twig',
+            [],
+            "user needs to check email"
         );
     }
 
@@ -454,7 +477,9 @@ class AccessController extends BaseAccessController
                 /* @var FormInterface $form */
                 $outputArray["set_password_form"] = $form->createView();
                 return $this->renderNoBackUrl(
-                    'access/register_confirm.html.twig', $outputArray, "reset was successful, user should press on dashboard"
+                    'access/register_confirm.html.twig',
+                    $outputArray,
+                    "reset was successful, user should press on dashboard"
                 );
             }
         );
@@ -478,7 +503,9 @@ class AccessController extends BaseAccessController
                 /* @var FormInterface $form */
                 $outputArray["reset_password_form"] = $form->createView();
                 return $this->renderNoBackUrl(
-                    'access/reset_confirm.html.twig', $outputArray, "user can now reset password, it does not make sense to go back"
+                    'access/reset_confirm.html.twig',
+                    $outputArray,
+                    "user can now reset password, it does not make sense to go back"
                 );
             }
         );
@@ -496,7 +523,9 @@ class AccessController extends BaseAccessController
         $user = $this->getDoctrine()->getRepository("App:FrontendUser")->findOneBy(["resetHash" => $confirmationToken]);
         if ($user == null) {
             return $this->renderNoBackUrl(
-                'access/hash_invalid.html.twig', [], $this->generateUrl("access_login")
+                'access/hash_invalid.html.twig',
+                [],
+                $this->generateUrl("access_login")
             );
         }
 

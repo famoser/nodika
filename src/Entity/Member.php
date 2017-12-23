@@ -16,7 +16,6 @@ use App\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * A Member is part of the organisation, and is responsible for the events assigned to it
  *

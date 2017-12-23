@@ -8,7 +8,6 @@
 
 namespace App\Form;
 
-
 use App\Enum\SubmitButtonType;
 use App\Helper\NamingHelper;
 use Symfony\Component\Form\AbstractType;

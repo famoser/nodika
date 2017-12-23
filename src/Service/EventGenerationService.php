@@ -8,7 +8,6 @@
 
 namespace App\Service;
 
-
 use App\Entity\Event;
 use App\Entity\EventLineGeneration;
 use App\Entity\Person;
@@ -301,7 +300,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             if ($matchMember == null) {
                 $startIndex = $activeIndex;
                 while (true) {
-
                     $myMember = $members[$activeIndex];
                     if ($memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $myMember) &&
                         $conflictCallable($assignedEventCount, $myMember)) {
@@ -429,7 +427,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $dayOfWeek = $day->format('N');
                 if ($dayOfWeek == 7) {
                     $sundayCount++;
-                } else if ($dayOfWeek == 6) {
+                } elseif ($dayOfWeek == 6) {
                     $saturdayCount++;
                 } else {
                     $weekdayCount++;
@@ -817,7 +815,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                         /* @var IdealQueueMember $targetMember */
                         $targetMember->assignSunday($queueIndex);
                     };
-                } else if ($dayOfWeek == 6) {
+                } elseif ($dayOfWeek == 6) {
                     //saturday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */

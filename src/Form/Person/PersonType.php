@@ -8,7 +8,6 @@
 
 namespace App\Form\Person;
 
-
 use App\Entity\Person;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CommunicationTrait;

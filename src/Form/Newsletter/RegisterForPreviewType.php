@@ -8,7 +8,6 @@
 
 namespace App\Form\Newsletter;
 
-
 use App\Entity\Newsletter;
 use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\PersonTrait;

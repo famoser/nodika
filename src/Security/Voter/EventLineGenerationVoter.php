@@ -8,7 +8,6 @@
 
 namespace App\Security\Voter;
 
-
 use App\Entity\Event;
 use App\Entity\EventLine;
 use App\Entity\EventLineGeneration;
@@ -31,7 +30,6 @@ class EventLineGenerationVoter extends EventLineVoter
         }
 
         return true;
-
     }
 
     /**

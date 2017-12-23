@@ -8,7 +8,6 @@
 
 namespace App\Enum;
 
-
 class EventGenerationServicePersistResponse
 {
     const SUCCESSFUL = 1;

@@ -64,10 +64,13 @@ class MemberController extends BaseFrontendController
         }
 
         $arr["member"] = $member;
-        $arr["person"] = $this->getPerson();;
+        $arr["person"] = $this->getPerson();
+        ;
         $arr["edit_form"] = $myForm->createView();
         return $this->renderWithBackUrl(
-            'member/edit.html.twig', $arr, $this->generateUrl("member_view")
+            'member/edit.html.twig',
+            $arr,
+            $this->generateUrl("member_view")
         );
     }
 
@@ -86,7 +89,9 @@ class MemberController extends BaseFrontendController
 
         $myPerson = $this->getPerson();
         return $this->renderWithBackUrl(
-            'member/remove_person.html.twig', ["person" => $person, "my_person" => $myPerson], $this->generateUrl("member_view")
+            'member/remove_person.html.twig',
+            ["person" => $person, "my_person" => $myPerson],
+            $this->generateUrl("member_view")
         );
     }
 

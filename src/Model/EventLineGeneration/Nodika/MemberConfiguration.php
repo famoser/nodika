@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration\Nodika;
 
-
 use App\Entity\Member;
 use App\Model\EventLineGeneration\Base\BaseMemberConfiguration;
 

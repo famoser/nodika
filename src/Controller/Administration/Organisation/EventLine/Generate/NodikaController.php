@@ -9,7 +9,6 @@
 
 namespace App\Controller\Administration\Organisation\EventLine\Generate;
 
-
 use App\Controller\Administration\Organisation\EventLine\Generate\Base\BaseGenerationController;
 use App\Entity\EventLine;
 use App\Entity\EventLineGeneration;
@@ -157,7 +156,7 @@ class NodikaController extends BaseGenerationController
                     if (isset($eventLineConfigurations[$eventLineId])) {
                         $eventLineConfigurations[$eventLineId]->isEnabled = true;
                     }
-                } else if ($key == "conflict_puffer_in_hours") {
+                } elseif ($key == "conflict_puffer_in_hours") {
                     $config->conflictPufferInHours = $value;
                 }
             }
@@ -257,7 +256,7 @@ class NodikaController extends BaseGenerationController
                     if (isset($memberConfigurations[$memberId])) {
                         $memberConfigurations[$memberId]->points = $value;
                     }
-                } else if (strpos($key, "member_l_") === 0) {
+                } elseif (strpos($key, "member_l_") === 0) {
                     $memberId = substr($key, 9); //cut off member_l_
                     if (isset($memberConfigurations[$memberId])) {
                         $memberConfigurations[$memberId]->luckyScore = $value;
@@ -324,13 +323,13 @@ class NodikaController extends BaseGenerationController
             foreach ($request->request->all() as $key => $value) {
                 if ($key === "event_type_weekday") {
                     $config->eventTypeConfiguration->weekday = $value;
-                } else if ($key === "event_type_saturday") {
+                } elseif ($key === "event_type_saturday") {
                     $config->eventTypeConfiguration->saturday = $value;
-                } else if ($key === "event_type_sunday") {
+                } elseif ($key === "event_type_sunday") {
                     $config->eventTypeConfiguration->sunday = $value;
-                } else if ($key === "event_type_holiday") {
+                } elseif ($key === "event_type_holiday") {
                     $config->eventTypeConfiguration->holiday = $value;
-                } else if ($key == "holiday_string") {
+                } elseif ($key == "holiday_string") {
                     $holidayString = $value;
                     if (trim($value) == "") {
                         $parts = [];
@@ -424,7 +423,6 @@ class NodikaController extends BaseGenerationController
             "administration_organisation_event_line_generate_nodika_distribution_confirm",
             ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId(), "generation" => $generation->getId()]
         );
-
     }
 
     /**
@@ -669,7 +667,7 @@ class NodikaController extends BaseGenerationController
                 "administration_organisation_event_line_administer",
                 ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]
             );
-        } else if ($resp == EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE) {
+        } elseif ($resp == EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE) {
             return $this->redirectToRoute(
                 "administration_organisation_event_line_generate_nodika_choose_members",
                 ["organisation" => $generation->getEventLine()->getOrganisation()->getId(), "eventLine" => $generation->getEventLine()->getId(), "generation" => $generation->getId()]
@@ -739,7 +737,6 @@ class NodikaController extends BaseGenerationController
             } else {
                 $removeKeys[] = $key;
             }
-
         }
 
         $memberChanges = false;
@@ -773,7 +770,7 @@ class NodikaController extends BaseGenerationController
                 foreach ($yearlyHolyDays as $yearlyHolyDay) {
                     if ($yearlyHolyDay->getTimestamp() < $configuration->startDateTime->getTimestamp()) {
                         //too early
-                    } else if ($yearlyHolyDay->getTimestamp() > $configuration->endDateTime->getTimestamp()) {
+                    } elseif ($yearlyHolyDay->getTimestamp() > $configuration->endDateTime->getTimestamp()) {
                         //too late; get back
                         return;
                     } else {

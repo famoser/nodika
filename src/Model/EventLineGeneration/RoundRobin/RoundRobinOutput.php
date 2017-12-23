@@ -9,7 +9,6 @@
 
 namespace App\Model\EventLineGeneration\RoundRobin;
 
-
 use App\Model\EventLineGeneration\Base\BaseOutput;
 
 class RoundRobinOutput extends BaseOutput

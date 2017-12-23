@@ -8,7 +8,6 @@
 
 namespace App\Model\EventLineGeneration;
 
-
 class GeneratedEvent
 {
     /* @var int $memberId */

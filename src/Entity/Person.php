@@ -16,7 +16,6 @@ use App\Entity\Traits\PersonTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * An Person represents a real live Person
  *

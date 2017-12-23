@@ -8,7 +8,6 @@
 
 namespace App\Framework;
 
-
 use App\Helper\NamingHelper;
 
 abstract class TranslatableObject
@@ -18,7 +17,7 @@ abstract class TranslatableObject
      *
      * @return mixed
      */
-    protected abstract function getTranslationDomainPrefix();
+    abstract protected function getTranslationDomainPrefix();
 
     /**
      * get the translation domain of the current object

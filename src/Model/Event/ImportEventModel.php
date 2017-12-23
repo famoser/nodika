@@ -8,7 +8,6 @@
 
 namespace App\Model\Event;
 
-
 use App\Entity\EventLine;
 use App\Model\Form\ImportFileModel;
 

@@ -8,7 +8,6 @@
 
 namespace App\Model\Event;
 
-
 use App\Model\Framework\DeserializedDateTime;
 
 class DeserializedEvent

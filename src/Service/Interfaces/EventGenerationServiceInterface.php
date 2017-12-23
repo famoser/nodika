@@ -8,7 +8,6 @@
 
 namespace App\Service\Interfaces;
 
-
 use App\Entity\EventLineGeneration;
 use App\Entity\Person;
 use App\Model\EventLineGeneration\GenerationResult;

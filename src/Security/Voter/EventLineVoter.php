@@ -8,7 +8,6 @@
 
 namespace App\Security\Voter;
 
-
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Organisation;

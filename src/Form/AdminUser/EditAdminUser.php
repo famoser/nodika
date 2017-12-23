@@ -8,7 +8,6 @@
 
 namespace App\Form\AdminUser;
 
-
 use App\Entity\AdminUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -42,5 +41,4 @@ class EditAdminUser extends AbstractType
     {
         $resolver->setDefaults(["data_class" => AdminUser::class]);
     }
-
 }

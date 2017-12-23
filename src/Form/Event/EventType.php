@@ -38,7 +38,9 @@ class EventType extends BaseCrudAbstractType
                     'choice_label' => 'name'
                 );
             $form = $event->getForm();
-            $form->add('member', EntityType::class,
+            $form->add(
+                'member',
+                EntityType::class,
                 $formOptions + [
                     'class' => Member::class,
                     'query_builder' => function (MemberRepository $er) use ($organisation) {

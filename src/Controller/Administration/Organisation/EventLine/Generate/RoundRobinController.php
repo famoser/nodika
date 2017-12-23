@@ -9,7 +9,6 @@
 
 namespace App\Controller\Administration\Organisation\EventLine\Generate;
 
-
 use App\Controller\Administration\Organisation\EventLine\Generate\Base\BaseGenerationController;
 use App\Entity\EventLine;
 use App\Entity\EventLineGeneration;
@@ -154,7 +153,7 @@ class RoundRobinController extends BaseGenerationController
                     if (isset($eventLineConfigurations[$eventLineId])) {
                         $eventLineConfigurations[$eventLineId]->isEnabled = true;
                     }
-                } else if ($key == "conflict_puffer_in_hours") {
+                } elseif ($key == "conflict_puffer_in_hours") {
                     $config->conflictPufferInHours = $value;
                 }
             }
@@ -438,7 +437,7 @@ class RoundRobinController extends BaseGenerationController
                 "administration_organisation_event_line_administer",
                 ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]
             );
-        } else if ($resp == EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE) {
+        } elseif ($resp == EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE) {
             return $this->redirectToRoute(
                 "administration_organisation_event_line_generate_round_robin_choose_members",
                 ["organisation" => $generation->getEventLine()->getOrganisation()->getId(), "eventLine" => $generation->getEventLine()->getId(), "generation" => $generation->getId()]
@@ -552,7 +551,6 @@ class RoundRobinController extends BaseGenerationController
             if ($value->order >= $maxOrder) {
                 $maxOrder = $value->order;
             }
-
         }
 
         foreach ($removeKeys as $removeKey) {
@@ -564,5 +562,4 @@ class RoundRobinController extends BaseGenerationController
             $configuration->memberConfigurations[] = $newConfig;
         }
     }
-
 }

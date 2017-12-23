@@ -8,7 +8,6 @@
 
 namespace App\Security\Voter;
 
-
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -36,7 +35,6 @@ class MemberVoter extends OrganisationVoter
         }
 
         return true;
-
     }
 
     /**

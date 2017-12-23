@@ -8,7 +8,6 @@
 
 namespace App\Helper;
 
-
 class HashHelper
 {
     /**
@@ -29,10 +28,11 @@ class HashHelper
                     $allowed = true;
                 }
             }
-            if ($allowed)
+            if ($allowed) {
                 $newHash .= chr($rand);
-            else
+            } else {
                 $i--;
+            }
         }
         return $newHash;
     }

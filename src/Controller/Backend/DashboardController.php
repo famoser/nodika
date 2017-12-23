@@ -8,7 +8,6 @@
 
 namespace App\Controller\Backend;
 
-
 use App\Controller\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

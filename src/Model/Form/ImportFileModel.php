@@ -8,7 +8,6 @@
 
 namespace App\Model\Form;
 
-
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImportFileModel

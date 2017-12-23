@@ -8,7 +8,6 @@
 
 namespace App\Model\Framework;
 
-
 class DeserializedDateTime
 {
     /* @var string $date */

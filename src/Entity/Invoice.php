@@ -17,7 +17,6 @@ use App\Enum\PaymentStatus;
 use App\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * An Invoice contains information about what a user has bought and if he payed
  *

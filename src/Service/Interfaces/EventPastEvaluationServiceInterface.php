@@ -8,7 +8,6 @@
 
 namespace App\Service\Interfaces;
 
-
 use App\Entity\Event;
 use App\Entity\EventPast;
 use App\Entity\Person;

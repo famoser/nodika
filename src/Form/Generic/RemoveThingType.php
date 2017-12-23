@@ -8,7 +8,6 @@
 
 namespace App\Form\Generic;
 
-
 use App\Form\BaseAbstractType;
 use App\Helper\NamingHelper;
 use App\Helper\StaticMessageHelper;

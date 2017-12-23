@@ -8,7 +8,6 @@
 
 namespace App\Form\EventLineGeneration\RoundRobin;
 
-
 use App\Form\EventLineGeneration\Base\BaseChoosePeriodType;
 use App\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use Symfony\Component\Form\FormBuilderInterface;

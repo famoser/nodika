@@ -9,7 +9,6 @@
 
 namespace App\Model\EventLineGeneration;
 
-
 class GenerationResult
 {
     public function __construct($data)

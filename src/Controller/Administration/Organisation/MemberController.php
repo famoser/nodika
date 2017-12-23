@@ -8,7 +8,6 @@
 
 namespace App\Controller\Administration\Organisation;
 
-
 use App\Controller\Base\BaseController;
 use App\Entity\Member;
 use App\Entity\Organisation;
@@ -184,7 +183,8 @@ class MemberController extends BaseController
         $arr["member"] = $member;
         $arr["remove_form"] = $myForm->createView();
         return $this->renderWithBackUrl(
-            'administration/organisation/member/remove.html.twig', $arr,
+            'administration/organisation/member/remove.html.twig',
+            $arr,
             $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
         );
     }

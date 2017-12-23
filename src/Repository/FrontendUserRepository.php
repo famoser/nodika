@@ -22,8 +22,9 @@ class FrontendUserRepository extends EntityRepository
         /* @var FrontendUser $tryUser */
         $tryUser = $this->findOneBy(["email" => $user->getEmail()]);
         $tryUser->setPlainPassword($user->getPlainPassword());
-        if ($tryUser->tryLoginWithPlainPassword())
+        if ($tryUser->tryLoginWithPlainPassword()) {
             return $tryUser;
+        }
         return null;
     }
 }
