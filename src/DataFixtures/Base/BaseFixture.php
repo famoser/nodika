@@ -12,6 +12,8 @@ use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\PersonTrait;
 use App\Entity\Traits\ThingTrait;
+use App\Service\EventGenerationService;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -19,8 +21,18 @@ use Faker\Factory;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
+    /**
+     * @var EventGenerationService $eventGenerationService
+     */
+    private $eventGenerationService;
+
+    public function __construct(EventGenerationService $eventGenerationService)
+    {
+        $this->eventGenerationService = $eventGenerationService;
+    }
+
     /**
      * @return \Faker\Generator
      */
@@ -42,7 +54,7 @@ abstract class BaseFixture extends AbstractFixture implements OrderedFixtureInte
      */
     protected function getEventGenerationService()
     {
-        return $this->container->get("app.event_generation_service");
+        return $this->eventGenerationService;
     }
 
     /**

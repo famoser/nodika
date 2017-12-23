@@ -32,6 +32,7 @@ use App\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 use App\Service\Interfaces\EventGenerationServiceInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class EventGenerationService implements EventGenerationServiceInterface
@@ -54,7 +55,7 @@ class EventGenerationService implements EventGenerationServiceInterface
     /* the random accuracy used. must be a valid input for random_int. */
     const RANDOM_ACCURACY = 1000;
 
-    public function __construct($doctrine, $translator, $session, $eventPastEvaluationService)
+    public function __construct(RegistryInterface $doctrine, TranslatorInterface $translator, SessionInterface $session,  EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->doctrine = $doctrine;
         $this->translator = $translator;
