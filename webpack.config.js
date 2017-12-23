@@ -26,7 +26,7 @@ Encore
     // .enableBuildNotifications()
 
     // create hashed filenames (e.g. app.abc123.css)
-    .enableVersioning()
+    .enableVersioning(Encore.isProduction())
 
     // faster builds
     .enableSassLoader(function (sassOptions) {
