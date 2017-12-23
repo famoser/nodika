@@ -22,6 +22,12 @@ backend with symfony4, with the additional bundles:
  - `logger` who doesn't need logging?
  - `profiler` to measure performance
  - `mailer` to send mails via smtp
+ - `apache-pack` for the .htaccess file
+ - `phpunit-bridge` to run tests
+
+using the following libraries:
+ - `erusev/parsedown` to convert markup to html
+ - `friendsofphp/php-cs-fixer` to fix code styling issues
   
 frontend building tools:
  - `@symfony/webpack-encore` for the encore provided by symfony
