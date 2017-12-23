@@ -1,4 +1,3 @@
 cd ..
-composer install
-cd scripts
-load_fixtures
+start composer install
+start yarn install

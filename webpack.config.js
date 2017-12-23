@@ -29,10 +29,7 @@ Encore
     .enableVersioning(Encore.isProduction())
 
     // faster builds
-    .enableSassLoader(function (sassOptions) {
-    }, {
-        resolveUrlLoader: false
-    })
+    .enableSassLoader()
 ;
 
 // export the final configuration
