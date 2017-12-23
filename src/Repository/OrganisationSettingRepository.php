@@ -14,6 +14,8 @@ class OrganisationSettingRepository extends EntityRepository
     /**
      * @param Organisation $organisation
      * @return OrganisationSetting
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function getByOrganisation(Organisation $organisation)
     {

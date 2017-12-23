@@ -12,7 +12,7 @@ use App\Controller\Base\BaseFrontendController;
 use App\Entity\Member;
 use App\Entity\Person;
 use App\Helper\DateTimeFormatter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,33 +25,32 @@ class CronJobController extends BaseFrontendController
 {
     /**
      * @Route("/test/{secret}", name="cron_test")
-     * @param Request $request
      * @param $secret
      * @return Response
      */
-    public function testAction(Request $request, $secret)
+    public function testAction($secret)
     {
         return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
     }
 
     /**
      * @Route("/hourly/{secret}", name="cron_hourly")
-     * @param Request $request
      * @param $secret
      * @return Response
      */
-    public function hourlyAction(Request $request, $secret)
+    public function hourlyAction($secret)
     {
         return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
     }
 
     /**
      * @Route("/daily/{secret}", name="cron_daily")
-     * @param Request $request
      * @param $secret
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function dailyAction(Request $request, $secret)
+    public function dailyAction($secret)
     {
         if ($secret != $this->getParameter("secret")) {
             return new Response("access denied");
@@ -196,11 +195,10 @@ class CronJobController extends BaseFrontendController
 
     /**
      * @Route("/weekly/{secret}", name="cron_weekly")
-     * @param Request $request
      * @param $secret
      * @return Response
      */
-    public function weeklyAction(Request $request, $secret)
+    public function weeklyAction($secret)
     {
         return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
     }

@@ -10,6 +10,7 @@ namespace App\DataFixtures\Production;
 
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\AdminUser;
+use Doctrine\Common\DataFixtures\BadMethodCallException;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadAdminUserData extends BaseFixture
@@ -18,6 +19,7 @@ class LoadAdminUserData extends BaseFixture
      * Load data fixtures with the passed EntityManager
      *
      * @param ObjectManager $manager
+     * @throws BadMethodCallException
      */
     public function load(ObjectManager $manager)
     {

@@ -10,7 +10,7 @@ namespace App\Controller\Backend;
 
 use App\Controller\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,10 +21,9 @@ class DashboardController extends BaseController
 {
     /**
      * @Route("/", name="backend_dashboard_index")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function startAction(Request $request)
+    public function startAction()
     {
         $arr = [];
         $arr["organisations"] = $this->getDoctrine()->getRepository("App:Organisation")->findAll();

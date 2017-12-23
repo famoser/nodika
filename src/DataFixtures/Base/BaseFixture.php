@@ -14,7 +14,7 @@ use App\Entity\Traits\PersonTrait;
 use App\Entity\Traits\ThingTrait;
 use App\Service\EventGenerationService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;

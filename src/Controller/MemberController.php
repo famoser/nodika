@@ -24,10 +24,9 @@ class MemberController extends BaseFrontendController
 {
     /**
      * @Route("/", name="member_view")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $member = $this->getMember();
         if ($member == null) {
@@ -76,11 +75,10 @@ class MemberController extends BaseFrontendController
 
     /**
      * @Route("/remove_person/{person}", name="member_remove_person")
-     * @param Request $request
      * @param Person $person
      * @return Response
      */
-    public function removePersonAction(Request $request, Person $person)
+    public function removePersonAction(Person $person)
     {
         $activeMember = $this->getMember();
         if ($activeMember == null) {
@@ -97,11 +95,10 @@ class MemberController extends BaseFrontendController
 
     /**
      * @Route("/remove_person/{person}/confirm", name="member_remove_person_confirm")
-     * @param Request $request
      * @param Person $person
      * @return Response
      */
-    public function removePersonConfirmAction(Request $request, Person $person)
+    public function removePersonConfirmAction(Person $person)
     {
         $activeMember = $this->getMember();
         if ($activeMember == null) {

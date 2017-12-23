@@ -19,6 +19,8 @@ class SettingRepository extends EntityRepository
      * @param FrontendUser $user
      * @param $settingKey
      * @return Setting|object
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function getByUser(FrontendUser $user, $settingKey)
     {

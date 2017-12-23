@@ -229,7 +229,7 @@ trait AddressTrait
      */
     protected function getAddressIdentifier()
     {
-        return implode(", ", $this->getAddressLine());
+        return implode(", ", $this->getAddressLines());
     }
 
     /**

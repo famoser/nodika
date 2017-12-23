@@ -29,7 +29,7 @@ class BaseController extends Controller
      * @param $submitButtonType
      * @param null $data
      * @param array $options
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     public function createCrudForm($type, $submitButtonType, $data = null, array $options = array())
     {

@@ -68,12 +68,11 @@ class MemberController extends BaseController
 
     /**
      * @Route("/{member}/administer", name="administration_organisation_member_administer")
-     * @param Request $request
      * @param Organisation $organisation
      * @param Member $member
      * @return Response
      */
-    public function administerAction(Request $request, Organisation $organisation, Member $member)
+    public function administerAction(Organisation $organisation, Member $member)
     {
         $this->denyAccessUnlessGranted(MemberVoter::ADMINISTRATE, $member);
 
@@ -103,12 +102,11 @@ class MemberController extends BaseController
 
     /**
      * @Route("/{member}/add_self", name="administration_organisation_member_add_self")
-     * @param Request $request
      * @param Organisation $organisation
      * @param Member $member
      * @return Response
      */
-    public function addSelfAction(Request $request, Organisation $organisation, Member $member)
+    public function addSelfAction(Organisation $organisation, Member $member)
     {
         $this->denyAccessUnlessGranted(MemberVoter::ADMINISTRATE, $member);
 
@@ -192,11 +190,9 @@ class MemberController extends BaseController
 
     /**
      * @Route("/import/download/template", name="administration_organisation_member_import_download_template")
-     * @param Request $request
-     * @param Organisation $organisation
      * @return Response
      */
-    public function importDownloadTemplateAction(Request $request, Organisation $organisation)
+    public function importDownloadTemplateAction()
     {
         $memberTrans = $this->get("translator")->trans("entity.name", [], "entity_member");
         $newMemberForm = $this->createForm(MemberType::class);

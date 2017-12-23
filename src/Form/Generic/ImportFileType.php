@@ -14,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class ImportFileType extends BaseAbstractType
@@ -25,20 +24,11 @@ abstract class ImportFileType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        static::buildFormInternal($builder, $options);
-    }
-
-    /**
-     * @param FormBuilderInterface|FormInterface $builder
-     * @param array $options
-     */
-    public function buildFormInternal($builder, array $options)
-    {
-        $transArray = ["translation_domain" => "import"];
+        $array = ["translation_domain" => "import"] + $options;
         //add person fields
-        $builder->add("file", FileType::class, $transArray);
-        $builder->add("isCorrectFormat", CheckboxType::class, $transArray);
-        $builder->add("import", SubmitType::class, $transArray);
+        $builder->add("file", FileType::class, $array);
+        $builder->add("isCorrectFormat", CheckboxType::class, $array);
+        $builder->add("import", SubmitType::class, $array);
     }
 
     public function configureOptions(OptionsResolver $resolver)

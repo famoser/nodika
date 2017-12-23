@@ -71,6 +71,7 @@ class MemberRepository extends EntityRepository
     /**
      * @param Member $member
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countUnassignedEvents(Member $member)
     {
@@ -172,6 +173,9 @@ class MemberRepository extends EntityRepository
      * @param Member $member
      * @param Person $person
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @internal param \DateInterval $threshHold
      */
     public function countUnconfirmedEvents(Member $member, Person $person = null)
@@ -188,6 +192,9 @@ class MemberRepository extends EntityRepository
      * @param Member $member
      * @param Person|null $person
      * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @internal param \DateInterval $threshHold
      */
     public function countLateUnconfirmedEvents(Member $member, Person $person = null)
@@ -203,6 +210,8 @@ class MemberRepository extends EntityRepository
      * @param Member $member
      * @param Person $person
      * @return Event[]
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @internal param \DateInterval $threshHold
      */
     public function findUnconfirmedEvents(Member $member, Person $person = null)
@@ -222,6 +231,8 @@ class MemberRepository extends EntityRepository
      * @param Member $member
      * @param Person $person
      * @return Event[]
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      * @internal param \DateInterval $threshHold
      */
     public function findLateUnconfirmedEvents(Member $member, Person $person = null)

@@ -22,10 +22,9 @@ class OrganisationController extends BaseFrontendController
 {
     /**
      * @Route("/", name="organisation_view")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $member = $this->getMember();
         if ($member == null) {
@@ -38,11 +37,10 @@ class OrganisationController extends BaseFrontendController
 
     /**
      * @Route("/change_to/{organisation}", name="organisation_change_to")
-     * @param Request $request
      * @param Organisation $organisation
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function changeToAction(Request $request, Organisation $organisation)
+    public function changeToAction(Organisation $organisation)
     {
         //check if part of organisation
         $person = $this->getPerson();

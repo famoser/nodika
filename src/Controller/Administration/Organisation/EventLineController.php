@@ -144,12 +144,11 @@ class EventLineController extends BaseController
 
     /**
      * @Route("/{eventLine}/administer", name="administration_organisation_event_line_administer")
-     * @param Request $request
      * @param Organisation $organisation
      * @param EventLine $eventLine
      * @return Response
      */
-    public function administerAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    public function administerAction(Organisation $organisation, EventLine $eventLine)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
@@ -165,11 +164,10 @@ class EventLineController extends BaseController
 
     /**
      * @Route("/import/download/template", name="administration_organisation_event_line_import_download_template")
-     * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
-    public function importDownloadTemplateAction(Request $request, Organisation $organisation)
+    public function importDownloadTemplateAction(Organisation $organisation)
     {
         $eventTrans = $this->get("translator")->trans("entity.name", [], "entity_event");
 

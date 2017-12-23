@@ -65,11 +65,10 @@ class OrganisationController extends BaseController
 
     /**
      * @Route("/{organisation}/administer", name="administration_organisation_administer")
-     * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
-    public function administerAction(Request $request, Organisation $organisation)
+    public function administerAction(Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $setupStatus = $this->getDoctrine()->getRepository("App:Organisation")->getSetupStatus($organisation);
@@ -122,11 +121,10 @@ class OrganisationController extends BaseController
 
     /**
      * @Route("/{organisation}/setup", name="administration_organisation_setup")
-     * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
-    public function setupAction(Request $request, Organisation $organisation)
+    public function setupAction(Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
@@ -142,11 +140,10 @@ class OrganisationController extends BaseController
 
     /**
      * @Route("/{organisation}/members", name="administration_organisation_members")
-     * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
-    public function membersAction(Request $request, Organisation $organisation)
+    public function membersAction(Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
@@ -163,6 +160,8 @@ class OrganisationController extends BaseController
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function membersInviteAction(Request $request, Organisation $organisation)
     {
@@ -227,6 +226,8 @@ class OrganisationController extends BaseController
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function membersInvitePreviewAction(Request $request, Organisation $organisation)
     {
@@ -325,6 +326,8 @@ class OrganisationController extends BaseController
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function personsInviteAction(Request $request, Organisation $organisation)
     {
@@ -393,6 +396,8 @@ class OrganisationController extends BaseController
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function personsInvitePreviewAction(Request $request, Organisation $organisation)
     {
@@ -488,11 +493,10 @@ class OrganisationController extends BaseController
 
     /**
      * @Route("/{organisation}/event_lines", name="administration_organisation_event_lines")
-     * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
-    public function eventLinesAction(Request $request, Organisation $organisation)
+    public function eventLinesAction(Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
@@ -509,6 +513,8 @@ class OrganisationController extends BaseController
      * @param Request $request
      * @param Organisation $organisation
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function settingsAction(Request $request, Organisation $organisation)
     {
@@ -537,11 +543,10 @@ class OrganisationController extends BaseController
 
     /**
      * @Route("/{organisation}/events", name="administration_organisation_events")
-     * @param Request $request
      * @param Organisation $organisation
      * @return Response
      */
-    public function eventsAction(Request $request, Organisation $organisation)
+    public function eventsAction(Organisation $organisation)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 

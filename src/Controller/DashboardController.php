@@ -22,10 +22,9 @@ class DashboardController extends BaseFrontendController
 {
     /**
      * @Route("/", name="dashboard_index")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $member = $this->getMember();
         $arr["person"] = $this->getPerson();

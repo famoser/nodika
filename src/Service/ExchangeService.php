@@ -73,6 +73,8 @@ class ExchangeService implements ExchangeServiceInterface
      * @param Closure $createNewEntityClosure
      * @param ImportFileModel $importFileModel
      * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function importCsv(FormInterface $createForm, $createNewEntityClosure, ImportFileModel $importFileModel)
     {
@@ -148,6 +150,8 @@ class ExchangeService implements ExchangeServiceInterface
      * @param Closure $validateHeaderClosure
      * @param ImportFileModel $importFileModel
      * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function importCsvAdvanced($entitySetClosure, $validateHeaderClosure, ImportFileModel $importFileModel)
     {

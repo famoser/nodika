@@ -94,10 +94,9 @@ class EventController extends BaseFrontendController
 
     /**
      * @Route("/confirm", name="event_confirm")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmAction(Request $request)
+    public function confirmAction()
     {
         $member = $this->getMember();
         if ($member == null) {
@@ -126,11 +125,10 @@ class EventController extends BaseFrontendController
 
     /**
      * @Route("/confirm/person/{event}", name="event_confirm_person")
-     * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmPersonAction(Request $request, Event $event)
+    public function confirmPersonAction(Event $event)
     {
         $member = $this->getMember();
         if ($member == null) {
@@ -156,11 +154,10 @@ class EventController extends BaseFrontendController
 
     /**
      * @Route("/confirm/member/{event}", name="event_confirm_member")
-     * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmMemberAction(Request $request, Event $event)
+    public function confirmMemberAction(Event $event)
     {
         $member = $this->getMember();
         if ($member == null) {
@@ -186,10 +183,9 @@ class EventController extends BaseFrontendController
 
     /**
      * @Route("/confirm/all", name="event_confirm_all")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmAllAction(Request $request)
+    public function confirmAllAction()
     {
         $member = $this->getMember();
         if ($member == null) {

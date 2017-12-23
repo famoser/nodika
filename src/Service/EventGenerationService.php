@@ -526,6 +526,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param double $dayValue the value of this day for $distributedPointsArray calculation
      * @param int $dayCount the amount of
      * @param int $dayKey the key of this day used in $distributedDaysArray
+     * @throws \Exception
      */
     private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayCount, $dayKey)
     {
@@ -546,6 +547,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param array $parties is an array of the form (int => double)
      * @param int $bucketsCount the number of buckets to distribute
      * @return array is an array of the form (int => int)
+     * @throws \Exception
      */
     private function bucketsAlgorithm($parties, $bucketsCount)
     {

@@ -56,10 +56,9 @@ class AccessController extends BaseAccessController
 
     /**
      * @Route("/register/check", name="access_register_check")
-     * @param Request $request
      * @return FormInterface|Response
      */
-    public function registerCheckAction(Request $request)
+    public function registerCheckAction()
     {
         return $this->renderWithBackUrl(
             'access/register_check.html.twig',
@@ -377,10 +376,9 @@ class AccessController extends BaseAccessController
 
     /**
      * @Route("/register/thanks", name="access_register_thanks")
-     * @param Request $request
      * @return Response
      */
-    public function registerThanksAction(Request $request)
+    public function registerThanksAction()
     {
         return $this->renderNoBackUrl(
             'access/register_thanks.html.twig',
@@ -400,7 +398,7 @@ class AccessController extends BaseAccessController
             $this->createForm(FrontendUserResetType::class),
             $request,
             new FrontendUser(),
-            function ($form, $entity) {
+            function ($entity) {
                 /* @var FormInterface $form */
                 /* @var FrontendUser $entity */
 
@@ -442,10 +440,9 @@ class AccessController extends BaseAccessController
 
     /**
      * @Route("/reset/done", name="access_reset_done")
-     * @param Request $request
      * @return Response
      */
-    public function resetDoneAction(Request $request)
+    public function resetDoneAction()
     {
         return $this->renderNoBackUrl(
             'access/reset_done.html.twig',
@@ -465,7 +462,7 @@ class AccessController extends BaseAccessController
         return $this->handleResetPasswordAction(
             $request,
             $confirmationToken,
-            function ($form, $entity) {
+            function ($entity) {
                 /* @var FrontendUser $entity */
                 if ($entity->getPerson()->getMembers()->count() == 0) {
                     return $this->redirectToRoute("administration_organisation_new");
@@ -496,7 +493,7 @@ class AccessController extends BaseAccessController
         return $this->handleResetPasswordAction(
             $request,
             $confirmationToken,
-            function ($form, $entity) {
+            function () {
                 return $this->redirectToRoute("dashboard_index");
             },
             function ($form) {
@@ -561,18 +558,16 @@ class AccessController extends BaseAccessController
 
     /**
      * @Route("/login_check", name="access_login_check")
-     * @param Request $request
      */
-    public function loginCheck(Request $request)
+    public function loginCheck()
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
 
     /**
      * @Route("/logout", name="access_logout")
-     * @param Request $request
      */
-    public function logoutAction(Request $request)
+    public function logoutAction()
     {
         throw new \RuntimeException('You must configure the logout path to be handled by the firewall using form_login.logout in your security firewall configuration.');
     }

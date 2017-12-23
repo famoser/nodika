@@ -66,10 +66,10 @@ class StaticController extends BaseController
 
     /**
      * @Route("/email/{identifier}", name="view_email")
-     * @param Request $request
+     * @param $identifier
      * @return Response
      */
-    public function emailAction(Request $request, $identifier)
+    public function emailAction($identifier)
     {
         $email = $this->getDoctrine()->getRepository("App:Email")->findOneBy(["identifier" => $identifier]);
         if ($email == null) {

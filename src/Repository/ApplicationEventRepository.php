@@ -28,6 +28,8 @@ class ApplicationEventRepository extends EntityRepository
     /**
      * @param Organisation $organisation
      * @param $applicationEventType
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function registerEventOccurred(Organisation $organisation, $applicationEventType)
     {

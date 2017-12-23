@@ -32,10 +32,9 @@ class OfferController extends BaseFrontendController
 {
     /**
      * @Route("/", name="offer_index")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $member = $this->getMember();
         if ($member == null) {
@@ -51,10 +50,9 @@ class OfferController extends BaseFrontendController
 
     /**
      * @Route("/new", name="offer_new")
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction(Request $request)
+    public function newAction()
     {
         $member = $this->getMember();
         if ($member == null) {
@@ -69,12 +67,11 @@ class OfferController extends BaseFrontendController
 
     /**
      * @Route("/start/{member}/{person}", name="offer_start")
-     * @param Request $request
      * @param Member $member
      * @param Person $person
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function startAction(Request $request, Member $member, Person $person)
+    public function startAction(Member $member, Person $person)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -106,6 +103,8 @@ class OfferController extends BaseFrontendController
      * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function chooseEventsAction(Request $request, EventOffer $eventOffer)
     {
@@ -215,11 +214,10 @@ class OfferController extends BaseFrontendController
 
     /**
      * @Route("/{eventOffer}/review", name="offer_review")
-     * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function reviewAction(Request $request, EventOffer $eventOffer)
+    public function reviewAction(EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -282,11 +280,10 @@ class OfferController extends BaseFrontendController
 
     /**
      * @Route("/{eventOffer}/accept", name="offer_accept")
-     * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function acceptAction(Request $request, EventOffer $eventOffer)
+    public function acceptAction(EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -359,11 +356,10 @@ class OfferController extends BaseFrontendController
 
     /**
      * @Route("/{eventOffer}/reject", name="offer_reject")
-     * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function rejectAction(Request $request, EventOffer $eventOffer)
+    public function rejectAction(EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -395,11 +391,10 @@ class OfferController extends BaseFrontendController
 
     /**
      * @Route("/{eventOffer}/close", name="offer_close")
-     * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function closeAction(Request $request, EventOffer $eventOffer)
+    public function closeAction(EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -424,11 +419,10 @@ class OfferController extends BaseFrontendController
 
     /**
      * @Route("/{eventOffer}/remove", name="offer_remove")
-     * @param Request $request
      * @param EventOffer $eventOffer
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeAction(Request $request, EventOffer $eventOffer)
+    public function removeAction(EventOffer $eventOffer)
     {
         $ownMember = $this->getMember();
         if ($ownMember == null) {
@@ -486,8 +480,10 @@ class OfferController extends BaseFrontendController
 
     /**
      * @param EventOffer $eventOffer
-     * @param $remove
+     * @param bool $remove
      * @return EventOfferEntry[]
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     private function getInvalidEventOfferEntries(EventOffer $eventOffer, $remove = false)
     {

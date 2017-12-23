@@ -9,21 +9,15 @@
 namespace App\Service;
 
 use App\Entity\Email;
-use App\Entity\Event;
-use App\Entity\EventOffer;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
-use App\Entity\Newsletter;
-use App\Entity\Person;
-use App\Entity\Traits\UserTrait;
+
+
 use App\Enum\EmailType;
-use App\Helper\DateTimeFormatter;
+
 use App\Helper\HashHelper;
 use App\Service\Interfaces\EmailServiceInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+
+
 use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
@@ -64,6 +58,9 @@ class EmailService implements EmailServiceInterface
 
     /**
      * @param Email $email
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     private function processEmail(Email $email)
     {
@@ -107,6 +104,9 @@ class EmailService implements EmailServiceInterface
      * @param string $body
      * @param string|null $carbonCopy
      * @return boolean
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = null)
     {
@@ -127,6 +127,9 @@ class EmailService implements EmailServiceInterface
      * @param string $actionLink
      * @param string|null $carbonCopy
      * @return boolean
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = null)
     {
@@ -147,6 +150,9 @@ class EmailService implements EmailServiceInterface
      * @param string $body
      * @param string|null $carbonCopy
      * @return boolean
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = null)
     {

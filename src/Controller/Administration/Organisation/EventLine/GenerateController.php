@@ -24,12 +24,11 @@ class GenerateController extends BaseController
 {
     /**
      * @Route("/choose", name="administration_organisation_event_line_generate_choose")
-     * @param Request $request
      * @param Organisation $organisation
      * @param EventLine $eventLine
      * @return Response
      */
-    public function chooseAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    public function chooseAction(Organisation $organisation, EventLine $eventLine)
     {
         $arr["organisation"] = $organisation;
         $arr["eventLine"] = $eventLine;

@@ -45,28 +45,25 @@ class AccessController extends BaseAccessController
 
     /**
      * @Route("/", name="backend_default")
-     * @param Request $request
      * @return Response
      */
-    public function defaultAction(Request $request)
+    public function defaultAction()
     {
         return $this->redirectToRoute("backend_login");
     }
 
     /**
      * @Route("/login_check", name="backend_login_check")
-     * @param Request $request
      */
-    public function loginCheck(Request $request)
+    public function loginCheck()
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
 
     /**
      * @Route("/logout", name="backend_logout")
-     * @param Request $request
      */
-    public function logoutAction(Request $request)
+    public function logoutAction()
     {
         throw new \RuntimeException('You must configure the logout path to be handled by the firewall using form_login.logout in your security firewall configuration.');
     }
