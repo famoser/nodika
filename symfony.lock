@@ -1,4 +1,7 @@
 {
+    "codacy/coverage": {
+        "version": "1.4.1"
+    },
     "composer/semver": {
         "version": "1.4.2"
     },
@@ -91,6 +94,9 @@
     },
     "gecko-packages/gecko-php-unit": {
         "version": "v3.0"
+    },
+    "gitonomy/gitlib": {
+        "version": "v1.0.2"
     },
     "javiereguiluz/easyadmin-bundle": {
         "version": "1.17",
