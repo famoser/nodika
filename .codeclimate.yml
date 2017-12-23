@@ -26,3 +26,4 @@ exclude_patterns:
   - "public"
   - "tests"
   - "var"
+  - "src/Migrations"
