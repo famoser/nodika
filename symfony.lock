@@ -98,6 +98,15 @@
     "gitonomy/gitlib": {
         "version": "v1.0.2"
     },
+    "guzzlehttp/guzzle": {
+        "version": "6.3.0"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.4.2"
+    },
     "javiereguiluz/easyadmin-bundle": {
         "version": "1.17",
         "recipe": {
@@ -122,6 +131,9 @@
     "pagerfanta/pagerfanta": {
         "version": "v1.0.5"
     },
+    "php-coveralls/php-coveralls": {
+        "version": "v2.0.0"
+    },
     "php-cs-fixer/diff": {
         "version": "v1.2.0"
     },
@@ -130,6 +142,9 @@
     },
     "psr/container": {
         "version": "1.0.0"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
     },
     "psr/log": {
         "version": "1.0.2"
