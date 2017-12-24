@@ -64,7 +64,7 @@ security:
         - { path: ^/cron, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #allow info pages
-        - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #level1: user
         - { path: ^/, role: ROLE_USER }

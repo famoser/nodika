@@ -57,11 +57,3 @@ services:
         class: App\Listener\DoctrinePreFlushListener
         tags:
             - { name: doctrine.event_listener, event: preFlush }
-
-    #twig extensions
-    app.extension.twig:
-        class: App\Extension\MyTwigExtension
-        tags:
-          - { name: twig.extension }
-        arguments:
-          ["@translator"]
