@@ -7,9 +7,15 @@ Introduction
 [![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
 
 dependencies (you need this on your machine):
+ - `xampp` https://www.apachefriends.org/de/index.html
  - `composer` https://getcomposer.org/download/
  - `npm` https://nodejs.org/en/download/
  - `yarn` https://yarnpkg.com/lang/en/docs/install/
+ 
+ubuntu installation:
+ - `sudo add-apt-repository ppa:ondrej/php`
+ - `sudo apt-get update`
+ - `sudo apt-get install php php-xml php-zip php-mbstring yard`
 
 backend with symfony4, with the additional bundles:
  - `server` for a better symfony server

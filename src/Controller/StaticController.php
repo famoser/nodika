@@ -43,7 +43,7 @@ class StaticController extends BaseController
                 /* @var FormInterface $form */
                 /* @var Newsletter $newsletter */
                 $this->get('app.email_service')->sendTextEmail(
-                    $this->getParameter('contact_email'),
+                    $this->getParameter('CONTACT_EMAIL'),
                     'Kontaktanfrage von nodika',
                     "Sie haben eine Kontaktanfrage auf nodika erhalten: \n".
                     "\nListe: ".$newsletter->getChoice().

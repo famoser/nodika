@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
  *     $ cd your-symfony-project/
  *     $ ./vendor/bin/phpunit
  */
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTestSkip extends WebTestCase
 {
     /**
      * PHPUnit's data providers allow to execute the same tests repeated times
@@ -66,14 +66,39 @@ class DefaultControllerTest extends WebTestCase
         );
     }
 
+    /**
+     * The application contains a lot of secure URLs which shouldn't be
+     * publicly accessible. This tests ensures that whenever a user tries to
+     * access one of those pages, a redirection to the login form is performed.
+     *
+     * @dataProvider get404Urls
+     */
+    public function test404Urls($url)
+    {
+        $client = static::createClient();
+        $client->request('GET', $url);
+
+        $response = $client->getResponse();
+        $this->assertSame(
+            Response::HTTP_NOT_FOUND,
+            $response->getStatusCode(),
+            sprintf('The %s URL does not exist.', $url)
+        );
+    }
+
     public function getPublicUrls()
     {
         yield ['/'];
-        yield ['/register/'];
+        yield ['/register'];
         yield ['/login'];
     }
 
     public function getSecureUrls()
+    {
+        yield ['/dashboard'];
+    }
+
+    public function get404Urls()
     {
         yield ['/dashboard/'];
     }

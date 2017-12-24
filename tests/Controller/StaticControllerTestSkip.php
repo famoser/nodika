@@ -23,14 +23,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  *     $ cd your-symfony-project/
  *     $ ./vendor/bin/phpunit
  */
-class StaticControllerTest extends WebTestCase
+class StaticControllerTestSkip extends WebTestCase
 {
     public function testIndex()
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/');
-
-        dump($crawler->text());
 
         $this->assertCount(
             5,

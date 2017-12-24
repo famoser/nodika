@@ -33,7 +33,7 @@ class CronJobController extends BaseFrontendController
      */
     public function testAction($secret)
     {
-        return new Response($secret === $this->getParameter('secret') ? 'successful' : 'access denied');
+        return new Response($secret === $this->getParameter('APP_SECRET') ? 'successful' : 'access denied');
     }
 
     /**
@@ -45,7 +45,7 @@ class CronJobController extends BaseFrontendController
      */
     public function hourlyAction($secret)
     {
-        return new Response($secret === $this->getParameter('secret') ? 'successful' : 'access denied');
+        return new Response($secret === $this->getParameter('APP_SECRET') ? 'successful' : 'access denied');
     }
 
     /**
@@ -60,7 +60,7 @@ class CronJobController extends BaseFrontendController
      */
     public function dailyAction($secret)
     {
-        if ($secret !== $this->getParameter('secret')) {
+        if ($secret !== $this->getParameter('APP_SECRET')) {
             return new Response('access denied');
         }
 
@@ -209,6 +209,6 @@ class CronJobController extends BaseFrontendController
      */
     public function weeklyAction($secret)
     {
-        return new Response($secret === $this->getParameter('secret') ? 'successful' : 'access denied');
+        return new Response($secret === $this->getParameter('APP_SECRET') ? 'successful' : 'access denied');
     }
 }
