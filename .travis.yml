@@ -26,18 +26,20 @@ matrix:
 before_install:
   - cp .env.travis .env
   - cp .env.travis .env.test
+  - cp phpunit.xml.dist phpunit.xml
   - '[[ "$TRAVIS_PHP_VERSION" == "nightly" ]] || phpenv config-rm xdebug.ini'
   - composer self-update
 
 install:
   - composer install --dev
   - ./vendor/bin/simple-phpunit install
+  - chmod +x ./bin/console
 
 before_script:
   # print versions just in case
   - php --version
   - php ./bin/console --version
-  # - php ./vendor/bin/phpunit --version
+  - php ./vendor/bin/simple-phpunit --version
 
   # check if travis fulfills symfony requirements
   - php ./vendor/bin/requirements-checker

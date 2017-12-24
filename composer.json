@@ -1,5 +1,6 @@
 {
     "name": "famoser/nodika",
+    "description": "emergency service (or any kind of consecutive events) distribution",
     "license": "MIT",
     "require": {
         "php": "^7.1.3",
