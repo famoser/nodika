@@ -2,6 +2,9 @@
     "codacy/coverage": {
         "version": "1.4.1"
     },
+    "composer/ca-bundle": {
+        "version": "1.1.0"
+    },
     "composer/semver": {
         "version": "1.4.2"
     },
@@ -185,9 +188,6 @@
     "symfony/cache": {
         "version": "v3.4.2"
     },
-    "symfony/class-loader": {
-        "version": "v3.4.2"
-    },
     "symfony/config": {
         "version": "v3.4.2"
     },
@@ -269,9 +269,6 @@
     "symfony/intl": {
         "version": "v3.4.2"
     },
-    "symfony/lts": {
-        "version": "v3"
-    },
     "symfony/monolog-bridge": {
         "version": "v3.4.2"
     },
@@ -299,9 +296,6 @@
             "ref": "179470cb6492db92dffee208cfdb436f175c93b4"
         }
     },
-    "symfony/polyfill-apcu": {
-        "version": "v1.6.0"
-    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.6.0"
     },
@@ -309,9 +303,6 @@
         "version": "v1.6.0"
     },
     "symfony/polyfill-php72": {
-        "version": "v1.6.0"
-    },
-    "symfony/polyfill-util": {
         "version": "v1.6.0"
     },
     "symfony/process": {

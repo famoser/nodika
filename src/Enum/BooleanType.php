@@ -15,6 +15,6 @@ use App\Enum\Base\BaseEnum;
 
 class BooleanType extends BaseEnum
 {
-    const TRUE = 1;
-    const FALSE = 2;
+    const YES = 1;
+    const NO = 2;
 }
