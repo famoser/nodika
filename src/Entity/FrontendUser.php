@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
@@ -43,7 +52,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
-     * Add setting
+     * Add setting.
      *
      * @param Setting $setting
      *
@@ -57,7 +66,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
-     * Remove setting
+     * Remove setting.
      *
      * @param Setting $setting
      */
@@ -67,7 +76,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
-     * Get settings
+     * Get settings.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -77,7 +86,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param Person $person
      *
@@ -91,7 +100,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return Person
      */
@@ -113,11 +122,12 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
      * Alternatively, the roles might be stored on a ``roles`` property,
      * and populated in any number of different ways when the user object
      * is created.
+     *
      * @return array (Role|string)[] The user roles
      */
     public function getRoles()
     {
-        return ["ROLE_USER"];
+        return ['ROLE_USER'];
     }
 
     /**
@@ -145,17 +155,19 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
 
     /**
      * @param Person $person
+     *
      * @return static
      */
     public static function createFromPerson(Person $person)
     {
         $user = static::createUserFromEmail($person->getEmail());
         $user->setPerson($person);
+
         return $user;
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */

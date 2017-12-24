@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 18:23
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service\Interfaces;
@@ -20,36 +23,40 @@ interface EventGenerationServiceInterface
 {
     /**
      * tries to generate the events
-     * returns true if successful
+     * returns true if successful.
      *
      * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable                $memberAllowedCallable   with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     *
      * @return RoundRobinOutput
      */
     public function generateRoundRobin(RoundRobinConfiguration $roundRobinConfiguration, $memberAllowedCallable);
 
     /**
      * tries to generate the events
-     * returns true if successful
+     * returns true if successful.
      *
      * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable            $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     *
      * @return NodikaOutput
      */
     public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable);
 
     /**
-     * persist the events associated with this generation in the database
+     * persist the events associated with this generation in the database.
      *
      * @param EventLineGeneration $generation
-     * @param GenerationResult $generationResult
-     * @param Person $person
+     * @param GenerationResult    $generationResult
+     * @param Person              $person
+     *
      * @return bool
      */
     public function persist(EventLineGeneration $generation, GenerationResult $generationResult, Person $person);
 
     /**
      * @param NodikaConfiguration $nodikaConfiguration
+     *
      * @return bool
      */
     public function setEventTypeDistribution(NodikaConfiguration $nodikaConfiguration);

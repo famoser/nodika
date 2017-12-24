@@ -1,10 +1,12 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 19/05/2017
- * Time: 19:08
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller\Administration\Organisation\EventLine\Generate\Base;
@@ -21,6 +23,7 @@ class BaseGenerationController extends BaseController
 {
     /**
      * @param EventLineGeneration $generation
+     *
      * @return GenerationResult
      */
     protected function getGenerationResult(EventLineGeneration $generation)
@@ -29,8 +32,8 @@ class BaseGenerationController extends BaseController
     }
 
     /**
-     * @param BaseConfiguration $configuration
-     * @param Organisation $organisation
+     * @param BaseConfiguration   $configuration
+     * @param Organisation        $organisation
      * @param EventLineGeneration $eventLineGeneration
      */
     protected function addEventLineConfiguration(BaseConfiguration $configuration, Organisation $organisation, EventLineGeneration $eventLineGeneration)
@@ -38,11 +41,10 @@ class BaseGenerationController extends BaseController
         /* @var EventLine[] $eventLineById */
         $eventLineById = [];
         foreach ($organisation->getEventLines() as $eventLine) {
-            if ($eventLine->getId() != $eventLineGeneration->getEventLine()->getId()) {
+            if ($eventLine->getId() !== $eventLineGeneration->getEventLine()->getId()) {
                 $eventLineById[$eventLine->getId()] = $eventLine;
             }
         }
-
 
         $removeKeys = [];
         foreach ($configuration->eventLineConfiguration as $key => $value) {
@@ -69,7 +71,7 @@ class BaseGenerationController extends BaseController
         //add events if applicable
         foreach ($configuration->eventLineConfiguration as $item) {
             if ($item->isEnabled && !$item->eventsSet) {
-                if (count($eventLineById) == 0) {
+                if (0 === count($eventLineById)) {
                     //cache event lines again
                     foreach ($organisation->getEventLines() as $eventLine) {
                         $eventLineById[$eventLine->getId()] = $eventLine;

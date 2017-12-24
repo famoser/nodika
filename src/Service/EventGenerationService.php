@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 18:24
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service;
@@ -55,7 +58,7 @@ class EventGenerationService implements EventGenerationServiceInterface
     /* the random accuracy used. must be a valid input for random_int. */
     const RANDOM_ACCURACY = 1000;
 
-    public function __construct(RegistryInterface $doctrine, TranslatorInterface $translator, SessionInterface $session,  EventPastEvaluationService $eventPastEvaluationService)
+    public function __construct(RegistryInterface $doctrine, TranslatorInterface $translator, SessionInterface $session, EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->doctrine = $doctrine;
         $this->translator = $translator;
@@ -81,7 +84,8 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * @param RoundRobinOutput $roundRobinResult
-     * @param int $status
+     * @param int              $status
+     *
      * @return RoundRobinOutput
      */
     private function returnRoundRobinError(RoundRobinOutput $roundRobinResult, $status)
@@ -95,12 +99,14 @@ class EventGenerationService implements EventGenerationServiceInterface
         );
 
         $roundRobinResult->roundRobinStatusCode = $status;
+
         return $roundRobinResult;
     }
 
     /**
      * @param NodikaOutput $nodikaOutput
-     * @param int $status
+     * @param int          $status
+     *
      * @return NodikaOutput
      */
     private function returnNodikaError(NodikaOutput $nodikaOutput, $status)
@@ -114,11 +120,13 @@ class EventGenerationService implements EventGenerationServiceInterface
         );
 
         $nodikaOutput->nodikaStatusCode = $status;
+
         return $nodikaOutput;
     }
 
     /**
      * @param RoundRobinOutput $roundRobinResult
+     *
      * @return RoundRobinOutput
      */
     private function returnRoundRobinSuccess(RoundRobinOutput $roundRobinResult)
@@ -133,11 +141,13 @@ class EventGenerationService implements EventGenerationServiceInterface
         );
 
         $roundRobinResult->roundRobinStatusCode = $status;
+
         return $roundRobinResult;
     }
 
     /**
      * @param NodikaOutput $nodikaOutput
+     *
      * @return NodikaOutput
      */
     private function returnNodikaSuccess(NodikaOutput $nodikaOutput)
@@ -152,11 +162,13 @@ class EventGenerationService implements EventGenerationServiceInterface
         );
 
         $nodikaOutput->nodikaStatusCode = $status;
+
         return $nodikaOutput;
     }
 
     /**
      * @param BaseConfiguration $configuration
+     *
      * @return \Closure with arguments ($currentEventCount, $memberId)
      */
     private function buildConflictBuffer(BaseConfiguration $configuration)
@@ -169,9 +181,9 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $eventLineEvents = [];
                 foreach ($item->eventEntries as $eventEntry) {
                     $myArr = [];
-                    $myArr["start"] = $eventEntry->startDateTime->getTimestamp() - $conflictPufferInSeconds;
-                    $myArr["end"] = $eventEntry->endDateTime->getTimestamp() + $conflictPufferInSeconds;
-                    $myArr["id"] = $eventEntry->memberId;
+                    $myArr['start'] = $eventEntry->startDateTime->getTimestamp() - $conflictPufferInSeconds;
+                    $myArr['end'] = $eventEntry->endDateTime->getTimestamp() + $conflictPufferInSeconds;
+                    $myArr['id'] = $eventEntry->memberId;
                     $eventLineEvents[$eventEntry->startDateTime->getTimestamp()][] = $myArr;
                 }
                 ksort($eventLineEvents);
@@ -183,7 +195,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $eventLineCount = count($allEventLineEvents);
         $activeIndexes = [];
         $eventLineCounts = [];
-        for ($i = 0; $i < $eventLineCount; $i++) {
+        for ($i = 0; $i < $eventLineCount; ++$i) {
             $activeIndexes[$i] = 0;
             $eventLineCounts[$i] = count($allEventLineEvents[$i]);
         }
@@ -191,32 +203,32 @@ class EventGenerationService implements EventGenerationServiceInterface
         $conflictBuffer = [];
         $assignedEventCount = 0;
 
-        $currentDate = clone($configuration->startDateTime);
+        $currentDate = clone $configuration->startDateTime;
         while ($currentDate < $configuration->endDateTime) {
-            $endDate = clone($currentDate);
+            $endDate = clone $currentDate;
             $endDate = $this->addInterval($endDate, $configuration);
             $startTimeStamp = $currentDate->getTimestamp();
             $endTimeStamp = $endDate->getTimestamp();
             $currentConflictBuffer = [];
-            for ($i = 0; $i < $eventLineCount; $i++) {
-                for ($j = $activeIndexes[$i]; $j < $eventLineCounts[$i]; $j++) {
+            for ($i = 0; $i < $eventLineCount; ++$i) {
+                for ($j = $activeIndexes[$i]; $j < $eventLineCounts[$i]; ++$j) {
                     $currentEvent = $allEventLineEvents[$i][$j];
-                    if ($currentEvent["end"] < $startTimeStamp) {
+                    if ($currentEvent['end'] < $startTimeStamp) {
                         //not in critical zone yet
-                        $activeIndexes[$i]++;
+                        ++$activeIndexes[$i];
                     } else {
                         //our active event begins before $currentEvent
-                        if ($currentEvent["start"] >= $startTimeStamp) {
+                        if ($currentEvent['start'] >= $startTimeStamp) {
                             //so it must end inside or after $currentEvent
-                            if (($currentEvent["start"] <= $endTimeStamp && $currentEvent["end"] >= $endTimeStamp) ||
-                                $currentEvent["end"] <= $endTimeStamp) {
-                                $currentConflictBuffer[] = $currentEvent["id"];
+                            if (($currentEvent['start'] <= $endTimeStamp && $currentEvent['end'] >= $endTimeStamp) ||
+                                $currentEvent['end'] <= $endTimeStamp) {
+                                $currentConflictBuffer[] = $currentEvent['id'];
                                 continue;
                             }
                         }
                         //our active events begins between $currentEvent
-                        if ($currentEvent["start"] <= $startTimeStamp && $currentEvent["end"] >= $startTimeStamp) {
-                            $currentConflictBuffer[] = $currentEvent["id"];
+                        if ($currentEvent['start'] <= $startTimeStamp && $currentEvent['end'] >= $startTimeStamp) {
+                            $currentConflictBuffer[] = $currentEvent['id'];
                             continue;
                         }
 
@@ -227,13 +239,13 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
 
             $conflictBuffer[$assignedEventCount] = $currentConflictBuffer;
-            $assignedEventCount++;
+            ++$assignedEventCount;
             $currentDate = $endDate;
         }
 
         $myFunc = function ($currentEventCount, $member) use ($conflictBuffer) {
             /* @var BaseMemberConfiguration $member */
-            return !in_array($member->id, $conflictBuffer[$currentEventCount]);
+            return !in_array($member->id, $conflictBuffer[$currentEventCount], true);
         };
 
         return $myFunc;
@@ -241,12 +253,14 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * tries to generate the events
-     * returns true if successful
+     * returns true if successful.
      *
      * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
-     * @return RoundRobinOutput
+     * @param callable                $memberAllowedCallable   with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     *
      * @throws \Exception
+     *
+     * @return RoundRobinOutput
      */
     public function generateRoundRobin(RoundRobinConfiguration $roundRobinConfiguration, $memberAllowedCallable)
     {
@@ -274,16 +288,16 @@ class EventGenerationService implements EventGenerationServiceInterface
         $totalMembers = count($members);
         /* @var RRMemberConfiguration[] $priorityQueue */
         $priorityQueue = [];
-        $currentDate = clone($roundRobinConfiguration->startDateTime);
+        $currentDate = clone $roundRobinConfiguration->startDateTime;
         while ($currentDate < $roundRobinConfiguration->endDateTime) {
-            $endDate = clone($currentDate);
+            $endDate = clone $currentDate;
             $endDate = $this->addInterval($endDate, $roundRobinConfiguration);
             //check if something in priority queue
             /* @var RRMemberConfiguration $matchMember */
             $matchMember = null;
             if (count($priorityQueue) > 0) {
                 $i = 0;
-                for (; $i < count($priorityQueue); $i++) {
+                for (; $i < count($priorityQueue); ++$i) {
                     if (
                         $memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
                         $conflictCallable($assignedEventCount, $priorityQueue[$i])
@@ -292,31 +306,30 @@ class EventGenerationService implements EventGenerationServiceInterface
                         break;
                     }
                 }
-                if ($matchMember != null) {
+                if (null !== $matchMember) {
                     unset($priorityQueue[$i]);
                     //reset keys in array (0,1,2,3,4,...)
                     $priorityQueue = array_values($priorityQueue);
                 }
             }
-            if ($matchMember == null) {
+            if (null === $matchMember) {
                 $startIndex = $activeIndex;
                 while (true) {
                     $myMember = $members[$activeIndex];
                     if ($memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $myMember) &&
                         $conflictCallable($assignedEventCount, $myMember)) {
                         $matchMember = $myMember;
-                        $activeIndex++;
+                        ++$activeIndex;
                         break;
-                    } else {
-                        $priorityQueue[] = $myMember;
-                        $activeIndex++;
-                        //wrap around index
-                        if ($activeIndex >= $totalMembers) {
-                            $activeIndex = 0;
-                        }
-                        if ($startIndex == $activeIndex) {
-                            return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER);
-                        }
+                    }
+                    $priorityQueue[] = $myMember;
+                    ++$activeIndex;
+                    //wrap around index
+                    if ($activeIndex >= $totalMembers) {
+                        $activeIndex = 0;
+                    }
+                    if ($startIndex === $activeIndex) {
+                        return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER);
                     }
                 }
                 //wrap around index
@@ -325,17 +338,17 @@ class EventGenerationService implements EventGenerationServiceInterface
                 }
             }
 
-            if ($matchMember == null) {
-                throw new \Exception("cannot happen!");
-            } else {
-                $event = new GeneratedEvent();
-                $event->memberId = $matchMember->id;
-                $event->startDateTime = $currentDate;
-                $event->endDateTime = $endDate;
-                $generationResult->events[] = $event;
-                $assignedEventCount++;
+            if (null === $matchMember) {
+                throw new \Exception('cannot happen!');
             }
-            $currentDate = clone($endDate);
+            $event = new GeneratedEvent();
+            $event->memberId = $matchMember->id;
+            $event->startDateTime = $currentDate;
+            $event->endDateTime = $endDate;
+            $generationResult->events[] = $event;
+            ++$assignedEventCount;
+
+            $currentDate = clone $endDate;
         }
 
         //prepare RR result
@@ -345,21 +358,23 @@ class EventGenerationService implements EventGenerationServiceInterface
         $roundRobinResult->priorityQueue = $priorityQueue;
         $roundRobinResult->activeIndex = $activeIndex;
         $roundRobinResult->generationResult = $generationResult;
+
         return $this->returnRoundRobinSuccess($roundRobinResult);
     }
 
     /**
-     * persist the events associated with this generation in the database
+     * persist the events associated with this generation in the database.
      *
      * @param EventLineGeneration $generation
-     * @param GenerationResult $generationResult
-     * @param Person $person
+     * @param GenerationResult    $generationResult
+     * @param Person              $person
+     *
      * @return bool
      */
     public function persist(EventLineGeneration $generation, GenerationResult $generationResult, Person $person)
     {
         $memberById = [];
-        foreach ($this->doctrine->getRepository("App:Member")->findBy(["organisation" => $generation->getEventLine()->getOrganisation()->getId()]) as $item) {
+        foreach ($this->doctrine->getRepository('App:Member')->findBy(['organisation' => $generation->getEventLine()->getOrganisation()->getId()]) as $item) {
             $memberById[$item->getId()] = $item;
         }
         $em = $this->doctrine->getManager();
@@ -379,22 +394,25 @@ class EventGenerationService implements EventGenerationServiceInterface
             } else {
                 $this->displayError(
                     $this->translator->trans(
-                        "member_not_found_anymore",
+                        'member_not_found_anymore',
                         [],
-                        "enum_event_generation_service_persist_response"
+                        'enum_event_generation_service_persist_response'
                     )
                 );
+
                 return EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE;
             }
         }
         $generation->setApplied(true);
         $em->persist($generation);
         $em->flush();
+
         return EventGenerationServicePersistResponse::SUCCESSFUL;
     }
 
     /**
      * @param NodikaConfiguration $nodikaConfiguration
+     *
      * @return bool
      */
     public function setEventTypeDistribution(NodikaConfiguration $nodikaConfiguration)
@@ -415,23 +433,23 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         $holidays = [];
         foreach ($nodikaConfiguration->holidays as $holiday) {
-            $holidays[(new \DateTime($holiday->format("d.m.Y")))->getTimestamp()] = 1;
+            $holidays[(new \DateTime($holiday->format('d.m.Y')))->getTimestamp()] = 1;
         }
 
-        $currentDate = clone($nodikaConfiguration->startDateTime);
+        $currentDate = clone $nodikaConfiguration->startDateTime;
         $oneMore = 1;
         while ($currentDate < $nodikaConfiguration->endDateTime || $oneMore--) {
-            $day = new \DateTime($currentDate->format("d.m.Y"));
+            $day = new \DateTime($currentDate->format('d.m.Y'));
             if (isset($holidays[$day->getTimestamp()])) {
-                $holidayCount++;
+                ++$holidayCount;
             } else {
                 $dayOfWeek = $day->format('N');
-                if ($dayOfWeek == 7) {
-                    $sundayCount++;
-                } elseif ($dayOfWeek == 6) {
-                    $saturdayCount++;
+                if (7 === $dayOfWeek) {
+                    ++$sundayCount;
+                } elseif (6 === $dayOfWeek) {
+                    ++$saturdayCount;
                 } else {
-                    $weekdayCount++;
+                    ++$weekdayCount;
                 }
             }
 
@@ -475,7 +493,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $nodikaConfiguration->memberEventTypeDistributions = [];
         foreach ($enabledMembers as $enabledMember) {
             $memberEventTypeDistribution = new MemberEventTypeDistribution(null);
-            $member = clone($enabledMember);
+            $member = clone $enabledMember;
             $member->endScore = round($partiesArray[$enabledMember->id], 2);
             $member->luckyScore = round($this->convertToLuckyScore($totalPoints, $member->points), 2);
             $memberEventTypeDistribution->newMemberConfiguration = $member;
@@ -494,11 +512,12 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * creates a lucky score
+     * creates a lucky score.
      *
      * @param $totalPoints
      * @param $reachedPoints
-     * @return double
+     *
+     * @return float
      */
     private function convertToLuckyScore($totalPoints, $reachedPoints)
     {
@@ -506,26 +525,29 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * creates a lucky score
+     * creates a lucky score.
      *
-     * @param double $totalPoints
-     * @param double $luckyScore
+     * @param float $totalPoints
+     * @param float $luckyScore
+     *
      * @return int
      */
     private function convertFromLuckyScore($totalPoints, $luckyScore)
     {
         $realScore = $luckyScore / 100.0;
+
         return $totalPoints * $realScore;
     }
 
     /**
-     * distribute the days to the members
+     * distribute the days to the members.
      *
-     * @param array $partiesArray is an array of the form (int => double) (target points per member)
+     * @param array $partiesArray         is an array of the form (int => double) (target points per member)
      * @param array $distributedDaysArray is an array of the form (int => (int => int)) (distributed dayKey => dayCount per member)
-     * @param double $dayValue the value of this day for $distributedPointsArray calculation
-     * @param int $dayCount the amount of
-     * @param int $dayKey the key of this day used in $distributedDaysArray
+     * @param float $dayValue             the value of this day for $distributedPointsArray calculation
+     * @param int   $dayCount             the amount of
+     * @param int   $dayKey               the key of this day used in $distributedDaysArray
+     *
      * @throws \Exception
      */
     private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayCount, $dayKey)
@@ -542,19 +564,21 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * the buckets algorithm puts the parties into equal size buckets
      * according to the share of one party into the bucket it secures that bucket with that probability
-     * the parties are distributed to the buckets to be in as few buckets as possible
+     * the parties are distributed to the buckets to be in as few buckets as possible.
      *
-     * @param array $parties is an array of the form (int => double)
-     * @param int $bucketsCount the number of buckets to distribute
-     * @return array is an array of the form (int => int)
+     * @param array $parties      is an array of the form (int => double)
+     * @param int   $bucketsCount the number of buckets to distribute
+     *
      * @throws \Exception
+     *
+     * @return array is an array of the form (int => int)
      */
     private function bucketsAlgorithm($parties, $bucketsCount)
     {
         //prepare party sizes
         $myParties = [];
         foreach ($parties as $partyId => $partySize) {
-            $myParties[$partyId] = (int)($partySize * 10000);
+            $myParties[$partyId] = (int) ($partySize * 10000);
         }
 
         //prepare parties (and sort by size)
@@ -564,7 +588,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             $sizes[$partySize][] = $partyId;
             $totalSize += $partySize;
         }
-
 
         $totalSize2 = 0;
         foreach ($sizes as $size => $val) {
@@ -580,13 +603,12 @@ class EventGenerationService implements EventGenerationServiceInterface
             ksort($sizes);
         }
 
-
         //prepare buckets
-        $bucketSize = (double)$totalSize / $bucketsCount;
+        $bucketSize = (float) $totalSize / $bucketsCount;
 
         $remainingBucketSizes = [];
         $bucketMembers = [];
-        for ($i = 0; $i < $bucketsCount; $i++) {
+        for ($i = 0; $i < $bucketsCount; ++$i) {
             $remainingBucketSizes[$i] = $bucketSize;
             $bucketMembers[$i] = [];
         }
@@ -608,11 +630,11 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //find biggest remaining bucket
                     $biggestRemaining = 0;
                     $biggestRemainingIndex = 0;
-                    for ($i = 0; $i < $bucketsCount; $i++) {
+                    for ($i = 0; $i < $bucketsCount; ++$i) {
                         if ($biggestRemaining < $remainingBucketSizes[$i]) {
                             $biggestRemaining = $remainingBucketSizes[$i];
                             $biggestRemainingIndex = $i;
-                            if ($biggestRemaining == $bucketSize) {
+                            if ($biggestRemaining === $bucketSize) {
                                 break;
                             }
                         }
@@ -624,17 +646,16 @@ class EventGenerationService implements EventGenerationServiceInterface
 
                         //adapt bucket sizes
                         $remainingBucketSizes[$biggestRemainingIndex] -= $myPartSize;
-                        $bucketsAssigned++;
+                        ++$bucketsAssigned;
 
                         break;
-                    } else {
-                        $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
-                        //adapt bucket sizes
-                        $myPartSize -= $biggestRemaining;
-                        $remainingBucketSizes[$biggestRemainingIndex] = 0;
-
-                        $bucketsAssigned++;
                     }
+                    $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
+                    //adapt bucket sizes
+                    $myPartSize -= $biggestRemaining;
+                    $remainingBucketSizes[$biggestRemainingIndex] = 0;
+
+                    ++$bucketsAssigned;
                 }
             }
         }
@@ -642,7 +663,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         //choose winner per bucket
         $winnerPerBucket = [];
         foreach ($bucketMembers as $bucketIndex => $members) {
-            if (count($members) == 1) {
+            if (1 === count($members)) {
                 //fully filled out!
                 $winnerPerBucket[$bucketIndex] = array_keys($members)[0];
             } else {
@@ -670,22 +691,22 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * tries to generate the events
-     * returns true if successful
+     * returns true if successful.
      *
      * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
-     * @return NodikaOutput
+     * @param callable            $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     *
      * @throws \Exception
+     *
+     * @return NodikaOutput
      */
     public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable)
     {
         /**
          * BUGS:
          * not generated till end
-         * wrong weekdays assigned
+         * wrong weekdays assigned.
          */
-
-
         $generationResult = new GenerationResult(null);
         $generationResult->generationDateTime = new \DateTime();
 
@@ -705,7 +726,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         /* @var EventTypeConfiguration[] $eventTypeDistributions */
         $eventTypeDistributions = [];
         foreach ($nodikaConfiguration->memberEventTypeDistributions as $memberEventTypeDistribution) {
-            $eventTypeDistributions[$memberEventTypeDistribution->newMemberConfiguration->id] = clone($memberEventTypeDistribution->eventTypeAssignment);
+            $eventTypeDistributions[$memberEventTypeDistribution->newMemberConfiguration->id] = clone $memberEventTypeDistribution->eventTypeAssignment;
         }
 
         $totalEvents = 0;
@@ -724,7 +745,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $idealQueueMembers[$idealQueueMember->id] = $idealQueueMember;
         }
 
-        $idealQueue = (array)($nodikaConfiguration->beforeEvents);
+        $idealQueue = (array) ($nodikaConfiguration->beforeEvents);
         if (count($idealQueue) > $totalEvents) {
             //cut off too large beginning arrays
             $idealQueue = array_slice($idealQueue, $totalEvents);
@@ -732,9 +753,9 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         foreach ($idealQueueMembers as $idealQueueMember) {
             foreach ($idealQueue as $item) {
-                if ($item == $idealQueueMember->id) {
-                    $idealQueueMember->totalEventCount++;
-                    $idealQueueMember->doneEventCount++;
+                if ($item === $idealQueueMember->id) {
+                    ++$idealQueueMember->totalEventCount;
+                    ++$idealQueueMember->doneEventCount;
                 }
             }
             $idealQueueMember->calculatePartDone();
@@ -753,7 +774,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 }
             }
 
-            if ($lowestPartDone == 1) {
+            if (1 === $lowestPartDone) {
                 //all members have delivered all events
                 break;
             }
@@ -761,7 +782,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $myMember = $idealQueueMembers[$lowestIndex];
 
             $idealQueue[] = $myMember->id;
-            $myMember->doneEventCount++;
+            ++$myMember->doneEventCount;
             $myMember->calculatePartDone();
         }
 
@@ -772,18 +793,18 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         $holidays = [];
         foreach ($nodikaConfiguration->holidays as $holiday) {
-            $holidays[(new \DateTime($holiday->format("d.m.Y")))->getTimestamp()] = 1;
+            $holidays[(new \DateTime($holiday->format('d.m.Y')))->getTimestamp()] = 1;
         }
 
         //this must be equal!
-        assert(count($idealQueue) == $totalEvents);
+        assert(count($idealQueue) === $totalEvents);
 
-        $startDateTime = clone($nodikaConfiguration->startDateTime);
+        $startDateTime = clone $nodikaConfiguration->startDateTime;
         $assignedEventCount = 0;
         $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
-            $day = new \DateTime($startDateTime->format("d.m.Y"));
-            $endDate = clone($startDateTime);
+            $day = new \DateTime($startDateTime->format('d.m.Y'));
+            $endDate = clone $startDateTime;
             $endDate = $this->addInterval($endDate, $nodikaConfiguration);
 
             //create callable for each day type
@@ -791,6 +812,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $res =
                     $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $members[$memberId]) &&
                     $conflictCallable($assignedEventCount, $members[$memberId]);
+
                 return $res;
             };
             $advancedFitsFunc = null;
@@ -799,6 +821,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                     /* @var IdealQueueMember $targetMember */
                     $res = $targetMember->availableHolidayCount > 0 && $fitsFunc($targetMember->id);
+
                     return $res;
                 };
                 $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
@@ -807,22 +830,24 @@ class EventGenerationService implements EventGenerationServiceInterface
                 };
             } else {
                 $dayOfWeek = $day->format('N');
-                if ($dayOfWeek == 7) {
+                if (7 === $dayOfWeek) {
                     //sunday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
                         $res = $targetMember->availableSundayCount > 0 && $fitsFunc($targetMember->id);
+
                         return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
                         /* @var IdealQueueMember $targetMember */
                         $targetMember->assignSunday($queueIndex);
                     };
-                } elseif ($dayOfWeek == 6) {
+                } elseif (6 === $dayOfWeek) {
                     //saturday
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
                         $res = $targetMember->availableSaturdayCount > 0 && $fitsFunc($targetMember->id);
+
                         return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
@@ -834,6 +859,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                     $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
                         /* @var IdealQueueMember $targetMember */
                         $res = $targetMember->availableWeekdayCount > 0 && $fitsFunc($targetMember->id);
+
                         return $res;
                     };
                     $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
@@ -851,7 +877,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $assignmentFound = false;
                 //the search begins; look n to the right, then continue with n+1
                 //totalEvents as upper bound; this will not be reached probably
-                for ($i = 1; $i < $totalEvents; $i++) {
+                for ($i = 1; $i < $totalEvents; ++$i) {
                     //n to right
                     $newIndex = $queueIndex + $i;
                     if ($newIndex < $totalEvents) {
@@ -917,8 +943,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                 }
             }
 
-            $queueIndex++;
-            $assignedEventCount++;
+            ++$queueIndex;
+            ++$assignedEventCount;
             $startDateTime = $this->addInterval($startDateTime, $nodikaConfiguration);
 
             if (!($queueIndex < $totalEvents)) {
@@ -926,13 +952,12 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         }
 
-
-        $startDateTime = clone($nodikaConfiguration->startDateTime);
+        $startDateTime = clone $nodikaConfiguration->startDateTime;
 
         $assignedEventCount = 0;
         $queueIndex = 0;
         while ($startDateTime < $nodikaConfiguration->endDateTime) {
-            $endDate = clone($startDateTime);
+            $endDate = clone $startDateTime;
             $endDate = $this->addInterval($endDate, $nodikaConfiguration);
 
             $targetMember = $idealQueueMembers[$idealQueue[$queueIndex]];
@@ -943,9 +968,9 @@ class EventGenerationService implements EventGenerationServiceInterface
             $event->endDateTime = $endDate;
             $generationResult->events[] = $event;
 
-            $queueIndex++;
-            $assignedEventCount++;
-            $startDateTime = clone($startDateTime);
+            ++$queueIndex;
+            ++$assignedEventCount;
+            $startDateTime = clone $startDateTime;
             $startDateTime = $this->addInterval($startDateTime, $nodikaConfiguration);
 
             if (!($queueIndex < $totalEvents)) {
@@ -957,38 +982,39 @@ class EventGenerationService implements EventGenerationServiceInterface
         $nodikaOutput->endDateTime = $startDateTime;
         $nodikaOutput->lengthInHours = $nodikaConfiguration->lengthInHours;
         $nodikaOutput->memberConfiguration = $members;
-        $nodikaOutput->beforeEvents = array_merge((array)($nodikaConfiguration->beforeEvents), $idealQueue);
+        $nodikaOutput->beforeEvents = array_merge((array) ($nodikaConfiguration->beforeEvents), $idealQueue);
         $nodikaOutput->generationResult = $generationResult;
+
         return $this->returnNodikaSuccess($nodikaOutput);
     }
-
 
     private function addInterval(\DateTime $dateTime, BaseConfiguration $configuration)
     {
         $hours = $configuration->lengthInHours;
         $days = 0;
         while ($hours >= 24) {
-            $days++;
+            ++$days;
             $hours -= 24;
         }
 
         if ($hours >= 12) {
-            $days++;
+            ++$days;
             $hours = 24 - $hours;
-            $daysAddInterval = new \DateInterval("P" . $days . "D");
+            $daysAddInterval = new \DateInterval('P'.$days.'D');
             $dateTime->add($daysAddInterval);
-            $hoursRemoveInterval = new \DateInterval("PT" . $hours . "H");
+            $hoursRemoveInterval = new \DateInterval('PT'.$hours.'H');
             $dateTime->sub($hoursRemoveInterval);
         } else {
             if ($days > 0) {
-                $daysAddInterval = new \DateInterval("P" . $days . "D");
+                $daysAddInterval = new \DateInterval('P'.$days.'D');
                 $dateTime->add($daysAddInterval);
             }
             if ($hours > 0) {
-                $hoursAddInterval = new \DateInterval("PT" . $hours . "H");
+                $hoursAddInterval = new \DateInterval('PT'.$hours.'H');
                 $dateTime->sub($hoursAddInterval);
             }
         }
+
         return $dateTime;
     }
 }

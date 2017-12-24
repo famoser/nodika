@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:46
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Traits;
@@ -62,11 +65,13 @@ trait CommunicationTrait
 
     /**
      * @param mixed $phone
+     *
      * @return static
      */
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -80,67 +85,72 @@ trait CommunicationTrait
 
     /**
      * @param string $email
+     *
      * @return static
      */
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
     /**
-     * get non-empty communication lines
+     * get non-empty communication lines.
      *
      * @return string[]
      */
     public function getCommunicationLines()
     {
         $res = [];
-        if ($this->getPhone() != "") {
+        if ('' !== $this->getPhone()) {
             $res[] = $this->getPhone();
         }
-        if ($this->getEmail() != "") {
+        if ('' !== $this->getEmail()) {
             $res[] = $this->getEmail();
         }
-        if ($this->getWebpage() != "") {
+        if ('' !== $this->getWebpage()) {
             $res[] = $this->getWebpage();
         }
+
         return $res;
     }
 
     /**
-     * get the communication identifier
+     * get the communication identifier.
      *
      * @return string
      */
     protected function getCommunicationIdentifier()
     {
-        return implode(",", $this->getCommunicationLines());
+        return implode(',', $this->getCommunicationLines());
     }
 
     /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     public static function getCommunicationBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(CommunicationTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(CommunicationTrait::class)] + $defaultArray;
         $builder->add(
-            "phone",
+            'phone',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("phone") + ["required" => false]
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('phone') + ['required' => false]
         );
         $builder->add(
-            "email",
+            'email',
             EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('email')
         );
         $builder->add(
-            "webpage",
+            'webpage',
             UrlType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("webpage") + ["required" => false]
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('webpage') + ['required' => false]
         );
+
         return $builder;
     }
 

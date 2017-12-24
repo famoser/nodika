@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 05/03/2017
- * Time: 08:41
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Enum\Base;
@@ -15,7 +18,7 @@ use ReflectionClass;
 abstract class BaseEnum extends TranslatableObject
 {
     /**
-     * generates an array to be used in form fields
+     * generates an array to be used in form fields.
      *
      * @return array
      */
@@ -28,13 +31,15 @@ abstract class BaseEnum extends TranslatableObject
         foreach ($choices as $name => $value) {
             $res[NamingHelper::constantToTranslation($name)] = $value;
         }
-        return ["choices" => $res, 'choice_translation_domain' => $this->getTranslationDomain()];
+
+        return ['choices' => $res, 'choice_translation_domain' => $this->getTranslationDomain()];
     }
 
     /**
-     * translate enum value
+     * translate enum value.
      *
      * @param $enumValue
+     *
      * @return bool|string
      */
     protected function getTranslationInternal($enumValue)
@@ -43,26 +48,29 @@ abstract class BaseEnum extends TranslatableObject
         $choices = $reflection->getConstants();
 
         foreach ($choices as $name => $value) {
-            if ($value == $enumValue) {
+            if ($value === $enumValue) {
                 return NamingHelper::constantToTranslation($name);
             }
         }
+
         return false;
     }
 
     /**
-     * translate enum value
+     * translate enum value.
      *
      * @param $enumValue
+     *
      * @return array
      */
     protected function getTranslationForBuilderInternal($enumValue)
     {
         $trans = $this->getTranslationInternal($enumValue);
-        if ($trans === false) {
-            return ["translation_domain" => "common_error", "label" => "enum.invalid_constant"];
+        if (false === $trans) {
+            return ['translation_domain' => 'common_error', 'label' => 'enum.invalid_constant'];
         }
-        return ["translation_domain" => $this->getTranslationDomain(), "label" => $trans];
+
+        return ['translation_domain' => $this->getTranslationDomain(), 'label' => $trans];
     }
 
     /**
@@ -70,42 +78,46 @@ abstract class BaseEnum extends TranslatableObject
      */
     protected function getTranslationDomainPrefix()
     {
-        return "enum";
+        return 'enum';
     }
 
-
     /**
-     * returns an array fit to be used by the ChoiceType
+     * returns an array fit to be used by the ChoiceType.
      *
      * @return array
      */
     public static function getChoicesForBuilder()
     {
         $elem = new static();
+
         return $elem->getChoicesForBuilderInternal();
     }
 
     /**
-     * translate enum value
+     * translate enum value.
      *
      * @param $enumValue
+     *
      * @return array
      */
     public static function getTranslationForBuilder($enumValue)
     {
         $elem = new static();
+
         return $elem->getTranslationForBuilderInternal($enumValue);
     }
 
     /**
-     * translate enum value
+     * translate enum value.
      *
      * @param $enumValue
+     *
      * @return string
      */
     public static function getTranslation($enumValue)
     {
         $elem = new static();
+
         return $elem->getTranslationInternal($enumValue);
     }
 }

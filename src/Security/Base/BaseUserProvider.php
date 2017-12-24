@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:37
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Security\Base;
@@ -23,9 +26,9 @@ abstract class BaseUserProvider implements UserProviderInterface
      *
      * @param string $username The username
      *
-     * @return UserInterface
-     *
      * @throws UsernameNotFoundException if the user is not found
+     *
+     * @return UserInterface
      */
     abstract public function loadUserByUsername($username);
 
@@ -39,9 +42,9 @@ abstract class BaseUserProvider implements UserProviderInterface
      *
      * @param UserInterface $user
      *
-     * @return UserInterface
-     *
      * @throws UnsupportedUserException if the account is not supported
+     *
+     * @return UserInterface
      */
     abstract public function refreshUser(UserInterface $user);
 

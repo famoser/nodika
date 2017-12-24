@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 17:25
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventLineGeneration\Base;
@@ -15,11 +18,12 @@ class EventLineConfiguration
 {
     /**
      * MemberConfiguration constructor.
+     *
      * @param $data
      */
     public function __construct($data)
     {
-        if ($data != null) {
+        if (null !== $data) {
             $this->id = $data->id;
             $this->name = $data->name;
             $this->isEnabled = $data->isEnabled;
@@ -47,6 +51,7 @@ class EventLineConfiguration
 
     /**
      * @param EventLine $eventLine
+     *
      * @return static
      */
     public static function createFromEventLine(EventLine $eventLine)
@@ -54,6 +59,7 @@ class EventLineConfiguration
         $val = new static(null);
         $val->id = $eventLine->getId();
         $val->name = $eventLine->getName();
+
         return $val;
     }
 

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -13,7 +16,7 @@ use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An EventOfferEntry is part of an EventOffer, and specified which events are about to be traded
+ * An EventOfferEntry is part of an EventOffer, and specified which events are about to be traded.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EventOfferEntryRepository")
@@ -38,7 +41,7 @@ class EventOfferEntry extends BaseEntity
     private $event;
 
     /**
-     * Set eventOffer
+     * Set eventOffer.
      *
      * @param EventOffer $eventOffer
      *
@@ -52,7 +55,7 @@ class EventOfferEntry extends BaseEntity
     }
 
     /**
-     * Get eventOffer
+     * Get eventOffer.
      *
      * @return EventOffer
      */
@@ -62,7 +65,7 @@ class EventOfferEntry extends BaseEntity
     }
 
     /**
-     * Set event
+     * Set event.
      *
      * @param Event $event
      *
@@ -76,7 +79,7 @@ class EventOfferEntry extends BaseEntity
     }
 
     /**
-     * Get event
+     * Get event.
      *
      * @return Event
      */
@@ -86,12 +89,12 @@ class EventOfferEntry extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
     public function getFullIdentifier()
     {
-        return "entry";
+        return 'entry';
     }
 }

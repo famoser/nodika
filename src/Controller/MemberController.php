@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 10/05/2017
- * Time: 18:28
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -24,29 +27,33 @@ class MemberController extends BaseFrontendController
 {
     /**
      * @Route("/", name="member_view")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
         $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
+        if (null === $member) {
+            return $this->redirectToRoute('dashboard_index');
         }
 
-        $arr["member"] = $member;
-        return $this->renderWithBackUrl("member/index.html.twig", $arr, $this->generateUrl("dashboard_index"));
+        $arr['member'] = $member;
+
+        return $this->renderWithBackUrl('member/index.html.twig', $arr, $this->generateUrl('dashboard_index'));
     }
 
     /**
      * @Route("/edit", name="member_edit")
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request)
     {
         $member = $this->getMember();
-        if ($member == null) {
-            return $this->redirectToRoute("dashboard_index");
+        if (null === $member) {
+            return $this->redirectToRoute('dashboard_index');
         }
 
         $myForm = $this->handleCrudForm(
@@ -54,7 +61,7 @@ class MemberController extends BaseFrontendController
             $member,
             SubmitButtonType::EDIT,
             function ($form, $entity) {
-                return $this->redirectToRoute("member_view");
+                return $this->redirectToRoute('member_view');
             }
         );
 
@@ -62,72 +69,80 @@ class MemberController extends BaseFrontendController
             return $myForm;
         }
 
-        $arr["member"] = $member;
-        $arr["person"] = $this->getPerson();
-        ;
-        $arr["edit_form"] = $myForm->createView();
+        $arr['member'] = $member;
+        $arr['person'] = $this->getPerson();
+
+        $arr['edit_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'member/edit.html.twig',
             $arr,
-            $this->generateUrl("member_view")
+            $this->generateUrl('member_view')
         );
     }
 
     /**
      * @Route("/remove_person/{person}", name="member_remove_person")
+     *
      * @param Person $person
+     *
      * @return Response
      */
     public function removePersonAction(Person $person)
     {
         $activeMember = $this->getMember();
-        if ($activeMember == null) {
-            return $this->redirectToRoute("dashboard_index");
+        if (null === $activeMember) {
+            return $this->redirectToRoute('dashboard_index');
         }
 
         $myPerson = $this->getPerson();
+
         return $this->renderWithBackUrl(
             'member/remove_person.html.twig',
-            ["person" => $person, "my_person" => $myPerson],
-            $this->generateUrl("member_view")
+            ['person' => $person, 'my_person' => $myPerson],
+            $this->generateUrl('member_view')
         );
     }
 
     /**
      * @Route("/remove_person/{person}/confirm", name="member_remove_person_confirm")
+     *
      * @param Person $person
+     *
      * @return Response
      */
     public function removePersonConfirmAction(Person $person)
     {
         $activeMember = $this->getMember();
-        if ($activeMember == null) {
-            return $this->redirectToRoute("dashboard_index");
+        if (null === $activeMember) {
+            return $this->redirectToRoute('dashboard_index');
         }
 
-        $trans = $this->get("translator");
+        $trans = $this->get('translator');
         $myPerson = $this->getPerson();
-        if ($myPerson->getId() == $person->getId()) {
+        if ($myPerson->getId() === $person->getId()) {
             //remove self!
             $activeMember->removePerson($myPerson);
             $this->fastSave($activeMember, $myPerson);
-            $this->displaySuccess($trans->trans("remove_person.messages.remove_successfully", [], "member"));
-            return $this->redirectToRoute("access_logout");
+            $this->displaySuccess($trans->trans('remove_person.messages.remove_successfully', [], 'member'));
+
+            return $this->redirectToRoute('access_logout');
         }
         $found = null;
         foreach ($activeMember->getPersons() as $person) {
-            if ($person->getId() == $myPerson->getId()) {
+            if ($person->getId() === $myPerson->getId()) {
                 $found = $person;
             }
         }
-        if ($found != null) {
+        if (null !== $found) {
             $activeMember->removePerson($found);
             $this->fastSave($activeMember, $found);
-            $this->displaySuccess($trans->trans("remove_person.messages.remove_successfully", [], "member"));
-            return $this->redirectToRoute("access_logout");
-        } else {
-            $this->displayError($trans->trans("remove_person.messages.not_part_of_member", [], "member"));
-            return $this->redirectToRoute("member_view");
+            $this->displaySuccess($trans->trans('remove_person.messages.remove_successfully', [], 'member'));
+
+            return $this->redirectToRoute('access_logout');
         }
+        $this->displayError($trans->trans('remove_person.messages.not_part_of_member', [], 'member'));
+
+        return $this->redirectToRoute('member_view');
     }
 }

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:37
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -16,7 +19,7 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * CustomerUser
+ * CustomerUser.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\AdminUserRepository")
@@ -27,17 +30,19 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
     use UserTrait;
 
     /**
-     * create new user; with required fields filled out
+     * create new user; with required fields filled out.
+     *
      * @return static
      */
     public static function createNewAdminUser()
     {
         $user = new static();
+
         return $user;
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
@@ -46,11 +51,10 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
         return $this->getUserIdentifier();
     }
 
-
     /**
      * @var array
      */
-    private $roles = ["ROLE_MODERATOR"];
+    private $roles = ['ROLE_MODERATOR'];
 
     /**
      * @param string $role
@@ -73,6 +77,7 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
      * Alternatively, the roles might be stored on a ``roles`` property,
      * and populated in any number of different ways when the user object
      * is created.
+     *
      * @return array (Role|string)[] The user roles
      */
     public function getRoles()
@@ -104,7 +109,7 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
     }
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {

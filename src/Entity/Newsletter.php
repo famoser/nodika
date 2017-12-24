@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 30/04/2017
- * Time: 15:51
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -19,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * A Newsletter is a person subscribed (or not) to receive news about this application
+ * A Newsletter is a person subscribed (or not) to receive news about this application.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\NewsletterRepository")
@@ -42,9 +45,9 @@ class Newsletter extends BaseEntity
     private $message;
 
     /**
-     * Set choice
+     * Set choice.
      *
-     * @param integer $choice
+     * @param int $choice
      *
      * @return Newsletter
      */
@@ -56,9 +59,9 @@ class Newsletter extends BaseEntity
     }
 
     /**
-     * Get choice
+     * Get choice.
      *
-     * @return integer
+     * @return int
      */
     public function getChoice()
     {
@@ -66,7 +69,7 @@ class Newsletter extends BaseEntity
     }
 
     /**
-     * Set message
+     * Set message.
      *
      * @param string $message
      *
@@ -80,7 +83,7 @@ class Newsletter extends BaseEntity
     }
 
     /**
-     * Get message
+     * Get message.
      *
      * @return string
      */
@@ -90,7 +93,7 @@ class Newsletter extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
@@ -102,16 +105,18 @@ class Newsletter extends BaseEntity
     /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
     {
         $builderArray = $this->getTranslationDomainForBuilder() + $defaultArray;
         $builder->add(
-            "message",
+            'message',
             TextareaType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("message")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('message')
         );
+
         return $builder;
     }
 }

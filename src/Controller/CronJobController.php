@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 10/05/2017
- * Time: 18:28
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -12,8 +15,6 @@ use App\Controller\Base\BaseFrontendController;
 use App\Entity\Member;
 use App\Entity\Person;
 use App\Helper\DateTimeFormatter;
-
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -25,49 +26,56 @@ class CronJobController extends BaseFrontendController
 {
     /**
      * @Route("/test/{secret}", name="cron_test")
+     *
      * @param $secret
+     *
      * @return Response
      */
     public function testAction($secret)
     {
-        return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
+        return new Response($secret === $this->getParameter('secret') ? 'successful' : 'access denied');
     }
 
     /**
      * @Route("/hourly/{secret}", name="cron_hourly")
+     *
      * @param $secret
+     *
      * @return Response
      */
     public function hourlyAction($secret)
     {
-        return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
+        return new Response($secret === $this->getParameter('secret') ? 'successful' : 'access denied');
     }
 
     /**
      * @Route("/daily/{secret}", name="cron_daily")
+     *
      * @param $secret
-     * @return Response
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return Response
      */
     public function dailyAction($secret)
     {
-        if ($secret != $this->getParameter("secret")) {
-            return new Response("access denied");
+        if ($secret !== $this->getParameter('secret')) {
+            return new Response('access denied');
         }
 
-        $translator = $this->get("translator");
-        $memberRepo = $this->getDoctrine()->getRepository("App:Member");
+        $translator = $this->get('translator');
+        $memberRepo = $this->getDoctrine()->getRepository('App:Member');
         //send event remainders
-        $organisations = $this->getDoctrine()->getRepository("App:Organisation")->findAll();
+        $organisations = $this->getDoctrine()->getRepository('App:Organisation')->findAll();
         foreach ($organisations as $organisation) {
-            $settings = $this->getDoctrine()->getRepository("App:OrganisationSetting")->getByOrganisation($organisation);
-            $adminEmail = $settings->getReceiverOfRemainders() != null ? $settings->getReceiverOfRemainders()->getEmail() : null;
+            $settings = $this->getDoctrine()->getRepository('App:OrganisationSetting')->getByOrganisation($organisation);
+            $adminEmail = null !== $settings->getReceiverOfRemainders() ? $settings->getReceiverOfRemainders()->getEmail() : null;
 
             //first time email is skipped
-            $remainderThreshold = new \DateTime("now + " . ($settings->getCanConfirmEventBeforeDays() - $settings->getSendConfirmEventEmailDays()) . " days");
-            $tooLateThreshold = new \DateTime("now + " . $settings->getMustConfirmEventBeforeDays() . " days");
-            $remainderSendBlock = new \DateTime("now - " . $settings->getSendConfirmEventEmailDays() . " days");
+            $remainderThreshold = new \DateTime('now + '.($settings->getCanConfirmEventBeforeDays() - $settings->getSendConfirmEventEmailDays()).' days');
+            $tooLateThreshold = new \DateTime('now + '.$settings->getMustConfirmEventBeforeDays().' days');
+            $remainderSendBlock = new \DateTime('now - '.$settings->getSendConfirmEventEmailDays().' days');
 
             foreach ($organisation->getMembers() as $member) {
                 /* @var Member $member */
@@ -86,7 +94,7 @@ class CronJobController extends BaseFrontendController
 
                         $receiver = null;
                         $member = $unconfirmedEvent->getMember();
-                        if ($unconfirmedEvent->getPerson() != null) {
+                        if (null !== $unconfirmedEvent->getPerson()) {
                             $receiver = $unconfirmedEvent->getPerson()->getEmail();
                             $owner = $unconfirmedEvent->getPerson()->getFullName();
                         } else {
@@ -95,27 +103,26 @@ class CronJobController extends BaseFrontendController
                         }
 
                         $body = $translator->trans(
-                            "member_event_confirm_too_late_remainder.message",
+                            'member_event_confirm_too_late_remainder.message',
                             [
-                                "%event_short%" =>
-                                    $unconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) .
-                                    " - " .
+                                '%event_short%' => $unconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT).
+                                    ' - '.
                                     $unconfirmedEvent->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT),
-                                "%owner%" => $owner
+                                '%owner%' => $owner,
                             ],
-                            "email_cronjob"
+                            'email_cronjob'
                         );
 
-                        $subject = $translator->trans("member_event_confirm_too_late_remainder.subject", [], "email_cronjob");
-                        $actionText = $translator->trans("member_event_confirm_too_late_remainder.action_text", [], "email_cronjob");
-                        $actionLink = $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL);
-                        $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $adminEmail);
+                        $subject = $translator->trans('member_event_confirm_too_late_remainder.subject', [], 'email_cronjob');
+                        $actionText = $translator->trans('member_event_confirm_too_late_remainder.action_text', [], 'email_cronjob');
+                        $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
+                        $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $adminEmail);
                     } else {
                         $disable =
                             //disable email if already sent
-                            ($unconfirmedEvent->getLastRemainderEmailSent() != null && $unconfirmedEvent->getLastRemainderEmailSent() > $remainderSendBlock);
+                            (null !== $unconfirmedEvent->getLastRemainderEmailSent() && $unconfirmedEvent->getLastRemainderEmailSent() > $remainderSendBlock);
 
-                        if ($unconfirmedEvent->getPerson() != null) {
+                        if (null !== $unconfirmedEvent->getPerson()) {
                             $person = $unconfirmedEvent->getPerson();
 
                             $sendRemainderToPerson[$person->getId()] = $person;
@@ -123,13 +130,13 @@ class CronJobController extends BaseFrontendController
                             if (!isset($personRemainderCount[$person->getId()])) {
                                 $personRemainderCount[$person->getId()] = 0;
                             }
-                            $personRemainderCount[$person->getId()]++;
+                            ++$personRemainderCount[$person->getId()];
 
                             if ($disable) {
                                 $sendRemainderToPersonDisabled[$person->getId()] = true;
                             }
                         } else {
-                            $memberRemainderCount++;
+                            ++$memberRemainderCount;
                             if ($disable) {
                                 $sendRemainderToMember = false;
                             }
@@ -141,26 +148,25 @@ class CronJobController extends BaseFrontendController
 
                 if ($sendRemainderToMember && $memberRemainderCount > 0) {
                     //send email to member
-                    $subject = $translator->trans("member_event_confirm_remainder.subject", [], "email_cronjob");
+                    $subject = $translator->trans('member_event_confirm_remainder.subject', [], 'email_cronjob');
                     $receiver = $member->getEmail();
                     $body = $translator->trans(
-                        "member_event_confirm_remainder.message",
-                        ["%count%" => $memberRemainderCount],
-                        "email_cronjob"
+                        'member_event_confirm_remainder.message',
+                        ['%count%' => $memberRemainderCount],
+                        'email_cronjob'
                     );
 
-                    $actionText = $translator->trans("member_event_confirm_too_late_remainder.action_text", [], "email_cronjob");
-                    $actionLink = $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+                    $actionText = $translator->trans('member_event_confirm_too_late_remainder.action_text', [], 'email_cronjob');
+                    $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
-                        if ($unconfirmedEvent->getPerson() == null) {
+                        if (null === $unconfirmedEvent->getPerson()) {
                             $unconfirmedEvent->setLastRemainderEmailSent(new \DateTime());
                             $manager->persist($unconfirmedEvent);
                         }
                     }
                 }
-
 
                 foreach ($sendRemainderToPerson as $person) {
                     if (isset($sendRemainderToPersonDisabled[$person->getId()]) || !isset($personRemainderCount[$person->getId()]) || !($personRemainderCount[$person->getId()] > 0)) {
@@ -169,18 +175,18 @@ class CronJobController extends BaseFrontendController
                     }
 
                     $receiver = $person->getEmail();
-                    $subject = $translator->trans("member_event_confirm_remainder.subject", [], "email_cronjob");
+                    $subject = $translator->trans('member_event_confirm_remainder.subject', [], 'email_cronjob');
                     $body = $translator->trans(
-                        "member_event_confirm_remainder.message",
-                        ["%count%" => $personRemainderCount[$person->getId()]],
-                        "email_cronjob"
+                        'member_event_confirm_remainder.message',
+                        ['%count%' => $personRemainderCount[$person->getId()]],
+                        'email_cronjob'
                     );
-                    $actionText = $translator->trans("member_event_confirm_remainder.action_text", [], "email_cronjob");
-                    $actionLink = $this->generateUrl("event_confirm", [], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $this->get("app.email_service")->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+                    $actionText = $translator->trans('member_event_confirm_remainder.action_text', [], 'email_cronjob');
+                    $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
-                        if ($unconfirmedEvent->getPerson() != null && $unconfirmedEvent->getPerson()->getId() == $person->getId()) {
+                        if (null !== $unconfirmedEvent->getPerson() && $unconfirmedEvent->getPerson()->getId() === $person->getId()) {
                             $unconfirmedEvent->setLastRemainderEmailSent(new \DateTime());
                             $manager->persist($unconfirmedEvent);
                         }
@@ -190,16 +196,19 @@ class CronJobController extends BaseFrontendController
                 $manager->flush();
             }
         }
-        return new Response("finished");
+
+        return new Response('finished');
     }
 
     /**
      * @Route("/weekly/{secret}", name="cron_weekly")
+     *
      * @param $secret
+     *
      * @return Response
      */
     public function weeklyAction($secret)
     {
-        return new Response($secret == $this->getParameter("secret") ? "successful" : "access denied");
+        return new Response($secret === $this->getParameter('secret') ? 'successful' : 'access denied');
     }
 }

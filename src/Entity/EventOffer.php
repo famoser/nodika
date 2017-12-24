@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -15,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An EventOffer can be accepted or declined, and allows one Person to propose one or more Events to change
+ * An EventOffer can be accepted or declined, and allows one Person to propose one or more Events to change.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EventOfferRepository")
@@ -86,7 +89,7 @@ class EventOffer extends BaseEntity
     private $eventOfferEntries;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -94,7 +97,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -108,7 +111,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -118,7 +121,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set openDateTime
+     * Set openDateTime.
      *
      * @param \DateTime $createDateTime
      *
@@ -132,7 +135,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get openDateTime
+     * Get openDateTime.
      *
      * @return \DateTime
      */
@@ -142,7 +145,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set closeDateTime
+     * Set closeDateTime.
      *
      * @param \DateTime $openDateTime
      *
@@ -156,7 +159,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get closeDateTime
+     * Get closeDateTime.
      *
      * @return \DateTime
      */
@@ -166,9 +169,9 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param integer $status
+     * @param int $status
      *
      * @return EventOffer
      */
@@ -180,9 +183,9 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -190,9 +193,9 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return integer
+     * @return int
      */
     public function getStatusText()
     {
@@ -200,7 +203,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set offeredByMember
+     * Set offeredByMember.
      *
      * @param Member $offeredByMember
      *
@@ -214,7 +217,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get offeredByMember
+     * Get offeredByMember.
      *
      * @return Member
      */
@@ -224,7 +227,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set offeredByPerson
+     * Set offeredByPerson.
      *
      * @param Person $offeredByPerson
      *
@@ -238,7 +241,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get offeredByPerson
+     * Get offeredByPerson.
      *
      * @return Person
      */
@@ -248,7 +251,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set offeredToMember
+     * Set offeredToMember.
      *
      * @param Member $offeredToMember
      *
@@ -262,7 +265,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get offeredToMember
+     * Get offeredToMember.
      *
      * @return Member
      */
@@ -272,7 +275,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set offeredToPerson
+     * Set offeredToPerson.
      *
      * @param Person $offeredToPerson
      *
@@ -286,7 +289,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get offeredToPerson
+     * Get offeredToPerson.
      *
      * @return Person
      */
@@ -296,7 +299,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Add eventOfferEntry
+     * Add eventOfferEntry.
      *
      * @param EventOfferEntry $eventOfferEntry
      *
@@ -310,7 +313,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Remove eventOfferEntry
+     * Remove eventOfferEntry.
      *
      * @param EventOfferEntry $eventOfferEntry
      */
@@ -320,7 +323,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get eventOfferEntries
+     * Get eventOfferEntries.
      *
      * @return \Doctrine\Common\Collections\Collection|EventOfferEntry[]
      */
@@ -330,7 +333,7 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */

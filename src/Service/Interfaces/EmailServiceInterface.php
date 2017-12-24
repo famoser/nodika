@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 07/12/2017
- * Time: 09:33
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service\Interfaces;
@@ -11,20 +14,22 @@ namespace App\Service\Interfaces;
 interface EmailServiceInterface
 {
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
+     * @param string      $receiver
+     * @param string      $subject
+     * @param string      $body
      * @param string|null $carbonCopy
-     * @return boolean
+     *
+     * @return bool
      */
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = null);
 
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
+     * @param string      $receiver
+     * @param string      $subject
+     * @param string      $body
      * @param string|null $carbonCopy
-     * @return boolean
+     *
+     * @return bool
      */
     public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = null);
 
@@ -33,9 +38,10 @@ interface EmailServiceInterface
      * @param string $subject
      * @param string $body
      * @param $actionText
-     * @param string $actionLink
+     * @param string      $actionLink
      * @param string|null $carbonCopy
-     * @return boolean
+     *
+     * @return bool
      */
     public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = null);
 }

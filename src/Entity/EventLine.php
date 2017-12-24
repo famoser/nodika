@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -15,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An EventLine groups together events of the same category
+ * An EventLine groups together events of the same category.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EventLineRepository")
@@ -27,7 +30,7 @@ class EventLine extends BaseEntity
     use ThingTrait;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="integer")
      */
@@ -57,7 +60,7 @@ class EventLine extends BaseEntity
     private $eventLineGenerations;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -66,7 +69,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param Organisation $organisation
      *
@@ -80,7 +83,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return Organisation
      */
@@ -90,7 +93,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Add event
+     * Add event.
      *
      * @param Event $event
      *
@@ -104,7 +107,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Remove event
+     * Remove event.
      *
      * @param Event $event
      */
@@ -114,7 +117,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Get events
+     * Get events.
      *
      * @return \Doctrine\Common\Collections\Collection|Event[]
      */
@@ -124,7 +127,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Add eventLineGeneration
+     * Add eventLineGeneration.
      *
      * @param EventLineGeneration $eventLineGeneration
      *
@@ -138,7 +141,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Remove eventLineGeneration
+     * Remove eventLineGeneration.
      *
      * @param EventLineGeneration $eventLineGeneration
      */
@@ -148,7 +151,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Get eventLineGenerations
+     * Get eventLineGenerations.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -158,7 +161,7 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
@@ -177,6 +180,7 @@ class EventLine extends BaseEntity
 
     /**
      * @param int $displayOrder
+     *
      * @return static
      */
     public function setDisplayOrder($displayOrder)

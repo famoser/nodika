@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -19,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An EventLineGeneration is the result of one of the generation algorithms
+ * An EventLineGeneration is the result of one of the generation algorithms.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EventLineGenerationRepository")
@@ -45,21 +48,21 @@ class EventLineGeneration extends BaseEntity
     private $distributionType = DistributionType::NODIKA;
 
     /**
-     * the input to the algorithm
+     * the input to the algorithm.
      *
      * @ORM\Column(type="text")
      */
     private $distributionConfigurationJson;
 
     /**
-     * the output of the algorithm
+     * the output of the algorithm.
      *
      * @ORM\Column(type="text")
      */
     private $distributionOutputJson;
 
     /**
-     * the result of the generation
+     * the result of the generation.
      *
      * @ORM\Column(type="text")
      */
@@ -93,7 +96,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set generationDate
+     * Set generationDate.
      *
      * @param \DateTime $createdAtDateTime
      *
@@ -107,7 +110,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Get generationDate
+     * Get generationDate.
      *
      * @return \DateTime
      */
@@ -117,9 +120,9 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set distributionType
+     * Set distributionType.
      *
-     * @param integer $distributionType
+     * @param int $distributionType
      *
      * @return EventLineGeneration
      */
@@ -131,9 +134,9 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Get distributionType
+     * Get distributionType.
      *
-     * @return integer
+     * @return int
      */
     public function getDistributionType()
     {
@@ -141,7 +144,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set distributionConfigurationJson
+     * Set distributionConfigurationJson.
      *
      * @param string $distributionConfigurationJson
      *
@@ -155,7 +158,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set distributionConfiguration
+     * Set distributionConfiguration.
      *
      * @param BaseConfiguration $distributionConfiguration
      *
@@ -167,7 +170,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Get distributionConfigurationJson
+     * Get distributionConfigurationJson.
      *
      * @return string
      */
@@ -177,7 +180,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set distributionOutputJson
+     * Set distributionOutputJson.
      *
      * @param string $distributionOutputJson
      *
@@ -191,9 +194,10 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set distributionOutput
+     * Set distributionOutput.
      *
      * @param BaseOutput $distributionOutput
+     *
      * @return EventLineGeneration
      */
     public function setDistributionOutput(BaseOutput $distributionOutput)
@@ -202,7 +206,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Get distributionOutputJson
+     * Get distributionOutputJson.
      *
      * @return string
      */
@@ -212,7 +216,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set generationResultJson
+     * Set generationResultJson.
      *
      * @param string $generationResultJson
      *
@@ -226,7 +230,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set generationResultJson
+     * Set generationResultJson.
      *
      * @param GenerationResult $generationResult
      *
@@ -238,7 +242,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Get generationResultJson
+     * Get generationResultJson.
      *
      * @return string
      */
@@ -248,7 +252,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set eventLine
+     * Set eventLine.
      *
      * @param EventLine $eventLine
      *
@@ -262,7 +266,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Get eventLine
+     * Get eventLine.
      *
      * @return EventLine
      */
@@ -272,7 +276,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
@@ -306,7 +310,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getApplied()
     {
@@ -314,7 +318,7 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * @param boolean $applied
+     * @param bool $applied
      */
     public function setApplied($applied)
     {

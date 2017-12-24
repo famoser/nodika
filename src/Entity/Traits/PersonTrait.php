@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:46
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Traits;
@@ -40,16 +43,18 @@ trait PersonTrait
 
     /**
      * @param mixed $jobTitle
+     *
      * @return PersonTrait
      */
     public function setJobTitle($jobTitle)
     {
         $this->jobTitle = $jobTitle;
+
         return $this;
     }
 
     /**
-     * Set givenName
+     * Set givenName.
      *
      * @param string $givenName
      *
@@ -63,7 +68,7 @@ trait PersonTrait
     }
 
     /**
-     * Get givenName
+     * Get givenName.
      *
      * @return string
      */
@@ -73,7 +78,7 @@ trait PersonTrait
     }
 
     /**
-     * Set familyName
+     * Set familyName.
      *
      * @param string $familyName
      *
@@ -87,7 +92,7 @@ trait PersonTrait
     }
 
     /**
-     * Get familyName
+     * Get familyName.
      *
      * @return string
      */
@@ -97,38 +102,40 @@ trait PersonTrait
     }
 
     /**
-     * get the person identifier
+     * get the person identifier.
      *
      * @return string
      */
     protected function getPersonIdentifier()
     {
-        return $this->jobTitle . " " . $this->getGivenName() . " " . $this->getFamilyName();
+        return $this->jobTitle.' '.$this->getGivenName().' '.$this->getFamilyName();
     }
 
     /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     public static function getPersonBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(PersonTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(PersonTrait::class)] + $defaultArray;
         $builder->add(
-            "jobTitle",
+            'jobTitle',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("jobTitle") + ["required" => false]
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('jobTitle') + ['required' => false]
         );
         $builder->add(
-            "givenName",
+            'givenName',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("givenName")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('givenName')
         );
         $builder->add(
-            "familyName",
+            'familyName',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("familyName")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('familyName')
         );
+
         return $builder;
     }
 
@@ -148,9 +155,10 @@ trait PersonTrait
     public function getFullName()
     {
         $res = $this->getJobTitle();
-        if ($this->getJobTitle() != "") {
-            $res .= " ";
+        if ('' !== $this->getJobTitle()) {
+            $res .= ' ';
         }
-        return $res . $this->getGivenName() . " " . $this->getFamilyName();
+
+        return $res.$this->getGivenName().' '.$this->getFamilyName();
     }
 }

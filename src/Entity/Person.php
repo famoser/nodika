@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -17,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An Person represents a real live Person
+ * An Person represents a real live Person.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
@@ -29,7 +32,6 @@ class Person extends BaseEntity
     use PersonTrait;
     use AddressTrait;
     use CommunicationTrait;
-
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -75,7 +77,7 @@ class Person extends BaseEntity
     private $events;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -85,7 +87,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Add leaderOf
+     * Add leaderOf.
      *
      * @param Organisation $leaderOf
      *
@@ -99,7 +101,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Remove leaderOf
+     * Remove leaderOf.
      *
      * @param Organisation $leaderOf
      */
@@ -109,7 +111,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Get leaderOf
+     * Get leaderOf.
      *
      * @return \Doctrine\Common\Collections\Collection|Organisation[]
      */
@@ -119,7 +121,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Add member
+     * Add member.
      *
      * @param Member $member
      *
@@ -133,7 +135,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Remove member
+     * Remove member.
      *
      * @param Member $member
      */
@@ -143,7 +145,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Get members
+     * Get members.
      *
      * @return \Doctrine\Common\Collections\Collection|Member[]
      */
@@ -153,7 +155,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Add event
+     * Add event.
      *
      * @param Event $event
      *
@@ -167,7 +169,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Remove event
+     * Remove event.
      *
      * @param Event $event
      */
@@ -177,7 +179,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * Get events
+     * Get events.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -187,7 +189,7 @@ class Person extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
@@ -250,6 +252,6 @@ class Person extends BaseEntity
      */
     public function getHasBeenInvited()
     {
-        return $this->getInvitationDateTime() != null;
+        return null !== $this->getInvitationDateTime();
     }
 }

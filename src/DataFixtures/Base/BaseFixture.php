@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 27/12/2016
- * Time: 12:05
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\DataFixtures\Base;
@@ -14,7 +17,6 @@ use App\Entity\Traits\PersonTrait;
 use App\Entity\Traits\ThingTrait;
 use App\Service\EventGenerationService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
@@ -24,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
     /**
-     * @var EventGenerationService $eventGenerationService
+     * @var EventGenerationService
      */
     private $eventGenerationService;
 
@@ -38,7 +40,7 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
      */
     protected function getFaker()
     {
-        return Factory::create("de_CH");
+        return Factory::create('de_CH');
     }
 
     /* @var ContainerInterface $container */
@@ -58,7 +60,7 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
     }
 
     /**
-     * create an instance with all random values
+     * create an instance with all random values.
      *
      * @return mixed
      */
@@ -121,14 +123,14 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
     }
 
     /**
-     * create random instances
+     * create random instances.
      *
      * @param $count
      * @param ObjectManager $manager
      */
     protected function loadSomeRandoms(ObjectManager $manager, $count = 5)
     {
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $instance = $this->getAllRandomInstance();
             $manager->persist($instance);
         }

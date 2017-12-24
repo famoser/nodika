@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 10/05/2017
- * Time: 14:32
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form\FrontendUser;
@@ -20,11 +23,11 @@ class FrontendUserChangeEmailType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
-        $builderArray = ["translation_domain" => "entity_frontend_user"];
+        $builderArray = ['translation_domain' => 'entity_frontend_user'];
         $builder->add(
-            "email",
+            'email',
             EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('email')
         );
 
         $this->addSubmit($builder, SubmitButtonType::APPLY);
@@ -32,8 +35,8 @@ class FrontendUserChangeEmailType extends BaseAbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => FrontendUser::class,
-        ));
+        ]);
     }
 }

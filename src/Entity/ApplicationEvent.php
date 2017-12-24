@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -13,7 +16,7 @@ use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An ApplicationEvent is an event which saves the actions of the organisation
+ * An ApplicationEvent is an event which saves the actions of the organisation.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\ApplicationEventRepository")
@@ -44,7 +47,7 @@ class ApplicationEvent extends BaseEntity
     private $organisation;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -83,13 +86,13 @@ class ApplicationEvent extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
     public function getFullIdentifier()
     {
-        return $this->getOrganisation() . " " . $this->getApplicationEventType();
+        return $this->getOrganisation().' '.$this->getApplicationEventType();
     }
 
     /**

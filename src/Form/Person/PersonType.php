@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 07/05/2017
- * Time: 10:21
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form\Person;
@@ -20,12 +23,12 @@ class PersonType extends BaseCrudAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->addTrait($builder, PersonTrait::class);
-        $this->addTrait($builder, AddressTrait::class, ["required" => false]);
+        $this->addTrait($builder, AddressTrait::class, ['required' => false]);
         $this->addTrait($builder, CommunicationTrait::class);
         parent::buildForm($builder, $options);
     }
@@ -36,7 +39,7 @@ class PersonType extends BaseCrudAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Person::class
+            'data_class' => Person::class,
         ]);
         parent::configureOptions($resolver);
     }

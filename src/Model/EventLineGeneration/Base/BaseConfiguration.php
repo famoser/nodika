@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 14:12
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventLineGeneration\Base;
@@ -12,15 +15,16 @@ class BaseConfiguration
 {
     /**
      * BaseConfiguration constructor.
+     *
      * @param $data
      */
     public function __construct($data)
     {
-        if ($data != null) {
+        if (null !== $data) {
             $this->startDateTime = new \DateTime($data->startDateTime->date);
             $this->endDateTime = new \DateTime($data->endDateTime->date);
-            $this->lengthInHours = (int)$data->lengthInHours;
-            $this->conflictPufferInHours = (int)$data->conflictPufferInHours;
+            $this->lengthInHours = (int) $data->lengthInHours;
+            $this->conflictPufferInHours = (int) $data->conflictPufferInHours;
             $this->eventLineConfiguration = [];
             foreach ($data->eventLineConfiguration as $item) {
                 $this->eventLineConfiguration[] = new EventLineConfiguration($item);

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 17:25
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventLineGeneration\Nodika;
@@ -15,11 +18,12 @@ class MemberConfiguration extends BaseMemberConfiguration
 {
     /**
      * MemberConfiguration constructor.
+     *
      * @param $data
      */
     public function __construct($data)
     {
-        if ($data != null) {
+        if (null !== $data) {
             $this->points = $data->points;
             $this->endScore = $data->endScore;
             $this->luckyScore = $data->luckyScore;
@@ -29,6 +33,7 @@ class MemberConfiguration extends BaseMemberConfiguration
 
     /**
      * @param Member $member
+     *
      * @return static
      */
     public static function createFromMember(Member $member)
@@ -38,6 +43,7 @@ class MemberConfiguration extends BaseMemberConfiguration
         $instance->points = 1;
         $instance->endScore = 0.0;
         $instance->luckyScore = 0.0;
+
         return $instance;
     }
 

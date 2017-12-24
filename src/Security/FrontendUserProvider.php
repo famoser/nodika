@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:34
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Security;
@@ -18,7 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class FrontendUserProvider extends BaseUserProvider
 {
     /**
-     * @var RegistryInterface $registry
+     * @var RegistryInterface
      */
     private $registry;
 
@@ -35,14 +38,14 @@ class FrontendUserProvider extends BaseUserProvider
      *
      * @param string $username The username
      *
-     * @return UserInterface
-     *
      * @throws UsernameNotFoundException if the user is not found
+     *
+     * @return UserInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->registry->getRepository("App:FrontendUser")->findOneBy(["email" => $username]);
-        if ($user != null) {
+        $user = $this->registry->getRepository('App:FrontendUser')->findOneBy(['email' => $username]);
+        if (null !== $user) {
             return $user;
         }
 
@@ -61,9 +64,9 @@ class FrontendUserProvider extends BaseUserProvider
      *
      * @param UserInterface $user
      *
-     * @return UserInterface
-     *
      * @throws UnsupportedUserException if the account is not supported
+     *
+     * @return UserInterface
      */
     public function refreshUser(UserInterface $user)
     {

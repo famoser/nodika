@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:42
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Traits;
@@ -20,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait UserTrait
 {
     /**
-     * @var string $email
+     * @var string
      *
      * @ORM\Column(type="text", unique=true)
      * @Assert\NotBlank()
@@ -29,45 +32,44 @@ trait UserTrait
     private $email;
 
     /**
-     * @var string $passwordHash
+     * @var string
      *
      * @ORM\Column(type="text")
      */
     private $passwordHash;
 
     /**
-     * @var string $resetHash
+     * @var string
      *
      * @ORM\Column(type="text")
      */
     private $resetHash;
 
     /**
-     * @var boolean $isActive
+     * @var bool
      *
      * @ORM\Column(type="boolean")
      */
     private $isActive;
 
     /**
-     * @var \DateTime $registrationDate
+     * @var \DateTime
      *
      * @ORM\Column(type="datetime")
      */
     private $registrationDate;
 
     /**
-     * @var bool $agbAccepted
+     * @var bool
      *
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $agbAccepted = false;
 
     /**
-     * @var string $plainPassword
+     * @var string
      */
     private $plainPassword;
-
 
     /**
      * @return string
@@ -79,11 +81,13 @@ trait UserTrait
 
     /**
      * @param string $email
+     *
      * @return static
      */
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -97,11 +101,13 @@ trait UserTrait
 
     /**
      * @param string $isActive
+     *
      * @return static
      */
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
+
         return $this;
     }
 
@@ -131,11 +137,13 @@ trait UserTrait
 
     /**
      * @param string $passwordHash
+     *
      * @return static
      */
     public function setPasswordHash($passwordHash)
     {
         $this->passwordHash = $passwordHash;
+
         return $this;
     }
 
@@ -149,11 +157,13 @@ trait UserTrait
 
     /**
      * @param string $resetHash
+     *
      * @return static
      */
     public function setResetHash($resetHash)
     {
         $this->resetHash = $resetHash;
+
         return $this;
     }
 
@@ -175,11 +185,13 @@ trait UserTrait
 
     /**
      * @param string $plainPassword
+     *
      * @return static
      */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
+
         return $this;
     }
 
@@ -195,11 +207,13 @@ trait UserTrait
 
     /**
      * @param string $plainPassword
+     *
      * @return static
      */
     public function setRepeatPlainPassword($plainPassword)
     {
         $this->repeatPlainPassword = $plainPassword;
+
         return $this;
     }
 
@@ -212,7 +226,7 @@ trait UserTrait
     }
 
     /**
-     * hashes the password if valid, and erases credentials
+     * hashes the password if valid, and erases credentials.
      */
     public function persistNewPassword()
     {
@@ -241,13 +255,14 @@ trait UserTrait
         if ($this->isValidPlainPassword()) {
             return password_verify($this->getPlainPassword(), $this->getPasswordHash());
         }
+
         return false;
     }
 
     /**
-     * checks if the user is allowed to login
+     * checks if the user is allowed to login.
      *
-     * @return boolean
+     * @return bool
      */
     public function canLogin()
     {
@@ -259,11 +274,11 @@ trait UserTrait
      */
     public function isValidPlainPassword()
     {
-        return $this->getPlainPassword() != "" && strlen($this->getPlainPassword()) >= 8;
+        return '' !== $this->getPlainPassword() && mb_strlen($this->getPlainPassword()) >= 8;
     }
 
     /**
-     * get the user identifier
+     * get the user identifier.
      *
      * @return string
      */
@@ -273,25 +288,25 @@ trait UserTrait
     }
 
     /**
-     * check if two users are equal
+     * check if two users are equal.
      *
      * @param UserTrait $user
+     *
      * @return bool
      */
     protected function isEqualToUser($user)
     {
         /* @var UserTrait $user */
-        if ($this->getUsername() != $user->getUsername()) {
+        if ($this->getUsername() !== $user->getUsername()) {
             return false;
         }
 
-        if ($this->getPasswordHash() != $user->getPasswordHash()) {
+        if ($this->getPasswordHash() !== $user->getPasswordHash()) {
             return false;
         }
 
         return true;
     }
-
 
     /**
      * Returns the password used to authenticate the user.
@@ -327,7 +342,6 @@ trait UserTrait
     {
         return $this->email;
     }
-
 
     /**
      * Checks whether the user's account has expired.
@@ -391,64 +405,72 @@ trait UserTrait
 
     /**
      * @param FormBuilderInterface $builder
-     * @param array $defaultArray
-     * @param bool $agb
+     * @param array                $defaultArray
+     * @param bool                 $agb
+     *
      * @return FormBuilderInterface
      */
     public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [], $agb = true)
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
         static::getEmailBuilder($builder, $builderArray);
         static::getPlainPasswordBuilder($builder, $builderArray);
         if ($agb) {
             $builder->add(
-                "agbAccepted",
+                'agbAccepted',
                 CheckboxType::class,
-                $builderArray + NamingHelper::propertyToTranslationForBuilder("agbAccepted")
+                $builderArray + NamingHelper::propertyToTranslationForBuilder('agbAccepted')
             );
         }
+
         return $builder;
     }
 
     /**
      * @param FormBuilderInterface $builder
-     * @param array $defaultArray
+     * @param array                $defaultArray
+     *
      * @return FormBuilderInterface
      */
     public static function getLoginBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
         static::getEmailBuilder($builder, $builderArray);
         static::getPlainPasswordBuilder($builder, $builderArray);
+
         return $builder;
     }
 
     /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     public static function getResetUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
         static::getEmailBuilder($builder, $builderArray);
+
         return $builder;
     }
 
     /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     public static function getSetPasswordBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
         static::getPlainPasswordBuilder($builder, $builderArray);
         $builder->add(
-            "repeatPlainPassword",
+            'repeatPlainPassword',
             PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("repeatPlainPassword")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('repeatPlainPassword')
         );
+
         return $builder;
     }
 
@@ -459,9 +481,9 @@ trait UserTrait
     private static function getPlainPasswordBuilder(FormBuilderInterface $builder, $builderArray)
     {
         $builder->add(
-            "plainPassword",
+            'plainPassword',
             PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("plainPassword")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('plainPassword')
         );
     }
 
@@ -472,9 +494,9 @@ trait UserTrait
     private static function getEmailBuilder(FormBuilderInterface $builder, $builderArray)
     {
         $builder->add(
-            "email",
+            'email',
             EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("email")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('email')
         );
     }
 
@@ -490,6 +512,7 @@ trait UserTrait
      * @param $email
      *
      * sets all fields of the user object
+     *
      * @return static
      */
     private static function createUserFromEmail($email)
@@ -500,6 +523,7 @@ trait UserTrait
         $object->setEmail($email);
         $object->setPlainPassword(uniqid());
         $object->persistNewPassword();
+
         return $object;
     }
 }

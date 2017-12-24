@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Form\Event;
 
-/**
+/*
  * Created by PhpStorm.
  * User: famoser
  * Date: 19/05/2017
@@ -29,14 +38,14 @@ class EventType extends BaseCrudAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $fillEventLine = function (FormEvent $event) use ($builder, $options) {
-            $transArray = ["translation_domain" => "event"];
-            $dateArray = ["date_widget" => "single_text", "time_widget" => "single_text"];
+            $transArray = ['translation_domain' => 'event'];
+            $dateArray = ['date_widget' => 'single_text', 'time_widget' => 'single_text'];
             /* @var Organisation $organisation */
-            $organisation = $options["organisation"];
+            $organisation = $options['organisation'];
 
-            $formOptions = $transArray + array(
-                    'choice_label' => 'name'
-                );
+            $formOptions = $transArray + [
+                    'choice_label' => 'name',
+                ];
             $form = $event->getForm();
             $form->add(
                 'member',
@@ -45,13 +54,13 @@ class EventType extends BaseCrudAbstractType
                     'class' => Member::class,
                     'query_builder' => function (MemberRepository $er) use ($organisation) {
                         return $er->getByOrganisationQueryBuilder($organisation);
-                    }]
+                    }, ]
             );
-            $form->add("startDateTime", DateTimeType::class, $transArray + $dateArray);
-            $form->add("endDateTime", DateTimeType::class, $transArray + $dateArray);
+            $form->add('startDateTime', DateTimeType::class, $transArray + $dateArray);
+            $form->add('endDateTime', DateTimeType::class, $transArray + $dateArray);
 
             $form->add(
-                "submit",
+                'submit',
                 SubmitType::class,
                 SubmitButtonType::getTranslationForBuilder($options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION])
             );
@@ -65,10 +74,10 @@ class EventType extends BaseCrudAbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => Event::class,
-            'organisation' => null
-        ));
+            'organisation' => null,
+        ]);
         parent::configureOptions($resolver);
     }
 }

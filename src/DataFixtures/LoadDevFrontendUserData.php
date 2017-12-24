@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 27/12/2016
- * Time: 11:47
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
@@ -16,14 +19,14 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadDevFrontendUserData extends BaseFixture
 {
     /**
-     * Load data fixtures with the passed EntityManager
+     * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
         /* @var Person $person */
-        $person = $this->getReference("person-1");
+        $person = $this->getReference('person-1');
 
         $user = FrontendUser::createFromPerson($person);
         $user->setPlainPassword('asdf1234');
@@ -39,7 +42,7 @@ class LoadDevFrontendUserData extends BaseFixture
     }
 
     /**
-     * create an instance with all random values
+     * create an instance with all random values.
      *
      * @return mixed
      */

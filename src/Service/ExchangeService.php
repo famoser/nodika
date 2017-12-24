@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 12/05/2017
- * Time: 15:57
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service;
@@ -34,10 +37,11 @@ class ExchangeService implements ExchangeServiceInterface
 
     /**
      * ExchangeService constructor.
+     *
      * @param TranslatorInterface $translator
-     * @param FlashBagInterface $flashBag
-     * @param ValidatorInterface $validator
-     * @param RegistryInterface $registry
+     * @param FlashBagInterface   $flashBag
+     * @param ValidatorInterface  $validator
+     * @param RegistryInterface   $registry
      */
     public function __construct(TranslatorInterface $translator, FlashBagInterface $flashBag, ValidatorInterface $validator, RegistryInterface $registry)
     {
@@ -49,6 +53,7 @@ class ExchangeService implements ExchangeServiceInterface
 
     /**
      * @param FormInterface $createForm
+     *
      * @return \string[]
      */
     public function getCsvHeader(FormInterface $createForm)
@@ -58,23 +63,26 @@ class ExchangeService implements ExchangeServiceInterface
             if ($item instanceof Form) {
                 foreach ($item->getIterator() as $name => $element) {
                     $myName = NamingHelper::propertyToTranslation($name);
-                    $myArr[] = $this->translator->trans($myName, [], $element->getConfig()->getOption("translation_domain"));
+                    $myArr[] = $this->translator->trans($myName, [], $element->getConfig()->getOption('translation_domain'));
                 }
             }
         }
+
         return $myArr;
     }
 
     /**
      * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
-     * returns true on success
+     * returns true on success.
      *
-     * @param FormInterface $createForm
-     * @param Closure $createNewEntityClosure
+     * @param FormInterface   $createForm
+     * @param Closure         $createNewEntityClosure
      * @param ImportFileModel $importFileModel
-     * @return bool
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return bool
      */
     public function importCsv(FormInterface $createForm, $createNewEntityClosure, ImportFileModel $importFileModel)
     {
@@ -88,102 +96,110 @@ class ExchangeService implements ExchangeServiceInterface
         }
 
         if (!$importFileModel->uploadFile()) {
-            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_upload_failed", [], "import"));
+            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_upload_failed', [], 'import'));
+
             return false;
         }
 
         $row = 1;
-        if (($handle = fopen($importFileModel->getFullFilePath(), "r")) !== false) {
+        if (false !== ($handle = fopen($importFileModel->getFullFilePath(), 'r'))) {
             $accessorNames = [];
             $em = $this->registry->getEntityManager();
-            while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== false) {
-                if ($row++ == 1) {
+            while (false !== ($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER))) {
+                if (1 === $row++) {
                     //validate header (poorly, but should be enough for the normal user)
-                    if (count($data) != count($header)) {
-                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_wrong_format", [], "import"));
+                    if (count($data) !== count($header)) {
+                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_wrong_format', [], 'import'));
+
                         return false;
                     }
-                    for ($i = 0; $i < count($header); $i++) {
-                        $accessorNames[$i] = "set" . strtoupper(substr($header[$i], 0, 1)) . substr($header[$i], 1);
+                    for ($i = 0; $i < count($header); ++$i) {
+                        $accessorNames[$i] = 'set'.mb_strtoupper(mb_substr($header[$i], 0, 1)).mb_substr($header[$i], 1);
                     }
                     continue;
                 }
                 $newEntry = $createNewEntityClosure();
-                if ($newEntry == false) {
-                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.creation_failure_occurred_at", ["%number%" => $row - 1], "import"));
+                if (false === $newEntry) {
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.creation_failure_occurred_at', ['%number%' => $row - 1], 'import'));
+
                     return false;
                 }
                 //transfer array to key-value
-                for ($i = 0; $i < count($data) && $i < count($header); $i++) {
+                for ($i = 0; $i < count($data) && $i < count($header); ++$i) {
                     $propName = $accessorNames[$i];
                     $newEntry->$propName($data[$i]);
                 }
                 $errors = $this->validator->validate($newEntry);
-                if (count($errors) == 0) {
+                if (0 === count($errors)) {
                     $em->persist($newEntry);
                 } else {
-                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.failure_occurred_at', ['%number%' => $row - 1, '%error%' => $errors[0]], 'import'));
                     fclose($handle);
+
                     return false;
                 }
             }
             $em->flush();
             fclose($handle);
             if ($row - 2 <= 0) {
-                $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_empty", [], "import"));
+                $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_empty', [], 'import'));
             } else {
-                $this->flashBag->set(StaticMessageHelper::FLASH_SUCCESS, $this->translator->trans("success.import_successful", ["%count%" => $row - 2], "import"));
+                $this->flashBag->set(StaticMessageHelper::FLASH_SUCCESS, $this->translator->trans('success.import_successful', ['%count%' => $row - 2], 'import'));
             }
+
             return true;
-        } else {
-            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));
         }
+        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_open_failed', [], 'import'));
 
         return false;
     }
 
     /**
      * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
-     * returns true on success
+     * returns true on success.
      *
-     * @param Closure $entitySetClosure
-     * @param Closure $validateHeaderClosure
+     * @param Closure         $entitySetClosure
+     * @param Closure         $validateHeaderClosure
      * @param ImportFileModel $importFileModel
-     * @return bool
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return bool
      */
     public function importCsvAdvanced($entitySetClosure, $validateHeaderClosure, ImportFileModel $importFileModel)
     {
         if (!$importFileModel->uploadFile()) {
-            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_upload_failed", [], "import"));
+            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_upload_failed', [], 'import'));
+
             return false;
         }
 
         $row = 1;
-        if (($handle = fopen($importFileModel->getFullFilePath(), "r")) !== false) {
+        if (false !== ($handle = fopen($importFileModel->getFullFilePath(), 'r'))) {
             $em = $this->registry->getEntityManager();
-            while (($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER)) !== false) {
-                if ($row++ == 1) {
+            while (false !== ($data = fgetcsv($handle, null, CsvFileHelper::DELIMITER))) {
+                if (1 === $row++) {
                     //validate header skipped
                     if (!$validateHeaderClosure($data)) {
-                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_wrong_format", [], "import"));
+                        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_wrong_format', [], 'import'));
+
                         return false;
-                    } else {
-                        continue;
                     }
+                    continue;
                 }
                 $newEntry = $entitySetClosure($data);
-                if ($newEntry == false) {
-                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.creation_failure_occurred_at", ["%number%" => $row - 1], "import"));
+                if (false === $newEntry) {
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.creation_failure_occurred_at', ['%number%' => $row - 1], 'import'));
+
                     return false;
                 }
                 $errors = $this->validator->validate($newEntry);
-                if (count($errors) == 0 && $newEntry != null) {
+                if (0 === count($errors) && null !== $newEntry) {
                     $em->persist($newEntry);
                 } else {
                     fclose($handle);
-                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.failure_occurred_at", ["%number%" => $row - 1, "%error%" => $errors[0]], "import"));
+                    $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.failure_occurred_at', ['%number%' => $row - 1, '%error%' => $errors[0]], 'import'));
 
                     return false;
                 }
@@ -191,14 +207,14 @@ class ExchangeService implements ExchangeServiceInterface
             $em->flush();
             fclose($handle);
             if ($row - 2 <= 0) {
-                $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_empty", [], "import"));
+                $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_empty', [], 'import'));
             } else {
-                $this->flashBag->set(StaticMessageHelper::FLASH_SUCCESS, $this->translator->trans("success.import_successful", ["%count%" => $row - 2], "import"));
+                $this->flashBag->set(StaticMessageHelper::FLASH_SUCCESS, $this->translator->trans('success.import_successful', ['%count%' => $row - 2], 'import'));
             }
+
             return true;
-        } else {
-            $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans("error.file_open_failed", [], "import"));
         }
+        $this->flashBag->set(StaticMessageHelper::FLASH_ERROR, $this->translator->trans('error.file_open_failed', [], 'import'));
 
         return false;
     }

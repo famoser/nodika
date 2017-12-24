@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -18,7 +21,7 @@ use App\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An Invoice contains information about what a user has bought and if he payed
+ * An Invoice contains information about what a user has bought and if he payed.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\InvoiceRepository")
@@ -63,7 +66,7 @@ class Invoice extends BaseEntity
     private $organisation;
 
     /**
-     * Set invoiceDateTime
+     * Set invoiceDateTime.
      *
      * @param \DateTime $invoiceDateTime
      *
@@ -77,7 +80,7 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get invoiceDateTime
+     * Get invoiceDateTime.
      *
      * @return \DateTime
      */
@@ -87,7 +90,7 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Set paymentDateTime
+     * Set paymentDateTime.
      *
      * @param \DateTime $paymentDateTime
      *
@@ -101,7 +104,7 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get paymentDateTime
+     * Get paymentDateTime.
      *
      * @return \DateTime
      */
@@ -111,9 +114,9 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Set paymentStatus
+     * Set paymentStatus.
      *
-     * @param integer $paymentStatus
+     * @param int $paymentStatus
      *
      * @return Invoice
      */
@@ -125,9 +128,9 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get paymentStatus
+     * Get paymentStatus.
      *
-     * @return integer
+     * @return int
      */
     public function getPaymentStatus()
     {
@@ -135,9 +138,9 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Set invoiceType
+     * Set invoiceType.
      *
-     * @param integer $invoiceType
+     * @param int $invoiceType
      *
      * @return Invoice
      */
@@ -149,9 +152,9 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get invoiceType
+     * Get invoiceType.
      *
-     * @return integer
+     * @return int
      */
     public function getInvoiceType()
     {
@@ -159,7 +162,7 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Set invoiceDataJson
+     * Set invoiceDataJson.
      *
      * @param string $invoiceDataJson
      *
@@ -173,7 +176,7 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get invoiceDataJson
+     * Get invoiceDataJson.
      *
      * @return string
      */
@@ -183,7 +186,7 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param Organisation $organisation
      *
@@ -197,7 +200,7 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return Organisation
      */
@@ -207,12 +210,12 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
     public function getFullIdentifier()
     {
-        return $this->getInvoiceDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . " - " . $this->getName();
+        return $this->getInvoiceDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT).' - '.$this->getName();
     }
 }

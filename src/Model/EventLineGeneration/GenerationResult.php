@@ -1,10 +1,12 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 14:18
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventLineGeneration;
@@ -15,7 +17,7 @@ class GenerationResult
     {
         $this->events = [];
         $this->generationDateTime = new \DateTime();
-        if ($data != null) {
+        if (null !== $data) {
             $this->generationDateTime = new \DateTime($data->generationDateTime->date);
             if (is_array($data->events)) {
                 foreach ($data->events as $event) {

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -13,7 +16,7 @@ use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A Member is part of the organisation, and is responsible for the events assigned to it
+ * A Member is part of the organisation, and is responsible for the events assigned to it.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\SettingRepository")
@@ -41,7 +44,7 @@ class Setting extends BaseEntity
     private $frontendUser;
 
     /**
-     * Set key
+     * Set key.
      *
      * @param string $key
      *
@@ -55,7 +58,7 @@ class Setting extends BaseEntity
     }
 
     /**
-     * Get key
+     * Get key.
      *
      * @return string
      */
@@ -65,7 +68,7 @@ class Setting extends BaseEntity
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $content
      *
@@ -79,7 +82,7 @@ class Setting extends BaseEntity
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -89,7 +92,7 @@ class Setting extends BaseEntity
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param FrontendUser $frontendUser
      *
@@ -103,7 +106,7 @@ class Setting extends BaseEntity
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return FrontendUser
      */
@@ -113,7 +116,7 @@ class Setting extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */

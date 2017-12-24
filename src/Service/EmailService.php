@@ -1,23 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 07/12/2017
- * Time: 09:33
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service;
 
 use App\Entity\Email;
-
-
 use App\Enum\EmailType;
-
 use App\Helper\HashHelper;
 use App\Service\Interfaces\EmailServiceInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-
-
 use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
@@ -43,9 +41,10 @@ class EmailService implements EmailServiceInterface
 
     /**
      * EmailService constructor.
-     * @param \Swift_Mailer $mailer
+     *
+     * @param \Swift_Mailer     $mailer
      * @param RegistryInterface $registry
-     * @param Environment $twig
+     * @param Environment       $twig
      * @param $mailerEmail
      */
     public function __construct(\Swift_Mailer $mailer, RegistryInterface $registry, Environment $twig, $mailerEmail)
@@ -58,6 +57,7 @@ class EmailService implements EmailServiceInterface
 
     /**
      * @param Email $email
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -77,36 +77,38 @@ class EmailService implements EmailServiceInterface
             ->setTo($email->getReceiver());
 
         $body = $email->getBody();
-        if ($email->getActionLink() != null) {
-            $body .= "\n\n" . $email->getActionText() . ": " . $email->getActionLink();
+        if (null !== $email->getActionLink()) {
+            $body .= "\n\n".$email->getActionText().': '.$email->getActionLink();
         }
         $message->setBody($body, 'text/plain');
 
-        if ($email->getEmailType() != EmailType::PLAIN_EMAIL) {
+        if (EmailType::PLAIN_EMAIL !== $email->getEmailType()) {
             $message->addPart(
                 $this->twig->render(
-                    "email/email.html.twig",
-                    ["email" => $email]
+                    'email/email.html.twig',
+                    ['email' => $email]
                 ),
                 'text/html'
             );
         }
 
-        if ($email->getCarbonCopy() != null) {
+        if (null !== $email->getCarbonCopy()) {
             $message->addCc($email->getCarbonCopy());
         }
         $this->mailer->send($message);
     }
 
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
+     * @param string      $receiver
+     * @param string      $subject
+     * @param string      $body
      * @param string|null $carbonCopy
-     * @return boolean
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     *
+     * @return bool
      */
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = null)
     {
@@ -116,6 +118,7 @@ class EmailService implements EmailServiceInterface
         $email->setBody($body);
         $email->setCarbonCopy($carbonCopy);
         $email->setEmailType(EmailType::TEXT_EMAIL);
+
         return $this->processEmail($email);
     }
 
@@ -124,12 +127,14 @@ class EmailService implements EmailServiceInterface
      * @param string $subject
      * @param string $body
      * @param $actionText
-     * @param string $actionLink
+     * @param string      $actionLink
      * @param string|null $carbonCopy
-     * @return boolean
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     *
+     * @return bool
      */
     public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = null)
     {
@@ -141,18 +146,21 @@ class EmailService implements EmailServiceInterface
         $email->setActionLink($actionLink);
         $email->setCarbonCopy($carbonCopy);
         $email->setEmailType(EmailType::ACTION_EMAIL);
+
         return $this->processEmail($email);
     }
 
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
+     * @param string      $receiver
+     * @param string      $subject
+     * @param string      $body
      * @param string|null $carbonCopy
-     * @return boolean
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     *
+     * @return bool
      */
     public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = null)
     {
@@ -162,6 +170,7 @@ class EmailService implements EmailServiceInterface
         $email->setBody($body);
         $email->setCarbonCopy($carbonCopy);
         $email->setEmailType(EmailType::PLAIN_EMAIL);
+
         return $this->processEmail($email);
     }
 }

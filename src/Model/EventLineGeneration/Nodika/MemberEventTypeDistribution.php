@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 12/09/2017
- * Time: 21:55
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventLineGeneration\Nodika;
@@ -12,11 +15,12 @@ class MemberEventTypeDistribution
 {
     /**
      * MemberEventTypeDistribution constructor.
+     *
      * @param $data
      */
     public function __construct($data)
     {
-        if ($data != null) {
+        if (null !== $data) {
             $this->newMemberConfiguration = new MemberConfiguration($data->newMemberConfiguration);
             $this->eventTypeAssignment = new EventTypeConfiguration($data->eventTypeAssignment);
         }

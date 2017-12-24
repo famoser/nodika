@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Form\OrganisationSetting;
 
-/**
+/*
  * Created by PhpStorm.
  * User: famoser
  * Date: 19/05/2017
@@ -21,29 +30,29 @@ class OrganisationSettingType extends BaseCrudAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builderArray = ["translation_domain" => "entity_organisation_setting"];
+        $builderArray = ['translation_domain' => 'entity_organisation_setting'];
         $builder->add(
-            "canConfirmEventBeforeDays",
+            'canConfirmEventBeforeDays',
             IntegerType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("canConfirmEventBeforeDays")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('canConfirmEventBeforeDays')
         );
 
         $builder->add(
-            "mustConfirmEventBeforeDays",
+            'mustConfirmEventBeforeDays',
             IntegerType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("mustConfirmEventBeforeDays")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('mustConfirmEventBeforeDays')
         );
 
         $builder->add(
-            "sendConfirmEventEmailDays",
+            'sendConfirmEventEmailDays',
             IntegerType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("sendConfirmEventEmailDays")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('sendConfirmEventEmailDays')
         );
 
         $builder->add(
-            "tradeEventDays",
+            'tradeEventDays',
             IntegerType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("tradeEventDays")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('tradeEventDays')
         );
 
         $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
@@ -51,9 +60,9 @@ class OrganisationSettingType extends BaseCrudAbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => OrganisationSetting::class
-        ));
+        $resolver->setDefaults([
+            'data_class' => OrganisationSetting::class,
+        ]);
         parent::configureOptions($resolver);
     }
 }

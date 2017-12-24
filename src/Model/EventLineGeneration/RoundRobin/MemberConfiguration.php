@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 17:25
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventLineGeneration\RoundRobin;
@@ -15,11 +18,12 @@ class MemberConfiguration extends BaseMemberConfiguration
 {
     /**
      * MemberConfiguration constructor.
+     *
      * @param $data
      */
     public function __construct($data)
     {
-        if ($data != null) {
+        if (null !== $data) {
             $this->order = $data->order;
         }
         parent::__construct($data);
@@ -28,6 +32,7 @@ class MemberConfiguration extends BaseMemberConfiguration
     /**
      * @param Member $member
      * @param $order
+     *
      * @return static
      */
     public static function createFromMember(Member $member, $order)
@@ -35,6 +40,7 @@ class MemberConfiguration extends BaseMemberConfiguration
         $instance = new static(null);
         $instance->initializeFromMember($member);
         $instance->order = $order;
+
         return $instance;
     }
 
