@@ -1,12 +1,12 @@
-require('../sass/app.sass');
-var $ = require('jquery');
+require("../sass/app.sass");
+var $ = require("jquery");
 
 //open navigation menu
 var openMenu = function () {
     var menu = $(".menu-content");
-    menu.toggleClass('open');
-    $(".menu-toggle").toggleClass('open');
-    $(".nav-icon").toggleClass('open');
+    menu.toggleClass("open");
+    $(".menu-toggle").toggleClass("open");
+    $(".nav-icon").toggleClass("open");
 
     //close help
     if ($(".help-content").hasClass("open") && menu.hasClass("open")) {
@@ -16,8 +16,8 @@ var openMenu = function () {
 
 //open help menu
 var openHelp = function () {
-    $(".help-content").toggleClass('open');
-    $(".help-toggle").toggleClass('open');
+    $(".help-content").toggleClass("open");
+    $(".help-toggle").toggleClass("open");
 };
 
 //prevent double submit & give user instant feedback
@@ -30,7 +30,7 @@ var disableFormButton = function () {
 };
 
 $(document).ready(function () {
-    $('#menu-toggle').on("click", openMenu);
-    $('#help-toggle').on("click", openHelp);
+    $("#menu-toggle").on("click", openMenu);
+    $("#help-toggle").on("click", openHelp);
     $("form").on("submit", disableFormButton);
 });

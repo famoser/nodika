@@ -27,3 +27,4 @@ exclude_patterns:
   - "tests"
   - "var"
   - "src/Migrations"
+  - "assets/sass/nodika-icons"
