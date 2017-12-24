@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Repository;
 
 use App\Entity\Organisation;
@@ -7,19 +16,21 @@ use App\Entity\OrganisationSetting;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * OrganisationSettingRepository
+ * OrganisationSettingRepository.
  */
 class OrganisationSettingRepository extends EntityRepository
 {
     /**
      * @param Organisation $organisation
-     * @return OrganisationSetting
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return OrganisationSetting
      */
     public function getByOrganisation(Organisation $organisation)
     {
-        $result = $this->findOneBy(["organisation" => $organisation->getId()]);
+        $result = $this->findOneBy(['organisation' => $organisation->getId()]);
         if ($result instanceof OrganisationSetting) {
             return $result;
         }
@@ -28,6 +39,7 @@ class OrganisationSettingRepository extends EntityRepository
         $result->setReceiverOfRemainders($organisation->getLeaders()->count() > 0 ? $organisation->getLeaders()->first() : null);
         $this->getEntityManager()->persist($result);
         $this->getEntityManager()->flush();
+
         return $result;
     }
 }

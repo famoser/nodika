@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -16,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An Event is a time unit which is assigned to a member or a person
+ * An Event is a time unit which is assigned to a member or a person.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -92,7 +95,7 @@ class Event extends BaseEntity
     private $lastRemainderEmailSent;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -100,7 +103,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Set startDateTime
+     * Set startDateTime.
      *
      * @param \DateTime $startDateTime
      *
@@ -114,7 +117,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Get startDateTime
+     * Get startDateTime.
      *
      * @return \DateTime
      */
@@ -124,7 +127,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Set endDateTime
+     * Set endDateTime.
      *
      * @param \DateTime $endDateTime
      *
@@ -138,7 +141,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Get endDateTime
+     * Get endDateTime.
      *
      * @return \DateTime
      */
@@ -148,9 +151,9 @@ class Event extends BaseEntity
     }
 
     /**
-     * Set tradeTag
+     * Set tradeTag.
      *
-     * @param integer $tradeTag
+     * @param int $tradeTag
      *
      * @return Event
      */
@@ -162,9 +165,9 @@ class Event extends BaseEntity
     }
 
     /**
-     * Get tradeTag
+     * Get tradeTag.
      *
-     * @return integer
+     * @return int
      */
     public function getTradeTag()
     {
@@ -172,7 +175,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Set member
+     * Set member.
      *
      * @param Member $member
      *
@@ -186,7 +189,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Get member
+     * Get member.
      *
      * @return Member
      */
@@ -196,7 +199,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Set person
+     * Set person.
      *
      * @param Person $person
      *
@@ -210,7 +213,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Get person
+     * Get person.
      *
      * @return Person
      */
@@ -220,7 +223,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Set eventLine
+     * Set eventLine.
      *
      * @param EventLine $eventLine
      *
@@ -234,7 +237,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Get eventLine
+     * Get eventLine.
      *
      * @return EventLine
      */
@@ -244,7 +247,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Add eventPast
+     * Add eventPast.
      *
      * @param EventPast $eventPast
      *
@@ -258,7 +261,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Remove eventPast
+     * Remove eventPast.
      *
      * @param EventPast $eventPast
      */
@@ -268,7 +271,7 @@ class Event extends BaseEntity
     }
 
     /**
-     * Get eventPast
+     * Get eventPast.
      *
      * @return \Doctrine\Common\Collections\Collection|EventPast[]
      */
@@ -278,17 +281,17 @@ class Event extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
     public function getFullIdentifier()
     {
-        return $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . " - " . $this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        return $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT).' - '.$this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
     }
 
     /**
-     * creates a json representation of the object
+     * creates a json representation of the object.
      *
      * @return string
      */
@@ -298,10 +301,11 @@ class Event extends BaseEntity
         $pseudoObject->id = $this->getId();
         $pseudoObject->startDateTime = $this->getStartDateTime();
         $pseudoObject->endDateTime = $this->getEndDateTime();
-        $pseudoObject->eventLineId = $this->getEventLine() != null ? $this->getEventLine()->getId() : null;
-        $pseudoObject->memberId = $this->getMember() != null ? $this->getMember()->getId() : null;
-        $pseudoObject->personId = $this->getPerson() != null ? $this->getPerson()->getId() : null;
+        $pseudoObject->eventLineId = null !== $this->getEventLine() ? $this->getEventLine()->getId() : null;
+        $pseudoObject->memberId = null !== $this->getMember() ? $this->getMember()->getId() : null;
+        $pseudoObject->personId = null !== $this->getPerson() ? $this->getPerson()->getId() : null;
         $pseudoObject->tradeTag = $this->getTradeTag();
+
         return json_encode($pseudoObject);
     }
 

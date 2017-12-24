@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -15,7 +18,7 @@ use App\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An EventPast saves the state of the event when action occurred
+ * An EventPast saves the state of the event when action occurred.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EventPastRepository")
@@ -47,14 +50,14 @@ class EventPast extends BaseEntity
     private $eventChangeType = EventChangeType::MANUALLY_CREATED_BY_ADMIN;
 
     /**
-     * the event before the change occurred
+     * the event before the change occurred.
      *
      * @ORM\Column(type="text")
      */
     private $beforeEventJson;
 
     /**
-     * the event after the change occurred
+     * the event after the change occurred.
      *
      * @ORM\Column(type="text")
      */
@@ -164,7 +167,7 @@ class EventPast extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */

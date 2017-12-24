@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 10/05/2017
- * Time: 13:57
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form\Organisation;
@@ -20,7 +23,7 @@ class OrganisationType extends BaseCrudAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addTrait($builder, ThingTrait::class, ["translation_domain" => "entity_organisation", "label" => "entity.name"]);
+        $this->addTrait($builder, ThingTrait::class, ['translation_domain' => 'entity_organisation', 'label' => 'entity.name']);
         $this->addTrait($builder, AddressTrait::class);
         $this->addTrait($builder, CommunicationTrait::class);
         parent::buildForm($builder, $options);

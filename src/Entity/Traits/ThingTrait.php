@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 30/04/2017
- * Time: 10:18
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Traits;
@@ -20,7 +23,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ThingTrait
 {
-
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
@@ -42,11 +44,13 @@ trait ThingTrait
 
     /**
      * @param string $name
+     *
      * @return static
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -60,16 +64,18 @@ trait ThingTrait
 
     /**
      * @param string $description
+     *
      * @return static
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * returns the name of this thing
+     * returns the name of this thing.
      *
      * @return string
      */
@@ -81,21 +87,23 @@ trait ThingTrait
     /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     public static function getThingBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(ThingTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(ThingTrait::class)] + $defaultArray;
         $builder->add(
-            "name",
+            'name',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("name")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('name')
         );
         $builder->add(
-            "description",
+            'description',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("description") + ["required" => false]
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('description') + ['required' => false]
         );
+
         return $builder;
     }
 

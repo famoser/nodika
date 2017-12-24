@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 19/05/2017
- * Time: 19:31
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Security\Voter;
@@ -17,14 +20,14 @@ class EventVoter extends EventLineVoter
 {
     /**
      * @param string $attribute An attribute
-     * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
+     * @param mixed  $subject   The subject to secure, e.g. an object the user wants to access or any other PHP type
      *
      * @return bool True if the attribute and subject are supported, false otherwise
      */
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::REMOVE))) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::REMOVE], true)) {
             return false;
         }
 
@@ -37,8 +40,8 @@ class EventVoter extends EventLineVoter
     }
 
     /**
-     * @param string $attribute
-     * @param Event $subject
+     * @param string         $attribute
+     * @param Event          $subject
      * @param TokenInterface $token
      *
      * @return bool

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:46
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Traits;
@@ -50,11 +53,10 @@ trait AddressTrait
      * @ORM\Column(type="text", nullable=true)
      * @Assert\Country()
      */
-    private $country = "CH";
-
+    private $country = 'CH';
 
     /**
-     * Set street
+     * Set street.
      *
      * @param string $street
      *
@@ -68,7 +70,7 @@ trait AddressTrait
     }
 
     /**
-     * Get street
+     * Get street.
      *
      * @return string
      */
@@ -78,7 +80,7 @@ trait AddressTrait
     }
 
     /**
-     * Set addressLine
+     * Set addressLine.
      *
      * @param string $addressLine
      *
@@ -92,7 +94,7 @@ trait AddressTrait
     }
 
     /**
-     * Get addressLine
+     * Get addressLine.
      *
      * @return string
      */
@@ -102,7 +104,7 @@ trait AddressTrait
     }
 
     /**
-     * Set streetNr
+     * Set streetNr.
      *
      * @param string $streetNr
      *
@@ -116,7 +118,7 @@ trait AddressTrait
     }
 
     /**
-     * Get streetNr
+     * Get streetNr.
      *
      * @return string
      */
@@ -126,7 +128,7 @@ trait AddressTrait
     }
 
     /**
-     * Set postalCode
+     * Set postalCode.
      *
      * @param string $postalCode
      *
@@ -140,7 +142,7 @@ trait AddressTrait
     }
 
     /**
-     * Get postalCode
+     * Get postalCode.
      *
      * @return string
      */
@@ -150,7 +152,7 @@ trait AddressTrait
     }
 
     /**
-     * Set addressRegion
+     * Set addressRegion.
      *
      * @param string $city
      *
@@ -164,7 +166,7 @@ trait AddressTrait
     }
 
     /**
-     * Get addressRegion
+     * Get addressRegion.
      *
      * @return string
      */
@@ -183,16 +185,18 @@ trait AddressTrait
 
     /**
      * @param string $country
+     *
      * @return static
      */
     public function setCountry($country)
     {
         $this->country = $country;
+
         return $this;
     }
 
     /**
-     * returns all non-empty address lines
+     * returns all non-empty address lines.
      *
      * @return string[]
      */
@@ -200,76 +204,79 @@ trait AddressTrait
     {
         $res = [];
         $lineOne = $this->getStreet();
-        if ($lineOne != "" && $this->getStreetNr() != "") {
-            $lineOne .= " " . $this->getStreetNr();
+        if ('' !== $lineOne && '' !== $this->getStreetNr()) {
+            $lineOne .= ' '.$this->getStreetNr();
         }
-        if ($lineOne != "") {
+        if ('' !== $lineOne) {
             $res[] = $lineOne;
         }
-        if ($this->getAddressLine() != "") {
+        if ('' !== $this->getAddressLine()) {
             $res[] = $this->getAddressLine();
         }
         $line3 = $this->getPostalCode();
-        if ($line3 != "" && $this->getCity() != "") {
-            $line3 .= " " . $this->getCity();
+        if ('' !== $line3 && '' !== $this->getCity()) {
+            $line3 .= ' '.$this->getCity();
         }
-        if ($line3 != "") {
+        if ('' !== $line3) {
             $res[] = $line3;
         }
-        if ($this->getCountry() != "") {
+        if ('' !== $this->getCountry()) {
             $res[] = $this->getCountry();
         }
+
         return $res;
     }
 
     /**
-     * gets the street identifier
+     * gets the street identifier.
      *
      * @return string
      */
     protected function getAddressIdentifier()
     {
-        return implode(", ", $this->getAddressLines());
+        return implode(', ', $this->getAddressLines());
     }
 
     /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $builderArray = ["translation_domain" => NamingHelper::traitToTranslationDomain(AddressTrait::class)] + $defaultArray;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(AddressTrait::class)] + $defaultArray;
         $builder->add(
-            "street",
+            'street',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("street")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('street')
         );
         $builder->add(
-            "streetNr",
+            'streetNr',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("streetNr")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('streetNr')
         );
         $builder->add(
-            "addressLine",
+            'addressLine',
             TextType::class,
-            ["required" => false] + $builderArray + NamingHelper::propertyToTranslationForBuilder("addressLine")
+            ['required' => false] + $builderArray + NamingHelper::propertyToTranslationForBuilder('addressLine')
         );
         $builder->add(
-            "postalCode",
+            'postalCode',
             NumberType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("postalCode")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('postalCode')
         );
         $builder->add(
-            "city",
+            'city',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("city")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('city')
         );
         $builder->add(
-            "country",
+            'country',
             TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("country")
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('country')
         );
+
         return $builder;
     }
 

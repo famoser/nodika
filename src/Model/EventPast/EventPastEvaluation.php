@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 10/09/2017
- * Time: 10:49
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventPast;
@@ -16,9 +19,10 @@ class EventPastEvaluation
 {
     /**
      * EventPastEvaluation constructor.
+     *
      * @param \DateTime $changedAtDateTime
-     * @param Person $changedByPerson
-     * @param int $eventChangeType
+     * @param Person    $changedByPerson
+     * @param int       $eventChangeType
      */
     public function __construct(\DateTime $changedAtDateTime, Person $changedByPerson, $eventChangeType)
     {
@@ -32,7 +36,7 @@ class EventPastEvaluation
     private $eventChangeType;
 
     /**
-     * call this function to show that the assigned Member has changed
+     * call this function to show that the assigned Member has changed.
      *
      * @param Member $oldMember
      * @param Member $newMember
@@ -49,7 +53,8 @@ class EventPastEvaluation
     private $newMember;
 
     /**
-     * call this function to show that the assigned Person has changed
+     * call this function to show that the assigned Person has changed.
+     *
      * @param Person $oldPerson
      * @param Person $newPerson
      */
@@ -65,7 +70,8 @@ class EventPastEvaluation
     private $newPerson;
 
     /**
-     * call this function to show that the startDateTime has changed
+     * call this function to show that the startDateTime has changed.
+     *
      * @param \DateTime $oldStartDateTime
      * @param \DateTime $newStartDateTime
      */
@@ -81,7 +87,8 @@ class EventPastEvaluation
     private $newStartDateTime;
 
     /**
-     * call this function to show that the endDateTime has changed
+     * call this function to show that the endDateTime has changed.
+     *
      * @param \DateTime $oldEndDateTime
      * @param \DateTime $newEndDateTime
      */

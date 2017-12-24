@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -17,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * A Member is part of the organisation, and is responsible for the events assigned to it
+ * A Member is part of the organisation, and is responsible for the events assigned to it.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\MemberRepository")
@@ -64,7 +67,7 @@ class Member extends BaseEntity
     private $events;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -73,7 +76,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Add person
+     * Add person.
      *
      * @param Person $person
      *
@@ -87,7 +90,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Remove person
+     * Remove person.
      *
      * @param Person $person
      */
@@ -97,7 +100,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Get persons
+     * Get persons.
      *
      * @return \Doctrine\Common\Collections\Collection|Person[]
      */
@@ -107,7 +110,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Set organisation
+     * Set organisation.
      *
      * @param Organisation $organisation
      *
@@ -121,7 +124,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Get organisation
+     * Get organisation.
      *
      * @return Organisation
      */
@@ -131,7 +134,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Add event
+     * Add event.
      *
      * @param Event $event
      *
@@ -145,7 +148,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Remove event
+     * Remove event.
      *
      * @param Event $event
      */
@@ -155,7 +158,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * Get events
+     * Get events.
      *
      * @return \Doctrine\Common\Collections\Collection|Event[]
      */
@@ -165,7 +168,7 @@ class Member extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
@@ -179,7 +182,7 @@ class Member extends BaseEntity
      */
     public function getHasBeenInvited()
     {
-        return $this->getInvitationDateTime() != null;
+        return null !== $this->getInvitationDateTime();
     }
 
     /**

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/05/2017
- * Time: 15:27
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller\Administration\Organisation\Member;
@@ -29,9 +32,11 @@ class PersonController extends BaseController
 {
     /**
      * @Route("/new", name="administration_organisation_member_person_new")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param Member $member
+     * @param Member       $member
+     *
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation, Member $member)
@@ -48,7 +53,7 @@ class PersonController extends BaseController
                 /* @var Form $form */
                 /* @var Member $entity */
                 //return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $entity->getId()]);
-                return $this->redirectToRoute("administration_organisation_member_person_new", ["organisation" => $organisation->getId(), "member" => $member->getId()]);
+                return $this->redirectToRoute('administration_organisation_member_person_new', ['organisation' => $organisation->getId(), 'member' => $member->getId()]);
             }
         );
 
@@ -56,22 +61,25 @@ class PersonController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
-        $arr["new_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['member'] = $member;
+        $arr['new_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/member/person/new.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
+            $this->generateUrl('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $member->getId()])
         );
     }
 
     /**
      * @Route("/{person}/edit", name="administration_organisation_member_person_edit")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param Member $member
-     * @param Person $person
+     * @param Member       $member
+     * @param Person       $person
+     *
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, Member $member, Person $person)
@@ -85,7 +93,7 @@ class PersonController extends BaseController
             function ($form, $entity) use ($organisation, $member) {
                 /* @var Member $entity */
                 /* @var Form $form */
-                return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()]);
+                return $this->redirectToRoute('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $member->getId()]);
             }
         );
 
@@ -93,23 +101,26 @@ class PersonController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
-        $arr["person"] = $person;
-        $arr["edit_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['member'] = $member;
+        $arr['person'] = $person;
+        $arr['edit_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/member/person/edit.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
+            $this->generateUrl('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $member->getId()])
         );
     }
 
     /**
      * @Route("/{person}/remove", name="administration_organisation_member_person_remove")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param Member $member
-     * @param Person $person
+     * @param Member       $member
+     * @param Person       $person
+     *
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, Member $member, Person $person)
@@ -123,7 +134,7 @@ class PersonController extends BaseController
             function ($form, $entity) use ($organisation, $member) {
                 /* @var Member $entity */
                 /* @var Form $form */
-                return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()]);
+                return $this->redirectToRoute('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $member->getId()]);
             }
         );
 
@@ -131,14 +142,15 @@ class PersonController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
-        $arr["person"] = $person;
-        $arr["remove_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['member'] = $member;
+        $arr['person'] = $person;
+        $arr['remove_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/member/person/remove.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_member_person_edit", ["organisation" => $organisation->getId(), "member" => $member->getId(), "person" => $person->getId()])
+            $this->generateUrl('administration_organisation_member_person_edit', ['organisation' => $organisation->getId(), 'member' => $member->getId(), 'person' => $person->getId()])
         );
     }
 }

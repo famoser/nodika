@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13/05/2017
- * Time: 13:41
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\Form;
@@ -17,13 +20,13 @@ class ImportFileModel
 
     /**
      * ImportFileModel constructor.
+     *
      * @param string $uploadFolderPath
      */
     public function __construct($uploadFolderPath)
     {
         $this->uploadFolderPath = $uploadFolderPath;
     }
-
 
     /* @var UploadedFile $file */
     private $file;
@@ -53,7 +56,7 @@ class ImportFileModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsCorrectFormat()
     {
@@ -61,7 +64,7 @@ class ImportFileModel
     }
 
     /**
-     * @param boolean $isCorrectFormat
+     * @param bool $isCorrectFormat
      */
     public function setIsCorrectFormat($isCorrectFormat)
     {
@@ -69,7 +72,7 @@ class ImportFileModel
     }
 
     /**
-     * Manages the copying of the file to the relevant place on the server
+     * Manages the copying of the file to the relevant place on the server.
      */
     public function uploadFile()
     {
@@ -78,9 +81,9 @@ class ImportFileModel
             return false;
         }
 
-        $path = $_SERVER["DOCUMENT_ROOT"] . $this->uploadFolderPath;
+        $path = $_SERVER['DOCUMENT_ROOT'].$this->uploadFolderPath;
         // move takes the target directory and target filename as params
-        $newFileName = uniqid() . "." . $this->getFile()->guessExtension();
+        $newFileName = uniqid().'.'.$this->getFile()->guessExtension();
         $this->getFile()->move(
             $path,
             $newFileName
@@ -100,6 +103,6 @@ class ImportFileModel
      */
     public function getFullFilePath()
     {
-        return $_SERVER["DOCUMENT_ROOT"] . $this->uploadFolderPath . "/" . $this->fileSrc;
+        return $_SERVER['DOCUMENT_ROOT'].$this->uploadFolderPath.'/'.$this->fileSrc;
     }
 }

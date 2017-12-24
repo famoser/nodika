@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 22/09/2017
- * Time: 08:50
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -21,31 +24,35 @@ class HelpController extends BaseController
 {
     /**
      * @Route("/users", name="help_users")
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function usersAction(Request $request)
     {
         //todo
         return $this->renderWithBackUrl(
-            "event/assign.html.twig",
+            'event/assign.html.twig',
             [],
-            $this->generateUrl("dashboard_index")
+            $this->generateUrl('dashboard_index')
         );
     }
 
     /**
      * @Route("/admins", name="help_admins")
+     *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function adminsAction(Request $request)
     {
         //todo
         return $this->renderWithBackUrl(
-            "event/assign.html.twig",
+            'event/assign.html.twig',
             [],
-            $this->generateUrl("dashboard_index")
+            $this->generateUrl('dashboard_index')
         );
     }
 }

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/05/2017
- * Time: 09:37
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Security\Voter;
@@ -22,14 +25,14 @@ class OrganisationVoter extends CrudVoter
      * Determines if the attribute and subject are supported by this voter.
      *
      * @param string $attribute An attribute
-     * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
+     * @param mixed  $subject   The subject to secure, e.g. an object the user wants to access or any other PHP type
      *
      * @return bool True if the attribute and subject are supported, false otherwise
      */
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::EDIT, self::REMOVE))) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT, self::REMOVE], true)) {
             return false;
         }
 
@@ -45,8 +48,8 @@ class OrganisationVoter extends CrudVoter
      * Perform a single access check operation on a given attribute, subject and token.
      * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
      *
-     * @param string $attribute
-     * @param Organisation $subject
+     * @param string         $attribute
+     * @param Organisation   $subject
      * @param TokenInterface $token
      *
      * @return bool
@@ -73,10 +76,11 @@ class OrganisationVoter extends CrudVoter
     }
 
     /**
-     * checks if the person is a leader or a member of the organisation
+     * checks if the person is a leader or a member of the organisation.
      *
      * @param Organisation $organisation
      * @param FrontendUser $user
+     *
      * @return bool
      */
     private function canView(Organisation $organisation, FrontendUser $user)
@@ -89,19 +93,21 @@ class OrganisationVoter extends CrudVoter
         $members = $user->getPerson()->getMembers();
         foreach ($organisation->getMembers() as $organisationMember) {
             foreach ($members as $member) {
-                if ($organisationMember->getId() == $member->getId()) {
+                if ($organisationMember->getId() === $member->getId()) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * checks if the person is part of the leader team
+     * checks if the person is part of the leader team.
      *
      * @param Organisation $organisation
      * @param FrontendUser $user
+     *
      * @return bool
      */
     private function canEdit(Organisation $organisation, FrontendUser $user)

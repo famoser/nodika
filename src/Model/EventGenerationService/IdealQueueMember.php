@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 14/09/2017
- * Time: 08:39
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventGenerationService;
@@ -31,25 +34,25 @@ class IdealQueueMember
 
     public function assignWeekday($pointInTime)
     {
-        $this->availableWeekdayCount--;
+        --$this->availableWeekdayCount;
         $this->history[$pointInTime] = 0;
     }
 
     public function assignSaturday($pointInTime)
     {
-        $this->availableSaturdayCount--;
+        --$this->availableSaturdayCount;
         $this->history[$pointInTime] = 1;
     }
 
     public function assignSunday($pointInTime)
     {
-        $this->availableSundayCount--;
+        --$this->availableSundayCount;
         $this->history[$pointInTime] = 2;
     }
 
     public function assignHoliday($pointInTime)
     {
-        $this->availableHolidayCount--;
+        --$this->availableHolidayCount;
         $this->history[$pointInTime] = 3;
     }
 
@@ -67,29 +70,29 @@ class IdealQueueMember
 
         foreach ($removeKeys as $removeKey) {
             $val = $this->history[$removeKey];
-            if ($val == 0) {
-                $this->availableWeekdayCount++;
-            } elseif ($val == 1) {
-                $this->availableSaturdayCount++;
-            } elseif ($val == 2) {
-                $this->availableSundayCount++;
-            } elseif ($val == 3) {
-                $this->availableHolidayCount++;
+            if (0 === $val) {
+                ++$this->availableWeekdayCount;
+            } elseif (1 === $val) {
+                ++$this->availableSaturdayCount;
+            } elseif (2 === $val) {
+                ++$this->availableSundayCount;
+            } elseif (3 === $val) {
+                ++$this->availableHolidayCount;
             }
             unset($this->history[$removeKey]);
         }
     }
 
     /**
-     * calculates the part which is done
+     * calculates the part which is done.
      */
     public function calculatePartDone()
     {
-        $this->partDone = (double)$this->doneEventCount / (double)$this->totalEventCount;
+        $this->partDone = (float) $this->doneEventCount / (float) $this->totalEventCount;
     }
 
     /**
-     * resets the available properties
+     * resets the available properties.
      */
     public function setAllAvailable()
     {
@@ -100,7 +103,7 @@ class IdealQueueMember
     }
 
     /**
-     * calculates total events by summing all event types
+     * calculates total events by summing all event types.
      */
     public function calculateTotalEventCount()
     {

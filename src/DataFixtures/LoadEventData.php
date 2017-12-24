@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 28/05/2017
- * Time: 15:48
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
@@ -20,7 +23,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadEventData extends BaseFixture
 {
     /**
-     * create an instance with all random values
+     * create an instance with all random values.
      *
      * @return EventLine
      */
@@ -28,13 +31,15 @@ class LoadEventData extends BaseFixture
     {
         $eventLine = new EventLine();
         $this->fillRandomThing($eventLine);
+
         return $eventLine;
     }
 
     /**
-     * Load data fixtures with the passed EntityManager
+     * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
+     *
      * @throws \Exception
      */
     public function load(ObjectManager $manager)
@@ -42,20 +47,19 @@ class LoadEventData extends BaseFixture
         $generation = $this->getEventGenerationService();
         $roundRobinConfiguration = new RoundRobinConfiguration(null);
 
-        $members = [$this->getReference("member-1"), $this->getReference("member-2"), $this->getReference("member-3")];
-        $eventLines = [$this->getReference("event-line-1"), $this->getReference("event-line-2")];
+        $members = [$this->getReference('member-1'), $this->getReference('member-2'), $this->getReference('member-3')];
+        $eventLines = [$this->getReference('event-line-1'), $this->getReference('event-line-2')];
 
         /* @var Person $admin */
-        $admin = $this->getReference("person-1");
-
+        $admin = $this->getReference('person-1');
 
         $roundRobinConfiguration->memberConfigurations = [];
-        for ($i = 0; $i < count($members); $i++) {
+        for ($i = 0; $i < count($members); ++$i) {
             $roundRobinConfiguration->memberConfigurations[] = MemberConfiguration::createFromMember($members[$i], $i);
         }
 
         $roundRobinConfiguration->startDateTime = new \DateTime();
-        $roundRobinConfiguration->endDateTime = new \DateTime("now + 1 year");
+        $roundRobinConfiguration->endDateTime = new \DateTime('now + 1 year');
         $roundRobinConfiguration->conflictPufferInHours = 0;
         $roundRobinConfiguration->lengthInHours = 168;
         $roundRobinConfiguration->randomOrderMade = true;
@@ -79,9 +83,9 @@ class LoadEventData extends BaseFixture
     }
 
     /**
-     * Get the order of this fixture
+     * Get the order of this fixture.
      *
-     * @return integer
+     * @return int
      */
     public function getOrder()
     {

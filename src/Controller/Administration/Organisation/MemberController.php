@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/05/2017
- * Time: 15:27
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller\Administration\Organisation;
@@ -31,8 +34,10 @@ class MemberController extends BaseController
 {
     /**
      * @Route("/new", name="administration_organisation_member_new")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
+     *
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation)
@@ -49,7 +54,7 @@ class MemberController extends BaseController
                 /* @var Form $form */
                 /* @var Member $entity */
                 //return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $entity->getId()]);
-                return $this->redirectToRoute("administration_organisation_member_new", ["organisation" => $organisation->getId()]);
+                return $this->redirectToRoute('administration_organisation_member_new', ['organisation' => $organisation->getId()]);
             }
         );
 
@@ -57,19 +62,22 @@ class MemberController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["new_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['new_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/member/new.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
+            $this->generateUrl('administration_organisation_members', ['organisation' => $organisation->getId()])
         );
     }
 
     /**
      * @Route("/{member}/administer", name="administration_organisation_member_administer")
+     *
      * @param Organisation $organisation
-     * @param Member $member
+     * @param Member       $member
+     *
      * @return Response
      */
     public function administerAction(Organisation $organisation, Member $member)
@@ -81,29 +89,32 @@ class MemberController extends BaseController
         foreach ($this->getPerson()->getMembers() as $itMember) {
             $isPartOfOrganisation =
                 $isPartOfOrganisation ||
-                $itMember->getOrganisation()->getId() == $organisation->getId();
+                $itMember->getOrganisation()->getId() === $organisation->getId();
         }
         if (!$isPartOfOrganisation) {
-            $translator = $this->get("translator");
+            $translator = $this->get('translator');
             $this->displayInfo(
-                $translator->trans("administer.not_part_of_organisation_yet", [], "administration_organisation_member"),
-                $this->generateUrl("administration_organisation_member_add_self", ["organisation" => $organisation->getId(), "member" => $member->getId()])
+                $translator->trans('administer.not_part_of_organisation_yet', [], 'administration_organisation_member'),
+                $this->generateUrl('administration_organisation_member_add_self', ['organisation' => $organisation->getId(), 'member' => $member->getId()])
             );
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
+        $arr['organisation'] = $organisation;
+        $arr['member'] = $member;
+
         return $this->renderWithBackUrl(
             'administration/organisation/member/administer.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
+            $this->generateUrl('administration_organisation_members', ['organisation' => $organisation->getId()])
         );
     }
 
     /**
      * @Route("/{member}/add_self", name="administration_organisation_member_add_self")
+     *
      * @param Organisation $organisation
-     * @param Member $member
+     * @param Member       $member
+     *
      * @return Response
      */
     public function addSelfAction(Organisation $organisation, Member $member)
@@ -112,14 +123,17 @@ class MemberController extends BaseController
 
         $this->getPerson()->addMember($member);
         $this->fastSave($this->getPerson());
-        return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()]);
+
+        return $this->redirectToRoute('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $member->getId()]);
     }
 
     /**
      * @Route("/{member}/edit", name="administration_organisation_member_edit")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param Member $member
+     * @param Member       $member
+     *
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, Member $member)
@@ -133,7 +147,7 @@ class MemberController extends BaseController
             function ($form, $entity) use ($organisation) {
                 /* @var Member $entity */
                 /* @var Form $form */
-                return $this->redirectToRoute("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $entity->getId()]);
+                return $this->redirectToRoute('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $entity->getId()]);
             }
         );
 
@@ -141,21 +155,24 @@ class MemberController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
-        $arr["edit_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['member'] = $member;
+        $arr['edit_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/member/edit.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
+            $this->generateUrl('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $member->getId()])
         );
     }
 
     /**
      * @Route("/{member}/remove", name="administration_organisation_member_remove")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param Member $member
+     * @param Member       $member
+     *
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, Member $member)
@@ -169,7 +186,7 @@ class MemberController extends BaseController
             function ($form, $entity) use ($organisation) {
                 /* @var Member $entity */
                 /* @var Form $form */
-                return $this->redirectToRoute("administration_organisation_members", ["organisation" => $organisation->getId()]);
+                return $this->redirectToRoute('administration_organisation_members', ['organisation' => $organisation->getId()]);
             }
         );
 
@@ -177,35 +194,37 @@ class MemberController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["member"] = $member;
-        $arr["remove_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['member'] = $member;
+        $arr['remove_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/member/remove.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_member_administer", ["organisation" => $organisation->getId(), "member" => $member->getId()])
+            $this->generateUrl('administration_organisation_member_administer', ['organisation' => $organisation->getId(), 'member' => $member->getId()])
         );
     }
 
-
     /**
      * @Route("/import/download/template", name="administration_organisation_member_import_download_template")
+     *
      * @return Response
      */
     public function importDownloadTemplateAction()
     {
-        $memberTrans = $this->get("translator")->trans("entity.name", [], "entity_member");
+        $memberTrans = $this->get('translator')->trans('entity.name', [], 'entity_member');
         $newMemberForm = $this->createForm(MemberType::class);
-        $exchangeService = $this->get("app.exchange_service");
+        $exchangeService = $this->get('app.exchange_service');
 
-        return $this->renderCsv($memberTrans . ".csv", [], $exchangeService->getCsvHeader($newMemberForm));
+        return $this->renderCsv($memberTrans.'.csv', [], $exchangeService->getCsvHeader($newMemberForm));
     }
-
 
     /**
      * @Route("/import", name="administration_organisation_member_import")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
+     *
      * @return Response
      */
     public function importAction(Request $request, Organisation $organisation)
@@ -215,20 +234,22 @@ class MemberController extends BaseController
         $importForm = $this->handleForm(
             $this->createForm(ImportMembersType::class),
             $request,
-            new ImportFileModel("/img/import"),
+            new ImportFileModel('/img/import'),
             function ($form, $entity) use ($organisation) {
                 /* @var Form $form */
                 /* @var ImportFileModel $entity */
                 $newMemberForm = $this->createForm(MemberType::class);
-                $exchangeService = $this->get("app.exchange_service");
+                $exchangeService = $this->get('app.exchange_service');
                 if ($exchangeService->importCsv($newMemberForm, function () use ($organisation) {
                     $member = new Member();
                     $member->setOrganisation($organisation);
+
                     return $member;
                 }, $entity)
                 ) {
-                    return $this->redirectToRoute("administration_organisation_members", ["organisation" => $organisation->getId()]);
+                    return $this->redirectToRoute('administration_organisation_members', ['organisation' => $organisation->getId()]);
                 }
+
                 return $form;
             }
         );
@@ -238,13 +259,13 @@ class MemberController extends BaseController
         }
 
         $arr = [];
-        $arr["import_form"] = $importForm->createView();
-        $arr["organisation"] = $organisation;
+        $arr['import_form'] = $importForm->createView();
+        $arr['organisation'] = $organisation;
 
         return $this->renderWithBackUrl(
             'administration/organisation/member/import.html.twig',
-            $arr + ["organisation" => $organisation],
-            $this->generateUrl("administration_organisation_members", ["organisation" => $organisation->getId()])
+            $arr + ['organisation' => $organisation],
+            $this->generateUrl('administration_organisation_members', ['organisation' => $organisation->getId()])
         );
     }
 }

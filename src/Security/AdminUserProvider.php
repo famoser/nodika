@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 18.04.2017
- * Time: 11:34
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Security;
@@ -18,24 +21,25 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AdminUserProvider extends BaseUserProvider
 {
     /**
-     * @var RegistryInterface $registry
+     * @var RegistryInterface
      */
     private $registry;
 
     /**
-     * @var string[] $adminEmails
+     * @var string[]
      */
     private $adminEmails;
 
     /**
      * AdminUserProvider constructor.
+     *
      * @param RegistryInterface $registry
      * @param $adminEmails
      */
     public function __construct(RegistryInterface $registry, $adminEmails)
     {
         $this->registry = $registry;
-        $this->adminEmails = explode(",", $adminEmails);
+        $this->adminEmails = explode(',', $adminEmails);
     }
 
     /**
@@ -46,17 +50,18 @@ class AdminUserProvider extends BaseUserProvider
      *
      * @param string $username The username
      *
-     * @return UserInterface
-     *
      * @throws UsernameNotFoundException if the user is not found
+     *
+     * @return UserInterface
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->registry->getRepository("App:AdminUser")->findOneBy(["email" => $username]);
-        if ($user != null) {
-            if (in_array($user->getEmail(), $this->adminEmails)) {
-                $user->addRole("ROLE_ADMIN");
+        $user = $this->registry->getRepository('App:AdminUser')->findOneBy(['email' => $username]);
+        if (null !== $user) {
+            if (in_array($user->getEmail(), $this->adminEmails, true)) {
+                $user->addRole('ROLE_ADMIN');
             }
+
             return $user;
         }
 
@@ -75,9 +80,9 @@ class AdminUserProvider extends BaseUserProvider
      *
      * @param UserInterface $user
      *
-     * @return UserInterface
-     *
      * @throws UnsupportedUserException if the account is not supported
+     *
+     * @return UserInterface
      */
     public function refreshUser(UserInterface $user)
     {

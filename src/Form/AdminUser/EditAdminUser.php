@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 21/06/2017
- * Time: 10:06
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form\AdminUser;
@@ -23,22 +26,21 @@ class EditAdminUser extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transArray = ["translation_domain" => "admin_moderators"];
-        $entityTransArray = ["translation_domain" => "admin_user"];
+        $transArray = ['translation_domain' => 'admin_moderators'];
+        $entityTransArray = ['translation_domain' => 'admin_user'];
 
         //add thing fields
-        $builder->add("email", EmailType::class, $entityTransArray);
-        $builder->add("plainPassword", PasswordType::class, $entityTransArray);
+        $builder->add('email', EmailType::class, $entityTransArray);
+        $builder->add('plainPassword', PasswordType::class, $entityTransArray);
 
-        $builder->add("save", SubmitType::class, $transArray);
+        $builder->add('save', SubmitType::class, $transArray);
     }
-
 
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(["data_class" => AdminUser::class]);
+        $resolver->setDefaults(['data_class' => AdminUser::class]);
     }
 }

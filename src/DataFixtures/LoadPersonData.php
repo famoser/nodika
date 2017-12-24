@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/05/2017
- * Time: 10:09
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
@@ -15,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadPersonData extends BaseFixture
 {
     /**
-     * create an instance with all random values
+     * create an instance with all random values.
      *
      * @return Person
      */
@@ -25,42 +28,43 @@ class LoadPersonData extends BaseFixture
         $this->fillRandomAddress($person);
         $this->fillRandomCommunication($person);
         $this->fillRandomPerson($person);
+
         return $person;
     }
 
     /**
-     * Load data fixtures with the passed EntityManager
+     * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
         $person = $this->getAllRandomInstance();
-        $person->setEmail("info@nodika.ch");
+        $person->setEmail('info@nodika.ch');
         $manager->persist($person);
         $manager->flush();
 
-        $this->setReference("person-1", $person);
+        $this->setReference('person-1', $person);
 
         $person = $this->getAllRandomInstance();
-        $person->setEmail("markus@praxis.ch");
+        $person->setEmail('markus@praxis.ch');
         $manager->persist($person);
         $manager->flush();
 
-        $this->setReference("person-2", $person);
+        $this->setReference('person-2', $person);
 
         $person = $this->getAllRandomInstance();
-        $person->setEmail("daniel@praxis.ch");
+        $person->setEmail('daniel@praxis.ch');
         $manager->persist($person);
         $manager->flush();
 
-        $this->setReference("person-3", $person);
+        $this->setReference('person-3', $person);
     }
 
     /**
-     * Get the order of this fixture
+     * Get the order of this fixture.
      *
-     * @return integer
+     * @return int
      */
     public function getOrder()
     {

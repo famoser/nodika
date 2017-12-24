@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/09/2017
- * Time: 14:06
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\EventLineGeneration\Nodika;
@@ -14,6 +17,7 @@ class NodikaConfiguration extends BaseConfiguration
 {
     /**
      * NodikaConfiguration constructor.
+     *
      * @param $data
      */
     public function __construct($data)
@@ -22,7 +26,7 @@ class NodikaConfiguration extends BaseConfiguration
         $this->memberEventTypeDistributions = [];
         $this->holidays = [];
         $this->beforeEvents = [];
-        if ($data != null) {
+        if (null !== $data) {
             foreach ($data->memberConfigurations as $key => $item) {
                 $this->memberConfigurations[] = new MemberConfiguration($item);
             }

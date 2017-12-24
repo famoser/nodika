@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 05/03/2017
- * Time: 09:26
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Base;
@@ -22,7 +25,7 @@ abstract class BaseEntity extends TranslatableObject
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
@@ -33,14 +36,15 @@ abstract class BaseEntity extends TranslatableObject
      */
     protected function getTranslationDomainPrefix()
     {
-        return "entity";
+        return 'entity';
     }
 
     /**
-     * returns the builder with all flat fields from the entity
+     * returns the builder with all flat fields from the entity.
      *
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return FormBuilderInterface
      */
     protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
@@ -49,15 +53,17 @@ abstract class BaseEntity extends TranslatableObject
     }
 
     /**
-     * returns the builder with all fields from the entity
+     * returns the builder with all fields from the entity.
      *
      * @param FormBuilderInterface $builder
      * @param $defaultArray
+     *
      * @return mixed
      */
     public static function getBuilderStatic(FormBuilderInterface $builder, $defaultArray = [])
     {
         $instance = new static();
+
         return $instance->getBuilder($builder, $defaultArray);
     }
 }

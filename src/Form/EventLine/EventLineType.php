@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 19/05/2017
- * Time: 19:11
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form\EventLine;
@@ -19,17 +22,17 @@ class EventLineType extends BaseCrudAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transArray = ["translation_domain" => "event_line"];
-        $builder->add("displayOrder", NumberType::class, $transArray);
-        $this->addTrait($builder, ThingTrait::class, ["translation_domain" => "entity_event_line", "label" => "entity.name"]);
+        $transArray = ['translation_domain' => 'event_line'];
+        $builder->add('displayOrder', NumberType::class, $transArray);
+        $this->addTrait($builder, ThingTrait::class, ['translation_domain' => 'entity_event_line', 'label' => 'entity.name']);
         parent::buildForm($builder, $options);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => EventLine::class,
-        ));
+        ]);
         parent::configureOptions($resolver);
     }
 }

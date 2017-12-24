@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 14/05/2017
- * Time: 10:32
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form\Generic;
@@ -19,11 +22,11 @@ abstract class RemoveThingType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builderArray = ["translation_domain" => "remove"];
+        $builderArray = ['translation_domain' => 'remove'];
         $builder->add(
-            "confirmConsequences",
+            'confirmConsequences',
             CheckboxType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder("confirmConsequences") + ["mapped" => false]
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('confirmConsequences') + ['mapped' => false]
         );
         $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
     }

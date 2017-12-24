@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 10/05/2017
- * Time: 22:21
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\Organisation;
@@ -17,7 +20,7 @@ class SetupStatusModel
     private $hasInvitedMembers;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasMembers()
     {
@@ -25,7 +28,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param boolean $hasMembers
+     * @param bool $hasMembers
      */
     public function setHasMembers($hasMembers)
     {
@@ -33,7 +36,7 @@ class SetupStatusModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasEventLines()
     {
@@ -41,7 +44,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param boolean $hasEventLines
+     * @param bool $hasEventLines
      */
     public function setHasEventLines($hasEventLines)
     {
@@ -49,7 +52,7 @@ class SetupStatusModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasEvents()
     {
@@ -57,7 +60,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param boolean $hasEvents
+     * @param bool $hasEvents
      */
     public function setHasEvents($hasEvents)
     {
@@ -65,7 +68,7 @@ class SetupStatusModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasVisitedSettings()
     {
@@ -73,7 +76,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param boolean $hasVisitedSettings
+     * @param bool $hasVisitedSettings
      */
     public function setHasVisitedSettings($hasVisitedSettings)
     {
@@ -81,7 +84,7 @@ class SetupStatusModel
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasInvitedMembers()
     {
@@ -89,7 +92,7 @@ class SetupStatusModel
     }
 
     /**
-     * @param boolean $hasInvitedMembers
+     * @param bool $hasInvitedMembers
      */
     public function setHasInvitedMembers($hasInvitedMembers)
     {

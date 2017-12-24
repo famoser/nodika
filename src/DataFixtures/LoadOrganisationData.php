@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 11/05/2017
- * Time: 14:01
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
@@ -15,9 +18,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadOrganisationData extends BaseFixture
 {
-
     /**
-     * create an instance with all random values
+     * create an instance with all random values.
      *
      * @return Organisation
      */
@@ -27,34 +29,35 @@ class LoadOrganisationData extends BaseFixture
         $this->fillRandomCommunication($organisation);
         $this->fillRandomAddress($organisation);
         $this->fillRandomThing($organisation);
+
         return $organisation;
     }
 
     /**
-     * Load data fixtures with the passed EntityManager
+     * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager)
     {
         $organisation = $this->getAllRandomInstance();
-        $organisation->setName("knbu.ch");
+        $organisation->setName('knbu.ch');
         /* @var Person $person */
-        $person = $this->getReference("person-1");
+        $person = $this->getReference('person-1');
         $organisation->addLeader($person);
 
         $organisation->setIsActive(true);
-        $organisation->setActiveEnd(new \DateTime("now + 1 month"));
+        $organisation->setActiveEnd(new \DateTime('now + 1 month'));
         $manager->persist($organisation);
         $manager->flush();
 
-        $this->setReference("organisation-1", $organisation);
+        $this->setReference('organisation-1', $organisation);
     }
 
     /**
-     * Get the order of this fixture
+     * Get the order of this fixture.
      *
-     * @return integer
+     * @return int
      */
     public function getOrder()
     {

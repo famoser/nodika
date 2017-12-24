@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 28/12/2016
- * Time: 01:50
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller\Base;
@@ -27,59 +30,61 @@ class BaseController extends Controller
     /**
      * @param $type
      * @param $submitButtonType
-     * @param null $data
+     * @param null  $data
      * @param array $options
+     *
      * @return FormInterface
      */
-    public function createCrudForm($type, $submitButtonType, $data = null, array $options = array())
+    public function createCrudForm($type, $submitButtonType, $data = null, array $options = [])
     {
         return $this->createForm($type, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType] + $options);
     }
 
-
     /**
-     * @param Request $request
+     * @param Request    $request
      * @param BaseEntity $data
-     * @param int $submitButtonType
+     * @param int        $submitButtonType
      * @param $onSuccessCallable
      * @param array $formOptions
+     *
      * @return FormInterface
      */
     public function handleCrudForm(Request $request, BaseEntity $data, $submitButtonType, $onSuccessCallable = null, $formOptions = [])
     {
-        $formType = NamingHelper::classToCrudFormType(get_class($data), $submitButtonType == SubmitButtonType::REMOVE);
+        $formType = NamingHelper::classToCrudFormType(get_class($data), SubmitButtonType::REMOVE === $submitButtonType);
         $myOnSuccessCallable = function ($form, $entity) use ($onSuccessCallable, $submitButtonType) {
-            $translator = $this->get("translator");
-            if ($submitButtonType == SubmitButtonType::CREATE) {
-                $this->displaySuccess($translator->trans("successful.add", [], "common_form"));
-            } elseif ($submitButtonType == SubmitButtonType::EDIT) {
-                $this->displaySuccess($translator->trans("successful.save", [], "common_form"));
-            } elseif ($submitButtonType == SubmitButtonType::REMOVE) {
-                $this->displaySuccess($translator->trans("successful.remove", [], "common_form"));
+            $translator = $this->get('translator');
+            if (SubmitButtonType::CREATE === $submitButtonType) {
+                $this->displaySuccess($translator->trans('successful.add', [], 'common_form'));
+            } elseif (SubmitButtonType::EDIT === $submitButtonType) {
+                $this->displaySuccess($translator->trans('successful.save', [], 'common_form'));
+            } elseif (SubmitButtonType::REMOVE === $submitButtonType) {
+                $this->displaySuccess($translator->trans('successful.remove', [], 'common_form'));
             }
 
             if (is_callable($onSuccessCallable)) {
                 return $onSuccessCallable($form, $entity);
             }
+
             return $form;
         };
 
         $myForm = $this->createForm($formType, $data, [StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION => $submitButtonType] + $formOptions);
-        if ($submitButtonType == SubmitButtonType::REMOVE) {
+        if (SubmitButtonType::REMOVE === $submitButtonType) {
             return $this->handleFormDoctrineRemove(
                 $myForm,
                 $request,
                 $data,
                 $myOnSuccessCallable
             );
-        } else {
-            return $this->handleFormDoctrinePersist(
+        }
+
+        return $this->handleFormDoctrinePersist(
                 $myForm,
                 $request,
                 $data,
                 $myOnSuccessCallable
             );
-        }
     }
 
     /**
@@ -89,15 +94,15 @@ class BaseController extends Controller
      */
     private function displayFlash($type, $message, $link = null)
     {
-        if ($link != null) {
-            $message = '<a href="' . $link . '">' . $message . '</a>';
+        if (null !== $link) {
+            $message = '<a href="'.$link.'">'.$message.'</a>';
         }
         $this->get('session')->getFlashBag()->set($type, $message);
     }
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displayError($message, $link = null)
     {
@@ -106,7 +111,7 @@ class BaseController extends Controller
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displayDanger($message, $link = null)
     {
@@ -115,7 +120,7 @@ class BaseController extends Controller
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displaySuccess($message, $link = null)
     {
@@ -124,7 +129,7 @@ class BaseController extends Controller
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displayInfo($message, $link = null)
     {
@@ -132,11 +137,11 @@ class BaseController extends Controller
     }
 
     /**
-     * displays the default form error
+     * displays the default form error.
      */
     protected function displayFormValidationError()
     {
-        $this->displayError($this->get("translator")->trans("error.form_validation_failed", [], "common_form"));
+        $this->displayError($this->get('translator')->trans('error.form_validation_failed', [], 'common_form'));
     }
 
     /**
@@ -148,6 +153,7 @@ class BaseController extends Controller
         if ($user instanceof FrontendUser) {
             return $user->getPerson();
         }
+
         return null;
     }
 
@@ -163,6 +169,7 @@ class BaseController extends Controller
      * @param $filename
      * @param array $header
      * @param array $data
+     *
      * @return StreamedResponse
      */
     protected function renderCsv($filename, $data, $header = null)
@@ -172,8 +179,8 @@ class BaseController extends Controller
             $handle = fopen('php://output', 'w+');
 
             //UTF-8 BOM
-            fputs($handle, "\xEF\xBB\xBF");
-            fputs($handle, "sep=,\n");
+            fwrite($handle, "\xEF\xBB\xBF");
+            fwrite($handle, "sep=,\n");
 
             if (is_array($header)) {
                 // Add the header of the CSV file
@@ -194,16 +201,17 @@ class BaseController extends Controller
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
         return $response;
     }
 
     /**
      * @param FormInterface $form
-     * @param Request $request
-     * @param BaseEntity $entity
-     * @param callable $onSuccessCallable with $form & $entity arguments
+     * @param Request       $request
+     * @param BaseEntity    $entity
+     * @param callable      $onSuccessCallable with $form & $entity arguments
+     *
      * @return FormInterface
      */
     protected function handleFormDoctrinePersist(FormInterface $form, Request $request, BaseEntity $entity, $onSuccessCallable = null)
@@ -213,6 +221,7 @@ class BaseController extends Controller
                 /* @var FormInterface $form */
                 /* @var BaseEntity $entity */
                 $this->fastSave($entity);
+
                 return $onSuccessCallable($form, $entity);
             };
         } else {
@@ -220,18 +229,21 @@ class BaseController extends Controller
                 /* @var FormInterface $form */
                 /* @var BaseEntity $entity */
                 $this->fastSave($entity);
+
                 return $form;
             };
         }
+
         return $this->handleForm($form, $request, $entity, $myCallable);
     }
 
     /**
      * @param FormInterface $form
-     * @param Request $request
-     * @param BaseEntity $entity
-     * @param callable $onRemoveCallable with $form & $entity arguments
-     * @param callable $beforeRemoveCallable with $form & $entity arguments
+     * @param Request       $request
+     * @param BaseEntity    $entity
+     * @param callable      $onRemoveCallable     with $form & $entity arguments
+     * @param callable      $beforeRemoveCallable with $form & $entity arguments
+     *
      * @return FormInterface
      */
     protected function handleFormDoctrineRemove(FormInterface $form, Request $request, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
@@ -245,15 +257,17 @@ class BaseController extends Controller
             }
             $em->remove($entity);
             $em->flush();
+
             return $onRemoveCallable($form, $entity);
         });
     }
 
     /**
      * @param FormInterface $form
-     * @param Request $request
+     * @param Request       $request
      * @param $entity
      * @param callable $callable with $form & $entity arguments
+     *
      * @return FormInterface
      */
     protected function handleForm(FormInterface $form, Request $request, $entity, $callable)
@@ -264,15 +278,15 @@ class BaseController extends Controller
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 return $callable($form, $entity);
-            } else {
-                $this->displayFormValidationError();
             }
+            $this->displayFormValidationError();
         }
+
         return $form;
     }
 
     /**
-     * saves entity to database
+     * saves entity to database.
      *
      * @param BaseEntity[] $entities
      */
@@ -286,7 +300,7 @@ class BaseController extends Controller
     }
 
     /**
-     * removes entity to database
+     * removes entity to database.
      *
      * @param BaseEntity[] $entities
      */
@@ -301,52 +315,59 @@ class BaseController extends Controller
 
     /**
      * @param Organisation $organisation
-     * @param int $applicationEventType
+     * @param int          $applicationEventType
+     *
      * @return bool
      */
     protected function getHasEventOccurred(Organisation $organisation, $applicationEventType)
     {
-        return $this->getDoctrine()->getRepository("App:ApplicationEvent")->hasEventOccurred($organisation, $applicationEventType);
+        return $this->getDoctrine()->getRepository('App:ApplicationEvent')->hasEventOccurred($organisation, $applicationEventType);
     }
 
     /**
      * Renders a view.
      *
-     * @param string $view The view name
-     * @param array $parameters An array of parameters to pass to the view
-     * @param string $backUrl
-     * @param Response $response A response instance
+     * @param string   $view       The view name
+     * @param array    $parameters An array of parameters to pass to the view
+     * @param string   $backUrl
+     * @param Response $response   A response instance
+     *
      * @return Response A Response instance
      */
     protected function renderWithBackUrl($view, array $parameters, $backUrl, Response $response = null)
     {
-        $parameters["show_dashboard"] = $this->getShowDashboard($backUrl);
-        $parameters["back_url"] = $backUrl;
+        $parameters['show_dashboard'] = $this->getShowDashboard($backUrl);
+        $parameters['back_url'] = $backUrl;
+
         return parent::render($view, $parameters, $response);
     }
 
     /**
      * Renders a view.
      *
-     * @param string $view The view name
-     * @param array $parameters An array of parameters to pass to the view
-     * @param string $justification why no backbutton
-     * @param Response $response A response instance
+     * @param string   $view          The view name
+     * @param array    $parameters    An array of parameters to pass to the view
+     * @param string   $justification why no backbutton
+     * @param Response $response      A response instance
+     *
      * @return Response A Response instance
      */
     protected function renderNoBackUrl($view, array $parameters, $justification, Response $response = null)
     {
-        $parameters["show_dashboard"] = $this->getShowDashboard();
+        $parameters['show_dashboard'] = $this->getShowDashboard();
+
         return parent::render($view, $parameters, $response);
     }
 
     /**
      * @param string|null $backUrl
+     *
      * @return bool
      */
     private function getShowDashboard($backUrl = null)
     {
-        $request = $this->get("request_stack")->getCurrentRequest();
-        return $this->getUser() instanceof FrontendUser && $request->get("_route") != "dashboard_index" && $backUrl != "/dashboard/";
+        $request = $this->get('request_stack')->getCurrentRequest();
+
+        return $this->getUser() instanceof FrontendUser && 'dashboard_index' !== $request->get('_route') && '/dashboard/' !== $backUrl;
     }
 }

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 06/11/2017
- * Time: 10:15
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Model\Event;
@@ -16,8 +19,9 @@ class SearchEventModel
 {
     /**
      * SearchEventModel constructor.
+     *
      * @param Organisation $organisation
-     * @param \DateTime $startDateTime
+     * @param \DateTime    $startDateTime
      */
     public function __construct(Organisation $organisation, \DateTime $startDateTime)
     {

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -18,7 +21,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An Organisation represents one unity of members which distribute Appointments
+ * An Organisation represents one unity of members which distribute Appointments.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\OrganisationRepository")
@@ -74,7 +77,7 @@ class Organisation extends BaseEntity
     private $eventLines;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -85,9 +88,9 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Set isActive
+     * Set isActive.
      *
-     * @param boolean $isActive
+     * @param bool $isActive
      *
      * @return Organisation
      */
@@ -99,9 +102,9 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Get isActive
+     * Get isActive.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsActive()
     {
@@ -109,7 +112,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Set activeEnd
+     * Set activeEnd.
      *
      * @param \DateTime $activeEnd
      *
@@ -123,7 +126,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Get activeEnd
+     * Get activeEnd.
      *
      * @return \DateTime
      */
@@ -133,7 +136,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Add leader
+     * Add leader.
      *
      * @param Person $leader
      *
@@ -147,7 +150,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Remove leader
+     * Remove leader.
      *
      * @param Person $leader
      */
@@ -157,7 +160,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Get leaders
+     * Get leaders.
      *
      * @return Collection|Person[]
      */
@@ -167,7 +170,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Add member
+     * Add member.
      *
      * @param Member $member
      *
@@ -181,7 +184,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Remove member
+     * Remove member.
      *
      * @param Member $member
      */
@@ -191,7 +194,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Get members
+     * Get members.
      *
      * @return Collection|Member[]
      */
@@ -201,7 +204,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Add invoice
+     * Add invoice.
      *
      * @param Invoice $invoice
      *
@@ -215,7 +218,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Remove invoice
+     * Remove invoice.
      *
      * @param Invoice $invoice
      */
@@ -225,7 +228,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Get invoices
+     * Get invoices.
      *
      * @return Collection|Invoice[]
      */
@@ -235,7 +238,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Add event line
+     * Add event line.
      *
      * @param EventLine $eventLine
      *
@@ -249,7 +252,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Remove event line
+     * Remove event line.
      *
      * @param EventLine $eventLine
      */
@@ -259,7 +262,7 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Get event lines
+     * Get event lines.
      *
      * @return Collection|EventLine[]
      */
@@ -270,18 +273,20 @@ class Organisation extends BaseEntity
 
     /**
      * @param Person $person
+     *
      * @return Organisation
      */
     public static function createFromPerson(Person $person)
     {
-        $organisation = new Organisation();
+        $organisation = new self();
         $organisation->setAddressFieldsFrom($person);
         $organisation->setCommunicationFieldsFrom($person);
+
         return $organisation;
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */

@@ -1,14 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13/05/2017
- * Time: 14:05
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Helper;
 
 class CsvFileHelper
 {
-    const DELIMITER = ",";
+    const DELIMITER = ',';
 }

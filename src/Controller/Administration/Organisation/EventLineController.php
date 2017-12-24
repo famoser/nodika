@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 19/05/2017
- * Time: 19:08
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller\Administration\Organisation;
@@ -34,8 +37,10 @@ class EventLineController extends BaseController
 {
     /**
      * @Route("/new", name="administration_organisation_event_line_new")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
+     *
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation)
@@ -51,7 +56,7 @@ class EventLineController extends BaseController
             function ($form, $entity) use ($organisation) {
                 /* @var Form $form */
                 /* @var Member $entity */
-                return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $entity->getId()]);
+                return $this->redirectToRoute('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $entity->getId()]);
             }
         );
 
@@ -59,20 +64,23 @@ class EventLineController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["new_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['new_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/event_line/new.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_event_lines", ["organisation" => $organisation->getId()])
+            $this->generateUrl('administration_organisation_event_lines', ['organisation' => $organisation->getId()])
         );
     }
 
     /**
      * @Route("/{eventLine}/edit", name="administration_organisation_event_line_edit")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param EventLine    $eventLine
+     *
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, EventLine $eventLine)
@@ -86,7 +94,7 @@ class EventLineController extends BaseController
             function ($form, $entity) use ($organisation) {
                 /* @var Form $form */
                 /* @var Member $entity */
-                return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $entity->getId()]);
+                return $this->redirectToRoute('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $entity->getId()]);
             }
         );
 
@@ -94,27 +102,29 @@ class EventLineController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["eventLine"] = $eventLine;
-        $arr["edit_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['eventLine'] = $eventLine;
+        $arr['edit_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/event_line/edit.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
+            $this->generateUrl('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $eventLine->getId()])
         );
     }
 
     /**
      * @Route("/{eventLine}/remove", name="administration_organisation_event_line_remove")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param EventLine    $eventLine
+     *
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, EventLine $eventLine)
     {
         $this->denyAccessUnlessGranted(EventLineVoter::REMOVE, $eventLine);
-
 
         $myForm = $this->handleCrudForm(
             $request,
@@ -123,7 +133,7 @@ class EventLineController extends BaseController
             function ($form, $entity) use ($organisation) {
                 /* @var Form $form */
                 /* @var Member $entity */
-                return $this->redirectToRoute("administration_organisation_event_lines", ["organisation" => $organisation->getId()]);
+                return $this->redirectToRoute('administration_organisation_event_lines', ['organisation' => $organisation->getId()]);
             }
         );
 
@@ -131,45 +141,49 @@ class EventLineController extends BaseController
             return $myForm;
         }
 
-        $arr["organisation"] = $organisation;
-        $arr["eventLine"] = $eventLine;
-        $arr["remove_form"] = $myForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['eventLine'] = $eventLine;
+        $arr['remove_form'] = $myForm->createView();
+
         return $this->renderWithBackUrl(
             'administration/organisation/event_line/remove.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()])
+            $this->generateUrl('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $eventLine->getId()])
         );
     }
 
-
     /**
      * @Route("/{eventLine}/administer", name="administration_organisation_event_line_administer")
+     *
      * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param EventLine    $eventLine
+     *
      * @return Response
      */
     public function administerAction(Organisation $organisation, EventLine $eventLine)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
-        $arr["organisation"] = $organisation;
-        $arr["eventLine"] = $eventLine;
+        $arr['organisation'] = $organisation;
+        $arr['eventLine'] = $eventLine;
+
         return $this->renderWithBackUrl(
             'administration/organisation/event_line/administer.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_event_lines", ["organisation" => $organisation->getId()])
+            $this->generateUrl('administration_organisation_event_lines', ['organisation' => $organisation->getId()])
         );
     }
 
-
     /**
      * @Route("/import/download/template", name="administration_organisation_event_line_import_download_template")
+     *
      * @param Organisation $organisation
+     *
      * @return Response
      */
     public function importDownloadTemplateAction(Organisation $organisation)
     {
-        $eventTrans = $this->get("translator")->trans("entity.name", [], "entity_event");
+        $eventTrans = $this->get('translator')->trans('entity.name', [], 'entity_event');
 
         $firstMemberId = 1;
         foreach ($organisation->getMembers() as $member) {
@@ -177,13 +191,13 @@ class EventLineController extends BaseController
         }
 
         return $this->renderCsv(
-            $eventTrans . ".csv",
+            $eventTrans.'.csv',
             [
                 [
                     (new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT),
-                    (new \DateTime("now + 1 day"))->format(DateTimeFormatter::DATE_TIME_FORMAT),
-                    $firstMemberId
-                ]
+                    (new \DateTime('now + 1 day'))->format(DateTimeFormatter::DATE_TIME_FORMAT),
+                    $firstMemberId,
+                ],
             ],
             $this->getImportFileHeader()
         );
@@ -194,17 +208,20 @@ class EventLineController extends BaseController
      */
     private function getImportFileHeader()
     {
-        $start = $this->get("translator")->trans("start_date_time", [], "entity_event");
-        $end = $this->get("translator")->trans("end_date_time", [], "entity_event");
-        $memberId = $this->get("translator")->trans("member_id", [], "entity_event");
+        $start = $this->get('translator')->trans('start_date_time', [], 'entity_event');
+        $end = $this->get('translator')->trans('end_date_time', [], 'entity_event');
+        $memberId = $this->get('translator')->trans('member_id', [], 'entity_event');
+
         return [$start, $end, $memberId];
     }
 
     /**
      * @Route("/{eventLine}/import", name="administration_organisation_event_line_import")
-     * @param Request $request
+     *
+     * @param Request      $request
      * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param EventLine    $eventLine
+     *
      * @return Response
      */
     public function importAction(Request $request, Organisation $organisation, EventLine $eventLine)
@@ -214,12 +231,12 @@ class EventLineController extends BaseController
         $importForm = $this->handleForm(
             $this->createForm(ImportEventsType::class),
             $request,
-            new ImportFileModel("/public/import"),
+            new ImportFileModel('/public/import'),
             function ($form, $importFileModel) use ($organisation, $eventLine) {
                 /* @var Form $form */
                 /* @var ImportFileModel $importFileModel */
-                $exchangeService = $this->get("app.exchange_service");
-                $members = $this->getDoctrine()->getRepository("App:Member")->getIdAssociatedArray($organisation);
+                $exchangeService = $this->get('app.exchange_service');
+                $members = $this->getDoctrine()->getRepository('App:Member')->getIdAssociatedArray($organisation);
                 if ($exchangeService->importCsvAdvanced(function ($data) use ($organisation, $eventLine, $members) {
                     $event = new Event();
                     $event->setStartDateTime(new \DateTime($data[0]));
@@ -227,23 +244,27 @@ class EventLineController extends BaseController
                     if (isset($members[$data[2]])) {
                         $event->setMember($members[$data[2]]);
                     } else {
-                        $this->get("session.flash_bag")->set(StaticMessageHelper::FLASH_ERROR, $this->get("translator")->trans("error.file_upload_failed", [], "import"));
+                        $this->get('session.flash_bag')->set(StaticMessageHelper::FLASH_ERROR, $this->get('translator')->trans('error.file_upload_failed', [], 'import'));
                     }
                     $event->setEventLine($eventLine);
+
                     return $event;
                 }, function ($header) use ($organisation) {
                     $expectedHeader = $this->getImportFileHeader();
-                    for ($i = 0; $i < count($header); $i++) {
-                        if ($expectedHeader[$i] != $header[$i]) {
-                            $this->get("session.flash_bag")->set(StaticMessageHelper::FLASH_ERROR, $this->get("translator")->trans("error.file_upload_failed", [], "import"));
+                    for ($i = 0; $i < count($header); ++$i) {
+                        if ($expectedHeader[$i] !== $header[$i]) {
+                            $this->get('session.flash_bag')->set(StaticMessageHelper::FLASH_ERROR, $this->get('translator')->trans('error.file_upload_failed', [], 'import'));
+
                             return false;
                         }
                     }
+
                     return true;
                 }, $importFileModel)
                 ) {
-                    return $this->redirectToRoute("administration_organisation_event_line_administer", ["organisation" => $organisation->getId(), "eventLine" => $eventLine->getId()]);
+                    return $this->redirectToRoute('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $eventLine->getId()]);
                 }
+
                 return $form;
             }
         );
@@ -253,14 +274,14 @@ class EventLineController extends BaseController
         }
 
         $arr = [];
-        $arr["organisation"] = $organisation;
-        $arr["eventLine"] = $eventLine;
-        $arr["import_form"] = $importForm->createView();
+        $arr['organisation'] = $organisation;
+        $arr['eventLine'] = $eventLine;
+        $arr['import_form'] = $importForm->createView();
 
         return $this->renderWithBackUrl(
             'administration/organisation/event_line/import.html.twig',
             $arr,
-            $this->generateUrl("administration_organisation_event_lines", ["organisation" => $organisation->getId()])
+            $this->generateUrl('administration_organisation_event_lines', ['organisation' => $organisation->getId()])
         );
     }
 }

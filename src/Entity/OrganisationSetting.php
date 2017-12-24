@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13/09/2017
- * Time: 21:37
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -13,7 +16,7 @@ use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OrganisationSetting saves the settings for an organisation
+ * OrganisationSetting saves the settings for an organisation.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\OrganisationSettingRepository")
@@ -28,28 +31,28 @@ class OrganisationSetting extends BaseEntity
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $memberInviteEmailSubject = "";
+    private $memberInviteEmailSubject = '';
 
     /**
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $memberInviteEmailMessage = "";
+    private $memberInviteEmailMessage = '';
 
     /**
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $personInviteEmailSubject = "";
+    private $personInviteEmailSubject = '';
 
     /**
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $personInviteEmailMessage = "";
+    private $personInviteEmailMessage = '';
 
     /**
      * @var int
@@ -101,13 +104,13 @@ class OrganisationSetting extends BaseEntity
     private $receiverOfRemainders;
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
     public function getFullIdentifier()
     {
-        return $this->getOrganisation()->getName() . " setting";
+        return $this->getOrganisation()->getName().' setting';
     }
 
     /**

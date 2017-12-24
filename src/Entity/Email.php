@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 13.02.2017
- * Time: 19:54
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -14,7 +17,7 @@ use App\Enum\EmailType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An Email is a sent email to the specified receivers
+ * An Email is a sent email to the specified receivers.
  *
  * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EmailRepository")
@@ -223,13 +226,13 @@ class Email extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity
+     * returns a string representation of this entity.
      *
      * @return string
      */
     public function getFullIdentifier()
     {
-        return $this->getReceiver() . " " . $this->getSubject();
+        return $this->getReceiver().' '.$this->getSubject();
     }
 
     /**
