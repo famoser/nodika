@@ -37,6 +37,7 @@ security:
 
             logout:       true
             anonymous:    true
+            logout_on_user_change: true
 
         #backend firewall for admins
         backend:
@@ -51,6 +52,7 @@ security:
 
             logout:       true
             anonymous:    true
+            logout_on_user_change: true
 
     access_control:
         #enable login

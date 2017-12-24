@@ -36,3 +36,32 @@ services:
     app.admin_user_provider:
         class: App\Security\AdminUserProvider
         arguments: ["@doctrine", "%env(ADMIN_EMAIL)%"]
+        
+    app.exchange_service:
+            class:  App\Service\ExchangeService
+            arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
+    
+    app.event_past_evaluation_service:
+        class:  App\Service\EventPastEvaluationService
+        arguments: ["@doctrine"]
+
+    app.event_generation_service:
+        class:  App\Service\EventGenerationService
+        arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
+
+    app.email_service:
+        class:  App\Service\EmailService
+        arguments: ["@mailer", "@doctrine", "@twig","%env(CONTACT_EMAIL)%"]
+
+    listener.entity.remove:
+        class: App\Listener\DoctrinePreFlushListener
+        tags:
+            - { name: doctrine.event_listener, event: preFlush }
+
+    #twig extensions
+    app.extension.twig:
+        class: App\Extension\MyTwigExtension
+        tags:
+          - { name: twig.extension }
+        arguments:
+          ["@translator"]
