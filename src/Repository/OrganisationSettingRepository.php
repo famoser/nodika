@@ -44,7 +44,6 @@ class OrganisationSettingRepository extends EntityRepository
             $em->flush();
         } catch (\Exception $e) {
             //we can't do anything if the database misbehaves
-
         }
 
         return $result;
