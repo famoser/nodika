@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 class BaseFrontendController extends BaseController
 {
     private $memberCache = null;
-    private $memberCacheHot = false;
 
     /**
      * returns the member of the logged in user or null.
@@ -28,7 +27,7 @@ class BaseFrontendController extends BaseController
      */
     protected function getMember()
     {
-        if (null !== $this->memberCacheHot) {
+        if (null !== $this->memberCache) {
             return $this->memberCache;
         }
         $person = $this->getPerson();
@@ -43,7 +42,6 @@ class BaseFrontendController extends BaseController
             foreach ($person->getMembers() as $member) {
                 if ($member->getId() === $activeMemberId) {
                     $this->memberCache = $member;
-                    $this->memberCacheHot = true;
 
                     return $member;
                 }
@@ -52,7 +50,6 @@ class BaseFrontendController extends BaseController
                 $member = $person->getMembers()->first();
                 $this->setMember($member);
                 $this->memberCache = $member;
-                $this->memberCacheHot = true;
 
                 return $member;
             }

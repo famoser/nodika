@@ -19,7 +19,7 @@
                         <li class="menu-group-header">
                             <span>{{ "entity.name"|trans({}, "entity_organisation") }}</span>
                         </li>
-                        {% if organisation is defined %}
+                        {% if organisation is not null %}
                             <li>
                                 <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">{{ "menu.admin.administer"|trans({}, "content_base") }}</a>
                             </li>
@@ -28,11 +28,11 @@
                             <a href="{{ path("administration_organisation_new") }}">{{ "menu.admin.add_organisation"|trans({}, "content_base") }}</a>
                         </li>
 
-                        {% if organisation is defined %}
+                        {% if organisation is not null %}
                             <li class="menu-group-header">
                                 <span>{{ "entity.name"|trans({}, "entity_member") }}</span>
                             </li>
-                            {% if member is defined %}
+                            {% if member is not null %}
                                 <li>
                                     <a href="{{ path("administration_organisation_member_administer", {"organisation" : organisation.id, "member" : member.id}) }}">{{ "menu.admin.administer"|trans({}, "content_base") }}</a>
                                 </li>
@@ -40,7 +40,7 @@
                             <li>
                                 <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "menu.admin.add_member"|trans({}, "content_base") }}</a>
                             </li>
-                            {% if member is defined %}
+                            {% if member is not null %}
                                 <li class="menu-group-header">
                                     <span>{{ "entity.name"|trans({}, "entity_person") }}</span>
                                 </li>
@@ -52,7 +52,7 @@
                             <li class="menu-group-header">
                                 <span>{{ "entity.name"|trans({}, "entity_event_line") }}</span>
                             </li>
-                            {% if eventLine is defined %}
+                            {% if eventLine is not null %}
                                 <li>
                                     <a href="{{ path("administration_organisation_event_line_administer", {"organisation" : organisation.id, "eventLine" : eventLine.id}) }}">{{ "menu.admin.administer"|trans({}, "content_base") }}</a>
                                 </li>
@@ -60,7 +60,7 @@
                             <li>
                                 <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "menu.admin.add_event_line"|trans({}, "content_base") }}</a>
                             </li>
-                            {% if event is defined %}
+                            {% if event is not null %}
                                 <li class="menu-group-header">
                                     <span>{{ "entity.name"|trans({}, "entity_event") }}</span>
                                 </li>
@@ -71,7 +71,7 @@
                         {% endif %}
                     {% else %}
                         {# user menu #}
-                        {% if menu_organisation is defined %}
+                        {% if menu_organisation is not null %}
                             <li class="menu-group-header">
                                 <span>{{ "entity.name"|trans({}, "entity_organisation") }}</span>
                             </li>
@@ -81,7 +81,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {% if menu_member is defined %}
+                        {% if menu_member is not null %}
                             <li class="menu-group-header">
                                 {{ "entity.plural"|trans({}, "entity_event") }}
                             </li>

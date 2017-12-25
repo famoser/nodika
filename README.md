@@ -30,6 +30,7 @@ backend with symfony4, with the additional bundles:
  - `mailer` to send mails via smtp
  - `apache-pack` for the .htaccess file
  - `phpunit-bridge` to run tests
+ - `expression-language` for fancy expressions & annotations
 
 using the following libraries:
  - `erusev/parsedown` to convert markup to html

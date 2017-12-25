@@ -155,7 +155,7 @@ trait PersonTrait
     public function getFullName()
     {
         $res = $this->getJobTitle();
-        if ('' !== $this->getJobTitle()) {
+        if (mb_strlen($this->getJobTitle()) > 0) {
             $res .= ' ';
         }
 

@@ -103,13 +103,13 @@ trait CommunicationTrait
     public function getCommunicationLines()
     {
         $res = [];
-        if ('' !== $this->getPhone()) {
+        if (mb_strlen($this->getPhone()) > 0) {
             $res[] = $this->getPhone();
         }
-        if ('' !== $this->getEmail()) {
+        if (mb_strlen($this->getEmail()) > 0) {
             $res[] = $this->getEmail();
         }
-        if ('' !== $this->getWebpage()) {
+        if (mb_strlen($this->getWebpage()) > 0) {
             $res[] = $this->getWebpage();
         }
 

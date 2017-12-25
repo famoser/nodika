@@ -204,23 +204,23 @@ trait AddressTrait
     {
         $res = [];
         $lineOne = $this->getStreet();
-        if ('' !== $lineOne && '' !== $this->getStreetNr()) {
+        if (mb_strlen($lineOne) > 0 && mb_strlen($this->getStreetNr()) > 0) {
             $lineOne .= ' '.$this->getStreetNr();
         }
-        if ('' !== $lineOne) {
+        if (mb_strlen($lineOne) > 0) {
             $res[] = $lineOne;
         }
-        if ('' !== $this->getAddressLine()) {
+        if (mb_strlen($this->getAddressLine()) > 0) {
             $res[] = $this->getAddressLine();
         }
         $line3 = $this->getPostalCode();
-        if ('' !== $line3 && '' !== $this->getCity()) {
+        if (mb_strlen($line3) > 0 && mb_strlen($this->getCity() > 0)) {
             $line3 .= ' '.$this->getCity();
         }
-        if ('' !== $line3) {
+        if (mb_strlen($line3) > 0) {
             $res[] = $line3;
         }
-        if ('' !== $this->getCountry()) {
+        if (mb_strlen($this->getCountry()) > 0) {
             $res[] = $this->getCountry();
         }
 

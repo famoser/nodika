@@ -1,10 +1,12 @@
 index:
   title: 'Dashboard'
   description: 'Alles Wichtige auf einen Blick'
-  administer_organisations: 'Meine Organisationen verwalten'
-  administer_organisations_description: 'Sie sind Administrator folgender Organisationen und können diese verwalten'
+
+  administer_organisations: 'Organisation verwalten'
+  administer_organisations_description: 'Sie sind Administrator. Klicken Sie hier, um Ihre Organisation zu verwalten'
+
   change_organisation: 'Organisation wechseln'
-  change_organisation_description: 'Sie sind Teil mehrerer Organisationen. Hier können Sie zu den anderen wechseln'
+  change_organisation_description: 'Sie sind Teil mehrerer Organisationen. Klicken Sie hier, um die aktive Orgnaisation zu wechseln'
 
   no_event_lines: 'Noch keine Termingruppen'
   to_organisation_administration: 'Organisation administrieren'
@@ -19,11 +21,17 @@ index:
   welcome: 'Willkommen auf nodika.ch!'
   welcome_description: 'Öffnen Sie das Menu links um eine Übersicht über alle verfügbaren Funktionen zu bekommen'
 
-  confirm_events: 'Termine bestätigen'
-  confirm_events_description: 'Bestätigen Sie ihre nächsten Termine unter "Termine bestätigen" im Menu'
+  assign_events: 'Termine zuweisen'
+  assign_events_description: 'Weisen Sie sich Termine zu'
 
   trade_events: 'Termine tauschen'
-  trade_events_description: 'Um Termine zu tauschen, gehen Sie zuerst zu "Termine zuweisen" im Menu und weisen Sie sich Ihre Termine zu. Danach können Sie zu "Termine tauschen" und Ihre Tauschanfrage starten'
+  trade_events_description: 'Tauschen Sie Ihnen zugewiesene Termine ab'
+
+  confirm_events: 'Termine bestätigen'
+  confirm_events_description: 'Bestätigen Sie ihre nächsten Termine'
+
+  search_events: 'Termine suchen'
+  search_events_description: 'Sehen Sie alle erfassten Termine'
 
   questions: 'Anregungen oder Fragen?'
   questions_description: 'Schreiben Sie mir eine E-Mail an '

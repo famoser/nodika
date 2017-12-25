@@ -237,22 +237,16 @@ class EventController extends BaseFrontendController
         $organisation = $member->getOrganisation();
 
         $startQuery = $request->query->get('start');
-        $startDateTime = false;
-        if ('' !== $startQuery) {
-            $startDateTime = new \DateTime($startQuery);
-        }
-        if (!$startDateTime) {
-            $startDateTime = new \DateTime();
-        }
+        $startDateTime = new \DateTime($startQuery);
 
         $endQuery = $request->query->get('end');
         $endDateTime = false;
-        if ('' !== $endQuery) {
+        if (mb_strlen($endQuery) > 0) {
             $endDateTime = new \DateTime($endQuery);
         }
         if (!$endDateTime) {
             $endDateTime = clone $startDateTime;
-            $endDateTime->add(new \DateInterval('P1Y'));
+            $endDateTime = $endDateTime->add(new \DateInterval('P1Y'));
         }
 
         $memberQuery = $request->query->get('member');

@@ -46,9 +46,7 @@ class DashboardController extends BaseFrontendController
             unset($all[array_search($member->getOrganisation(), $all, true)]);
         }
 
-        if (count($all) > 0) {
-            $arr['change_organisations'] = $all;
-        }
+        $arr['change_organisations'] = $all;
 
         return $this->renderNoBackUrl('dashboard/index.html.twig', $arr, 'dashboard!');
     }

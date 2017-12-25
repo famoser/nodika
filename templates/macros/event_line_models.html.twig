@@ -14,7 +14,7 @@
         <p>{{ "index.no_events"|trans({}, "dashboard") }}</p>
     {% else %}
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover table-striped">
                 <thead>
                 <tr>
                     <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
@@ -45,7 +45,7 @@
                     </td>
                     <td>
                         {% if event.isConfirmed %}
-                            <i class="icon ion-checkmark"></i>
+                            <i class="icon icon-check-square"></i>
                         {% endif %}
                     </td>
                     </tr>

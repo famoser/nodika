@@ -274,7 +274,7 @@ trait UserTrait
      */
     public function isValidPlainPassword()
     {
-        return '' !== $this->getPlainPassword() && mb_strlen($this->getPlainPassword()) >= 8;
+        return mb_strlen($this->getPlainPassword()) >= 8;
     }
 
     /**
