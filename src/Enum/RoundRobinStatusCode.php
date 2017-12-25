@@ -17,5 +17,6 @@ class RoundRobinStatusCode extends BaseEnum
 {
     const SUCCESSFUL = 1;
     const NO_MATCHING_MEMBER = 2;
+    const NO_MATCHING_MEMBER_2 = 3;
     const UNKNOWN_ERROR = 10;
 }

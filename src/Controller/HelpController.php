@@ -25,11 +25,9 @@ class HelpController extends BaseController
     /**
      * @Route("/users", name="help_users")
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function usersAction(Request $request)
+    public function usersAction()
     {
         //todo
         return $this->renderWithBackUrl(
@@ -42,11 +40,9 @@ class HelpController extends BaseController
     /**
      * @Route("/admins", name="help_admins")
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function adminsAction(Request $request)
+    public function adminsAction()
     {
         //todo
         return $this->renderWithBackUrl(

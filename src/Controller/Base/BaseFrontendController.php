@@ -24,9 +24,6 @@ class BaseFrontendController extends BaseController
     /**
      * returns the member of the logged in user or null.
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
      * @return Member
      */
     protected function getMember()
@@ -81,9 +78,6 @@ class BaseFrontendController extends BaseController
      * sets the active member.
      *
      * @param Member $member
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function setMember(Member $member)
     {
@@ -132,10 +126,6 @@ class BaseFrontendController extends BaseController
      * add the entries needed to contruct the menu.
      *
      * @param $parameters
-     *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function addMenuEntries(&$parameters)
     {

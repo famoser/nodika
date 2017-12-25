@@ -15,7 +15,12 @@ use App\Entity\Email;
 use App\Enum\EmailType;
 use App\Helper\HashHelper;
 use App\Service\Interfaces\EmailServiceInterface;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Component\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
@@ -40,27 +45,30 @@ class EmailService implements EmailServiceInterface
     private $twig;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * EmailService constructor.
      *
-     * @param \Swift_Mailer     $mailer
+     * @param \Swift_Mailer $mailer
      * @param RegistryInterface $registry
-     * @param Environment       $twig
-     * @param $contactEmail
+     * @param LoggerInterface $logger
+     * @param Environment $twig
+     * @param string $contactEmail
      */
-    public function __construct(\Swift_Mailer $mailer, RegistryInterface $registry, Environment $twig, string $contactEmail)
+    public function __construct(\Swift_Mailer $mailer, RegistryInterface $registry, LoggerInterface $logger, Environment $twig, string $contactEmail)
     {
         $this->mailer = $mailer;
         $this->doctrine = $registry;
         $this->twig = $twig;
+        $this->logger = $logger;
         $this->contactEmail = $contactEmail;
     }
 
     /**
      * @param Email $email
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
     private function processEmail(Email $email)
     {
@@ -78,18 +86,22 @@ class EmailService implements EmailServiceInterface
 
         $body = $email->getBody();
         if (null !== $email->getActionLink()) {
-            $body .= "\n\n".$email->getActionText().': '.$email->getActionLink();
+            $body .= "\n\n" . $email->getActionText() . ': ' . $email->getActionLink();
         }
         $message->setBody($body, 'text/plain');
 
         if (EmailType::PLAIN_EMAIL !== $email->getEmailType()) {
-            $message->addPart(
-                $this->twig->render(
-                    'email/email.html.twig',
-                    ['email' => $email]
-                ),
-                'text/html'
-            );
+            try {
+                $message->addPart(
+                    $this->twig->render(
+                        'email/email.html.twig',
+                        ['email' => $email]
+                    ),
+                    'text/html'
+                );
+            } catch (\Exception $e) {
+                $this->logger->log(Logger::ERROR, "can not render email", $e);
+            }
         }
 
         if (null !== $email->getCarbonCopy()) {
@@ -99,14 +111,10 @@ class EmailService implements EmailServiceInterface
     }
 
     /**
-     * @param string      $receiver
-     * @param string      $subject
-     * @param string      $body
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
      * @param string|null $carbonCopy
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      *
      * @return bool
      */
@@ -127,12 +135,8 @@ class EmailService implements EmailServiceInterface
      * @param string $subject
      * @param string $body
      * @param $actionText
-     * @param string      $actionLink
+     * @param string $actionLink
      * @param string|null $carbonCopy
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      *
      * @return bool
      */
@@ -151,14 +155,10 @@ class EmailService implements EmailServiceInterface
     }
 
     /**
-     * @param string      $receiver
-     * @param string      $subject
-     * @param string      $body
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
      * @param string|null $carbonCopy
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      *
      * @return bool
      */

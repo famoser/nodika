@@ -53,8 +53,6 @@ class CronJobController extends BaseFrontendController
      *
      * @param $secret
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Response
      */

@@ -11,8 +11,10 @@
 
 namespace App\Extension;
 
+use App\Enum\BooleanType;
 use App\Helper\DateTimeFormatter;
 use DateTime;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -76,9 +78,9 @@ class MyTwigExtension extends Twig_Extension
     public function booleanFilter($value)
     {
         if ($value) {
-            return $this->translator->trans('true', [], 'enum_boolean_type');
+            return $this->translator->trans(BooleanType::getTranslation(BooleanType::YES), [], 'enum_boolean_type');
         }
 
-        return $this->translator->trans('false', [], 'enum_boolean_type');
+        return $this->translator->trans(BooleanType::getTranslation(BooleanType::NO), [], 'enum_boolean_type');
     }
 }

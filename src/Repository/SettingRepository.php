@@ -15,6 +15,8 @@ use App\Entity\FrontendUser;
 use App\Entity\Setting;
 use App\Enum\SettingKey;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\ORMException;
+use PHPUnit\Runner\Exception;
 
 /**
  * PersonRepository.
@@ -27,9 +29,6 @@ class SettingRepository extends EntityRepository
     /**
      * @param FrontendUser $user
      * @param $settingKey
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Setting|object
      */
@@ -45,8 +44,12 @@ class SettingRepository extends EntityRepository
         $result->setContent(SettingKey::getDefaultContent($settingKey));
 
         $em = $this->getEntityManager();
-        $em->persist($result);
-        $em->flush();
+        try {
+            $em->persist($result);
+            $em->flush();
+        } catch (\Exception $e) {
+            //if it doesn't safe it to database we do not care so much, as its only settings affected
+        }
 
         return $result;
     }

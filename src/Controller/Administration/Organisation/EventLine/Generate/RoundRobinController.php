@@ -27,6 +27,8 @@ use App\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use App\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 use App\Security\Voter\EventLineGenerationVoter;
 use App\Security\Voter\EventLineVoter;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,13 +43,12 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/new", name="administration_organisation_event_line_generate_round_robin_new")
      *
-     * @param Request      $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
      * @return Response
      */
-    public function newAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    public function newAction(Organisation $organisation, EventLine $eventLine)
     {
         $arr = [];
         $arr['organisation'] = $organisation;
@@ -63,13 +64,12 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/start", name="administration_organisation_event_line_generate_round_robin_start")
      *
-     * @param Request      $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
      * @return Response
      */
-    public function startAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    public function startAction(Organisation $organisation, EventLine $eventLine)
     {
         $this->denyAccessUnlessGranted(EventLineVoter::ADMINISTRATE, $eventLine);
 
@@ -92,9 +92,9 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/choose_period", name="administration_organisation_event_line_generate_round_robin_choose_period")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -142,9 +142,9 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/no_conflicts", name="administration_organisation_event_line_generate_round_robin_no_conflicts")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -196,9 +196,9 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/choose_members", name="administration_organisation_event_line_generate_round_robin_choose_members")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -248,14 +248,13 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/randomize_member_order", name="administration_organisation_event_line_generate_round_robin_randomize_member_order")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
      */
-    public function randomizeMemberOrderAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function randomizeMemberOrderAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -272,9 +271,9 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/set_order", name="administration_organisation_event_line_generate_round_robin_set_order")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -347,14 +346,13 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/start_generation", name="administration_organisation_event_line_generate_round_robin_start_generation")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
      */
-    public function startGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function startGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
 
@@ -373,14 +371,15 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_generate", name="administration_organisation_event_line_generate_round_robin_do_generate")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
+     * @param LoggerInterface $logger
      * @return Response
      */
-    public function doGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function doGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, LoggerInterface $logger)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -400,6 +399,8 @@ class RoundRobinController extends BaseGenerationController
                     'administration_organisation_event_line_generate_round_robin_confirm_generation',
                     ['organisation' => $organisation->getId(), 'eventLine' => $eventLine->getId(), 'generation' => $generation->getId()]
                 );
+            } else {
+                $logger->log(Logger::ERROR, "round robin error occurred with generation id " . $generation->getId());
             }
         } else {
             $translator = $this->get('translator');
@@ -421,14 +422,13 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/confirm_generation", name="administration_organisation_event_line_generate_round_robin_confirm_generation")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
      */
-    public function confirmGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function confirmGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);
@@ -455,14 +455,13 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/apply_generation", name="administration_organisation_event_line_generate_round_robin_apply_generation")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
      */
-    public function applyGenerationAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function applyGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);
@@ -482,14 +481,14 @@ class RoundRobinController extends BaseGenerationController
         }
 
         return $this->redirectToRoute(
-                'administration_organisation_event_line_generate_nodika_confirm_generation',
-                ['organisation' => $generation->getEventLine()->getOrganisation()->getId(), 'eventLine' => $generation->getEventLine()->getId(), 'generation' => $generation->getId()]
-            );
+            'administration_organisation_event_line_generate_nodika_confirm_generation',
+            ['organisation' => $generation->getEventLine()->getOrganisation()->getId(), 'eventLine' => $generation->getEventLine()->getId(), 'generation' => $generation->getId()]
+        );
     }
 
     /**
      * @param EventLineGeneration $generation
-     * @param Organisation        $organisation
+     * @param Organisation $organisation
      *
      * @return RoundRobinConfiguration
      */
@@ -519,7 +518,7 @@ class RoundRobinController extends BaseGenerationController
 
     /**
      * @param EventLineGeneration $generation
-     * @param RoundRobinOutput    $roundRobinOutput
+     * @param RoundRobinOutput $roundRobinOutput
      */
     private function saveRoundRobinOutput(EventLineGeneration $generation, RoundRobinOutput $roundRobinOutput)
     {
@@ -566,7 +565,7 @@ class RoundRobinController extends BaseGenerationController
 
     /**
      * @param RoundRobinConfiguration $configuration
-     * @param Organisation            $organisation
+     * @param Organisation $organisation
      */
     private function addMemberConfiguration(RoundRobinConfiguration $configuration, Organisation $organisation)
     {

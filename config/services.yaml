@@ -51,7 +51,7 @@ services:
 
     app.email_service:
         class:  App\Service\EmailService
-        arguments: ["@mailer", "@doctrine", "@twig","%env(CONTACT_EMAIL)%"]
+        arguments: ["@mailer", "@doctrine", "@translator","@twig","%env(CONTACT_EMAIL)%"]
 
     listener.entity.remove:
         class: App\Listener\DoctrinePreFlushListener

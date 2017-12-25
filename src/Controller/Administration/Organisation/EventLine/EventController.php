@@ -174,14 +174,13 @@ class EventController extends BaseController
     /**
      * @Route("/{event}/view", name="administration_organisation_event_line_event_view")
      *
-     * @param Request      $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
-     * @param Event        $event
+     * @param EventLine $eventLine
+     * @param Event $event
      *
      * @return Response
      */
-    public function viewAction(Request $request, Organisation $organisation, EventLine $eventLine, Event $event)
+    public function viewAction(Organisation $organisation, EventLine $eventLine, Event $event)
     {
         $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
 

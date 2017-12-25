@@ -179,8 +179,6 @@ class OrganisationController extends BaseController
      * @param Request      $request
      * @param Organisation $organisation
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Response
      */
@@ -248,8 +246,6 @@ class OrganisationController extends BaseController
      * @param Request      $request
      * @param Organisation $organisation
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Response
      */
@@ -349,8 +345,6 @@ class OrganisationController extends BaseController
      * @param Request      $request
      * @param Organisation $organisation
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Response
      */
@@ -422,8 +416,6 @@ class OrganisationController extends BaseController
      * @param Request      $request
      * @param Organisation $organisation
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Response
      */

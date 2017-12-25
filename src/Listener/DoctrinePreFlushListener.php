@@ -15,6 +15,7 @@ use App\Entity\Traits\IdTrait;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\ORMException;
 
 class DoctrinePreFlushListener implements EventSubscriber
 {
@@ -26,7 +27,11 @@ class DoctrinePreFlushListener implements EventSubscriber
         foreach ($uow->getScheduledEntityDeletions() as $deletedEntity) {
             /* @var IdTrait $deletedEntity */
             $deletedEntity->setDeletedAt(new \DateTime('now'));
-            $em->persist($deletedEntity);
+            try {
+                $em->persist($deletedEntity);
+            } catch (\Exception $e) {
+                //we can't do anything if the database fails
+            }
         }
     }
 

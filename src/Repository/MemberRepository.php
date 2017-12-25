@@ -16,6 +16,7 @@ use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * MemberRepository.
@@ -84,16 +85,18 @@ class MemberRepository extends EntityRepository
     /**
      * @param Member $member
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     *
      * @return int
      */
     public function countUnassignedEvents(Member $member)
     {
-        return $this->getAssignableEventsQueryBuilder($member, true)
-            ->andWhere('e.person IS NULL')
-            ->getQuery()
-            ->getSingleScalarResult();
+        try {
+            return $this->getAssignableEventsQueryBuilder($member, true)
+                ->andWhere('e.person IS NULL')
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            return 0;
+        }
     }
 
     /**
@@ -154,7 +157,7 @@ class MemberRepository extends EntityRepository
      */
     private function getUnconfirmedEventsQueryBuilder(Member $member, $dayThreshold, Person $person = null, $singleScalar = false)
     {
-        $threshHold = new \DateInterval('P'.$dayThreshold.'D');
+        $threshHold = new \DateInterval('P' . $dayThreshold . 'D');
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -191,10 +194,6 @@ class MemberRepository extends EntityRepository
      * @param Member $member
      * @param Person $person
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
      * @return int
      *
      * @internal param \DateInterval $threshHold
@@ -203,20 +202,23 @@ class MemberRepository extends EntityRepository
     {
         $organisationSetting = $this->getEntityManager()->getRepository('App:OrganisationSetting')->getByOrganisation($member->getOrganisation());
 
-        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person, true)
-            ->getQuery()
-            ->getSingleScalarResult();
+        try {
+            return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person, true)
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            return 0;
+        }
     }
 
     /**
      * counts the events which are not confirmed yet, but should be.
      *
-     * @param Member      $member
+     * @param Member $member
      * @param Person|null $person
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return int
      *
@@ -234,9 +236,6 @@ class MemberRepository extends EntityRepository
     /**
      * @param Member $member
      * @param Person $person
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Event[]
      *
@@ -260,8 +259,6 @@ class MemberRepository extends EntityRepository
      * @param Member $member
      * @param Person $person
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return Event[]
      *

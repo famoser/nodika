@@ -112,9 +112,6 @@ class OfferController extends BaseFrontendController
      * @param Request    $request
      * @param EventOffer $eventOffer
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function chooseEventsAction(Request $request, EventOffer $eventOffer)
@@ -504,9 +501,6 @@ class OfferController extends BaseFrontendController
     /**
      * @param EventOffer $eventOffer
      * @param bool       $remove
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return EventOfferEntry[]
      */

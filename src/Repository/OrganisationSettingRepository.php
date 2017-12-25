@@ -13,7 +13,10 @@ namespace App\Repository;
 
 use App\Entity\Organisation;
 use App\Entity\OrganisationSetting;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping;
+use Doctrine\ORM\ORMException;
 
 /**
  * OrganisationSettingRepository.
@@ -22,9 +25,6 @@ class OrganisationSettingRepository extends EntityRepository
 {
     /**
      * @param Organisation $organisation
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return OrganisationSetting
      */
@@ -37,8 +37,15 @@ class OrganisationSettingRepository extends EntityRepository
         $result = new OrganisationSetting();
         $result->setOrganisation($organisation);
         $result->setReceiverOfRemainders($organisation->getLeaders()->count() > 0 ? $organisation->getLeaders()->first() : null);
-        $this->getEntityManager()->persist($result);
-        $this->getEntityManager()->flush();
+        $em = $this->getEntityManager();
+
+        try {
+            $em->persist($result);
+            $em->flush();
+        } catch (\Exception $e) {
+            //we can't do anything if the database misbehaves
+
+        }
 
         return $result;
     }
