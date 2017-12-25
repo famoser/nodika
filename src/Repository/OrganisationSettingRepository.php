@@ -13,10 +13,7 @@ namespace App\Repository;
 
 use App\Entity\Organisation;
 use App\Entity\OrganisationSetting;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping;
-use Doctrine\ORM\ORMException;
 
 /**
  * OrganisationSettingRepository.

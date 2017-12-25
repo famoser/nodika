@@ -157,7 +157,7 @@ class MemberRepository extends EntityRepository
      */
     private function getUnconfirmedEventsQueryBuilder(Member $member, $dayThreshold, Person $person = null, $singleScalar = false)
     {
-        $threshHold = new \DateInterval('P' . $dayThreshold . 'D');
+        $threshHold = new \DateInterval('P'.$dayThreshold.'D');
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -214,7 +214,7 @@ class MemberRepository extends EntityRepository
     /**
      * counts the events which are not confirmed yet, but should be.
      *
-     * @param Member $member
+     * @param Member      $member
      * @param Person|null $person
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -258,7 +258,6 @@ class MemberRepository extends EntityRepository
     /**
      * @param Member $member
      * @param Person $person
-     *
      *
      * @return Event[]
      *

@@ -92,7 +92,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * @param RoundRobinOutput $roundRobinResult
-     * @param int $status
+     * @param int              $status
      *
      * @return RoundRobinOutput
      */
@@ -113,7 +113,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * @param NodikaOutput $nodikaOutput
-     * @param int $status
+     * @param int          $status
      *
      * @return NodikaOutput
      */
@@ -264,7 +264,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      * returns true if successful.
      *
      * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable                $memberAllowedCallable   with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
      *
      * @return RoundRobinOutput
      */
@@ -372,8 +372,8 @@ class EventGenerationService implements EventGenerationServiceInterface
      * persist the events associated with this generation in the database.
      *
      * @param EventLineGeneration $generation
-     * @param GenerationResult $generationResult
-     * @param Person $person
+     * @param GenerationResult    $generationResult
+     * @param Person              $person
      *
      * @return bool
      */
@@ -548,11 +548,11 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * distribute the days to the members.
      *
-     * @param array $partiesArray is an array of the form (int => double) (target points per member)
+     * @param array $partiesArray         is an array of the form (int => double) (target points per member)
      * @param array $distributedDaysArray is an array of the form (int => (int => int)) (distributed dayKey => dayCount per member)
-     * @param float $dayValue the value of this day for $distributedPointsArray calculation
-     * @param int $dayCount the amount of
-     * @param int $dayKey the key of this day used in $distributedDaysArray
+     * @param float $dayValue             the value of this day for $distributedPointsArray calculation
+     * @param int   $dayCount             the amount of
+     * @param int   $dayKey               the key of this day used in $distributedDaysArray
      */
     private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayCount, $dayKey)
     {
@@ -570,8 +570,8 @@ class EventGenerationService implements EventGenerationServiceInterface
      * according to the share of one party into the bucket it secures that bucket with that probability
      * the parties are distributed to the buckets to be in as few buckets as possible.
      *
-     * @param array $parties is an array of the form (int => double)
-     * @param int $bucketsCount the number of buckets to distribute
+     * @param array $parties      is an array of the form (int => double)
+     * @param int   $bucketsCount the number of buckets to distribute
      *
      * @return array is an array of the form (int => int)
      */
@@ -580,7 +580,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         //prepare party sizes
         $myParties = [];
         foreach ($parties as $partyId => $partySize) {
-            $myParties[$partyId] = (int)($partySize * 10000);
+            $myParties[$partyId] = (int) ($partySize * 10000);
         }
 
         //prepare parties (and sort by size)
@@ -606,7 +606,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         //prepare buckets
-        $bucketSize = (float)$totalSize / $bucketsCount;
+        $bucketSize = (float) $totalSize / $bucketsCount;
 
         $remainingBucketSizes = [];
         $bucketMembers = [];
@@ -690,7 +690,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         } catch (\Exception $e) {
             //try/catch because of random_int which throws an exception if not enough entropy can be found
-            $this->logger->log(Logger::CRITICAL, "no randomness sources could be found");
+            $this->logger->log(Logger::CRITICAL, 'no randomness sources could be found');
         }
 
         return $winnerPerBucket;
@@ -701,7 +701,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      * returns true if successful.
      *
      * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable            $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
      *
      * @return NodikaOutput
      */
@@ -750,7 +750,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $idealQueueMembers[$idealQueueMember->id] = $idealQueueMember;
         }
 
-        $idealQueue = (array)($nodikaConfiguration->beforeEvents);
+        $idealQueue = (array) ($nodikaConfiguration->beforeEvents);
         if (count($idealQueue) > $totalEvents) {
             //cut off too large beginning arrays
             $idealQueue = array_slice($idealQueue, $totalEvents);
@@ -987,7 +987,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $nodikaOutput->endDateTime = $startDateTime;
         $nodikaOutput->lengthInHours = $nodikaConfiguration->lengthInHours;
         $nodikaOutput->memberConfiguration = $members;
-        $nodikaOutput->beforeEvents = array_merge((array)($nodikaConfiguration->beforeEvents), $idealQueue);
+        $nodikaOutput->beforeEvents = array_merge((array) ($nodikaConfiguration->beforeEvents), $idealQueue);
         $nodikaOutput->generationResult = $generationResult;
 
         return $this->returnNodikaSuccess($nodikaOutput);
@@ -1005,17 +1005,17 @@ class EventGenerationService implements EventGenerationServiceInterface
         if ($hours >= 12) {
             ++$days;
             $hours = 24 - $hours;
-            $daysAddInterval = new \DateInterval('P' . $days . 'D');
+            $daysAddInterval = new \DateInterval('P'.$days.'D');
             $dateTime->add($daysAddInterval);
-            $hoursRemoveInterval = new \DateInterval('PT' . $hours . 'H');
+            $hoursRemoveInterval = new \DateInterval('PT'.$hours.'H');
             $dateTime->sub($hoursRemoveInterval);
         } else {
             if ($days > 0) {
-                $daysAddInterval = new \DateInterval('P' . $days . 'D');
+                $daysAddInterval = new \DateInterval('P'.$days.'D');
                 $dateTime->add($daysAddInterval);
             }
             if ($hours > 0) {
-                $hoursAddInterval = new \DateInterval('PT' . $hours . 'H');
+                $hoursAddInterval = new \DateInterval('PT'.$hours.'H');
                 $dateTime->sub($hoursAddInterval);
             }
         }

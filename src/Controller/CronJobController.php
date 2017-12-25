@@ -53,7 +53,6 @@ class CronJobController extends BaseFrontendController
      *
      * @param $secret
      *
-     *
      * @return Response
      */
     public function dailyAction($secret)

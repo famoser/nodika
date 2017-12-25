@@ -179,7 +179,6 @@ class OrganisationController extends BaseController
      * @param Request      $request
      * @param Organisation $organisation
      *
-     *
      * @return Response
      */
     public function membersInviteAction(Request $request, Organisation $organisation)
@@ -245,7 +244,6 @@ class OrganisationController extends BaseController
      *
      * @param Request      $request
      * @param Organisation $organisation
-     *
      *
      * @return Response
      */
@@ -345,7 +343,6 @@ class OrganisationController extends BaseController
      * @param Request      $request
      * @param Organisation $organisation
      *
-     *
      * @return Response
      */
     public function personsInviteAction(Request $request, Organisation $organisation)
@@ -415,7 +412,6 @@ class OrganisationController extends BaseController
      *
      * @param Request      $request
      * @param Organisation $organisation
-     *
      *
      * @return Response
      */

@@ -175,8 +175,8 @@ class EventController extends BaseController
      * @Route("/{event}/view", name="administration_organisation_event_line_event_view")
      *
      * @param Organisation $organisation
-     * @param EventLine $eventLine
-     * @param Event $event
+     * @param EventLine    $eventLine
+     * @param Event        $event
      *
      * @return Response
      */

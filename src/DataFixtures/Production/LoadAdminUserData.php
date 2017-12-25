@@ -22,6 +22,7 @@ class LoadAdminUserData extends BaseFixture
      * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
+     *
      * @throws \BadMethodCallException
      * @throws BadMethodCallException
      */

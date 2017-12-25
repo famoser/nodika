@@ -15,8 +15,6 @@ use App\Entity\FrontendUser;
 use App\Entity\Setting;
 use App\Enum\SettingKey;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\ORMException;
-use PHPUnit\Runner\Exception;
 
 /**
  * PersonRepository.

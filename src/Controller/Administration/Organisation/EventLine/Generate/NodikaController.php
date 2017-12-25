@@ -44,7 +44,7 @@ class NodikaController extends BaseGenerationController
      * @Route("/new", name="administration_organisation_event_line_generate_nodika_new")
      *
      * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param EventLine    $eventLine
      *
      * @return Response
      */
@@ -65,7 +65,7 @@ class NodikaController extends BaseGenerationController
      * @Route("/start", name="administration_organisation_event_line_generate_nodika_start")
      *
      * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param EventLine    $eventLine
      *
      * @return Response
      */
@@ -427,8 +427,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_distribution", name="administration_organisation_event_line_generate_nodika_do_distribution")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -452,8 +452,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/distribution_confirm", name="administration_organisation_event_line_generate_nodika_distribution_confirm")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -579,8 +579,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/start_generation", name="administration_organisation_event_line_generate_nodika_start_generation")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -604,8 +604,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_generate", name="administration_organisation_event_line_generate_nodika_do_generate")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -651,8 +651,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/confirm_generation", name="administration_organisation_event_line_generate_nodika_confirm_generation")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -684,8 +684,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/apply_generation", name="administration_organisation_event_line_generate_nodika_apply_generation")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response

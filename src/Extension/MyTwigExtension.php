@@ -14,7 +14,6 @@ namespace App\Extension;
 use App\Enum\BooleanType;
 use App\Helper\DateTimeFormatter;
 use DateTime;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 use Twig_SimpleFilter;

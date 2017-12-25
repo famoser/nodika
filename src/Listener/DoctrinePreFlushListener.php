@@ -15,7 +15,6 @@ use App\Entity\Traits\IdTrait;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\ORMException;
 
 class DoctrinePreFlushListener implements EventSubscriber
 {

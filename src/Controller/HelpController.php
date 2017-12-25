@@ -13,7 +13,6 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
