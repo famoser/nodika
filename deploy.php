@@ -1,11 +1,21 @@
 <?php
 
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Deployer;
+
 require 'vendor/deployer/deployer/recipe/symfony-flex.php';
 
 // Configuration
 set('repository', 'git@github.com:famoser/nodika.git');
-set('shared_files', array_merge(get('shared_files'), ["var/data.db3"]));
+set('shared_files', array_merge(get('shared_files'), ['var/data.db3']));
 
 // import servers
 inventory('servers.yml');
@@ -28,9 +38,9 @@ task('frontend:build', function () {
 
 //load fixtures for dev
 task('database:fixtures', function () {
-    if (get('stage') == "dev") {
+    if ('dev' === get('stage')) {
         //ensure dev
-        $before = get("symfony_env");
+        $before = get('symfony_env');
         set('symfony_env', 'dev');
         run('{{bin/php}} {{bin/console}} doctrine:fixtures:load {{console_options}}');
         set('symfony_env', $before);
@@ -39,7 +49,7 @@ task('database:fixtures', function () {
 
 // kill php processes to ensure symlinks are refreshed
 task('deploy:refresh_symlink', function () {
-    run("killall -9 php-cgi"); //kill all php processes so symlink is refreshed
+    run('killall -9 php-cgi'); //kill all php processes so symlink is refreshed
 })->desc('Refreshing symlink');
 //frontend stuff
 after('deploy:vendors', 'frontend:build');
