@@ -42,7 +42,7 @@ task('deploy:refresh_symlink', function () {
     run("killall -9 php-cgi"); //kill all php processes so symlink is refreshed
 })->desc('Refreshing symlink');
 //frontend stuff
-after('deploy:vendor', 'frontend:build');
+after('deploy:vendors', 'frontend:build');
 // migrations
 after('deploy:writable', 'database:migrate');
 // fixtures
