@@ -8,6 +8,12 @@
     "composer/semver": {
         "version": "1.4.2"
     },
+    "deployer/deployer": {
+        "version": "dev-famoser-symfony-4"
+    },
+    "deployer/phar-update": {
+        "version": "dev-famoser-symfony-4"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -139,6 +145,9 @@
     },
     "php-cs-fixer/diff": {
         "version": "v1.2.0"
+    },
+    "pimple/pimple": {
+        "version": "v3.2.2"
     },
     "psr/cache": {
         "version": "1.0.1"

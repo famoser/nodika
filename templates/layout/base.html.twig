@@ -13,7 +13,7 @@
     <title>{{ title }}</title>
     {% block stylesheets %}
     {% endblock %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('build/app.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/app.css') }}"/>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     <meta name="description" content="{{ description }}">
     <base href="/" target="_self">
@@ -89,7 +89,7 @@
 </script>
 <!--End of Tawk.to Script-->
 
-<script type="text/javascript" src="{{ asset('build/app.js') }}"></script>
+<script type="text/javascript" src="{{ asset('dist/app.js') }}"></script>
 {% block javascript %}
 {% endblock %}
 </body>
