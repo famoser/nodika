@@ -16,6 +16,7 @@ require 'vendor/deployer/deployer/recipe/symfony-flex.php';
 // Configuration
 set('repository', 'git@github.com:famoser/nodika.git');
 set('shared_files', array_merge(get('shared_files'), ['var/data.db3']));
+set('symfony_env_file', '.env');
 
 // import servers
 inventory('servers.yml');
@@ -28,7 +29,6 @@ set(
     'bin/php',
     '/usr/local/php71/bin/php'
 );
-
 //build yarn stuff & upload
 task('frontend:build', function () {
     runLocally('yarn install');
