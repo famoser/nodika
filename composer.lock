@@ -5044,12 +5044,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/famoser/deployer.git",
-                "reference": "57b7d590a6b2c1c49d63deba3f9b351740898010"
+                "reference": "60518e651daa0f4e14a6e7a6ab78d310539f091a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/famoser/deployer/zipball/57b7d590a6b2c1c49d63deba3f9b351740898010",
-                "reference": "57b7d590a6b2c1c49d63deba3f9b351740898010",
+                "url": "https://api.github.com/repos/famoser/deployer/zipball/60518e651daa0f4e14a6e7a6ab78d310539f091a",
+                "reference": "60518e651daa0f4e14a6e7a6ab78d310539f091a",
                 "shasum": ""
             },
             "require": {
@@ -5093,7 +5093,7 @@
                 "source": "https://github.com/deployphp/deployer",
                 "docs": "https://deployer.org/docs"
             },
-            "time": "2018-01-06T18:42:15+00:00"
+            "time": "2018-01-06T19:03:24+00:00"
         },
         {
             "name": "deployer/phar-update",
