@@ -32,7 +32,6 @@ class StaticController extends BaseController
      */
     public function indexAction(Request $request)
     {
-        dump($this->getParameter("param1"));
         $arr = [];
         $arr['is_logged_in'] = $this->getUser() instanceof FrontendUser;
 

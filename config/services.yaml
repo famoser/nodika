@@ -3,6 +3,8 @@
 parameters:
     locale: 'de'
 
+imports:
+    - { resource: legacy_aliases.yml }
 
 services:
     # default configuration for services in *this* file
@@ -25,38 +27,22 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
 
-    app.github_notifier: '@App\Service\GitHubNotifier'
-    markdown_transformer: '@App\Service\MarkdownTransformer'
-
-
-    app.frontend_user_provider:
-        class: App\Security\FrontendUserProvider
-        arguments: ["@doctrine"]
-
-    app.admin_user_provider:
-        class: App\Security\AdminUserProvider
+    App\Security\AdminUserProvider:
         arguments: ["@doctrine", "%env(ADMIN_EMAIL)%"]
         
-    app.exchange_service:
-            class:  App\Service\ExchangeService
-            arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
+    App\Service\ExchangeService:
+        arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
     
-    app.event_past_evaluation_service:
-        class:  App\Service\EventPastEvaluationService
+    App\Service\EventPastEvaluationService:
         arguments: ["@doctrine"]
 
-    app.event_generation_service:
-        class:  App\Service\EventGenerationService
+    App\Service\EventGenerationService:
         arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
 
-    app.email_service:
-        class:  App\Service\EmailService
+    App\Service\EmailService:
         arguments: ["@mailer", "@doctrine", "@translator","@twig","%env(CONTACT_EMAIL)%"]
 
-    listener.entity.remove:
-        class: App\Listener\DoctrinePreFlushListener
+    App\Listener\DoctrinePreFlushListener:
         tags:
             - { name: doctrine.event_listener, event: preFlush }
