@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dbdcbb05b8a49fb1afd762215b836c5b",
+    "content-hash": "2ea0bc6ccceacf5b2a9ad00254d2f798",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -3982,6 +3982,54 @@
             "time": "2018-01-03T07:38:00+00:00"
         },
         {
+            "name": "symfony/requirements-checker",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/requirements-checker.git",
+                "reference": "931997643fb512026241c7360c613bc1e61ed9cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/requirements-checker/zipball/931997643fb512026241c7360c613bc1e61ed9cf",
+                "reference": "931997643fb512026241c7360c613bc1e61ed9cf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "bin": [
+                "bin/requirements-checker"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Requirements\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Check Symfony requirements and give recommendations",
+            "keywords": [
+                "configuration",
+                "distribution"
+            ],
+            "time": "2017-11-10T15:30:47+00:00"
+        },
+        {
             "name": "symfony/routing",
             "version": "v4.0.3",
             "source": {
@@ -5044,12 +5092,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/famoser/deployer.git",
-                "reference": "60518e651daa0f4e14a6e7a6ab78d310539f091a"
+                "reference": "ec7a413fd2dd8029b68a6e5d40c7c747981da879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/famoser/deployer/zipball/60518e651daa0f4e14a6e7a6ab78d310539f091a",
-                "reference": "60518e651daa0f4e14a6e7a6ab78d310539f091a",
+                "url": "https://api.github.com/repos/famoser/deployer/zipball/ec7a413fd2dd8029b68a6e5d40c7c747981da879",
+                "reference": "ec7a413fd2dd8029b68a6e5d40c7c747981da879",
                 "shasum": ""
             },
             "require": {
@@ -5093,7 +5141,7 @@
                 "source": "https://github.com/deployphp/deployer",
                 "docs": "https://deployer.org/docs"
             },
-            "time": "2018-01-06T19:03:24+00:00"
+            "time": "2018-01-07T00:06:23+00:00"
         },
         {
             "name": "deployer/phar-update",
@@ -5863,54 +5911,6 @@
             ],
             "description": "A pack for the Symfony web profiler",
             "time": "2017-12-12T01:48:24+00:00"
-        },
-        {
-            "name": "symfony/requirements-checker",
-            "version": "v1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/requirements-checker.git",
-                "reference": "931997643fb512026241c7360c613bc1e61ed9cf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/requirements-checker/zipball/931997643fb512026241c7360c613bc1e61ed9cf",
-                "reference": "931997643fb512026241c7360c613bc1e61ed9cf",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "bin": [
-                "bin/requirements-checker"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Requirements\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Check Symfony requirements and give recommendations",
-            "keywords": [
-                "configuration",
-                "distribution"
-            ],
-            "time": "2017-11-10T15:30:47+00:00"
         },
         {
             "name": "symfony/var-dumper",
