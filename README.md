@@ -15,7 +15,7 @@ dependencies (you need this on your machine):
 ubuntu installation:
  - `sudo add-apt-repository ppa:ondrej/php`
  - `sudo apt-get update`
- - `sudo apt-get install php php-xml php-zip php-mbstring yard`
+ - `sudo apt-get install php php-xml php-zip php-mbstring npm yard`
  
 
 backend with symfony4, with the additional bundles:
