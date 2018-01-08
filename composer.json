@@ -79,6 +79,7 @@
       "cache:clear": "symfony-cmd",
       "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd",
       "security:check --end-point=http://security.sensiolabs.org/check_lock": "symfony-cmd",
+      "doctrine:migrations:migrate -q": "symfony-cmd",
       "requirements-checker": "script"
     },
     "post-install-cmd": [
