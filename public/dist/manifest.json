@@ -1,0 +1,13 @@
+{
+  "dist/app.css": "/dist/app.css",
+  "dist/app.js": "/dist/app.js",
+  "dist/fonts/ionicons.eot": "/dist/fonts/ionicons.bdf1d306.eot",
+  "dist/fonts/ionicons.ttf": "/dist/fonts/ionicons.74c65267.ttf",
+  "dist/fonts/ionicons.woff": "/dist/fonts/ionicons.81414686.woff",
+  "dist/fonts/ionicons.woff2": "/dist/fonts/ionicons.311d8196.woff2",
+  "dist/fonts/nodika-icons.eot": "/dist/fonts/nodika-icons.8cd08549.eot",
+  "dist/fonts/nodika-icons.ttf": "/dist/fonts/nodika-icons.e022891f.ttf",
+  "dist/fonts/nodika-icons.woff": "/dist/fonts/nodika-icons.f643d56e.woff",
+  "dist/images/ionicons.svg": "/dist/images/ionicons.d9496a23.svg",
+  "dist/images/nodika-icons.svg": "/dist/images/nodika-icons.21535c03.svg"
+}
