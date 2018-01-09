@@ -21,6 +21,7 @@
 
 #deployment info
 servers.yml
+public/dist/*
 
 public/build
 ###> symfony/phpunit-bridge ###
