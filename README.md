@@ -42,7 +42,7 @@ frontend building tools:
  - `bootstrap-sass` bootstrap for basic css styling
  - `font-awesome` font with icons
  - `sass-loader node-sass` to enable the sass precompiler
-
+ 
 after first pull, execute from project root:
  - `yarn install` installs npm dependencies 
  - `composer install` installs php dependencies
