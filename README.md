@@ -3,7 +3,7 @@ Introduction
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Travis Build Status](https://travis-ci.org/famoser/nodika.svg?branch=master)](https://travis-ci.org/famoser/nodika)
 [![Code Climate](https://codeclimate.com/github/famoser/nodika/badges/gpa.svg)](https://codeclimate.com/github/famoser/nodika)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0049282fe1b3437ba8321ec244a3ea93)](https://www.codacy.com/app/famoser/SyncApi-Webpage?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=famoser/nodika&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0049282fe1b3437ba8321ec244a3ea93)](https://www.codacy.com/app/famoser/nodika)
 [![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
 
 dependencies (you need this on your machine):
@@ -16,7 +16,6 @@ ubuntu installation:
  - `sudo add-apt-repository ppa:ondrej/php`
  - `sudo apt-get update`
  - `sudo apt-get install php php-xml php-zip php-mbstring npm yard`
- 
 
 backend with symfony4, with the additional bundles:
  - `server` for a better symfony server
@@ -45,13 +44,10 @@ frontend building tools:
  - `sass-loader node-sass` to enable the sass precompiler
 
 after first pull, execute from project root:
- - `npm install` #installs npm dependencies
- - `npm install gulp -g` #installs gulp globally 
- - `composer install` #installs php dependencies
- - `gulp` #builds css / js files
- - `reinit_dev.cmd` which executes:
-	- `php bin/console doctrine:migrations:migrate` #migrate db to newest version
-	- `php bin/console doctrine:fixtures:load` #load sample data & user
+ - `yarn install` installs npm dependencies 
+ - `composer install` installs php dependencies
+ - `yarn encore dev` builds css / js files
+ - `php bin/console doctrine:fixtures:load` loads sample data & user
  
 if you're developing in the backend:
  - `php bin/console server:run` #starts the symfony server
@@ -67,14 +63,14 @@ if you want to login as an admin
  - use the user `info@nodika.ch` with pass `asdf1234`
  
 if you've changed the Entities and need to adapt the database
- - `php bin/console doctrine:migrations:diff` to generate the changescript sql
+ - `php bin/console doctrine:migrations:diff` to generate the migration class
  - `php bin/console doctrine:migrations:migrate` to migrate db to the newest version
- - optionally execute `php bin/console doctrine:generate:entities AppBundle:MyClass` to generate getter & setters
  
 if you want to deploy
  - rename `servers_template.yml` to `servers.yml`, correct entries
  - execute `php deployer.phar deploy ENVIRONMENT`, replacing `ENVIRONMENT` by ether `dev`, `testing` or `production` (defaults to `dev`) 
- - you may want to login with ssh and prepare the database data with `php bin/console doctrine:fixtures:load --fixtures=src/AppBundle/DataFixtures/ORM/Production -q` (execute from active release root)
+ - if you are on the dev branch fixtures are autoamtically applied
+ - if you deploy the fist time to production may want to login with ssh and prepare the database data with `php bin/console doctrine:fixtures:load --fixtures=src/DataFixtures/Production -q`
  
 if you're setting up deployment on a new server
  - `cat ~/.ssh/id_rsa.pub` to ensure you already have created an ssh key for yourself, if none:
