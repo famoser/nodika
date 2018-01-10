@@ -24,6 +24,8 @@ inventory('servers.yml');
 
 //stages: dev, testing, production
 set('default_stage', 'dev');
+//only keep two releases
+set('keep_releases', 2);
 
 //use php 7.1
 set(
@@ -36,6 +38,13 @@ task('frontend:build', function () {
     runLocally('yarn run encore production');
     runLocally('rsync -azP public/dist {{user}}@{{hostname}}:{{release_path}}/public');
 })->desc('Build frontend assets');
+
+
+// Symfony console bin
+set('bin/console', function () {
+    $env = get("env_file_path");
+    return sprintf('--version && cd {{release_path}} && set -a && source ' . $env . ' && set +a && {{bin/php}} {{release_path}}/%s/console', trim(get('bin_dir'), '/'));
+});
 
 //load fixtures for dev
 task('database:fixtures', function () {
