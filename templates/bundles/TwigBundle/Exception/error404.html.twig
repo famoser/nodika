@@ -1,0 +1,7 @@
+{% extends 'bundles/TwigBundle/Exception/error.html.twig' %}
+
+{% trans_default_domain "static" %}
+
+{% block additional_error_info %}
+    <p>{{ "error.404"|trans }}</p>
+{% endblock %}

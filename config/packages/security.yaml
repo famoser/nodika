@@ -60,8 +60,9 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-        #allow cron jobs
+        #allow cron jobs / debugging routes
         - { path: ^/cron, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/_, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #allow info pages
         - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }

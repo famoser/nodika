@@ -19,13 +19,14 @@ use App\Enum\SubmitButtonType;
 use App\Helper\CsvFileHelper;
 use App\Helper\NamingHelper;
 use App\Helper\StaticMessageHelper;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class BaseController extends Controller
+class BaseController extends AbstractController
 {
     /**
      * @param $type

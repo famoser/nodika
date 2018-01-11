@@ -56,7 +56,7 @@ if you're developing the frontend (css/js), execute afterwards:
  - `gulp watch` #serves as a proxy between the symfony server & the webpage displayed in the browser
  - go to the webpage display in the console from gulp, propably http://localhost:3000/
  - edit files in web/assets/sass or web/assets/js, save them to see the change instantly in the browser
- - test error templates inside TwigBundle/views by accessing `/app_dev.php/_error/404` and `/app_dev.php/_error/500`
+ - test error templates inside TwigBundle/views by accessing `/_error/404` and `/_error/500`
  
 if you want to login as an admin
  - go to /login
