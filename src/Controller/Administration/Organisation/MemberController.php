@@ -20,11 +20,13 @@ use App\Form\Member\MemberType;
 use App\Model\Form\ImportFileModel;
 use App\Security\Voter\MemberVoter;
 use App\Security\Voter\OrganisationVoter;
+use App\Service\ExchangeService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/members")
@@ -40,7 +42,7 @@ class MemberController extends BaseController
      *
      * @return Response
      */
-    public function newAction(Request $request, Organisation $organisation)
+    public function newAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
@@ -48,6 +50,7 @@ class MemberController extends BaseController
         $member->setOrganisation($organisation);
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $member,
             SubmitButtonType::CREATE,
             function ($form, $entity) use ($organisation) {
@@ -80,7 +83,7 @@ class MemberController extends BaseController
      *
      * @return Response
      */
-    public function administerAction(Organisation $organisation, Member $member)
+    public function administerAction(Organisation $organisation, Member $member, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(MemberVoter::ADMINISTRATE, $member);
 
@@ -92,7 +95,6 @@ class MemberController extends BaseController
                 $itMember->getOrganisation()->getId() === $organisation->getId();
         }
         if (!$isPartOfOrganisation) {
-            $translator = $this->get('translator');
             $this->displayInfo(
                 $translator->trans('administer.not_part_of_organisation_yet', [], 'administration_organisation_member'),
                 $this->generateUrl('administration_organisation_member_add_self', ['organisation' => $organisation->getId(), 'member' => $member->getId()])
@@ -136,12 +138,13 @@ class MemberController extends BaseController
      *
      * @return Response
      */
-    public function editAction(Request $request, Organisation $organisation, Member $member)
+    public function editAction(Request $request, Organisation $organisation, Member $member, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(MemberVoter::EDIT, $member);
 
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $member,
             SubmitButtonType::EDIT,
             function ($form, $entity) use ($organisation) {
@@ -175,12 +178,13 @@ class MemberController extends BaseController
      *
      * @return Response
      */
-    public function removeAction(Request $request, Organisation $organisation, Member $member)
+    public function removeAction(Request $request, Organisation $organisation, Member $member, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(MemberVoter::REMOVE, $member);
 
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $member,
             SubmitButtonType::REMOVE,
             function ($form, $entity) use ($organisation) {
@@ -210,11 +214,10 @@ class MemberController extends BaseController
      *
      * @return Response
      */
-    public function importDownloadTemplateAction()
+    public function importDownloadTemplateAction(TranslatorInterface $translator, ExchangeService $exchangeService)
     {
-        $memberTrans = $this->get('translator')->trans('entity.name', [], 'entity_member');
+        $memberTrans = $translator->trans('entity.name', [], 'entity_member');
         $newMemberForm = $this->createForm(MemberType::class);
-        $exchangeService = $this->get('app.exchange_service');
 
         return $this->renderCsv($memberTrans.'.csv', [], $exchangeService->getCsvHeader($newMemberForm));
     }
@@ -222,24 +225,26 @@ class MemberController extends BaseController
     /**
      * @Route("/import", name="administration_organisation_member_import")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function importAction(Request $request, Organisation $organisation)
+    public function importAction(Request $request, Organisation $organisation, TranslatorInterface $translator, ExchangeService $exchangeService)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
 
         $importForm = $this->handleForm(
-            $this->createForm(ImportMembersType::class),
+            $this->createForm(
+                ImportMembersType::class),
             $request,
+            $translator,
             new ImportFileModel('/img/import'),
-            function ($form, $entity) use ($organisation) {
+            function ($form, $entity) use ($organisation, $exchangeService) {
                 /* @var Form $form */
                 /* @var ImportFileModel $entity */
                 $newMemberForm = $this->createForm(MemberType::class);
-                $exchangeService = $this->get('app.exchange_service');
                 if ($exchangeService->importCsv($newMemberForm, function () use ($organisation) {
                     $member = new Member();
                     $member->setOrganisation($organisation);

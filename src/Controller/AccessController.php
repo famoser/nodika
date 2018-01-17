@@ -23,12 +23,14 @@ use App\Form\Member\MemberInviteType;
 use App\Form\Person\PersonInviteType;
 use App\Form\Person\PersonType;
 use App\Helper\HashHelper;
+use App\Service\EmailService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AccessController extends BaseAccessController
 {
@@ -37,16 +39,17 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\Form\Form|RedirectResponse|Response
      */
-    public function loginAction(Request $request)
+    public function loginAction(Request $request, TranslatorInterface $translator)
     {
         $user = $this->getUser();
         if ($user instanceof FrontendUser) {
             return $this->redirectToRoute('dashboard_index');
         }
 
-        $form = $this->getLoginForm($request, new FrontendUser(), $this->createForm(FrontendUserLoginType::class));
+        $form = $this->getLoginForm($request, $translator, new FrontendUser(), $this->createForm(FrontendUserLoginType::class));
         if ($form instanceof RedirectResponse) {
             return $form;
         }
@@ -78,36 +81,38 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
      * @return FormInterface|Response
      */
-    public function registerAction(Request $request)
+    public function registerAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $registerForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
             $request,
+            $translator,
             new Person(),
-            function ($form, $person) {
+            function ($form, $person) use ($translator, $emailService) {
                 /* @var Person $person */
                 $existingUser = $this->getDoctrine()->getRepository('App:FrontendUser')->findOneBy(['email' => $person->getEmail()]);
                 if (null !== $existingUser) {
-                    $this->displayError($this->get('translator')->trans('error.email_already_registered', [], 'access'));
+                    $this->displayError($translator->trans('error.email_already_registered', [], 'access'));
 
                     return $form;
                 }
                 $user = FrontendUser::createFromPerson($person);
                 $this->fastSave($person, $user);
 
-                $translator = $this->get('translator');
                 $subject = $translator->trans('register.subject', [], 'email_access');
-                $receiver = $existingUser->getEmail();
+                $receiver = $person->getEmail();
                 $body = $translator->trans('register.message', [], 'email_access');
                 $actionText = $translator->trans('register.action_text', [], 'email_access');
                 $actionLink = $this->generateUrl(
-                        'access_register_confirm',
-                        ['confirmationToken' => $user->getResetHash()],
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+                    'access_register_confirm',
+                    ['confirmationToken' => $user->getResetHash()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
                 return $this->redirectToRoute('access_register_thanks');
             }
@@ -131,13 +136,13 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return FormInterface|Response
      */
-    public function inviteResendAction(Request $request)
+    public function inviteResendAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         if ('POST' === $request->getMethod()) {
             $email = $request->get('email');
-            $translator = $this->get('translator');
 
             $person = $this->getDoctrine()->getRepository('App:Person')->findOneBy(['email' => $email]);
             if (null !== $person) {
@@ -153,7 +158,7 @@ class AccessController extends BaseAccessController
                             UrlGeneratorInterface::ABSOLUTE_URL
                         );
 
-                        $this->get('app.email_service')->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
+                        $emailService->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
 
                         $this->displaySuccess($translator->trans('invite_resend.success.email_send', [], 'access'));
                     } else {
@@ -178,7 +183,7 @@ class AccessController extends BaseAccessController
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
 
-                    $this->get('app.email_service')->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
+                    $emailService->sendActionEmail($person->getEmail(), $subject, $body, $actionText, $actionLink);
 
                     $this->displaySuccess($translator->trans('invite_resend.success.email_send', [], 'access'));
                 } else {
@@ -204,9 +209,10 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @param $invitationHash
      *
+     * @param TranslatorInterface $translator
      * @return FormInterface|Response
      */
-    public function inviteAction(Request $request, $invitationHash)
+    public function inviteAction(Request $request, $invitationHash, TranslatorInterface $translator)
     {
         $member = $this->getDoctrine()->getRepository('App:Member')->findOneBy(['invitationHash' => $invitationHash]);
         if (!$member instanceof Member) {
@@ -219,7 +225,6 @@ class AccessController extends BaseAccessController
 
         //add user if already registered
         if ($this->getUser() instanceof FrontendUser) {
-            $translator = $this->get('translator');
             $found = false;
 
             $person = $this->getPerson();
@@ -258,12 +263,13 @@ class AccessController extends BaseAccessController
         $inviteForm = $this->handleForm(
             $this->createForm(MemberInviteType::class),
             $request,
+            $translator,
             $person,
-            function ($form, $person) use ($member, $request) {
+            function ($form, $person) use ($member, $request, $translator) {
                 /* @var Person $person */
                 $existingUser = $this->getDoctrine()->getRepository('App:FrontendUser')->findOneBy(['email' => $person->getEmail()]);
                 if (null !== $existingUser) {
-                    $this->displayError($this->get('translator')->trans('error.email_already_registered', [], 'access'));
+                    $this->displayError($translator->trans('error.email_already_registered', [], 'access'));
 
                     return $form;
                 }
@@ -279,7 +285,7 @@ class AccessController extends BaseAccessController
                 $this->fastSave($person, $member);
 
                 $this->loginUser($request, $person->getFrontendUser());
-                $this->displaySuccess($this->get('translator')->trans('success.welcome', [], 'access'));
+                $this->displaySuccess($translator->trans('success.welcome', [], 'access'));
 
                 return $this->redirectToRoute('dashboard_index');
             }
@@ -306,9 +312,10 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @param $invitationHash
      *
+     * @param TranslatorInterface $translator
      * @return FormInterface|Response
      */
-    public function invitePersonAction(Request $request, $invitationHash)
+    public function invitePersonAction(Request $request, $invitationHash, TranslatorInterface $translator)
     {
         $person = $this->getDoctrine()->getRepository('App:Person')->findOneBy(['invitationHash' => $invitationHash]);
         if (!$person instanceof Person) {
@@ -325,22 +332,22 @@ class AccessController extends BaseAccessController
                     $this->getUser()->setPerson($person);
                     $person->setFrontendUser($this->getUser());
                     $this->fastSave($this->getUser(), $person);
-                    $this->displaySuccess($this->get('translator')->trans('success.person_assigned', [], 'access'));
+                    $this->displaySuccess($translator->trans('success.person_assigned', [], 'access'));
                 } else {
-                    $this->displayInfo($this->get('translator')->trans('info.already_accepted_invite', [], 'access'));
+                    $this->displayInfo($translator->trans('info.already_accepted_invite', [], 'access'));
                 }
 
                 return $this->redirectToRoute('dashboard_index');
             }
-            $this->displayError($this->get('translator')->trans('error.already_logged_in', [], 'access'));
+            $this->displayError($translator->trans('error.already_logged_in', [], 'access'));
 
             return $this->redirectToRoute('dashboard_index');
         }
 
         $existingUser = $this->getDoctrine()->getRepository('App:FrontendUser')->findOneBy(['email' => $person->getEmail()]);
         if (null !== $existingUser) {
-            $this->displayError($this->get('translator')->trans('error.email_already_registered', [], 'access'));
-            $this->displayInfo($this->get('translator')->trans('info.login_with_email', [], 'access'));
+            $this->displayError($translator->trans('error.email_already_registered', [], 'access'));
+            $this->displayInfo($translator->trans('info.login_with_email', [], 'access'));
 
             return $this->redirectToRoute('access_login');
         }
@@ -351,12 +358,13 @@ class AccessController extends BaseAccessController
         $inviteForm = $this->handleForm(
             $this->createForm(PersonInviteType::class),
             $request,
+            $translator,
             $person,
-            function ($form, $person) use ($request) {
+            function ($form, $person) use ($request, $translator) {
                 /* @var Person $person */
                 $existingUser = $this->getDoctrine()->getRepository('App:FrontendUser')->findOneBy(['email' => $person->getEmail()]);
                 if (null !== $existingUser) {
-                    $this->displayError($this->get('translator')->trans('error.email_already_registered', [], 'access'));
+                    $this->displayError($translator->trans('error.email_already_registered', [], 'access'));
 
                     return $form;
                 }
@@ -369,7 +377,7 @@ class AccessController extends BaseAccessController
                 $this->fastSave($person, $person);
 
                 $this->loginUser($request, $person->getFrontendUser());
-                $this->displaySuccess($this->get('translator')->trans('success.welcome', [], 'access'));
+                $this->displaySuccess($translator->trans('success.welcome', [], 'access'));
 
                 return $this->redirectToRoute('dashboard_index');
             }
@@ -412,15 +420,18 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function resetAction(Request $request)
+    public function resetAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $myForm = $this->handleForm(
-            $this->createForm(FrontendUserResetType::class),
+            $this->createForm(
+                FrontendUserResetType::class),
             $request,
+            $translator,
             new FrontendUser(),
-            function ($entity) {
+            function ($entity) use ($translator, $emailService) {
                 /* @var FormInterface $form */
                 /* @var FrontendUser $entity */
 
@@ -429,7 +440,6 @@ class AccessController extends BaseAccessController
                     $existingUser->setResetHash(HashHelper::createNewResetHash());
                     $this->fastSave($existingUser);
 
-                    $translator = $this->get('translator');
                     $subject = $translator->trans('reset.subject', [], 'email_access');
                     $receiver = $existingUser->getEmail();
                     $body = $translator->trans('reset.message', [], 'email_access');
@@ -439,9 +449,9 @@ class AccessController extends BaseAccessController
                         ['confirmationToken' => $existingUser->getResetHash()],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
-                    $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+                    $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 } else {
-                    $this->get('logger')->error('tried to reset password for non-existing user '.$entity->getEmail());
+                    $this->get('logger')->error('tried to reset password for non-existing user ' . $entity->getEmail());
                 }
 
                 return $this->redirectToRoute('access_reset_done');
@@ -482,13 +492,15 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @param $confirmationToken
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function registerConfirmAction(Request $request, $confirmationToken)
+    public function registerConfirmAction(Request $request, $confirmationToken, TranslatorInterface $translator)
     {
         return $this->handleResetPasswordAction(
             $request,
             $confirmationToken,
+            $translator,
             function ($entity) {
                 /* @var FrontendUser $entity */
                 if (0 === $entity->getPerson()->getMembers()->count()) {
@@ -516,13 +528,15 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @param $confirmationToken
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function resetConfirmAction(Request $request, $confirmationToken)
+    public function resetConfirmAction(Request $request, $confirmationToken, TranslatorInterface $translator)
     {
         return $this->handleResetPasswordAction(
             $request,
             $confirmationToken,
+            $translator,
             function () {
                 return $this->redirectToRoute('dashboard_index');
             },
@@ -542,12 +556,12 @@ class AccessController extends BaseAccessController
     /**
      * @param Request $request
      * @param $confirmationToken
+     * @param TranslatorInterface $translator
      * @param callable $onSuccessCallable with $form & $entity as argument
-     * @param callable $responseCallable  with $form as argument
-     *
+     * @param callable $responseCallable with $form as argument
      * @return FormInterface|Response
      */
-    protected function handleResetPasswordAction(Request $request, $confirmationToken, $onSuccessCallable, $responseCallable)
+    protected function handleResetPasswordAction(Request $request, $confirmationToken, TranslatorInterface $translator, $onSuccessCallable, $responseCallable)
     {
         $user = $this->getDoctrine()->getRepository('App:FrontendUser')->findOneBy(['resetHash' => $confirmationToken]);
         if (null === $user) {
@@ -561,8 +575,9 @@ class AccessController extends BaseAccessController
         $myForm = $this->handleForm(
             $this->createForm(FrontendUserSetPasswordType::class),
             $request,
+            $translator,
             $user,
-            function ($form, $user) use ($request, $onSuccessCallable) {
+            function ($form, $user) use ($request, $onSuccessCallable, $translator) {
                 /* @var FrontendUser $user */
                 if ($user->isValidPlainPassword()) {
                     if ($user->getPlainPassword() === $user->getRepeatPlainPassword()) {
@@ -572,9 +587,9 @@ class AccessController extends BaseAccessController
 
                         return $onSuccessCallable($form, $user);
                     }
-                    $this->displayError($this->get('translator')->trans('error.passwords_do_not_match', [], 'access'));
+                    $this->displayError($translator->trans('error.passwords_do_not_match', [], 'access'));
                 } else {
-                    $this->displayError($this->get('translator')->trans('error.new_password_not_valid', [], 'access'));
+                    $this->displayError($translator->trans('error.new_password_not_valid', [], 'access'));
                 }
 
                 return $form;

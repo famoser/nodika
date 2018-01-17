@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/member")
@@ -47,9 +48,10 @@ class MemberController extends BaseFrontendController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param TranslatorInterface $translator
+     * @return Response
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request, TranslatorInterface $translator)
     {
         $member = $this->getMember();
         if (null === $member) {
@@ -58,6 +60,7 @@ class MemberController extends BaseFrontendController
 
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $member,
             SubmitButtonType::EDIT,
             function ($form, $entity) {
@@ -109,22 +112,22 @@ class MemberController extends BaseFrontendController
      *
      * @param Person $person
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function removePersonConfirmAction(Person $person)
+    public function removePersonConfirmAction(Person $person, TranslatorInterface $translator)
     {
         $activeMember = $this->getMember();
         if (null === $activeMember) {
             return $this->redirectToRoute('dashboard_index');
         }
 
-        $trans = $this->get('translator');
         $myPerson = $this->getPerson();
         if ($myPerson->getId() === $person->getId()) {
             //remove self!
             $activeMember->removePerson($myPerson);
             $this->fastSave($activeMember, $myPerson);
-            $this->displaySuccess($trans->trans('remove_person.messages.remove_successfully', [], 'member'));
+            $this->displaySuccess($translator->trans('remove_person.messages.remove_successfully', [], 'member'));
 
             return $this->redirectToRoute('access_logout');
         }
@@ -137,7 +140,7 @@ class MemberController extends BaseFrontendController
         if (null !== $found) {
             $activeMember->removePerson($found);
             $this->fastSave($activeMember, $found);
-            $this->displaySuccess($trans->trans('remove_person.messages.remove_successfully', [], 'member'));
+            $this->displaySuccess($translator->trans('remove_person.messages.remove_successfully', [], 'member'));
 
             return $this->redirectToRoute('access_logout');
         }

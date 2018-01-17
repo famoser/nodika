@@ -19,9 +19,12 @@ use App\Enum\EventChangeType;
 use App\Helper\DateTimeFormatter;
 use App\Model\Event\SearchEventModel;
 use App\Model\EventLine\EventLineModel;
+use App\Service\EmailService;
+use App\Service\EventPastEvaluationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/event")
@@ -34,9 +37,10 @@ class EventController extends BaseFrontendController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function assignAction(Request $request)
+    public function assignAction(Request $request, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $member = $this->getMember();
         if (null === $member) {
@@ -68,24 +72,22 @@ class EventController extends BaseFrontendController
                 }
             }
 
-            $trans = $this->get('translator');
             if (count($events) > 0) {
                 if (null !== $selectedPerson) {
-                    $eventPastService = $this->get('app.event_past_evaluation_service');
                     $count = 0;
                     foreach ($events as $event) {
                         $oldEvent = clone $event;
                         $event->setPerson($selectedPerson);
-                        $eventPast = $eventPastService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::PERSON_ASSIGNED_BY_MEMBER);
+                        $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::PERSON_ASSIGNED_BY_MEMBER);
                         $this->fastSave($eventPast, $event);
                         ++$count;
                     }
-                    $this->displaySuccess($trans->trans('assign.messages.assigned', ['%count%' => $count], 'event'));
+                    $this->displaySuccess($translator->trans('assign.messages.assigned', ['%count%' => $count], 'event'));
                 } else {
-                    $this->displayError($trans->trans('assign.messages.no_person', [], 'event'));
+                    $this->displayError($translator->trans('assign.messages.no_person', [], 'event'));
                 }
             } else {
-                $this->displayError($trans->trans('assign.messages.no_events', [], 'event'));
+                $this->displayError($translator->trans('assign.messages.no_events', [], 'event'));
             }
         }
 
@@ -137,26 +139,25 @@ class EventController extends BaseFrontendController
      *
      * @param Event $event
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmPersonAction(Event $event)
+    public function confirmPersonAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $member = $this->getMember();
         if (null === $member) {
             return $this->redirectToRoute('dashboard_index');
         }
 
-        $trans = $this->get('translator');
         if ($this->canConfirmEvent($member, $event) && $event->getPerson()->getId() === $this->getPerson()->getId()) {
             $oldEvent = clone $event;
             $event->setIsConfirmed(true);
             $event->setIsConfirmedDateTime(new \DateTime());
-            $eventPastService = $this->get('app.event_past_evaluation_service');
-            $eventPast = $eventPastService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::CONFIRMED_BY_PERSON);
+            $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::CONFIRMED_BY_PERSON);
             $this->fastSave($eventPast, $event);
-            $this->displaySuccess($trans->trans('confirm.messages.confirm_successful', [], 'event'));
+            $this->displaySuccess($translator->trans('confirm.messages.confirm_successful', [], 'event'));
         } else {
-            $this->displayError($trans->trans('confirm.messages.no_access', [], 'event'));
+            $this->displayError($translator->trans('confirm.messages.no_access', [], 'event'));
         }
 
         return $this->redirectToRoute('event_confirm');
@@ -167,26 +168,25 @@ class EventController extends BaseFrontendController
      *
      * @param Event $event
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmMemberAction(Event $event)
+    public function confirmMemberAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $member = $this->getMember();
         if (null === $member) {
             return $this->redirectToRoute('dashboard_index');
         }
 
-        $trans = $this->get('translator');
         if ($this->canConfirmEvent($member, $event) && null === $event->getPerson() && $event->getMember()->getId() === $this->getMember()->getId()) {
             $oldEvent = clone $event;
             $event->setIsConfirmed(true);
             $event->setIsConfirmedDateTime(new \DateTime());
-            $eventPastService = $this->get('app.event_past_evaluation_service');
-            $eventPast = $eventPastService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::CONFIRMED_BY_MEMBER);
+            $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::CONFIRMED_BY_MEMBER);
             $this->fastSave($eventPast, $event);
-            $this->displaySuccess($trans->trans('confirm.messages.confirm_successful', [], 'event'));
+            $this->displaySuccess($translator->trans('confirm.messages.confirm_successful', [], 'event'));
         } else {
-            $this->displayError($trans->trans('confirm.messages.no_access', [], 'event'));
+            $this->displayError($translator->trans('confirm.messages.no_access', [], 'event'));
         }
 
         return $this->redirectToRoute('event_confirm');
@@ -195,17 +195,16 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/confirm/all", name="event_confirm_all")
      *
+     * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmAllAction()
+    public function confirmAllAction(TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $member = $this->getMember();
         if (null === $member) {
             return $this->redirectToRoute('dashboard_index');
         }
-
-        $eventPastService = $this->get('app.event_past_evaluation_service');
-        $trans = $this->get('translator');
 
         $person = $this->getPerson();
         $events = $this->getDoctrine()->getRepository('App:Member')->findUnconfirmedEvents($member, $person);
@@ -213,7 +212,7 @@ class EventController extends BaseFrontendController
             $oldEvent = clone $event;
             $event->setIsConfirmed(true);
             $event->setIsConfirmedDateTime(new \DateTime());
-            $eventPast = $eventPastService->createEventPast(
+            $eventPast = $eventPastEvaluationService->createEventPast(
                 $person,
                 $oldEvent,
                 $event,
@@ -221,7 +220,7 @@ class EventController extends BaseFrontendController
             );
             $this->fastSave($event, $eventPast);
         }
-        $this->displaySuccess($trans->trans('confirm.messages.confirm_all_successful', ['%count%' => count($events)], 'event'));
+        $this->displaySuccess($translator->trans('confirm.messages.confirm_all_successful', ['%count%' => count($events)], 'event'));
 
         return $this->redirectToRoute('event_confirm');
     }
@@ -284,9 +283,10 @@ class EventController extends BaseFrontendController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request, TranslatorInterface $translator)
     {
         $member = $this->getMember();
         if (null === $member) {
@@ -299,7 +299,7 @@ class EventController extends BaseFrontendController
         $eventLineModels = $organisationRepo->findEventLineModels($searchEventModel);
 
         if ('csv' === $request->query->get('view')) {
-            return $this->exportAsCsv($eventLineModels);
+            return $this->exportAsCsv($eventLineModels, $translator);
         }
         $arr['eventLineModels'] = $eventLineModels;
         $arr['members'] = $this->getOrganisation()->getMembers();
@@ -323,9 +323,10 @@ class EventController extends BaseFrontendController
     /**
      * @param EventLineModel[] $eventModels
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    private function exportAsCsv($eventModels)
+    private function exportAsCsv($eventModels, TranslatorInterface $translator)
     {
         $data = [];
         foreach ($eventModels as $eventModel) {
@@ -333,7 +334,7 @@ class EventController extends BaseFrontendController
             $row[] = $eventModel->eventLine->getName();
             $row[] = $eventModel->eventLine->getDescription();
             $data[] = $row;
-            $data[] = $this->getEventsHeader();
+            $data[] = $this->getEventsHeader($translator);
             foreach ($eventModel->events as $event) {
                 $row = [];
                 $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
@@ -351,14 +352,15 @@ class EventController extends BaseFrontendController
     }
 
     /**
+     * @param TranslatorInterface $translator
      * @return string[]
      */
-    private function getEventsHeader()
+    private function getEventsHeader(TranslatorInterface $translator)
     {
-        $start = $this->get('translator')->trans('start_date_time', [], 'entity_event');
-        $end = $this->get('translator')->trans('end_date_time', [], 'entity_event');
-        $member = $this->get('translator')->trans('entity.name', [], 'entity_member');
-        $person = $this->get('translator')->trans('entity.name', [], 'entity_person');
+        $start = $translator->trans('start_date_time', [], 'entity_event');
+        $end = $translator->trans('end_date_time', [], 'entity_event');
+        $member = $translator->trans('entity.name', [], 'entity_member');
+        $person = $translator->trans('entity.name', [], 'entity_person');
 
         return [$start, $end, $member, $person];
     }

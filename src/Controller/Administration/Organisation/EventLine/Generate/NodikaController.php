@@ -29,10 +29,12 @@ use App\Model\EventLineGeneration\Nodika\NodikaConfiguration;
 use App\Model\EventLineGeneration\Nodika\NodikaOutput;
 use App\Security\Voter\EventLineGenerationVoter;
 use App\Security\Voter\EventLineVoter;
+use App\Service\EventGenerationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/nodika")
@@ -92,21 +94,24 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/choose_period", name="administration_organisation_event_line_generate_nodika_choose_period")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function choosePeriodAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function choosePeriodAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
         $form = $this->handleForm(
-            $this->createForm(ChoosePeriodType::class),
+            $this->createForm(
+                ChoosePeriodType::class),
             $request,
+            $translator,
             $config,
             function ($form, $entity) use ($organisation, $eventLine, $generation, $config) {
                 /* @var NodikaConfiguration $entity */
@@ -315,14 +320,15 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/distribution_settings", name="administration_organisation_event_line_generate_nodika_distribution_settings")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function distributionSettingsAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function distributionSettingsAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -372,7 +378,6 @@ class NodikaController extends BaseGenerationController
                             is_numeric($parts[2]) && 4 === mb_strlen($parts[2]))) {
                             $submissionFailure = true;
                             $foundInvalid = true;
-                            $translator = $this->get('translator');
                             $this->displayError($translator->trans('error.date_format_invalid', ['%date%' => $part], 'administration_organisation_event_line_generate_nodika'));
                         } else {
                             $sanitizedParts[] = $part;
@@ -433,13 +438,12 @@ class NodikaController extends BaseGenerationController
      *
      * @return Response
      */
-    public function doDistributionAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function doDistributionAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
-        $generationService = $this->get('app.event_generation_service');
-        $generationService->setEventTypeDistribution($config);
+        $eventGenerationService->setEventTypeDistribution($config);
         $config->memberEventTypeDistributionFilled = true;
         $this->saveDistributionConfiguration($generation, $config);
 
@@ -495,7 +499,7 @@ class NodikaController extends BaseGenerationController
      *
      * @return Response
      */
-    public function assignmentSettingsAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function assignmentSettingsAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -509,7 +513,6 @@ class NodikaController extends BaseGenerationController
         }
 
         if ('POST' === $request->getMethod()) {
-            $translator = $this->get('translator');
             /* @var MemberConfiguration[] $memberConfigurations */
             $memberConfigurations = [];
             foreach ($config->memberConfigurations as $memberConfiguration) {
@@ -610,13 +613,13 @@ class NodikaController extends BaseGenerationController
      *
      * @return Response
      */
-    public function doGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function doGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
         /* @var NodikaOutput $nodikaOutput */
-        $nodikaOutput = $this->get('app.event_generation_service')->generateNodika(
+        $nodikaOutput = $eventGenerationService->generateNodika(
             $config,
             function ($startDate, $endDate, $assignedEventCount, $member) {
                 return true;
@@ -632,7 +635,6 @@ class NodikaController extends BaseGenerationController
                 );
             }
         } else {
-            $translator = $this->get('translator');
             $this->displayError(
                 $translator->trans(
                     NodikaStatusCode::getTranslation(NodikaStatusCode::UNKNOWN_ERROR),
@@ -690,13 +692,12 @@ class NodikaController extends BaseGenerationController
      *
      * @return Response
      */
-    public function applyGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function applyGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);
 
-        $generationService = $this->get('app.event_generation_service');
-        $resp = $generationService->persist($generation, $generationResult, $this->getPerson());
+        $resp = $eventGenerationService->persist($generation, $generationResult, $this->getPerson());
         if (EventGenerationServicePersistResponse::SUCCESSFUL === $resp) {
             return $this->redirectToRoute(
                 'administration_organisation_event_line_administer',

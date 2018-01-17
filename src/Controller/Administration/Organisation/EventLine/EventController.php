@@ -20,11 +20,13 @@ use App\Enum\SubmitButtonType;
 use App\Model\EventPast\EventPastEvaluation;
 use App\Security\Voter\EventLineVoter;
 use App\Security\Voter\EventVoter;
+use App\Service\EventPastEvaluationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/events")
@@ -35,13 +37,13 @@ class EventController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_event_line_event_new")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
      * @return Response
      */
-    public function newAction(Request $request, Organisation $organisation, EventLine $eventLine)
+    public function newAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->denyAccessUnlessGranted(EventLineVoter::EDIT, $eventLine);
 
@@ -49,13 +51,13 @@ class EventController extends BaseController
         $event->setEventLine($eventLine);
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $event,
             SubmitButtonType::CREATE,
-            function ($form, $entity) use ($organisation, $eventLine) {
+            function ($form, $entity) use ($organisation, $eventLine, $eventPastEvaluationService) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $myService = $this->get('app.event_past_evaluation_service');
-                $eventPast = $myService->createEventPast($this->getPerson(), null, $entity, EventChangeType::MANUALLY_CREATED_BY_ADMIN);
+                $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), null, $entity, EventChangeType::MANUALLY_CREATED_BY_ADMIN);
                 $this->fastSave($eventPast);
 
                 return $this->redirectToRoute('administration_organisation_event_line_event_new', ['organisation' => $organisation->getId(), 'eventLine' => $eventLine->getId()]);
@@ -81,27 +83,27 @@ class EventController extends BaseController
     /**
      * @Route("/{event}/edit", name="administration_organisation_event_line_event_edit")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
-     * @param Event        $event
+     * @param EventLine $eventLine
+     * @param Event $event
      *
      * @return Response
      */
-    public function editAction(Request $request, Organisation $organisation, EventLine $eventLine, Event $event)
+    public function editAction(Request $request, Organisation $organisation, EventLine $eventLine, Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
 
         $oldEvent = clone $event;
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $event,
             SubmitButtonType::EDIT,
-            function ($form, $entity) use ($organisation, $eventLine, $oldEvent) {
+            function ($form, $entity) use ($organisation, $eventLine, $oldEvent, $eventPastEvaluationService) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $myService = $this->get('app.event_past_evaluation_service');
-                $eventPast = $myService->createEventPast($this->getPerson(), $oldEvent, $entity, EventChangeType::MANUALLY_CHANGED_BY_ADMIN);
+                $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $entity, EventChangeType::MANUALLY_CHANGED_BY_ADMIN);
                 $this->fastSave($eventPast);
 
                 return $this->redirectToRoute('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $eventLine->getId()]);
@@ -128,27 +130,27 @@ class EventController extends BaseController
     /**
      * @Route("/{event}/remove", name="administration_organisation_event_line_event_remove")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
-     * @param Event        $event
+     * @param EventLine $eventLine
+     * @param Event $event
      *
      * @return Response
      */
-    public function removeAction(Request $request, Organisation $organisation, EventLine $eventLine, Event $event)
+    public function removeAction(Request $request, Organisation $organisation, EventLine $eventLine, Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->denyAccessUnlessGranted(EventVoter::REMOVE, $event);
 
         $oldEvent = clone $event;
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $event,
             SubmitButtonType::REMOVE,
-            function ($form, $entity) use ($organisation, $eventLine, $oldEvent) {
+            function ($form, $entity) use ($organisation, $eventLine, $oldEvent, $eventPastEvaluationService) {
                 /* @var Form $form */
                 /* @var Event $entity */
-                $myService = $this->get('app.event_past_evaluation_service');
-                $eventPast = $myService->createEventPast($this->getPerson(), $oldEvent, $entity, EventChangeType::MANUALLY_REMOVED_BY_ADMIN);
+                $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $entity, EventChangeType::MANUALLY_REMOVED_BY_ADMIN);
                 $this->fastSave($eventPast);
 
                 return $this->redirectToRoute('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $eventLine->getId()]);
@@ -175,12 +177,12 @@ class EventController extends BaseController
      * @Route("/{event}/view", name="administration_organisation_event_line_event_view")
      *
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
-     * @param Event        $event
+     * @param EventLine $eventLine
+     * @param Event $event
      *
      * @return Response
      */
-    public function viewAction(Organisation $organisation, EventLine $eventLine, Event $event)
+    public function viewAction(Organisation $organisation, EventLine $eventLine, Event $event, EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
 
@@ -189,11 +191,10 @@ class EventController extends BaseController
         $arr['event'] = $event;
 
         $pasts = $event->getEventPast();
-        $eventPastService = $this->get('app.event_past_evaluation_service');
         /* @var EventPastEvaluation[] $displayPasts */
         $displayPasts = [];
         foreach ($pasts as $past) {
-            $displayPasts[] = $eventPastService->createEventPastEvaluation($past);
+            $displayPasts[] = $eventPastEvaluationService->createEventPastEvaluation($past);
         }
         $arr['eventPasts'] = $displayPasts;
 

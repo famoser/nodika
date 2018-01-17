@@ -15,9 +15,11 @@ use App\Controller\Base\BaseFrontendController;
 use App\Entity\Member;
 use App\Entity\Person;
 use App\Helper\DateTimeFormatter;
+use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/cron")
@@ -55,13 +57,12 @@ class CronJobController extends BaseFrontendController
      *
      * @return Response
      */
-    public function dailyAction($secret)
+    public function dailyAction($secret, TranslatorInterface $translator, EmailService $emailService)
     {
         if ($secret !== $this->getParameter('APP_SECRET')) {
             return new Response('access denied');
         }
 
-        $translator = $this->get('translator');
         $memberRepo = $this->getDoctrine()->getRepository('App:Member');
         //send event remainders
         $organisations = $this->getDoctrine()->getRepository('App:Organisation')->findAll();
@@ -113,7 +114,7 @@ class CronJobController extends BaseFrontendController
                         $subject = $translator->trans('member_event_confirm_too_late_remainder.subject', [], 'email_cronjob');
                         $actionText = $translator->trans('member_event_confirm_too_late_remainder.action_text', [], 'email_cronjob');
                         $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
-                        $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $adminEmail);
+                        $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $adminEmail);
                     } else {
                         $disable =
                             //disable email if already sent
@@ -155,7 +156,7 @@ class CronJobController extends BaseFrontendController
 
                     $actionText = $translator->trans('member_event_confirm_too_late_remainder.action_text', [], 'email_cronjob');
                     $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+                    $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
                         if (null === $unconfirmedEvent->getPerson()) {
@@ -180,7 +181,7 @@ class CronJobController extends BaseFrontendController
                     );
                     $actionText = $translator->trans('member_event_confirm_remainder.action_text', [], 'email_cronjob');
                     $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+                    $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
                         if (null !== $unconfirmedEvent->getPerson() && $unconfirmedEvent->getPerson()->getId() === $person->getId()) {

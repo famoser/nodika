@@ -15,11 +15,13 @@ use App\Controller\Base\BaseController;
 use App\Entity\FrontendUser;
 use App\Entity\Newsletter;
 use App\Form\Newsletter\RegisterForPreviewType;
+use App\Service\EmailService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class StaticController extends BaseController
 {
@@ -28,9 +30,11 @@ class StaticController extends BaseController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
+     * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $arr = [];
         $arr['is_logged_in'] = $this->getUser() instanceof FrontendUser;
@@ -38,11 +42,12 @@ class StaticController extends BaseController
         $form = $this->handleFormDoctrinePersist(
             $this->createForm(RegisterForPreviewType::class),
             $request,
+            $translator,
             new Newsletter(),
-            function ($form, $newsletter) {
+            function ($form, $newsletter) use ($translator, $emailService) {
                 /* @var FormInterface $form */
                 /* @var Newsletter $newsletter */
-                $this->get('app.email_service')->sendTextEmail(
+                $emailService->sendTextEmail(
                     $this->getParameter('CONTACT_EMAIL'),
                     'Kontaktanfrage von nodika',
                     "Sie haben eine Kontaktanfrage auf nodika erhalten: \n".
@@ -52,8 +57,6 @@ class StaticController extends BaseController
                     "\nNachname: ".$newsletter->getFamilyName().
                     "\nNachricht: ".$newsletter->getMessage()
                 );
-
-                $translator = $this->get('translator');
 
                 $this->displaySuccess($translator->trans('index.thanks_for_contact_form', [], 'static'));
 

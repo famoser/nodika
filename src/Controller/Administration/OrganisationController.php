@@ -21,12 +21,14 @@ use App\Form\Organisation\OrganisationType;
 use App\Helper\HashHelper;
 use App\Model\Event\SearchEventModel;
 use App\Security\Voter\OrganisationVoter;
+use App\Service\EmailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/organisation")
@@ -39,9 +41,10 @@ class OrganisationController extends BaseController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return RedirectResponse|Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, TranslatorInterface $translator)
     {
         $organisation = Organisation::createFromPerson($this->getPerson());
         $organisation->setActiveEnd(new \DateTime('today + 31 days'));
@@ -50,6 +53,7 @@ class OrganisationController extends BaseController
         $newOrganisationForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(OrganisationType::class, SubmitButtonType::CREATE),
             $request,
+            $translator,
             $organisation,
             function ($form, $entity) use ($organisation) {
                 return $this->redirectToRoute('administration_organisation_setup', ['organisation' => $organisation->getId()]);
@@ -76,12 +80,11 @@ class OrganisationController extends BaseController
      *
      * @return Response
      */
-    public function administerAction(Organisation $organisation)
+    public function administerAction(Organisation $organisation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $setupStatus = $this->getDoctrine()->getRepository('App:Organisation')->getSetupStatus($organisation);
         if (!$setupStatus->getAllDone()) {
-            $translator = $this->get('translator');
             $this->displayInfo(
                 $translator->trans('messages.not_fully_setup', [], 'administration_organisation'),
                 $this->generateUrl('administration_organisation_setup', ['organisation' => $organisation->getId()])
@@ -106,12 +109,13 @@ class OrganisationController extends BaseController
      *
      * @return Response
      */
-    public function editAction(Request $request, Organisation $organisation)
+    public function editAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $organisation,
             SubmitButtonType::EDIT,
             function ($form, $entity) {
@@ -176,24 +180,25 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/members/invite", name="administration_organisation_members_invite")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function membersInviteAction(Request $request, Organisation $organisation)
+    public function membersInviteAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $organisationSetting = $this->getDoctrine()->getRepository('App:OrganisationSetting')->getByOrganisation($organisation);
 
         if ('' === $organisationSetting->getMemberInviteEmailSubject()) {
             $organisationSetting->setMemberInviteEmailSubject(
-                $this->get('translator')->trans('members_invite.email.default_subject', [], 'administration_organisation')
+                $translator->trans('members_invite.email.default_subject', [], 'administration_organisation')
             );
         }
         if ('' === $organisationSetting->getMemberInviteEmailMessage()) {
             $organisationSetting->setMemberInviteEmailMessage(
-                $this->get('translator')->trans('members_invite.email.default_message', [], 'administration_organisation')
+                $translator->trans('members_invite.email.default_message', [], 'administration_organisation')
             );
         }
 
@@ -212,7 +217,7 @@ class OrganisationController extends BaseController
                 } elseif ('message' === $key) {
                     $organisationSetting->setMemberInviteEmailMessage($value);
                     if (!mb_strpos($value, 'LINK_REPLACE')) {
-                        $this->get('translator')->trans('members_invite.error.no_link_replace_in_message', [], 'administration_organisation');
+                        $translator->trans('members_invite.error.no_link_replace_in_message', [], 'administration_organisation');
                         $canForward = false;
                     }
                 }
@@ -242,12 +247,14 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/members/invite/preview", name="administration_organisation_members_invite_preview")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
      *
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
      * @return Response
      */
-    public function membersInvitePreviewAction(Request $request, Organisation $organisation)
+    public function membersInvitePreviewAction(Request $request, Organisation $organisation, TranslatorInterface $translator, EmailService $emailService)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $organisationSetting = $this->getDoctrine()->getRepository('App:OrganisationSetting')->getByOrganisation($organisation);
@@ -298,12 +305,12 @@ class OrganisationController extends BaseController
                     $body = str_replace($search, $replace, $body);
                 }
 
-                $this->get('app.email_service')->sendPlainEmail($member->getEmail(), $subject, $body);
+                $emailService->sendPlainEmail($member->getEmail(), $subject, $body);
 
                 $this->fastSave($member);
             }
 
-            $this->displaySuccess($this->get('translator')->trans('members_invite.successful.emails_send', ['%count%' => count($notInvitedMembers)], 'administration_organisation'));
+            $this->displaySuccess($translator->trans('members_invite.successful.emails_send', ['%count%' => count($notInvitedMembers)], 'administration_organisation'));
 
             return $this->redirectToRoute('administration_organisation_members', ['organisation' => $organisation->getId()]);
         }
@@ -340,24 +347,25 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/persons/invite", name="administration_organisation_persons_invite")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function personsInviteAction(Request $request, Organisation $organisation)
+    public function personsInviteAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $organisationSetting = $this->getDoctrine()->getRepository('App:OrganisationSetting')->getByOrganisation($organisation);
 
         if ('' === $organisationSetting->getPersonInviteEmailSubject()) {
             $organisationSetting->setPersonInviteEmailSubject(
-                $this->get('translator')->trans('persons_invite.email.default_subject', [], 'administration_organisation')
+                $translator->trans('persons_invite.email.default_subject', [], 'administration_organisation')
             );
         }
         if ('' === $organisationSetting->getPersonInviteEmailMessage()) {
             $organisationSetting->setPersonInviteEmailMessage(
-                $this->get('translator')->trans('persons_invite.email.default_message', [], 'administration_organisation')
+                $translator->trans('persons_invite.email.default_message', [], 'administration_organisation')
             );
         }
 
@@ -380,7 +388,7 @@ class OrganisationController extends BaseController
                 } elseif ('message' === $key) {
                     $organisationSetting->setPersonInviteEmailMessage($value);
                     if (!mb_strpos($value, 'LINK_REPLACE')) {
-                        $this->get('translator')->trans('persons_invite.error.no_link_replace_in_message', [], 'administration_organisation');
+                        $translator->trans('persons_invite.error.no_link_replace_in_message', [], 'administration_organisation');
                         $canForward = false;
                     }
                 }
@@ -415,7 +423,7 @@ class OrganisationController extends BaseController
      *
      * @return Response
      */
-    public function personsInvitePreviewAction(Request $request, Organisation $organisation)
+    public function personsInvitePreviewAction(Request $request, Organisation $organisation, TranslatorInterface $translator, EmailService $emailService)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $organisationSetting = $this->getDoctrine()->getRepository('App:OrganisationSetting')->getByOrganisation($organisation);
@@ -467,11 +475,11 @@ class OrganisationController extends BaseController
                     $body = str_replace($search, $replace, $body);
                 }
 
-                $this->get('app.email_service')->sendPlainEmail($person->getEmail(), $subject, $body);
+                $emailService->sendPlainEmail($person->getEmail(), $subject, $body);
                 $this->fastSave($person);
             }
 
-            $this->displaySuccess($this->get('translator')->trans('persons_invite.successful.emails_send', ['%count%' => count($notInvitedPersons)], 'administration_organisation'));
+            $this->displaySuccess($translator->trans('persons_invite.successful.emails_send', ['%count%' => count($notInvitedPersons)], 'administration_organisation'));
 
             return $this->redirectToRoute('administration_organisation_members', ['organisation' => $organisation->getId()]);
         }
@@ -536,7 +544,7 @@ class OrganisationController extends BaseController
      *
      * @return Response
      */
-    public function settingsAction(Request $request, Organisation $organisation)
+    public function settingsAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
         $this->getDoctrine()->getRepository('App:ApplicationEvent')->registerEventOccurred($organisation, ApplicationEventType::VISITED_SETTINGS);
@@ -544,6 +552,7 @@ class OrganisationController extends BaseController
 
         $form = $this->handleCrudForm(
             $request,
+            $translator,
             $organisationSetting,
             SubmitButtonType::EDIT
         );

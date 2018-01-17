@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AccessController extends BaseAccessController
 {
@@ -26,16 +27,17 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function loginAction(Request $request)
+    public function loginAction(Request $request, TranslatorInterface $translator)
     {
         $user = $this->getUser();
         if ($user instanceof AdminUser) {
             return $this->redirectToRoute('backend_dashboard_index');
         }
 
-        $form = $this->getLoginForm($request, new AdminUser(), $this->createForm(AdminUserLoginType::class));
+        $form = $this->getLoginForm($request, $translator, new AdminUser(), $this->createForm(AdminUserLoginType::class));
         if ($form instanceof RedirectResponse) {
             return $form;
         }

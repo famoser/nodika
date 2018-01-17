@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/persons")
@@ -39,7 +40,7 @@ class PersonController extends BaseController
      *
      * @return Response
      */
-    public function newAction(Request $request, Organisation $organisation, Member $member)
+    public function newAction(Request $request, Organisation $organisation, Member $member, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(MemberVoter::EDIT, $organisation);
 
@@ -47,6 +48,7 @@ class PersonController extends BaseController
         $person->addMember($member);
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $person,
             SubmitButtonType::CREATE,
             function ($form, $entity) use ($organisation, $member) {
@@ -82,12 +84,13 @@ class PersonController extends BaseController
      *
      * @return Response
      */
-    public function editAction(Request $request, Organisation $organisation, Member $member, Person $person)
+    public function editAction(Request $request, Organisation $organisation, Member $member, Person $person, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(PersonVoter::EDIT, $member);
 
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $person,
             SubmitButtonType::EDIT,
             function ($form, $entity) use ($organisation, $member) {
@@ -123,12 +126,13 @@ class PersonController extends BaseController
      *
      * @return Response
      */
-    public function removeAction(Request $request, Organisation $organisation, Member $member, Person $person)
+    public function removeAction(Request $request, Organisation $organisation, Member $member, Person $person, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(PersonVoter::REMOVE, $member);
 
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $person,
             SubmitButtonType::REMOVE,
             function ($form, $entity) use ($organisation, $member) {

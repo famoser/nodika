@@ -27,12 +27,14 @@ use App\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use App\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 use App\Security\Voter\EventLineGenerationVoter;
 use App\Security\Voter\EventLineVoter;
+use App\Service\EventGenerationService;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/round_robin")
@@ -99,7 +101,7 @@ class RoundRobinController extends BaseGenerationController
      *
      * @return Response
      */
-    public function choosePeriodAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function choosePeriodAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -107,6 +109,7 @@ class RoundRobinController extends BaseGenerationController
         $form = $this->handleForm(
             $this->createForm(ChoosePeriodType::class),
             $request,
+            $translator,
             $config,
             function ($form, $entity) use ($organisation, $eventLine, $generation, $config) {
                 /* @var RoundRobinConfiguration $entity */
@@ -371,21 +374,21 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_generate", name="administration_organisation_event_line_generate_round_robin_do_generate")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
-     * @param LoggerInterface     $logger
-     *
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
      * @return Response
+     * @internal param Request $request
      */
-    public function doGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, LoggerInterface $logger)
+    public function doGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator, EventGenerationService $eventGenerationService, LoggerInterface $logger)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
 
         /* @var RoundRobinOutput $roundRobinOutput */
-        $roundRobinOutput = $this->get('app.event_generation_service')->generateRoundRobin(
+        $roundRobinOutput = $eventGenerationService->generateRoundRobin(
             $config,
             function ($startDate, $endDate, $assignedEventCount, $member) {
                 return true;
@@ -402,7 +405,6 @@ class RoundRobinController extends BaseGenerationController
             }
             $logger->log(Logger::ERROR, 'round robin error occurred with generation id '.$generation->getId());
         } else {
-            $translator = $this->get('translator');
             $this->displayError(
                 $translator->trans(
                     RoundRobinStatusCode::getTranslation(RoundRobinStatusCode::UNKNOWN_ERROR),
@@ -460,13 +462,12 @@ class RoundRobinController extends BaseGenerationController
      *
      * @return Response
      */
-    public function applyGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation)
+    public function applyGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);
 
-        $generationService = $this->get('app.event_generation_service');
-        $resp = $generationService->persist($generation, $generationResult, $this->getPerson());
+        $resp = $eventGenerationService->persist($generation, $generationResult, $this->getPerson());
         if (EventGenerationServicePersistResponse::SUCCESSFUL === $resp) {
             return $this->redirectToRoute(
                 'administration_organisation_event_line_administer',

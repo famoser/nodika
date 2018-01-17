@@ -20,18 +20,18 @@ use App\Helper\CsvFileHelper;
 use App\Helper\NamingHelper;
 use App\Helper\StaticMessageHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
     /**
      * @param $type
      * @param $submitButtonType
-     * @param null  $data
+     * @param null $data
      * @param array $options
      *
      * @return FormInterface
@@ -42,19 +42,18 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param Request    $request
+     * @param Request $request
+     * @param TranslatorInterface $translator
      * @param BaseEntity $data
-     * @param int        $submitButtonType
+     * @param int $submitButtonType
      * @param $onSuccessCallable
      * @param array $formOptions
-     *
      * @return FormInterface
      */
-    public function handleCrudForm(Request $request, BaseEntity $data, $submitButtonType, $onSuccessCallable = null, $formOptions = [])
+    public function handleCrudForm(Request $request, TranslatorInterface $translator, BaseEntity $data, $submitButtonType, $onSuccessCallable = null, $formOptions = [])
     {
         $formType = NamingHelper::classToCrudFormType(get_class($data), SubmitButtonType::REMOVE === $submitButtonType);
-        $myOnSuccessCallable = function ($form, $entity) use ($onSuccessCallable, $submitButtonType) {
-            $translator = $this->get('translator');
+        $myOnSuccessCallable = function ($form, $entity) use ($onSuccessCallable, $submitButtonType, $translator) {
             if (SubmitButtonType::CREATE === $submitButtonType) {
                 $this->displaySuccess($translator->trans('successful.add', [], 'common_form'));
             } elseif (SubmitButtonType::EDIT === $submitButtonType) {
@@ -75,17 +74,19 @@ class BaseController extends AbstractController
             return $this->handleFormDoctrineRemove(
                 $myForm,
                 $request,
+                $translator,
                 $data,
                 $myOnSuccessCallable
             );
         }
 
         return $this->handleFormDoctrinePersist(
-                $myForm,
-                $request,
-                $data,
-                $myOnSuccessCallable
-            );
+            $myForm,
+            $request,
+            $translator,
+            $data,
+            $myOnSuccessCallable
+        );
     }
 
     /**
@@ -96,14 +97,14 @@ class BaseController extends AbstractController
     private function displayFlash($type, $message, $link = null)
     {
         if (null !== $link) {
-            $message = '<a href="'.$link.'">'.$message.'</a>';
+            $message = '<a href="' . $link . '">' . $message . '</a>';
         }
         $this->get('session')->getFlashBag()->set($type, $message);
     }
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param null $link
      */
     protected function displayError($message, $link = null)
     {
@@ -112,7 +113,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param null $link
      */
     protected function displayDanger($message, $link = null)
     {
@@ -121,7 +122,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param null $link
      */
     protected function displaySuccess($message, $link = null)
     {
@@ -130,7 +131,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param null $link
      */
     protected function displayInfo($message, $link = null)
     {
@@ -139,10 +140,11 @@ class BaseController extends AbstractController
 
     /**
      * displays the default form error.
+     * @param TranslatorInterface $translator
      */
-    protected function displayFormValidationError()
+    protected function displayFormValidationError(TranslatorInterface $translator)
     {
-        $this->displayError($this->get('translator')->trans('error.form_validation_failed', [], 'common_form'));
+        $this->displayError($translator->trans('error.form_validation_failed', [], 'common_form'));
     }
 
     /**
@@ -202,20 +204,20 @@ class BaseController extends AbstractController
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
 
         return $response;
     }
 
     /**
      * @param FormInterface $form
-     * @param Request       $request
-     * @param BaseEntity    $entity
-     * @param callable      $onSuccessCallable with $form & $entity arguments
+     * @param Request $request
+     * @param BaseEntity $entity
+     * @param callable $onSuccessCallable with $form & $entity arguments
      *
      * @return FormInterface
      */
-    protected function handleFormDoctrinePersist(FormInterface $form, Request $request, BaseEntity $entity, $onSuccessCallable = null)
+    protected function handleFormDoctrinePersist(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onSuccessCallable = null)
     {
         if (is_callable($onSuccessCallable)) {
             $myCallable = function ($form, $entity) use ($onSuccessCallable) {
@@ -235,21 +237,21 @@ class BaseController extends AbstractController
             };
         }
 
-        return $this->handleForm($form, $request, $entity, $myCallable);
+        return $this->handleForm($form, $request, $translator, $entity, $myCallable);
     }
 
     /**
      * @param FormInterface $form
-     * @param Request       $request
-     * @param BaseEntity    $entity
-     * @param callable      $onRemoveCallable     with $form & $entity arguments
-     * @param callable      $beforeRemoveCallable with $form & $entity arguments
-     *
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param BaseEntity $entity
+     * @param callable $onRemoveCallable with $form & $entity arguments
+     * @param callable $beforeRemoveCallable with $form & $entity arguments
      * @return FormInterface
      */
-    protected function handleFormDoctrineRemove(FormInterface $form, Request $request, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
+    protected function handleFormDoctrineRemove(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
     {
-        return $this->handleForm($form, $request, $entity, function ($form, $entity) use ($onRemoveCallable, $beforeRemoveCallable) {
+        return $this->handleForm($form, $request, $translator, $entity, function ($form, $entity) use ($onRemoveCallable, $beforeRemoveCallable, $translator) {
             /* @var FormInterface $form */
             /* @var BaseEntity $entity */
             $em = $this->getDoctrine()->getManager();
@@ -265,13 +267,13 @@ class BaseController extends AbstractController
 
     /**
      * @param FormInterface $form
-     * @param Request       $request
+     * @param Request $request
+     * @param TranslatorInterface $translator
      * @param $entity
      * @param callable $callable with $form & $entity arguments
-     *
      * @return FormInterface
      */
-    protected function handleForm(FormInterface $form, Request $request, $entity, $callable)
+    protected function handleForm(FormInterface $form, Request $request, TranslatorInterface $translator, $entity, $callable)
     {
         $form->setData($entity);
         $form->handleRequest($request);
@@ -280,7 +282,7 @@ class BaseController extends AbstractController
             if ($form->isValid()) {
                 return $callable($form, $entity);
             }
-            $this->displayFormValidationError();
+            $this->displayFormValidationError($translator);
         }
 
         return $form;
@@ -316,7 +318,7 @@ class BaseController extends AbstractController
 
     /**
      * @param Organisation $organisation
-     * @param int          $applicationEventType
+     * @param int $applicationEventType
      *
      * @return bool
      */
@@ -328,10 +330,10 @@ class BaseController extends AbstractController
     /**
      * Renders a view.
      *
-     * @param string   $view       The view name
-     * @param array    $parameters An array of parameters to pass to the view
-     * @param string   $backUrl
-     * @param Response $response   A response instance
+     * @param string $view The view name
+     * @param array $parameters An array of parameters to pass to the view
+     * @param string $backUrl
+     * @param Response $response A response instance
      *
      * @return Response A Response instance
      */
@@ -346,10 +348,10 @@ class BaseController extends AbstractController
     /**
      * Renders a view.
      *
-     * @param string   $view          The view name
-     * @param array    $parameters    An array of parameters to pass to the view
-     * @param string   $justification why no backbutton
-     * @param Response $response      A response instance
+     * @param string $view The view name
+     * @param array $parameters An array of parameters to pass to the view
+     * @param string $justification why no backbutton
+     * @param Response $response A response instance
      *
      * @return Response A Response instance
      */

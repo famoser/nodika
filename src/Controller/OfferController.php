@@ -22,10 +22,13 @@ use App\Enum\OfferStatus;
 use App\Enum\TradeTag;
 use App\Helper\DateTimeConverter;
 use App\Model\Event\SearchEventModel;
+use App\Service\EmailService;
+use App\Service\EventPastEvaluationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/offer")
@@ -78,9 +81,10 @@ class OfferController extends BaseFrontendController
      * @param Member $member
      * @param Person $person
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function startAction(Member $member, Person $person)
+    public function startAction(Member $member, Person $person, TranslatorInterface $translator)
     {
         $ownMember = $this->getMember();
         if (null === $ownMember) {
@@ -89,7 +93,6 @@ class OfferController extends BaseFrontendController
 
         if ($ownMember->getOrganisation()->getId() !== $member->getOrganisation()->getId() ||
             !$member->getPersons()->contains($person)) {
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.no_access_anymore', [], 'offer'));
 
             return $this->redirectToRoute('offer_index');
@@ -109,12 +112,14 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/choose_events", name="offer_choose_events")
      *
-     * @param Request    $request
+     * @param Request $request
      * @param EventOffer $eventOffer
      *
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function chooseEventsAction(Request $request, EventOffer $eventOffer)
+    public function chooseEventsAction(Request $request, EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
     {
         $ownMember = $this->getMember();
         if (null === $ownMember) {
@@ -123,7 +128,6 @@ class OfferController extends BaseFrontendController
 
         if ($ownMember->getId() !== $eventOffer->getOfferedByMember()->getId() ||
             !in_array($eventOffer->getStatus(), [OfferStatus::CREATING, OfferStatus::OPEN, OfferStatus::CLOSED], true)) {
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.no_access_anymore', [], 'offer'));
 
             return $this->redirectToRoute('offer_index');
@@ -171,7 +175,6 @@ class OfferController extends BaseFrontendController
             $em->persist($eventOffer);
             $em->flush();
 
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.offer_open', [], 'offer'));
 
             $receiver = $eventOffer->getOfferedToPerson()->getEmail();
@@ -179,7 +182,7 @@ class OfferController extends BaseFrontendController
             $subject = $translator->trans('emails.new_offer.subject', [], 'offer');
             $actionText = $translator->trans('emails.new_offer.action_text', [], 'offer');
             $actionLink = $this->generateUrl('offer_review', ['eventOffer' => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-            $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+            $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
             return $this->redirectToRoute('offer_index');
         }
@@ -206,7 +209,6 @@ class OfferController extends BaseFrontendController
 
         $invalids = $this->getInvalidEventOfferEntries($eventOffer, false);
         if (count($invalids) > 0) {
-            $translator = $this->get('translator');
             $this->displayError($translator->trans('messages.has_invalid_entries', [], 'offer'));
             $arr['invalids'] = $invalids;
         }
@@ -221,9 +223,10 @@ class OfferController extends BaseFrontendController
      *
      * @param EventOffer $eventOffer
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function reviewAction(EventOffer $eventOffer)
+    public function reviewAction(EventOffer $eventOffer, TranslatorInterface $translator)
     {
         $ownMember = $this->getMember();
         if (null === $ownMember) {
@@ -234,7 +237,6 @@ class OfferController extends BaseFrontendController
         $acceptReject = $this->canAcceptOrRejectOffer($ownMember, $ownPerson, $eventOffer);
         $close = $this->canCloseOffer($ownMember, $ownPerson, $eventOffer);
         if (!($acceptReject || $close)) {
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.no_access_anymore', [], 'offer'));
 
             return $this->redirectToRoute('offer_index');
@@ -242,7 +244,6 @@ class OfferController extends BaseFrontendController
 
         $invalids = $this->getInvalidEventOfferEntries($eventOffer, false);
         if (count($invalids) > 0) {
-            $translator = $this->get('translator');
             if ($close) {
                 //can close, therefore can edit
                 return $this->redirectToRoute('offer_choose_events', ['eventOffer' => $eventOffer->getId()]);
@@ -289,9 +290,12 @@ class OfferController extends BaseFrontendController
      *
      * @param EventOffer $eventOffer
      *
+     * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
+     * @param EmailService $emailService
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function acceptAction(EventOffer $eventOffer)
+    public function acceptAction(EventOffer $eventOffer, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService, EmailService $emailService)
     {
         $ownMember = $this->getMember();
         if (null === $ownMember) {
@@ -304,7 +308,6 @@ class OfferController extends BaseFrontendController
         if ($acceptReject) {
             $invalids = $this->getInvalidEventOfferEntries($eventOffer, false);
             if (count($invalids) > 0) {
-                $translator = $this->get('translator');
                 $eventOffer->setStatus(OfferStatus::CREATING);
                 $this->fastSave($eventOffer);
                 $this->displayError($translator->trans('messages.has_invalid_entries_rejected', [], 'offer'));
@@ -324,8 +327,7 @@ class OfferController extends BaseFrontendController
                     $event->setPerson($eventOffer->getOfferedToPerson());
                     $event->setTradeTag(TradeTag::MAYBE_TRADE);
 
-                    $myService = $this->get('app.event_past_evaluation_service');
-                    $eventPast = $myService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::TRADED_TO_NEW_MEMBER);
+                    $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::TRADED_TO_NEW_MEMBER);
                     $em->persist($eventPast);
 
                     $em->persist($event);
@@ -337,8 +339,7 @@ class OfferController extends BaseFrontendController
                     $event->setPerson($eventOffer->getOfferedByPerson());
                     $event->setTradeTag(TradeTag::MAYBE_TRADE);
 
-                    $myService = $this->get('app.event_past_evaluation_service');
-                    $eventPast = $myService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::TRADED_TO_NEW_MEMBER);
+                    $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::TRADED_TO_NEW_MEMBER);
                     $em->persist($eventPast);
 
                     $em->persist($event);
@@ -347,7 +348,6 @@ class OfferController extends BaseFrontendController
             $eventOffer->setCloseDateTime(new \DateTime());
             $this->fastSave($eventOffer);
 
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.offer_accepted_successful', [], 'offer'));
 
             $receiver = $eventOffer->getOfferedByPerson()->getEmail();
@@ -355,9 +355,8 @@ class OfferController extends BaseFrontendController
             $body = $translator->trans('emails.offer_accepted.message', [], 'offer');
             $actionText = $translator->trans('emails.offer_accepted.action_text', [], 'offer');
             $actionLink = $this->generateUrl('offer_review', ['eventOffer' => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-            $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+            $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
         } else {
-            $translator = $this->get('translator');
             $this->displayError($translator->trans('messages.no_access_anymore', [], 'offer'));
         }
 
@@ -369,9 +368,11 @@ class OfferController extends BaseFrontendController
      *
      * @param EventOffer $eventOffer
      *
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function rejectAction(EventOffer $eventOffer)
+    public function rejectAction(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
     {
         $ownMember = $this->getMember();
         if (null === $ownMember) {
@@ -385,7 +386,6 @@ class OfferController extends BaseFrontendController
             $eventOffer->setStatus(OfferStatus::REJECTED);
             $eventOffer->setCloseDateTime(new \DateTime());
             $this->fastSave($eventOffer);
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.offer_rejected_successful', [], 'offer'));
 
             $receiver = $eventOffer->getOfferedByPerson()->getEmail();
@@ -393,9 +393,8 @@ class OfferController extends BaseFrontendController
             $body = $translator->trans('emails.offer_rejected.message', [], 'offer');
             $actionText = $translator->trans('emails.offer_rejected.action_text', [], 'offer');
             $actionLink = $this->generateUrl('offer_review', ['eventOffer' => $eventOffer->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-            $this->get('app.email_service')->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
+            $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
         } else {
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.no_access_anymore', [], 'offer'));
         }
 
@@ -409,7 +408,7 @@ class OfferController extends BaseFrontendController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function closeAction(EventOffer $eventOffer)
+    public function closeAction(EventOffer $eventOffer, TranslatorInterface $translator)
     {
         $ownMember = $this->getMember();
         if (null === $ownMember) {
@@ -423,10 +422,8 @@ class OfferController extends BaseFrontendController
             $eventOffer->setStatus(OfferStatus::CLOSED);
             $eventOffer->setCloseDateTime(new \DateTime());
             $this->fastSave($eventOffer);
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.offer_close_successful', [], 'offer'));
         } else {
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.no_access_anymore', [], 'offer'));
         }
 
@@ -440,7 +437,7 @@ class OfferController extends BaseFrontendController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeAction(EventOffer $eventOffer)
+    public function removeAction(EventOffer $eventOffer, TranslatorInterface $translator)
     {
         $ownMember = $this->getMember();
         if (null === $ownMember) {
@@ -452,10 +449,8 @@ class OfferController extends BaseFrontendController
         $canRemove = $this->canRemoveOffer($ownMember, $ownPerson, $eventOffer);
         if ($canRemove) {
             $this->fastRemove($eventOffer);
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.offer_remove_successful', [], 'offer'));
         } else {
-            $translator = $this->get('translator');
             $this->displaySuccess($translator->trans('messages.no_access_anymore', [], 'offer'));
         }
 

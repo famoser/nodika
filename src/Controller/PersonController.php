@@ -20,7 +20,9 @@ use App\Form\FrontendUser\FrontendUserSetPasswordType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\EventListener\TranslatorListener;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/person")
@@ -50,9 +52,10 @@ class PersonController extends BaseFrontendController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param TranslatorInterface $translator
+     * @return Response
      */
-    public function changePersonalAction(Request $request)
+    public function changePersonalAction(Request $request, TranslatorInterface $translator)
     {
         $member = $this->getMember();
         if (null === $member) {
@@ -62,6 +65,7 @@ class PersonController extends BaseFrontendController
         $person = $this->getPerson();
         $myForm = $this->handleCrudForm(
             $request,
+            $translator,
             $person,
             SubmitButtonType::EDIT,
             function ($form, $entity) {
@@ -89,9 +93,10 @@ class PersonController extends BaseFrontendController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param TranslatorInterface $translator
+     * @return Response
      */
-    public function changeEmailAction(Request $request)
+    public function changeEmailAction(Request $request, TranslatorInterface $translator)
     {
         $member = $this->getMember();
         if (null === $member) {
@@ -102,20 +107,20 @@ class PersonController extends BaseFrontendController
         $myForm = $this->handleForm(
             $this->createForm(FrontendUserChangeEmailType::class),
             $request,
+            $translator,
             clone $user,
-            function ($form, $entity) use ($user) {
+            function ($form, $entity) use ($user, $translator) {
                 /* @var \App\Entity\FrontendUser $entity */
                 $exitingUser = $this->getDoctrine()->getRepository('App:FrontendUser')->findOneBy(['email' => $entity->getEmail()]);
-                $trans = $this->get('translator');
                 if (!$exitingUser instanceof FrontendUser) {
                     //can change!
                     $user->setEmail($entity->getEmail());
                     $this->fastSave($user);
-                    $this->displaySuccess($trans->trans('change_email.messages.changed_successfully', [], 'person'));
+                    $this->displaySuccess($translator->trans('change_email.messages.changed_successfully', [], 'person'));
 
                     return $this->redirectToRoute('person_view');
                 }
-                $this->displayError($trans->trans('change_email.messages.email_already_picked', [], 'person'));
+                $this->displayError($translator->trans('change_email.messages.email_already_picked', [], 'person'));
 
                 return $form;
             }
@@ -139,9 +144,10 @@ class PersonController extends BaseFrontendController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param TranslatorInterface $translator
+     * @return Response
      */
-    public function changePasswordAction(Request $request)
+    public function changePasswordAction(Request $request, TranslatorInterface $translator)
     {
         $member = $this->getMember();
         if (null === $member) {
@@ -152,8 +158,9 @@ class PersonController extends BaseFrontendController
         $myForm = $this->handleForm(
             $this->createForm(FrontendUserSetPasswordType::class),
             $request,
+            $translator,
             $user,
-            function ($form, $entity) {
+            function ($form, $entity) use ($translator) {
                 /* @var \App\Entity\FrontendUser $entity */
                 /* @var FrontendUser $user */
                 if ($entity->isValidPlainPassword()) {
@@ -161,13 +168,13 @@ class PersonController extends BaseFrontendController
                         $entity->persistNewPassword();
                         $this->fastSave($entity);
 
-                        $this->displayError($this->get('translator')->trans('success.password_set', [], 'access'));
+                        $this->displayError($translator->trans('success.password_set', [], 'access'));
 
                         return $this->redirectToRoute('person_view');
                     }
-                    $this->displayError($this->get('translator')->trans('error.passwords_do_not_match', [], 'access'));
+                    $this->displayError($translator->trans('error.passwords_do_not_match', [], 'access'));
                 } else {
-                    $this->displayError($this->get('translator')->trans('error.new_password_not_valid', [], 'access'));
+                    $this->displayError($translator->trans('error.new_password_not_valid', [], 'access'));
                 }
 
                 return $form;
@@ -213,9 +220,10 @@ class PersonController extends BaseFrontendController
      *
      * @param Member $member
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function removeMemberConfirmAction(Member $member)
+    public function removeMemberConfirmAction(Member $member, TranslatorInterface $translator)
     {
         $activeMember = $this->getMember();
         if (null === $activeMember) {
@@ -229,15 +237,14 @@ class PersonController extends BaseFrontendController
                 $found = $person;
             }
         }
-        $trans = $this->get('translator');
         if (null !== $found) {
             $member->removePerson($found);
             $this->fastSave($member, $found);
-            $this->displaySuccess($trans->trans('remove_member.messages.remove_successfully', [], 'person'));
+            $this->displaySuccess($translator->trans('remove_member.messages.remove_successfully', [], 'person'));
 
             return $this->redirectToRoute('access_logout');
         }
-        $this->displayError($trans->trans('remove_member.messages.not_part_of_member', [], 'person'));
+        $this->displayError($translator->trans('remove_member.messages.not_part_of_member', [], 'person'));
 
         return $this->redirectToRoute('person_view');
     }
