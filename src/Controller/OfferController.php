@@ -406,6 +406,7 @@ class OfferController extends BaseFrontendController
      *
      * @param EventOffer $eventOffer
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function closeAction(EventOffer $eventOffer, TranslatorInterface $translator)
@@ -435,6 +436,7 @@ class OfferController extends BaseFrontendController
      *
      * @param EventOffer $eventOffer
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeAction(EventOffer $eventOffer, TranslatorInterface $translator)

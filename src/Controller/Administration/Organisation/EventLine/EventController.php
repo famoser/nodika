@@ -41,6 +41,8 @@ class EventController extends BaseController
      * @param Organisation $organisation
      * @param EventLine $eventLine
      *
+     * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -88,6 +90,8 @@ class EventController extends BaseController
      * @param EventLine $eventLine
      * @param Event $event
      *
+     * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, EventLine $eventLine, Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -135,6 +139,8 @@ class EventController extends BaseController
      * @param EventLine $eventLine
      * @param Event $event
      *
+     * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, EventLine $eventLine, Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -180,6 +186,7 @@ class EventController extends BaseController
      * @param EventLine $eventLine
      * @param Event $event
      *
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return Response
      */
     public function viewAction(Organisation $organisation, EventLine $eventLine, Event $event, EventPastEvaluationService $eventPastEvaluationService)

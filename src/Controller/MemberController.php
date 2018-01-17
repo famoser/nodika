@@ -144,7 +144,7 @@ class MemberController extends BaseFrontendController
 
             return $this->redirectToRoute('access_logout');
         }
-        $this->displayError($trans->trans('remove_person.messages.not_part_of_member', [], 'member'));
+        $this->displayError($translator->trans('remove_person.messages.not_part_of_member', [], 'member'));
 
         return $this->redirectToRoute('member_view');
     }

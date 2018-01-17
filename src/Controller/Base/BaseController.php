@@ -212,9 +212,9 @@ class BaseController extends AbstractController
     /**
      * @param FormInterface $form
      * @param Request $request
+     * @param TranslatorInterface $translator
      * @param BaseEntity $entity
      * @param callable $onSuccessCallable with $form & $entity arguments
-     *
      * @return FormInterface
      */
     protected function handleFormDoctrinePersist(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onSuccessCallable = null)

@@ -137,6 +137,7 @@ class AccessController extends BaseAccessController
      * @param Request $request
      *
      * @param TranslatorInterface $translator
+     * @param EmailService $emailService
      * @return FormInterface|Response
      */
     public function inviteResendAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
@@ -421,6 +422,7 @@ class AccessController extends BaseAccessController
      * @param Request $request
      *
      * @param TranslatorInterface $translator
+     * @param EmailService $emailService
      * @return Response
      */
     public function resetAction(Request $request, TranslatorInterface $translator, EmailService $emailService)

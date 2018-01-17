@@ -19,7 +19,6 @@ use App\Enum\EventChangeType;
 use App\Helper\DateTimeFormatter;
 use App\Model\Event\SearchEventModel;
 use App\Model\EventLine\EventLineModel;
-use App\Service\EmailService;
 use App\Service\EventPastEvaluationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +37,7 @@ class EventController extends BaseFrontendController
      * @param Request $request
      *
      * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function assignAction(Request $request, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -140,6 +140,7 @@ class EventController extends BaseFrontendController
      * @param Event $event
      *
      * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmPersonAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -169,6 +170,7 @@ class EventController extends BaseFrontendController
      * @param Event $event
      *
      * @param TranslatorInterface $translator
+     * @param EventPastEvaluationService $eventPastEvaluationService
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmMemberAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)

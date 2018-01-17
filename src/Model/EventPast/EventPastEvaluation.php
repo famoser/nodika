@@ -41,7 +41,7 @@ class EventPastEvaluation
      * @param Member $oldMember
      * @param Member $newMember
      */
-    public function setMemberChanged(Member $oldMember = null, Member $newMember)
+    public function setMemberChanged(Member $oldMember = null, Member $newMember = null)
     {
         $this->hasChangedMember = true;
         $this->oldMember = $oldMember;
@@ -58,7 +58,7 @@ class EventPastEvaluation
      * @param Person $oldPerson
      * @param Person $newPerson
      */
-    public function setPersonChanged(Person $oldPerson = null, Person $newPerson)
+    public function setPersonChanged(Person $oldPerson = null, Person $newPerson = null)
     {
         $this->hasChangedPerson = true;
         $this->oldPerson = $oldPerson;

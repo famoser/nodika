@@ -78,6 +78,7 @@ class OrganisationController extends BaseController
      *
      * @param Organisation $organisation
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function administerAction(Organisation $organisation, TranslatorInterface $translator)
@@ -104,9 +105,10 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/edit", name="administration_organisation_edit")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
@@ -418,9 +420,11 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/persons/invite/preview", name="administration_organisation_persons_invite_preview")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
      *
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
      * @return Response
      */
     public function personsInvitePreviewAction(Request $request, Organisation $organisation, TranslatorInterface $translator, EmailService $emailService)
@@ -536,12 +540,10 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/settings", name="administration_organisation_settings")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function settingsAction(Request $request, Organisation $organisation, TranslatorInterface $translator)

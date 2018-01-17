@@ -81,10 +81,11 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/edit", name="administration_organisation_event_line_edit")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator)
@@ -121,10 +122,11 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/remove", name="administration_organisation_event_line_remove")
      *
-     * @param Request      $request
+     * @param Request $request
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator)

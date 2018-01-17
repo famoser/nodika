@@ -41,7 +41,7 @@ services:
         arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
 
     App\Service\EmailService:
-        arguments: ["@mailer", "@doctrine", "@translator","@twig","%env(CONTACT_EMAIL)%"]
+        arguments: ["@mailer", "@doctrine", "@logger","@twig","%env(CONTACT_EMAIL)%"]
 
     App\Listener\DoctrinePreFlushListener:
         tags:
