@@ -600,7 +600,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         if ($bucketsCount < count($myParties)) {
             krsort($sizes);
 
-            //issue: if one small party is the last, he will have to distribute over multiple buckets!
+        //issue: if one small party is the last, he will have to distribute over multiple buckets!
         } else {
             ksort($sizes);
         }

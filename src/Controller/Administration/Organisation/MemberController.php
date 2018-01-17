@@ -243,7 +243,8 @@ class MemberController extends BaseController
 
         $importForm = $this->handleForm(
             $this->createForm(
-                ImportMembersType::class),
+                ImportMembersType::class
+            ),
             $request,
             $translator,
             new ImportFileModel('/img/import'),

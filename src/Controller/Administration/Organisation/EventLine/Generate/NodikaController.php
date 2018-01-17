@@ -109,7 +109,8 @@ class NodikaController extends BaseGenerationController
 
         $form = $this->handleForm(
             $this->createForm(
-                ChoosePeriodType::class),
+                ChoosePeriodType::class
+            ),
             $request,
             $translator,
             $config,

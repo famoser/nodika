@@ -242,7 +242,8 @@ class EventLineController extends BaseController
 
         $importForm = $this->handleForm(
             $this->createForm(
-                ImportEventsType::class),
+                ImportEventsType::class
+            ),
             $request,
             $translator,
             new ImportFileModel('/public/import'),

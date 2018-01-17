@@ -429,7 +429,8 @@ class AccessController extends BaseAccessController
     {
         $myForm = $this->handleForm(
             $this->createForm(
-                FrontendUserResetType::class),
+                FrontendUserResetType::class
+            ),
             $request,
             $translator,
             new FrontendUser(),
