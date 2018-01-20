@@ -1,17 +1,27 @@
 index:
   title: 'nodika.ch'
   description: 'Der Notfalldienst Kalender erlaubt eine schnelle, transparente und einfache Absprache über die Verteilung von Notfalldiensten'
-  returning:
-    welcome_back: 'Willkommen zurück!'
-    to_dashboard: 'hier geht''s zum Dashboard'
-  introduction:
-    header: 'Überblick'
-    header_description: 'Das webbasierte Tool übernimmt die Administration und Organisation von Notfalldiensten'
-    paragraph_1: >
-      Nodika übernimmt den Grossteil der Verwaltungsaufgaben eines Notfalldienstverbandes.
-    paragraph_2: >
-      Informieren Sie sich hier über die genauen Funktionen, oder probieren Sie es einfach kostenlos und unverbindlich aus.
-    register_action: 'Registrieren Sie sich!'
+  login: 'Login'
+  login_description: 'Hier gelangen Sie zum Login'
+  register: 'Registrieren'
+  register_description: 'Noch keinen Account? Hier können Sie sich registrieren'
+  about: 'Über Nodika'
+  about_description: 'Erfahren Sie mehr über diese Webseite'
+  contact: 'Kontakt'
+  contact_description: 'Nehmen Sie bei Fragen Kontakt auf'
+
+introduction:
+  header: 'Überblick'
+  header_description: 'Das webbasierte Tool übernimmt die Administration und Organisation von Notfalldiensten'
+  paragraph_1: >
+    Nodika übernimmt den Grossteil der Verwaltungsaufgaben eines Notfalldienstverbandes.
+  paragraph_2: >
+    Verteilen Sie Termine fair auf Ihre Mitglieder.
+    Diese können die Termine bestätigen, durchsuchen, und untereinander abtauschen.
+
+about:
+  title: Über nodika.ch
+  description: Erfahren Sie mehr über diese Webseite
   features:
     header: 'Funktionen'
     header_description: >
@@ -71,11 +81,16 @@ index:
     aspect_4_name: 'Gratis Testphase'
     aspect_4_description: >
       Alle Funktionen von nodika sind für einen Monat unbeschränkt und gratis verfügbar.
-  contact:
-    header: 'Noch Fragen?'
-    header_description: >
-      Kontaktieren Sie uns!
-    contact_form_header: 'Kontaktformular'
+
+contact:
+  header: 'Noch Fragen?'
+  header_description: >
+    Kontaktieren Sie uns!
+  address: >+
+    Florian Moser
+    Ochsengasse 66
+    4123 Allschwil
+  contact_form_header: 'Kontaktformular'
   thanks_for_contact_form: 'Vielen Dank für die Kontaktaufnahme. Wir melden uns.'
 
 error:

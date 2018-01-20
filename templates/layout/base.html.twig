@@ -53,6 +53,10 @@
                             <a href="{{ path("dashboard_index") }}"
                                class="{{ color_class }} go-button">{{ "navigation.dashboard"|trans({}, "content_base") }}</a>
                         {% endif %}
+                        {% if go_to_startpage is defined %}
+                            <a href="{{ path("homepage") }}"
+                               class="{{ color_class }} go-button">{{ "navigation.to_start_page"|trans({}, "content_base") }}</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -69,7 +73,7 @@
                 made with <3 by <a href="http://famoser.ch">famoser</a>
             </div>
             <div class="col-md-6 align-right">
-                version 2017.3
+                version 2018.1
             </div>
         </div>
     </div>

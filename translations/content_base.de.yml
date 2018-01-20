@@ -24,6 +24,7 @@ navigation:
   login: 'login'
   go_back: 'zurück'
   register: 'registrieren'
+  to_start_page: 'zur Startseite'
 
 help:
   help: 'Hilfe'

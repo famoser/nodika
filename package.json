@@ -1,13 +1,13 @@
 {
   "devDependencies": {
-    "@symfony/webpack-encore": "^0.17.0",
-    "jquery": "^3.2.1",
-    "node-sass": "^4.7.2",
-    "sass-loader": "^6.0.6"
+    "@symfony/webpack-encore": "^0.17",
+    "jquery": "^3.2",
+    "node-sass": "^4",
+    "sass-loader": "^6"
   },
   "dependencies": {
-    "bootstrap": "4.0.0-beta.2",
-    "font-awesome": "^4.7.0",
-    "ionicons": "^3.0.0"
+    "bootstrap": "^4",
+    "font-awesome": "^4",
+    "ionicons": "^2"
   }
 }

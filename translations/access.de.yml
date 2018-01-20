@@ -9,7 +9,7 @@ login:
   no_account_description: 'Ihr Organisator lässt Ihnen Zugangsdaten zukommen oder registrieren Sie sich, um selber eine Organisation zu erstellen'
   forgot_password: 'Passwort vergessen?'
   forgot_password_description: 'Drücken Sie auf ''"Passwort vergessen" unterhalb des Loginformulars und verifizieren Sie sich mit der hinterlegten E-Mail'
-  invitation_not_received: "Einladung nicht bekommen"
+  invitation_not_received: "Einladung nicht bekommen?"
   invitation_not_received_description: "Sind Sie Teil einer Organisation, aber haben die Einladung nicht bekommen?"
   invitation_not_received_action: "Einladung erneut anfordern"
 

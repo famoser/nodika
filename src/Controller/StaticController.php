@@ -37,8 +37,25 @@ class StaticController extends BaseController
     public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $arr = [];
-        $arr['is_logged_in'] = $this->getUser() instanceof FrontendUser;
+        if ($this->getUser() instanceof FrontendUser) {
+            return $this->redirectToRoute("dashboard_index");
+        }
 
+        return $this->renderNoBackUrl(
+            'static/index.html.twig',
+            $arr,
+            'this is the homepage'
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
+     * @param $arr
+     */
+    private function processNewsletterForm(Request $request, TranslatorInterface $translator, EmailService $emailService, &$arr)
+    {
         $form = $this->handleFormDoctrinePersist(
             $this->createForm(RegisterForPreviewType::class),
             $request,
@@ -50,12 +67,12 @@ class StaticController extends BaseController
                 $emailService->sendTextEmail(
                     $this->getParameter('CONTACT_EMAIL'),
                     'Kontaktanfrage von nodika',
-                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n".
-                    "\nListe: ".$newsletter->getChoice().
-                    "\nEmail: ".$newsletter->getEmail().
-                    "\nVorname: ".$newsletter->getGivenName().
-                    "\nNachname: ".$newsletter->getFamilyName().
-                    "\nNachricht: ".$newsletter->getMessage()
+                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
+                    "\nListe: " . $newsletter->getChoice() .
+                    "\nEmail: " . $newsletter->getEmail() .
+                    "\nVorname: " . $newsletter->getGivenName() .
+                    "\nNachname: " . $newsletter->getFamilyName() .
+                    "\nNachricht: " . $newsletter->getMessage()
                 );
 
                 $this->displaySuccess($translator->trans('index.thanks_for_contact_form', [], 'static'));
@@ -64,12 +81,6 @@ class StaticController extends BaseController
             }
         );
         $arr['newsletter_form'] = $form->createView();
-
-        return $this->renderNoBackUrl(
-            'static/index.html.twig',
-            $arr,
-            'this is the homepage'
-        );
     }
 
     /**
@@ -87,5 +98,35 @@ class StaticController extends BaseController
         }
 
         return $this->render('email/email.html.twig', ['email' => $email]);
+    }
+
+    /**
+     * @Route("/about", name="about")
+     *
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
+     * @return Response
+     */
+    public function aboutAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
+    {
+        $arr = [];
+        $this->processNewsletterForm($request, $translator, $emailService, $arr);
+        return $this->render('static/about.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/contact", name="contact")
+     *
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
+     * @return Response
+     */
+    public function contactAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
+    {
+        $arr = [];
+        $this->processNewsletterForm($request, $translator, $emailService, $arr);
+        return $this->render('static/contact.html.twig', $arr);
     }
 }
