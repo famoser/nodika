@@ -24,10 +24,33 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
+    /**
+     * get the parameter
+     *
+     * remove this method as soon as possible
+     * here because of missing getParameter call in AbstractController, should be back in release 4.1
+     * clean up involves:
+     *  remove this method
+     *  remove getSubscribedServices override
+     *  remove file config/packages/parameters.yml
+     * @param string $name
+     * @return mixed
+     */
+    protected function getParameter(string $name)
+    {
+        return $this->get("kernel")->getContainer()->getParameter($name);
+    }
+
+    public static function getSubscribedServices()
+    {
+        return parent::getSubscribedServices() + ["kernel" => KernelInterface::class];
+    }
+
     /**
      * @param $type
      * @param $submitButtonType

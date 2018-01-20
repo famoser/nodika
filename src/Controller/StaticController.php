@@ -39,8 +39,6 @@ class StaticController extends BaseController
         $arr = [];
         $arr['is_logged_in'] = $this->getUser() instanceof FrontendUser;
 
-        dump($this->getParameter("DATABASE_URL"));
-
         $form = $this->handleFormDoctrinePersist(
             $this->createForm(RegisterForPreviewType::class),
             $request,
