@@ -27,4 +27,6 @@ class EventLineModel
     public $eventLine;
     /* @var Event[] $events */
     public $events;
+    /* @var Event[] $events */
+    public $activeEvents;
 }

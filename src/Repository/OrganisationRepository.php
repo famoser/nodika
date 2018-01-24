@@ -31,9 +31,9 @@ class OrganisationRepository extends EntityRepository
 {
     /**
      * @param Organisation $organisation
-     * @param \DateTime    $dateTime
-     * @param string       $comparator
-     * @param int          $maxResults
+     * @param \DateTime $dateTime
+     * @param string $comparator
+     * @param int $maxResults
      *
      * @return Event[]
      */
@@ -96,6 +96,38 @@ class OrganisationRepository extends EntityRepository
             $eventLineModel->events = $qb->getQuery()
                 ->getResult();
             $res[] = $eventLineModel;
+        }
+
+        return $res;
+    }
+
+    /**
+     * @param EventLineModel[] $eventLineModels
+     *
+     * @return boolean
+     */
+    public function addActiveEvents(array $eventLineModels)
+    {
+        $res = false;
+        foreach ($eventLineModels as $eventLineModel2) {
+            $eventLine = $eventLineModel2->eventLine;
+            $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('e')
+                ->from('App:Event', 'e')
+                ->join('e.eventLine', 'el')
+                ->leftJoin('e.member', 'm')
+                ->leftJoin('e.person', 'p')
+                ->where('el = :eventLine')
+                ->setParameter('eventLine', $eventLine);
+
+            $qb->andWhere('e.startDateTime < :startDateTime')
+                ->setParameter('startDateTime', new \DateTime());
+
+            $qb->andWhere('e.endDateTime > :endDateTime')
+                ->setParameter('endDateTime', new \DateTime());
+
+            $eventLineModel2->activeEvents = $arr = $qb->getQuery()->getResult();;
+            $res |= count($eventLineModel2->activeEvents);
         }
 
         return $res;

@@ -37,3 +37,6 @@ index:
   questions_description: 'Schreiben Sie mir eine E-Mail an '
 
   show_all_events: 'Alle Termine anzeigen'
+
+  currently_active: 'Aktiv'
+  currently_active_description: 'Jetzt aktive Termine'

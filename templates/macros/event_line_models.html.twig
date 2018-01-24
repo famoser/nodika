@@ -5,8 +5,9 @@
     {% endfor %}
 {% endmacro %}
 
-{% macro show_full_table_single(eventLineModel, activeMember = null) %}<h3>
-    {{ eventLineModel.eventLine.name }}
+{% macro show_full_table_single(eventLineModel, activeMember = null) %}
+    <h3>
+        {{ eventLineModel.eventLine.name }}
     </h3>
     <p>{{ eventLineModel.eventLine.description }}</p>
 
