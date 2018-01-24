@@ -9,6 +9,7 @@ assign:
   assigned_person: 'Zugewiesener Mitarbeiter'
   no_assigned_person: 'Noch keinem Mitarbeiter zugewiesen'
   choose_person: 'Mitarbeiter auswählen'
+  select_events: 'Termine auswählen, die Sie zuweisen wollen:'
   no_events_can_be_assigned: 'Zurzeit können Sie keine Termine zuweisen'
   assign_events: 'Termine zuweisen'
   assign_events_description: 'Wählen Sie einen Mitarbeiter aus und markieren Sie danach alle Termine, die Sie diesem Mitarbeiter zuweisen wollen. Drücken Sie danach auf "zuweisen", um die Änderung zu bestätigen. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt'

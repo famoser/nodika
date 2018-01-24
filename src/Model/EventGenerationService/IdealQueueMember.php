@@ -69,7 +69,7 @@ class IdealQueueMember
         }
 
         foreach ($removeKeys as $removeKey) {
-            $val = $this->history[$removeKey];
+            $val = (int)$this->history[$removeKey];
             if (0 === $val) {
                 ++$this->availableWeekdayCount;
             } elseif (1 === $val) {

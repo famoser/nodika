@@ -1,4 +1,4 @@
-{% extends "single_content_base.html.twig" %}
+{% extends "list_content_base.html.twig" %}
 {% set color_class = globals_color_class_event %}
 {% import "macros/kitchen_sink.html.twig" as kitchen_sink %}
 
@@ -7,9 +7,12 @@
 
 {% trans_default_domain "offer" %}
 
+{% block list_content_wrapper_start %}
 
-{% block single_content %}
-    <form class="form" action="{{ path("offer_choose_events", {"eventOffer" : eventOffer.id}) }}" method="post">
+<form class="form" action="{{ path("offer_choose_events", {"eventOffer" : eventOffer.id}) }}" method="post">
+    {% endblock %}
+
+    {% block list_content_0 %}
         <div class="row">
             <div class="col-md-8">
                 <h3>{{ "choose_events.your_events"|trans }}</h3>
@@ -30,9 +33,11 @@
                 <h3>{{ "choose_events.event_not_found"|trans }}</h3>
                 <p>{{ "choose_events.event_not_found_description"|trans }}</p>
             </div>
-            <div class="col-md-12">
-                <hr/>
-            </div>
+        </div>
+    {% endblock %}
+
+    {% block list_content_1 %}
+        <div class="row">
             <div class="col-md-8">
                 <h3>{{ "choose_events.their_events"|trans }}</h3>
                 <p>{{ "choose_events.their_events_description"|trans }}</p>
@@ -52,17 +57,18 @@
                 <h3>{{ "choose_events.event_not_found"|trans }}</h3>
                 <p>{{ "choose_events.event_not_found_receiver_description"|trans }}</p>
             </div>
-
-            <div class="col-md-12">
-                <hr/>
-            </div>
-
-            <div class="col-md-12">
-                <h3>{{ "choose_events.message"|trans }}</h3>
-                <p>{{ "choose_events.message_description"|trans }}</p>
-                {{ kitchen_sink.textarea_form_field("description", description_form, "description"|trans({}, "entity_event_offer")) }}
-                {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
-            </div>
         </div>
-    </form>
+    {% endblock %}
+
+    {% block list_content_2 %}
+        <h3>{{ "choose_events.message"|trans }}</h3>
+        <p>{{ "choose_events.message_description"|trans }}</p>
+        {{ kitchen_sink.textarea_form_field("description", description_form, "description"|trans({}, "entity_event_offer")) }}
+        {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
+    {% endblock %}
+
+
+    {% block list_content_wrapper_end %}
+
+</form>
 {% endblock %}

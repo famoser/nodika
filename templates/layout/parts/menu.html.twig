@@ -168,13 +168,13 @@
             <p>{{ "help.help_description"|trans({}, "content_base") }}</p>
             <h3>{{ "help.architecture"|trans({}, "content_base") }}</h3>
             <p>
-                {% if member is defined and person is defined %}
+                {% if member is defined and member is not null and person is defined and person is not null %}
                     {{ "help.architecture_description_1"|trans({"%member%" : member.name, "%person%" : person.fullName}, "content_base") }}
                 {% else %}
                     {{ "help.architecture_description_1_alternative"|trans({}, "content_base") }}
                 {% endif %}
                 <br/>
-                {% if organisation is defined %}
+                {% if organisation is defined and organisation is not null %}
                     {{ "help.architecture_description_2"|trans({"%organisation%": organisation.name}, "content_base") }}
                 {% else %}
                     {{ "help.architecture_description_2_alternative"|trans({}, "content_base") }}

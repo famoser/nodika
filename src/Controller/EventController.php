@@ -63,7 +63,7 @@ class EventController extends BaseFrontendController
                         $events[] = $assignableEvents[$eventId];
                     }
                 } elseif ('selected_person' === $key) {
-                    $selectedPersonId = $value;
+                    $selectedPersonId = (int)$value;
                     foreach ($persons as $person) {
                         if ($person->getId() === $selectedPersonId) {
                             $selectedPerson = $person;
@@ -71,6 +71,7 @@ class EventController extends BaseFrontendController
                     }
                 }
             }
+
 
             if (count($events) > 0) {
                 if (null !== $selectedPerson) {
@@ -253,8 +254,9 @@ class EventController extends BaseFrontendController
         $memberQuery = $request->query->get('member');
         $member = null;
         if (is_numeric($memberQuery)) {
+            $memberQueryInt = (int)$memberQuery;
             foreach ($organisation->getMembers() as $organisationMember) {
-                if ($organisationMember->getId() === $memberQuery) {
+                if ($organisationMember->getId() === $memberQueryInt) {
                     $member = $organisationMember;
                 }
             }
@@ -263,9 +265,10 @@ class EventController extends BaseFrontendController
         $personQuery = $request->query->get('person');
         $person = null;
         if (is_numeric($personQuery)) {
+            $personQueryInt = (int)$personQuery;
             foreach ($organisation->getMembers() as $organisationMember) {
                 foreach ($organisationMember->getPersons() as $organisationPerson) {
-                    if ($organisationPerson->getId() === $personQuery) {
+                    if ($organisationPerson->getId() === $personQueryInt) {
                         $person = $organisationPerson;
                     }
                 }

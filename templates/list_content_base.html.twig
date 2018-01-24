@@ -5,6 +5,10 @@
     {% include "layout/parts/menu.html.twig" %}
     {% include "layout/parts/flashbag.html.twig" %}
 
+    {% block list_content_wrapper_start %}
+
+    {% endblock %}
+
     {% set condition = true %}
     {% for i in 0..10 if condition %}
         {% if block('list_content_' ~ i) is defined %}
@@ -20,4 +24,8 @@
             {% set condition = false %}
         {% endif %}
     {% endfor %}
+
+    {% block list_content_wrapper_end %}
+
+    {% endblock %}
 {% endblock %}

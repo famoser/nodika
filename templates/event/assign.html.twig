@@ -17,6 +17,8 @@
                 <form class="form"
                       action="{{ path("event_assign") }}"
                       method="post">
+                    {{ kitchen_sink.select_form_field("selected_person", person, persons, "assign.choose_person"|trans) }}
+                    <p>{{ "assign.select_events"|trans }}</p>
                     <table class="table">
                         <thead>
                         <tr>
@@ -44,7 +46,6 @@
                         {% endfor %}
                         </tbody>
                     </table>
-                    {{ kitchen_sink.select_form_field("selected_person", person, persons, "assign.choose_person"|trans) }}
                     {{ kitchen_sink.submit_form_button("submit", "assign.assign_events"|trans) }}
                 </form>
             {% else %}
