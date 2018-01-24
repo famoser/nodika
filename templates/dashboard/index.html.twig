@@ -105,7 +105,7 @@
                 {% endfor %}
 
                 {# show help if no organisation, or leading an organisation #}
-                {% if leading_organisations|length > 0 or organisation is not null %}
+                {% if leading_organisations|length > 0 or organisation is null %}
                     <a class="tile tile-double default-color" href="mailto:support@nodika.ch">
                         <h3>{{ "index.questions"|trans }}</h3>
                         <p>

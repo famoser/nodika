@@ -12,16 +12,28 @@
 namespace App\Controller\Base;
 
 use App\Entity\Traits\UserTrait;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class BaseAccessController extends BaseFrontendController
 {
+    public static function getSubscribedServices()
+    {
+        return parent::getSubscribedServices() +
+            [
+                "event_dispatcher" => EventDispatcherInterface::class,
+                "security.token_storage" => TokenStorageInterface::class,
+            ];
+    }
+
+
     /**
      * @param Request $request
      * @param TranslatorInterface $translator
@@ -63,8 +75,8 @@ class BaseAccessController extends BaseFrontendController
     }
 
     /**
+     * @param Request $request
      * @param AdvancedUserInterface $user
-     * @param Request               $request
      */
     protected function loginUser(Request $request, AdvancedUserInterface $user)
     {

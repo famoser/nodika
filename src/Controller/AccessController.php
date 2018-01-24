@@ -24,6 +24,7 @@ use App\Form\Person\PersonInviteType;
 use App\Form\Person\PersonType;
 use App\Helper\HashHelper;
 use App\Service\EmailService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -422,10 +423,11 @@ class AccessController extends BaseAccessController
      * @param Request $request
      *
      * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
      * @param EmailService $emailService
      * @return Response
      */
-    public function resetAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
+    public function resetAction(Request $request, TranslatorInterface $translator, LoggerInterface $logger, EmailService $emailService)
     {
         $myForm = $this->handleForm(
             $this->createForm(
@@ -434,7 +436,7 @@ class AccessController extends BaseAccessController
             $request,
             $translator,
             new FrontendUser(),
-            function ($entity) use ($translator, $emailService) {
+            function ($form, $entity) use ($translator, $logger, $emailService) {
                 /* @var FormInterface $form */
                 /* @var FrontendUser $entity */
 
@@ -454,7 +456,7 @@ class AccessController extends BaseAccessController
                     );
                     $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 } else {
-                    $this->get('logger')->error('tried to reset password for non-existing user ' . $entity->getEmail());
+                    $logger->error('tried to reset password for non-existing user ' . $entity->getEmail());
                 }
 
                 return $this->redirectToRoute('access_reset_done');

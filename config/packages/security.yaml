@@ -58,7 +58,8 @@ security:
         #enable login
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/invite, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #allow cron jobs / debugging routes
         - { path: ^/cron, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -68,6 +69,7 @@ security:
         - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/about, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/email, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #level1: user
         - { path: ^/, role: ROLE_USER }
