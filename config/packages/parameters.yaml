@@ -1,0 +1,11 @@
+parameters:
+    APP_ENV: '%env(APP_ENV)%'
+    APP_SECRET: '%env(APP_SECRET)%'
+    DATABASE_URL: '%env(DATABASE_URL)%'
+    MAILER_URL: '%env(MAILER_URL)%'
+    CONTACT_EMAIL: '%env(CONTACT_EMAIL)%'
+    ADMIN_EMAIL: '%env(ADMIN_EMAIL)%'
+    FREE_PERIOD_DAYS: '%env(FREE_PERIOD_DAYS)%'
+    REGISTER_FEE: '%env(REGISTER_FEE)%'
+    YEARLY_FEE: '%env(YEARLY_FEE)%'
+    TAWK_ID: '%env(TAWK_ID)%'

@@ -1,0 +1,77 @@
+security:
+    access_decision_manager:
+        strategy: unanimous
+
+    encoders:
+        App\Entity\FrontendUser: bcrypt
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    providers:
+        frontend_user_provider:
+            id: app.frontend_user_provider
+        admin_user_provider:
+            id: app.admin_user_provider
+
+    firewalls:
+        # disables authentication for assets and the profiler
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # main firewall for logged in users
+        main:
+            pattern:   ^/
+            anonymous: ~
+            form_login:
+                provider: frontend_user_provider
+                login_path: access_login
+                check_path: access_login_check
+                default_target_path: dashboard_index
+                csrf_token_generator: security.csrf.token_manager
+                # field names for the username and password fields
+                username_parameter: frontend_user_login[email]
+                password_parameter: frontend_user_login[plainPassword]
+            logout:       true
+            anonymous:    true
+            logout_on_user_change: true
+
+        #backend firewall for admins
+        backend:
+            pattern:   ^/
+            anonymous: ~
+            form_login:
+                provider: admin_user_provider
+                login_path: backend_login
+                check_path: backend_login_check
+                default_target_path: backend_dashboard_index
+                csrf_token_generator: security.csrf.token_manager
+
+            logout:       true
+            anonymous:    true
+            logout_on_user_change: true
+
+    access_control:
+        #enable login
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/invite, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        #allow cron jobs / debugging routes
+        - { path: ^/cron, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/_, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        #allow info pages
+        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/about, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/email, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        #level1: user
+        - { path: ^/, role: ROLE_USER }
+
+        #level2: admin
+        - { path: ^/backend/, role: ROLE_ADMIN }

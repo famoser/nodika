@@ -1,0 +1,70 @@
+@import 'variables'
+
+body
+  color: $grey-dark
+  font-family: $font-stack
+
+h1, h2, h3, h4, p
+  font-family: $font-stack
+
+h1
+  font-size: 3em
+  margin: 0
+  font-weight: $weight-light
+
+h2
+  font-size: 2em
+  margin: 0 0 1em
+  font-weight: $weight-light
+
+h3
+  font-size: 1.3em
+  margin-bottom: 0.5em
+  margin-top: 0.5em
+  text-transform: uppercase
+  font-weight: $weight-bold
+
+p
+  font-weight: $weight-default
+  &.lead
+    font-size: 1.3em
+    line-height: 1.8em
+    margin-bottom: 0
+    margin-top: 1em
+  &.info
+    font-size: 0.8em
+    color: $grey-normal
+    margin-bottom: 1.2em
+  &.low
+    margin-bottom: 1.2em
+
+ul, ol
+  margin-bottom: 1.8em
+  padding-left: 0
+
+a
+  color: $color-primary-0
+  text-decoration: none
+  &:hover, &:active, &:focus
+    color: $color-primary-0
+    text-decoration: none
+
+a.no-highlight
+  color: inherit
+  text-decoration: none
+  &:hover, &:active, &:focus
+    color: inherit
+    text-decoration: none
+
+hr
+  border-color: $grey-dark
+  margin-top: 10px
+  margin-bottom: 30px
+
+p.h1-description, p.h2-description
+  color: $grey-normal
+  line-height: 1.4em
+  margin-top: 0.5em
+
+.ion-big
+  font-size: 4em

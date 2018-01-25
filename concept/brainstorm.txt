@@ -1,0 +1,53 @@
+Funktionen bisherige Webseite:
+    Import generierter Termine jeweils Ende Jahr
+    Einsicht nächste NotfalldienstTermine
+    Einsicht geleistete Notfalldienste vergangenes Jahr
+
+Organisation knbu
+    Ende Jahr werden neue Termine generiert mit einem speziellen Algorythmus
+    Die generierten Termine werden in die Webanwendung importiert & die Mitglieder verständigt
+    Mitglieder können online Ihre Termine nachsehen
+    Mitglieder werden telefonisch kurz vor dem nächsten Termin daran erinnert
+    Mitglieder können Ihre Termine mit Anderen abtauschen, dazu muss eine Einverständnisserklärung an den Leiter übermittelt werden
+    Der Leiter kann die online publizierten Termine abändern
+    Ende des Jahres wird eine Auflistung der geleisteten Termine erstellt
+
+Was gut ist an der Webseite jetzt:
+    Mitglieder können die nächsten Termine einsehen
+    Mitglieder können einen Jahresrückblick anzeigen lassen
+    Die Webseite ist schnell und übersichtlich
+
+Was verbesserungswürdig ist:
+    Das Abtauschen der Termine ist zeitaufwenig und braucht schrifliche Zustimmung
+    Das Tool zum die neuen Termine zu generieren ist zu wenig anwenderfreundlich
+    Die telefonische Benachrichtigung ist zu aufwendig und zeitintensiv
+    Werden Termine verändert, wird keine History dazu erstellt (der alte Wert kann also nicht eingesehn werden)
+    Der Algorythmus ist verbesserungswürdig (konkret: je nach Punkte sollte der Abstand zwischen Notfalldienste optimiert werden)
+
+Neuentwicklung des Tools:
+    Einsicht der Termine (wie bisher)
+    Werden Termine geändert können Administratoren alte Werte einsehen
+    Möglichkeit einen anderen Nutzer anzufragen, seinen Termin zu übernehmen
+    Möglichkeit entsprechende Anfragen anzunehmen oder abzulehnen
+    Automatischer Versand einer E-Mail zwei Wochen vor Termin mit einem Bestätigunglink
+    Leiter wird verständig falls Termine nicht bestätigt werden
+    Algorythmus für die Generierung der Termine wird online eingebaut & verbessert
+    Export von Jahresrückblicken
+
+Vorteile:
+    Zeitersparnis durch Wegfall von Telefonaten
+    Zeitersparnis beim Wechsel von Terminen da keine schriftliche Bestätigung mehr nötig
+    Zeitersparnis bei der Administration da Änderungen automatisch vollzogen werden
+    Mehr Kontrolle bei der Änderung von Terminen, Fehler können leichter korrigiert
+    besserer Algorythmus
+
+Technisches:
+    Erstellung der Applikation mit symfony (auch andere Entwicklung können Arbeit fortfahren)
+    Höhere Qualität der Webanwendung: Auch für grössere Änderungen ist in Zukunft keine Neuprogrammierung nötig
+    Erfahrungen der alten Webappliaktion können einbezogen werden
+
+Kosten:
+    2500.- CHF einmalig: Entwicklung, Konzeption & Dokumentation
+    300.- CHF pro Jahr: Für Hosting, URL & Maintainance der Webanwendung.
+    60.- CHF/h Support
+    Es wird aktiv nach möglichen Partnern gesucht, werden diese gefunden, sinken die Beträge für knbu

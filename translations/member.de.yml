@@ -1,0 +1,33 @@
+index:
+  title: 'Praxis ansehen'
+  description: 'Nähere Informationen zu Ihrer Praxis'
+  manage_self: 'Verwalten'
+  edit: 'Daten ändern'
+  no_persons: 'Diese Praxis hat keine zugeordneten Mitarbeiter. Fragen Sie Ihren Administrator nach einer Einladung zu dieser Praxis.'
+  your_persons: 'Ihre Mitarbeiter'
+  remove_person: 'Zugriff entfernen'
+  remove_person_description: 'Sie können einem Mitarbeiter den Zugriff zu dieser Praxis entziehen (z.B. weil er/sie nicht mehr dort arbeitet)'
+
+#edit page
+edit:
+  title: 'Praxis ändern'
+  description: 'Editieren Sie die Daten Ihrer Praxis'
+  member_edit_form: 'Praxis ändern'
+  member_address: 'Adresse'
+  member_address_description: 'Die Adresse Ihrer Praxis.'
+  member_contact: 'Kontaktinformationen'
+  member_contact_description: 'An diese hinterlegte E-Mail werden die Nachrichten an Ihre Praxis versandt, sowie Erinnerungen für nicht zugeordnete Termine'
+
+#remove_person page
+remove_person:
+  title: 'Mitarbeiter entfernen'
+  description: 'Möchten Sie diesen Mitarbeiter wirklich von dieser Praxis entfernen?'
+  really_remove: 'Ich möchte diesen Mitarbeiter wirklich von meiner Praxis entfernen. Ich verstehe die damit entstehenden Konsequenzen.'
+  really_remove_confirm: 'Bestätigen'
+  remove_person: 'Von der Praxis entfernen'
+  remove_person_description: >
+    Entfernen Sie diesen Mitarbeiter von dieser Praxis.
+    Damit verliert diese Person den Zugriff auf die Praxis und dessen Termine.
+  messages:
+    remove_successfully: 'Der Mitarbeiter wurde erfolgreich entfernt'
+    not_part_of_member: 'Dieser Mitarbeiter ist nicht Teil der Praxis'

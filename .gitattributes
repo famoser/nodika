@@ -1,2 +1,2 @@
-web/dist/**/*.css       -diff
-web/dist/**/*.js        -diff
+#exclude compiled sources
+public/build/**/* -diff

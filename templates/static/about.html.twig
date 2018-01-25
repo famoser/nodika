@@ -1,0 +1,150 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}{{ "about.title"|trans }}{% endblock %}
+{% block description %}{{ "about.description"|trans }}{% endblock %}
+
+{% trans_default_domain "static" %}
+
+{% set show_dashboard = false %}
+{% set go_to_startpage = true %}
+{% set color_class = globals_color_class_organisation %}
+
+{% block content %}
+    <section class="introduction">
+        <div class="container index-container default-color">
+            <div class="row">
+                <div class="color-title col-md-4">
+                    <h2>{{ "introduction.header"|trans }}</h2>
+                    <p class="h2-description">{{ "introduction.header_description"|trans }}</p>
+                </div>
+                <div class="color-content offset-md-2 col-md-6">
+                    <p>{{ "introduction.paragraph_1"|trans }}</p>
+                    <p>{{ "introduction.paragraph_2"|trans }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features">
+        <div class="container index-container default-color">
+            <div class="row">
+                <div class="color-title col-md-4">
+                    <h2>{{ "about.features.header"|trans }}</h2>
+                    <p class="h2-description">{{ "about.features.header_description"|trans }}</p>
+                </div>
+                <div class="color-content offset-md-2 col-md-6">
+                    <ul>
+                        <li>
+                            <b>{{ "about.features.reason_1_name"|trans }}:</b>
+                            {{ "about.features.reason_1_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.features.reason_2_name"|trans }}:</b>
+                            {{ "about.features.reason_2_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.features.reason_3_name"|trans }}:</b>
+                            {{ "about.features.reason_3_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.features.reason_4_name"|trans }}:</b>
+                            {{ "about.features.reason_4_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.features.reason_5_name"|trans }}:</b>
+                            {{ "about.features.reason_5_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.features.reason_6_name"|trans }}:</b>
+                            {{ "about.features.reason_6_description"|trans }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="promises">
+        <div class="container index-container default-color">
+            <div class="row">
+                <div class="color-title col-md-4">
+                    <h2>{{ "about.promises.header"|trans }}</h2>
+                    <p class="h2-description">{{ "about.promises.header_description"|trans }}</p>
+                </div>
+                <div class="color-content offset-md-2 col-md-6">
+                    <ul>
+                        <li>
+                            <b>{{ "about.promises.promise_1_name"|trans }}:</b>
+                            {{ "about.promises.promise_1_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.promises.promise_2_name"|trans }}:</b>
+                            {{ "about.promises.promise_2_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.promises.promise_3_name"|trans }}:</b>
+                            {{ "about.promises.promise_3_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.promises.promise_4_name"|trans }}:</b>
+                            {{ "about.promises.promise_4_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.promises.promise_5_name"|trans }}:</b>
+                            {{ "about.promises.promise_5_description"|trans }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="payment">
+        <div class="container index-container default-color">
+            <div class="row">
+                <div class="color-title col-md-4">
+                    <h2>{{ "about.payment.header"|trans }}</h2>
+                    <p class="h2-description">{{ "about.payment.header_description"|trans }}</p>
+                </div>
+                <div class="color-content offset-md-2 col-md-6">
+                    <ul>
+                        <li>
+                            <b>{{ "about.payment.aspect_1_name"|trans }}:</b>
+                            {{ "about.payment.aspect_1_description"|trans({"%register_fee%": globals_register_fee}) }}
+                        </li>
+                        <li>
+                            <b>{{ "about.payment.aspect_2_name"|trans }}:</b>
+                            {{ "about.payment.aspect_2_description"|trans({"%yearly_fee%": globals_yearly_fee}) }}
+                        </li>
+                        <li>
+                            <b>{{ "about.payment.aspect_3_name"|trans }}:</b>
+                            {{ "about.payment.aspect_3_description"|trans }}
+                        </li>
+                        <li>
+                            <b>{{ "about.payment.aspect_4_name"|trans }}:</b>
+                            {{ "about.payment.aspect_4_description"|trans }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <div class="container list-container d-md-block">
+            <div class="row">
+                <a class="tile tile-double default-color" href="{{ path('access_register_check') }}">
+                    <i class="ion ion-big ion-ios-add-circle-outline"></i>
+                    <h3>{{ "index.register"|trans }}</h3>
+                    <p>
+                        {{ "index.register_description"|trans }}
+                    </p>
+                </a>
+                <a class="tile tile-double default-color" href="{{ path('contact') }}">
+                    <i class="ion ion-big ion-ios-contact"></i>
+                    <h3>{{ "index.contact"|trans }}</h3>
+                    <p>
+                        {{ "index.contact_description"|trans }}
+                    </p>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

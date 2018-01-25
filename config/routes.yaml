@@ -1,0 +1,34 @@
+app:
+    resource: "../src/Controller/"
+    type:     annotation
+
+app_administration:
+    resource: "../src/Controller/Administration/"
+    type:     annotation
+    prefix:   /administration
+
+app_administration_organisation:
+    resource: "../src/Controller/Administration/Organisation"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}
+
+app_administration_organisation_event_line:
+    resource: "../src/Controller/Administration/Organisation/EventLine"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}/event_line/{eventLine}
+
+app_administration_organisation_event_line_generate:
+    resource: "../src/Controller/Administration/Organisation/EventLine/Generate"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}/event_line/{eventLine}/generate
+
+app_administration_organisation_member:
+    resource: "../src/Controller/Administration/Organisation/Member"
+    type:     annotation
+    prefix:   /administration/organisation/{organisation}/member/{member}
+
+app_backend:
+    resource: "../src/Controller/Backend/"
+    type:     annotation
+    prefix:   /backend
+

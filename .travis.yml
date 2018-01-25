@@ -1,21 +1,74 @@
 language: php
+sudo: false
 
-php:
-    - 7.1
-    - 7.2
-    - nightly
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+    - $HOME/symfony-bridge/.phpunit
+    - $HOME/.sonar/cache
+
+env:
+  global:
+    - SYMFONY_PHPUNIT_DIR="$HOME/symfony-bridge/.phpunit"
 
 matrix:
-  allow_failures:
-    - php: 7.2
-    - php: nightly
+  fast_finish: true
+  include:
+    - php: 7.1
+      env:
+        - COVERAGE=true
+    - php: 7.2
+    - php: nightly
+
+  allow_failures:
+    - php: nightly
+
+before_install:
+  - cp .env.travis .env
+  - cp .env.travis .env.test
+  - cp phpunit.xml.dist phpunit.xml
+  - '[[ "$TRAVIS_PHP_VERSION" == "nightly" ]] || phpenv config-rm xdebug.ini'
+  - composer self-update
 
 install:
-    - composer install --dev
+  - composer install --dev
+  - ./vendor/bin/simple-phpunit install
+  - chmod +x ./bin/console
+
+before_script:
+  # print versions just in case
+  - php --version
+  - php ./bin/console --version
+  - php ./vendor/bin/simple-phpunit --version
+
+  # check if travis fulfills symfony requirements
+  - php ./vendor/bin/requirements-checker
+
+script:
+  # this executes the phpunit tests
+  - ./vendor/bin/simple-phpunit
+  # this checks that the source code follows the Symfony Code Syntax rules (DEACTIVATED)
+  # - '[[ "$TRAVIS_PHP_VERSION" == "nightly" ]] || ./vendor/bin/php-cs-fixer fix --diff --dry-run -v'
+  # this checks that the YAML config files contain no syntax errors
+  - ./bin/console lint:yaml config
+  # this checks that the Twig template files contain no syntax errors
+  - ./bin/console lint:twig templates
+  # this checks that the XLIFF translations contain no syntax errors
+  - ./bin/console lint:xliff translations
+  # this checks that the application doesn't use dependencies with known security vulnerabilities
+  - ./bin/console security:check --end-point=http://security.sensiolabs.org/check_lock
+  # this checks that the application doesn't use dependencies with known security vulnerabilities
+  # - ./bin/console security:check --end-point=http://security.sensiolabs.org/check_lock
+  # this checks that the composer.json and composer.lock files are valid
+  - composer validate --strict
+  # this checks that Doctrine's mapping configurations are valid
+  - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
+
 
 after_script:
-  - ./vendor/bin/test-reporter
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml
-  - ./vendor/bin/codacycoverage clover ./build/logs/clover.xml
- 
+  # scrutinizer reporting
+  - if [[ $COVERAGE == true ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
+  # codacy reporting
+  - if [[ $COVERAGE == true ]]; then php ./vendor/bin/codacycoverage clover ./build/logs/clover.xml fi
+  # coveralls reporting
+  - if [[ $COVERAGE == true ]]; then php ./vendor/bin/coveralls -v; fi

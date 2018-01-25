@@ -1,0 +1,70 @@
+/* general small utility classes */
+.full-width
+  width: 100%
+
+.full-height
+  height: 100%
+
+.align-right
+  text-align: right
+
+.position-relative
+  position: relative
+
+.no-margin
+  margin: 0
+
+/* background classes & respective link fixes */
+.blue-background, .info-color
+  background-color: $color-secondary-1-0
+
+a.blue-background, a.info-color
+  &:hover
+    background-color: $color-secondary-1-2
+
+.brown-background, .warning-color
+  background-color: $color-secondary-2-0
+
+a.brown-background, a.warning-color
+  &:hover
+    background-color: $color-secondary-2-2
+
+.green-background, .success-color
+  background-color: $color-primary-0
+
+a.green-background, a.success-color
+  &:hover
+    background-color: $color-primary-2
+
+.green2-background
+  background-color: $color-secondary-3-0
+
+a.green2-background
+  &:hover
+    background-color: $color-secondary-3-2
+
+.red-background, .error-color
+  background-color: $color-complement-0
+
+a.red-background, a.error-color
+  &:hover
+    background-color: $color-complement-2
+
+.gray-background, .default-color
+  background-color: $grey-light
+  color: $grey-dark
+  @include shadow()
+
+a.gray-background, a.default-color
+  &:hover
+    background-color: $grey-light
+
+.warning-color, .info-color, .error-color, .success-color
+  a
+    color: $grey-light
+    text-decoration: underline
+
+.blue-background, .info-color, .brown-background, .warning-color, .green-background, .success-color, .green2-background, .red-background, .error-color
+  color: $grey-light
+  &:hover, &:active, &:focus
+    color: $grey-light

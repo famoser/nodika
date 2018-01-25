@@ -1,5 +1,0 @@
-[testing] > export SYMFONY_ENV='prod'; echo $0
-[testing] < [error] command-line: line 0: Bad configuration option: ControlMaster
-[testing] > export SYMFONY_ENV='prod'; echo $0
-[testing] < [error] 'ssh' is not recognized as an internal or external command,
-[testing] < [error] operable program or batch file.

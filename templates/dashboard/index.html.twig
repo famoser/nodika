@@ -1,0 +1,176 @@
+{% extends 'layout/base.html.twig' %}
+{% import "macros/events.html.twig" as events %}
+{% import "macros/event_line_models.html.twig" as event_line_model_macro %}
+{% import _self as local_macro %}
+
+{% trans_default_domain "dashboard" %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+{% set color_class = "brown-background" %}
+
+{% macro event_row(event, activeMember, class = "") %}
+    {% if event.member == activeMember %}
+        {% set class = class ~ " bold" %}
+    {% endif %}
+    <tr class="{{ class }}">
+        <td>
+            {{ event.startDateTime|myDateTime }}
+        </td>
+        <td>
+            {{ event.endDateTime|myDateTime }}
+        </td>
+        <td>
+            {{ event.member }}
+        </td>
+        <td>
+            {{ event.person }}
+        </td>
+        <td>
+            {% if event.isConfirmed %}
+                <i class="icon icon-check-square"></i>
+            {% endif %}
+        </td>
+    </tr>
+{% endmacro %}
+
+
+{% block content %}
+    <section class="content {{ color_class }}">
+        {% include "layout/parts/menu.html.twig" %}
+        {% include "layout/parts/flashbag.html.twig" %}
+
+        <div class="container list-container d-none d-md-block">
+            <div class="row">
+                {# case 1: normal, active organisation #}
+                {% if organisation is defined and event_line_models|length > 0 %}
+                    <a class="tile tile-single default-color" href="{{ path('event_assign') }}">
+                        <h3>{{ "index.assign_events"|trans }}</h3>
+                        <p>
+                            {{ "index.assign_events_description"|trans }}
+                        </p>
+                    </a>
+                    <a class="tile tile-single default-color" href="{{ path('offer_index') }}">
+                        <h3>{{ "index.trade_events"|trans }}</h3>
+                        <p>
+                            {{ "index.trade_events_description"|trans }}
+                        </p>
+                    </a>
+                    <a class="tile tile-single default-color" href="{{ path('event_confirm') }}">
+                        <h3>{{ "index.confirm_events"|trans }}</h3>
+                        <p>
+                            {{ "index.confirm_events_description"|trans }}
+                        </p>
+                    </a>
+                    <a class="tile tile-single default-color" href="{{ path('event_search') }}">
+                        <h3>{{ "index.search_events"|trans }}</h3>
+                        <p>
+                            {{ "index.search_events_description"|trans }}
+                        </p>
+                    </a>
+                {% endif %}
+
+                {# case 2: not in an active organisation; probably failed setup? #}
+                {% if organisation is not defined %}
+                    <a class="tile tile-single default-color" href="{{ path("help_users") }}">
+                        <h3>{{ "index.welcome"|trans }}</h3>
+                        <p>
+                            {{ "index.welcome_description"|trans }}
+                        </p>
+                    </a>
+                {% endif %}
+
+                {% for organisation in change_organisations %}
+                    <a class="tile tile-single default-color"
+                       href="{{ path("organisation_change_to", {"organisation" : organisation.id}) }}">
+                        <h3>{{ "index.change_organisation"|trans }}</h3>
+                        <p>
+                            {{ "index.change_organisation_description"|trans }}
+                            <br/>
+                            <b>{{ organisation.name }}</b>
+                        </p>
+                    </a>
+                {% endfor %}
+
+                {% for organisation in leading_organisations %}
+                    <a class="tile tile-double default-color"
+                       href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">
+                        <h3>{{ "index.administer_organisations"|trans }}</h3>
+                        <p>
+                            {{ "index.administer_organisations_description"|trans }}
+                            <br/>
+                            <b>{{ organisation.name }}</b>
+                        </p>
+                    </a>
+                {% endfor %}
+
+                {# show help if no organisation, or leading an organisation #}
+                {% if leading_organisations|length > 0 or organisation is null %}
+                    <a class="tile tile-double default-color" href="mailto:support@nodika.ch">
+                        <h3>{{ "index.questions"|trans }}</h3>
+                        <p>
+                            {{ "index.questions_description"|trans }}
+                            <br/>
+                            <b>support@nodika.ch</b>
+                        </p>
+                    </a>
+                {% endif %}
+
+            </div>
+        </div>
+
+        {% if organisation is defined %}
+            {% if event_line_models|length == 0 %}
+                <div class="container index-container default-color list-container">
+                    <p>{{ "index.no_event_lines"|trans }}
+                        <br/>
+                        {{ "index.are_you_administrator"|trans }}
+                        <a href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">
+                            {{ "index.to_organisation_administration"|trans }}
+                        </a>
+                    </p>
+                </div>
+            {% else %}
+                {% for eventLineModel in event_line_models %}
+                    <div class="container index-container default-color list-container"><h3>
+                            {{ eventLineModel.eventLine.name }}
+                        </h3>
+                        <p>{{ eventLineModel.eventLine.description }}</p>
+
+                        {% if eventLineModel.events|length == 0 %}
+                            <p>{{ "index.no_events"|trans({}, "dashboard") }}</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+                                        <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+                                        <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                                        <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
+                                        <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for event in eventLineModel.activeEvents %}
+                                        {{ local_macro.event_row(event, member, "table-light") }}
+                                    {% endfor %}
+                                    {% for event in eventLineModel.events %}
+                                        {{ local_macro.event_row(event, member) }}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                        <p><a href="{{ path("event_search") }}">{{ "index.show_all_events"|trans }}</a></p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            <div class="container index-container default-color list-container">
+                <p>{{ "index.not_part_of_organisation"|trans }}</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
+
