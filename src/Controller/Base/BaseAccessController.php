@@ -28,17 +28,16 @@ class BaseAccessController extends BaseFrontendController
     {
         return parent::getSubscribedServices() +
             [
-                "event_dispatcher" => EventDispatcherInterface::class,
-                "security.token_storage" => TokenStorageInterface::class,
+                'event_dispatcher' => EventDispatcherInterface::class,
+                'security.token_storage' => TokenStorageInterface::class,
             ];
     }
 
-
     /**
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param UserTrait $user
-     * @param FormInterface $loginForm
+     * @param UserTrait           $user
+     * @param FormInterface       $loginForm
      *
      * @return FormInterface
      */
@@ -75,7 +74,7 @@ class BaseAccessController extends BaseFrontendController
     }
 
     /**
-     * @param Request $request
+     * @param Request               $request
      * @param AdvancedUserInterface $user
      */
     protected function loginUser(Request $request, AdvancedUserInterface $user)

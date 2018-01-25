@@ -21,7 +21,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        #main firewall for logged in users
+        # main firewall for logged in users
         main:
             pattern:   ^/
             anonymous: ~
@@ -34,7 +34,6 @@ security:
                 # field names for the username and password fields
                 username_parameter: frontend_user_login[email]
                 password_parameter: frontend_user_login[plainPassword]
-
             logout:       true
             anonymous:    true
             logout_on_user_change: true

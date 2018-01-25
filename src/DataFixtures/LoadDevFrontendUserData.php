@@ -33,6 +33,17 @@ class LoadDevFrontendUserData extends BaseFixture
         $user->persistNewPassword();
 
         $manager->persist($user);
+
+        $person = $this->getReference('person-2');
+
+        $user = FrontendUser::createFromPerson($person);
+        $person->setEmail('info2@nodika.ch');
+        $user->setPlainPassword('asdf1234');
+        $user->setEmail('info2@nodika.ch');
+        $user->persistNewPassword();
+
+        $manager->persist($user);
+        $manager->persist($person);
         $manager->flush();
     }
 

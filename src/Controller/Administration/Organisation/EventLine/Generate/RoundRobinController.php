@@ -94,12 +94,12 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/choose_period", name="administration_organisation_event_line_generate_round_robin_choose_period")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param EventLineGeneration $generation
-     *
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function choosePeriodAction(Request $request, Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
@@ -375,13 +375,15 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_generate", name="administration_organisation_event_line_generate_round_robin_do_generate")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
-     * @param TranslatorInterface $translator
+     * @param Organisation           $organisation
+     * @param EventLine              $eventLine
+     * @param EventLineGeneration    $generation
+     * @param TranslatorInterface    $translator
      * @param EventGenerationService $eventGenerationService
-     * @param LoggerInterface $logger
+     * @param LoggerInterface        $logger
+     *
      * @return Response
+     *
      * @internal param Request $request
      */
     public function doGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator, EventGenerationService $eventGenerationService, LoggerInterface $logger)
@@ -458,11 +460,11 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/apply_generation", name="administration_organisation_event_line_generate_round_robin_apply_generation")
      *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
-     *
+     * @param Organisation           $organisation
+     * @param EventLine              $eventLine
+     * @param EventLineGeneration    $generation
      * @param EventGenerationService $eventGenerationService
+     *
      * @return Response
      */
     public function applyGenerationAction(Organisation $organisation, EventLine $eventLine, EventLineGeneration $generation, EventGenerationService $eventGenerationService)

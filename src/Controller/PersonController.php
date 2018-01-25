@@ -49,9 +49,9 @@ class PersonController extends BaseFrontendController
     /**
      * @Route("/change_personal", name="person_change_personal")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function changePersonalAction(Request $request, TranslatorInterface $translator)
@@ -90,9 +90,9 @@ class PersonController extends BaseFrontendController
     /**
      * @Route("/change_email", name="person_change_email")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function changeEmailAction(Request $request, TranslatorInterface $translator)
@@ -141,9 +141,9 @@ class PersonController extends BaseFrontendController
     /**
      * @Route("/change_password", name="person_change_password")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function changePasswordAction(Request $request, TranslatorInterface $translator)
@@ -217,9 +217,9 @@ class PersonController extends BaseFrontendController
     /**
      * @Route("/remove_member/{member}/confirm", name="person_remove_member_confirm")
      *
-     * @param Member $member
-     *
+     * @param Member              $member
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function removeMemberConfirmAction(Member $member, TranslatorInterface $translator)

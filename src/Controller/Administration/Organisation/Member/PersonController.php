@@ -34,11 +34,11 @@ class PersonController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_member_person_new")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param Member $member
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param Member              $member
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation, Member $member, TranslatorInterface $translator)
@@ -78,12 +78,12 @@ class PersonController extends BaseController
     /**
      * @Route("/{person}/edit", name="administration_organisation_member_person_edit")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param Member $member
-     * @param Person $person
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param Member              $member
+     * @param Person              $person
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, Member $member, Person $person, TranslatorInterface $translator)
@@ -121,12 +121,12 @@ class PersonController extends BaseController
     /**
      * @Route("/{person}/remove", name="administration_organisation_member_person_remove")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param Member $member
-     * @param Person $person
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param Member              $member
+     * @param Person              $person
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, Member $member, Person $person, TranslatorInterface $translator)

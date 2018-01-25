@@ -37,10 +37,10 @@ class MemberController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_member_new")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
@@ -78,10 +78,10 @@ class MemberController extends BaseController
     /**
      * @Route("/{member}/administer", name="administration_organisation_member_administer")
      *
-     * @param Organisation $organisation
-     * @param Member $member
-     *
+     * @param Organisation        $organisation
+     * @param Member              $member
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function administerAction(Organisation $organisation, Member $member, TranslatorInterface $translator)
@@ -133,11 +133,11 @@ class MemberController extends BaseController
     /**
      * @Route("/{member}/edit", name="administration_organisation_member_edit")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param Member $member
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param Member              $member
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, Member $member, TranslatorInterface $translator)
@@ -174,11 +174,11 @@ class MemberController extends BaseController
     /**
      * @Route("/{member}/remove", name="administration_organisation_member_remove")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param Member $member
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param Member              $member
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, Member $member, TranslatorInterface $translator)
@@ -216,7 +216,8 @@ class MemberController extends BaseController
      * @Route("/import/download/template", name="administration_organisation_member_import_download_template")
      *
      * @param TranslatorInterface $translator
-     * @param ExchangeService $exchangeService
+     * @param ExchangeService     $exchangeService
+     *
      * @return Response
      */
     public function importDownloadTemplateAction(TranslatorInterface $translator, ExchangeService $exchangeService)
@@ -230,11 +231,11 @@ class MemberController extends BaseController
     /**
      * @Route("/import", name="administration_organisation_member_import")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
      * @param TranslatorInterface $translator
-     * @param ExchangeService $exchangeService
+     * @param ExchangeService     $exchangeService
+     *
      * @return Response
      */
     public function importAction(Request $request, Organisation $organisation, TranslatorInterface $translator, ExchangeService $exchangeService)

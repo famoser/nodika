@@ -78,10 +78,10 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/start/{member}/{person}", name="offer_start")
      *
-     * @param Member $member
-     * @param Person $person
-     *
+     * @param Member              $member
+     * @param Person              $person
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function startAction(Member $member, Person $person, TranslatorInterface $translator)
@@ -112,11 +112,11 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/choose_events", name="offer_choose_events")
      *
-     * @param Request $request
-     * @param EventOffer $eventOffer
-     *
+     * @param Request             $request
+     * @param EventOffer          $eventOffer
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function chooseEventsAction(Request $request, EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
@@ -221,9 +221,9 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/review", name="offer_review")
      *
-     * @param EventOffer $eventOffer
-     *
+     * @param EventOffer          $eventOffer
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function reviewAction(EventOffer $eventOffer, TranslatorInterface $translator)
@@ -288,11 +288,11 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/accept", name="offer_accept")
      *
-     * @param EventOffer $eventOffer
-     *
-     * @param TranslatorInterface $translator
+     * @param EventOffer                 $eventOffer
+     * @param TranslatorInterface        $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
-     * @param EmailService $emailService
+     * @param EmailService               $emailService
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function acceptAction(EventOffer $eventOffer, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService, EmailService $emailService)
@@ -366,10 +366,10 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/reject", name="offer_reject")
      *
-     * @param EventOffer $eventOffer
-     *
+     * @param EventOffer          $eventOffer
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function rejectAction(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
@@ -404,9 +404,9 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/close", name="offer_close")
      *
-     * @param EventOffer $eventOffer
-     *
+     * @param EventOffer          $eventOffer
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function closeAction(EventOffer $eventOffer, TranslatorInterface $translator)
@@ -434,9 +434,9 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/remove", name="offer_remove")
      *
-     * @param EventOffer $eventOffer
-     *
+     * @param EventOffer          $eventOffer
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function removeAction(EventOffer $eventOffer, TranslatorInterface $translator)

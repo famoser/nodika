@@ -54,9 +54,9 @@ class CronJobController extends BaseFrontendController
      * @Route("/daily/{secret}", name="cron_daily")
      *
      * @param $secret
-     *
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return Response
      */
     public function dailyAction($secret, TranslatorInterface $translator, EmailService $emailService)

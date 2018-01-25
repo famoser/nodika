@@ -64,7 +64,8 @@
         <h3>{{ "choose_events.message"|trans }}</h3>
         <p>{{ "choose_events.message_description"|trans }}</p>
         {{ kitchen_sink.textarea_form_field("description", description_form, "description"|trans({}, "entity_event_offer")) }}
-        {{ kitchen_sink.submit_form_button("submit", "next"|trans({}, "enum_submit_button_type")) }}
+        <hr/>
+        {{ kitchen_sink.submit_form_button("submit", "choose_events.create_offer"|trans) }}
     {% endblock %}
 
 

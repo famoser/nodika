@@ -40,10 +40,10 @@ class EventLineController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_event_line_new")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function newAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
@@ -81,11 +81,11 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/edit", name="administration_organisation_event_line_edit")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function editAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator)
@@ -122,11 +122,11 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/remove", name="administration_organisation_event_line_remove")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function removeAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator)
@@ -185,9 +185,9 @@ class EventLineController extends BaseController
     /**
      * @Route("/import/download/template", name="administration_organisation_event_line_import_download_template")
      *
-     * @param Organisation $organisation
-     *
+     * @param Organisation        $organisation
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function importDownloadTemplateAction(Organisation $organisation, TranslatorInterface $translator)
@@ -214,6 +214,7 @@ class EventLineController extends BaseController
 
     /**
      * @param TranslatorInterface $translator
+     *
      * @return string[]
      */
     private function getImportFileHeader(TranslatorInterface $translator)
@@ -228,12 +229,12 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/import", name="administration_organisation_event_line_import")
      *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     *
+     * @param Request             $request
+     * @param Organisation        $organisation
+     * @param EventLine           $eventLine
      * @param TranslatorInterface $translator
-     * @param ExchangeService $exchangeService
+     * @param ExchangeService     $exchangeService
+     *
      * @return Response
      */
     public function importAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator, ExchangeService $exchangeService)

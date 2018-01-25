@@ -32,6 +32,7 @@ set(
     'bin/php',
     '/usr/local/php71/bin/php'
 );
+
 //build yarn stuff & upload
 task('frontend:build', function () {
     runLocally('yarn install');
@@ -39,11 +40,11 @@ task('frontend:build', function () {
     runLocally('rsync -azP public/dist {{user}}@{{hostname}}:{{release_path}}/public');
 })->desc('Build frontend assets');
 
-
 // Symfony console bin
 set('bin/console', function () {
-    $env = get("env_file_path");
-    return sprintf('--version && cd {{release_path}} && set -a && source ' . $env . ' && set +a && {{bin/php}} {{release_path}}/%s/console', trim(get('bin_dir'), '/'));
+    $env = get('env_file_path');
+
+    return sprintf('--version && cd {{release_path}} && set -a && source '.$env.' && set +a && {{bin/php}} {{release_path}}/%s/console', trim(get('bin_dir'), '/'));
 });
 
 //load fixtures for dev

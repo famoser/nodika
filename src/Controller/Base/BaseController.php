@@ -30,7 +30,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class BaseController extends AbstractController
 {
     /**
-     * get the parameter
+     * get the parameter.
      *
      * remove this method as soon as possible
      * here because of missing getParameter call in AbstractController, should be back in release 4.1
@@ -38,23 +38,25 @@ class BaseController extends AbstractController
      *  remove this method
      *  remove getSubscribedServices override
      *  remove file config/packages/parameters.yml
+     *
      * @param string $name
+     *
      * @return mixed
      */
     protected function getParameter(string $name)
     {
-        return $this->get("kernel")->getContainer()->getParameter($name);
+        return $this->get('kernel')->getContainer()->getParameter($name);
     }
 
     public static function getSubscribedServices()
     {
-        return parent::getSubscribedServices() + ["kernel" => KernelInterface::class];
+        return parent::getSubscribedServices() + ['kernel' => KernelInterface::class];
     }
 
     /**
      * @param $type
      * @param $submitButtonType
-     * @param null $data
+     * @param null  $data
      * @param array $options
      *
      * @return FormInterface
@@ -65,12 +67,13 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param BaseEntity $data
-     * @param int $submitButtonType
+     * @param BaseEntity          $data
+     * @param int                 $submitButtonType
      * @param $onSuccessCallable
      * @param array $formOptions
+     *
      * @return FormInterface
      */
     public function handleCrudForm(Request $request, TranslatorInterface $translator, BaseEntity $data, $submitButtonType, $onSuccessCallable = null, $formOptions = [])
@@ -120,14 +123,14 @@ class BaseController extends AbstractController
     private function displayFlash($type, $message, $link = null)
     {
         if (null !== $link) {
-            $message = '<a href="' . $link . '">' . $message . '</a>';
+            $message = '<a href="'.$link.'">'.$message.'</a>';
         }
         $this->get('session')->getFlashBag()->set($type, $message);
     }
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displayError($message, $link = null)
     {
@@ -136,7 +139,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displayDanger($message, $link = null)
     {
@@ -145,7 +148,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displaySuccess($message, $link = null)
     {
@@ -154,7 +157,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null $link
+     * @param null   $link
      */
     protected function displayInfo($message, $link = null)
     {
@@ -163,6 +166,7 @@ class BaseController extends AbstractController
 
     /**
      * displays the default form error.
+     *
      * @param TranslatorInterface $translator
      */
     protected function displayFormValidationError(TranslatorInterface $translator)
@@ -227,17 +231,18 @@ class BaseController extends AbstractController
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
         return $response;
     }
 
     /**
-     * @param FormInterface $form
-     * @param Request $request
+     * @param FormInterface       $form
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param BaseEntity $entity
-     * @param callable $onSuccessCallable with $form & $entity arguments
+     * @param BaseEntity          $entity
+     * @param callable            $onSuccessCallable with $form & $entity arguments
+     *
      * @return FormInterface
      */
     protected function handleFormDoctrinePersist(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onSuccessCallable = null)
@@ -264,12 +269,13 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param FormInterface $form
-     * @param Request $request
+     * @param FormInterface       $form
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param BaseEntity $entity
-     * @param callable $onRemoveCallable with $form & $entity arguments
-     * @param callable $beforeRemoveCallable with $form & $entity arguments
+     * @param BaseEntity          $entity
+     * @param callable            $onRemoveCallable     with $form & $entity arguments
+     * @param callable            $beforeRemoveCallable with $form & $entity arguments
+     *
      * @return FormInterface
      */
     protected function handleFormDoctrineRemove(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
@@ -289,11 +295,12 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param FormInterface $form
-     * @param Request $request
+     * @param FormInterface       $form
+     * @param Request             $request
      * @param TranslatorInterface $translator
      * @param $entity
      * @param callable $callable with $form & $entity arguments
+     *
      * @return FormInterface
      */
     protected function handleForm(FormInterface $form, Request $request, TranslatorInterface $translator, $entity, $callable)
@@ -341,7 +348,7 @@ class BaseController extends AbstractController
 
     /**
      * @param Organisation $organisation
-     * @param int $applicationEventType
+     * @param int          $applicationEventType
      *
      * @return bool
      */
@@ -353,10 +360,10 @@ class BaseController extends AbstractController
     /**
      * Renders a view.
      *
-     * @param string $view The view name
-     * @param array $parameters An array of parameters to pass to the view
-     * @param string $backUrl
-     * @param Response $response A response instance
+     * @param string   $view       The view name
+     * @param array    $parameters An array of parameters to pass to the view
+     * @param string   $backUrl
+     * @param Response $response   A response instance
      *
      * @return Response A Response instance
      */
@@ -371,10 +378,10 @@ class BaseController extends AbstractController
     /**
      * Renders a view.
      *
-     * @param string $view The view name
-     * @param array $parameters An array of parameters to pass to the view
-     * @param string $justification why no backbutton
-     * @param Response $response A response instance
+     * @param string   $view          The view name
+     * @param array    $parameters    An array of parameters to pass to the view
+     * @param string   $justification why no backbutton
+     * @param Response $response      A response instance
      *
      * @return Response A Response instance
      */

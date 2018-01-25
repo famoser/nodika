@@ -31,9 +31,9 @@ class OrganisationRepository extends EntityRepository
 {
     /**
      * @param Organisation $organisation
-     * @param \DateTime $dateTime
-     * @param string $comparator
-     * @param int $maxResults
+     * @param \DateTime    $dateTime
+     * @param string       $comparator
+     * @param int          $maxResults
      *
      * @return Event[]
      */
@@ -126,7 +126,7 @@ class OrganisationRepository extends EntityRepository
             $qb->andWhere('e.endDateTime > :endDateTime')
                 ->setParameter('endDateTime', new \DateTime());
 
-            $eventLineModel2->activeEvents = $arr = $qb->getQuery()->getResult();;
+            $eventLineModel2->activeEvents = $arr = $qb->getQuery()->getResult();
             $res |= count($eventLineModel2->activeEvents);
         }
 

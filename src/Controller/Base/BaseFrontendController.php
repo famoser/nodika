@@ -39,7 +39,7 @@ class BaseFrontendController extends BaseController
                 $setting = $this->getDoctrine()->getRepository('App:Setting')->getByUser($this->getUser(), SettingKey::ACTIVE_MEMBER_ID);
                 $activeMemberId = $setting->getContent();
             }
-            $activeMemberIdInt = (int)$activeMemberId;
+            $activeMemberIdInt = (int) $activeMemberId;
             foreach ($person->getMembers() as $member) {
                 if ($member->getId() === $activeMemberIdInt) {
                     $this->memberCache = $member;

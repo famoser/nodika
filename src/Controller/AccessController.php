@@ -38,9 +38,9 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/login", name="access_login")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\Form\Form|RedirectResponse|Response
      */
     public function loginAction(Request $request, TranslatorInterface $translator)
@@ -80,10 +80,10 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/register", name="access_register")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return FormInterface|Response
      */
     public function registerAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
@@ -135,10 +135,10 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/invite/resend", name="access_invite_resend")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return FormInterface|Response
      */
     public function inviteResendAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
@@ -210,8 +210,8 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      * @param $invitationHash
-     *
      * @param TranslatorInterface $translator
+     *
      * @return FormInterface|Response
      */
     public function inviteAction(Request $request, $invitationHash, TranslatorInterface $translator)
@@ -313,8 +313,8 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      * @param $invitationHash
-     *
      * @param TranslatorInterface $translator
+     *
      * @return FormInterface|Response
      */
     public function invitePersonAction(Request $request, $invitationHash, TranslatorInterface $translator)
@@ -420,11 +420,11 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/reset", name="access_reset")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param LoggerInterface $logger
-     * @param EmailService $emailService
+     * @param LoggerInterface     $logger
+     * @param EmailService        $emailService
+     *
      * @return Response
      */
     public function resetAction(Request $request, TranslatorInterface $translator, LoggerInterface $logger, EmailService $emailService)
@@ -456,7 +456,7 @@ class AccessController extends BaseAccessController
                     );
                     $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 } else {
-                    $logger->error('tried to reset password for non-existing user ' . $entity->getEmail());
+                    $logger->error('tried to reset password for non-existing user '.$entity->getEmail());
                 }
 
                 return $this->redirectToRoute('access_reset_done');
@@ -496,8 +496,8 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      * @param $confirmationToken
-     *
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function registerConfirmAction(Request $request, $confirmationToken, TranslatorInterface $translator)
@@ -532,8 +532,8 @@ class AccessController extends BaseAccessController
      *
      * @param Request $request
      * @param $confirmationToken
-     *
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function resetConfirmAction(Request $request, $confirmationToken, TranslatorInterface $translator)
@@ -562,8 +562,9 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @param $confirmationToken
      * @param TranslatorInterface $translator
-     * @param callable $onSuccessCallable with $form & $entity as argument
-     * @param callable $responseCallable with $form as argument
+     * @param callable            $onSuccessCallable with $form & $entity as argument
+     * @param callable            $responseCallable  with $form as argument
+     *
      * @return FormInterface|Response
      */
     protected function handleResetPasswordAction(Request $request, $confirmationToken, TranslatorInterface $translator, $onSuccessCallable, $responseCallable)

@@ -34,10 +34,10 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/assign", name="event_assign")
      *
-     * @param Request $request
-     *
-     * @param TranslatorInterface $translator
+     * @param Request                    $request
+     * @param TranslatorInterface        $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function assignAction(Request $request, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -63,7 +63,7 @@ class EventController extends BaseFrontendController
                         $events[] = $assignableEvents[$eventId];
                     }
                 } elseif ('selected_person' === $key) {
-                    $selectedPersonId = (int)$value;
+                    $selectedPersonId = (int) $value;
                     foreach ($persons as $person) {
                         if ($person->getId() === $selectedPersonId) {
                             $selectedPerson = $person;
@@ -71,7 +71,6 @@ class EventController extends BaseFrontendController
                     }
                 }
             }
-
 
             if (count($events) > 0) {
                 if (null !== $selectedPerson) {
@@ -138,10 +137,10 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/confirm/person/{event}", name="event_confirm_person")
      *
-     * @param Event $event
-     *
-     * @param TranslatorInterface $translator
+     * @param Event                      $event
+     * @param TranslatorInterface        $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmPersonAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -168,10 +167,10 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/confirm/member/{event}", name="event_confirm_member")
      *
-     * @param Event $event
-     *
-     * @param TranslatorInterface $translator
+     * @param Event                      $event
+     * @param TranslatorInterface        $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmMemberAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -198,8 +197,9 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/confirm/all", name="event_confirm_all")
      *
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface        $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmAllAction(TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
@@ -254,7 +254,7 @@ class EventController extends BaseFrontendController
         $memberQuery = $request->query->get('member');
         $member = null;
         if (is_numeric($memberQuery)) {
-            $memberQueryInt = (int)$memberQuery;
+            $memberQueryInt = (int) $memberQuery;
             foreach ($organisation->getMembers() as $organisationMember) {
                 if ($organisationMember->getId() === $memberQueryInt) {
                     $member = $organisationMember;
@@ -265,7 +265,7 @@ class EventController extends BaseFrontendController
         $personQuery = $request->query->get('person');
         $person = null;
         if (is_numeric($personQuery)) {
-            $personQueryInt = (int)$personQuery;
+            $personQueryInt = (int) $personQuery;
             foreach ($organisation->getMembers() as $organisationMember) {
                 foreach ($organisationMember->getPersons() as $organisationPerson) {
                     if ($organisationPerson->getId() === $personQueryInt) {
@@ -286,9 +286,9 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/search", name="event_search")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchAction(Request $request, TranslatorInterface $translator)
@@ -326,9 +326,9 @@ class EventController extends BaseFrontendController
     }
 
     /**
-     * @param EventLineModel[] $eventModels
-     *
+     * @param EventLineModel[]    $eventModels
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     private function exportAsCsv($eventModels, TranslatorInterface $translator)
@@ -358,6 +358,7 @@ class EventController extends BaseFrontendController
 
     /**
      * @param TranslatorInterface $translator
+     *
      * @return string[]
      */
     private function getEventsHeader(TranslatorInterface $translator)

@@ -28,17 +28,17 @@ class StaticController extends BaseController
     /**
      * @Route("/", name="homepage")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return Response
      */
     public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $arr = [];
         if ($this->getUser() instanceof FrontendUser) {
-            return $this->redirectToRoute("dashboard_index");
+            return $this->redirectToRoute('dashboard_index');
         }
 
         return $this->renderNoBackUrl(
@@ -49,9 +49,9 @@ class StaticController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
      * @param $arr
      */
     private function processNewsletterForm(Request $request, TranslatorInterface $translator, EmailService $emailService, &$arr)
@@ -67,12 +67,12 @@ class StaticController extends BaseController
                 $emailService->sendTextEmail(
                     $this->getParameter('CONTACT_EMAIL'),
                     'Kontaktanfrage von nodika',
-                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
-                    "\nListe: " . $newsletter->getChoice() .
-                    "\nEmail: " . $newsletter->getEmail() .
-                    "\nVorname: " . $newsletter->getGivenName() .
-                    "\nNachname: " . $newsletter->getFamilyName() .
-                    "\nNachricht: " . $newsletter->getMessage()
+                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n".
+                    "\nListe: ".$newsletter->getChoice().
+                    "\nEmail: ".$newsletter->getEmail().
+                    "\nVorname: ".$newsletter->getGivenName().
+                    "\nNachname: ".$newsletter->getFamilyName().
+                    "\nNachricht: ".$newsletter->getMessage()
                 );
 
                 $this->displaySuccess($translator->trans('index.thanks_for_contact_form', [], 'static'));
@@ -103,30 +103,34 @@ class StaticController extends BaseController
     /**
      * @Route("/about", name="about")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return Response
      */
     public function aboutAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $arr = [];
         $this->processNewsletterForm($request, $translator, $emailService, $arr);
+
         return $this->render('static/about.html.twig', $arr);
     }
 
     /**
      * @Route("/contact", name="contact")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
+     *
      * @return Response
      */
     public function contactAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $arr = [];
         $this->processNewsletterForm($request, $translator, $emailService, $arr);
+
         return $this->render('static/contact.html.twig', $arr);
     }
 }

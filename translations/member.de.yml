@@ -6,7 +6,7 @@ index:
   no_persons: 'Diese Praxis hat keine zugeordneten Mitarbeiter. Fragen Sie Ihren Administrator nach einer Einladung zu dieser Praxis.'
   your_persons: 'Ihre Mitarbeiter'
   remove_person: 'Zugriff entfernen'
-  remove_person_description: 'Sie können einem Mitarbeiter den Zugriff zu dieser Praxis entziehen (weil er z.B. nicht mehr dort arbeiten)'
+  remove_person_description: 'Sie können einem Mitarbeiter den Zugriff zu dieser Praxis entziehen (z.B. weil er/sie nicht mehr dort arbeitet)'
 
 #edit page
 edit:

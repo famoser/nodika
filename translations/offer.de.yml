@@ -34,6 +34,7 @@ choose_events:
   their_events_description: 'Die zu tauschenden Termine des Empfängers / der Empfängerin.'
   message: 'Nachricht'
   message_description: 'Verfassen Sie eine kurze Nachricht an den Empfänger / die Empfängerin zur Tauschanfrage'
+  create_offer: 'Tauschanfrage erstellen'
 
 review_offer:
   title: 'Tauschanfrage ansehen'
@@ -43,6 +44,7 @@ review_offer:
   their_events_for_you: 'Ihre neuen Termine'
   their_events_for_you_description: 'Diese Termine werden neu Sie übernehmen'
   message: 'Nachricht'
+  message_description: 'Persönliche Nachricht zur Tauschanfrage'
   accept_offer: 'Tauschanfrage annehmen'
   reject_offer: 'Tauschanfrage ablehnen'
   close_offer: 'Tauschanfrage zurückziehen'
