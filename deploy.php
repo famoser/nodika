@@ -47,17 +47,6 @@ set('bin/console', function () {
     return sprintf('--version && cd {{release_path}} && set -a && source '.$env.' && set +a && {{bin/php}} {{release_path}}/%s/console', trim(get('bin_dir'), '/'));
 });
 
-//load fixtures for dev
-task('database:fixtures', function () {
-    if ('dev' === get('stage')) {
-        //ensure dev
-        $before = get('symfony_env');
-        set('symfony_env', 'dev');
-        run('{{bin/php}} {{bin/console}} doctrine:fixtures:load {{console_options}}');
-        set('symfony_env', $before);
-    }
-})->desc('Initializing example data if on dev stage');
-
 // kill php processes to ensure symlinks are refreshed
 task('deploy:refresh_symlink', function () {
     run('killall -9 php-cgi'); //kill all php processes so symlink is refreshed
@@ -66,7 +55,5 @@ task('deploy:refresh_symlink', function () {
 after('deploy:vendors', 'frontend:build');
 // migrations
 after('deploy:writable', 'database:migrate');
-// fixtures
-after('database:migrate', 'database:fixtures');
 // refresh symlink
 after('deploy:symlink', 'deploy:refresh_symlink');
