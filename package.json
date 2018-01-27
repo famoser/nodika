@@ -8,6 +8,6 @@
   "dependencies": {
     "bootstrap": "^4",
     "font-awesome": "^4",
-    "ionicons": "^2"
+    "ionicons": "^3"
   }
 }
