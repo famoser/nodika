@@ -79,10 +79,11 @@ DirectoryIndex index.php
     ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType image/svg "access plus 1 year"
     ExpiresByType image/ico "access plus 1 year"
-    ExpiresByType text/css "access plus 1 week"
-    ExpiresByType application/pdf "access plus 1 month"
-    ExpiresByType text/x-javascript "access plus 1 week"
     ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType text/x-javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType text/css "access plus 1 month"
     ExpiresDefault "access plus 2 days"
 </IfModule>
 
