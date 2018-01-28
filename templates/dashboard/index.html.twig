@@ -44,7 +44,7 @@
             <div class="row">
                 {# case 1: normal, active organisation #}
                 {% if organisation is defined and event_line_models|length > 0 %}
-                    <a class="tile tile-single default-color" href="{{ path('event_assign') }}">
+                    <a class="tile tile-single tile-left default-color" href="{{ path('event_assign') }}">
                         <h3>{{ "index.assign_events"|trans }}</h3>
                         <p>
                             {{ "index.assign_events_description"|trans }}
@@ -62,7 +62,7 @@
                             {{ "index.confirm_events_description"|trans }}
                         </p>
                     </a>
-                    <a class="tile tile-single default-color" href="{{ path('event_search') }}">
+                    <a class="tile tile-single tile-right default-color" href="{{ path('event_search') }}">
                         <h3>{{ "index.search_events"|trans }}</h3>
                         <p>
                             {{ "index.search_events_description"|trans }}
@@ -72,16 +72,24 @@
 
                 {# case 2: not in an active organisation; probably failed setup? #}
                 {% if organisation is not defined %}
-                    <a class="tile tile-single default-color" href="{{ path("help_users") }}">
+                    <a class="tile tile-double tile-left default-color" href="{{ path("help_users") }}">
                         <h3>{{ "index.welcome"|trans }}</h3>
                         <p>
                             {{ "index.welcome_description"|trans }}
                         </p>
                     </a>
+                    <a class="tile tile-double tile-right default-color" href="mailto:support@nodika.ch">
+                        <h3>{{ "index.questions"|trans }}</h3>
+                        <p>
+                            {{ "index.questions_description"|trans }}
+                            <br/>
+                            <b>support@nodika.ch</b>
+                        </p>
+                    </a>
                 {% endif %}
 
                 {% for organisation in change_organisations %}
-                    <a class="tile tile-single default-color"
+                    <a class="tile tile-single {% if loop.index0 % 2 == 0 %}tile-left{% else %}tile-right{% endif %} default-color"
                        href="{{ path("organisation_change_to", {"organisation" : organisation.id}) }}">
                         <h3>{{ "index.change_organisation"|trans }}</h3>
                         <p>
@@ -93,7 +101,7 @@
                 {% endfor %}
 
                 {% for organisation in leading_organisations %}
-                    <a class="tile tile-double default-color"
+                    <a class="tile tile-double default-color {% if loop.index0 % 2 == 0 %}tile-left{% else %}tile-right{% endif %} "
                        href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">
                         <h3>{{ "index.administer_organisations"|trans }}</h3>
                         <p>
@@ -103,19 +111,6 @@
                         </p>
                     </a>
                 {% endfor %}
-
-                {# show help if no organisation, or leading an organisation #}
-                {% if leading_organisations|length > 0 or organisation is null %}
-                    <a class="tile tile-double default-color" href="mailto:support@nodika.ch">
-                        <h3>{{ "index.questions"|trans }}</h3>
-                        <p>
-                            {{ "index.questions_description"|trans }}
-                            <br/>
-                            <b>support@nodika.ch</b>
-                        </p>
-                    </a>
-                {% endif %}
-
             </div>
         </div>
 
