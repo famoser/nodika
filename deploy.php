@@ -36,6 +36,7 @@ set(
 //build yarn stuff & upload
 task('frontend:build', function () {
     runLocally('yarn install');
+    runLocally('yarn upgrade');
     runLocally('yarn run encore production');
     runLocally('rsync -azP public/dist {{user}}@{{hostname}}:{{release_path}}/public');
 })->desc('Build frontend assets');

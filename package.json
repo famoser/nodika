@@ -8,6 +8,7 @@
   "dependencies": {
     "bootstrap": "^4",
     "font-awesome": "^4",
-    "ionicons": "^3"
+    "ionicons": "^3",
+    "open-sans-fontface": "^1.4.0"
   }
 }

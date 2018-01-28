@@ -1,9 +1,9 @@
 {% extends 'layout/base.html.twig' %}
 
-{% set color_class = color_class_lower %}
+{% set theme_color = theme_color_upper %}
 
 {% block content %}
-    <section class="content {{ color_class_upper }}">
+    <section class="content {{ theme_color_upper }}-background">
         {% include "layout/parts/menu.html.twig" %}
         {% include "layout/parts/flashbag.html.twig" %}
         <div class="container index-container default-color">
@@ -12,7 +12,7 @@
         </div>
     </section>
 
-    <section class="content {{ color_class_lower }}">
+    <section class="content {{ theme_color_lower }}-background">
         <div class="container index-container default-color">
             {% block content_lower %}
 

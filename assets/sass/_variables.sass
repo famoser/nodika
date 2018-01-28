@@ -6,13 +6,13 @@ $break-mobile: 760px
 
 // weight
 $weight-light: 300
-$weight-default: 400
-$weight-bold: 600
+$weight-default: normal
+$weight-bold: bold
 
 // grays
 $white: #ffffff
 $grey-light: #efefef
-$grey-normal: #a7a7a7
+$grey-normal: #737373
 $grey-dark: #555555
 
 // The base font size
@@ -35,115 +35,37 @@ $xlarge-font-leading: 1.5
 
 
 // Palette URL: http://paletton.com/#uid=73+1s0kllllaFw0g0qFqFg0w0aF */
-
-$color-primary-0: #618D61	// Main Primary color */
-$color-primary-1: #B5CDB5
-$color-primary-2: #86AA86
-$color-primary-3: #457345
-$color-primary-4: #285928
-
+//blue
 $color-secondary-1-0: #555F76	// Main Secondary color (1) */
 $color-secondary-1-1: #9AA0AC
 $color-secondary-1-2: #737B8E
 $color-secondary-1-3: #3E4861
 $color-secondary-1-4: #26314B
 
+//brown
 $color-secondary-2-0: #B19E7A	// Main Secondary color (2) */
 $color-secondary-2-1: #FFF5E2
 $color-secondary-2-2: #D4C5A7
 $color-secondary-2-3: #907D56
 $color-secondary-2-4: #6F5B32
 
+//green2
 $color-secondary-3-0: #496A6A	// Main Secondary color (1) */
 $color-secondary-3-1: #899A9A
 $color-secondary-3-2: #647F7F
 $color-secondary-3-3: #345656
 $color-secondary-3-4: #1E4343
 
+//green
+$color-primary-0: #618D61	// Main Primary color */
+$color-primary-1: #B5CDB5
+$color-primary-2: #86AA86
+$color-primary-3: #457345
+$color-primary-4: #285928
+
+//red
 $color-complement-0: #B17A7A	// Main Complement color */
 $color-complement-1: #FFE2E2
 $color-complement-2: #D4A7A7
 $color-complement-3: #905656
 $color-complement-4: #6F3232
-
-// Mixin for creating animations using single or "all" property transitions
-// @include transition(PROPERTY DURATION DELAY(OPT) TIMING-FUNCTION)
-@mixin transition($transition)
-  -webkit-transition: $transition
-  -moz-transition: $transition
-  -ms-transition: $transition
-  -o-transition: $transition
-  transition: $transition
-
-
-// Draw an arrow pointing up. Can be called on element or pseudoelement.
-// @include arrowUp(#fff, 2rem, 1rem)
-@mixin arrowUp($color, $arrowWidth, $arrowHeight)
-  content: ''
-  display: block
-  width: 0
-  height: 0
-  border-bottom: $arrowHeight solid $color
-  border-left: ($arrowWidth/2) solid transparent
-  border-right: ($arrowWidth/2) solid transparent
-
-
-// Draw an arrow pointing right. Can be called on element or pseudoelement.
-// @include arrowRight(#fff, 1rem, 2rem)
-@mixin arrowRight($color, $arrowWidth, $arrowHeight)
-  content: ''
-  display: block
-  width: 0
-  height: 0
-  border-left: $arrowWidth solid $color
-  border-top: ($arrowHeight/2) solid transparent
-  border-bottom: ($arrowHeight/2) solid transparent
-
-
-// Draw an arrow pointing down. Can be called on element or pseudoelement.
-// @include arrowDown(#fff, 2rem, 1rem)
-@mixin arrowDown($color, $arrowWidth, $arrowHeight)
-  content: ''
-  display: block
-  width: 0
-  height: 0
-  border-top: $arrowHeight solid $color
-  border-left: ($arrowWidth/2) solid transparent
-  border-right: ($arrowWidth/2) solid transparent
-
-
-// Draw an arrow pointing left. Can be called on element or pseudoelement.
-// @include arrowRight(#fff, 1rem, 2rem)
-@mixin arrowLeft($color, $arrowWidth, $arrowHeight)
-  content: ''
-  display: block
-  width: 0
-  height: 0
-  border-right: $arrowWidth solid $color
-  border-top: ($arrowHeight/2) solid transparent
-  border-bottom: ($arrowHeight/2) solid transparent
-
-
-// Box shadow with value declarations
-// @include drop-shadow(X-OFFSET, Y-OFFSET, BLUR, ALPHA)
-@mixin drop-shadow($x-axis: 0, $y-axis: 1px, $blur: 2px, $alpha: 0.1)
-  -webkit-box-shadow: $x-axis $y-axis $blur rgba(0, 0, 0, $alpha)
-  -moz-box-shadow: $x-axis $y-axis $blur rgba(0, 0, 0, $alpha)
-  box-shadow: $x-axis $y-axis $blur rgba(0, 0, 0, $alpha)
-
-
-// Variable-size rounded corners
-// @include border-radius(INT, INT, INT, INT)
-@mixin border-radius($topright: 0, $bottomright: 0, $bottomleft: 0, $topleft: 0)
-  -webkit-border-radius: $topleft $topright $bottomright $bottomleft
-  -moz-border-radius: $topleft $topright $bottomright $bottomleft
-  border-radius: $topleft $topright $bottomright $bottomleft
-  background-clip: padding-box
-
-
-// Box shadow with full shadow declaration
-// @include box-shadow(SHADOW DELCARATION)
-@mixin box-shadow($shadow: 0 1px 3px rgba(0,0,0,.25))
-  -webkit-box-shadow: $shadow
-  -moz-box-shadow: $shadow
-  box-shadow: $shadow

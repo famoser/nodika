@@ -4,10 +4,10 @@
 {% import _self as local_macro %}
 
 {% trans_default_domain "dashboard" %}
+{% set theme_color = "blue" %}
 
 {% block title %}{{ "index.title"|trans }}{% endblock %}
 {% block description %}{{ "index.description"|trans }}{% endblock %}
-{% set color_class = "brown-background" %}
 
 {% macro event_row(event, activeMember, class = "") %}
     {% if event.member == activeMember %}
@@ -36,7 +36,7 @@
 
 
 {% block content %}
-    <section class="content {{ color_class }}">
+    <section class="content {{ theme_color }}-background">
         {% include "layout/parts/menu.html.twig" %}
         {% include "layout/parts/flashbag.html.twig" %}
 
