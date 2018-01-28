@@ -1,7 +1,7 @@
 {% import "widgets/base_widgets.html.twig" as base_widgets %}
 
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,6 +13,7 @@
     <title>{{ title }}</title>
     {% block stylesheets %}
     {% endblock %}
+
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/app.css') }}"/>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     <meta name="description" content="{{ description }}">
@@ -28,7 +29,7 @@
 <header class="header">
     <div class="container header-container">
         <div class="logo-wrapper">
-            <img src="{{ asset("images/logo.svg") }}" class="logo-img">
+            <img src="{{ asset("images/logo.svg") }}" alt="logo" class="logo-img">
         </div>
 
         <div class="header-content">
