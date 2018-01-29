@@ -116,9 +116,9 @@ AddDefaultCharset utf-8
     Header set X-Content-Type-Options "nosniff"
 </IfModule>
 
-# Set referrer policy
+# Set referrer policy (disable all potentially leaking information)
 <IfModule mod_headers.c>
-    Header set Referrer-Policy: origin
+    Header set Referrer-Policy: no-referrer
 </IfModule>
 
 # Protect website against clickjacking.
@@ -161,9 +161,9 @@ AddDefaultCharset utf-8
 # attacks.
 <IfModule mod_headers.c>
 
-    Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' https://*.tawk.to wss://*.tawk.to https://cdn.jsdelivr.net"
-    Header set X-Content-Security-Policy "default-src 'self' 'unsafe-inline' https://*.tawk.to wss://*.tawk.to https://cdn.jsdelivr.net"
-    Header set X-WebKit-CSP "default-src 'self' 'unsafe-inline' https://*.tawk.to wss://*.tawk.to https://cdn.jsdelivr.net"
+    Header set Content-Security-Policy "default-src 'self'"
+    Header set X-Content-Security-Policy "default-src 'self'"
+    Header set X-WebKit-CSP "default-src 'self'"
 
     # `mod_headers` cannot match based on the content-type, however,
     # the `Content-Security-Policy` response header should be send
