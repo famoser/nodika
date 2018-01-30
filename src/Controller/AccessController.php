@@ -38,7 +38,7 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/login", name="access_login")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\Form\Form|RedirectResponse|Response
@@ -80,9 +80,9 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/register", name="access_register")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return FormInterface|Response
      */
@@ -135,9 +135,9 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/invite/resend", name="access_invite_resend")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return FormInterface|Response
      */
@@ -227,8 +227,6 @@ class AccessController extends BaseAccessController
 
         //add user if already registered
         if ($this->getUser() instanceof FrontendUser) {
-            $found = false;
-
             $person = $this->getPerson();
             //already logged in!
             foreach ($member->getPersons() as $memberPerson) {
@@ -240,25 +238,22 @@ class AccessController extends BaseAccessController
                             'access'
                         )
                     );
-                    $found = true;
-                    break;
+                    return $this->redirectToRoute('dashboard_index');
                 }
             }
-            if (!$found) {
-                $person->addMember($member);
-                $member->addPerson($person);
-                $this->fastSave($member, $person);
+            $person->addMember($member);
+            $member->addPerson($person);
+            $this->fastSave($member, $person);
 
-                $this->displayInfo(
-                    $translator->trans(
-                        'invite.messages.now_part_of_member',
-                        ['%member%' => $member->getName(), '%organisation%' => $member->getOrganisation()->getName()],
-                        'access'
-                    )
-                );
-            }
+            $this->displayInfo(
+                $translator->trans(
+                    'invite.messages.now_part_of_member',
+                    ['%member%' => $member->getName(), '%organisation%' => $member->getOrganisation()->getName()],
+                    'access'
+                )
+            );
 
-            return $this->redirectToRoute('dashboard_index');
+            return $this->redirectToRoute('dashboard_about');
         }
         $person = new Person();
         $person->setEmail($member->getEmail());
@@ -289,7 +284,7 @@ class AccessController extends BaseAccessController
                 $this->loginUser($request, $person->getFrontendUser());
                 $this->displaySuccess($translator->trans('success.welcome', [], 'access'));
 
-                return $this->redirectToRoute('dashboard_index');
+                return $this->redirectToRoute('dashboard_about');
             }
         );
 
@@ -339,7 +334,7 @@ class AccessController extends BaseAccessController
                     $this->displayInfo($translator->trans('info.already_accepted_invite', [], 'access'));
                 }
 
-                return $this->redirectToRoute('dashboard_index');
+                return $this->redirectToRoute('dashboard_about');
             }
             $this->displayError($translator->trans('error.already_logged_in', [], 'access'));
 
@@ -381,7 +376,7 @@ class AccessController extends BaseAccessController
                 $this->loginUser($request, $person->getFrontendUser());
                 $this->displaySuccess($translator->trans('success.welcome', [], 'access'));
 
-                return $this->redirectToRoute('dashboard_index');
+                return $this->redirectToRoute('dashboard_about');
             }
         );
 
@@ -420,10 +415,10 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/reset", name="access_reset")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param LoggerInterface     $logger
-     * @param EmailService        $emailService
+     * @param LoggerInterface $logger
+     * @param EmailService $emailService
      *
      * @return Response
      */
@@ -456,7 +451,7 @@ class AccessController extends BaseAccessController
                     );
                     $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
                 } else {
-                    $logger->error('tried to reset password for non-existing user '.$entity->getEmail());
+                    $logger->error('tried to reset password for non-existing user ' . $entity->getEmail());
                 }
 
                 return $this->redirectToRoute('access_reset_done');
@@ -562,8 +557,8 @@ class AccessController extends BaseAccessController
      * @param Request $request
      * @param $confirmationToken
      * @param TranslatorInterface $translator
-     * @param callable            $onSuccessCallable with $form & $entity as argument
-     * @param callable            $responseCallable  with $form as argument
+     * @param callable $onSuccessCallable with $form & $entity as argument
+     * @param callable $responseCallable with $form as argument
      *
      * @return FormInterface|Response
      */

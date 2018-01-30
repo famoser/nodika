@@ -8,4 +8,3 @@ parameters:
     FREE_PERIOD_DAYS: '%env(FREE_PERIOD_DAYS)%'
     REGISTER_FEE: '%env(REGISTER_FEE)%'
     YEARLY_FEE: '%env(YEARLY_FEE)%'
-    TAWK_ID: '%env(TAWK_ID)%'
