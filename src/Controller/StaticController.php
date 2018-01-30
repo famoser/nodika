@@ -14,7 +14,9 @@ namespace App\Controller;
 use App\Controller\Base\BaseController;
 use App\Entity\FrontendUser;
 use App\Entity\Newsletter;
+use App\Form\ContactRequest\ContactRequestType;
 use App\Form\Newsletter\RegisterForPreviewType;
+use App\Model\ContactRequest\ContactRequest;
 use App\Service\EmailService;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,13 +30,9 @@ class StaticController extends BaseController
     /**
      * @Route("/", name="homepage")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
-     *
      * @return Response
      */
-    public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
+    public function indexAction()
     {
         $arr = [];
         if ($this->getUser() instanceof FrontendUser) {
@@ -49,38 +47,36 @@ class StaticController extends BaseController
     }
 
     /**
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      * @param $arr
      */
-    private function processNewsletterForm(Request $request, TranslatorInterface $translator, EmailService $emailService, &$arr)
+    private function processContactForm(Request $request, TranslatorInterface $translator, EmailService $emailService, &$arr)
     {
-        $form = $this->handleFormDoctrinePersist(
-            $this->createForm(RegisterForPreviewType::class),
+        $form = $this->handleForm(
+            $this->createForm(ContactRequestType::class),
             $request,
             $translator,
-            new Newsletter(),
-            function ($form, $newsletter) use ($translator, $emailService) {
+            new ContactRequest(),
+            function ($form, $contactRequest) use ($translator, $emailService) {
                 /* @var FormInterface $form */
-                /* @var Newsletter $newsletter */
+                /* @var ContactRequest $contactRequest */
                 $emailService->sendTextEmail(
                     $this->getParameter('CONTACT_EMAIL'),
                     'Kontaktanfrage von nodika',
-                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n".
-                    "\nListe: ".$newsletter->getChoice().
-                    "\nEmail: ".$newsletter->getEmail().
-                    "\nVorname: ".$newsletter->getGivenName().
-                    "\nNachname: ".$newsletter->getFamilyName().
-                    "\nNachricht: ".$newsletter->getMessage()
+                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
+                    "\nEmail: " . $contactRequest->getEmail() .
+                    "\nName: " . $contactRequest->getName() .
+                    "\nNachricht: " . $contactRequest->getMessage()
                 );
 
-                $this->displaySuccess($translator->trans('index.thanks_for_contact_form', [], 'static'));
+                $this->displaySuccess($translator->trans('contact.thanks_for_contact_form', [], 'static'));
 
-                return $form;
+                return $this->createForm(ContactRequestType::class);
             }
         );
-        $arr['newsletter_form'] = $form->createView();
+        $arr['contact_form'] = $form->createView();
     }
 
     /**
@@ -103,33 +99,27 @@ class StaticController extends BaseController
     /**
      * @Route("/about", name="about")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
-     *
      * @return Response
      */
-    public function aboutAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
+    public function aboutAction()
     {
         $arr = [];
-        $this->processNewsletterForm($request, $translator, $emailService, $arr);
-
         return $this->render('static/about.html.twig', $arr);
     }
 
     /**
      * @Route("/contact", name="contact")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return Response
      */
     public function contactAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
         $arr = [];
-        $this->processNewsletterForm($request, $translator, $emailService, $arr);
+        $this->processContactForm($request, $translator, $emailService, $arr);
 
         return $this->render('static/contact.html.twig', $arr);
     }
