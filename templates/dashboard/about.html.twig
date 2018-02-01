@@ -1,0 +1,48 @@
+{% extends 'layout/base.html.twig' %}
+{% import "macros/events.html.twig" as events %}
+{% import "macros/event_line_models.html.twig" as event_line_model_macro %}
+{% import _self as local_macro %}
+
+{% trans_default_domain "dashboard" %}
+{% set theme_color = "blue" %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% block content %}
+    <section class="content {{ theme_color }}-background">
+        {% include "layout/parts/menu.html.twig" %}
+        {% include "layout/parts/flashbag.html.twig" %}
+
+        <div class="container list-container">
+            <div class="row">
+                <a class="tile tile-single tile-left default-color" href="#">
+                    <h3>{{ "about.nodika"|trans }}</h3>
+                    <p>{{ "about.nodika_description"|trans }}</p>
+                </a>
+                <a class="tile tile-double default-color" href="#">
+                    <h3>{{ "about.architecture"|trans }}</h3>
+                    <p>
+                        {% if member is defined and member is not null and person is defined and person is not null %}
+                            {{ "about.architecture_description_1"|trans({"%member%" : member.name, "%person%" : person.fullName}) }}
+                        {% else %}
+                            {{ "about.architecture_description_1_alternative"|trans }}
+                        {% endif %}
+                        <br/>
+                        {% if organisation is defined and organisation is not null %}
+                            {{ "about.architecture_description_2"|trans({"%organisation%": organisation.name}) }}
+                        {% else %}
+                            {{ "about.architecture_description_2_alternative"|trans }}
+                        {% endif %}
+                    </p>
+                </a>
+
+                <a class="tile tile-single tile-right default-color" href="{{ path("dashboard_index") }}">
+                    <h3>{{ "about.start"|trans }}</h3>
+                    <p>{{ "about.start_description"|trans }}</p>
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

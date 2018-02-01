@@ -1,0 +1,8 @@
+entity:
+  name: 'Kontaktanfrage'
+  description: 'Mit dieser Kontaktanfrage kann der Administrator der Seite erreicht werden'
+  plural: 'Kontaktanfragen'
+
+name: Name
+email: Email
+message: Nachricht

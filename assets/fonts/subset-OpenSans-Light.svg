@@ -1,0 +1,50 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata>
+Created by FontForge 20170731 at Sat Aug 19 09:05:13 2017
+ By ,,,
+Digitized data copyright (c) 2010-2011, Google Corporation.
+</metadata>
+<defs>
+<font id="OpenSans-Light" horiz-adv-x="1081" >
+  <font-face 
+    font-family="Open Sans Light"
+    font-weight="300"
+    font-stretch="normal"
+    units-per-em="2048"
+    panose-1="2 11 3 6 3 5 4 2 2 4"
+    ascent="1638"
+    descent="-410"
+    bbox="0 -20 1823 1813"
+    underline-thickness="102"
+    underline-position="-715"
+    unicode-range="U+0020-0178"
+  />
+<missing-glyph horiz-adv-x="748" 
+d="M68 0v1365h544v-1365h-544zM136 68h408v1229h-408v-1229z" />
+    <glyph glyph-name=".notdef" horiz-adv-x="748" 
+d="M68 0v1365h544v-1365h-544zM136 68h408v1229h-408v-1229z" />
+    <glyph glyph-name="glyph1" horiz-adv-x="0" 
+ />
+    <glyph glyph-name="uni000D" horiz-adv-x="1044" 
+ />
+    <glyph glyph-name="space" unicode=" " horiz-adv-x="532" 
+ />
+    <glyph glyph-name="Y" 
+d="M543 662l428 800h110l-487 -897v-565h-105v557l-489 905h117z" />
+    <glyph glyph-name="dieresis" horiz-adv-x="1182" 
+d="M336 1389q0 46 15.5 66t47.5 20q64 0 64 -86t-64 -86q-63 0 -63 86zM717 1389q0 46 15.5 66t47.5 20q64 0 64 -86t-64 -86q-63 0 -63 86z" />
+    <glyph glyph-name="dotlessi" unicode="&#x131;" horiz-adv-x="463" 
+d="M281 0h-99v1087h99v-1087z" />
+    <glyph glyph-name="OE" unicode="&#x152;" horiz-adv-x="1839" 
+d="M1714 0h-756q-76 -16 -176 -16q-305 0 -479 200t-174 551q0 347 174.5 545.5t480.5 198.5q78 0 183 -17h747v-94h-655v-553h616v-94h-616v-627h655v-94zM782 80q109 0 174 18v1266q-62 16 -172 16q-262 0 -403 -167.5t-141 -479.5q0 -315 140.5 -484t401.5 -169z" />
+    <glyph glyph-name="oe" unicode="&#x153;" horiz-adv-x="1942" 
+d="M1438 -20q-156 0 -266.5 67.5t-165.5 198.5q-59 -128 -158 -197t-252 -69q-143 0 -252 69t-167 198t-58 298q0 266 129 414.5t354 148.5q151 0 251 -70t157 -209q110 279 399 279q192 0 303 -134t111 -364v-80h-762q2 -230 100.5 -345t276.5 -115q93 0 163.5 13t178.5 56
+v-90q-92 -40 -170 -54.5t-172 -14.5zM223 545q0 -224 98.5 -349.5t278.5 -125.5q174 0 265 122.5t91 352.5q0 224 -93 348.5t-265 124.5q-180 0 -277.5 -123.5t-97.5 -349.5zM1409 1020q-155 0 -242 -104t-102 -298h653q0 189 -82 295.5t-227 106.5z" />
+    <glyph glyph-name="Ydieresis" unicode="&#x178;" 
+d="M543 662l428 800h110l-487 -897v-565h-105v557l-489 905h117zM288 1727q0 46 15.5 66t47.5 20q64 0 64 -86t-64 -86q-63 0 -63 86zM669 1727q0 46 15.5 66t47.5 20q64 0 64 -86t-64 -86q-63 0 -63 86z" />
+    <hkern u1="&#x178;" u2="&#x153;" k="102" />
+    <hkern u1="&#x178;" u2="&#x152;" k="41" />
+  </font>
+</defs></svg>

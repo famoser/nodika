@@ -52,4 +52,20 @@ class DashboardController extends BaseFrontendController
 
         return $this->renderNoBackUrl('dashboard/index.html.twig', $arr, 'dashboard!');
     }
+
+    /**
+     * @Route("/about", name="dashboard_about")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function aboutAction()
+    {
+        $member = $this->getMember();
+        $arr['person'] = $this->getPerson();
+        if (null !== $member) {
+            $arr['member'] = $member;
+            $arr['organisation'] = $member->getOrganisation();
+        }
+        return $this->renderNoBackUrl('dashboard/about.html.twig', $arr, 'dashboard!');
+    }
 }

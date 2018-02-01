@@ -1,11 +1,19 @@
 {% import "widgets/base_widgets.html.twig" as base_widgets %}
 
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- fav icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="mask-icon" href="{{ asset('safari-pinned-tab.svg') }}" color="#496a6a">
+    <meta name="theme-color" content="#496a6a">
 
     {% set title = block('title')|raw %}
     {% set description = block('description')|raw %}
@@ -13,11 +21,11 @@
     <title>{{ title }}</title>
     {% block stylesheets %}
     {% endblock %}
+
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/app.css') }}"/>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     <meta name="description" content="{{ description }}">
     <base href="/" target="_self">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i" rel="stylesheet">
 </head>
 <body>
 <!--[if lte IE 9]>
@@ -28,7 +36,7 @@
 <header class="header">
     <div class="container header-container">
         <div class="logo-wrapper">
-            <img src="{{ asset("images/logo.svg") }}" class="logo-img">
+            <img src="{{ asset("images/logo.svg") }}" alt="logo" class="logo-img">
         </div>
 
         <div class="header-content">
@@ -41,21 +49,21 @@
                     <div class="go-buttons">
                         {% if back_url is defined %}
                             <a href="{{ back_url }}"
-                               class="{{ color_class }} go-button">{{ "navigation.go_back"|trans({}, "content_base") }}</a>
+                               class="{{ theme_color }}-background go-button">{{ "navigation.go_back"|trans({}, "content_base") }}</a>
                         {% endif %}
                         {% if show_login is defined %}
                             <a href="{{ path("access_register_check") }}"
-                               class="{{ color_class }} go-button">{{ "navigation.register"|trans({}, "content_base") }}</a>
+                               class="{{ theme_color }}-background go-button">{{ "navigation.register"|trans({}, "content_base") }}</a>
                             <a href="{{ path("dashboard_index") }}"
-                               class="{{ color_class }} go-button">{{ "navigation.login"|trans({}, "content_base") }}</a>
+                               class="{{ theme_color }}-background go-button">{{ "navigation.login"|trans({}, "content_base") }}</a>
                         {% endif %}
                         {% if show_dashboard %}
                             <a href="{{ path("dashboard_index") }}"
-                               class="{{ color_class }} go-button">{{ "navigation.dashboard"|trans({}, "content_base") }}</a>
+                               class="{{ theme_color }}-background go-button">{{ "navigation.dashboard"|trans({}, "content_base") }}</a>
                         {% endif %}
                         {% if go_to_startpage is defined %}
                             <a href="{{ path("homepage") }}"
-                               class="{{ color_class }} go-button">{{ "navigation.to_start_page"|trans({}, "content_base") }}</a>
+                               class="{{ theme_color }}-background go-button">{{ "navigation.to_start_page"|trans({}, "content_base") }}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -70,7 +78,7 @@
     <div class="container footer-container">
         <div class="row">
             <div class="col-md-6">
-                made with <3 by <a href="http://famoser.ch">famoser</a>
+                made with &lt;3 by <a href="http://famoser.ch" target="_blank">famoser</a>
             </div>
             <div class="col-md-6 align-right">
                 version 2018.1
@@ -79,21 +87,8 @@
     </div>
 </footer>
 
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-    (function () {
-        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-        s1.async = true;
-        s1.src = 'https://embed.tawk.to/{{ globals_tawk_id }}/default';
-        s1.charset = 'UTF-8';
-        s1.setAttribute('crossorigin', '*');
-        s0.parentNode.insertBefore(s1, s0);
-    })();
-</script>
-<!--End of Tawk.to Script-->
+<script src="{{ asset('dist/app.js') }}"></script>
 
-<script type="text/javascript" src="{{ asset('dist/app.js') }}"></script>
 {% block javascript %}
 {% endblock %}
 </body>

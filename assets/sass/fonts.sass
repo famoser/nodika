@@ -1,0 +1,10 @@
+@mixin font-face($family, $path, $svg, $weight: normal, $style: normal)
+  @font-face
+    font-family: $family
+    src: url('#{$path}.eot')
+    src: local('Open Sans'), local('#{$svg}'), url('#{$path}.eot?#iefix') format('embedded-opentype'), url('#{$path}.woff2') format('woff2'), url('#{$path}.woff') format('woff'), url('#{$path}.ttf') format('truetype'), url('#{$path}.svg##{$svg}') format('svg')
+    font-weight: $weight
+    font-style: $style
+
++font-face('Open Sans', '../fonts/subset-OpenSans', 'OpenSans')
++font-face('Open Sans', '../fonts/subset-OpenSans-Light', 'OpenSans-Light', 300)

@@ -6,7 +6,7 @@
 {% trans_default_domain "static" %}
 
 {% set show_dashboard = false %}
-{% set color_class = globals_color_class_organisation %}
+{% set theme_color = globals_theme_color_organisation %}
 
 {% block content %}
     <section class="content blue-background">
@@ -34,7 +34,7 @@
                     </p>
                 </a>
                 <a class="tile tile-double default-color" href="{{ path('contact') }}">
-                    <i class="ion ion-big ion-ios-contact"></i>
+                    <i class="ion ion-big ion-ios-contact-outline"></i>
                     <h3>{{ "index.contact"|trans }}</h3>
                     <p>
                         {{ "index.contact_description"|trans }}

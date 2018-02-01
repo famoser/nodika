@@ -33,6 +33,7 @@ class MyTwigExtension extends Twig_Extension
             new Twig_SimpleFilter('myDate', [$this, 'dateFilter']),
             new Twig_SimpleFilter('myDateTime', [$this, 'dateTimeFilter']),
             new Twig_SimpleFilter('myBoolean', [$this, 'booleanFilter']),
+            new Twig_SimpleFilter('themeColorToHex', [$this, 'themeColorToHexFilter'])
         ];
     }
 
@@ -67,6 +68,23 @@ class MyTwigExtension extends Twig_Extension
         }
 
         return '-';
+    }
+
+    /**
+     * @param string $color
+     *
+     * @return string
+     */
+    public function themeColorToHexFilter($color)
+    {
+        $colorArray = [
+            "blue" => "555F76",
+            "brown" => "B19E7A",
+            "green" => "618D61",
+            "green2" => "496A6A",
+            "red" => "B17A7A"
+        ];
+        return "#" . $colorArray[$color];
     }
 
     /**

@@ -12,6 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseController;
+use App\Controller\Base\BaseFrontendController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Route("/help")
  * @Security("has_role('ROLE_USER')")
  */
-class HelpController extends BaseController
+class HelpController extends BaseFrontendController
 {
     /**
      * @Route("/users", name="help_users")
@@ -28,9 +29,8 @@ class HelpController extends BaseController
      */
     public function usersAction()
     {
-        //todo
         return $this->renderWithBackUrl(
-            'event/assign.html.twig',
+            'help/users.html.twig',
             [],
             $this->generateUrl('dashboard_index')
         );
@@ -43,9 +43,8 @@ class HelpController extends BaseController
      */
     public function adminsAction()
     {
-        //todo
         return $this->renderWithBackUrl(
-            'event/assign.html.twig',
+            'help/admins.html.twig',
             [],
             $this->generateUrl('dashboard_index')
         );

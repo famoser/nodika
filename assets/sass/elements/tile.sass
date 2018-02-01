@@ -7,71 +7,50 @@
   margin-right: 5px
   margin-bottom: 10px
 
-
 .tile-single
   flex: 0 0 calc(25% - 10px)
   max-width: calc(25% - 10px)
-
-.tile-single:nth-child(4n),
-.tile-single:first-child,
-.tile-single:nth-child(4n + 1)
-  flex: 0 0 calc(25% - 5px)
-  max-width: calc(25% - 5px)
-
-.tile-single:nth-child(4n)
-  margin-right: 0
-
-.tile-single:first-child,
-.tile-single:nth-child(4n + 1)
-  margin-left: 0
+  &.tile-left, &.tile-right
+    flex: 0 0 calc(25% - 5px)
+    max-width: calc(25% - 5px)
+  &.tile-left
+    margin-left: 0
+  &.tile-right
+    margin-right: 0
 
 
-.tile-double:nth-child(even),
-.tile-double:nth-child(odd)
-  flex: 0 0 calc(50% - 5px)
-  max-width: calc(50% - 5px)
-
-.tile-double:nth-child(even)
-  margin-right: 0
-.tile-double:nth-child(odd)
-  margin-left: 0
+.tile-double
+  flex: 0 0 calc(50% - 10px)
+  max-width: calc(50% - 10px)
+  &.tile-left, &.tile-right
+    flex: 0 0 calc(50% - 5px)
+    max-width: calc(50% - 5px)
+  &.tile-left
+    margin-left: 0
+  &.tile-right
+    margin-right: 0
   
 
 @media (max-width: $break-tablet)
-  .tile-double:nth-child(even),
-  .tile-double:nth-child(odd)
+  .tile-double
     flex: 0 0 100%
     max-width: 100%
-    margin-left: 0
-    margin-right: 0
+    &.tile-left, &.tile-right
+      margin-left: 0
+      margin-right: 0
 
-  .tile-single,
-  .tile-single:nth-child(4n),
-  .tile-single:first-child,
-  .tile-single:nth-child(4n + 1)
+  .tile-single
     flex: 0 0 calc(50% - 5px)
     max-width: calc(50% - 5px)
+    &.tile-left, &.tile-right
+      margin-right: 5px
+      margin-left: 5px
 
-
-  .tile-single,
-  .tile-single:nth-child(4n),
-  .tile-single:first-child,
-  .tile-single:nth-child(4n + 1)
-    margin-right: 5px
-    margin-left: 5px
-
-  .tile-single:nth-child(even)
-    margin-right: 0
-    
-  .tile-single:nth-child(odd)
-    margin-left: 0
 
 @media (max-width: $break-mobile)
-  .tile-single,
-  .tile-single:nth-child(4n),
-  .tile-single:first-child,
-  .tile-single:nth-child(4n + 1)
+  .tile-single
     flex: 0 0 100%
     max-width: 100%
-    margin-left: 0
-    margin-right: 0
+    &.tile-left, &.tile-right
+      margin-left: 0
+      margin-right: 0
