@@ -1,0 +1,9 @@
+admins:
+  title: 'Hilfe'
+  description: 'Hilfe für Administratoren'
+  message: 'Hier ist noch nichts. Wir arbeiten aber hart daran, und hoffen Ihnen in Kürze hier mit nodika weiterhelfen zu können.'
+
+users:
+  title: 'Hilfe'
+  description: 'Hilfe für Benutzer'
+  message: 'Hier ist noch nichts. Wir arbeiten aber hart daran, und hoffen Ihnen in Kürze hier mit nodika weiterhelfen zu können.'

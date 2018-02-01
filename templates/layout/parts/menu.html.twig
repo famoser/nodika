@@ -71,7 +71,7 @@
                         {% endif %}
                     {% else %}
                         {# user menu #}
-                        {% if menu_organisation is not null %}
+                        {% if menu_organisation is defined and menu_organisation is not null %}
                             <li class="menu-group-header">
                                 <span>{{ "entity.name"|trans({}, "entity_organisation") }}</span>
                             </li>
@@ -81,7 +81,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        {% if menu_member is not null %}
+                        {% if menu_member is defined and menu_member is not null %}
                             <li class="menu-group-header">
                                 {{ "entity.plural"|trans({}, "entity_event") }}
                             </li>
