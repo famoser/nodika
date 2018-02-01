@@ -186,6 +186,9 @@ AddDefaultCharset utf-8
 # (e.g.: error messages, directory listings, etc.)
 ServerSignature Off
 
+# Prevent Apache from publishing exact server version
+ServerTokens Prod
+
 # Compress HTML, CSS, JavaScript, Text, XML and fonts
 <IfModule mod_deflate.c>
 
