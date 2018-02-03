@@ -12,6 +12,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\EventLine;
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;
@@ -64,6 +65,12 @@ class OrganisationRepository extends EntityRepository
         foreach ($searchEventModel->getOrganisation()->getEventLines() as $eventLine) {
             $eventLineModel = new EventLineModel();
             $eventLineModel->eventLine = $eventLine;
+
+            if ($searchEventModel->getFilterEventLine() instanceof EventLine &&
+                $searchEventModel->getFilterEventLine()->getId() != $eventLine->getId()) {
+                continue;
+            }
+
             $qb = $this->getEntityManager()->createQueryBuilder()
                 ->select('e')
                 ->from('App:Event', 'e')
@@ -90,6 +97,7 @@ class OrganisationRepository extends EntityRepository
                 $qb->andWhere('p = :person')
                     ->setParameter('person', $searchEventModel->getFilterPerson());
             }
+
 
             $qb->setMaxResults($searchEventModel->getMaxResults());
 

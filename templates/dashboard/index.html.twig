@@ -157,7 +157,7 @@
                                 </table>
                             </div>
                         {% endif %}
-                        <p><a href="{{ path("event_search") }}">{{ "index.show_all_events"|trans }}</a></p>
+                        <p><a href="{{ path("event_search", {"event_line" : eventLineModel.eventLine.id}) }}">{{ "index.show_all_events"|trans }}</a></p>
                     </div>
                 {% endfor %}
             {% endif %}

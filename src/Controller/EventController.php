@@ -262,6 +262,17 @@ class EventController extends BaseFrontendController
             }
         }
 
+        $eventLineQuery = $request->query->get('event_line');
+        $eventLine = null;
+        if (is_numeric($eventLineQuery)) {
+            $eventLineInt = (int) $eventLineQuery;
+            foreach ($organisation->getEventLines() as $organisationEventLine) {
+                if ($organisationEventLine->getId() === $eventLineInt) {
+                    $eventLine = $organisationEventLine;
+                }
+            }
+        }
+
         $personQuery = $request->query->get('person');
         $person = null;
         if (is_numeric($personQuery)) {
@@ -278,6 +289,7 @@ class EventController extends BaseFrontendController
         $searchEventModel = new SearchEventModel($organisation, $startDateTime);
         $searchEventModel->setEndDateTime($endDateTime);
         $searchEventModel->setFilterMember($member);
+        $searchEventModel->setFilterEventLine($eventLine);
         $searchEventModel->setFilterPerson($person);
 
         return $searchEventModel;
@@ -306,8 +318,11 @@ class EventController extends BaseFrontendController
         if ('csv' === $request->query->get('view')) {
             return $this->exportAsCsv($eventLineModels, $translator);
         }
-        $arr['eventLineModels'] = $eventLineModels;
+        $arr['event_line_models'] = $eventLineModels;
+
+        $arr['event_lines'] = $this->getOrganisation()->getEventLines();
         $arr['members'] = $this->getOrganisation()->getMembers();
+        $arr['member'] = $member;
         $persons = [];
         foreach ($this->getOrganisation()->getMembers() as $lMember) {
             foreach ($lMember->getPersons() as $lPerson) {
@@ -317,10 +332,10 @@ class EventController extends BaseFrontendController
         $arr['persons'] = $persons;
 
         $arr['selected_member'] = $searchEventModel->getFilterMember();
-        $arr['member'] = $member;
         $arr['selected_person'] = $searchEventModel->getFilterPerson();
-        $arr['startDateTime'] = $searchEventModel->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-        $arr['endDateTime'] = $searchEventModel->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        $arr['selected_event_line'] = $searchEventModel->getFilterEventLine();
+        $arr['start_date_time'] = $searchEventModel->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        $arr['end_date_time'] = $searchEventModel->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
 
         return $this->renderWithBackUrl('event/search.html.twig', $arr, $this->generateUrl('dashboard_index'));
     }
