@@ -161,9 +161,9 @@ AddDefaultCharset utf-8
 # attacks.
 <IfModule mod_headers.c>
 
-    Header set Content-Security-Policy "default-src 'self'"
-    Header set X-Content-Security-Policy "default-src 'self'"
-    Header set X-WebKit-CSP "default-src 'self'"
+    Header set Content-Security-Policy "default-src 'none'; base-uri 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; frame-ancestors 'none'"
+    Header set X-Content-Security-Policy "default-src 'none'; base-uri 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; frame-ancestors 'none'"
+    Header set X-WebKit-CSP "default-src 'none'; base-uri 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; frame-ancestors 'none'"
 
     # `mod_headers` cannot match based on the content-type, however,
     # the `Content-Security-Policy` response header should be send
