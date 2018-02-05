@@ -82,7 +82,7 @@ class EventOffer extends BaseEntity
     private $offeredToPerson;
 
     /**
-     * @var EventOfferEntry[]
+     * @var EventOfferEntry[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventOfferEntry", mappedBy="eventOffer")
      */

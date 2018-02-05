@@ -92,7 +92,7 @@ trait UserTrait
     }
 
     /**
-     * @return string
+     * @return boolean
      */
     public function getIsActive()
     {
@@ -100,7 +100,7 @@ trait UserTrait
     }
 
     /**
-     * @param string $isActive
+     * @param boolean $isActive
      *
      * @return static
      */

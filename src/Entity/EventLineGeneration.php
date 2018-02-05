@@ -83,7 +83,7 @@ class EventLineGeneration extends BaseEntity
     private $createdByPerson;
 
     /**
-     * @var Event[]
+     * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="generatedBy")
      * @ORM\OrderBy({"startDateTime" = "ASC"})

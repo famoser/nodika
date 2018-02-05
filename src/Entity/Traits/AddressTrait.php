@@ -130,7 +130,7 @@ trait AddressTrait
     /**
      * Set postalCode.
      *
-     * @param string $postalCode
+     * @param int $postalCode
      *
      * @return static
      */
@@ -144,7 +144,7 @@ trait AddressTrait
     /**
      * Get postalCode.
      *
-     * @return string
+     * @return int
      */
     public function getPostalCode()
     {

@@ -30,7 +30,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     use UserTrait;
 
     /**
-     * @var Setting[]
+     * @var Setting[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Setting", mappedBy="frontendUser")
      */

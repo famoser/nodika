@@ -76,7 +76,7 @@ class Event extends BaseEntity
     private $eventLine;
 
     /**
-     * @var EventPast[]
+     * @var EventPast[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event")
      */

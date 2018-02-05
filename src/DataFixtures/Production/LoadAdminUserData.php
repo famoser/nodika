@@ -24,7 +24,6 @@ class LoadAdminUserData extends BaseFixture
      * @param ObjectManager $manager
      *
      * @throws \BadMethodCallException
-     * @throws BadMethodCallException
      */
     public function load(ObjectManager $manager)
     {

@@ -41,7 +41,7 @@ abstract class TranslatableObject
      */
     protected function getTranslationDomainForBuilder()
     {
-        return ['translation_domain' => static::getTranslationDomain()];
+        return ['translation_domain' => $this->getTranslationDomain()];
     }
 
     /**

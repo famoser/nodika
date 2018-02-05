@@ -45,7 +45,7 @@ class Organisation extends BaseEntity
     private $activeEnd;
 
     /**
-     * @var Person[]
+     * @var Person[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Person", inversedBy="leaderOf")
      * @ORM\OrderBy({"familyName" = "ASC", "givenName" = "ASC"})
@@ -53,7 +53,7 @@ class Organisation extends BaseEntity
     private $leaders;
 
     /**
-     * @var Member[]
+     * @var Member[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Member", mappedBy="organisation")
      * @ORM\OrderBy({"name" = "ASC"})
@@ -61,7 +61,7 @@ class Organisation extends BaseEntity
     private $members;
 
     /**
-     * @var Invoice[]
+     * @var Invoice[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Invoice", mappedBy="organisation")
      * @ORM\OrderBy({"invoiceDateTime" = "DESC"})
@@ -69,7 +69,7 @@ class Organisation extends BaseEntity
     private $invoices;
 
     /**
-     * @var EventLine[]
+     * @var EventLine[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\EventLine", mappedBy="organisation")
      * @ORM\OrderBy({"displayOrder" = "ASC"})

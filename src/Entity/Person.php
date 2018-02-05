@@ -44,7 +44,7 @@ class Person extends BaseEntity
     private $invitationHash = null;
 
     /**
-     * @var Organisation[]
+     * @var Organisation[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="leaders")
      * @ORM\JoinTable(name="person_organisations")
@@ -53,7 +53,7 @@ class Person extends BaseEntity
     private $leaderOf;
 
     /**
-     * @var Member[]
+     * @var Member[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Member", inversedBy="persons")
      * @ORM\JoinTable(name="person_members")
@@ -69,7 +69,7 @@ class Person extends BaseEntity
     private $frontendUser;
 
     /**
-     * @var Event[]
+     * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="person")
      * @ORM\OrderBy({"startDateTime" = "ASC"})

@@ -44,7 +44,7 @@ class EventLine extends BaseEntity
     private $organisation;
 
     /**
-     * @var Event[]
+     * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="eventLine")
      * @ORM\OrderBy({"startDateTime" = "ASC"})
@@ -52,7 +52,7 @@ class EventLine extends BaseEntity
     private $events;
 
     /**
-     * @var EventLineGeneration[]
+     * @var EventLineGeneration[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventLineGeneration", mappedBy="eventLine")
      * @ORM\OrderBy({"createdAtDateTime" = "ASC"})

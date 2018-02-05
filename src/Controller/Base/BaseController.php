@@ -56,7 +56,7 @@ class BaseController extends AbstractController
     /**
      * @param $type
      * @param $submitButtonType
-     * @param null  $data
+     * @param array  $data
      * @param array $options
      *
      * @return FormInterface
@@ -118,7 +118,7 @@ class BaseController extends AbstractController
     /**
      * @param $type
      * @param $message
-     * @param null $link
+     * @param string $link
      */
     private function displayFlash($type, $message, $link = null)
     {
@@ -130,7 +130,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param string   $link
      */
     protected function displayError($message, $link = null)
     {
@@ -139,7 +139,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param string   $link
      */
     protected function displayDanger($message, $link = null)
     {
@@ -148,7 +148,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param string   $link
      */
     protected function displaySuccess($message, $link = null)
     {
@@ -157,7 +157,7 @@ class BaseController extends AbstractController
 
     /**
      * @param string $message the translation message to display
-     * @param null   $link
+     * @param string   $link
      */
     protected function displayInfo($message, $link = null)
     {
