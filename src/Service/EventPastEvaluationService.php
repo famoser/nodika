@@ -57,7 +57,7 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
      * if only a new event is in the history.
      *
      * @param EventPastEvaluation $evaluation
-     * @param DeserializedEvent   $event
+     * @param DeserializedEvent $event
      *
      * @return EventPastEvaluation
      */
@@ -71,33 +71,6 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
         }
         $evaluation->setStartDateTimeChanged(null, new \DateTime($event->startDateTime->date));
         $evaluation->setEndDateTimeChanged(null, new \DateTime($event->endDateTime->date));
-
-        return $evaluation;
-    }
-
-    /**
-     * if only a new event is in the history.
-     *
-     * @param EventPastEvaluation $evaluation
-     * @param DeserializedEvent   $beforeEvent
-     * @param DeserializedEvent   $afterEvent
-     *
-     * @return EventPastEvaluation
-     */
-    private function eventChangeOccurred(EventPastEvaluation $evaluation, $beforeEvent, $afterEvent)
-    {
-        if ($beforeEvent->memberId !== $afterEvent->memberId) {
-            $this->setMemberChanged($evaluation, $beforeEvent->memberId, $afterEvent->memberId);
-        }
-        if ($beforeEvent->personId !== $afterEvent->personId) {
-            $this->setPersonChanged($evaluation, $beforeEvent->personId, $afterEvent->personId);
-        }
-        if ($beforeEvent->startDateTime->date !== $afterEvent->startDateTime->date) {
-            $evaluation->setStartDateTimeChanged(new \DateTime($beforeEvent->startDateTime->date), new \DateTime($afterEvent->startDateTime->date));
-        }
-        if ($beforeEvent->endDateTime->date !== $afterEvent->endDateTime->date) {
-            $evaluation->setStartDateTimeChanged(new \DateTime($beforeEvent->endDateTime->date), new \DateTime($afterEvent->endDateTime->date));
-        }
 
         return $evaluation;
     }
@@ -129,11 +102,38 @@ class EventPastEvaluationService implements EventPastEvaluationServiceInterface
     }
 
     /**
+     * if only a new event is in the history.
+     *
+     * @param EventPastEvaluation $evaluation
+     * @param DeserializedEvent $beforeEvent
+     * @param DeserializedEvent $afterEvent
+     *
+     * @return EventPastEvaluation
+     */
+    private function eventChangeOccurred(EventPastEvaluation $evaluation, $beforeEvent, $afterEvent)
+    {
+        if ($beforeEvent->memberId !== $afterEvent->memberId) {
+            $this->setMemberChanged($evaluation, $beforeEvent->memberId, $afterEvent->memberId);
+        }
+        if ($beforeEvent->personId !== $afterEvent->personId) {
+            $this->setPersonChanged($evaluation, $beforeEvent->personId, $afterEvent->personId);
+        }
+        if ($beforeEvent->startDateTime->date !== $afterEvent->startDateTime->date) {
+            $evaluation->setStartDateTimeChanged(new \DateTime($beforeEvent->startDateTime->date), new \DateTime($afterEvent->startDateTime->date));
+        }
+        if ($beforeEvent->endDateTime->date !== $afterEvent->endDateTime->date) {
+            $evaluation->setStartDateTimeChanged(new \DateTime($beforeEvent->endDateTime->date), new \DateTime($afterEvent->endDateTime->date));
+        }
+
+        return $evaluation;
+    }
+
+    /**
      * creates the EventPast object.
      *
      * @param Person $changePerson
-     * @param Event  $oldEvent
-     * @param Event  $newEvent
+     * @param Event $oldEvent
+     * @param Event $newEvent
      * @param $eventChangeType
      *
      * @return EventPast

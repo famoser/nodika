@@ -96,27 +96,13 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set generationDate.
+     * Get distributionType.
      *
-     * @param \DateTime $createdAtDateTime
-     *
-     * @return EventLineGeneration
+     * @return int
      */
-    public function setCreatedAtDateTime($createdAtDateTime)
+    public function getDistributionType()
     {
-        $this->createdAtDateTime = $createdAtDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get generationDate.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAtDateTime()
-    {
-        return $this->createdAtDateTime;
+        return $this->distributionType;
     }
 
     /**
@@ -129,30 +115,6 @@ class EventLineGeneration extends BaseEntity
     public function setDistributionType($distributionType)
     {
         $this->distributionType = $distributionType;
-
-        return $this;
-    }
-
-    /**
-     * Get distributionType.
-     *
-     * @return int
-     */
-    public function getDistributionType()
-    {
-        return $this->distributionType;
-    }
-
-    /**
-     * Set distributionConfigurationJson.
-     *
-     * @param string $distributionConfigurationJson
-     *
-     * @return EventLineGeneration
-     */
-    public function setDistributionConfigurationJson($distributionConfigurationJson)
-    {
-        $this->distributionConfigurationJson = $distributionConfigurationJson;
 
         return $this;
     }
@@ -180,15 +142,15 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set distributionOutputJson.
+     * Set distributionConfigurationJson.
      *
-     * @param string $distributionOutputJson
+     * @param string $distributionConfigurationJson
      *
      * @return EventLineGeneration
      */
-    public function setDistributionOutputJson($distributionOutputJson)
+    public function setDistributionConfigurationJson($distributionConfigurationJson)
     {
-        $this->distributionOutputJson = $distributionOutputJson;
+        $this->distributionConfigurationJson = $distributionConfigurationJson;
 
         return $this;
     }
@@ -216,15 +178,15 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set generationResultJson.
+     * Set distributionOutputJson.
      *
-     * @param string $generationResultJson
+     * @param string $distributionOutputJson
      *
      * @return EventLineGeneration
      */
-    public function setGenerationResultJson($generationResultJson)
+    public function setDistributionOutputJson($distributionOutputJson)
     {
-        $this->generationResultJson = $generationResultJson;
+        $this->distributionOutputJson = $distributionOutputJson;
 
         return $this;
     }
@@ -252,15 +214,15 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
-     * Set eventLine.
+     * Set generationResultJson.
      *
-     * @param EventLine $eventLine
+     * @param string $generationResultJson
      *
      * @return EventLineGeneration
      */
-    public function setEventLine(EventLine $eventLine = null)
+    public function setGenerationResultJson($generationResultJson)
     {
-        $this->eventLine = $eventLine;
+        $this->generationResultJson = $generationResultJson;
 
         return $this;
     }
@@ -276,6 +238,20 @@ class EventLineGeneration extends BaseEntity
     }
 
     /**
+     * Set eventLine.
+     *
+     * @param EventLine $eventLine
+     *
+     * @return EventLineGeneration
+     */
+    public function setEventLine(EventLine $eventLine = null)
+    {
+        $this->eventLine = $eventLine;
+
+        return $this;
+    }
+
+    /**
      * returns a string representation of this entity.
      *
      * @return string
@@ -283,6 +259,30 @@ class EventLineGeneration extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getCreatedAtDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+    }
+
+    /**
+     * Get generationDate.
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAtDateTime()
+    {
+        return $this->createdAtDateTime;
+    }
+
+    /**
+     * Set generationDate.
+     *
+     * @param \DateTime $createdAtDateTime
+     *
+     * @return EventLineGeneration
+     */
+    public function setCreatedAtDateTime($createdAtDateTime)
+    {
+        $this->createdAtDateTime = $createdAtDateTime;
+
+        return $this;
     }
 
     /**

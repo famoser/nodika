@@ -37,8 +37,8 @@ class MemberController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_member_new")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -78,8 +78,8 @@ class MemberController extends BaseController
     /**
      * @Route("/{member}/administer", name="administration_organisation_member_administer")
      *
-     * @param Organisation        $organisation
-     * @param Member              $member
+     * @param Organisation $organisation
+     * @param Member $member
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -116,7 +116,7 @@ class MemberController extends BaseController
      * @Route("/{member}/add_self", name="administration_organisation_member_add_self")
      *
      * @param Organisation $organisation
-     * @param Member       $member
+     * @param Member $member
      *
      * @return Response
      */
@@ -133,9 +133,9 @@ class MemberController extends BaseController
     /**
      * @Route("/{member}/edit", name="administration_organisation_member_edit")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param Member              $member
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param Member $member
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -174,9 +174,9 @@ class MemberController extends BaseController
     /**
      * @Route("/{member}/remove", name="administration_organisation_member_remove")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param Member              $member
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param Member $member
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -216,7 +216,7 @@ class MemberController extends BaseController
      * @Route("/import/download/template", name="administration_organisation_member_import_download_template")
      *
      * @param TranslatorInterface $translator
-     * @param ExchangeService     $exchangeService
+     * @param ExchangeService $exchangeService
      *
      * @return Response
      */
@@ -225,16 +225,16 @@ class MemberController extends BaseController
         $memberTrans = $translator->trans('entity.name', [], 'entity_member');
         $newMemberForm = $this->createForm(MemberType::class);
 
-        return $this->renderCsv($memberTrans.'.csv', [], $exchangeService->getCsvHeader($newMemberForm));
+        return $this->renderCsv($memberTrans . '.csv', [], $exchangeService->getCsvHeader($newMemberForm));
     }
 
     /**
      * @Route("/import", name="administration_organisation_member_import")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
-     * @param ExchangeService     $exchangeService
+     * @param ExchangeService $exchangeService
      *
      * @return Response
      */

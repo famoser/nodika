@@ -28,8 +28,8 @@ interface ExchangeServiceInterface
      * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
      * returns true on success.
      *
-     * @param FormInterface   $createForm
-     * @param Closure         $createNewEntityClosure
+     * @param FormInterface $createForm
+     * @param Closure $createNewEntityClosure
      * @param ImportFileModel $importFileModel
      *
      * @return bool
@@ -40,8 +40,8 @@ interface ExchangeServiceInterface
      * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
      * returns true on success.
      *
-     * @param Closure         $entitySetClosure
-     * @param Closure         $validateHeaderClosure
+     * @param Closure $entitySetClosure
+     * @param Closure $validateHeaderClosure
      * @param ImportFileModel $importFileModel
      *
      * @return bool

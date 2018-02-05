@@ -28,11 +28,23 @@ class NamingHelper
     }
 
     /**
+     * makes from camelCase => camel_case.
+     *
+     * @param $camelCase
+     *
+     * @return string
+     */
+    private static function camelCaseToTranslation($camelCase)
+    {
+        return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $camelCase));
+    }
+
+    /**
      * produces App\Form\MyClassName\MyClassNameType from Famoser\Class\MyClassName
      * if $isRemoveType is true then the remove form is returned.
      *
      * @param string $classWithNamespace
-     * @param bool   $isRemoveType
+     * @param bool $isRemoveType
      *
      * @return string
      */
@@ -41,21 +53,7 @@ class NamingHelper
         $prepend = $isRemoveType ? 'Remove' : '';
         $className = mb_substr($classWithNamespace, mb_strrpos($classWithNamespace, '\\') + 1);
 
-        return 'App\\Form\\'.$className.'\\'.$prepend.$className.'Type';
-    }
-
-    /**
-     * produces my_stuff from Famoser\Class\MyStuffTrait.
-     *
-     * @param $traitWithNamespace
-     *
-     * @return string
-     */
-    public static function traitToTranslationDomain($traitWithNamespace)
-    {
-        $traitName = mb_substr($traitWithNamespace, mb_strrpos($traitWithNamespace, '\\') + 1);
-        // subtract 5 because strlen("Trait") == 5
-        return 'trait_'.static::camelCaseToTranslation(mb_substr($traitName, 0, -5));
+        return 'App\\Form\\' . $className . '\\' . $prepend . $className . 'Type';
     }
 
     /**
@@ -71,18 +69,6 @@ class NamingHelper
     }
 
     /**
-     * the property to be converted to a label.
-     *
-     * @param $propertyName
-     *
-     * @return string
-     */
-    public static function propertyToTranslation($propertyName)
-    {
-        return static::camelCaseToTranslation($propertyName);
-    }
-
-    /**
      * the property to be converted to a array for the builder including the label member.
      *
      * @param $propertyName
@@ -95,15 +81,15 @@ class NamingHelper
     }
 
     /**
-     * makes from camelCase => camel_case.
+     * the property to be converted to a label.
      *
-     * @param $camelCase
+     * @param $propertyName
      *
      * @return string
      */
-    private static function camelCaseToTranslation($camelCase)
+    public static function propertyToTranslation($propertyName)
     {
-        return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $camelCase));
+        return static::camelCaseToTranslation($propertyName);
     }
 
     /**
@@ -116,5 +102,19 @@ class NamingHelper
     public static function traitNameToTranslationForBuilder($trait)
     {
         return ['label' => 'trait.name', 'translation_domain' => static::traitToTranslationDomain($trait)];
+    }
+
+    /**
+     * produces my_stuff from Famoser\Class\MyStuffTrait.
+     *
+     * @param $traitWithNamespace
+     *
+     * @return string
+     */
+    public static function traitToTranslationDomain($traitWithNamespace)
+    {
+        $traitName = mb_substr($traitWithNamespace, mb_strrpos($traitWithNamespace, '\\') + 1);
+        // subtract 5 because strlen("Trait") == 5
+        return 'trait_' . static::camelCaseToTranslation(mb_substr($traitName, 0, -5));
     }
 }

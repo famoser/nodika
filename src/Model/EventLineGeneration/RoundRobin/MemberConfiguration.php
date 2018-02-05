@@ -16,6 +16,9 @@ use App\Model\EventLineGeneration\Base\BaseMemberConfiguration;
 
 class MemberConfiguration extends BaseMemberConfiguration
 {
+    /* @var int $order */
+    public $order;
+
     /**
      * MemberConfiguration constructor.
      *
@@ -43,7 +46,4 @@ class MemberConfiguration extends BaseMemberConfiguration
 
         return $instance;
     }
-
-    /* @var int $order */
-    public $order;
 }

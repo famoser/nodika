@@ -78,8 +78,8 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/start/{member}/{person}", name="offer_start")
      *
-     * @param Member              $member
-     * @param Person              $person
+     * @param Member $member
+     * @param Person $person
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -112,10 +112,10 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/choose_events", name="offer_choose_events")
      *
-     * @param Request             $request
-     * @param EventOffer          $eventOffer
+     * @param Request $request
+     * @param EventOffer $eventOffer
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -219,9 +219,51 @@ class OfferController extends BaseFrontendController
     }
 
     /**
+     * @param EventOffer $eventOffer
+     * @param bool $remove
+     *
+     * @return EventOfferEntry[]
+     */
+    private function getInvalidEventOfferEntries(EventOffer $eventOffer, $remove = false)
+    {
+        $settingRepo = $this->getDoctrine()->getRepository('App:OrganisationSetting');
+        $ownMember = $this->getMember();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
+        $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
+
+        /* @var EventOfferEntry[] $invalids */
+        $invalids = [];
+
+        foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
+            if ($eventOfferEntry->getEvent()->getPerson()->getId() === $eventOffer->getOfferedByPerson()->getId() ||
+                $eventOfferEntry->getEvent()->getPerson()->getId() === $eventOffer->getOfferedToPerson()->getId()) {
+                if ($eventOfferEntry->getEvent()->getStartDateTime() < $threshHold) {
+                    $invalids[] = $eventOfferEntry;
+                    if ($remove) {
+                        $em->remove($eventOfferEntry);
+                    }
+                }
+            } else {
+                $invalids[] = $eventOfferEntry;
+                if ($remove) {
+                    $em->remove($eventOfferEntry);
+                }
+            }
+        }
+        if ($remove) {
+            $em->flush();
+        }
+
+        return $invalids;
+    }
+
+    /**
      * @Route("/{eventOffer}/review", name="offer_review")
      *
-     * @param EventOffer          $eventOffer
+     * @param EventOffer $eventOffer
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -286,12 +328,36 @@ class OfferController extends BaseFrontendController
     }
 
     /**
+     * @param Member $member
+     * @param Person $person
+     * @param EventOffer $eventOffer
+     *
+     * @return bool
+     */
+    private function canAcceptOrRejectOffer(Member $member, Person $person, EventOffer $eventOffer)
+    {
+        return $member->getId() === $eventOffer->getOfferedToMember()->getId() && $person->getId() === $eventOffer->getOfferedToPerson()->getId() && OfferStatus::OPEN === $eventOffer->getStatus();
+    }
+
+    /**
+     * @param Member $member
+     * @param Person $person
+     * @param EventOffer $eventOffer
+     *
+     * @return bool
+     */
+    private function canCloseOffer(Member $member, Person $person, EventOffer $eventOffer)
+    {
+        return $member->getId() === $eventOffer->getOfferedByMember()->getId() && $person->getId() === $eventOffer->getOfferedByPerson()->getId() && OfferStatus::OPEN === $eventOffer->getStatus();
+    }
+
+    /**
      * @Route("/{eventOffer}/accept", name="offer_accept")
      *
-     * @param EventOffer                 $eventOffer
-     * @param TranslatorInterface        $translator
+     * @param EventOffer $eventOffer
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
-     * @param EmailService               $emailService
+     * @param EmailService $emailService
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -366,9 +432,9 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/reject", name="offer_reject")
      *
-     * @param EventOffer          $eventOffer
+     * @param EventOffer $eventOffer
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -404,7 +470,7 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/close", name="offer_close")
      *
-     * @param EventOffer          $eventOffer
+     * @param EventOffer $eventOffer
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -434,7 +500,7 @@ class OfferController extends BaseFrontendController
     /**
      * @Route("/{eventOffer}/remove", name="offer_remove")
      *
-     * @param EventOffer          $eventOffer
+     * @param EventOffer $eventOffer
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -460,32 +526,8 @@ class OfferController extends BaseFrontendController
     }
 
     /**
-     * @param Member     $member
-     * @param Person     $person
-     * @param EventOffer $eventOffer
-     *
-     * @return bool
-     */
-    private function canAcceptOrRejectOffer(Member $member, Person $person, EventOffer $eventOffer)
-    {
-        return $member->getId() === $eventOffer->getOfferedToMember()->getId() && $person->getId() === $eventOffer->getOfferedToPerson()->getId() && OfferStatus::OPEN === $eventOffer->getStatus();
-    }
-
-    /**
-     * @param Member     $member
-     * @param Person     $person
-     * @param EventOffer $eventOffer
-     *
-     * @return bool
-     */
-    private function canCloseOffer(Member $member, Person $person, EventOffer $eventOffer)
-    {
-        return $member->getId() === $eventOffer->getOfferedByMember()->getId() && $person->getId() === $eventOffer->getOfferedByPerson()->getId() && OfferStatus::OPEN === $eventOffer->getStatus();
-    }
-
-    /**
-     * @param Member     $member
-     * @param Person     $person
+     * @param Member $member
+     * @param Person $person
      * @param EventOffer $eventOffer
      *
      * @return bool
@@ -493,47 +535,5 @@ class OfferController extends BaseFrontendController
     private function canRemoveOffer(Member $member, Person $person, EventOffer $eventOffer)
     {
         return $member->getId() === $eventOffer->getOfferedByMember()->getId() && $person->getId() === $eventOffer->getOfferedByPerson()->getId() && OfferStatus::CREATING === $eventOffer->getStatus();
-    }
-
-    /**
-     * @param EventOffer $eventOffer
-     * @param bool       $remove
-     *
-     * @return EventOfferEntry[]
-     */
-    private function getInvalidEventOfferEntries(EventOffer $eventOffer, $remove = false)
-    {
-        $settingRepo = $this->getDoctrine()->getRepository('App:OrganisationSetting');
-        $ownMember = $this->getMember();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
-        $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
-
-        /* @var EventOfferEntry[] $invalids */
-        $invalids = [];
-
-        foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
-            if ($eventOfferEntry->getEvent()->getPerson()->getId() === $eventOffer->getOfferedByPerson()->getId() ||
-                $eventOfferEntry->getEvent()->getPerson()->getId() === $eventOffer->getOfferedToPerson()->getId()) {
-                if ($eventOfferEntry->getEvent()->getStartDateTime() < $threshHold) {
-                    $invalids[] = $eventOfferEntry;
-                    if ($remove) {
-                        $em->remove($eventOfferEntry);
-                    }
-                }
-            } else {
-                $invalids[] = $eventOfferEntry;
-                if ($remove) {
-                    $em->remove($eventOfferEntry);
-                }
-            }
-        }
-        if ($remove) {
-            $em->flush();
-        }
-
-        return $invalids;
     }
 }

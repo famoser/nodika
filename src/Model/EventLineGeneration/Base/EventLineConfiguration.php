@@ -16,6 +16,17 @@ use App\Entity\EventLine;
 
 class EventLineConfiguration
 {
+    /* @var int $id */
+    public $id;
+    /* @var string $name */
+    public $name;
+    /* @var bool $isEnabled */
+    public $isEnabled = false;
+    /* @var bool $eventsSet */
+    public $eventsSet = false;
+    /* @var EventLineConfigurationEventEntry[] $eventEntries */
+    public $eventEntries = [];
+
     /**
      * MemberConfiguration constructor.
      *
@@ -38,18 +49,6 @@ class EventLineConfiguration
     }
 
     /**
-     * @param Event[] $events
-     */
-    public function setEvents($events)
-    {
-        $this->eventEntries = [];
-        foreach ($events as $event) {
-            $this->eventEntries[] = EventLineConfigurationEventEntry::fromEvent($event);
-        }
-        $this->eventsSet = true;
-    }
-
-    /**
      * @param EventLine $eventLine
      *
      * @return static
@@ -63,14 +62,15 @@ class EventLineConfiguration
         return $val;
     }
 
-    /* @var int $id */
-    public $id;
-    /* @var string $name */
-    public $name;
-    /* @var bool $isEnabled */
-    public $isEnabled = false;
-    /* @var bool $eventsSet */
-    public $eventsSet = false;
-    /* @var EventLineConfigurationEventEntry[] $eventEntries */
-    public $eventEntries = [];
+    /**
+     * @param Event[] $events
+     */
+    public function setEvents($events)
+    {
+        $this->eventEntries = [];
+        foreach ($events as $event) {
+            $this->eventEntries[] = EventLineConfigurationEventEntry::fromEvent($event);
+        }
+        $this->eventsSet = true;
+    }
 }

@@ -34,10 +34,10 @@ class BaseAccessController extends BaseFrontendController
     }
 
     /**
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param UserTrait           $user
-     * @param FormInterface       $loginForm
+     * @param UserTrait $user
+     * @param FormInterface $loginForm
      *
      * @return FormInterface
      */
@@ -74,7 +74,7 @@ class BaseAccessController extends BaseFrontendController
     }
 
     /**
-     * @param Request               $request
+     * @param Request $request
      * @param AdvancedUserInterface $user
      */
     protected function loginUser(Request $request, AdvancedUserInterface $user)

@@ -13,6 +13,17 @@ namespace App\Model\EventLineGeneration\Base;
 
 class BaseConfiguration
 {
+    /* @var \DateTime $startDateTime */
+    public $startDateTime;
+    /* @var \DateTime $startDateTime */
+    public $endDateTime;
+    /* @var int $lengthInHours */
+    public $lengthInHours;
+    /* @var int $conflictPufferInHours */
+    public $conflictPufferInHours;
+    /* @var EventLineConfiguration[] $eventLineConfiguration */
+    public $eventLineConfiguration;
+
     /**
      * BaseConfiguration constructor.
      *
@@ -23,8 +34,8 @@ class BaseConfiguration
         if (null !== $data) {
             $this->startDateTime = new \DateTime($data->startDateTime->date);
             $this->endDateTime = new \DateTime($data->endDateTime->date);
-            $this->lengthInHours = (int) $data->lengthInHours;
-            $this->conflictPufferInHours = (int) $data->conflictPufferInHours;
+            $this->lengthInHours = (int)$data->lengthInHours;
+            $this->conflictPufferInHours = (int)$data->conflictPufferInHours;
             $this->eventLineConfiguration = [];
             foreach ($data->eventLineConfiguration as $item) {
                 $this->eventLineConfiguration[] = new EventLineConfiguration($item);
@@ -38,19 +49,4 @@ class BaseConfiguration
             $this->conflictPufferInHours = 2;
         }
     }
-
-    /* @var \DateTime $startDateTime */
-    public $startDateTime;
-
-    /* @var \DateTime $startDateTime */
-    public $endDateTime;
-
-    /* @var int $lengthInHours */
-    public $lengthInHours;
-
-    /* @var int $conflictPufferInHours */
-    public $conflictPufferInHours;
-
-    /* @var EventLineConfiguration[] $eventLineConfiguration */
-    public $eventLineConfiguration;
 }

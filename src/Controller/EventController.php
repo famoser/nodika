@@ -34,8 +34,8 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/assign", name="event_assign")
      *
-     * @param Request                    $request
-     * @param TranslatorInterface        $translator
+     * @param Request $request
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -63,7 +63,7 @@ class EventController extends BaseFrontendController
                         $events[] = $assignableEvents[$eventId];
                     }
                 } elseif ('selected_person' === $key) {
-                    $selectedPersonId = (int) $value;
+                    $selectedPersonId = (int)$value;
                     foreach ($persons as $person) {
                         if ($person->getId() === $selectedPersonId) {
                             $selectedPerson = $person;
@@ -117,28 +117,10 @@ class EventController extends BaseFrontendController
     }
 
     /**
-     * @param Member $member
-     * @param Event  $event
-     *
-     * @return bool
-     */
-    private function canConfirmEvent(Member $member, Event $event)
-    {
-        $availableEvents = $this->getDoctrine()->getRepository('App:Member')->findUnconfirmedEvents($member, $this->getPerson());
-        foreach ($availableEvents as $availableEvent) {
-            if ($availableEvent->getId() === $event->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @Route("/confirm/person/{event}", name="event_confirm_person")
      *
-     * @param Event                      $event
-     * @param TranslatorInterface        $translator
+     * @param Event $event
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -165,10 +147,28 @@ class EventController extends BaseFrontendController
     }
 
     /**
+     * @param Member $member
+     * @param Event $event
+     *
+     * @return bool
+     */
+    private function canConfirmEvent(Member $member, Event $event)
+    {
+        $availableEvents = $this->getDoctrine()->getRepository('App:Member')->findUnconfirmedEvents($member, $this->getPerson());
+        foreach ($availableEvents as $availableEvent) {
+            if ($availableEvent->getId() === $event->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @Route("/confirm/member/{event}", name="event_confirm_member")
      *
-     * @param Event                      $event
-     * @param TranslatorInterface        $translator
+     * @param Event $event
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -197,7 +197,7 @@ class EventController extends BaseFrontendController
     /**
      * @Route("/confirm/all", name="event_confirm_all")
      *
-     * @param TranslatorInterface        $translator
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -229,76 +229,9 @@ class EventController extends BaseFrontendController
     }
 
     /**
-     * @param Request $request
-     * @param Member  $member
-     *
-     * @return SearchEventModel
-     */
-    private function resolveSearchEventModel(Request $request, Member $member)
-    {
-        $organisation = $member->getOrganisation();
-
-        $startQuery = $request->query->get('start');
-        $startDateTime = new \DateTime($startQuery);
-
-        $endQuery = $request->query->get('end');
-        $endDateTime = false;
-        if (mb_strlen($endQuery) > 0) {
-            $endDateTime = new \DateTime($endQuery);
-        }
-        if (!$endDateTime) {
-            $endDateTime = clone $startDateTime;
-            $endDateTime = $endDateTime->add(new \DateInterval('P1Y'));
-        }
-
-        $memberQuery = $request->query->get('member');
-        $member = null;
-        if (is_numeric($memberQuery)) {
-            $memberQueryInt = (int) $memberQuery;
-            foreach ($organisation->getMembers() as $organisationMember) {
-                if ($organisationMember->getId() === $memberQueryInt) {
-                    $member = $organisationMember;
-                }
-            }
-        }
-
-        $eventLineQuery = $request->query->get('event_line');
-        $eventLine = null;
-        if (is_numeric($eventLineQuery)) {
-            $eventLineInt = (int) $eventLineQuery;
-            foreach ($organisation->getEventLines() as $organisationEventLine) {
-                if ($organisationEventLine->getId() === $eventLineInt) {
-                    $eventLine = $organisationEventLine;
-                }
-            }
-        }
-
-        $personQuery = $request->query->get('person');
-        $person = null;
-        if (is_numeric($personQuery)) {
-            $personQueryInt = (int) $personQuery;
-            foreach ($organisation->getMembers() as $organisationMember) {
-                foreach ($organisationMember->getPersons() as $organisationPerson) {
-                    if ($organisationPerson->getId() === $personQueryInt) {
-                        $person = $organisationPerson;
-                    }
-                }
-            }
-        }
-
-        $searchEventModel = new SearchEventModel($organisation, $startDateTime);
-        $searchEventModel->setEndDateTime($endDateTime);
-        $searchEventModel->setFilterMember($member);
-        $searchEventModel->setFilterEventLine($eventLine);
-        $searchEventModel->setFilterPerson($person);
-
-        return $searchEventModel;
-    }
-
-    /**
      * @Route("/search", name="event_search")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -341,7 +274,74 @@ class EventController extends BaseFrontendController
     }
 
     /**
-     * @param EventLineModel[]    $eventModels
+     * @param Request $request
+     * @param Member $member
+     *
+     * @return SearchEventModel
+     */
+    private function resolveSearchEventModel(Request $request, Member $member)
+    {
+        $organisation = $member->getOrganisation();
+
+        $startQuery = $request->query->get('start');
+        $startDateTime = new \DateTime($startQuery);
+
+        $endQuery = $request->query->get('end');
+        $endDateTime = false;
+        if (mb_strlen($endQuery) > 0) {
+            $endDateTime = new \DateTime($endQuery);
+        }
+        if (!$endDateTime) {
+            $endDateTime = clone $startDateTime;
+            $endDateTime = $endDateTime->add(new \DateInterval('P1Y'));
+        }
+
+        $memberQuery = $request->query->get('member');
+        $member = null;
+        if (is_numeric($memberQuery)) {
+            $memberQueryInt = (int)$memberQuery;
+            foreach ($organisation->getMembers() as $organisationMember) {
+                if ($organisationMember->getId() === $memberQueryInt) {
+                    $member = $organisationMember;
+                }
+            }
+        }
+
+        $eventLineQuery = $request->query->get('event_line');
+        $eventLine = null;
+        if (is_numeric($eventLineQuery)) {
+            $eventLineInt = (int)$eventLineQuery;
+            foreach ($organisation->getEventLines() as $organisationEventLine) {
+                if ($organisationEventLine->getId() === $eventLineInt) {
+                    $eventLine = $organisationEventLine;
+                }
+            }
+        }
+
+        $personQuery = $request->query->get('person');
+        $person = null;
+        if (is_numeric($personQuery)) {
+            $personQueryInt = (int)$personQuery;
+            foreach ($organisation->getMembers() as $organisationMember) {
+                foreach ($organisationMember->getPersons() as $organisationPerson) {
+                    if ($organisationPerson->getId() === $personQueryInt) {
+                        $person = $organisationPerson;
+                    }
+                }
+            }
+        }
+
+        $searchEventModel = new SearchEventModel($organisation, $startDateTime);
+        $searchEventModel->setEndDateTime($endDateTime);
+        $searchEventModel->setFilterMember($member);
+        $searchEventModel->setFilterEventLine($eventLine);
+        $searchEventModel->setFilterPerson($person);
+
+        return $searchEventModel;
+    }
+
+    /**
+     * @param EventLineModel[] $eventModels
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse

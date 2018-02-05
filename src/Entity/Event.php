@@ -103,150 +103,6 @@ class Event extends BaseEntity
     }
 
     /**
-     * Set startDateTime.
-     *
-     * @param \DateTime $startDateTime
-     *
-     * @return Event
-     */
-    public function setStartDateTime($startDateTime)
-    {
-        $this->startDateTime = $startDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get startDateTime.
-     *
-     * @return \DateTime
-     */
-    public function getStartDateTime()
-    {
-        return $this->startDateTime;
-    }
-
-    /**
-     * Set endDateTime.
-     *
-     * @param \DateTime $endDateTime
-     *
-     * @return Event
-     */
-    public function setEndDateTime($endDateTime)
-    {
-        $this->endDateTime = $endDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get endDateTime.
-     *
-     * @return \DateTime
-     */
-    public function getEndDateTime()
-    {
-        return $this->endDateTime;
-    }
-
-    /**
-     * Set tradeTag.
-     *
-     * @param int $tradeTag
-     *
-     * @return Event
-     */
-    public function setTradeTag($tradeTag)
-    {
-        $this->tradeTag = $tradeTag;
-
-        return $this;
-    }
-
-    /**
-     * Get tradeTag.
-     *
-     * @return int
-     */
-    public function getTradeTag()
-    {
-        return $this->tradeTag;
-    }
-
-    /**
-     * Set member.
-     *
-     * @param Member $member
-     *
-     * @return Event
-     */
-    public function setMember(Member $member = null)
-    {
-        $this->member = $member;
-
-        return $this;
-    }
-
-    /**
-     * Get member.
-     *
-     * @return Member
-     */
-    public function getMember()
-    {
-        return $this->member;
-    }
-
-    /**
-     * Set person.
-     *
-     * @param Person $person
-     *
-     * @return Event
-     */
-    public function setPerson(Person $person = null)
-    {
-        $this->person = $person;
-
-        return $this;
-    }
-
-    /**
-     * Get person.
-     *
-     * @return Person
-     */
-    public function getPerson()
-    {
-        return $this->person;
-    }
-
-    /**
-     * Set eventLine.
-     *
-     * @param EventLine $eventLine
-     *
-     * @return Event
-     */
-    public function setEventLine(EventLine $eventLine = null)
-    {
-        $this->eventLine = $eventLine;
-
-        return $this;
-    }
-
-    /**
-     * Get eventLine.
-     *
-     * @return EventLine
-     */
-    public function getEventLine()
-    {
-        return $this->eventLine;
-    }
-
-    /**
      * Add eventPast.
      *
      * @param EventPast $eventPast
@@ -287,7 +143,55 @@ class Event extends BaseEntity
      */
     public function getFullIdentifier()
     {
-        return $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT).' - '.$this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        return $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . ' - ' . $this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+    }
+
+    /**
+     * Get startDateTime.
+     *
+     * @return \DateTime
+     */
+    public function getStartDateTime()
+    {
+        return $this->startDateTime;
+    }
+
+    /**
+     * Set startDateTime.
+     *
+     * @param \DateTime $startDateTime
+     *
+     * @return Event
+     */
+    public function setStartDateTime($startDateTime)
+    {
+        $this->startDateTime = $startDateTime;
+
+        return $this;
+    }
+
+    /**
+     * Get endDateTime.
+     *
+     * @return \DateTime
+     */
+    public function getEndDateTime()
+    {
+        return $this->endDateTime;
+    }
+
+    /**
+     * Set endDateTime.
+     *
+     * @param \DateTime $endDateTime
+     *
+     * @return Event
+     */
+    public function setEndDateTime($endDateTime)
+    {
+        $this->endDateTime = $endDateTime;
+
+        return $this;
     }
 
     /**
@@ -307,6 +211,102 @@ class Event extends BaseEntity
         $pseudoObject->tradeTag = $this->getTradeTag();
 
         return json_encode($pseudoObject);
+    }
+
+    /**
+     * Get eventLine.
+     *
+     * @return EventLine
+     */
+    public function getEventLine()
+    {
+        return $this->eventLine;
+    }
+
+    /**
+     * Set eventLine.
+     *
+     * @param EventLine $eventLine
+     *
+     * @return Event
+     */
+    public function setEventLine(EventLine $eventLine = null)
+    {
+        $this->eventLine = $eventLine;
+
+        return $this;
+    }
+
+    /**
+     * Get member.
+     *
+     * @return Member
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * Set member.
+     *
+     * @param Member $member
+     *
+     * @return Event
+     */
+    public function setMember(Member $member = null)
+    {
+        $this->member = $member;
+
+        return $this;
+    }
+
+    /**
+     * Get person.
+     *
+     * @return Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
+
+    /**
+     * Set person.
+     *
+     * @param Person $person
+     *
+     * @return Event
+     */
+    public function setPerson(Person $person = null)
+    {
+        $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * Get tradeTag.
+     *
+     * @return int
+     */
+    public function getTradeTag()
+    {
+        return $this->tradeTag;
+    }
+
+    /**
+     * Set tradeTag.
+     *
+     * @param int $tradeTag
+     *
+     * @return Event
+     */
+    public function setTradeTag($tradeTag)
+    {
+        $this->tradeTag = $tradeTag;
+
+        return $this;
     }
 
     /**

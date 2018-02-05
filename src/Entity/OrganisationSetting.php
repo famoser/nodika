@@ -110,7 +110,7 @@ class OrganisationSetting extends BaseEntity
      */
     public function getFullIdentifier()
     {
-        return $this->getOrganisation()->getName().' setting';
+        return $this->getOrganisation()->getName() . ' setting';
     }
 
     /**

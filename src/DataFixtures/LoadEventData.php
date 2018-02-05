@@ -24,19 +24,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadEventData extends BaseFixture
 {
     /**
-     * create an instance with all random values.
-     *
-     * @return EventLine
-     */
-    protected function getAllRandomInstance()
-    {
-        $eventLine = new EventLine();
-        $this->fillRandomThing($eventLine);
-
-        return $eventLine;
-    }
-
-    /**
      * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
@@ -108,5 +95,18 @@ class LoadEventData extends BaseFixture
     public function getOrder()
     {
         return 20;
+    }
+
+    /**
+     * create an instance with all random values.
+     *
+     * @return EventLine
+     */
+    protected function getAllRandomInstance()
+    {
+        $eventLine = new EventLine();
+        $this->fillRandomThing($eventLine);
+
+        return $eventLine;
     }
 }

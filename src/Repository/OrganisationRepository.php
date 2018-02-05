@@ -32,9 +32,9 @@ class OrganisationRepository extends EntityRepository
 {
     /**
      * @param Organisation $organisation
-     * @param \DateTime    $dateTime
-     * @param string       $comparator
-     * @param int          $maxResults
+     * @param \DateTime $dateTime
+     * @param string $comparator
+     * @param int $maxResults
      *
      * @return Event[]
      */

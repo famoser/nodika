@@ -32,8 +32,8 @@ class BaseGenerationController extends BaseController
     }
 
     /**
-     * @param BaseConfiguration   $configuration
-     * @param Organisation        $organisation
+     * @param BaseConfiguration $configuration
+     * @param Organisation $organisation
      * @param EventLineGeneration $eventLineGeneration
      */
     protected function addEventLineConfiguration(BaseConfiguration $configuration, Organisation $organisation, EventLineGeneration $eventLineGeneration)

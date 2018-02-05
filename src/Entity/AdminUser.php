@@ -30,6 +30,18 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
     use UserTrait;
 
     /**
+     * @var array
+     */
+    private $roles = ['ROLE_MODERATOR'];
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * create new user; with required fields filled out.
      *
      * @return static
@@ -50,11 +62,6 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
     {
         return $this->getUserIdentifier();
     }
-
-    /**
-     * @var array
-     */
-    private $roles = ['ROLE_MODERATOR'];
 
     /**
      * @param string $role
@@ -106,12 +113,5 @@ class AdminUser extends BaseEntity implements UserInterface, EquatableInterface
         }
 
         return $this->isEqualToUser($user);
-    }
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
     }
 }

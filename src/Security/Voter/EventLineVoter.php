@@ -20,7 +20,7 @@ class EventLineVoter extends OrganisationVoter
 {
     /**
      * @param string $attribute An attribute
-     * @param mixed  $subject   The subject to secure, e.g. an object the user wants to access or any other PHP type
+     * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
      *
      * @return bool True if the attribute and subject are supported, false otherwise
      */
@@ -40,8 +40,8 @@ class EventLineVoter extends OrganisationVoter
     }
 
     /**
-     * @param string         $attribute
-     * @param EventLine      $subject
+     * @param string $attribute
+     * @param EventLine $subject
      * @param TokenInterface $token
      *
      * @return bool

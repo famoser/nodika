@@ -37,10 +37,10 @@ class EventController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_event_line_event_new")
      *
-     * @param Request                    $request
-     * @param Organisation               $organisation
-     * @param EventLine                  $eventLine
-     * @param TranslatorInterface        $translator
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return Response
@@ -85,11 +85,11 @@ class EventController extends BaseController
     /**
      * @Route("/{event}/edit", name="administration_organisation_event_line_event_edit")
      *
-     * @param Request                    $request
-     * @param Organisation               $organisation
-     * @param EventLine                  $eventLine
-     * @param Event                      $event
-     * @param TranslatorInterface        $translator
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param Event $event
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return Response
@@ -134,11 +134,11 @@ class EventController extends BaseController
     /**
      * @Route("/{event}/remove", name="administration_organisation_event_line_event_remove")
      *
-     * @param Request                    $request
-     * @param Organisation               $organisation
-     * @param EventLine                  $eventLine
-     * @param Event                      $event
-     * @param TranslatorInterface        $translator
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param Event $event
+     * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return Response
@@ -182,9 +182,9 @@ class EventController extends BaseController
     /**
      * @Route("/{event}/view", name="administration_organisation_event_line_event_view")
      *
-     * @param Organisation               $organisation
-     * @param EventLine                  $eventLine
-     * @param Event                      $event
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param Event $event
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return Response

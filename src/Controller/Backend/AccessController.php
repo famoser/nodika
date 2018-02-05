@@ -25,7 +25,7 @@ class AccessController extends BaseAccessController
     /**
      * @Route("/login", name="backend_login")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
      *
      * @return Response

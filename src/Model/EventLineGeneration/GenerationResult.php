@@ -13,6 +13,11 @@ namespace App\Model\EventLineGeneration;
 
 class GenerationResult
 {
+    /* @var \DateTime $generationDateTime */
+    public $generationDateTime;
+    /* @var GeneratedEvent[] $events */
+    public $events;
+
     public function __construct($data)
     {
         $this->events = [];
@@ -30,10 +35,4 @@ class GenerationResult
             }
         }
     }
-
-    /* @var \DateTime $generationDateTime */
-    public $generationDateTime;
-
-    /* @var GeneratedEvent[] $events */
-    public $events;
 }

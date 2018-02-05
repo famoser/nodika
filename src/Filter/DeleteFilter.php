@@ -18,6 +18,6 @@ class DeleteFilter extends SQLFilter
 {
     public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
     {
-        return $targetTableAlias.'.deleted_at IS NULL'; // getParameter applies quoting automatically
+        return $targetTableAlias . '.deleted_at IS NULL'; // getParameter applies quoting automatically
     }
 }

@@ -69,7 +69,7 @@ class IdealQueueMember
         }
 
         foreach ($removeKeys as $removeKey) {
-            $val = (int) $this->history[$removeKey];
+            $val = (int)$this->history[$removeKey];
             if (0 === $val) {
                 ++$this->availableWeekdayCount;
             } elseif (1 === $val) {
@@ -88,7 +88,7 @@ class IdealQueueMember
      */
     public function calculatePartDone()
     {
-        $this->partDone = (float) $this->doneEventCount / (float) $this->totalEventCount;
+        $this->partDone = (float)$this->doneEventCount / (float)$this->totalEventCount;
     }
 
     /**

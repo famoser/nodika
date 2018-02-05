@@ -52,6 +52,19 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
+     * @param Person $person
+     *
+     * @return static
+     */
+    public static function createFromPerson(Person $person)
+    {
+        $user = static::createUserFromEmail($person->getEmail());
+        $user->setPerson($person);
+
+        return $user;
+    }
+
+    /**
      * Add setting.
      *
      * @param Setting $setting
@@ -86,6 +99,16 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
+     * Get person.
+     *
+     * @return Person
+     */
+    public function getPerson()
+    {
+        return $this->person;
+    }
+
+    /**
      * Set person.
      *
      * @param Person $person
@@ -97,16 +120,6 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
         $this->person = $person;
 
         return $this;
-    }
-
-    /**
-     * Get person.
-     *
-     * @return Person
-     */
-    public function getPerson()
-    {
-        return $this->person;
     }
 
     /**
@@ -151,19 +164,6 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
         }
 
         return $this->isEqualToUser($user);
-    }
-
-    /**
-     * @param Person $person
-     *
-     * @return static
-     */
-    public static function createFromPerson(Person $person)
-    {
-        $user = static::createUserFromEmail($person->getEmail());
-        $user->setPerson($person);
-
-        return $user;
     }
 
     /**

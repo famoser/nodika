@@ -216,22 +216,6 @@ class Person extends BaseEntity
     }
 
     /**
-     * @return \DateTime
-     */
-    public function getInvitationDateTime()
-    {
-        return $this->invitationDateTime;
-    }
-
-    /**
-     * @param mixed $invitationDateTime
-     */
-    public function setInvitationDateTime($invitationDateTime)
-    {
-        $this->invitationDateTime = $invitationDateTime;
-    }
-
-    /**
      * @return string
      */
     public function getInvitationHash()
@@ -253,5 +237,21 @@ class Person extends BaseEntity
     public function getHasBeenInvited()
     {
         return null !== $this->getInvitationDateTime();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getInvitationDateTime()
+    {
+        return $this->invitationDateTime;
+    }
+
+    /**
+     * @param mixed $invitationDateTime
+     */
+    public function setInvitationDateTime($invitationDateTime)
+    {
+        $this->invitationDateTime = $invitationDateTime;
     }
 }

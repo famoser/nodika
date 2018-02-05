@@ -17,12 +17,28 @@ use App\Enum\EventChangeType;
 
 class EventPastEvaluation
 {
+    private $changedAtDateTime;
+    private $changedByPerson;
+    private $eventChangeType;
+    private $hasChangedMember = false;
+    private $oldMember;
+    private $newMember;
+    private $hasChangedPerson = false;
+    private $oldPerson;
+    private $newPerson;
+    private $hasChangedStartDateTime = false;
+    private $oldStartDateTime;
+    private $newStartDateTime;
+    private $hasChangedEndDateTime = false;
+    private $oldEndDateTime;
+    private $newEndDateTime;
+
     /**
      * EventPastEvaluation constructor.
      *
      * @param \DateTime $changedAtDateTime
-     * @param Person    $changedByPerson
-     * @param int       $eventChangeType
+     * @param Person $changedByPerson
+     * @param int $eventChangeType
      */
     public function __construct(\DateTime $changedAtDateTime, Person $changedByPerson, $eventChangeType)
     {
@@ -30,10 +46,6 @@ class EventPastEvaluation
         $this->changedByPerson = $changedByPerson;
         $this->eventChangeType = $eventChangeType;
     }
-
-    private $changedAtDateTime;
-    private $changedByPerson;
-    private $eventChangeType;
 
     /**
      * call this function to show that the assigned Member has changed.
@@ -48,10 +60,6 @@ class EventPastEvaluation
         $this->newMember = $newMember;
     }
 
-    private $hasChangedMember = false;
-    private $oldMember;
-    private $newMember;
-
     /**
      * call this function to show that the assigned Person has changed.
      *
@@ -64,10 +72,6 @@ class EventPastEvaluation
         $this->oldPerson = $oldPerson;
         $this->newPerson = $newPerson;
     }
-
-    private $hasChangedPerson = false;
-    private $oldPerson;
-    private $newPerson;
 
     /**
      * call this function to show that the startDateTime has changed.
@@ -82,10 +86,6 @@ class EventPastEvaluation
         $this->newStartDateTime = $newStartDateTime;
     }
 
-    private $hasChangedStartDateTime = false;
-    private $oldStartDateTime;
-    private $newStartDateTime;
-
     /**
      * call this function to show that the endDateTime has changed.
      *
@@ -98,10 +98,6 @@ class EventPastEvaluation
         $this->oldEndDateTime = $oldEndDateTime;
         $this->newEndDateTime = $newEndDateTime;
     }
-
-    private $hasChangedEndDateTime = false;
-    private $oldEndDateTime;
-    private $newEndDateTime;
 
     /**
      * @return \DateTime

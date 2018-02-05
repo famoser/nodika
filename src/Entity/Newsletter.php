@@ -45,6 +45,16 @@ class Newsletter extends BaseEntity
     private $message;
 
     /**
+     * Get choice.
+     *
+     * @return int
+     */
+    public function getChoice()
+    {
+        return $this->choice;
+    }
+
+    /**
      * Set choice.
      *
      * @param int $choice
@@ -59,13 +69,13 @@ class Newsletter extends BaseEntity
     }
 
     /**
-     * Get choice.
+     * Get message.
      *
-     * @return int
+     * @return string
      */
-    public function getChoice()
+    public function getMessage()
     {
-        return $this->choice;
+        return $this->message;
     }
 
     /**
@@ -80,16 +90,6 @@ class Newsletter extends BaseEntity
         $this->message = $message;
 
         return $this;
-    }
-
-    /**
-     * Get message.
-     *
-     * @return string
-     */
-    public function getMessage()
-    {
-        return $this->message;
     }
 
     /**

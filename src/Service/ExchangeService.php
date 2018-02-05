@@ -39,9 +39,9 @@ class ExchangeService implements ExchangeServiceInterface
      * ExchangeService constructor.
      *
      * @param TranslatorInterface $translator
-     * @param FlashBagInterface   $flashBag
-     * @param ValidatorInterface  $validator
-     * @param RegistryInterface   $registry
+     * @param FlashBagInterface $flashBag
+     * @param ValidatorInterface $validator
+     * @param RegistryInterface $registry
      */
     public function __construct(TranslatorInterface $translator, FlashBagInterface $flashBag, ValidatorInterface $validator, RegistryInterface $registry)
     {
@@ -75,8 +75,8 @@ class ExchangeService implements ExchangeServiceInterface
      * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
      * returns true on success.
      *
-     * @param FormInterface   $createForm
-     * @param Closure         $createNewEntityClosure
+     * @param FormInterface $createForm
+     * @param Closure $createNewEntityClosure
      * @param ImportFileModel $importFileModel
      *
      * @throws \Doctrine\ORM\ORMException
@@ -114,7 +114,7 @@ class ExchangeService implements ExchangeServiceInterface
                         return false;
                     }
                     for ($i = 0; $i < count($header); ++$i) {
-                        $accessorNames[$i] = 'set'.mb_strtoupper(mb_substr($header[$i], 0, 1)).mb_substr($header[$i], 1);
+                        $accessorNames[$i] = 'set' . mb_strtoupper(mb_substr($header[$i], 0, 1)) . mb_substr($header[$i], 1);
                     }
                     continue;
                 }
@@ -158,8 +158,8 @@ class ExchangeService implements ExchangeServiceInterface
      * imports the content of the csv file from the import form into the database and sets a flash message if an error occurred
      * returns true on success.
      *
-     * @param Closure         $entitySetClosure
-     * @param Closure         $validateHeaderClosure
+     * @param Closure $entitySetClosure
+     * @param Closure $validateHeaderClosure
      * @param ImportFileModel $importFileModel
      *
      * @throws \Doctrine\ORM\ORMException

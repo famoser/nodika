@@ -13,6 +13,11 @@ namespace App\Model\EventLineGeneration\Nodika;
 
 class MemberEventTypeDistribution
 {
+    /* @var MemberConfiguration $newMemberConfiguration */
+    public $newMemberConfiguration;
+    /* @var EventTypeConfiguration $eventTypeAssignment */
+    public $eventTypeAssignment;
+
     /**
      * MemberEventTypeDistribution constructor.
      *
@@ -25,9 +30,4 @@ class MemberEventTypeDistribution
             $this->eventTypeAssignment = new EventTypeConfiguration($data->eventTypeAssignment);
         }
     }
-
-    /* @var MemberConfiguration $newMemberConfiguration */
-    public $newMemberConfiguration;
-    /* @var EventTypeConfiguration $eventTypeAssignment */
-    public $eventTypeAssignment;
 }

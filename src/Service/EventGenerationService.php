@@ -42,24 +42,20 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class EventGenerationService implements EventGenerationServiceInterface
 {
+    const ACCURACY_THRESHOLD = 0.0001;
+    const RANDOM_ACCURACY = 1000;
     /* @var RegistryInterface $doctrine */
     private $doctrine;
-
     /* @var TranslatorInterface $translator */
     private $translator;
 
+    /* the accuracy of double comparision at critical points */
     /* @var Session $session */
     private $session;
 
+    /* the random accuracy used. must be a valid input for random_int. */
     /* @var EventPastEvaluationService $eventPastEvaluationService */
     private $eventPastEvaluationService;
-
-    /* the accuracy of double comparision at critical points */
-    const ACCURACY_THRESHOLD = 0.0001;
-
-    /* the random accuracy used. must be a valid input for random_int. */
-    const RANDOM_ACCURACY = 1000;
-
     /**
      * @var LoggerInterface
      */
@@ -75,196 +71,11 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * @param $message
-     */
-    private function displayError($message)
-    {
-        $this->session->getFlashBag()->set(StaticMessageHelper::FLASH_ERROR, $message);
-    }
-
-    /**
-     * @param $message
-     */
-    private function displaySuccess($message)
-    {
-        $this->session->getFlashBag()->set(StaticMessageHelper::FLASH_SUCCESS, $message);
-    }
-
-    /**
-     * @param RoundRobinOutput $roundRobinResult
-     * @param int              $status
-     *
-     * @return RoundRobinOutput
-     */
-    private function returnRoundRobinError(RoundRobinOutput $roundRobinResult, $status)
-    {
-        $this->displayError(
-            $this->translator->trans(
-                RoundRobinStatusCode::getTranslation($status),
-                [],
-                RoundRobinStatusCode::getTranslationDomainStatic()
-            )
-        );
-
-        $roundRobinResult->roundRobinStatusCode = $status;
-
-        return $roundRobinResult;
-    }
-
-    /**
-     * @param NodikaOutput $nodikaOutput
-     * @param int          $status
-     *
-     * @return NodikaOutput
-     */
-    private function returnNodikaError(NodikaOutput $nodikaOutput, $status)
-    {
-        $this->displayError(
-            $this->translator->trans(
-                NodikaStatusCode::getTranslation($status),
-                [],
-                NodikaStatusCode::getTranslationDomainStatic()
-            )
-        );
-
-        $nodikaOutput->nodikaStatusCode = $status;
-
-        return $nodikaOutput;
-    }
-
-    /**
-     * @param RoundRobinOutput $roundRobinResult
-     *
-     * @return RoundRobinOutput
-     */
-    private function returnRoundRobinSuccess(RoundRobinOutput $roundRobinResult)
-    {
-        $status = RoundRobinStatusCode::SUCCESSFUL;
-        $this->displaySuccess(
-            $this->translator->trans(
-                RoundRobinStatusCode::getTranslation($status),
-                [],
-                RoundRobinStatusCode::getTranslationDomainStatic()
-            )
-        );
-
-        $roundRobinResult->roundRobinStatusCode = $status;
-
-        return $roundRobinResult;
-    }
-
-    /**
-     * @param NodikaOutput $nodikaOutput
-     *
-     * @return NodikaOutput
-     */
-    private function returnNodikaSuccess(NodikaOutput $nodikaOutput)
-    {
-        $status = NodikaStatusCode::SUCCESSFUL;
-        $this->displaySuccess(
-            $this->translator->trans(
-                NodikaStatusCode::getTranslation($status),
-                [],
-                NodikaStatusCode::getTranslationDomainStatic()
-            )
-        );
-
-        $nodikaOutput->nodikaStatusCode = $status;
-
-        return $nodikaOutput;
-    }
-
-    /**
-     * @param BaseConfiguration $configuration
-     *
-     * @return \Closure with arguments ($currentEventCount, $memberId)
-     */
-    private function buildConflictBuffer(BaseConfiguration $configuration)
-    {
-        /* @var [][] $allEventLineEvents */
-        $allEventLineEvents = [];
-        $conflictPufferInSeconds = $configuration->conflictPufferInHours * 60 * 60;
-        foreach ($configuration->eventLineConfiguration as $item) {
-            if ($item->isEnabled) {
-                $eventLineEvents = [];
-                foreach ($item->eventEntries as $eventEntry) {
-                    $myArr = [];
-                    $myArr['start'] = $eventEntry->startDateTime->getTimestamp() - $conflictPufferInSeconds;
-                    $myArr['end'] = $eventEntry->endDateTime->getTimestamp() + $conflictPufferInSeconds;
-                    $myArr['id'] = $eventEntry->memberId;
-                    $eventLineEvents[$eventEntry->startDateTime->getTimestamp()][] = $myArr;
-                }
-                ksort($eventLineEvents);
-                $collapsedArray = call_user_func_array('array_merge', $eventLineEvents);
-                $allEventLineEvents[] = $collapsedArray;
-            }
-        }
-
-        $eventLineCount = count($allEventLineEvents);
-        $activeIndexes = [];
-        $eventLineCounts = [];
-        for ($i = 0; $i < $eventLineCount; ++$i) {
-            $activeIndexes[$i] = 0;
-            $eventLineCounts[$i] = count($allEventLineEvents[$i]);
-        }
-
-        $conflictBuffer = [];
-        $assignedEventCount = 0;
-
-        $currentDate = clone $configuration->startDateTime;
-        while ($currentDate < $configuration->endDateTime) {
-            $endDate = clone $currentDate;
-            $endDate = $this->addInterval($endDate, $configuration);
-            $startTimeStamp = $currentDate->getTimestamp();
-            $endTimeStamp = $endDate->getTimestamp();
-            $currentConflictBuffer = [];
-            for ($i = 0; $i < $eventLineCount; ++$i) {
-                for ($j = $activeIndexes[$i]; $j < $eventLineCounts[$i]; ++$j) {
-                    $currentEvent = $allEventLineEvents[$i][$j];
-                    if ($currentEvent['end'] < $startTimeStamp) {
-                        //not in critical zone yet
-                        ++$activeIndexes[$i];
-                    } else {
-                        //our active event begins before $currentEvent
-                        if ($currentEvent['start'] >= $startTimeStamp) {
-                            //so it must end inside or after $currentEvent
-                            if (($currentEvent['start'] <= $endTimeStamp && $currentEvent['end'] >= $endTimeStamp) ||
-                                $currentEvent['end'] <= $endTimeStamp) {
-                                $currentConflictBuffer[] = $currentEvent['id'];
-                                continue;
-                            }
-                        }
-                        //our active events begins between $currentEvent
-                        if ($currentEvent['start'] <= $startTimeStamp && $currentEvent['end'] >= $startTimeStamp) {
-                            $currentConflictBuffer[] = $currentEvent['id'];
-                            continue;
-                        }
-
-                        //no more assignment found; stop loop
-                        break;
-                    }
-                }
-            }
-
-            $conflictBuffer[$assignedEventCount] = $currentConflictBuffer;
-            ++$assignedEventCount;
-            $currentDate = $endDate;
-        }
-
-        $myFunc = function ($currentEventCount, $member) use ($conflictBuffer) {
-            /* @var BaseMemberConfiguration $member */
-            return !in_array($member->id, $conflictBuffer[$currentEventCount], true);
-        };
-
-        return $myFunc;
-    }
-
-    /**
      * tries to generate the events
      * returns true if successful.
      *
      * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable                $memberAllowedCallable   with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
      *
      * @return RoundRobinOutput
      */
@@ -369,11 +180,184 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
+     * @param BaseConfiguration $configuration
+     *
+     * @return \Closure with arguments ($currentEventCount, $memberId)
+     */
+    private function buildConflictBuffer(BaseConfiguration $configuration)
+    {
+        /* @var [][] $allEventLineEvents */
+        $allEventLineEvents = [];
+        $conflictPufferInSeconds = $configuration->conflictPufferInHours * 60 * 60;
+        foreach ($configuration->eventLineConfiguration as $item) {
+            if ($item->isEnabled) {
+                $eventLineEvents = [];
+                foreach ($item->eventEntries as $eventEntry) {
+                    $myArr = [];
+                    $myArr['start'] = $eventEntry->startDateTime->getTimestamp() - $conflictPufferInSeconds;
+                    $myArr['end'] = $eventEntry->endDateTime->getTimestamp() + $conflictPufferInSeconds;
+                    $myArr['id'] = $eventEntry->memberId;
+                    $eventLineEvents[$eventEntry->startDateTime->getTimestamp()][] = $myArr;
+                }
+                ksort($eventLineEvents);
+                $collapsedArray = call_user_func_array('array_merge', $eventLineEvents);
+                $allEventLineEvents[] = $collapsedArray;
+            }
+        }
+
+        $eventLineCount = count($allEventLineEvents);
+        $activeIndexes = [];
+        $eventLineCounts = [];
+        for ($i = 0; $i < $eventLineCount; ++$i) {
+            $activeIndexes[$i] = 0;
+            $eventLineCounts[$i] = count($allEventLineEvents[$i]);
+        }
+
+        $conflictBuffer = [];
+        $assignedEventCount = 0;
+
+        $currentDate = clone $configuration->startDateTime;
+        while ($currentDate < $configuration->endDateTime) {
+            $endDate = clone $currentDate;
+            $endDate = $this->addInterval($endDate, $configuration);
+            $startTimeStamp = $currentDate->getTimestamp();
+            $endTimeStamp = $endDate->getTimestamp();
+            $currentConflictBuffer = [];
+            for ($i = 0; $i < $eventLineCount; ++$i) {
+                for ($j = $activeIndexes[$i]; $j < $eventLineCounts[$i]; ++$j) {
+                    $currentEvent = $allEventLineEvents[$i][$j];
+                    if ($currentEvent['end'] < $startTimeStamp) {
+                        //not in critical zone yet
+                        ++$activeIndexes[$i];
+                    } else {
+                        //our active event begins before $currentEvent
+                        if ($currentEvent['start'] >= $startTimeStamp) {
+                            //so it must end inside or after $currentEvent
+                            if (($currentEvent['start'] <= $endTimeStamp && $currentEvent['end'] >= $endTimeStamp) ||
+                                $currentEvent['end'] <= $endTimeStamp) {
+                                $currentConflictBuffer[] = $currentEvent['id'];
+                                continue;
+                            }
+                        }
+                        //our active events begins between $currentEvent
+                        if ($currentEvent['start'] <= $startTimeStamp && $currentEvent['end'] >= $startTimeStamp) {
+                            $currentConflictBuffer[] = $currentEvent['id'];
+                            continue;
+                        }
+
+                        //no more assignment found; stop loop
+                        break;
+                    }
+                }
+            }
+
+            $conflictBuffer[$assignedEventCount] = $currentConflictBuffer;
+            ++$assignedEventCount;
+            $currentDate = $endDate;
+        }
+
+        $myFunc = function ($currentEventCount, $member) use ($conflictBuffer) {
+            /* @var BaseMemberConfiguration $member */
+            return !in_array($member->id, $conflictBuffer[$currentEventCount], true);
+        };
+
+        return $myFunc;
+    }
+
+    private function addInterval(\DateTime $dateTime, BaseConfiguration $configuration)
+    {
+        $hours = $configuration->lengthInHours;
+        $days = 0;
+        while ($hours >= 24) {
+            ++$days;
+            $hours -= 24;
+        }
+
+        if ($hours >= 12) {
+            ++$days;
+            $hours = 24 - $hours;
+            $daysAddInterval = new \DateInterval('P' . $days . 'D');
+            $dateTime->add($daysAddInterval);
+            $hoursRemoveInterval = new \DateInterval('PT' . $hours . 'H');
+            $dateTime->sub($hoursRemoveInterval);
+        } else {
+            if ($days > 0) {
+                $daysAddInterval = new \DateInterval('P' . $days . 'D');
+                $dateTime->add($daysAddInterval);
+            }
+            if ($hours > 0) {
+                $hoursAddInterval = new \DateInterval('PT' . $hours . 'H');
+                $dateTime->sub($hoursAddInterval);
+            }
+        }
+
+        return $dateTime;
+    }
+
+    /**
+     * @param RoundRobinOutput $roundRobinResult
+     * @param int $status
+     *
+     * @return RoundRobinOutput
+     */
+    private function returnRoundRobinError(RoundRobinOutput $roundRobinResult, $status)
+    {
+        $this->displayError(
+            $this->translator->trans(
+                RoundRobinStatusCode::getTranslation($status),
+                [],
+                RoundRobinStatusCode::getTranslationDomainStatic()
+            )
+        );
+
+        $roundRobinResult->roundRobinStatusCode = $status;
+
+        return $roundRobinResult;
+    }
+
+    /**
+     * @param $message
+     */
+    private function displayError($message)
+    {
+        $this->session->getFlashBag()->set(StaticMessageHelper::FLASH_ERROR, $message);
+    }
+
+    /**
+     * @param RoundRobinOutput $roundRobinResult
+     *
+     * @return RoundRobinOutput
+     */
+    private function returnRoundRobinSuccess(RoundRobinOutput $roundRobinResult)
+    {
+        $status = RoundRobinStatusCode::SUCCESSFUL;
+        $this->displaySuccess(
+            $this->translator->trans(
+                RoundRobinStatusCode::getTranslation($status),
+                [],
+                RoundRobinStatusCode::getTranslationDomainStatic()
+            )
+        );
+
+        $roundRobinResult->roundRobinStatusCode = $status;
+
+        return $roundRobinResult;
+    }
+
+    /**
+     * @param $message
+     */
+    private function displaySuccess($message)
+    {
+        $this->session->getFlashBag()->set(StaticMessageHelper::FLASH_SUCCESS, $message);
+    }
+
+    /**
      * persist the events associated with this generation in the database.
      *
      * @param EventLineGeneration $generation
-     * @param GenerationResult    $generationResult
-     * @param Person              $person
+     * @param GenerationResult $generationResult
+     * @param Person $person
      *
      * @return bool
      */
@@ -520,19 +504,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * creates a lucky score.
      *
-     * @param $totalPoints
-     * @param $reachedPoints
-     *
-     * @return float
-     */
-    private function convertToLuckyScore($totalPoints, $reachedPoints)
-    {
-        return ($reachedPoints / $totalPoints) * 100.0;
-    }
-
-    /**
-     * creates a lucky score.
-     *
      * @param float $totalPoints
      * @param float $luckyScore
      *
@@ -548,11 +519,11 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * distribute the days to the members.
      *
-     * @param array $partiesArray         is an array of the form (int => double) (target points per member)
+     * @param array $partiesArray is an array of the form (int => double) (target points per member)
      * @param array $distributedDaysArray is an array of the form (int => (int => int)) (distributed dayKey => dayCount per member)
-     * @param float $dayValue             the value of this day for $distributedPointsArray calculation
-     * @param int   $dayCount             the amount of
-     * @param int   $dayKey               the key of this day used in $distributedDaysArray
+     * @param float $dayValue the value of this day for $distributedPointsArray calculation
+     * @param int $dayCount the amount of
+     * @param int $dayKey the key of this day used in $distributedDaysArray
      */
     private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayCount, $dayKey)
     {
@@ -570,8 +541,8 @@ class EventGenerationService implements EventGenerationServiceInterface
      * according to the share of one party into the bucket it secures that bucket with that probability
      * the parties are distributed to the buckets to be in as few buckets as possible.
      *
-     * @param array $parties      is an array of the form (int => double)
-     * @param int   $bucketsCount the number of buckets to distribute
+     * @param array $parties is an array of the form (int => double)
+     * @param int $bucketsCount the number of buckets to distribute
      *
      * @return array is an array of the form (int => int)
      */
@@ -580,7 +551,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         //prepare party sizes
         $myParties = [];
         foreach ($parties as $partyId => $partySize) {
-            $myParties[$partyId] = (int) ($partySize * 10000);
+            $myParties[$partyId] = (int)($partySize * 10000);
         }
 
         //prepare parties (and sort by size)
@@ -606,7 +577,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         //prepare buckets
-        $bucketSize = (float) $totalSize / $bucketsCount;
+        $bucketSize = (float)$totalSize / $bucketsCount;
 
         $remainingBucketSizes = [];
         $bucketMembers = [];
@@ -697,11 +668,24 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
+     * creates a lucky score.
+     *
+     * @param $totalPoints
+     * @param $reachedPoints
+     *
+     * @return float
+     */
+    private function convertToLuckyScore($totalPoints, $reachedPoints)
+    {
+        return ($reachedPoints / $totalPoints) * 100.0;
+    }
+
+    /**
      * tries to generate the events
      * returns true if successful.
      *
      * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable            $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
      *
      * @return NodikaOutput
      */
@@ -750,7 +734,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $idealQueueMembers[$idealQueueMember->id] = $idealQueueMember;
         }
 
-        $idealQueue = (array) ($nodikaConfiguration->beforeEvents);
+        $idealQueue = (array)($nodikaConfiguration->beforeEvents);
         if (count($idealQueue) > $totalEvents) {
             //cut off too large beginning arrays
             $idealQueue = array_slice($idealQueue, $totalEvents);
@@ -987,39 +971,51 @@ class EventGenerationService implements EventGenerationServiceInterface
         $nodikaOutput->endDateTime = $startDateTime;
         $nodikaOutput->lengthInHours = $nodikaConfiguration->lengthInHours;
         $nodikaOutput->memberConfiguration = $members;
-        $nodikaOutput->beforeEvents = array_merge((array) ($nodikaConfiguration->beforeEvents), $idealQueue);
+        $nodikaOutput->beforeEvents = array_merge((array)($nodikaConfiguration->beforeEvents), $idealQueue);
         $nodikaOutput->generationResult = $generationResult;
 
         return $this->returnNodikaSuccess($nodikaOutput);
     }
 
-    private function addInterval(\DateTime $dateTime, BaseConfiguration $configuration)
+    /**
+     * @param NodikaOutput $nodikaOutput
+     * @param int $status
+     *
+     * @return NodikaOutput
+     */
+    private function returnNodikaError(NodikaOutput $nodikaOutput, $status)
     {
-        $hours = $configuration->lengthInHours;
-        $days = 0;
-        while ($hours >= 24) {
-            ++$days;
-            $hours -= 24;
-        }
+        $this->displayError(
+            $this->translator->trans(
+                NodikaStatusCode::getTranslation($status),
+                [],
+                NodikaStatusCode::getTranslationDomainStatic()
+            )
+        );
 
-        if ($hours >= 12) {
-            ++$days;
-            $hours = 24 - $hours;
-            $daysAddInterval = new \DateInterval('P'.$days.'D');
-            $dateTime->add($daysAddInterval);
-            $hoursRemoveInterval = new \DateInterval('PT'.$hours.'H');
-            $dateTime->sub($hoursRemoveInterval);
-        } else {
-            if ($days > 0) {
-                $daysAddInterval = new \DateInterval('P'.$days.'D');
-                $dateTime->add($daysAddInterval);
-            }
-            if ($hours > 0) {
-                $hoursAddInterval = new \DateInterval('PT'.$hours.'H');
-                $dateTime->sub($hoursAddInterval);
-            }
-        }
+        $nodikaOutput->nodikaStatusCode = $status;
 
-        return $dateTime;
+        return $nodikaOutput;
+    }
+
+    /**
+     * @param NodikaOutput $nodikaOutput
+     *
+     * @return NodikaOutput
+     */
+    private function returnNodikaSuccess(NodikaOutput $nodikaOutput)
+    {
+        $status = NodikaStatusCode::SUCCESSFUL;
+        $this->displaySuccess(
+            $this->translator->trans(
+                NodikaStatusCode::getTranslation($status),
+                [],
+                NodikaStatusCode::getTranslationDomainStatic()
+            )
+        );
+
+        $nodikaOutput->nodikaStatusCode = $status;
+
+        return $nodikaOutput;
     }
 }

@@ -23,9 +23,9 @@ use Doctrine\ORM\EntityRepository;
 class PersonRepository extends EntityRepository
 {
     /**
-     * @param Person    $person
+     * @param Person $person
      * @param \DateTime $dateTime
-     * @param string    $comparator
+     * @param string $comparator
      *
      * @return array
      */

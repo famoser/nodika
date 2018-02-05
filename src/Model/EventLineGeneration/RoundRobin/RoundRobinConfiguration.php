@@ -15,6 +15,11 @@ use App\Model\EventLineGeneration\Base\BaseConfiguration;
 
 class RoundRobinConfiguration extends BaseConfiguration
 {
+    /* @var bool $randomOrderMade */
+    public $randomOrderMade;
+    /* @var MemberConfiguration[] $memberConfigurations */
+    public $memberConfigurations;
+
     /**
      * RoundRobinConfiguration constructor.
      *
@@ -33,10 +38,4 @@ class RoundRobinConfiguration extends BaseConfiguration
         }
         parent::__construct($data);
     }
-
-    /* @var bool $randomOrderMade */
-    public $randomOrderMade;
-
-    /* @var MemberConfiguration[] $memberConfigurations */
-    public $memberConfigurations;
 }

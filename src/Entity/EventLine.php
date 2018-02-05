@@ -69,6 +69,16 @@ class EventLine extends BaseEntity
     }
 
     /**
+     * Get organisation.
+     *
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
      * Set organisation.
      *
      * @param Organisation $organisation
@@ -80,16 +90,6 @@ class EventLine extends BaseEntity
         $this->organisation = $organisation;
 
         return $this;
-    }
-
-    /**
-     * Get organisation.
-     *
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
     }
 
     /**

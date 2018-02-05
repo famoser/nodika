@@ -18,21 +18,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 class LoadPersonData extends BaseFixture
 {
     /**
-     * create an instance with all random values.
-     *
-     * @return Person
-     */
-    protected function getAllRandomInstance()
-    {
-        $person = new Person();
-        $this->fillRandomAddress($person);
-        $this->fillRandomCommunication($person);
-        $this->fillRandomPerson($person);
-
-        return $person;
-    }
-
-    /**
      * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
@@ -59,6 +44,21 @@ class LoadPersonData extends BaseFixture
         $manager->flush();
 
         $this->setReference('person-3', $person);
+    }
+
+    /**
+     * create an instance with all random values.
+     *
+     * @return Person
+     */
+    protected function getAllRandomInstance()
+    {
+        $person = new Person();
+        $this->fillRandomAddress($person);
+        $this->fillRandomCommunication($person);
+        $this->fillRandomPerson($person);
+
+        return $person;
     }
 
     /**

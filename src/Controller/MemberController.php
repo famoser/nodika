@@ -46,7 +46,7 @@ class MemberController extends BaseFrontendController
     /**
      * @Route("/edit", name="member_edit")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -110,7 +110,7 @@ class MemberController extends BaseFrontendController
     /**
      * @Route("/remove_person/{person}/confirm", name="member_remove_person_confirm")
      *
-     * @param Person              $person
+     * @param Person $person
      * @param TranslatorInterface $translator
      *
      * @return Response

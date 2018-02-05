@@ -54,7 +54,7 @@ class EventType extends BaseCrudAbstractType
                     'class' => Member::class,
                     'query_builder' => function (MemberRepository $er) use ($organisation) {
                         return $er->getByOrganisationQueryBuilder($organisation);
-                    }, ]
+                    },]
             );
             $form->add('startDateTime', DateTimeType::class, $transArray + $dateArray);
             $form->add('endDateTime', DateTimeType::class, $transArray + $dateArray);

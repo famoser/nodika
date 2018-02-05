@@ -66,27 +66,13 @@ class Invoice extends BaseEntity
     private $organisation;
 
     /**
-     * Set invoiceDateTime.
-     *
-     * @param \DateTime $invoiceDateTime
-     *
-     * @return Invoice
-     */
-    public function setInvoiceDateTime($invoiceDateTime)
-    {
-        $this->invoiceDateTime = $invoiceDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get invoiceDateTime.
+     * Get paymentDateTime.
      *
      * @return \DateTime
      */
-    public function getInvoiceDateTime()
+    public function getPaymentDateTime()
     {
-        return $this->invoiceDateTime;
+        return $this->paymentDateTime;
     }
 
     /**
@@ -104,13 +90,13 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get paymentDateTime.
+     * Get paymentStatus.
      *
-     * @return \DateTime
+     * @return int
      */
-    public function getPaymentDateTime()
+    public function getPaymentStatus()
     {
-        return $this->paymentDateTime;
+        return $this->paymentStatus;
     }
 
     /**
@@ -128,13 +114,13 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get paymentStatus.
+     * Get invoiceType.
      *
      * @return int
      */
-    public function getPaymentStatus()
+    public function getInvoiceType()
     {
-        return $this->paymentStatus;
+        return $this->invoiceType;
     }
 
     /**
@@ -152,13 +138,13 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get invoiceType.
+     * Get invoiceDataJson.
      *
-     * @return int
+     * @return string
      */
-    public function getInvoiceType()
+    public function getInvoiceDataJson()
     {
-        return $this->invoiceType;
+        return $this->invoiceDataJson;
     }
 
     /**
@@ -176,13 +162,13 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get invoiceDataJson.
+     * Get organisation.
      *
-     * @return string
+     * @return Organisation
      */
-    public function getInvoiceDataJson()
+    public function getOrganisation()
     {
-        return $this->invoiceDataJson;
+        return $this->organisation;
     }
 
     /**
@@ -200,22 +186,36 @@ class Invoice extends BaseEntity
     }
 
     /**
-     * Get organisation.
-     *
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
      * returns a string representation of this entity.
      *
      * @return string
      */
     public function getFullIdentifier()
     {
-        return $this->getInvoiceDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT).' - '.$this->getName();
+        return $this->getInvoiceDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . ' - ' . $this->getName();
+    }
+
+    /**
+     * Get invoiceDateTime.
+     *
+     * @return \DateTime
+     */
+    public function getInvoiceDateTime()
+    {
+        return $this->invoiceDateTime;
+    }
+
+    /**
+     * Set invoiceDateTime.
+     *
+     * @param \DateTime $invoiceDateTime
+     *
+     * @return Invoice
+     */
+    public function setInvoiceDateTime($invoiceDateTime)
+    {
+        $this->invoiceDateTime = $invoiceDateTime;
+
+        return $this;
     }
 }

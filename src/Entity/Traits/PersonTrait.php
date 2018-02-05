@@ -34,84 +34,6 @@ trait PersonTrait
     private $familyName;
 
     /**
-     * @return mixed
-     */
-    public function getJobTitle()
-    {
-        return $this->jobTitle;
-    }
-
-    /**
-     * @param mixed $jobTitle
-     *
-     * @return PersonTrait
-     */
-    public function setJobTitle($jobTitle)
-    {
-        $this->jobTitle = $jobTitle;
-
-        return $this;
-    }
-
-    /**
-     * Set givenName.
-     *
-     * @param string $givenName
-     *
-     * @return static
-     */
-    public function setGivenName($givenName)
-    {
-        $this->givenName = $givenName;
-
-        return $this;
-    }
-
-    /**
-     * Get givenName.
-     *
-     * @return string
-     */
-    public function getGivenName()
-    {
-        return $this->givenName;
-    }
-
-    /**
-     * Set familyName.
-     *
-     * @param string $familyName
-     *
-     * @return static
-     */
-    public function setFamilyName($familyName)
-    {
-        $this->familyName = $familyName;
-
-        return $this;
-    }
-
-    /**
-     * Get familyName.
-     *
-     * @return string
-     */
-    public function getFamilyName()
-    {
-        return $this->familyName;
-    }
-
-    /**
-     * get the person identifier.
-     *
-     * @return string
-     */
-    protected function getPersonIdentifier()
-    {
-        return $this->jobTitle.' '.$this->getGivenName().' '.$this->getFamilyName();
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
      *
@@ -150,6 +72,26 @@ trait PersonTrait
     }
 
     /**
+     * @return mixed
+     */
+    public function getJobTitle()
+    {
+        return $this->jobTitle;
+    }
+
+    /**
+     * @param mixed $jobTitle
+     *
+     * @return PersonTrait
+     */
+    public function setJobTitle($jobTitle)
+    {
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getFullName()
@@ -159,6 +101,64 @@ trait PersonTrait
             $res .= ' ';
         }
 
-        return $res.$this->getGivenName().' '.$this->getFamilyName();
+        return $res . $this->getGivenName() . ' ' . $this->getFamilyName();
+    }
+
+    /**
+     * get the person identifier.
+     *
+     * @return string
+     */
+    protected function getPersonIdentifier()
+    {
+        return $this->jobTitle . ' ' . $this->getGivenName() . ' ' . $this->getFamilyName();
+    }
+
+    /**
+     * Get givenName.
+     *
+     * @return string
+     */
+    public function getGivenName()
+    {
+        return $this->givenName;
+    }
+
+    /**
+     * Set givenName.
+     *
+     * @param string $givenName
+     *
+     * @return static
+     */
+    public function setGivenName($givenName)
+    {
+        $this->givenName = $givenName;
+
+        return $this;
+    }
+
+    /**
+     * Get familyName.
+     *
+     * @return string
+     */
+    public function getFamilyName()
+    {
+        return $this->familyName;
+    }
+
+    /**
+     * Set familyName.
+     *
+     * @param string $familyName
+     *
+     * @return static
+     */
+    public function setFamilyName($familyName)
+    {
+        $this->familyName = $familyName;
+
+        return $this;
     }
 }

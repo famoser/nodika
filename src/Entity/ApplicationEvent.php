@@ -54,19 +54,13 @@ class ApplicationEvent extends BaseEntity
     }
 
     /**
-     * @return int
+     * returns a string representation of this entity.
+     *
+     * @return string
      */
-    public function getApplicationEventType()
+    public function getFullIdentifier()
     {
-        return $this->applicationEventType;
-    }
-
-    /**
-     * @param int $applicationEventType
-     */
-    public function setApplicationEventType($applicationEventType)
-    {
-        $this->applicationEventType = $applicationEventType;
+        return $this->getOrganisation() . ' ' . $this->getApplicationEventType();
     }
 
     /**
@@ -86,13 +80,19 @@ class ApplicationEvent extends BaseEntity
     }
 
     /**
-     * returns a string representation of this entity.
-     *
-     * @return string
+     * @return int
      */
-    public function getFullIdentifier()
+    public function getApplicationEventType()
     {
-        return $this->getOrganisation().' '.$this->getApplicationEventType();
+        return $this->applicationEventType;
+    }
+
+    /**
+     * @param int $applicationEventType
+     */
+    public function setApplicationEventType($applicationEventType)
+    {
+        $this->applicationEventType = $applicationEventType;
     }
 
     /**

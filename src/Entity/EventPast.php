@@ -71,22 +71,6 @@ class EventPast extends BaseEntity
     private $event;
 
     /**
-     * @return \DateTime
-     */
-    public function getChangedAtDateTime()
-    {
-        return $this->changedAtDateTime;
-    }
-
-    /**
-     * @param \DateTime $changedAtDateTime
-     */
-    public function setChangedAtDateTime($changedAtDateTime)
-    {
-        $this->changedAtDateTime = $changedAtDateTime;
-    }
-
-    /**
      * @return Person
      */
     public function getChangedByPerson()
@@ -174,5 +158,21 @@ class EventPast extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getChangedAtDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getChangedAtDateTime()
+    {
+        return $this->changedAtDateTime;
+    }
+
+    /**
+     * @param \DateTime $changedAtDateTime
+     */
+    public function setChangedAtDateTime($changedAtDateTime)
+    {
+        $this->changedAtDateTime = $changedAtDateTime;
     }
 }

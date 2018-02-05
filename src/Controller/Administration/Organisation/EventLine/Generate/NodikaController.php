@@ -46,7 +46,7 @@ class NodikaController extends BaseGenerationController
      * @Route("/new", name="administration_organisation_event_line_generate_nodika_new")
      *
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
      * @return Response
      */
@@ -67,7 +67,7 @@ class NodikaController extends BaseGenerationController
      * @Route("/start", name="administration_organisation_event_line_generate_nodika_start")
      *
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
      * @return Response
      */
@@ -94,9 +94,9 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/choose_period", name="administration_organisation_event_line_generate_nodika_choose_period")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      * @param TranslatorInterface $translator
      *
@@ -147,11 +147,120 @@ class NodikaController extends BaseGenerationController
     }
 
     /**
+     * @param EventLineGeneration $generation
+     * @param Organisation $organisation
+     *
+     * @return NodikaConfiguration
+     */
+    private function getDistributionConfiguration(EventLineGeneration $generation, Organisation $organisation)
+    {
+        $configuration = new NodikaConfiguration(json_decode($generation->getDistributionConfigurationJson()));
+        $this->addMemberConfiguration($configuration, $organisation);
+        $this->addEventLineConfiguration($configuration, $organisation, $generation);
+        $this->saveDistributionConfiguration($generation, $configuration);
+        $this->fillHolidays($configuration);
+
+        return $configuration;
+    }
+
+    /**
+     * @param NodikaConfiguration $configuration
+     * @param Organisation $organisation
+     */
+    private function addMemberConfiguration(NodikaConfiguration $configuration, Organisation $organisation)
+    {
+        /* @var Member[] $memberById */
+        $memberById = [];
+        foreach ($organisation->getMembers() as $member) {
+            $memberById[$member->getId()] = $member;
+        }
+
+        $removeKeys = [];
+        foreach ($configuration->memberConfigurations as $key => $value) {
+            if (isset($memberById[$value->id])) {
+                $value->name = $memberById[$value->id]->getName();
+                unset($memberById[$value->id]);
+            } else {
+                $removeKeys[] = $key;
+            }
+        }
+
+        $memberChanges = false;
+
+        foreach ($removeKeys as $removeKey) {
+            $memberChanges = true;
+            unset($configuration->memberConfigurations[$removeKey]);
+        }
+
+        foreach ($memberById as $item) {
+            $memberChanges = true;
+            $newConfig = MemberConfiguration::createFromMember($item);
+            $configuration->memberConfigurations[] = $newConfig;
+        }
+
+        if ($memberChanges) {
+            $configuration->memberEventTypeDistributionFilled = false;
+        }
+    }
+
+    /**
+     * @param EventLineGeneration $generation
+     * @param $configuration
+     */
+    private function saveDistributionConfiguration(EventLineGeneration $generation, NodikaConfiguration $configuration)
+    {
+        $generation->setDistributionConfiguration($configuration);
+        $this->fastSave($generation);
+    }
+
+    /**
+     * @param NodikaConfiguration $configuration
+     */
+    private function fillHolidays(NodikaConfiguration $configuration)
+    {
+        if (!$configuration->holidaysFilled) {
+            $configuration->holidaysFilled = true;
+            $currentYear = $configuration->startDateTime->format('Y');
+            while (true) {
+                $yearlyHolyDays = $this->getYearlyHolidays($currentYear);
+                foreach ($yearlyHolyDays as $yearlyHolyDay) {
+                    if ($yearlyHolyDay->getTimestamp() < $configuration->startDateTime->getTimestamp()) {
+                        //too early
+                    } elseif ($yearlyHolyDay->getTimestamp() > $configuration->endDateTime->getTimestamp()) {
+                        //too late; get back
+                        return;
+                    } else {
+                        $configuration->holidays[] = $yearlyHolyDay;
+                    }
+                }
+                ++$currentYear;
+            }
+        }
+    }
+
+    /**
+     * @param $year
+     *
+     * @return \DateTime[]
+     */
+    private function getYearlyHolidays($year)
+    {
+        return [
+            // new year: 01.01.2000
+            new \DateTime('01.01.' . $year),
+            // noel: 25.12.2000
+            new \DateTime('01.08.' . $year),
+            // swiss: 01.08.2000
+            new \DateTime('25.12.' . $year),
+        ];
+    }
+
+    /**
      * @Route("/{generation}/no_conflicts", name="administration_organisation_event_line_generate_nodika_no_conflicts")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -204,9 +313,9 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/choose_members", name="administration_organisation_event_line_generate_nodika_choose_members")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -257,9 +366,9 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/relative_distribution", name="administration_organisation_event_line_generate_nodika_relative_distribution")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -321,9 +430,9 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/distribution_settings", name="administration_organisation_event_line_generate_nodika_distribution_settings")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      * @param TranslatorInterface $translator
      *
@@ -336,7 +445,7 @@ class NodikaController extends BaseGenerationController
 
         $holidayString = '';
         foreach ($config->holidays as $holiday) {
-            $holidayString .= $holiday->format(DateTimeFormatter::DATE_FORMAT).', ';
+            $holidayString .= $holiday->format(DateTimeFormatter::DATE_FORMAT) . ', ';
         }
         if (mb_strlen($holidayString) > 0) {
             $holidayString = mb_substr($holidayString, 0, -2);
@@ -433,9 +542,9 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_distribution", name="administration_organisation_event_line_generate_nodika_do_distribution")
      *
-     * @param Organisation           $organisation
-     * @param EventLine              $eventLine
-     * @param EventLineGeneration    $generation
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
      * @param EventGenerationService $eventGenerationService
      *
      * @return Response
@@ -458,8 +567,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/distribution_confirm", name="administration_organisation_event_line_generate_nodika_distribution_confirm")
      *
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -494,9 +603,9 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/assignment_settings", name="administration_organisation_event_line_generate_nodika_assignment_settings")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      * @param TranslatorInterface $translator
      *
@@ -509,7 +618,7 @@ class NodikaController extends BaseGenerationController
 
         $beforeEventsString = '';
         foreach ($config->beforeEvents as $beforeEvent) {
-            $beforeEventsString .= $beforeEvent.', ';
+            $beforeEventsString .= $beforeEvent . ', ';
         }
         if (mb_strlen($beforeEventsString) > 0) {
             $beforeEventsString = mb_substr($beforeEventsString, 0, -2);
@@ -585,8 +694,8 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/start_generation", name="administration_organisation_event_line_generate_nodika_start_generation")
      *
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -610,10 +719,10 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_generate", name="administration_organisation_event_line_generate_nodika_do_generate")
      *
-     * @param Organisation           $organisation
-     * @param EventLine              $eventLine
-     * @param EventLineGeneration    $generation
-     * @param TranslatorInterface    $translator
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
+     * @param TranslatorInterface $translator
      * @param EventGenerationService $eventGenerationService
      *
      * @return Response
@@ -656,10 +765,21 @@ class NodikaController extends BaseGenerationController
     }
 
     /**
+     * @param EventLineGeneration $generation
+     * @param NodikaOutput $nodikaOutput
+     */
+    private function saveNodikaOutput(EventLineGeneration $generation, NodikaOutput $nodikaOutput)
+    {
+        $generation->setGenerationResult($nodikaOutput->generationResult);
+        $generation->setDistributionOutput($nodikaOutput);
+        $this->fastSave($generation);
+    }
+
+    /**
      * @Route("/{generation}/confirm_generation", name="administration_organisation_event_line_generate_nodika_confirm_generation")
      *
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
      * @return Response
@@ -691,9 +811,9 @@ class NodikaController extends BaseGenerationController
     /**
      * @Route("/{generation}/apply_generation", name="administration_organisation_event_line_generate_nodika_apply_generation")
      *
-     * @param Organisation           $organisation
-     * @param EventLine              $eventLine
-     * @param EventLineGeneration    $generation
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
+     * @param EventLineGeneration $generation
      * @param EventGenerationService $eventGenerationService
      *
      * @return Response
@@ -717,128 +837,8 @@ class NodikaController extends BaseGenerationController
         }
 
         return $this->redirectToRoute(
-                'administration_organisation_event_line_generate_nodika_confirm_generation',
-                ['organisation' => $generation->getEventLine()->getOrganisation()->getId(), 'eventLine' => $generation->getEventLine()->getId(), 'generation' => $generation->getId()]
-            );
-    }
-
-    /**
-     * @param EventLineGeneration $generation
-     * @param Organisation        $organisation
-     *
-     * @return NodikaConfiguration
-     */
-    private function getDistributionConfiguration(EventLineGeneration $generation, Organisation $organisation)
-    {
-        $configuration = new NodikaConfiguration(json_decode($generation->getDistributionConfigurationJson()));
-        $this->addMemberConfiguration($configuration, $organisation);
-        $this->addEventLineConfiguration($configuration, $organisation, $generation);
-        $this->saveDistributionConfiguration($generation, $configuration);
-        $this->fillHolidays($configuration);
-
-        return $configuration;
-    }
-
-    /**
-     * @param EventLineGeneration $generation
-     * @param $configuration
-     */
-    private function saveDistributionConfiguration(EventLineGeneration $generation, NodikaConfiguration $configuration)
-    {
-        $generation->setDistributionConfiguration($configuration);
-        $this->fastSave($generation);
-    }
-
-    /**
-     * @param EventLineGeneration $generation
-     * @param NodikaOutput        $nodikaOutput
-     */
-    private function saveNodikaOutput(EventLineGeneration $generation, NodikaOutput $nodikaOutput)
-    {
-        $generation->setGenerationResult($nodikaOutput->generationResult);
-        $generation->setDistributionOutput($nodikaOutput);
-        $this->fastSave($generation);
-    }
-
-    /**
-     * @param NodikaConfiguration $configuration
-     * @param Organisation        $organisation
-     */
-    private function addMemberConfiguration(NodikaConfiguration $configuration, Organisation $organisation)
-    {
-        /* @var Member[] $memberById */
-        $memberById = [];
-        foreach ($organisation->getMembers() as $member) {
-            $memberById[$member->getId()] = $member;
-        }
-
-        $removeKeys = [];
-        foreach ($configuration->memberConfigurations as $key => $value) {
-            if (isset($memberById[$value->id])) {
-                $value->name = $memberById[$value->id]->getName();
-                unset($memberById[$value->id]);
-            } else {
-                $removeKeys[] = $key;
-            }
-        }
-
-        $memberChanges = false;
-
-        foreach ($removeKeys as $removeKey) {
-            $memberChanges = true;
-            unset($configuration->memberConfigurations[$removeKey]);
-        }
-
-        foreach ($memberById as $item) {
-            $memberChanges = true;
-            $newConfig = MemberConfiguration::createFromMember($item);
-            $configuration->memberConfigurations[] = $newConfig;
-        }
-
-        if ($memberChanges) {
-            $configuration->memberEventTypeDistributionFilled = false;
-        }
-    }
-
-    /**
-     * @param NodikaConfiguration $configuration
-     */
-    private function fillHolidays(NodikaConfiguration $configuration)
-    {
-        if (!$configuration->holidaysFilled) {
-            $configuration->holidaysFilled = true;
-            $currentYear = $configuration->startDateTime->format('Y');
-            while (true) {
-                $yearlyHolyDays = $this->getYearlyHolidays($currentYear);
-                foreach ($yearlyHolyDays as $yearlyHolyDay) {
-                    if ($yearlyHolyDay->getTimestamp() < $configuration->startDateTime->getTimestamp()) {
-                        //too early
-                    } elseif ($yearlyHolyDay->getTimestamp() > $configuration->endDateTime->getTimestamp()) {
-                        //too late; get back
-                        return;
-                    } else {
-                        $configuration->holidays[] = $yearlyHolyDay;
-                    }
-                }
-                ++$currentYear;
-            }
-        }
-    }
-
-    /**
-     * @param $year
-     *
-     * @return \DateTime[]
-     */
-    private function getYearlyHolidays($year)
-    {
-        return [
-            // new year: 01.01.2000
-            new \DateTime('01.01.'.$year),
-            // noel: 25.12.2000
-            new \DateTime('01.08.'.$year),
-            // swiss: 01.08.2000
-            new \DateTime('25.12.'.$year),
-        ];
+            'administration_organisation_event_line_generate_nodika_confirm_generation',
+            ['organisation' => $generation->getEventLine()->getOrganisation()->getId(), 'eventLine' => $generation->getEventLine()->getId(), 'generation' => $generation->getId()]
+        );
     }
 }

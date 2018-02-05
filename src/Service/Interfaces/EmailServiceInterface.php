@@ -14,9 +14,9 @@ namespace App\Service\Interfaces;
 interface EmailServiceInterface
 {
     /**
-     * @param string      $receiver
-     * @param string      $subject
-     * @param string      $body
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
      * @param string|null $carbonCopy
      *
      * @return bool
@@ -24,9 +24,9 @@ interface EmailServiceInterface
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = null);
 
     /**
-     * @param string      $receiver
-     * @param string      $subject
-     * @param string      $body
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
      * @param string|null $carbonCopy
      *
      * @return bool
@@ -38,7 +38,7 @@ interface EmailServiceInterface
      * @param string $subject
      * @param string $body
      * @param $actionText
-     * @param string      $actionLink
+     * @param string $actionLink
      * @param string|null $carbonCopy
      *
      * @return bool

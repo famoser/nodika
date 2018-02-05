@@ -40,8 +40,8 @@ class EventLineController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_event_line_new")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -81,9 +81,9 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/edit", name="administration_organisation_event_line_edit")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -122,9 +122,9 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/remove", name="administration_organisation_event_line_remove")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -164,7 +164,7 @@ class EventLineController extends BaseController
      * @Route("/{eventLine}/administer", name="administration_organisation_event_line_administer")
      *
      * @param Organisation $organisation
-     * @param EventLine    $eventLine
+     * @param EventLine $eventLine
      *
      * @return Response
      */
@@ -185,7 +185,7 @@ class EventLineController extends BaseController
     /**
      * @Route("/import/download/template", name="administration_organisation_event_line_import_download_template")
      *
-     * @param Organisation        $organisation
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -200,7 +200,7 @@ class EventLineController extends BaseController
         }
 
         return $this->renderCsv(
-            $eventTrans.'.csv',
+            $eventTrans . '.csv',
             [
                 [
                     (new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT),
@@ -229,11 +229,11 @@ class EventLineController extends BaseController
     /**
      * @Route("/{eventLine}/import", name="administration_organisation_event_line_import")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
-     * @param EventLine           $eventLine
+     * @param Request $request
+     * @param Organisation $organisation
+     * @param EventLine $eventLine
      * @param TranslatorInterface $translator
-     * @param ExchangeService     $exchangeService
+     * @param ExchangeService $exchangeService
      *
      * @return Response
      */

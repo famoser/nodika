@@ -48,12 +48,12 @@ class BaseAbstractType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param $className
      * @param array $builderArgs the arguments submitted to the Trait builder
-     * @param array $args        the arguments submitted to the Trait builder method
+     * @param array $args the arguments submitted to the Trait builder method
      */
     protected function addTrait(FormBuilderInterface $builder, $className, $builderArgs = [], $args = [])
     {
         $relevantName = mb_substr($className, mb_strrpos($className, '\\') + 1, -5);
-        $builderCall = 'get'.$relevantName.'Builder';
+        $builderCall = 'get' . $relevantName . 'Builder';
         $subBuilder = $builder->create(
             mb_strtolower($relevantName),
             FormType::class,

@@ -27,19 +27,6 @@ class ApplicationEventRepository extends EntityRepository
      * @param Organisation $organisation
      * @param $applicationEventType
      *
-     * @return bool
-     */
-    public function hasEventOccurred(Organisation $organisation, $applicationEventType)
-    {
-        $entity = $this->findOneBy(['organisation' => $organisation->getId(), 'applicationEventType' => $applicationEventType]);
-
-        return $entity instanceof ApplicationEvent;
-    }
-
-    /**
-     * @param Organisation $organisation
-     * @param $applicationEventType
-     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -54,5 +41,18 @@ class ApplicationEventRepository extends EntityRepository
             $em->persist($applicationEvent);
             $em->flush();
         }
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @param $applicationEventType
+     *
+     * @return bool
+     */
+    public function hasEventOccurred(Organisation $organisation, $applicationEventType)
+    {
+        $entity = $this->findOneBy(['organisation' => $organisation->getId(), 'applicationEventType' => $applicationEventType]);
+
+        return $entity instanceof ApplicationEvent;
     }
 }

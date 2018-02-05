@@ -41,6 +41,16 @@ class EventOfferEntry extends BaseEntity
     private $event;
 
     /**
+     * Get eventOffer.
+     *
+     * @return EventOffer
+     */
+    public function getEventOffer()
+    {
+        return $this->eventOffer;
+    }
+
+    /**
      * Set eventOffer.
      *
      * @param EventOffer $eventOffer
@@ -55,13 +65,13 @@ class EventOfferEntry extends BaseEntity
     }
 
     /**
-     * Get eventOffer.
+     * Get event.
      *
-     * @return EventOffer
+     * @return Event
      */
-    public function getEventOffer()
+    public function getEvent()
     {
-        return $this->eventOffer;
+        return $this->event;
     }
 
     /**
@@ -76,16 +86,6 @@ class EventOfferEntry extends BaseEntity
         $this->event = $event;
 
         return $this;
-    }
-
-    /**
-     * Get event.
-     *
-     * @return Event
-     */
-    public function getEvent()
-    {
-        return $this->event;
     }
 
     /**

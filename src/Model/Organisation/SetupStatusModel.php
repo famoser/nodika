@@ -22,6 +22,14 @@ class SetupStatusModel
     /**
      * @return bool
      */
+    public function getAllDone()
+    {
+        return $this->getHasMembers() && $this->getHasEventLines() && $this->getHasEvents() && $this->getHasVisitedSettings() && $this->getHasInvitedMembers();
+    }
+
+    /**
+     * @return bool
+     */
     public function getHasMembers()
     {
         return $this->hasMembers;
@@ -97,13 +105,5 @@ class SetupStatusModel
     public function setHasInvitedMembers($hasInvitedMembers)
     {
         $this->hasInvitedMembers = $hasInvitedMembers;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getAllDone()
-    {
-        return $this->getHasMembers() && $this->getHasEventLines() && $this->getHasEvents() && $this->getHasVisitedSettings() && $this->getHasInvitedMembers();
     }
 }

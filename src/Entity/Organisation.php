@@ -88,6 +88,30 @@ class Organisation extends BaseEntity
     }
 
     /**
+     * @param Person $person
+     *
+     * @return Organisation
+     */
+    public static function createFromPerson(Person $person)
+    {
+        $organisation = new self();
+        $organisation->setAddressFieldsFrom($person);
+        $organisation->setCommunicationFieldsFrom($person);
+
+        return $organisation;
+    }
+
+    /**
+     * Get isActive.
+     *
+     * @return bool
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
      * Set isActive.
      *
      * @param bool $isActive
@@ -102,13 +126,13 @@ class Organisation extends BaseEntity
     }
 
     /**
-     * Get isActive.
+     * Get activeEnd.
      *
-     * @return bool
+     * @return \DateTime
      */
-    public function getIsActive()
+    public function getActiveEnd()
     {
-        return $this->isActive;
+        return $this->activeEnd;
     }
 
     /**
@@ -123,16 +147,6 @@ class Organisation extends BaseEntity
         $this->activeEnd = $activeEnd;
 
         return $this;
-    }
-
-    /**
-     * Get activeEnd.
-     *
-     * @return \DateTime
-     */
-    public function getActiveEnd()
-    {
-        return $this->activeEnd;
     }
 
     /**
@@ -269,20 +283,6 @@ class Organisation extends BaseEntity
     public function getEventLines()
     {
         return $this->eventLines;
-    }
-
-    /**
-     * @param Person $person
-     *
-     * @return Organisation
-     */
-    public static function createFromPerson(Person $person)
-    {
-        $organisation = new self();
-        $organisation->setAddressFieldsFrom($person);
-        $organisation->setCommunicationFieldsFrom($person);
-
-        return $organisation;
     }
 
     /**

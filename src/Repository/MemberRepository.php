@@ -55,6 +55,23 @@ class MemberRepository extends EntityRepository
 
     /**
      * @param Member $member
+     *
+     * @return int
+     */
+    public function countUnassignedEvents(Member $member)
+    {
+        try {
+            return $this->getAssignableEventsQueryBuilder($member, true)
+                ->andWhere('e.person IS NULL')
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            return 0;
+        }
+    }
+
+    /**
+     * @param Member $member
      * @param $singleScalar
      *
      * @return \Doctrine\ORM\QueryBuilder
@@ -80,23 +97,6 @@ class MemberRepository extends EntityRepository
             ->setParameter('startDateTime', new \DateTime());
 
         return $qb;
-    }
-
-    /**
-     * @param Member $member
-     *
-     * @return int
-     */
-    public function countUnassignedEvents(Member $member)
-    {
-        try {
-            return $this->getAssignableEventsQueryBuilder($member, true)
-                ->andWhere('e.person IS NULL')
-                ->getQuery()
-                ->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-            return 0;
-        }
     }
 
     /**
@@ -148,6 +148,29 @@ class MemberRepository extends EntityRepository
     }
 
     /**
+     * counts the events which are currently unconfirmed.
+     *
+     * @param Member $member
+     * @param Person $person
+     *
+     * @return int
+     *
+     * @internal param \DateInterval $threshHold
+     */
+    public function countUnconfirmedEvents(Member $member, Person $person = null)
+    {
+        $organisationSetting = $this->getEntityManager()->getRepository('App:OrganisationSetting')->getByOrganisation($member->getOrganisation());
+
+        try {
+            return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person, true)
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            return 0;
+        }
+    }
+
+    /**
      * @param Member $member
      * @param Person $person
      * @param $dayThreshold
@@ -157,7 +180,7 @@ class MemberRepository extends EntityRepository
      */
     private function getUnconfirmedEventsQueryBuilder(Member $member, $dayThreshold, Person $person = null, $singleScalar = false)
     {
-        $threshHold = new \DateInterval('P'.$dayThreshold.'D');
+        $threshHold = new \DateInterval('P' . $dayThreshold . 'D');
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -189,32 +212,9 @@ class MemberRepository extends EntityRepository
     }
 
     /**
-     * counts the events which are currently unconfirmed.
-     *
-     * @param Member $member
-     * @param Person $person
-     *
-     * @return int
-     *
-     * @internal param \DateInterval $threshHold
-     */
-    public function countUnconfirmedEvents(Member $member, Person $person = null)
-    {
-        $organisationSetting = $this->getEntityManager()->getRepository('App:OrganisationSetting')->getByOrganisation($member->getOrganisation());
-
-        try {
-            return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person, true)
-                ->getQuery()
-                ->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-            return 0;
-        }
-    }
-
-    /**
      * counts the events which are not confirmed yet, but should be.
      *
-     * @param Member      $member
+     * @param Member $member
      * @param Person|null $person
      *
      * @throws \Doctrine\ORM\NonUniqueResultException

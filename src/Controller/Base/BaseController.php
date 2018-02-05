@@ -29,25 +29,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
-    /**
-     * get the parameter.
-     *
-     * remove this method as soon as possible
-     * here because of missing getParameter call in AbstractController, should be back in release 4.1
-     * clean up involves:
-     *  remove this method
-     *  remove getSubscribedServices override
-     *  remove file config/packages/parameters.yml
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    protected function getParameter(string $name)
-    {
-        return $this->get('kernel')->getContainer()->getParameter($name);
-    }
-
     public static function getSubscribedServices()
     {
         return parent::getSubscribedServices() + ['kernel' => KernelInterface::class];
@@ -56,7 +37,7 @@ class BaseController extends AbstractController
     /**
      * @param $type
      * @param $submitButtonType
-     * @param array  $data
+     * @param array $data
      * @param array $options
      *
      * @return FormInterface
@@ -67,10 +48,10 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
-     * @param BaseEntity          $data
-     * @param int                 $submitButtonType
+     * @param BaseEntity $data
+     * @param int $submitButtonType
      * @param $onSuccessCallable
      * @param array $formOptions
      *
@@ -116,39 +97,8 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param $type
-     * @param $message
+     * @param string $message the translation message to display
      * @param string $link
-     */
-    private function displayFlash($type, $message, $link = null)
-    {
-        if (null !== $link) {
-            $message = '<a href="'.$link.'">'.$message.'</a>';
-        }
-        $this->get('session')->getFlashBag()->set($type, $message);
-    }
-
-    /**
-     * @param string $message the translation message to display
-     * @param string   $link
-     */
-    protected function displayError($message, $link = null)
-    {
-        return $this->displayFlash(StaticMessageHelper::FLASH_ERROR, $message, $link);
-    }
-
-    /**
-     * @param string $message the translation message to display
-     * @param string   $link
-     */
-    protected function displayDanger($message, $link = null)
-    {
-        return $this->displayFlash(StaticMessageHelper::FLASH_DANGER, $message, $link);
-    }
-
-    /**
-     * @param string $message the translation message to display
-     * @param string   $link
      */
     protected function displaySuccess($message, $link = null)
     {
@@ -156,12 +106,66 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param string $message the translation message to display
-     * @param string   $link
+     * @param $type
+     * @param $message
+     * @param string $link
      */
-    protected function displayInfo($message, $link = null)
+    private function displayFlash($type, $message, $link = null)
     {
-        return $this->displayFlash(StaticMessageHelper::FLASH_INFO, $message, $link);
+        if (null !== $link) {
+            $message = '<a href="' . $link . '">' . $message . '</a>';
+        }
+        $this->get('session')->getFlashBag()->set($type, $message);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param BaseEntity $entity
+     * @param callable $onRemoveCallable with $form & $entity arguments
+     * @param callable $beforeRemoveCallable with $form & $entity arguments
+     *
+     * @return FormInterface
+     */
+    protected function handleFormDoctrineRemove(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
+    {
+        return $this->handleForm($form, $request, $translator, $entity, function ($form, $entity) use ($onRemoveCallable, $beforeRemoveCallable, $translator) {
+            /* @var FormInterface $form */
+            /* @var BaseEntity $entity */
+            $em = $this->getDoctrine()->getManager();
+            if (is_callable($beforeRemoveCallable)) {
+                $beforeRemoveCallable($form, $entity, $em);
+            }
+            $em->remove($entity);
+            $em->flush();
+
+            return $onRemoveCallable($form, $entity);
+        });
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param $entity
+     * @param callable $callable with $form & $entity arguments
+     *
+     * @return FormInterface
+     */
+    protected function handleForm(FormInterface $form, Request $request, TranslatorInterface $translator, $entity, $callable)
+    {
+        $form->setData($entity);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                return $callable($form, $entity);
+            }
+            $this->displayFormValidationError($translator);
+        }
+
+        return $form;
     }
 
     /**
@@ -172,6 +176,98 @@ class BaseController extends AbstractController
     protected function displayFormValidationError(TranslatorInterface $translator)
     {
         $this->displayError($translator->trans('error.form_validation_failed', [], 'common_form'));
+    }
+
+    /**
+     * @param string $message the translation message to display
+     * @param string $link
+     */
+    protected function displayError($message, $link = null)
+    {
+        return $this->displayFlash(StaticMessageHelper::FLASH_ERROR, $message, $link);
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param BaseEntity $entity
+     * @param callable $onSuccessCallable with $form & $entity arguments
+     *
+     * @return FormInterface
+     */
+    protected function handleFormDoctrinePersist(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onSuccessCallable = null)
+    {
+        if (is_callable($onSuccessCallable)) {
+            $myCallable = function ($form, $entity) use ($onSuccessCallable) {
+                /* @var FormInterface $form */
+                /* @var BaseEntity $entity */
+                $this->fastSave($entity);
+
+                return $onSuccessCallable($form, $entity);
+            };
+        } else {
+            $myCallable = function ($form, $entity) use ($onSuccessCallable) {
+                /* @var FormInterface $form */
+                /* @var BaseEntity $entity */
+                $this->fastSave($entity);
+
+                return $form;
+            };
+        }
+
+        return $this->handleForm($form, $request, $translator, $entity, $myCallable);
+    }
+
+    /**
+     * saves entity to database.
+     *
+     * @param BaseEntity[] $entities
+     */
+    protected function fastSave(...$entities)
+    {
+        $mgr = $this->getDoctrine()->getManager();
+        foreach ($entities as $item) {
+            $mgr->persist($item);
+        }
+        $mgr->flush();
+    }
+
+    /**
+     * get the parameter.
+     *
+     * remove this method as soon as possible
+     * here because of missing getParameter call in AbstractController, should be back in release 4.1
+     * clean up involves:
+     *  remove this method
+     *  remove getSubscribedServices override
+     *  remove file config/packages/parameters.yml
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    protected function getParameter(string $name)
+    {
+        return $this->get('kernel')->getContainer()->getParameter($name);
+    }
+
+    /**
+     * @param string $message the translation message to display
+     * @param string $link
+     */
+    protected function displayDanger($message, $link = null)
+    {
+        return $this->displayFlash(StaticMessageHelper::FLASH_DANGER, $message, $link);
+    }
+
+    /**
+     * @param string $message the translation message to display
+     * @param string $link
+     */
+    protected function displayInfo($message, $link = null)
+    {
+        return $this->displayFlash(StaticMessageHelper::FLASH_INFO, $message, $link);
     }
 
     /**
@@ -231,105 +327,9 @@ class BaseController extends AbstractController
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
 
         return $response;
-    }
-
-    /**
-     * @param FormInterface       $form
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param BaseEntity          $entity
-     * @param callable            $onSuccessCallable with $form & $entity arguments
-     *
-     * @return FormInterface
-     */
-    protected function handleFormDoctrinePersist(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onSuccessCallable = null)
-    {
-        if (is_callable($onSuccessCallable)) {
-            $myCallable = function ($form, $entity) use ($onSuccessCallable) {
-                /* @var FormInterface $form */
-                /* @var BaseEntity $entity */
-                $this->fastSave($entity);
-
-                return $onSuccessCallable($form, $entity);
-            };
-        } else {
-            $myCallable = function ($form, $entity) use ($onSuccessCallable) {
-                /* @var FormInterface $form */
-                /* @var BaseEntity $entity */
-                $this->fastSave($entity);
-
-                return $form;
-            };
-        }
-
-        return $this->handleForm($form, $request, $translator, $entity, $myCallable);
-    }
-
-    /**
-     * @param FormInterface       $form
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param BaseEntity          $entity
-     * @param callable            $onRemoveCallable     with $form & $entity arguments
-     * @param callable            $beforeRemoveCallable with $form & $entity arguments
-     *
-     * @return FormInterface
-     */
-    protected function handleFormDoctrineRemove(FormInterface $form, Request $request, TranslatorInterface $translator, BaseEntity $entity, $onRemoveCallable, $beforeRemoveCallable = null)
-    {
-        return $this->handleForm($form, $request, $translator, $entity, function ($form, $entity) use ($onRemoveCallable, $beforeRemoveCallable, $translator) {
-            /* @var FormInterface $form */
-            /* @var BaseEntity $entity */
-            $em = $this->getDoctrine()->getManager();
-            if (is_callable($beforeRemoveCallable)) {
-                $beforeRemoveCallable($form, $entity, $em);
-            }
-            $em->remove($entity);
-            $em->flush();
-
-            return $onRemoveCallable($form, $entity);
-        });
-    }
-
-    /**
-     * @param FormInterface       $form
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param $entity
-     * @param callable $callable with $form & $entity arguments
-     *
-     * @return FormInterface
-     */
-    protected function handleForm(FormInterface $form, Request $request, TranslatorInterface $translator, $entity, $callable)
-    {
-        $form->setData($entity);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                return $callable($form, $entity);
-            }
-            $this->displayFormValidationError($translator);
-        }
-
-        return $form;
-    }
-
-    /**
-     * saves entity to database.
-     *
-     * @param BaseEntity[] $entities
-     */
-    protected function fastSave(...$entities)
-    {
-        $mgr = $this->getDoctrine()->getManager();
-        foreach ($entities as $item) {
-            $mgr->persist($item);
-        }
-        $mgr->flush();
     }
 
     /**
@@ -348,7 +348,7 @@ class BaseController extends AbstractController
 
     /**
      * @param Organisation $organisation
-     * @param int          $applicationEventType
+     * @param int $applicationEventType
      *
      * @return bool
      */
@@ -360,10 +360,10 @@ class BaseController extends AbstractController
     /**
      * Renders a view.
      *
-     * @param string   $view       The view name
-     * @param array    $parameters An array of parameters to pass to the view
-     * @param string   $backUrl
-     * @param Response $response   A response instance
+     * @param string $view The view name
+     * @param array $parameters An array of parameters to pass to the view
+     * @param string $backUrl
+     * @param Response $response A response instance
      *
      * @return Response A Response instance
      */
@@ -371,23 +371,6 @@ class BaseController extends AbstractController
     {
         $parameters['show_dashboard'] = $this->getShowDashboard($backUrl);
         $parameters['back_url'] = $backUrl;
-
-        return parent::render($view, $parameters, $response);
-    }
-
-    /**
-     * Renders a view.
-     *
-     * @param string   $view          The view name
-     * @param array    $parameters    An array of parameters to pass to the view
-     * @param string   $justification why no backbutton
-     * @param Response $response      A response instance
-     *
-     * @return Response A Response instance
-     */
-    protected function renderNoBackUrl($view, array $parameters, $justification, Response $response = null)
-    {
-        $parameters['show_dashboard'] = $this->getShowDashboard();
 
         return parent::render($view, $parameters, $response);
     }
@@ -402,5 +385,22 @@ class BaseController extends AbstractController
         $request = $this->get('request_stack')->getCurrentRequest();
 
         return $this->getUser() instanceof FrontendUser && 'dashboard_index' !== $request->get('_route') && '/dashboard/' !== $backUrl;
+    }
+
+    /**
+     * Renders a view.
+     *
+     * @param string $view The view name
+     * @param array $parameters An array of parameters to pass to the view
+     * @param string $justification why no backbutton
+     * @param Response $response A response instance
+     *
+     * @return Response A Response instance
+     */
+    protected function renderNoBackUrl($view, array $parameters, $justification, Response $response = null)
+    {
+        $parameters['show_dashboard'] = $this->getShowDashboard();
+
+        return parent::render($view, $parameters, $response);
     }
 }

@@ -56,188 +56,6 @@ trait AddressTrait
     private $country = 'CH';
 
     /**
-     * Set street.
-     *
-     * @param string $street
-     *
-     * @return static
-     */
-    public function setStreet($street)
-    {
-        $this->street = $street;
-
-        return $this;
-    }
-
-    /**
-     * Get street.
-     *
-     * @return string
-     */
-    public function getStreet()
-    {
-        return $this->street;
-    }
-
-    /**
-     * Set addressLine.
-     *
-     * @param string $addressLine
-     *
-     * @return static
-     */
-    public function setAddressLine($addressLine)
-    {
-        $this->addressLine = $addressLine;
-
-        return $this;
-    }
-
-    /**
-     * Get addressLine.
-     *
-     * @return string
-     */
-    public function getAddressLine()
-    {
-        return $this->addressLine;
-    }
-
-    /**
-     * Set streetNr.
-     *
-     * @param string $streetNr
-     *
-     * @return static
-     */
-    public function setStreetNr($streetNr)
-    {
-        $this->streetNr = $streetNr;
-
-        return $this;
-    }
-
-    /**
-     * Get streetNr.
-     *
-     * @return string
-     */
-    public function getStreetNr()
-    {
-        return $this->streetNr;
-    }
-
-    /**
-     * Set postalCode.
-     *
-     * @param int $postalCode
-     *
-     * @return static
-     */
-    public function setPostalCode($postalCode)
-    {
-        $this->postalCode = $postalCode;
-
-        return $this;
-    }
-
-    /**
-     * Get postalCode.
-     *
-     * @return int
-     */
-    public function getPostalCode()
-    {
-        return $this->postalCode;
-    }
-
-    /**
-     * Set addressRegion.
-     *
-     * @param string $city
-     *
-     * @return static
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    /**
-     * Get addressRegion.
-     *
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param string $country
-     *
-     * @return static
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    /**
-     * returns all non-empty address lines.
-     *
-     * @return string[]
-     */
-    public function getAddressLines()
-    {
-        $res = [];
-        $lineOne = $this->getStreet();
-        if (mb_strlen($lineOne) > 0 && mb_strlen($this->getStreetNr()) > 0) {
-            $lineOne .= ' '.$this->getStreetNr();
-        }
-        if (mb_strlen($lineOne) > 0) {
-            $res[] = $lineOne;
-        }
-        if (mb_strlen($this->getAddressLine()) > 0) {
-            $res[] = $this->getAddressLine();
-        }
-        $line3 = $this->getPostalCode();
-        if (mb_strlen($line3) > 0 && mb_strlen($this->getCity() > 0)) {
-            $line3 .= ' '.$this->getCity();
-        }
-        if (mb_strlen($line3) > 0) {
-            $res[] = $line3;
-        }
-        if (mb_strlen($this->getCountry()) > 0) {
-            $res[] = $this->getCountry();
-        }
-
-        return $res;
-    }
-
-    /**
-     * gets the street identifier.
-     *
-     * @return string
-     */
-    protected function getAddressIdentifier()
-    {
-        return implode(', ', $this->getAddressLines());
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
      *
@@ -291,5 +109,187 @@ trait AddressTrait
         $this->setPostalCode($source->getPostalCode());
         $this->setCity($source->getCity());
         $this->setCountry($source->getCountry());
+    }
+
+    /**
+     * gets the street identifier.
+     *
+     * @return string
+     */
+    protected function getAddressIdentifier()
+    {
+        return implode(', ', $this->getAddressLines());
+    }
+
+    /**
+     * returns all non-empty address lines.
+     *
+     * @return string[]
+     */
+    public function getAddressLines()
+    {
+        $res = [];
+        $lineOne = $this->getStreet();
+        if (mb_strlen($lineOne) > 0 && mb_strlen($this->getStreetNr()) > 0) {
+            $lineOne .= ' ' . $this->getStreetNr();
+        }
+        if (mb_strlen($lineOne) > 0) {
+            $res[] = $lineOne;
+        }
+        if (mb_strlen($this->getAddressLine()) > 0) {
+            $res[] = $this->getAddressLine();
+        }
+        $line3 = $this->getPostalCode();
+        if (mb_strlen($line3) > 0 && mb_strlen($this->getCity() > 0)) {
+            $line3 .= ' ' . $this->getCity();
+        }
+        if (mb_strlen($line3) > 0) {
+            $res[] = $line3;
+        }
+        if (mb_strlen($this->getCountry()) > 0) {
+            $res[] = $this->getCountry();
+        }
+
+        return $res;
+    }
+
+    /**
+     * Get street.
+     *
+     * @return string
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    /**
+     * Set street.
+     *
+     * @param string $street
+     *
+     * @return static
+     */
+    public function setStreet($street)
+    {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    /**
+     * Get streetNr.
+     *
+     * @return string
+     */
+    public function getStreetNr()
+    {
+        return $this->streetNr;
+    }
+
+    /**
+     * Set streetNr.
+     *
+     * @param string $streetNr
+     *
+     * @return static
+     */
+    public function setStreetNr($streetNr)
+    {
+        $this->streetNr = $streetNr;
+
+        return $this;
+    }
+
+    /**
+     * Get addressLine.
+     *
+     * @return string
+     */
+    public function getAddressLine()
+    {
+        return $this->addressLine;
+    }
+
+    /**
+     * Set addressLine.
+     *
+     * @param string $addressLine
+     *
+     * @return static
+     */
+    public function setAddressLine($addressLine)
+    {
+        $this->addressLine = $addressLine;
+
+        return $this;
+    }
+
+    /**
+     * Get postalCode.
+     *
+     * @return int
+     */
+    public function getPostalCode()
+    {
+        return $this->postalCode;
+    }
+
+    /**
+     * Set postalCode.
+     *
+     * @param int $postalCode
+     *
+     * @return static
+     */
+    public function setPostalCode($postalCode)
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    /**
+     * Get addressRegion.
+     *
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * Set addressRegion.
+     *
+     * @param string $city
+     *
+     * @return static
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $country
+     *
+     * @return static
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
     }
 }

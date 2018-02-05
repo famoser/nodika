@@ -40,93 +40,6 @@ trait CommunicationTrait
     private $webpage;
 
     /**
-     * @return mixed
-     */
-    public function getWebpage()
-    {
-        return $this->webpage;
-    }
-
-    /**
-     * @param mixed $webpage
-     */
-    public function setWebpage($webpage)
-    {
-        $this->webpage = $webpage;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param mixed $phone
-     *
-     * @return static
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return static
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * get non-empty communication lines.
-     *
-     * @return string[]
-     */
-    public function getCommunicationLines()
-    {
-        $res = [];
-        if (mb_strlen($this->getPhone()) > 0) {
-            $res[] = $this->getPhone();
-        }
-        if (mb_strlen($this->getEmail()) > 0) {
-            $res[] = $this->getEmail();
-        }
-        if (mb_strlen($this->getWebpage()) > 0) {
-            $res[] = $this->getWebpage();
-        }
-
-        return $res;
-    }
-
-    /**
-     * get the communication identifier.
-     *
-     * @return string
-     */
-    protected function getCommunicationIdentifier()
-    {
-        return implode(',', $this->getCommunicationLines());
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param $defaultArray
      *
@@ -155,6 +68,26 @@ trait CommunicationTrait
     }
 
     /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return static
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
      * @param CommunicationTrait $source
      */
     public function setCommunicationFieldsFrom($source)
@@ -162,5 +95,72 @@ trait CommunicationTrait
         $this->setPhone($source->getPhone());
         $this->setEmail($source->getEmail());
         $this->setWebpage($source->getWebpage());
+    }
+
+    /**
+     * get the communication identifier.
+     *
+     * @return string
+     */
+    protected function getCommunicationIdentifier()
+    {
+        return implode(',', $this->getCommunicationLines());
+    }
+
+    /**
+     * get non-empty communication lines.
+     *
+     * @return string[]
+     */
+    public function getCommunicationLines()
+    {
+        $res = [];
+        if (mb_strlen($this->getPhone()) > 0) {
+            $res[] = $this->getPhone();
+        }
+        if (mb_strlen($this->getEmail()) > 0) {
+            $res[] = $this->getEmail();
+        }
+        if (mb_strlen($this->getWebpage()) > 0) {
+            $res[] = $this->getWebpage();
+        }
+
+        return $res;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     *
+     * @return static
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWebpage()
+    {
+        return $this->webpage;
+    }
+
+    /**
+     * @param mixed $webpage
+     */
+    public function setWebpage($webpage)
+    {
+        $this->webpage = $webpage;
     }
 }

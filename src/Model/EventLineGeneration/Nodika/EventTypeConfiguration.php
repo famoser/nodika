@@ -13,6 +13,15 @@ namespace App\Model\EventLineGeneration\Nodika;
 
 class EventTypeConfiguration
 {
+    /* @var double $weekday */
+    public $weekday;
+    /* @var double $saturday */
+    public $saturday;
+    /* @var double $sunday */
+    public $sunday;
+    /* @var double $holiday */
+    public $holiday;
+
     /**
      * EventTypeConfiguration constructor.
      *
@@ -32,18 +41,6 @@ class EventTypeConfiguration
             $this->holiday = 0;
         }
     }
-
-    /* @var double $weekday */
-    public $weekday;
-
-    /* @var double $saturday */
-    public $saturday;
-
-    /* @var double $sunday */
-    public $sunday;
-
-    /* @var double $holiday */
-    public $holiday;
 
     public function getSumOfDays()
     {

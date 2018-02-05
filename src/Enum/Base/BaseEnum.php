@@ -18,6 +18,18 @@ use ReflectionClass;
 abstract class BaseEnum extends TranslatableObject
 {
     /**
+     * returns an array fit to be used by the ChoiceType.
+     *
+     * @return array
+     */
+    public static function getChoicesForBuilder()
+    {
+        $elem = new static();
+
+        return $elem->getChoicesForBuilderInternal();
+    }
+
+    /**
      * generates an array to be used in form fields.
      *
      * @return array
@@ -33,6 +45,37 @@ abstract class BaseEnum extends TranslatableObject
         }
 
         return ['choices' => $res, 'choice_translation_domain' => $this->getTranslationDomain()];
+    }
+
+    /**
+     * translate enum value.
+     *
+     * @param $enumValue
+     *
+     * @return array
+     */
+    public static function getTranslationForBuilder($enumValue)
+    {
+        $elem = new static();
+
+        return $elem->getTranslationForBuilderInternal($enumValue);
+    }
+
+    /**
+     * translate enum value.
+     *
+     * @param $enumValue
+     *
+     * @return array
+     */
+    protected function getTranslationForBuilderInternal($enumValue)
+    {
+        $trans = $this->getTranslationInternal($enumValue);
+        if (false === $trans) {
+            return ['translation_domain' => 'common_error', 'label' => 'enum.invalid_constant'];
+        }
+
+        return ['translation_domain' => $this->getTranslationDomain(), 'label' => $trans];
     }
 
     /**
@@ -61,16 +104,13 @@ abstract class BaseEnum extends TranslatableObject
      *
      * @param $enumValue
      *
-     * @return array
+     * @return string
      */
-    protected function getTranslationForBuilderInternal($enumValue)
+    public static function getTranslation($enumValue)
     {
-        $trans = $this->getTranslationInternal($enumValue);
-        if (false === $trans) {
-            return ['translation_domain' => 'common_error', 'label' => 'enum.invalid_constant'];
-        }
+        $elem = new static();
 
-        return ['translation_domain' => $this->getTranslationDomain(), 'label' => $trans];
+        return $elem->getTranslationInternal($enumValue);
     }
 
     /**
@@ -79,45 +119,5 @@ abstract class BaseEnum extends TranslatableObject
     protected function getTranslationDomainPrefix()
     {
         return 'enum';
-    }
-
-    /**
-     * returns an array fit to be used by the ChoiceType.
-     *
-     * @return array
-     */
-    public static function getChoicesForBuilder()
-    {
-        $elem = new static();
-
-        return $elem->getChoicesForBuilderInternal();
-    }
-
-    /**
-     * translate enum value.
-     *
-     * @param $enumValue
-     *
-     * @return array
-     */
-    public static function getTranslationForBuilder($enumValue)
-    {
-        $elem = new static();
-
-        return $elem->getTranslationForBuilderInternal($enumValue);
-    }
-
-    /**
-     * translate enum value.
-     *
-     * @param $enumValue
-     *
-     * @return string
-     */
-    public static function getTranslation($enumValue)
-    {
-        $elem = new static();
-
-        return $elem->getTranslationInternal($enumValue);
     }
 }

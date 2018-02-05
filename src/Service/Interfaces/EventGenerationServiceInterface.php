@@ -26,7 +26,7 @@ interface EventGenerationServiceInterface
      * returns true if successful.
      *
      * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable                $memberAllowedCallable   with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
      *
      * @return RoundRobinOutput
      */
@@ -37,7 +37,7 @@ interface EventGenerationServiceInterface
      * returns true if successful.
      *
      * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable            $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
      *
      * @return NodikaOutput
      */
@@ -47,8 +47,8 @@ interface EventGenerationServiceInterface
      * persist the events associated with this generation in the database.
      *
      * @param EventLineGeneration $generation
-     * @param GenerationResult    $generationResult
-     * @param Person              $person
+     * @param GenerationResult $generationResult
+     * @param Person $person
      *
      * @return bool
      */

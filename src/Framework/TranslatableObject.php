@@ -16,22 +16,15 @@ use App\Helper\NamingHelper;
 abstract class TranslatableObject
 {
     /**
-     * get the prefix of the translation domain of this object.
+     * the array for the builder including the translation_domain member.
      *
-     * @return mixed
+     * @return string[]
      */
-    abstract protected function getTranslationDomainPrefix();
-
-    /**
-     * get the translation domain of the current object.
-     *
-     * @return string
-     */
-    public function getTranslationDomain()
+    public static function getTranslationDomainForBuilderStatic()
     {
-        $class = get_class($this);
+        $instance = new static();
 
-        return $this->getTranslationDomainPrefix().'_'.NamingHelper::classToTranslationDomain($class);
+        return $instance->getTranslationDomainForBuilder();
     }
 
     /**
@@ -45,16 +38,23 @@ abstract class TranslatableObject
     }
 
     /**
-     * the array for the builder including the translation_domain member.
+     * get the translation domain of the current object.
      *
-     * @return string[]
+     * @return string
      */
-    public static function getTranslationDomainForBuilderStatic()
+    public function getTranslationDomain()
     {
-        $instance = new static();
+        $class = get_class($this);
 
-        return $instance->getTranslationDomainForBuilder();
+        return $this->getTranslationDomainPrefix() . '_' . NamingHelper::classToTranslationDomain($class);
     }
+
+    /**
+     * get the prefix of the translation domain of this object.
+     *
+     * @return mixed
+     */
+    abstract protected function getTranslationDomainPrefix();
 
     /**
      * the array for the builder including the translation_domain member.

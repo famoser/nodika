@@ -31,8 +31,8 @@ interface EventPastEvaluationServiceInterface
      * creates the EventPast object.
      *
      * @param Person $changePerson
-     * @param Event  $oldEvent
-     * @param Event  $newEvent
+     * @param Event $oldEvent
+     * @param Event $newEvent
      * @param $eventChangeType
      *
      * @return EventPast

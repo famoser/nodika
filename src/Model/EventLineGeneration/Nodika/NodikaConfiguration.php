@@ -15,6 +15,21 @@ use App\Model\EventLineGeneration\Base\BaseConfiguration;
 
 class NodikaConfiguration extends BaseConfiguration
 {
+    /* @var MemberConfiguration[] $memberConfigurations */
+    public $memberConfigurations;
+    /* @var EventTypeConfiguration $eventTypeConfiguration */
+    public $eventTypeConfiguration;
+    /* @var MemberEventTypeDistribution[] $memberEventTypeDistributions */
+    public $memberEventTypeDistributions;
+    /* @var boolean $memberEventTypeDistributionFilled */
+    public $memberEventTypeDistributionFilled;
+    /* @var \DateTime[] $holidays */
+    public $holidays;
+    /* @var boolean $holidaysFilled */
+    public $holidaysFilled;
+    /* @var int[] $beforeEvents */
+    public $beforeEvents;
+
     /**
      * NodikaConfiguration constructor.
      *
@@ -52,25 +67,4 @@ class NodikaConfiguration extends BaseConfiguration
         }
         parent::__construct($data);
     }
-
-    /* @var MemberConfiguration[] $memberConfigurations */
-    public $memberConfigurations;
-
-    /* @var EventTypeConfiguration $eventTypeConfiguration */
-    public $eventTypeConfiguration;
-
-    /* @var MemberEventTypeDistribution[] $memberEventTypeDistributions */
-    public $memberEventTypeDistributions;
-
-    /* @var boolean $memberEventTypeDistributionFilled */
-    public $memberEventTypeDistributionFilled;
-
-    /* @var \DateTime[] $holidays */
-    public $holidays;
-
-    /* @var boolean $holidaysFilled */
-    public $holidaysFilled;
-
-    /* @var int[] $beforeEvents */
-    public $beforeEvents;
 }

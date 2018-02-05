@@ -523,37 +523,6 @@ class AccessController extends BaseAccessController
     }
 
     /**
-     * @Route("/reset/confirm/{confirmationToken}", name="access_reset_confirm")
-     *
-     * @param Request $request
-     * @param $confirmationToken
-     * @param TranslatorInterface $translator
-     *
-     * @return Response
-     */
-    public function resetConfirmAction(Request $request, $confirmationToken, TranslatorInterface $translator)
-    {
-        return $this->handleResetPasswordAction(
-            $request,
-            $confirmationToken,
-            $translator,
-            function () {
-                return $this->redirectToRoute('dashboard_index');
-            },
-            function ($form) {
-                /* @var FormInterface $form */
-                $outputArray['reset_password_form'] = $form->createView();
-
-                return $this->renderNoBackUrl(
-                    'access/reset_confirm.html.twig',
-                    $outputArray,
-                    'user can now reset password, it does not make sense to go back'
-                );
-            }
-        );
-    }
-
-    /**
      * @param Request $request
      * @param $confirmationToken
      * @param TranslatorInterface $translator
@@ -602,6 +571,37 @@ class AccessController extends BaseAccessController
         }
 
         return $responseCallable($myForm);
+    }
+
+    /**
+     * @Route("/reset/confirm/{confirmationToken}", name="access_reset_confirm")
+     *
+     * @param Request $request
+     * @param $confirmationToken
+     * @param TranslatorInterface $translator
+     *
+     * @return Response
+     */
+    public function resetConfirmAction(Request $request, $confirmationToken, TranslatorInterface $translator)
+    {
+        return $this->handleResetPasswordAction(
+            $request,
+            $confirmationToken,
+            $translator,
+            function () {
+                return $this->redirectToRoute('dashboard_index');
+            },
+            function ($form) {
+                /* @var FormInterface $form */
+                $outputArray['reset_password_form'] = $form->createView();
+
+                return $this->renderNoBackUrl(
+                    'access/reset_confirm.html.twig',
+                    $outputArray,
+                    'user can now reset password, it does not make sense to go back'
+                );
+            }
+        );
     }
 
     /**

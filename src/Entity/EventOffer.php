@@ -97,27 +97,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Set description.
+     * Get openDateTime.
      *
-     * @param string $description
-     *
-     * @return EventOffer
+     * @return \DateTime
      */
-    public function setDescription($description)
+    public function getCreateDateTime()
     {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
+        return $this->createDateTime;
     }
 
     /**
@@ -135,13 +121,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get openDateTime.
+     * Get closeDateTime.
      *
      * @return \DateTime
      */
-    public function getCreateDateTime()
+    public function getOpenDateTime()
     {
-        return $this->createDateTime;
+        return $this->openDateTime;
     }
 
     /**
@@ -159,13 +145,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get closeDateTime.
+     * Get status.
      *
-     * @return \DateTime
+     * @return int
      */
-    public function getOpenDateTime()
+    public function getStatus()
     {
-        return $this->openDateTime;
+        return $this->status;
     }
 
     /**
@@ -187,19 +173,19 @@ class EventOffer extends BaseEntity
      *
      * @return int
      */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Get status.
-     *
-     * @return int
-     */
     public function getStatusText()
     {
         return OfferStatus::getTranslation($this->status);
+    }
+
+    /**
+     * Get offeredByMember.
+     *
+     * @return Member
+     */
+    public function getOfferedByMember()
+    {
+        return $this->offeredByMember;
     }
 
     /**
@@ -217,13 +203,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get offeredByMember.
+     * Get offeredByPerson.
      *
-     * @return Member
+     * @return Person
      */
-    public function getOfferedByMember()
+    public function getOfferedByPerson()
     {
-        return $this->offeredByMember;
+        return $this->offeredByPerson;
     }
 
     /**
@@ -241,13 +227,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get offeredByPerson.
+     * Get offeredToMember.
      *
-     * @return Person
+     * @return Member
      */
-    public function getOfferedByPerson()
+    public function getOfferedToMember()
     {
-        return $this->offeredByPerson;
+        return $this->offeredToMember;
     }
 
     /**
@@ -265,13 +251,13 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get offeredToMember.
+     * Get offeredToPerson.
      *
-     * @return Member
+     * @return Person
      */
-    public function getOfferedToMember()
+    public function getOfferedToPerson()
     {
-        return $this->offeredToMember;
+        return $this->offeredToPerson;
     }
 
     /**
@@ -286,16 +272,6 @@ class EventOffer extends BaseEntity
         $this->offeredToPerson = $offeredToPerson;
 
         return $this;
-    }
-
-    /**
-     * Get offeredToPerson.
-     *
-     * @return Person
-     */
-    public function getOfferedToPerson()
-    {
-        return $this->offeredToPerson;
     }
 
     /**
@@ -340,6 +316,30 @@ class EventOffer extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getDescription();
+    }
+
+    /**
+     * Get description.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param string $description
+     *
+     * @return EventOffer
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
     }
 
     /**

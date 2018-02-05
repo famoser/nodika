@@ -110,6 +110,16 @@ class Member extends BaseEntity
     }
 
     /**
+     * Get organisation.
+     *
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
      * Set organisation.
      *
      * @param Organisation $organisation
@@ -121,16 +131,6 @@ class Member extends BaseEntity
         $this->organisation = $organisation;
 
         return $this;
-    }
-
-    /**
-     * Get organisation.
-     *
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
     }
 
     /**
@@ -186,22 +186,6 @@ class Member extends BaseEntity
     }
 
     /**
-     * @return string
-     */
-    public function getInvitationHash()
-    {
-        return $this->invitationHash;
-    }
-
-    /**
-     * @param string $invitationHash
-     */
-    public function setInvitationHash($invitationHash)
-    {
-        $this->invitationHash = $invitationHash;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getInvitationDateTime()
@@ -215,5 +199,21 @@ class Member extends BaseEntity
     public function setInvitationDateTime($invitationDateTime)
     {
         $this->invitationDateTime = $invitationDateTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvitationHash()
+    {
+        return $this->invitationHash;
+    }
+
+    /**
+     * @param string $invitationHash
+     */
+    public function setInvitationHash($invitationHash)
+    {
+        $this->invitationHash = $invitationHash;
     }
 }

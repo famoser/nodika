@@ -17,6 +17,34 @@ use Symfony\Component\Form\FormBuilderInterface;
 abstract class BaseEntity extends TranslatableObject
 {
     /**
+     * returns the builder with all fields from the entity.
+     *
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     *
+     * @return mixed
+     */
+    public static function getBuilderStatic(FormBuilderInterface $builder, $defaultArray = [])
+    {
+        $instance = new static();
+
+        return $instance->getBuilder($builder, $defaultArray);
+    }
+
+    /**
+     * returns the builder with all flat fields from the entity.
+     *
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     *
+     * @return FormBuilderInterface
+     */
+    protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
+    {
+        return $builder;
+    }
+
+    /**
      * @return string
      */
     public function __toString()
@@ -37,33 +65,5 @@ abstract class BaseEntity extends TranslatableObject
     protected function getTranslationDomainPrefix()
     {
         return 'entity';
-    }
-
-    /**
-     * returns the builder with all flat fields from the entity.
-     *
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    protected function getBuilder(FormBuilderInterface $builder, $defaultArray)
-    {
-        return $builder;
-    }
-
-    /**
-     * returns the builder with all fields from the entity.
-     *
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return mixed
-     */
-    public static function getBuilderStatic(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $instance = new static();
-
-        return $instance->getBuilder($builder, $defaultArray);
     }
 }

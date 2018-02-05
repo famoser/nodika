@@ -55,7 +55,7 @@ class CronJobController extends BaseFrontendController
      *
      * @param $secret
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return Response
      */
@@ -73,9 +73,9 @@ class CronJobController extends BaseFrontendController
             $adminEmail = null !== $settings->getReceiverOfRemainders() ? $settings->getReceiverOfRemainders()->getEmail() : null;
 
             //first time email is skipped
-            $remainderThreshold = new \DateTime('now + '.($settings->getCanConfirmEventBeforeDays() - $settings->getSendConfirmEventEmailDays()).' days');
-            $tooLateThreshold = new \DateTime('now + '.$settings->getMustConfirmEventBeforeDays().' days');
-            $remainderSendBlock = new \DateTime('now - '.$settings->getSendConfirmEventEmailDays().' days');
+            $remainderThreshold = new \DateTime('now + ' . ($settings->getCanConfirmEventBeforeDays() - $settings->getSendConfirmEventEmailDays()) . ' days');
+            $tooLateThreshold = new \DateTime('now + ' . $settings->getMustConfirmEventBeforeDays() . ' days');
+            $remainderSendBlock = new \DateTime('now - ' . $settings->getSendConfirmEventEmailDays() . ' days');
 
             foreach ($organisation->getMembers() as $member) {
                 /* @var Member $member */
@@ -105,8 +105,8 @@ class CronJobController extends BaseFrontendController
                         $body = $translator->trans(
                             'member_event_confirm_too_late_remainder.message',
                             [
-                                '%event_short%' => $unconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT).
-                                    ' - '.
+                                '%event_short%' => $unconfirmedEvent->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) .
+                                    ' - ' .
                                     $unconfirmedEvent->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT),
                                 '%owner%' => $owner,
                             ],

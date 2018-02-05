@@ -70,6 +70,145 @@ trait UserTrait
      * @var string
      */
     private $plainPassword;
+    private $repeatPlainPassword;
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $defaultArray
+     * @param bool $agb
+     *
+     * @return FormBuilderInterface
+     */
+    public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [], $agb = true)
+    {
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getEmailBuilder($builder, $builderArray);
+        static::getPlainPasswordBuilder($builder, $builderArray);
+        if ($agb) {
+            $builder->add(
+                'agbAccepted',
+                CheckboxType::class,
+                $builderArray + NamingHelper::propertyToTranslationForBuilder('agbAccepted')
+            );
+        }
+
+        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $builderArray
+     */
+    private static function getEmailBuilder(FormBuilderInterface $builder, $builderArray)
+    {
+        $builder->add(
+            'email',
+            EmailType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('email')
+        );
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $builderArray
+     */
+    private static function getPlainPasswordBuilder(FormBuilderInterface $builder, $builderArray)
+    {
+        $builder->add(
+            'plainPassword',
+            PasswordType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('plainPassword')
+        );
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $defaultArray
+     *
+     * @return FormBuilderInterface
+     */
+    public static function getLoginBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    {
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getEmailBuilder($builder, $builderArray);
+        static::getPlainPasswordBuilder($builder, $builderArray);
+
+        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     *
+     * @return FormBuilderInterface
+     */
+    public static function getResetUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    {
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getEmailBuilder($builder, $builderArray);
+
+        return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
+     *
+     * @return FormBuilderInterface
+     */
+    public static function getSetPasswordBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    {
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
+        static::getPlainPasswordBuilder($builder, $builderArray);
+        $builder->add(
+            'repeatPlainPassword',
+            PasswordType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('repeatPlainPassword')
+        );
+
+        return $builder;
+    }
+
+    /**
+     * @param $email
+     *
+     * sets all fields of the user object
+     *
+     * @return static
+     */
+    private static function createUserFromEmail($email)
+    {
+        $object = new static();
+        $object->setRegistrationDate(new \DateTime());
+        $object->setIsActive(true);
+        $object->setEmail($email);
+        $object->setPlainPassword(uniqid());
+        $object->persistNewPassword();
+
+        return $object;
+    }
+
+    /**
+     * hashes the password if valid, and erases credentials.
+     */
+    public function persistNewPassword()
+    {
+        $this->setPasswordHash(password_hash($this->getPlainPassword(), PASSWORD_BCRYPT));
+        $this->eraseCredentials();
+        $this->setResetHash(HashHelper::createNewResetHash());
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        $this->setPlainPassword(null);
+        $this->setRepeatPlainPassword(null);
+    }
 
     /**
      * @return string
@@ -130,26 +269,6 @@ trait UserTrait
     /**
      * @return string
      */
-    public function getPasswordHash()
-    {
-        return $this->passwordHash;
-    }
-
-    /**
-     * @param string $passwordHash
-     *
-     * @return static
-     */
-    public function setPasswordHash($passwordHash)
-    {
-        $this->passwordHash = $passwordHash;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getResetHash()
     {
         return $this->resetHash;
@@ -184,26 +303,12 @@ trait UserTrait
     }
 
     /**
-     * @param string $plainPassword
-     *
-     * @return static
-     */
-    public function setPlainPassword($plainPassword)
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getPlainPassword()
+    public function getRepeatPlainPassword()
     {
-        return $this->plainPassword;
+        return $this->repeatPlainPassword;
     }
-
-    private $repeatPlainPassword;
 
     /**
      * @param string $plainPassword
@@ -215,36 +320,6 @@ trait UserTrait
         $this->repeatPlainPassword = $plainPassword;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepeatPlainPassword()
-    {
-        return $this->repeatPlainPassword;
-    }
-
-    /**
-     * hashes the password if valid, and erases credentials.
-     */
-    public function persistNewPassword()
-    {
-        $this->setPasswordHash(password_hash($this->getPlainPassword(), PASSWORD_BCRYPT));
-        $this->eraseCredentials();
-        $this->setResetHash(HashHelper::createNewResetHash());
-    }
-
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
-    public function eraseCredentials()
-    {
-        $this->setPlainPassword(null);
-        $this->setRepeatPlainPassword(null);
     }
 
     /**
@@ -260,16 +335,6 @@ trait UserTrait
     }
 
     /**
-     * checks if the user is allowed to login.
-     *
-     * @return bool
-     */
-    public function canLogin()
-    {
-        return $this->isActive;
-    }
-
-    /**
      * @return bool
      */
     public function isValidPlainPassword()
@@ -278,34 +343,53 @@ trait UserTrait
     }
 
     /**
-     * get the user identifier.
-     *
      * @return string
      */
-    protected function getUserIdentifier()
+    public function getPlainPassword()
     {
-        return $this->email;
+        return $this->plainPassword;
     }
 
     /**
-     * check if two users are equal.
+     * @param string $plainPassword
      *
-     * @param UserTrait $user
+     * @return static
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordHash()
+    {
+        return $this->passwordHash;
+    }
+
+    /**
+     * @param string $passwordHash
+     *
+     * @return static
+     */
+    public function setPasswordHash($passwordHash)
+    {
+        $this->passwordHash = $passwordHash;
+
+        return $this;
+    }
+
+    /**
+     * checks if the user is allowed to login.
      *
      * @return bool
      */
-    protected function isEqualToUser($user)
+    public function canLogin()
     {
-        /* @var UserTrait $user */
-        if ($this->getUsername() !== $user->getUsername()) {
-            return false;
-        }
-
-        if ($this->getPasswordHash() !== $user->getPasswordHash()) {
-            return false;
-        }
-
-        return true;
+        return $this->isActive;
     }
 
     /**
@@ -331,16 +415,6 @@ trait UserTrait
     public function getSalt()
     {
         return null;
-    }
-
-    /**
-     * Returns the username used to authenticate the user.
-     *
-     * @return string The username
-     */
-    public function getUsername()
-    {
-        return $this->email;
     }
 
     /**
@@ -404,103 +478,6 @@ trait UserTrait
     }
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param array                $defaultArray
-     * @param bool                 $agb
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [], $agb = true)
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builderArray);
-        static::getPlainPasswordBuilder($builder, $builderArray);
-        if ($agb) {
-            $builder->add(
-                'agbAccepted',
-                CheckboxType::class,
-                $builderArray + NamingHelper::propertyToTranslationForBuilder('agbAccepted')
-            );
-        }
-
-        return $builder;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getLoginBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builderArray);
-        static::getPlainPasswordBuilder($builder, $builderArray);
-
-        return $builder;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getResetUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builderArray);
-
-        return $builder;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getSetPasswordBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getPlainPasswordBuilder($builder, $builderArray);
-        $builder->add(
-            'repeatPlainPassword',
-            PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('repeatPlainPassword')
-        );
-
-        return $builder;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $builderArray
-     */
-    private static function getPlainPasswordBuilder(FormBuilderInterface $builder, $builderArray)
-    {
-        $builder->add(
-            'plainPassword',
-            PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('plainPassword')
-        );
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $builderArray
-     */
-    private static function getEmailBuilder(FormBuilderInterface $builder, $builderArray)
-    {
-        $builder->add(
-            'email',
-            EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('email')
-        );
-    }
-
-    /**
      * @ORM\PrePersist()
      */
     public function prePersistsHandler()
@@ -509,21 +486,43 @@ trait UserTrait
     }
 
     /**
-     * @param $email
+     * get the user identifier.
      *
-     * sets all fields of the user object
-     *
-     * @return static
+     * @return string
      */
-    private static function createUserFromEmail($email)
+    protected function getUserIdentifier()
     {
-        $object = new static();
-        $object->setRegistrationDate(new \DateTime());
-        $object->setIsActive(true);
-        $object->setEmail($email);
-        $object->setPlainPassword(uniqid());
-        $object->persistNewPassword();
+        return $this->email;
+    }
 
-        return $object;
+    /**
+     * check if two users are equal.
+     *
+     * @param UserTrait $user
+     *
+     * @return bool
+     */
+    protected function isEqualToUser($user)
+    {
+        /* @var UserTrait $user */
+        if ($this->getUsername() !== $user->getUsername()) {
+            return false;
+        }
+
+        if ($this->getPasswordHash() !== $user->getPasswordHash()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        return $this->email;
     }
 }

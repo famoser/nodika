@@ -15,56 +15,49 @@ use App\Entity\EventLine;
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;
-use App\Model\EventLine\EventLineModel;
 
 class SearchEventModel
 {
     /**
+     * @var Organisation
+     */
+    private $organisation;
+    /**
+     * @var \DateTime
+     */
+    private $startDateTime;
+    /**
+     * @var \DateTime
+     */
+    private $endDateTime = null;
+    /**
+     * @var EventLine
+     */
+    private $filterEventLine = null;
+    /**
+     * @var Member
+     */
+    private $filterMember = null;
+    /**
+     * @var Person
+     */
+    private $filterPerson = null;
+    /**
+     * @var int
+     */
+    private $maxResults = 3000;
+
+    /**
      * SearchEventModel constructor.
      *
      * @param Organisation $organisation
-     * @param \DateTime    $startDateTime
+     * @param \DateTime $startDateTime
      */
     public function __construct(Organisation $organisation, \DateTime $startDateTime)
     {
         $this->organisation = $organisation;
         $this->startDateTime = $startDateTime;
     }
-
-    /**
-     * @var Organisation
-     */
-    private $organisation;
-
-    /**
-     * @var \DateTime
-     */
-    private $startDateTime;
-
-    /**
-     * @var \DateTime
-     */
-    private $endDateTime = null;
-
-    /**
-     * @var EventLine
-     */
-    private $filterEventLine = null;
-
-    /**
-     * @var Member
-     */
-    private $filterMember = null;
-
-    /**
-     * @var Person
-     */
-    private $filterPerson = null;
-
-    /**
-     * @var int
-     */
-    private $maxResults = 3000;
 
     /**
      * @return Organisation

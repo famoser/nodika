@@ -15,6 +15,13 @@ use App\Entity\Event;
 
 class EventLineConfigurationEventEntry
 {
+    /* @var int $memberId */
+    public $memberId;
+    /* @var \DateTime $startDateTime */
+    public $startDateTime;
+    /* @var \DateTime $endDateTime */
+    public $endDateTime;
+
     /**
      * MemberConfiguration constructor.
      *
@@ -43,11 +50,4 @@ class EventLineConfigurationEventEntry
 
         return $static;
     }
-
-    /* @var int $memberId */
-    public $memberId;
-    /* @var \DateTime $startDateTime */
-    public $startDateTime;
-    /* @var \DateTime $endDateTime */
-    public $endDateTime;
 }

@@ -13,9 +13,7 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseController;
 use App\Entity\FrontendUser;
-use App\Entity\Newsletter;
 use App\Form\ContactRequest\ContactRequestType;
-use App\Form\Newsletter\RegisterForPreviewType;
 use App\Model\ContactRequest\ContactRequest;
 use App\Service\EmailService;
 use Symfony\Component\Form\FormInterface;
@@ -44,39 +42,6 @@ class StaticController extends BaseController
             $arr,
             'this is the homepage'
         );
-    }
-
-    /**
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param EmailService $emailService
-     * @param $arr
-     */
-    private function processContactForm(Request $request, TranslatorInterface $translator, EmailService $emailService, &$arr)
-    {
-        $form = $this->handleForm(
-            $this->createForm(ContactRequestType::class),
-            $request,
-            $translator,
-            new ContactRequest(),
-            function ($form, $contactRequest) use ($translator, $emailService) {
-                /* @var FormInterface $form */
-                /* @var ContactRequest $contactRequest */
-                $emailService->sendTextEmail(
-                    $this->getParameter('CONTACT_EMAIL'),
-                    'Kontaktanfrage von nodika',
-                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
-                    "\nEmail: " . $contactRequest->getEmail() .
-                    "\nName: " . $contactRequest->getName() .
-                    "\nNachricht: " . $contactRequest->getMessage()
-                );
-
-                $this->displaySuccess($translator->trans('contact.thanks_for_contact_form', [], 'static'));
-
-                return $this->createForm(ContactRequestType::class);
-            }
-        );
-        $arr['contact_form'] = $form->createView();
     }
 
     /**
@@ -122,5 +87,38 @@ class StaticController extends BaseController
         $this->processContactForm($request, $translator, $emailService, $arr);
 
         return $this->render('static/contact.html.twig', $arr);
+    }
+
+    /**
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param EmailService $emailService
+     * @param $arr
+     */
+    private function processContactForm(Request $request, TranslatorInterface $translator, EmailService $emailService, &$arr)
+    {
+        $form = $this->handleForm(
+            $this->createForm(ContactRequestType::class),
+            $request,
+            $translator,
+            new ContactRequest(),
+            function ($form, $contactRequest) use ($translator, $emailService) {
+                /* @var FormInterface $form */
+                /* @var ContactRequest $contactRequest */
+                $emailService->sendTextEmail(
+                    $this->getParameter('CONTACT_EMAIL'),
+                    'Kontaktanfrage von nodika',
+                    "Sie haben eine Kontaktanfrage auf nodika erhalten: \n" .
+                    "\nEmail: " . $contactRequest->getEmail() .
+                    "\nName: " . $contactRequest->getName() .
+                    "\nNachricht: " . $contactRequest->getMessage()
+                );
+
+                $this->displaySuccess($translator->trans('contact.thanks_for_contact_form', [], 'static'));
+
+                return $this->createForm(ContactRequestType::class);
+            }
+        );
+        $arr['contact_form'] = $form->createView();
     }
 }

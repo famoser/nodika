@@ -44,27 +44,13 @@ class Setting extends BaseEntity
     private $frontendUser;
 
     /**
-     * Set key.
-     *
-     * @param string $key
-     *
-     * @return Setting
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-
-        return $this;
-    }
-
-    /**
-     * Get key.
+     * Get content.
      *
      * @return string
      */
-    public function getKey()
+    public function getContent()
     {
-        return $this->key;
+        return $this->content;
     }
 
     /**
@@ -82,13 +68,13 @@ class Setting extends BaseEntity
     }
 
     /**
-     * Get content.
+     * Get user.
      *
-     * @return string
+     * @return FrontendUser
      */
-    public function getContent()
+    public function getFrontendUser()
     {
-        return $this->content;
+        return $this->frontendUser;
     }
 
     /**
@@ -106,16 +92,6 @@ class Setting extends BaseEntity
     }
 
     /**
-     * Get user.
-     *
-     * @return FrontendUser
-     */
-    public function getFrontendUser()
-    {
-        return $this->frontendUser;
-    }
-
-    /**
      * returns a string representation of this entity.
      *
      * @return string
@@ -123,5 +99,29 @@ class Setting extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getKey();
+    }
+
+    /**
+     * Get key.
+     *
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * Set key.
+     *
+     * @param string $key
+     *
+     * @return Setting
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
     }
 }

@@ -35,23 +35,26 @@ trait ThingTrait
     private $description;
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
+     * @param FormBuilderInterface $builder
+     * @param $defaultArray
      *
-     * @return static
+     * @return FormBuilderInterface
      */
-    public function setName($name)
+    public static function getThingBuilder(FormBuilderInterface $builder, $defaultArray = [])
     {
-        $this->name = $name;
+        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(ThingTrait::class)] + $defaultArray;
+        $builder->add(
+            'name',
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('name')
+        );
+        $builder->add(
+            'description',
+            TextType::class,
+            $builderArray + NamingHelper::propertyToTranslationForBuilder('description') + ['required' => false]
+        );
 
-        return $this;
+        return $builder;
     }
 
     /**
@@ -85,26 +88,23 @@ trait ThingTrait
     }
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
+     * @return string
      */
-    public static function getThingBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    public function getName()
     {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(ThingTrait::class)] + $defaultArray;
-        $builder->add(
-            'name',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('name')
-        );
-        $builder->add(
-            'description',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('description') + ['required' => false]
-        );
+        return $this->name;
+    }
 
-        return $builder;
+    /**
+     * @param string $name
+     *
+     * @return static
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     /**

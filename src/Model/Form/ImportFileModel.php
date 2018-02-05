@@ -17,6 +17,12 @@ class ImportFileModel
 {
     /* @var string $uploadFolderPath */
     private $uploadFolderPath;
+    /* @var UploadedFile $file */
+    private $file;
+    /* @var boolean $isCorrectFormat */
+    private $isCorrectFormat;
+    /* @var string $fileSrc */
+    private $fileSrc;
 
     /**
      * ImportFileModel constructor.
@@ -26,33 +32,6 @@ class ImportFileModel
     public function __construct($uploadFolderPath)
     {
         $this->uploadFolderPath = $uploadFolderPath;
-    }
-
-    /* @var UploadedFile $file */
-    private $file;
-
-    /* @var boolean $isCorrectFormat */
-    private $isCorrectFormat;
-
-    /* @var string $fileSrc */
-    private $fileSrc;
-
-    /**
-     * Get file.
-     *
-     * @return UploadedFile
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * @param UploadedFile|null $file
-     */
-    public function setFile(UploadedFile $file = null)
-    {
-        $this->file = $file;
     }
 
     /**
@@ -81,9 +60,9 @@ class ImportFileModel
             return false;
         }
 
-        $path = $_SERVER['DOCUMENT_ROOT'].$this->uploadFolderPath;
+        $path = $_SERVER['DOCUMENT_ROOT'] . $this->uploadFolderPath;
         // move takes the target directory and target filename as params
-        $newFileName = uniqid().'.'.$this->getFile()->guessExtension();
+        $newFileName = uniqid() . '.' . $this->getFile()->guessExtension();
         $this->getFile()->move(
             $path,
             $newFileName
@@ -99,10 +78,28 @@ class ImportFileModel
     }
 
     /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param UploadedFile|null $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+    }
+
+    /**
      * @return string
      */
     public function getFullFilePath()
     {
-        return $_SERVER['DOCUMENT_ROOT'].$this->uploadFolderPath.'/'.$this->fileSrc;
+        return $_SERVER['DOCUMENT_ROOT'] . $this->uploadFolderPath . '/' . $this->fileSrc;
     }
 }

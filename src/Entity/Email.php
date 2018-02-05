@@ -98,38 +98,6 @@ class Email extends BaseEntity
     private $visitedDateTime;
 
     /**
-     * @return mixed
-     */
-    public function getReceiver()
-    {
-        return $this->receiver;
-    }
-
-    /**
-     * @param mixed $receiver
-     */
-    public function setReceiver($receiver)
-    {
-        $this->receiver = $receiver;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @param string $subject
-     */
-    public function setSubject(string $subject)
-    {
-        $this->subject = $subject;
-    }
-
-    /**
      * @return string
      */
     public function getBody()
@@ -232,7 +200,39 @@ class Email extends BaseEntity
      */
     public function getFullIdentifier()
     {
-        return $this->getReceiver().' '.$this->getSubject();
+        return $this->getReceiver() . ' ' . $this->getSubject();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceiver()
+    {
+        return $this->receiver;
+    }
+
+    /**
+     * @param mixed $receiver
+     */
+    public function setReceiver($receiver)
+    {
+        $this->receiver = $receiver;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param string $subject
+     */
+    public function setSubject(string $subject)
+    {
+        $this->subject = $subject;
     }
 
     /**

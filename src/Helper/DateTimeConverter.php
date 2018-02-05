@@ -23,7 +23,7 @@ class DateTimeConverter
      */
     public static function addDays(\DateTime $dateTime, $days)
     {
-        $interval = new \DateInterval('P'.$days.'D');
+        $interval = new \DateInterval('P' . $days . 'D');
         $dateTime->add($interval);
 
         return $dateTime;

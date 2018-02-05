@@ -29,22 +29,13 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
      * @var EventGenerationService
      */
     private $eventGenerationService;
+    /* @var ContainerInterface $container */
+    private $container;
 
     public function __construct(EventGenerationService $eventGenerationService)
     {
         $this->eventGenerationService = $eventGenerationService;
     }
-
-    /**
-     * @return \Faker\Generator
-     */
-    protected function getFaker()
-    {
-        return Factory::create('de_CH');
-    }
-
-    /* @var ContainerInterface $container */
-    private $container;
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -60,13 +51,6 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
     }
 
     /**
-     * create an instance with all random values.
-     *
-     * @return mixed
-     */
-    abstract protected function getAllRandomInstance();
-
-    /**
      * @param AddressTrait $obj
      */
     protected function fillRandomAddress($obj)
@@ -77,9 +61,17 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
         if ($faker->numberBetween(0, 10) > 8) {
             $obj->setAddressLine($faker->streetAddress);
         }
-        $obj->setPostalCode($faker->postcode);
+        $obj->setPostalCode($faker->numberBetween(0, 9999));
         $obj->setCity($faker->city);
         $obj->setCountry($faker->countryCode);
+    }
+
+    /**
+     * @return \Faker\Generator
+     */
+    protected function getFaker()
+    {
+        return Factory::create('de_CH');
     }
 
     /**
@@ -135,4 +127,11 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
             $manager->persist($instance);
         }
     }
+
+    /**
+     * create an instance with all random values.
+     *
+     * @return mixed
+     */
+    abstract protected function getAllRandomInstance();
 }

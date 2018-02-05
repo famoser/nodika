@@ -39,7 +39,7 @@ class OrganisationController extends BaseController
     /**
      * @Route("/new", name="administration_organisation_new")
      *
-     * @param Request             $request
+     * @param Request $request
      * @param TranslatorInterface $translator
      *
      * @return RedirectResponse|Response
@@ -76,7 +76,7 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/administer", name="administration_organisation_administer")
      *
-     * @param Organisation        $organisation
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -105,8 +105,8 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/edit", name="administration_organisation_edit")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -182,8 +182,8 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/members/invite", name="administration_organisation_members_invite")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -249,10 +249,10 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/members/invite/preview", name="administration_organisation_members_invite_preview")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return Response
      */
@@ -280,13 +280,13 @@ class OrganisationController extends BaseController
             }
             foreach ($request->request->all() as $key => $value) {
                 if (0 === mb_strpos($key, 'free_1_')) {
-                    $memberId = (int) mb_substr($key, 7); //to cut off free_1_
+                    $memberId = (int)mb_substr($key, 7); //to cut off free_1_
                     $variableMapping[$memberId]['FREE_1_REPLACE'] = $value;
                 } elseif (0 === mb_strpos($key, 'free_2_')) {
-                    $memberId = (int) mb_substr($key, 7); //to cut off free_2_
+                    $memberId = (int)mb_substr($key, 7); //to cut off free_2_
                     $variableMapping[$memberId]['FREE_2_REPLACE'] = $value;
                 } elseif (0 === mb_strpos($key, 'free_3_')) {
-                    $memberId = (int) mb_substr($key, 7); //to cut off free_3_
+                    $memberId = (int)mb_substr($key, 7); //to cut off free_3_
                     $variableMapping[$memberId]['FREE_3_REPLACE'] = $value;
                 }
             }
@@ -349,8 +349,8 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/persons/invite", name="administration_organisation_persons_invite")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
@@ -420,10 +420,10 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/persons/invite/preview", name="administration_organisation_persons_invite_preview")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
+     * @param EmailService $emailService
      *
      * @return Response
      */
@@ -452,13 +452,13 @@ class OrganisationController extends BaseController
             }
             foreach ($request->request->all() as $key => $value) {
                 if (0 === mb_strpos($key, 'free_1_')) {
-                    $personId = (int) mb_substr($key, 7); //to cut off free_1_
+                    $personId = (int)mb_substr($key, 7); //to cut off free_1_
                     $variableMapping[$personId]['FREE_1_REPLACE'] = $value;
                 } elseif (0 === mb_strpos($key, 'free_2_')) {
-                    $personId = (int) mb_substr($key, 7); //to cut off free_2_
+                    $personId = (int)mb_substr($key, 7); //to cut off free_2_
                     $variableMapping[$personId]['FREE_2_REPLACE'] = $value;
                 } elseif (0 === mb_strpos($key, 'free_3_')) {
-                    $personId = (int) mb_substr($key, 7); //to cut off free_3_
+                    $personId = (int)mb_substr($key, 7); //to cut off free_3_
                     $variableMapping[$personId]['FREE_3_REPLACE'] = $value;
                 }
             }
@@ -540,8 +540,8 @@ class OrganisationController extends BaseController
     /**
      * @Route("/{organisation}/settings", name="administration_organisation_settings")
      *
-     * @param Request             $request
-     * @param Organisation        $organisation
+     * @param Request $request
+     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response

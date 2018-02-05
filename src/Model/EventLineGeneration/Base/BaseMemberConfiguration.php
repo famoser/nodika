@@ -15,6 +15,13 @@ use App\Entity\Member;
 
 class BaseMemberConfiguration
 {
+    /* @var int $id */
+    public $id;
+    /* @var string $name */
+    public $name;
+    /* @var bool $isEnabled */
+    public $isEnabled;
+
     /**
      * MemberConfiguration constructor.
      *
@@ -46,11 +53,4 @@ class BaseMemberConfiguration
         $this->name = $member->getName();
         $this->isEnabled = true;
     }
-
-    /* @var int $id */
-    public $id;
-    /* @var string $name */
-    public $name;
-    /* @var bool $isEnabled */
-    public $isEnabled;
 }

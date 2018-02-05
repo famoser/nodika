@@ -31,30 +31,6 @@ class FrontendUserProvider extends BaseUserProvider
     }
 
     /**
-     * Loads the user for the given username.
-     *
-     * This method must throw UsernameNotFoundException if the user is not
-     * found.
-     *
-     * @param string $username The username
-     *
-     * @throws UsernameNotFoundException if the user is not found
-     *
-     * @return UserInterface
-     */
-    public function loadUserByUsername($username)
-    {
-        $user = $this->registry->getRepository('App:FrontendUser')->findOneBy(['email' => $username]);
-        if (null !== $user) {
-            return $user;
-        }
-
-        throw new UsernameNotFoundException(
-            sprintf('Username "%s" does not exist in UserProvider.', $username)
-        );
-    }
-
-    /**
      * Refreshes the user for the account interface.
      *
      * It is up to the implementation to decide if the user data should be
@@ -77,6 +53,30 @@ class FrontendUserProvider extends BaseUserProvider
         }
 
         return $this->loadUserByUsername($user->getUsername());
+    }
+
+    /**
+     * Loads the user for the given username.
+     *
+     * This method must throw UsernameNotFoundException if the user is not
+     * found.
+     *
+     * @param string $username The username
+     *
+     * @throws UsernameNotFoundException if the user is not found
+     *
+     * @return UserInterface
+     */
+    public function loadUserByUsername($username)
+    {
+        $user = $this->registry->getRepository('App:FrontendUser')->findOneBy(['email' => $username]);
+        if (null !== $user) {
+            return $user;
+        }
+
+        throw new UsernameNotFoundException(
+            sprintf('Username "%s" does not exist in UserProvider.', $username)
+        );
     }
 
     /**

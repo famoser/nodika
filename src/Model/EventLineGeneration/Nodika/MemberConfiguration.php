@@ -16,6 +16,13 @@ use App\Model\EventLineGeneration\Base\BaseMemberConfiguration;
 
 class MemberConfiguration extends BaseMemberConfiguration
 {
+    /* @var double $points */
+    public $points;
+    /* @var double $endScore */
+    public $endScore;
+    /* @var double $order */
+    public $luckyScore;
+
     /**
      * MemberConfiguration constructor.
      *
@@ -46,11 +53,4 @@ class MemberConfiguration extends BaseMemberConfiguration
 
         return $instance;
     }
-
-    /* @var double $points */
-    public $points;
-    /* @var double $endScore */
-    public $endScore;
-    /* @var double $order */
-    public $luckyScore;
 }
