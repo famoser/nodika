@@ -11,9 +11,11 @@
 
 namespace App\Model\Event;
 
+use App\Entity\EventLine;
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;
+use App\Model\EventLine\EventLineModel;
 
 class SearchEventModel
 {
@@ -43,6 +45,11 @@ class SearchEventModel
      * @var \DateTime
      */
     private $endDateTime = null;
+
+    /**
+     * @var EventLine
+     */
+    private $filterEventLine = null;
 
     /**
      * @var Member
@@ -137,5 +144,21 @@ class SearchEventModel
     public function setMaxResults($maxResults)
     {
         $this->maxResults = $maxResults;
+    }
+
+    /**
+     * @return EventLine
+     */
+    public function getFilterEventLine()
+    {
+        return $this->filterEventLine;
+    }
+
+    /**
+     * @param EventLine $filterEventLine
+     */
+    public function setFilterEventLine($filterEventLine)
+    {
+        $this->filterEventLine = $filterEventLine;
     }
 }

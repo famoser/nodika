@@ -25,8 +25,8 @@ security:
         main:
             pattern:   ^/
             anonymous: ~
+            provider: frontend_user_provider
             form_login:
-                provider: frontend_user_provider
                 login_path: access_login
                 check_path: access_login_check
                 default_target_path: dashboard_index
@@ -37,13 +37,18 @@ security:
             logout:       true
             anonymous:    true
             logout_on_user_change: true
+            remember_me:
+              secret: '%env(APP_SECRET)%'
+              lifetime: 604800
+              path: /
+              always_remember_me: true
 
         #backend firewall for admins
         backend:
             pattern:   ^/
             anonymous: ~
+            provider: admin_user_provider
             form_login:
-                provider: admin_user_provider
                 login_path: backend_login
                 check_path: backend_login_check
                 default_target_path: backend_dashboard_index
