@@ -14,6 +14,7 @@ namespace App\DataFixtures;
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventLine;
 use App\Entity\EventLineGeneration;
+use App\Entity\Member;
 use App\Entity\Person;
 use App\Enum\DistributionType;
 use App\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
@@ -47,7 +48,13 @@ class LoadEventData extends BaseFixture
         $generation = $this->getEventGenerationService();
         $roundRobinConfiguration = new RoundRobinConfiguration(null);
 
-        $members = [$this->getReference('member-1'), $this->getReference('member-2'), $this->getReference('member-3')];
+        /**
+         * @var Member $member1
+         * @var Member $member2
+         */
+        $member1 = $this->getReference('member-1');
+        $member2 = $this->getReference('member-2');
+        $members = [$member1, $member2, $this->getReference('member-3')];
         $eventLines = [$this->getReference('event-line-1'), $this->getReference('event-line-2')];
 
         /* @var Person $admin */
@@ -59,9 +66,9 @@ class LoadEventData extends BaseFixture
         }
 
         $roundRobinConfiguration->startDateTime = new \DateTime();
-        $roundRobinConfiguration->endDateTime = new \DateTime('now + 1 year');
+        $roundRobinConfiguration->endDateTime = new \DateTime('now + 4 months');
         $roundRobinConfiguration->conflictPufferInHours = 0;
-        $roundRobinConfiguration->lengthInHours = 168;
+        $roundRobinConfiguration->lengthInHours = 48;
         $roundRobinConfiguration->randomOrderMade = true;
 
         $output = $generation->generateRoundRobin($roundRobinConfiguration, function () {
@@ -78,6 +85,17 @@ class LoadEventData extends BaseFixture
         $eventLineGeneration->setGenerationResult($output->generationResult);
         $manager->persist($eventLineGeneration);
         $generation->persist($eventLineGeneration, $output->generationResult, $admin);
+        $manager->flush();
+
+        //assign events to member
+        foreach ($member1->getEvents() as $event) {
+            $event->setPerson($member1->getPersons()->get(0));
+            $manager->persist($event);
+        }
+        foreach ($member2->getEvents() as $event) {
+            $event->setPerson($member2->getPersons()->get(0));
+            $manager->persist($event);
+        }
 
         $manager->flush();
     }

@@ -15,12 +15,12 @@
         {% include "layout/parts/flashbag.html.twig" %}
 
         <div class="container list-container">
-            <div class="row">
-                <a class="tile tile-single tile-left default-color" href="#">
+            <div class="row tile-grid">
+                <a class="tile tile-2 default-color" href="#">
                     <h3>{{ "about.nodika"|trans }}</h3>
                     <p>{{ "about.nodika_description"|trans }}</p>
                 </a>
-                <a class="tile tile-double default-color" href="#">
+                <a class="tile tile-4 default-color" href="#">
                     <h3>{{ "about.architecture"|trans }}</h3>
                     <p>
                         {% if member is defined and member is not null and person is defined and person is not null %}
@@ -37,7 +37,7 @@
                     </p>
                 </a>
 
-                <a class="tile tile-single tile-right default-color" href="{{ path("dashboard_index") }}">
+                <a class="tile tile-2 default-color" href="{{ path("dashboard_index") }}">
                     <h3>{{ "about.start"|trans }}</h3>
                     <p>{{ "about.start_description"|trans }}</p>
                 </a>

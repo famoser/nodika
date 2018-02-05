@@ -41,28 +41,28 @@
         {% include "layout/parts/flashbag.html.twig" %}
 
         <div class="container list-container d-none d-md-block">
-            <div class="row">
+            <div class="row tile-grid">
                 {# case 1: normal, active organisation #}
                 {% if organisation is defined and event_line_models|length > 0 %}
-                    <a class="tile tile-single tile-left default-color" href="{{ path('event_assign') }}">
+                    <a class="tile tile-2 default-color" href="{{ path('event_assign') }}">
                         <h3>{{ "index.assign_events"|trans }}</h3>
                         <p>
                             {{ "index.assign_events_description"|trans }}
                         </p>
                     </a>
-                    <a class="tile tile-single default-color" href="{{ path('offer_index') }}">
+                    <a class="tile tile-2 default-color" href="{{ path('offer_index') }}">
                         <h3>{{ "index.trade_events"|trans }}</h3>
                         <p>
                             {{ "index.trade_events_description"|trans }}
                         </p>
                     </a>
-                    <a class="tile tile-single default-color" href="{{ path('event_confirm') }}">
+                    <a class="tile tile-2 default-color" href="{{ path('event_confirm') }}">
                         <h3>{{ "index.confirm_events"|trans }}</h3>
                         <p>
                             {{ "index.confirm_events_description"|trans }}
                         </p>
                     </a>
-                    <a class="tile tile-single tile-right default-color" href="{{ path('event_search') }}">
+                    <a class="tile tile-2 default-color" href="{{ path('event_search') }}">
                         <h3>{{ "index.search_events"|trans }}</h3>
                         <p>
                             {{ "index.search_events_description"|trans }}
@@ -72,13 +72,13 @@
 
                 {# case 2: not in an active organisation; probably failed setup? #}
                 {% if organisation is not defined %}
-                    <a class="tile tile-double tile-left default-color" href="{{ path("help_users") }}">
+                    <a class="tile tile-4 default-color" href="{{ path("help_users") }}">
                         <h3>{{ "index.welcome"|trans }}</h3>
                         <p>
                             {{ "index.welcome_description"|trans }}
                         </p>
                     </a>
-                    <a class="tile tile-double tile-right default-color" href="mailto:support@nodika.ch">
+                    <a class="tile tile-4 default-color" href="mailto:support@nodika.ch">
                         <h3>{{ "index.questions"|trans }}</h3>
                         <p>
                             {{ "index.questions_description"|trans }}
@@ -89,7 +89,7 @@
                 {% endif %}
 
                 {% for organisation in change_organisations %}
-                    <a class="tile tile-single {% if loop.index0 % 2 == 0 %}tile-left{% else %}tile-right{% endif %} default-color"
+                    <a class="tile tile-2 {% if loop.index0 % 2 == 0 %}tile-left{% else %}tile-right{% endif %} default-color"
                        href="{{ path("organisation_change_to", {"organisation" : organisation.id}) }}">
                         <h3>{{ "index.change_organisation"|trans }}</h3>
                         <p>
@@ -101,7 +101,7 @@
                 {% endfor %}
 
                 {% for organisation in leading_organisations %}
-                    <a class="tile tile-double default-color {% if loop.index0 % 2 == 0 %}tile-left{% else %}tile-right{% endif %} "
+                    <a class="tile tile-4 default-color"
                        href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">
                         <h3>{{ "index.administer_organisations"|trans }}</h3>
                         <p>

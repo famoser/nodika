@@ -1,56 +1,17 @@
+.tile-grid
+  display: grid
+  grid-template-columns: repeat(8, 1fr)
+  grid-gap: 10px
+  grid-auto-rows: minmax(100px, auto)
+
 .tile
-  position: relative
-  width: 100%
-  min-height: 1px
-  padding: 10px 20px
-  margin-left: 5px
-  margin-right: 5px
-  margin-bottom: 10px
+  padding: 10px 15px
 
-.tile-single
-  flex: 0 0 calc(25% - 10px)
-  max-width: calc(25% - 10px)
-  &.tile-left, &.tile-right
-    flex: 0 0 calc(25% - 5px)
-    max-width: calc(25% - 5px)
-  &.tile-left
-    margin-left: 0
-  &.tile-right
-    margin-right: 0
+.tile-1
+  grid-column-end: span 1
 
+.tile-2
+  grid-column-end: span 2
 
-.tile-double
-  flex: 0 0 calc(50% - 10px)
-  max-width: calc(50% - 10px)
-  &.tile-left, &.tile-right
-    flex: 0 0 calc(50% - 5px)
-    max-width: calc(50% - 5px)
-  &.tile-left
-    margin-left: 0
-  &.tile-right
-    margin-right: 0
-  
-
-@media (max-width: $break-tablet)
-  .tile-double
-    flex: 0 0 100%
-    max-width: 100%
-    &.tile-left, &.tile-right
-      margin-left: 0
-      margin-right: 0
-
-  .tile-single
-    flex: 0 0 calc(50% - 5px)
-    max-width: calc(50% - 5px)
-    &.tile-left, &.tile-right
-      margin-right: 5px
-      margin-left: 5px
-
-
-@media (max-width: $break-mobile)
-  .tile-single
-    flex: 0 0 100%
-    max-width: 100%
-    &.tile-left, &.tile-right
-      margin-left: 0
-      margin-right: 0
+.tile-4
+  grid-column-end: span 4
