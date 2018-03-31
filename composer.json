@@ -32,8 +32,7 @@
   },
   "require-dev": {
     "codacy/coverage": "^1.4",
-    "deployer/deployer": "dev-famoser-symfony-4",
-    "deployer/phar-update": "dev-famoser-symfony-4",
+    "deployer/deployer": "^6.1",
     "friendsofphp/php-cs-fixer": "^2.7",
     "symfony/browser-kit": "^4.0",
     "symfony/css-selector": "^4.0",

@@ -101,9 +101,6 @@
     "fzaninotto/faker": {
         "version": "v1.7.1"
     },
-    "gecko-packages/gecko-php-unit": {
-        "version": "v3.0"
-    },
     "gitonomy/gitlib": {
         "version": "v1.0.2"
     },
