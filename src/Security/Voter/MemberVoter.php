@@ -59,7 +59,7 @@ class MemberVoter extends OrganisationVoter
         }
 
         //check if own member
-        $own = $subject->getPersons()->contains($user->getPerson());
+        $own = $subject->getFrontendUsers()->contains($user->getPerson());
 
         $organisation = $subject->getOrganisation();
 

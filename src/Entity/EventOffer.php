@@ -13,7 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
-use App\Entity\Traits\TimeTrait;
+use App\Entity\Traits\ChangeAwareTrait;
 use App\Enum\OfferStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 class EventOffer extends BaseEntity
 {
     use IdTrait;
-    use TimeTrait;
+    use ChangeAwareTrait;
 
     /**
      * @var string

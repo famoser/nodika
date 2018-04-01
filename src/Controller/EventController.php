@@ -51,7 +51,7 @@ class EventController extends BaseFrontendController
         }
 
         $assignableEvents = $this->getDoctrine()->getRepository('App:Member')->findAssignableEventsAsIdArray($member);
-        $persons = $member->getPersons();
+        $persons = $member->getFrontendUsers();
         $selectedPerson = $this->getPerson();
 
         if ('POST' === $request->getMethod()) {
@@ -80,7 +80,7 @@ class EventController extends BaseFrontendController
                     $count = 0;
                     foreach ($events as $event) {
                         $oldEvent = clone $event;
-                        $event->setPerson($selectedPerson);
+                        $event->setFrontendUser($selectedPerson);
                         $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::PERSON_ASSIGNED_BY_MEMBER);
                         $this->fastSave($eventPast, $event);
                         ++$count;
@@ -135,7 +135,7 @@ class EventController extends BaseFrontendController
             return $this->redirectToRoute('dashboard_index');
         }
 
-        if ($this->canConfirmEvent($member, $event) && $event->getPerson()->getId() === $this->getPerson()->getId()) {
+        if ($this->canConfirmEvent($member, $event) && $event->getFrontendUser()->getId() === $this->getPerson()->getId()) {
             $oldEvent = clone $event;
             $event->setIsConfirmed(true);
             $event->setIsConfirmedDateTime(new \DateTime());
@@ -183,7 +183,7 @@ class EventController extends BaseFrontendController
             return $this->redirectToRoute('dashboard_index');
         }
 
-        if ($this->canConfirmEvent($member, $event) && null === $event->getPerson() && $event->getMember()->getId() === $this->getMember()->getId()) {
+        if ($this->canConfirmEvent($member, $event) && null === $event->getFrontendUser() && $event->getMember()->getId() === $this->getMember()->getId()) {
             $oldEvent = clone $event;
             $event->setIsConfirmed(true);
             $event->setIsConfirmedDateTime(new \DateTime());
@@ -222,7 +222,7 @@ class EventController extends BaseFrontendController
                 $person,
                 $oldEvent,
                 $event,
-                $event->getPerson() instanceof Person ? EventChangeType::CONFIRMED_BY_PERSON : EventChangeType::CONFIRMED_BY_MEMBER
+                $event->getFrontendUser() instanceof Person ? EventChangeType::CONFIRMED_BY_PERSON : EventChangeType::CONFIRMED_BY_MEMBER
             );
             $this->fastSave($event, $eventPast);
         }

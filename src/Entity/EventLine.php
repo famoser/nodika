@@ -62,84 +62,6 @@ class EventLine extends BaseEntity
     }
 
     /**
-     * Add event.
-     *
-     * @param Event $event
-     *
-     * @return EventLine
-     */
-    public function addEvent(Event $event)
-    {
-        $this->events[] = $event;
-
-        return $this;
-    }
-
-    /**
-     * Remove event.
-     *
-     * @param Event $event
-     */
-    public function removeEvent(Event $event)
-    {
-        $this->events->removeElement($event);
-    }
-
-    /**
-     * Get events.
-     *
-     * @return \Doctrine\Common\Collections\Collection|Event[]
-     */
-    public function getEvents()
-    {
-        return $this->events;
-    }
-
-    /**
-     * Add eventLineGeneration.
-     *
-     * @param EventLineGeneration $eventLineGeneration
-     *
-     * @return EventLine
-     */
-    public function addEventLineGeneration(EventLineGeneration $eventLineGeneration)
-    {
-        $this->eventLineGenerations[] = $eventLineGeneration;
-
-        return $this;
-    }
-
-    /**
-     * Remove eventLineGeneration.
-     *
-     * @param EventLineGeneration $eventLineGeneration
-     */
-    public function removeEventLineGeneration(EventLineGeneration $eventLineGeneration)
-    {
-        $this->eventLineGenerations->removeElement($eventLineGeneration);
-    }
-
-    /**
-     * Get eventLineGenerations.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEventLineGenerations()
-    {
-        return $this->eventLineGenerations;
-    }
-
-    /**
-     * returns a string representation of this entity.
-     *
-     * @return string
-     */
-    public function getFullIdentifier()
-    {
-        return $this->getName();
-    }
-
-    /**
      * @return int
      */
     public function getDisplayOrder()
@@ -157,5 +79,25 @@ class EventLine extends BaseEntity
         $this->displayOrder = $displayOrder;
 
         return $this;
+    }
+
+    /**
+     * Get events.
+     *
+     * @return \Doctrine\Common\Collections\Collection|Event[]
+     */
+    public function getEvents()
+    {
+        return $this->events;
+    }
+
+    /**
+     * Get eventLineGenerations.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEventLineGenerations()
+    {
+        return $this->eventLineGenerations;
     }
 }

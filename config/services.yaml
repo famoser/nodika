@@ -3,9 +3,6 @@
 parameters:
     locale: 'de'
 
-imports:
-    - { resource: legacy_aliases.yml }
-
 services:
     # default configuration for services in *this* file
     _defaults:

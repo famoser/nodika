@@ -231,7 +231,7 @@ class PersonController extends BaseFrontendController
 
         $myPerson = $this->getPerson();
         $found = null;
-        foreach ($member->getPersons() as $person) {
+        foreach ($member->getFrontendUsers() as $person) {
             if ($person->getId() === $myPerson->getId()) {
                 $found = $person;
             }

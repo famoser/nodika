@@ -11,6 +11,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\FrontendUser;
 use App\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * automatically keeps track of creation time & last change time
  */
 
-trait TimeTrait
+trait ChangeAwareTrait
 {
     /**
      * @var \DateTime
@@ -33,6 +34,20 @@ trait TimeTrait
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastChangedAt;
+
+    /**
+     * @var FrontendUser
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     */
+    private $createdBy;
+
+    /**
+     * @var FrontendUser
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     */
+    private $lastChangedBy;
 
 
     /**
@@ -70,15 +85,31 @@ trait TimeTrait
     }
 
     /**
-     * returns a string representation of this entity.
-     *
-     * @return string
+     * @return FrontendUser
      */
-    public function getFullIdentifier()
+    public function getCreatedBy(): FrontendUser
     {
-        if ($this->createdAt != null) {
-            return $this->createdAt->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        return $this->createdBy;
+    }
+
+    /**
+     * @return FrontendUser
+     */
+    public function getLastChangedBy(): FrontendUser
+    {
+        return $this->lastChangedBy;
+    }
+
+    /**
+     * register who has changed the entity
+     *
+     * @param FrontendUser $frontendUser
+     */
+    public function registerChangeBy(FrontendUser $frontendUser)
+    {
+        if ($this->createdBy == null) {
+            $this->createdBy = $frontendUser;
         }
-        return get_class($this);
+        $this->changedBy = $frontendUser;
     }
 }

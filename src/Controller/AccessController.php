@@ -253,7 +253,7 @@ class AccessController extends BaseAccessController
         if ($this->getUser() instanceof FrontendUser) {
             $person = $this->getPerson();
             //already logged in!
-            foreach ($member->getPersons() as $memberPerson) {
+            foreach ($member->getFrontendUsers() as $memberPerson) {
                 if ($memberPerson->getId() === $person->getId()) {
                     $this->displayInfo(
                         $translator->trans(

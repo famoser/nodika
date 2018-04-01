@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller\Administration\Organisation\EventLine\Generate\Base;
+namespace App\Controller\Administration\Generate\Base;
 
 use App\Controller\Base\BaseController;
 use App\Entity\EventLine;

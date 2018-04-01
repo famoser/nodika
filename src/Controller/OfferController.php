@@ -92,7 +92,7 @@ class OfferController extends BaseFrontendController
         }
 
         if ($ownMember->getOrganisation()->getId() !== $member->getOrganisation()->getId() ||
-            !$member->getPersons()->contains($person)) {
+            !$member->getFrontendUsers()->contains($person)) {
             $this->displaySuccess($translator->trans('messages.no_access_anymore', [], 'offer'));
 
             return $this->redirectToRoute('offer_index');
@@ -147,11 +147,11 @@ class OfferController extends BaseFrontendController
 
                     $isValidPossibility1 =
                         $event->getMember()->getId() === $eventOffer->getOfferedByMember()->getId() &&
-                        $event->getPerson()->getId() === $eventOffer->getOfferedByPerson()->getId();
+                        $event->getFrontendUser()->getId() === $eventOffer->getOfferedByPerson()->getId();
 
                     $isValidPossibility2 =
                         $event->getMember()->getId() === $eventOffer->getOfferedToMember()->getId() &&
-                        $event->getPerson()->getId() === $eventOffer->getOfferedToPerson()->getId();
+                        $event->getFrontendUser()->getId() === $eventOffer->getOfferedToPerson()->getId();
                     if ($isValidPossibility1 || $isValidPossibility2) {
                         $events[] = $event;
                     }
@@ -238,8 +238,8 @@ class OfferController extends BaseFrontendController
         $invalids = [];
 
         foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
-            if ($eventOfferEntry->getEvent()->getPerson()->getId() === $eventOffer->getOfferedByPerson()->getId() ||
-                $eventOfferEntry->getEvent()->getPerson()->getId() === $eventOffer->getOfferedToPerson()->getId()) {
+            if ($eventOfferEntry->getEvent()->getFrontendUser()->getId() === $eventOffer->getOfferedByPerson()->getId() ||
+                $eventOfferEntry->getEvent()->getFrontendUser()->getId() === $eventOffer->getOfferedToPerson()->getId()) {
                 if ($eventOfferEntry->getEvent()->getStartDateTime() < $threshHold) {
                     $invalids[] = $eventOfferEntry;
                     if ($remove) {
@@ -312,9 +312,9 @@ class OfferController extends BaseFrontendController
         $otherEvents = [];
 
         foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
-            if ($eventOfferEntry->getEvent()->getPerson()->getId() === $otherPersonId) {
+            if ($eventOfferEntry->getEvent()->getFrontendUser()->getId() === $otherPersonId) {
                 $otherEvents[] = $eventOfferEntry->getEvent();
-            } elseif ($eventOfferEntry->getEvent()->getPerson()->getId() === $ownPerson->getId()) {
+            } elseif ($eventOfferEntry->getEvent()->getFrontendUser()->getId() === $ownPerson->getId()) {
                 $myEvents[] = $eventOfferEntry->getEvent();
             }
         }
@@ -385,24 +385,24 @@ class OfferController extends BaseFrontendController
 
             $eventOffer->setStatus(OfferStatus::ACCEPTED);
             foreach ($eventOffer->getEventOfferEntries() as $eventOfferEntry) {
-                if ($eventOfferEntry->getEvent()->getPerson()->getId() === $eventOffer->getOfferedByPerson()->getId()) {
+                if ($eventOfferEntry->getEvent()->getFrontendUser()->getId() === $eventOffer->getOfferedByPerson()->getId()) {
                     $event = $eventOfferEntry->getEvent();
                     $oldEvent = clone $event;
                     $event->setIsConfirmed(false);
                     $event->setMember($eventOffer->getOfferedToMember());
-                    $event->setPerson($eventOffer->getOfferedToPerson());
+                    $event->setFrontendUser($eventOffer->getOfferedToPerson());
                     $event->setTradeTag(TradeTag::MAYBE_TRADE);
 
                     $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::TRADED_TO_NEW_MEMBER);
                     $em->persist($eventPast);
 
                     $em->persist($event);
-                } elseif ($eventOfferEntry->getEvent()->getPerson()->getId() === $ownPerson->getId()) {
+                } elseif ($eventOfferEntry->getEvent()->getFrontendUser()->getId() === $ownPerson->getId()) {
                     $event = $eventOfferEntry->getEvent();
                     $oldEvent = clone $event;
                     $event->setIsConfirmed(false);
                     $event->setMember($eventOffer->getOfferedByMember());
-                    $event->setPerson($eventOffer->getOfferedByPerson());
+                    $event->setFrontendUser($eventOffer->getOfferedByPerson());
                     $event->setTradeTag(TradeTag::MAYBE_TRADE);
 
                     $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::TRADED_TO_NEW_MEMBER);

@@ -44,12 +44,12 @@ class Member extends BaseEntity
     private $invitationHash = null;
 
     /**
-     * @var Person[]|ArrayCollection
+     * @var FrontendUser[]|ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Person", mappedBy="members")
+     * @ORM\ManyToMany(targetEntity="App\Entity\FrontendUser", mappedBy="members")
      * @ORM\OrderBy({"familyName" = "ASC", "givenName" = "ASC"})
      */
-    private $persons;
+    private $frontendUsers;
 
     /**
      * @var Event[]|ArrayCollection
@@ -64,18 +64,18 @@ class Member extends BaseEntity
      */
     public function __construct()
     {
-        $this->persons = new ArrayCollection();
+        $this->frontendUsers = new ArrayCollection();
         $this->events = new ArrayCollection();
     }
 
     /**
      * Get persons.
      *
-     * @return \Doctrine\Common\Collections\Collection|Person[]
+     * @return \Doctrine\Common\Collections\Collection|FrontendUser[]
      */
-    public function getPersons()
+    public function getFrontendUsers()
     {
-        return $this->persons;
+        return $this->frontendUsers;
     }
 
     /**

@@ -30,26 +30,36 @@ class Event extends BaseEntity
     use IdTrait;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime")
      */
     private $startDateTime;
 
     /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
-    private $isConfirmed = false;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $isConfirmedDateTime;
-
-    /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime")
      */
     private $endDateTime;
 
     /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $confirmDateTime = null;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastRemainderEmailSent;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(type="integer")
      */
     private $tradeTag = TradeTag::MAYBE_TRADE;
@@ -62,11 +72,11 @@ class Event extends BaseEntity
     private $member;
 
     /**
-     * @var Person
+     * @var FrontendUser|null
      *
-     * @ORM\ManyToOne(targetEntity="Person", inversedBy="events")
+     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser", inversedBy="events")
      */
-    private $person;
+    private $frontendUser;
 
     /**
      * @var EventLine
@@ -76,23 +86,18 @@ class Event extends BaseEntity
     private $eventLine;
 
     /**
-     * @var EventPast[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event")
-     */
-    private $eventPast;
-
-    /**
-     * @var EventLineGeneration
+     * @var EventLineGeneration|null
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\EventLineGeneration", inversedBy="generatedEvents")
      */
     private $generatedBy;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var EventPast[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event")
      */
-    private $lastRemainderEmailSent;
+    private $eventPast;
 
     /**
      * Constructor.
@@ -103,273 +108,154 @@ class Event extends BaseEntity
     }
 
     /**
-     * Add eventPast.
-     *
-     * @param EventPast $eventPast
-     *
-     * @return Event
-     */
-    public function addEventPast(EventPast $eventPast)
-    {
-        $this->eventPast[] = $eventPast;
-
-        return $this;
-    }
-
-    /**
-     * Remove eventPast.
-     *
-     * @param EventPast $eventPast
-     */
-    public function removeEventPast(EventPast $eventPast)
-    {
-        $this->eventPast->removeElement($eventPast);
-    }
-
-    /**
-     * Get eventPast.
-     *
-     * @return \Doctrine\Common\Collections\Collection|EventPast[]
-     */
-    public function getEventPast()
-    {
-        return $this->eventPast;
-    }
-
-    /**
-     * returns a string representation of this entity.
-     *
-     * @return string
-     */
-    public function getFullIdentifier()
-    {
-        return $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) . ' - ' . $this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-    }
-
-    /**
-     * Get startDateTime.
-     *
      * @return \DateTime
      */
-    public function getStartDateTime()
+    public function getStartDateTime(): ?\DateTime
     {
         return $this->startDateTime;
     }
 
     /**
-     * Set startDateTime.
-     *
      * @param \DateTime $startDateTime
-     *
-     * @return Event
      */
-    public function setStartDateTime($startDateTime)
+    public function setStartDateTime(\DateTime $startDateTime): void
     {
         $this->startDateTime = $startDateTime;
-
-        return $this;
     }
 
     /**
-     * Get endDateTime.
-     *
      * @return \DateTime
      */
-    public function getEndDateTime()
+    public function getEndDateTime(): ?\DateTime
     {
         return $this->endDateTime;
     }
 
     /**
-     * Set endDateTime.
-     *
      * @param \DateTime $endDateTime
-     *
-     * @return Event
      */
-    public function setEndDateTime($endDateTime)
+    public function setEndDateTime(\DateTime $endDateTime): void
     {
         $this->endDateTime = $endDateTime;
-
-        return $this;
     }
 
     /**
-     * creates a json representation of the object.
-     *
-     * @return string
+     * @return \DateTime|null
      */
-    public function createJson()
+    public function getConfirmDateTime(): ?\DateTime
     {
-        $pseudoObject = new \stdClass();
-        $pseudoObject->id = $this->getId();
-        $pseudoObject->startDateTime = $this->getStartDateTime();
-        $pseudoObject->endDateTime = $this->getEndDateTime();
-        $pseudoObject->eventLineId = null !== $this->getEventLine() ? $this->getEventLine()->getId() : null;
-        $pseudoObject->memberId = null !== $this->getMember() ? $this->getMember()->getId() : null;
-        $pseudoObject->personId = null !== $this->getPerson() ? $this->getPerson()->getId() : null;
-        $pseudoObject->tradeTag = $this->getTradeTag();
-
-        return json_encode($pseudoObject);
+        return $this->confirmDateTime;
     }
 
     /**
-     * Get eventLine.
-     *
-     * @return EventLine
+     * @param \DateTime|null $confirmDateTime
      */
-    public function getEventLine()
+    public function setConfirmDateTime(?\DateTime $confirmDateTime): void
     {
-        return $this->eventLine;
+        $this->confirmDateTime = $confirmDateTime;
     }
 
     /**
-     * Set eventLine.
-     *
-     * @param EventLine $eventLine
-     *
-     * @return Event
+     * @return \DateTime|null
      */
-    public function setEventLine(EventLine $eventLine = null)
-    {
-        $this->eventLine = $eventLine;
-
-        return $this;
-    }
-
-    /**
-     * Get member.
-     *
-     * @return Member
-     */
-    public function getMember()
-    {
-        return $this->member;
-    }
-
-    /**
-     * Set member.
-     *
-     * @param Member $member
-     *
-     * @return Event
-     */
-    public function setMember(Member $member = null)
-    {
-        $this->member = $member;
-
-        return $this;
-    }
-
-    /**
-     * Get person.
-     *
-     * @return Person
-     */
-    public function getPerson()
-    {
-        return $this->person;
-    }
-
-    /**
-     * Set person.
-     *
-     * @param Person $person
-     *
-     * @return Event
-     */
-    public function setPerson(Person $person = null)
-    {
-        $this->person = $person;
-
-        return $this;
-    }
-
-    /**
-     * Get tradeTag.
-     *
-     * @return int
-     */
-    public function getTradeTag()
-    {
-        return $this->tradeTag;
-    }
-
-    /**
-     * Set tradeTag.
-     *
-     * @param int $tradeTag
-     *
-     * @return Event
-     */
-    public function setTradeTag($tradeTag)
-    {
-        $this->tradeTag = $tradeTag;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsConfirmed()
-    {
-        return $this->isConfirmed;
-    }
-
-    /**
-     * @param mixed $isConfirmed
-     */
-    public function setIsConfirmed($isConfirmed)
-    {
-        $this->isConfirmed = $isConfirmed;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getIsConfirmedDateTime()
-    {
-        return $this->isConfirmedDateTime;
-    }
-
-    /**
-     * @param \DateTime $isConfirmedDateTime
-     */
-    public function setIsConfirmedDateTime($isConfirmedDateTime)
-    {
-        $this->isConfirmedDateTime = $isConfirmedDateTime;
-    }
-
-    /**
-     * @return EventLineGeneration
-     */
-    public function getGeneratedBy()
-    {
-        return $this->generatedBy;
-    }
-
-    /**
-     * @param EventLineGeneration $generatedBy
-     */
-    public function setGeneratedBy(EventLineGeneration $generatedBy)
-    {
-        $this->generatedBy = $generatedBy;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastRemainderEmailSent()
+    public function getLastRemainderEmailSent(): ?\DateTime
     {
         return $this->lastRemainderEmailSent;
     }
 
     /**
-     * @param \DateTime $lastRemainderEmailSent
+     * @param \DateTime|null $lastRemainderEmailSent
      */
-    public function setLastRemainderEmailSent($lastRemainderEmailSent)
+    public function setLastRemainderEmailSent(?\DateTime $lastRemainderEmailSent): void
     {
         $this->lastRemainderEmailSent = $lastRemainderEmailSent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTradeTag(): int
+    {
+        return $this->tradeTag;
+    }
+
+    /**
+     * @param int $tradeTag
+     */
+    public function setTradeTag(int $tradeTag): void
+    {
+        $this->tradeTag = $tradeTag;
+    }
+
+    /**
+     * @return Member
+     */
+    public function getMember(): Member
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param Member $member
+     */
+    public function setMember(Member $member): void
+    {
+        $this->member = $member;
+    }
+
+    /**
+     * @return FrontendUser|null
+     */
+    public function getFrontendUser(): ?FrontendUser
+    {
+        return $this->frontendUser;
+    }
+
+    /**
+     * @param FrontendUser|null $frontendUser
+     */
+    public function setFrontendUser(?FrontendUser $frontendUser): void
+    {
+        $this->frontendUser = $frontendUser;
+    }
+
+    /**
+     * @return EventLine
+     */
+    public function getEventLine(): EventLine
+    {
+        return $this->eventLine;
+    }
+
+    /**
+     * @param EventLine $eventLine
+     */
+    public function setEventLine(EventLine $eventLine): void
+    {
+        $this->eventLine = $eventLine;
+    }
+
+    /**
+     * @return EventLineGeneration|null
+     */
+    public function getGeneratedBy(): ?EventLineGeneration
+    {
+        return $this->generatedBy;
+    }
+
+    /**
+     * @param EventLineGeneration|null $generatedBy
+     */
+    public function setGeneratedBy(?EventLineGeneration $generatedBy): void
+    {
+        $this->generatedBy = $generatedBy;
+    }
+
+    /**
+     * @return EventPast[]|ArrayCollection
+     */
+    public function getEventPast()
+    {
+        return $this->eventPast;
     }
 }

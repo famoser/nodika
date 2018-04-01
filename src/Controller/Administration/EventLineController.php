@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller\Administration\Organisation;
+namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseController;
 use App\Entity\Event;
@@ -41,17 +41,15 @@ class EventLineController extends BaseController
      * @Route("/new", name="administration_event_line_new")
      *
      * @param Request $request
-     * @param Organisation $organisation
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function newAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
+    public function newAction(Request $request, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
 
         $eventLine = new EventLine();
-        $eventLine->setOrganisation($organisation);
         $myForm = $this->handleCrudForm(
             $request,
             $translator,

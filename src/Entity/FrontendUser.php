@@ -30,18 +30,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class FrontendUser extends BaseEntity implements AdvancedUserInterface, EquatableInterface
 {
     use IdTrait;
+    use UserTrait;
     use PersonTrait;
     use AddressTrait;
-    use CommunicationTrait;
-    use UserTrait {
-        CommunicationTrait::getEmail insteadof UserTrait::getEmail;
-        CommunicationTrait::setEmail insteadof UserTrait::setEmail;
+    use CommunicationTrait {
+        UserTrait::getEmail insteadof CommunicationTrait::getEmail;
+        UserTrait::setEmail insteadof CommunicationTrait::setEmail;
     }
 
     /**
      * @var Member[]|ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Member", inversedBy="persons")
+     * @ORM\ManyToMany(targetEntity="Member", inversedBy="frontendUsers")
      * @ORM\JoinTable(name="person_members")
      * @ORM\OrderBy({"name" = "ASC"})
      */
@@ -50,10 +50,17 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     /**
      * @var Event[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="person")
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="frontendUser")
      * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
     private $events;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $administrator = false;
 
     /**
      * Constructor.
@@ -108,5 +115,21 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
         }
 
         return $this->isEqualToUser($user);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdministrator(): bool
+    {
+        return $this->administrator;
+    }
+
+    /**
+     * @param bool $administrator
+     */
+    public function setAdministrator(bool $administrator): void
+    {
+        $this->administrator = $administrator;
     }
 }

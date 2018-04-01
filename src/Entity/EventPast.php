@@ -12,6 +12,7 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
+use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use App\Enum\EventChangeType;
 use App\Helper\DateTimeFormatter;
@@ -27,20 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 class EventPast extends BaseEntity
 {
     use IdTrait;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $changedAtDateTime;
-
-    /**
-     * @var Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person")
-     */
-    private $changedByPerson;
+    use ChangeAwareTrait;
 
     /**
      * @var int
@@ -71,25 +59,9 @@ class EventPast extends BaseEntity
     private $event;
 
     /**
-     * @return Person
-     */
-    public function getChangedByPerson()
-    {
-        return $this->changedByPerson;
-    }
-
-    /**
-     * @param Person $changedByPerson
-     */
-    public function setChangedByPerson($changedByPerson)
-    {
-        $this->changedByPerson = $changedByPerson;
-    }
-
-    /**
      * @return int
      */
-    public function getEventChangeType()
+    public function getEventChangeType(): int
     {
         return $this->eventChangeType;
     }
@@ -97,7 +69,7 @@ class EventPast extends BaseEntity
     /**
      * @param int $eventChangeType
      */
-    public function setEventChangeType($eventChangeType)
+    public function setEventChangeType(int $eventChangeType): void
     {
         $this->eventChangeType = $eventChangeType;
     }
@@ -113,7 +85,7 @@ class EventPast extends BaseEntity
     /**
      * @param mixed $beforeEventJson
      */
-    public function setBeforeEventJson($beforeEventJson)
+    public function setBeforeEventJson($beforeEventJson): void
     {
         $this->beforeEventJson = $beforeEventJson;
     }
@@ -129,7 +101,7 @@ class EventPast extends BaseEntity
     /**
      * @param mixed $afterEventJson
      */
-    public function setAfterEventJson($afterEventJson)
+    public function setAfterEventJson($afterEventJson): void
     {
         $this->afterEventJson = $afterEventJson;
     }
@@ -137,7 +109,7 @@ class EventPast extends BaseEntity
     /**
      * @return Event
      */
-    public function getEvent()
+    public function getEvent(): Event
     {
         return $this->event;
     }
@@ -145,34 +117,8 @@ class EventPast extends BaseEntity
     /**
      * @param Event $event
      */
-    public function setEvent($event)
+    public function setEvent(Event $event): void
     {
         $this->event = $event;
-    }
-
-    /**
-     * returns a string representation of this entity.
-     *
-     * @return string
-     */
-    public function getFullIdentifier()
-    {
-        return $this->getChangedAtDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getChangedAtDateTime()
-    {
-        return $this->changedAtDateTime;
-    }
-
-    /**
-     * @param \DateTime $changedAtDateTime
-     */
-    public function setChangedAtDateTime($changedAtDateTime)
-    {
-        $this->changedAtDateTime = $changedAtDateTime;
     }
 }

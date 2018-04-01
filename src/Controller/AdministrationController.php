@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller\Administration;
+namespace App\Controller;
 
 use App\Controller\Base\BaseFrontendController;
 use App\Controller\Traits\EventControllerTrait;

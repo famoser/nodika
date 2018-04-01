@@ -76,11 +76,11 @@ class LoadEventData extends BaseFixture
 
         //assign events to member
         foreach ($member1->getEvents() as $event) {
-            $event->setPerson($member1->getPersons()->get(0));
+            $event->setFrontendUser($member1->getFrontendUsers()->get(0));
             $manager->persist($event);
         }
         foreach ($member2->getEvents() as $event) {
-            $event->setPerson($member2->getPersons()->get(0));
+            $event->setFrontendUser($member2->getFrontendUsers()->get(0));
             $manager->persist($event);
         }
 

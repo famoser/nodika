@@ -19,10 +19,13 @@ namespace App\Form\Event;
  */
 
 use App\Entity\Event;
+use App\Entity\EventLine;
+use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Enum\SubmitButtonType;
 use App\Form\BaseCrudAbstractType;
+use App\Form\Person\PersonType;
 use App\Helper\StaticMessageHelper;
 use App\Repository\MemberRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -37,46 +40,20 @@ class EventType extends BaseCrudAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $fillEventLine = function (FormEvent $event) use ($builder, $options) {
-            $transArray = ['translation_domain' => 'event'];
-            $dateArray = ['date_widget' => 'single_text', 'time_widget' => 'single_text'];
-            /* @var Organisation $organisation */
-            $organisation = $options['organisation'];
+        $dateArray = ['date_widget' => 'single_text', 'time_widget' => 'single_text'];
 
-            $formOptions = $transArray + [
-                    'choice_label' => 'name',
-                ];
-            $form = $event->getForm();
-            $form->add(
-                'member',
-                EntityType::class,
-                $formOptions + [
-                    'class' => Member::class,
-                    'query_builder' => function (MemberRepository $er) use ($organisation) {
-                        return $er->getByOrganisationQueryBuilder($organisation);
-                    },]
-            );
-            $form->add('startDateTime', DateTimeType::class, $transArray + $dateArray);
-            $form->add('endDateTime', DateTimeType::class, $transArray + $dateArray);
-
-            $form->add(
-                'submit',
-                SubmitType::class,
-                SubmitButtonType::getTranslationForBuilder($options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION])
-            );
-        };
-
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            $fillEventLine
-        );
+        $builder->add('startDateTime', DateTimeType::class, $dateArray);
+        $builder->add('endDateTime', DateTimeType::class, $dateArray);
+        $builder->add('member', EntityType::class, ["class" => Member::class]);
+        $builder->add('person', EntityType::class, ["class" => FrontendUser::class]);
+        $builder->add('eventLine', EntityType::class, ['class' => EventLine::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
-            'organisation' => null,
+            'translation_domain' => 'entity_event'
         ]);
         parent::configureOptions($resolver);
     }

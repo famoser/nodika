@@ -132,7 +132,7 @@ class MemberController extends BaseFrontendController
             return $this->redirectToRoute('access_logout');
         }
         $found = null;
-        foreach ($activeMember->getPersons() as $person) {
+        foreach ($activeMember->getFrontendUsers() as $person) {
             if ($person->getId() === $myPerson->getId()) {
                 $found = $person;
             }

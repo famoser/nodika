@@ -107,8 +107,8 @@ trait EventControllerTrait
                 $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
                 $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
                 $row[] = $event->getMember()->getName();
-                if ($event->getPerson() instanceof Person) {
-                    $row[] = $event->getPerson()->getFullName();
+                if ($event->getFrontendUser() instanceof Person) {
+                    $row[] = $event->getFrontendUser()->getFullName();
                 }
                 $data[] = $row;
             }

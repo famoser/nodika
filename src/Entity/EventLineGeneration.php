@@ -12,6 +12,7 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
+use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use App\Enum\DistributionType;
 use App\Helper\DateTimeFormatter;
@@ -31,11 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
 class EventLineGeneration extends BaseEntity
 {
     use IdTrait;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAtDateTime;
+    use ChangeAwareTrait;
 
     /**
      * @ORM\Column(type="boolean", options={"default" : false})
@@ -74,13 +71,6 @@ class EventLineGeneration extends BaseEntity
      * @ORM\ManyToOne(targetEntity="EventLine", inversedBy="eventLineGenerations")
      */
     private $eventLine;
-
-    /**
-     * @var Person
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Person")
-     */
-    private $createdByPerson;
 
     /**
      * @var Event[]|ArrayCollection

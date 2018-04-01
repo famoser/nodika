@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller\Administration\Organisation\EventLine;
+namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseController;
 use App\Entity\Event;
@@ -38,14 +38,13 @@ class EventController extends BaseController
      * @Route("/new", name="administration_event_new")
      *
      * @param Request $request
-     * @param Organisation $organisation
      * @param EventLine $eventLine
      * @param TranslatorInterface $translator
      * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return Response
      */
-    public function newAction(Request $request, Organisation $organisation, EventLine $eventLine, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
+    public function newAction(Request $request, EventLine $eventLine, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->denyAccessUnlessGranted(EventLineVoter::EDIT, $eventLine);
 

@@ -41,60 +41,35 @@ class EventOfferEntry extends BaseEntity
     private $event;
 
     /**
-     * Get eventOffer.
-     *
      * @return EventOffer
      */
-    public function getEventOffer()
+    public function getEventOffer(): EventOffer
     {
         return $this->eventOffer;
     }
 
     /**
-     * Set eventOffer.
-     *
      * @param EventOffer $eventOffer
-     *
-     * @return EventOfferEntry
      */
-    public function setEventOffer(EventOffer $eventOffer = null)
+    public function setEventOffer(EventOffer $eventOffer): void
     {
         $this->eventOffer = $eventOffer;
-
-        return $this;
     }
 
     /**
-     * Get event.
-     *
      * @return Event
      */
-    public function getEvent()
+    public function getEvent(): Event
     {
         return $this->event;
     }
 
     /**
-     * Set event.
-     *
      * @param Event $event
-     *
-     * @return EventOfferEntry
      */
-    public function setEvent(Event $event = null)
+    public function setEvent(Event $event): void
     {
         $this->event = $event;
-
-        return $this;
     }
 
-    /**
-     * returns a string representation of this entity.
-     *
-     * @return string
-     */
-    public function getFullIdentifier()
-    {
-        return 'entry';
-    }
 }

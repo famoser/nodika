@@ -94,9 +94,9 @@ class CronJobController extends BaseFrontendController
 
                         $receiver = null;
                         $member = $unconfirmedEvent->getMember();
-                        if (null !== $unconfirmedEvent->getPerson()) {
-                            $receiver = $unconfirmedEvent->getPerson()->getEmail();
-                            $owner = $unconfirmedEvent->getPerson()->getFullName();
+                        if (null !== $unconfirmedEvent->getFrontendUser()) {
+                            $receiver = $unconfirmedEvent->getFrontendUser()->getEmail();
+                            $owner = $unconfirmedEvent->getFrontendUser()->getFullName();
                         } else {
                             $receiver = $member->getEmail();
                             $owner = $member->getName();
@@ -122,8 +122,8 @@ class CronJobController extends BaseFrontendController
                             //disable email if already sent
                             (null !== $unconfirmedEvent->getLastRemainderEmailSent() && $unconfirmedEvent->getLastRemainderEmailSent() > $remainderSendBlock);
 
-                        if (null !== $unconfirmedEvent->getPerson()) {
-                            $person = $unconfirmedEvent->getPerson();
+                        if (null !== $unconfirmedEvent->getFrontendUser()) {
+                            $person = $unconfirmedEvent->getFrontendUser();
 
                             $sendRemainderToPerson[$person->getId()] = $person;
 
@@ -161,7 +161,7 @@ class CronJobController extends BaseFrontendController
                     $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
-                        if (null === $unconfirmedEvent->getPerson()) {
+                        if (null === $unconfirmedEvent->getFrontendUser()) {
                             $unconfirmedEvent->setLastRemainderEmailSent(new \DateTime());
                             $manager->persist($unconfirmedEvent);
                         }
@@ -186,7 +186,7 @@ class CronJobController extends BaseFrontendController
                     $emailService->sendActionEmail($receiver, $subject, $body, $actionText, $actionLink);
 
                     foreach ($unconfirmedEvents as $unconfirmedEvent) {
-                        if (null !== $unconfirmedEvent->getPerson() && $unconfirmedEvent->getPerson()->getId() === $person->getId()) {
+                        if (null !== $unconfirmedEvent->getFrontendUser() && $unconfirmedEvent->getFrontendUser()->getId() === $person->getId()) {
                             $unconfirmedEvent->setLastRemainderEmailSent(new \DateTime());
                             $manager->persist($unconfirmedEvent);
                         }
