@@ -268,9 +268,9 @@ class EventController extends BaseFrontendController
         }
         $arr['persons'] = $persons;
 
-        $arr['selected_member'] = $searchEventModel->getFilterMember();
-        $arr['selected_person'] = $searchEventModel->getFilterFrontendUser();
-        $arr['selected_event_line'] = $searchEventModel->getFilterEventLine();
+        $arr['selected_member'] = $searchEventModel->getMember();
+        $arr['selected_person'] = $searchEventModel->getFrontendUser();
+        $arr['selected_event_line'] = $searchEventModel->getEventLine();
         $arr['start_date_time'] = $searchEventModel->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
         $arr['end_date_time'] = $searchEventModel->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
 

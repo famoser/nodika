@@ -38,8 +38,8 @@ class EventLineRepository extends EntityRepository
 
         //get event lines to be converted
         $eventLines = [];
-        if ($searchEventModel->getFilterEventLine() instanceof EventLine) {
-            $eventLines[] = $searchEventModel->getFilterEventLine();
+        if ($searchEventModel->getEventLine() instanceof EventLine) {
+            $eventLines[] = $searchEventModel->getEventLine();
         } else {
             $eventLines = $this->findAll();
         }
@@ -66,14 +66,22 @@ class EventLineRepository extends EntityRepository
                     ->setParameter('endDateTime', $searchEventModel->getEndDateTime());
             }
 
-            if ($searchEventModel->getFilterMember() instanceof Member) {
+            if ($searchEventModel->getMember() instanceof Member) {
                 $qb->andWhere('m = :member')
-                    ->setParameter('member', $searchEventModel->getFilterMember());
+                    ->setParameter('member', $searchEventModel->getMember());
             }
 
-            if ($searchEventModel->getFilterFrontendUser() instanceof FrontendUser) {
+            if ($searchEventModel->getFrontendUser() instanceof FrontendUser) {
                 $qb->andWhere('p = :person')
-                    ->setParameter('person', $searchEventModel->getFilterFrontendUser());
+                    ->setParameter('person', $searchEventModel->getFrontendUser());
+            }
+
+            if ($searchEventModel->getIsConfirmed() != null) {
+                if ($searchEventModel->getIsConfirmed()) {
+                    $qb->andWhere("e.confirmDateTime IS NOT NULL");
+                } else {
+                    $qb->andWhere("e.confirmDateTime IS NULL");
+                }
             }
 
 

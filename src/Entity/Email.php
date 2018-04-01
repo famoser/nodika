@@ -162,6 +162,22 @@ class Email extends BaseEntity
     }
 
     /**
+     * @return string[]
+     */
+    public function getCarbonCopyArray()
+    {
+        return explode(", ", $this->carbonCopy);
+    }
+
+    /**
+     * @param string[] $carbonCopy
+     */
+    public function setCarbonCopyArray($carbonCopy)
+    {
+        $this->carbonCopy = implode(", ", $carbonCopy);
+    }
+
+    /**
      * @return \DateTime
      */
     public function getSentDateTime()

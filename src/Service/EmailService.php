@@ -65,26 +65,6 @@ class EmailService implements EmailServiceInterface
     }
 
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
-     * @param string|null $carbonCopy
-     *
-     * @return bool
-     */
-    public function sendTextEmail($receiver, $subject, $body, $carbonCopy = null)
-    {
-        $email = new Email();
-        $email->setReceiver($receiver);
-        $email->setSubject($subject);
-        $email->setBody($body);
-        $email->setCarbonCopy($carbonCopy);
-        $email->setEmailType(EmailType::TEXT_EMAIL);
-
-        return $this->processEmail($email);
-    }
-
-    /**
      * @param Email $email
      */
     private function processEmail(Email $email)
@@ -121,8 +101,8 @@ class EmailService implements EmailServiceInterface
             }
         }
 
-        if (null !== $email->getCarbonCopy()) {
-            $message->addCc($email->getCarbonCopy());
+        foreach ($email->getCarbonCopyArray() as $item) {
+            $message->addCc($item);
         }
         $this->mailer->send($message);
     }
@@ -131,13 +111,33 @@ class EmailService implements EmailServiceInterface
      * @param string $receiver
      * @param string $subject
      * @param string $body
-     * @param $actionText
-     * @param string $actionLink
-     * @param string|null $carbonCopy
+     * @param string[] $carbonCopy
      *
      * @return bool
      */
-    public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = null)
+    public function sendTextEmail($receiver, $subject, $body, $carbonCopy = [])
+    {
+        $email = new Email();
+        $email->setReceiver($receiver);
+        $email->setSubject($subject);
+        $email->setBody($body);
+        $email->setCarbonCopyArray($carbonCopy);
+        $email->setEmailType(EmailType::TEXT_EMAIL);
+
+        return $this->processEmail($email);
+    }
+
+    /**
+     * @param string $receiver
+     * @param string $subject
+     * @param string $body
+     * @param $actionText
+     * @param string $actionLink
+     * @param string[] $carbonCopy
+     *
+     * @return bool
+     */
+    public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = [])
     {
         $email = new Email();
         $email->setReceiver($receiver);
@@ -145,7 +145,7 @@ class EmailService implements EmailServiceInterface
         $email->setBody($body);
         $email->setActionText($actionText);
         $email->setActionLink($actionLink);
-        $email->setCarbonCopy($carbonCopy);
+        $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::ACTION_EMAIL);
 
         return $this->processEmail($email);
@@ -155,17 +155,17 @@ class EmailService implements EmailServiceInterface
      * @param string $receiver
      * @param string $subject
      * @param string $body
-     * @param string|null $carbonCopy
+     * @param string[] $carbonCopy
      *
      * @return bool
      */
-    public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = null)
+    public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = [])
     {
         $email = new Email();
         $email->setReceiver($receiver);
         $email->setSubject($subject);
         $email->setBody($body);
-        $email->setCarbonCopy($carbonCopy);
+        $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::PLAIN_EMAIL);
 
         return $this->processEmail($email);

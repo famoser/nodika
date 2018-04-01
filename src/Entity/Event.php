@@ -258,4 +258,17 @@ class Event extends BaseEntity
     {
         return $this->eventPast;
     }
+
+    /**
+     * returns a short representation of start/end datetime of the event
+     *
+     * @return string
+     */
+    public function toShort()
+    {
+        return
+            $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) .
+            " - " .
+            $this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+    }
 }

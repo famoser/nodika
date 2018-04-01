@@ -17,21 +17,21 @@ interface EmailServiceInterface
      * @param string $receiver
      * @param string $subject
      * @param string $body
-     * @param string|null $carbonCopy
+     * @param string[] $carbonCopy
      *
      * @return bool
      */
-    public function sendTextEmail($receiver, $subject, $body, $carbonCopy = null);
+    public function sendTextEmail($receiver, $subject, $body, $carbonCopy = []);
 
     /**
      * @param string $receiver
      * @param string $subject
      * @param string $body
-     * @param string|null $carbonCopy
+     * @param string[] $carbonCopy
      *
      * @return bool
      */
-    public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = null);
+    public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = []);
 
     /**
      * @param string $receiver
@@ -39,9 +39,9 @@ interface EmailServiceInterface
      * @param string $body
      * @param $actionText
      * @param string $actionLink
-     * @param string|null $carbonCopy
+     * @param string[] $carbonCopy
      *
      * @return bool
      */
-    public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = null);
+    public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = []);
 }

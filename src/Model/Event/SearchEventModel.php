@@ -30,15 +30,19 @@ class SearchEventModel
     /**
      * @var EventLine|null
      */
-    private $filterEventLine;
+    private $eventLine;
     /**
      * @var Member|null
      */
-    private $filterMember;
+    private $member;
     /**
      * @var FrontendUser|null
      */
-    private $filterFrontendUser;
+    private $frontendUser;
+    /**
+     * @var boolean|null
+     */
+    private $isConfirmed;
     /**
      * @var int
      */
@@ -85,49 +89,65 @@ class SearchEventModel
     /**
      * @return EventLine|null
      */
-    public function getFilterEventLine(): ?EventLine
+    public function getEventLine(): ?EventLine
     {
-        return $this->filterEventLine;
+        return $this->eventLine;
     }
 
     /**
-     * @param EventLine|null $filterEventLine
+     * @param EventLine|null $eventLine
      */
-    public function setFilterEventLine(?EventLine $filterEventLine): void
+    public function setEventLine(?EventLine $eventLine): void
     {
-        $this->filterEventLine = $filterEventLine;
+        $this->eventLine = $eventLine;
     }
 
     /**
      * @return Member|null
      */
-    public function getFilterMember(): ?Member
+    public function getMember(): ?Member
     {
-        return $this->filterMember;
+        return $this->member;
     }
 
     /**
-     * @param Member|null $filterMember
+     * @param Member|null $member
      */
-    public function setFilterMember(?Member $filterMember): void
+    public function setMember(?Member $member): void
     {
-        $this->filterMember = $filterMember;
+        $this->member = $member;
     }
 
     /**
      * @return FrontendUser|null
      */
-    public function getFilterFrontendUser(): ?FrontendUser
+    public function getFrontendUser(): ?FrontendUser
     {
-        return $this->filterFrontendUser;
+        return $this->frontendUser;
     }
 
     /**
-     * @param FrontendUser|null $filterFrontendUser
+     * @param FrontendUser|null $frontendUser
      */
-    public function setFilterFrontendUser(?FrontendUser $filterFrontendUser): void
+    public function setFrontendUser(?FrontendUser $frontendUser): void
     {
-        $this->filterFrontendUser = $filterFrontendUser;
+        $this->frontendUser = $frontendUser;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsConfirmed(): ?bool
+    {
+        return $this->isConfirmed;
+    }
+
+    /**
+     * @param bool|null $isConfirmed
+     */
+    public function setIsConfirmed(?bool $isConfirmed): void
+    {
+        $this->isConfirmed = $isConfirmed;
     }
 
     /**

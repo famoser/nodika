@@ -80,9 +80,9 @@ trait EventControllerTrait
 
         $searchEventModel = new SearchEventModel($organisation, $startDateTime);
         $searchEventModel->setEndDateTime($endDateTime);
-        $searchEventModel->setFilterMember($member);
-        $searchEventModel->setFilterEventLine($eventLine);
-        $searchEventModel->setFilterFrontendUser($person);
+        $searchEventModel->setMember($member);
+        $searchEventModel->setEventLine($eventLine);
+        $searchEventModel->setFrontendUser($person);
 
         return $searchEventModel;
     }

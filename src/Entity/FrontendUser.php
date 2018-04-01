@@ -62,7 +62,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
      *
      * @ORM\Column(type="boolean")
      */
-    private $administrator = false;
+    private $isAdministrator = false;
 
     /**
      * Constructor.
@@ -124,14 +124,14 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
      */
     public function isAdministrator(): bool
     {
-        return $this->administrator;
+        return $this->isAdministrator;
     }
 
     /**
-     * @param bool $administrator
+     * @param bool $isAdministrator
      */
-    public function setAdministrator(bool $administrator): void
+    public function setIsAdministrator(bool $isAdministrator): void
     {
-        $this->administrator = $administrator;
+        $this->isAdministrator = $isAdministrator;
     }
 }
