@@ -12,6 +12,7 @@
 namespace App\Model\Event;
 
 use App\Entity\EventLine;
+use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;
@@ -19,52 +20,34 @@ use App\Entity\Person;
 class SearchEventModel
 {
     /**
-     * @var Organisation
-     */
-    private $organisation;
-    /**
      * @var \DateTime
      */
     private $startDateTime;
     /**
      * @var \DateTime
      */
-    private $endDateTime = null;
+    private $endDateTime;
     /**
-     * @var EventLine
+     * @var EventLine|null
      */
-    private $filterEventLine = null;
+    private $filterEventLine;
     /**
-     * @var Member
+     * @var Member|null
      */
-    private $filterMember = null;
+    private $filterMember;
     /**
-     * @var Person
+     * @var FrontendUser|null
      */
-    private $filterPerson = null;
+    private $filterFrontendUser;
     /**
      * @var int
      */
     private $maxResults = 3000;
 
-    /**
-     * SearchEventModel constructor.
-     *
-     * @param Organisation $organisation
-     * @param \DateTime $startDateTime
-     */
-    public function __construct(Organisation $organisation, \DateTime $startDateTime)
+    public function __construct($size = "month")
     {
-        $this->organisation = $organisation;
-        $this->startDateTime = $startDateTime;
-    }
-
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
+        $this->startDateTime = new \DateTime();
+        $this->endDateTime = new \DateTime("now + 1 " . $size);
     }
 
     /**
@@ -76,9 +59,17 @@ class SearchEventModel
     }
 
     /**
+     * @param \DateTime $startDateTime
+     */
+    public function setStartDateTime(\DateTime $startDateTime): void
+    {
+        $this->startDateTime = $startDateTime;
+    }
+
+    /**
      * @return \DateTime
      */
-    public function getEndDateTime()
+    public function getEndDateTime(): \DateTime
     {
         return $this->endDateTime;
     }
@@ -86,47 +77,63 @@ class SearchEventModel
     /**
      * @param \DateTime $endDateTime
      */
-    public function setEndDateTime($endDateTime)
+    public function setEndDateTime(\DateTime $endDateTime): void
     {
         $this->endDateTime = $endDateTime;
     }
 
     /**
-     * @return Member
+     * @return EventLine|null
      */
-    public function getFilterMember()
+    public function getFilterEventLine(): ?EventLine
+    {
+        return $this->filterEventLine;
+    }
+
+    /**
+     * @param EventLine|null $filterEventLine
+     */
+    public function setFilterEventLine(?EventLine $filterEventLine): void
+    {
+        $this->filterEventLine = $filterEventLine;
+    }
+
+    /**
+     * @return Member|null
+     */
+    public function getFilterMember(): ?Member
     {
         return $this->filterMember;
     }
 
     /**
-     * @param Member $filterMember
+     * @param Member|null $filterMember
      */
-    public function setFilterMember($filterMember)
+    public function setFilterMember(?Member $filterMember): void
     {
         $this->filterMember = $filterMember;
     }
 
     /**
-     * @return Person
+     * @return FrontendUser|null
      */
-    public function getFilterPerson()
+    public function getFilterFrontendUser(): ?FrontendUser
     {
-        return $this->filterPerson;
+        return $this->filterFrontendUser;
     }
 
     /**
-     * @param Person $filterPerson
+     * @param FrontendUser|null $filterFrontendUser
      */
-    public function setFilterPerson($filterPerson)
+    public function setFilterFrontendUser(?FrontendUser $filterFrontendUser): void
     {
-        $this->filterPerson = $filterPerson;
+        $this->filterFrontendUser = $filterFrontendUser;
     }
 
     /**
      * @return int
      */
-    public function getMaxResults()
+    public function getMaxResults(): int
     {
         return $this->maxResults;
     }
@@ -134,24 +141,8 @@ class SearchEventModel
     /**
      * @param int $maxResults
      */
-    public function setMaxResults($maxResults)
+    public function setMaxResults(int $maxResults): void
     {
         $this->maxResults = $maxResults;
-    }
-
-    /**
-     * @return EventLine
-     */
-    public function getFilterEventLine()
-    {
-        return $this->filterEventLine;
-    }
-
-    /**
-     * @param EventLine $filterEventLine
-     */
-    public function setFilterEventLine($filterEventLine)
-    {
-        $this->filterEventLine = $filterEventLine;
     }
 }

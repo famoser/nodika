@@ -82,7 +82,7 @@ trait EventControllerTrait
         $searchEventModel->setEndDateTime($endDateTime);
         $searchEventModel->setFilterMember($member);
         $searchEventModel->setFilterEventLine($eventLine);
-        $searchEventModel->setFilterPerson($person);
+        $searchEventModel->setFilterFrontendUser($person);
 
         return $searchEventModel;
     }

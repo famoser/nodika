@@ -191,12 +191,12 @@ class OfferController extends BaseFrontendController
         $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
         $myEvents = new SearchEventModel($ownMember->getOrganisation(), $threshHold);
         $myEvents->setFilterMember($eventOffer->getOfferedByMember());
-        $myEvents->setFilterPerson($eventOffer->getOfferedByPerson());
+        $myEvents->setFilterFrontendUser($eventOffer->getOfferedByPerson());
         $arr['myEventLineModels'] = $repo->findEventLineModels($myEvents);
 
         $theirEvents = new SearchEventModel($ownMember->getOrganisation(), $threshHold);
         $theirEvents->setFilterMember($eventOffer->getOfferedToMember());
-        $theirEvents->setFilterPerson($eventOffer->getOfferedToPerson());
+        $theirEvents->setFilterFrontendUser($eventOffer->getOfferedToPerson());
         $arr['theirEventLineModels'] = $repo->findEventLineModels($theirEvents);
 
         $arr['description_form'] = $eventOffer->getDescription();

@@ -12,9 +12,8 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\FrontendUser;
 use App\Entity\Member;
-use App\Entity\Organisation;
-use App\Entity\Person;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 
@@ -27,168 +26,18 @@ use Doctrine\ORM\NonUniqueResultException;
 class MemberRepository extends EntityRepository
 {
     /**
-     * @param Organisation $organisation
+     * @param Member $member
+     * @param FrontendUser $frontendUser
+     * @param int $dayThreshold
      *
      * @return \Doctrine\ORM\QueryBuilder
+     * @throws \Exception
      */
-    public function getByOrganisationQueryBuilder(Organisation $organisation)
-    {
-        return $this->createQueryBuilder('u')->where('u.organisation = :organisation')->setParameter('organisation', $organisation);
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return Member[]
-     */
-    public function getIdAssociatedArray(Organisation $organisation)
-    {
-        $res = [];
-        /* @var Member[] $members */
-        $members = $this->findBy(['organisation' => $organisation]);
-        foreach ($members as $memberEntry) {
-            $res[$memberEntry->getId()] = $memberEntry;
-        }
-
-        return $res;
-    }
-
-    /**
-     * @param Member $member
-     *
-     * @return int
-     */
-    public function countUnassignedEvents(Member $member)
-    {
-        try {
-            return $this->getAssignableEventsQueryBuilder($member, true)
-                ->andWhere('e.person IS NULL')
-                ->getQuery()
-                ->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-            return 0;
-        }
-    }
-
-    /**
-     * @param Member $member
-     * @param $singleScalar
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    private function getAssignableEventsQueryBuilder(Member $member, $singleScalar = false)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-
-        if ($singleScalar) {
-            $qb->select('COUNT(e)');
-        } else {
-            $qb->select('e');
-        }
-
-        $qb
-            ->from('App:Event', 'e')
-            ->join('e.eventLine', 'el')
-            ->leftJoin('e.member', 'm')
-            ->where('m = :member')
-            ->setParameter('member', $member);
-
-        $qb->andWhere('e.startDateTime > :startDateTime')
-            ->setParameter('startDateTime', new \DateTime());
-
-        return $qb;
-    }
-
-    /**
-     * @param Member $member
-     *
-     * @return array
-     */
-    public function findAssignableEventsAsIdArray(Member $member)
-    {
-        $qb = $this->getAssignableEventsQueryBuilder($member);
-        /* @var Event[] $eventsRaw */
-        $eventsRaw = $qb->getQuery()->getResult();
-        $events = [];
-        foreach ($eventsRaw as $item) {
-            $events[$item->getId()] = $item;
-        }
-
-        return $events;
-    }
-
-    /**
-     * @param Member $member
-     * @param $threshHold
-     *
-     * @return Event[]
-     */
-    public function findUnconfirmedEventsByMember(Member $member, \DateTime $threshHold)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-
-        $qb->select('e')
-            ->from('App:Event', 'e')
-            ->join('e.eventLine', 'el')
-            ->leftJoin('e.member', 'm')
-            ->where('m = :member')
-            ->setParameter('member', $member);
-
-        $qb->orderBy('e.startDateTime');
-
-        $now = new \DateTime();
-        $qb->andWhere('e.startDateTime < :startDateTime')
-            ->setParameter('startDateTime', $threshHold);
-        $qb->andWhere('e.startDateTime > :now')
-            ->setParameter('now', $now);
-        $qb->andWhere('e.isConfirmed = :isConfirmed')
-            ->setParameter('isConfirmed', false);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * counts the events which are currently unconfirmed.
-     *
-     * @param Member $member
-     * @param Person $person
-     *
-     * @return int
-     *
-     * @internal param \DateInterval $threshHold
-     */
-    public function countUnconfirmedEvents(Member $member, Person $person = null)
-    {
-        $organisationSetting = $this->getEntityManager()->getRepository('App:OrganisationSetting')->getByOrganisation($member->getOrganisation());
-
-        try {
-            return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person, true)
-                ->getQuery()
-                ->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-            return 0;
-        }
-    }
-
-    /**
-     * @param Member $member
-     * @param Person $person
-     * @param $dayThreshold
-     * @param bool $singleScalar
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    private function getUnconfirmedEventsQueryBuilder(Member $member, $dayThreshold, Person $person = null, $singleScalar = false)
+    private function unconfirmedEventsQueryBuilder(Member $member, $frontendUser, $dayThreshold)
     {
         $threshHold = new \DateInterval('P' . $dayThreshold . 'D');
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-
-        if ($singleScalar) {
-            $qb->select('COUNT(e)');
-        } else {
-            $qb->select('e');
-        }
 
         $qb->from('App:Event', 'e')
             ->join('e.eventLine', 'el')
@@ -196,9 +45,9 @@ class MemberRepository extends EntityRepository
             ->where('m = :member')
             ->setParameter('member', $member);
 
-        if ($person instanceof Person) {
-            $qb->andWhere('e.person IS NULL OR e.person = :person')
-                ->setParameter('person', $person);
+        if ($frontendUser instanceof FrontendUser) {
+            $qb->andWhere('e.frontendUser IS NULL OR e.frontendUser = :frontendUser')
+                ->setParameter('frontendUser', $frontendUser);
         }
 
         $maxStartTime = new \DateTime();
@@ -212,63 +61,20 @@ class MemberRepository extends EntityRepository
     }
 
     /**
-     * counts the events which are not confirmed yet, but should be.
+     * counts the events which are not confirmed yet in the specified timespan
      *
      * @param Member $member
-     * @param Person|null $person
+     * @param FrontendUser|null $frontendUser
      *
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     *
+     * @param $timeSpanInDays
      * @return int
-     *
-     * @internal param \DateInterval $threshHold
+     * @throws NonUniqueResultException
+     * @throws \Exception
      */
-    public function countLateUnconfirmedEvents(Member $member, Person $person = null)
+    public function countUnconfirmedEvents(Member $member, $frontendUser, $timeSpanInDays)
     {
-        $organisationSetting = $this->getEntityManager()->getRepository('App:OrganisationSetting')->getByOrganisation($member->getOrganisation());
-
-        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person, true)
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
-     * @param Member $member
-     * @param Person $person
-     *
-     * @return Event[]
-     *
-     * @internal param \DateInterval $threshHold
-     */
-    public function findUnconfirmedEvents(Member $member, Person $person = null)
-    {
-        $organisationSetting = $this->getEntityManager()->getRepository('App:OrganisationSetting')->getByOrganisation($member->getOrganisation());
-        $qb = $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getCanConfirmEventBeforeDays(), $person);
-        /* @var Event[] $eventsRaw */
-        $eventsRaw = $qb->getQuery()->getResult();
-        $events = [];
-        foreach ($eventsRaw as $item) {
-            $events[$item->getId()] = $item;
-        }
-
-        return $events;
-    }
-
-    /**
-     * @param Member $member
-     * @param Person $person
-     *
-     * @return Event[]
-     *
-     * @internal param \DateInterval $threshHold
-     */
-    public function findLateUnconfirmedEvents(Member $member, Person $person = null)
-    {
-        $organisationSetting = $this->getEntityManager()->getRepository('App:OrganisationSetting')->getByOrganisation($member->getOrganisation());
-
-        return $this->getUnconfirmedEventsQueryBuilder($member, $organisationSetting->getMustConfirmEventBeforeDays(), $person)
-            ->getQuery()
-            ->getResult();
+        $qb = $this->unconfirmedEventsQueryBuilder($member, $frontendUser, $timeSpanInDays);
+        $qb->select('COUNT(e)');
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }

@@ -11,7 +11,11 @@
 
 namespace App\Repository;
 
-use App\Entity\Organisation;
+use App\Entity\EventLine;
+use App\Entity\FrontendUser;
+use App\Entity\Member;
+use App\Model\Event\SearchEventModel;
+use App\Model\EventLine\EventLineModel;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -22,13 +26,97 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventLineRepository extends EntityRepository
 {
+
     /**
-     * @param Organisation $organisation
+     * @param SearchEventModel $searchEventModel
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return EventLineModel[]
      */
-    public function getByOrganisationQueryBuilder(Organisation $organisation)
+    public function findEventLineModels(SearchEventModel $searchEventModel)
     {
-        return $this->createQueryBuilder('u')->where('u.organisation = :organisation')->setParameter('organisation', $organisation);
+        $res = [];
+
+        //get event lines to be converted
+        $eventLines = [];
+        if ($searchEventModel->getFilterEventLine() instanceof EventLine) {
+            $eventLines[] = $searchEventModel->getFilterEventLine();
+        } else {
+            $eventLines = $this->findAll();
+        }
+
+        //construct query for each event line
+        foreach ($eventLines as $eventLine) {
+            $eventLineModel = new EventLineModel();
+            $eventLineModel->eventLine = $eventLine;
+
+            $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('e')
+                ->from('App:Event', 'e')
+                ->join('e.eventLine', 'el')
+                ->leftJoin('e.member', 'm')
+                ->leftJoin('e.person', 'p')
+                ->where('el = :eventLine')
+                ->setParameter('eventLine', $eventLine);
+
+            $qb->andWhere('e.startDateTime > :startDateTime')
+                ->setParameter('startDateTime', $searchEventModel->getStartDateTime());
+
+            if ($searchEventModel->getEndDateTime() instanceof \DateTime) {
+                $qb->andWhere('e.endDateTime < :endDateTime')
+                    ->setParameter('endDateTime', $searchEventModel->getEndDateTime());
+            }
+
+            if ($searchEventModel->getFilterMember() instanceof Member) {
+                $qb->andWhere('m = :member')
+                    ->setParameter('member', $searchEventModel->getFilterMember());
+            }
+
+            if ($searchEventModel->getFilterFrontendUser() instanceof FrontendUser) {
+                $qb->andWhere('p = :person')
+                    ->setParameter('person', $searchEventModel->getFilterFrontendUser());
+            }
+
+
+            $qb->setMaxResults($searchEventModel->getMaxResults());
+
+            $eventLineModel->events = $qb->getQuery()->getResult();
+            $res[] = $eventLineModel;
+        }
+
+        return $res;
+    }
+
+    /**
+     * add the right now active events to all passed eventLineModels
+     *
+     * @param EventLineModel[] $eventLineModels
+     *
+     * @return boolean
+     */
+    public function addCurrentlyActiveEvents(array $eventLineModels)
+    {
+        $res = false;
+        foreach ($eventLineModels as $eventLineModel2) {
+            $eventLine = $eventLineModel2->eventLine;
+            $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('e')
+                ->from('App:Event', 'e')
+                ->join('e.eventLine', 'el')
+                ->leftJoin('e.member', 'm')
+                ->leftJoin('e.person', 'p')
+                ->where('el = :eventLine')
+                ->setParameter('eventLine', $eventLine);
+
+            $qb->andWhere('e.startDateTime < :startDateTime')
+                ->setParameter('startDateTime', new \DateTime());
+
+            $qb->andWhere('e.endDateTime > :endDateTime')
+                ->setParameter('endDateTime', new \DateTime());
+
+            $eventLineModel2->activeEvents = $arr = $qb->getQuery()->getResult();
+            $res |= count($eventLineModel2->activeEvents);
+        }
+
+        return $res;
     }
 }
