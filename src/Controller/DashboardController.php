@@ -36,6 +36,6 @@ class DashboardController extends BaseDoctrineController
         $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);
         $arr['event_line_models'] = $eventLineModels;
 
-        return $this->render('dashboard/index.html.twig', $arr, 'dashboard!');
+        return $this->render('dashboard/index.html.twig', $arr);
     }
 }

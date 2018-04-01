@@ -12,28 +12,27 @@
 namespace App\Form\Member;
 
 use App\Entity\Member;
-use App\Entity\Traits\AddressTrait;
-use App\Entity\Traits\CommunicationTrait;
-use App\Entity\Traits\ThingTrait;
-use App\Form\BaseCrudAbstractType;
+use App\Form\Base\BaseAbstractType;
+use App\Form\Traits\Address\AddressType;
+use App\Form\Traits\Communication\CommunicationType;
+use App\Form\Traits\Thing\ThingType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MemberType extends BaseCrudAbstractType
+class MemberType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addTrait($builder, ThingTrait::class, ['translation_domain' => 'entity_member', 'label' => 'entity.name']);
-        $this->addTrait($builder, AddressTrait::class, ['required' => false]);
-        $this->addTrait($builder, CommunicationTrait::class);
-        parent::buildForm($builder, $options);
+        $builder->add("thing", ThingType::class, ["inherit_data" => true]);
+        $builder->add("address", AddressType::class, ["inherit_data" => true]);
+        $builder->add("communication", CommunicationType::class, ["inherit_data" => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Member::class,
+            'translation_domain' => 'entity_member'
         ]);
-        parent::configureOptions($resolver);
     }
 }

@@ -24,6 +24,7 @@ use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Enum\SubmitButtonType;
+use App\Form\Base\BaseAbstractType;
 use App\Form\BaseCrudAbstractType;
 use App\Form\Person\PersonType;
 use App\Helper\StaticMessageHelper;
@@ -36,7 +37,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventType extends BaseCrudAbstractType
+class EventType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

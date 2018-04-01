@@ -11,11 +11,9 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseFrontendController;
+use App\Controller\Base\BaseController;
 use App\Controller\Traits\EventControllerTrait;
-use App\Entity\Organisation;
-use App\Enum\ApplicationEventType;
-use App\Enum\SubmitButtonType;
+use App\Entity\EventLine;
 use App\Model\Event\SearchEventModel;
 use App\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -28,7 +26,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @Route("/administration")
  * @Security("has_role('ROLE_USER')")
  */
-class AdministrationController extends BaseFrontendController
+class AdministrationController extends BaseController
 {
     use EventControllerTrait;
 
@@ -39,21 +37,14 @@ class AdministrationController extends BaseFrontendController
      */
     public function indexAction()
     {
-        $organisation = $this->getOrganisation();
-        $searchModel = new SearchEventModel($organisation, new \DateTime());
-        $searchModel->setEndDateTime(new \DateTime('today + 1 month'));
+        $searchModel = new SearchEventModel();
+        $searchModel->setIsConfirmed(false);
+        $eventLineRepository = $this->getDoctrine()->getRepository(EventLine::class);
 
-        $organisationRepo = $this->getDoctrine()->getRepository('App:Organisation');
+        $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);
+        $arr['unconfirmed_events'] = $eventLineModels;
 
-        $eventLineModels = $organisationRepo->findEventLineModels($searchModel);
-        $arr['has_active_events'] = $organisationRepo->addActiveEvents($eventLineModels);
-        $arr['event_line_models'] = $eventLineModels;
-
-
-        $setupStatus = $this->getDoctrine()->getRepository('App:Organisation')->getSetupStatus($organisation);
-        $arr["setup_finished"] = $setupStatus->getAllDone();
-
-        return $this->renderNoBackUrl('administration/index.html.twig', $arr, 'dashboard!');
+        return $this->render('administration/index.html.twig', $arr);
     }
 
     /**

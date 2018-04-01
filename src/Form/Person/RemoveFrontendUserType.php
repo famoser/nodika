@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\Organisation;
+namespace App\Form\FrontendUser;
 
 use App\Form\Generic\RemoveThingType;
 
-class RemoveOrganisationType extends RemoveThingType
+class RemoveFrontendUserType extends RemoveThingType
 {
 }
