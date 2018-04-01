@@ -15,6 +15,7 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\InvitedTrait;
 use App\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -32,16 +33,7 @@ class Member extends BaseEntity
     use ThingTrait;
     use AddressTrait;
     use CommunicationTrait;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $invitationDateTime = null;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $invitationHash = null;
+    use InvitedTrait;
 
     /**
      * @var FrontendUser[]|ArrayCollection
@@ -86,55 +78,5 @@ class Member extends BaseEntity
     public function getEvents()
     {
         return $this->events;
-    }
-
-    /**
-     * returns a string representation of this entity.
-     *
-     * @return string
-     */
-    public function getFullIdentifier()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * @return bool
-     */
-    public function getHasBeenInvited()
-    {
-        return null !== $this->getInvitationDateTime();
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getInvitationDateTime()
-    {
-        return $this->invitationDateTime;
-    }
-
-    /**
-     * @param mixed $invitationDateTime
-     */
-    public function setInvitationDateTime($invitationDateTime)
-    {
-        $this->invitationDateTime = $invitationDateTime;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInvitationHash()
-    {
-        return $this->invitationHash;
-    }
-
-    /**
-     * @param string $invitationHash
-     */
-    public function setInvitationHash($invitationHash)
-    {
-        $this->invitationHash = $invitationHash;
     }
 }

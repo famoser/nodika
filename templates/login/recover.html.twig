@@ -1,0 +1,10 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "recover.title"|trans }}{% endblock %}
+{% block description %}{{ "recover.description"|trans }}{% endblock %}
+
+{% trans_default_domain "login" %}
+
+{% block single_content%}
+    {{ form(form) }}
+{% endblock %}

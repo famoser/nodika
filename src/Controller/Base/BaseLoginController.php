@@ -11,6 +11,7 @@
 
 namespace App\Controller\Base;
 
+use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\UserTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class BaseAccessController extends BaseFrontendController
+class BaseLoginController extends BaseFormController
 {
     public static function getSubscribedServices()
     {
@@ -30,18 +31,18 @@ class BaseAccessController extends BaseFrontendController
             [
                 'event_dispatcher' => EventDispatcherInterface::class,
                 'security.token_storage' => TokenStorageInterface::class,
+                'translator' => TranslatorInterface::class
             ];
     }
 
     /**
      * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param UserTrait $user
+     * @param UserTrait|BaseEntity $user
      * @param FormInterface $loginForm
      *
      * @return FormInterface
      */
-    protected function getLoginForm(Request $request, TranslatorInterface $translator, $user, FormInterface $loginForm)
+    protected function handleLoginForm(Request $request, BaseEntity $user, FormInterface $loginForm)
     {
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
@@ -57,7 +58,7 @@ class BaseAccessController extends BaseFrontendController
             $error = null;
         }
         if (null !== $error) {
-            $this->displayError($translator->trans('error.login_failed', [], 'access'));
+            $this->displayError($this->getTranslator()->trans('index.errors.login_failed', [], 'frontend_login'));
         }
 
         // last username entered by the user

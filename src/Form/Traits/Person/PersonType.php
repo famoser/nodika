@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\FrontendUser;
+namespace App\Form\Traits\Person;
 
-use App\Entity\FrontendUser;
-use App\Entity\Traits\UserTrait;
-use App\Enum\SubmitButtonType;
-use App\Form\BaseAbstractType;
+use App\Form\Base\BaseAbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FrontendUserResetType extends BaseAbstractType
+class PersonType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -26,8 +24,8 @@ class FrontendUserResetType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = UserTrait::getResetUserBuilder($builder);
-        $this->addSubmit($builder, SubmitButtonType::RESET_PASSWORD);
+        $builder->add('givenName', TextType::class);
+        $builder->add('familyName', TextType::class);
     }
 
     /**
@@ -36,7 +34,7 @@ class FrontendUserResetType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => FrontendUser::class,
+            'translation_domain' => 'trait_person'
         ]);
     }
 }

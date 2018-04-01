@@ -9,16 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\FrontendUser;
+namespace App\Form\Traits\Thing;
 
-use App\Entity\FrontendUser;
-use App\Entity\Traits\UserTrait;
-use App\Enum\SubmitButtonType;
-use App\Form\BaseAbstractType;
+use App\Form\Base\BaseAbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FrontendUserRegisterType extends BaseAbstractType
+class ThingType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -26,9 +25,8 @@ class FrontendUserRegisterType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = UserTrait::getRegisterUserBuilder($builder, [], $options['agb']);
-
-        $this->addSubmit($builder, SubmitButtonType::REGISTER);
+        $builder->add('name', TextType::class);
+        $builder->add('description', TextareaType::class, ["required" => false]);
     }
 
     /**
@@ -37,8 +35,7 @@ class FrontendUserRegisterType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => FrontendUser::class,
-            'agb' => true,
+            'translation_domain' => 'trait_thing'
         ]);
     }
 }

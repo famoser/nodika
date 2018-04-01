@@ -9,14 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form;
+namespace App\Form\Traits\Communication;
 
-use App\Enum\SubmitButtonType;
-use App\Helper\StaticMessageHelper;
+use App\Form\Base\BaseAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class BaseCrudAbstractType extends BaseAbstractType
+class EmailType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -24,7 +23,7 @@ class BaseCrudAbstractType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
+        $builder->add("email", \Symfony\Component\Form\Extension\Core\Type\EmailType::class);
     }
 
     /**
@@ -32,7 +31,8 @@ class BaseCrudAbstractType extends BaseAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
-        $resolver->setDefault(StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION, SubmitButtonType::NOT_SET);
+        $resolver->setDefaults([
+            'translation_domain' => 'trait_communication'
+        ]);
     }
 }

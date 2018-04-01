@@ -1,0 +1,50 @@
+#login page
+index:
+  title: 'Login'
+  description: 'In einen existierenden Account einloggen'
+  login_form_header: 'Login'
+  forgot_password_action: 'Passwort vergessen'
+  register_action: 'Neu registrieren'
+  errors:
+    login_failed: 'Login fehlgeschlagen'
+
+#reset page
+recover:
+  title: 'Passwort zurücksetzen'
+  description: 'Setzen Sie Ihr Passwort mit Ihrer E-Mail zurück'
+  set_email_form_description: 'Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.'
+  success:
+    email_sent: 'Sofern diese E-Mail in unserem System gefunden wurde, haben wir Ihnen soeben eine E-Mail versandt'
+  email:
+    reset_password:
+      subject: 'Passwort zurücksetzen'
+      message: 'Wir wurden beauftragt Ihr Passwort zurückzusetzen. Sie können diese E-Mail ignorieren wenn nicht Sie diese Anfrage gestellt haben.'
+      action_text: 'Jetzt Passwort zurücksetzen'
+
+
+#reset/confirm page
+reset:
+  title: 'Passwort zurücksetzen'
+  description: 'Setzen Sie Ihr neues Passwort'
+  reset_password_form_description: 'Setzen Sie Ihr neues Passwort'
+  success:
+    password_set: 'Neues Passwort erfolgreich gesetzt'
+  error:
+    passwords_do_not_match: 'Die Passwörter stimmen nicht überein'
+    invalid_hash: "Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann."
+
+#displayed if hash from link is invalid
+invalid:
+  title: 'Link ungültig'
+  description: 'Der aufgerufene Link ist ungültig'
+
+
+register:
+  subject: 'Registrierung abschliessen'
+  message: 'Vielen Dank für Ihr Interesse! Ihr Account wurde erstellt.'
+  action_text: 'Registrierung abschliessen'
+
+resend_invitation:
+  subject: "Einladung für nodika"
+  message: "Sie wurden auf nodika eingeladen. Folgen Sie dem Link, um die Einladung anzunehmen"
+  action_text: 'Jetzt Einladung annehmen'
