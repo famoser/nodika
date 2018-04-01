@@ -38,7 +38,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class EventLineController extends BaseController
 {
     /**
-     * @Route("/new", name="administration_organisation_event_line_new")
+     * @Route("/new", name="administration_event_line_new")
      *
      * @param Request $request
      * @param Organisation $organisation
@@ -79,7 +79,7 @@ class EventLineController extends BaseController
     }
 
     /**
-     * @Route("/{eventLine}/edit", name="administration_organisation_event_line_edit")
+     * @Route("/{eventLine}/edit", name="administration_event_line_edit")
      *
      * @param Request $request
      * @param Organisation $organisation
@@ -120,7 +120,7 @@ class EventLineController extends BaseController
     }
 
     /**
-     * @Route("/{eventLine}/remove", name="administration_organisation_event_line_remove")
+     * @Route("/{eventLine}/remove", name="administration_event_line_remove")
      *
      * @param Request $request
      * @param Organisation $organisation
@@ -161,29 +161,7 @@ class EventLineController extends BaseController
     }
 
     /**
-     * @Route("/{eventLine}/administer", name="administration_organisation_event_line_administer")
-     *
-     * @param Organisation $organisation
-     * @param EventLine $eventLine
-     *
-     * @return Response
-     */
-    public function administerAction(Organisation $organisation, EventLine $eventLine)
-    {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
-
-        $arr['organisation'] = $organisation;
-        $arr['eventLine'] = $eventLine;
-
-        return $this->renderWithBackUrl(
-            'administration/organisation/event_line/administer.html.twig',
-            $arr,
-            $this->generateUrl('administration_organisation_event_lines', ['organisation' => $organisation->getId()])
-        );
-    }
-
-    /**
-     * @Route("/import/download/template", name="administration_organisation_event_line_import_download_template")
+     * @Route("/import/template", name="administration_event_line_import_template")
      *
      * @param Organisation $organisation
      * @param TranslatorInterface $translator
@@ -227,7 +205,7 @@ class EventLineController extends BaseController
     }
 
     /**
-     * @Route("/{eventLine}/import", name="administration_organisation_event_line_import")
+     * @Route("/{eventLine}/import", name="administration_event_line_import")
      *
      * @param Request $request
      * @param Organisation $organisation

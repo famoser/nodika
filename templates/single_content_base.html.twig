@@ -1,18 +1,7 @@
 {% extends 'layout/base.html.twig' %}
 
 {% block content %}
-    <section class="content
-        {% if theme_color == "blue" %}
-        blue-background
-        {% elseif theme_color == "brown" %}
-        brown-background
-        {% elseif theme_color == "green" %}
-        green-background
-        {% elseif theme_color == "green2" %}
-        green2-background
-        {% elseif theme_color == "red" %}
-        red-background
-        {% endif %}">
+    <section class="content blue-background">
         {% include "layout/parts/menu.html.twig" %}
         {% include "layout/parts/flashbag.html.twig" %}
         <div class="container index-container default-color">

@@ -14,12 +14,14 @@ namespace App\Controller;
 use App\Controller\Base\BaseAccessController;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
+use App\Entity\Organisation;
 use App\Entity\Person;
 use App\Enum\SubmitButtonType;
 use App\Form\FrontendUser\FrontendUserLoginType;
 use App\Form\FrontendUser\FrontendUserResetType;
 use App\Form\FrontendUser\FrontendUserSetPasswordType;
 use App\Form\Member\MemberInviteType;
+use App\Form\Organisation\OrganisationType;
 use App\Form\Person\PersonInviteType;
 use App\Form\Person\PersonType;
 use App\Helper\HashHelper;
@@ -88,6 +90,28 @@ class AccessController extends BaseAccessController
      */
     public function registerAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
+
+        $organisation = Organisation::createFromPerson($this->getPerson());
+        $organisation->setActiveEnd(new \DateTime('today + 31 days'));
+        $organisation->setIsActive(true);
+        $organisation->addLeader($this->getPerson());
+        $newOrganisationForm = $this->handleFormDoctrinePersist(
+            $this->createCrudForm(OrganisationType::class, SubmitButtonType::CREATE),
+            $request,
+            $translator,
+            $organisation,
+            function ($form, $entity) use ($organisation) {
+                return $this->redirectToRoute('administration_organisation_setup', ['organisation' => $organisation->getId()]);
+            }
+        );
+
+        if ($newOrganisationForm instanceof Response) {
+            return $newOrganisationForm;
+        }
+
+        $arr['new_organisation_form'] = $newOrganisationForm->createView();
+
+
         $registerForm = $this->handleFormDoctrinePersist(
             $this->createCrudForm(PersonType::class, SubmitButtonType::REGISTER),
             $request,

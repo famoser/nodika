@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 class GenerateController extends BaseController
 {
     /**
-     * @Route("/choose", name="administration_organisation_event_line_generate_choose")
+     * @Route("/", name="administration_generate_index")
      *
      * @param Organisation $organisation
      * @param EventLine $eventLine

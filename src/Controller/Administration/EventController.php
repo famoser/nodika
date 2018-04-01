@@ -35,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class EventController extends BaseController
 {
     /**
-     * @Route("/new", name="administration_organisation_event_line_event_new")
+     * @Route("/new", name="administration_event_new")
      *
      * @param Request $request
      * @param Organisation $organisation
@@ -83,7 +83,7 @@ class EventController extends BaseController
     }
 
     /**
-     * @Route("/{event}/edit", name="administration_organisation_event_line_event_edit")
+     * @Route("/{event}/edit", name="administration_event_edit")
      *
      * @param Request $request
      * @param Organisation $organisation
@@ -132,7 +132,7 @@ class EventController extends BaseController
     }
 
     /**
-     * @Route("/{event}/remove", name="administration_organisation_event_line_event_remove")
+     * @Route("/{event}/remove", name="administration_event_remove")
      *
      * @param Request $request
      * @param Organisation $organisation
@@ -180,7 +180,7 @@ class EventController extends BaseController
     }
 
     /**
-     * @Route("/{event}/view", name="administration_organisation_event_line_event_view")
+     * @Route("/{event}/history", name="administration_event_history")
      *
      * @param Organisation $organisation
      * @param EventLine $eventLine
@@ -189,7 +189,7 @@ class EventController extends BaseController
      *
      * @return Response
      */
-    public function viewAction(Organisation $organisation, EventLine $eventLine, Event $event, EventPastEvaluationService $eventPastEvaluationService)
+    public function historyAction(Organisation $organisation, EventLine $eventLine, Event $event, EventPastEvaluationService $eventPastEvaluationService)
     {
         $this->denyAccessUnlessGranted(EventVoter::VIEW, $event);
 

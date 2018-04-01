@@ -12,6 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFrontendController;
+use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
 use App\Entity\Member;
 use App\Entity\Person;
@@ -31,6 +32,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class EventController extends BaseFrontendController
 {
+    use EventControllerTrait;
+
     /**
      * @Route("/assign", name="event_assign")
      *
@@ -235,6 +238,7 @@ class EventController extends BaseFrontendController
      * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
     public function searchAction(Request $request, TranslatorInterface $translator)
     {
@@ -249,7 +253,7 @@ class EventController extends BaseFrontendController
         $eventLineModels = $organisationRepo->findEventLineModels($searchEventModel);
 
         if ('csv' === $request->query->get('view')) {
-            return $this->exportAsCsv($eventLineModels, $translator);
+            return $this->renderCsv("export.csv", $this->toDataTable($eventLineModels, $translator));
         }
         $arr['event_line_models'] = $eventLineModels;
 
@@ -273,116 +277,4 @@ class EventController extends BaseFrontendController
         return $this->renderWithBackUrl('event/search.html.twig', $arr, $this->generateUrl('dashboard_index'));
     }
 
-    /**
-     * @param Request $request
-     * @param Member $member
-     *
-     * @return SearchEventModel
-     */
-    private function resolveSearchEventModel(Request $request, Member $member)
-    {
-        $organisation = $member->getOrganisation();
-
-        $startQuery = $request->query->get('start');
-        $startDateTime = new \DateTime($startQuery);
-
-        $endQuery = $request->query->get('end');
-        $endDateTime = false;
-        if (mb_strlen($endQuery) > 0) {
-            $endDateTime = new \DateTime($endQuery);
-        }
-        if (!$endDateTime) {
-            $endDateTime = clone $startDateTime;
-            $endDateTime = $endDateTime->add(new \DateInterval('P1Y'));
-        }
-
-        $memberQuery = $request->query->get('member');
-        $member = null;
-        if (is_numeric($memberQuery)) {
-            $memberQueryInt = (int)$memberQuery;
-            foreach ($organisation->getMembers() as $organisationMember) {
-                if ($organisationMember->getId() === $memberQueryInt) {
-                    $member = $organisationMember;
-                }
-            }
-        }
-
-        $eventLineQuery = $request->query->get('event_line');
-        $eventLine = null;
-        if (is_numeric($eventLineQuery)) {
-            $eventLineInt = (int)$eventLineQuery;
-            foreach ($organisation->getEventLines() as $organisationEventLine) {
-                if ($organisationEventLine->getId() === $eventLineInt) {
-                    $eventLine = $organisationEventLine;
-                }
-            }
-        }
-
-        $personQuery = $request->query->get('person');
-        $person = null;
-        if (is_numeric($personQuery)) {
-            $personQueryInt = (int)$personQuery;
-            foreach ($organisation->getMembers() as $organisationMember) {
-                foreach ($organisationMember->getPersons() as $organisationPerson) {
-                    if ($organisationPerson->getId() === $personQueryInt) {
-                        $person = $organisationPerson;
-                    }
-                }
-            }
-        }
-
-        $searchEventModel = new SearchEventModel($organisation, $startDateTime);
-        $searchEventModel->setEndDateTime($endDateTime);
-        $searchEventModel->setFilterMember($member);
-        $searchEventModel->setFilterEventLine($eventLine);
-        $searchEventModel->setFilterPerson($person);
-
-        return $searchEventModel;
-    }
-
-    /**
-     * @param EventLineModel[] $eventModels
-     * @param TranslatorInterface $translator
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     */
-    private function exportAsCsv($eventModels, TranslatorInterface $translator)
-    {
-        $data = [];
-        foreach ($eventModels as $eventModel) {
-            $row = [];
-            $row[] = $eventModel->eventLine->getName();
-            $row[] = $eventModel->eventLine->getDescription();
-            $data[] = $row;
-            $data[] = $this->getEventsHeader($translator);
-            foreach ($eventModel->events as $event) {
-                $row = [];
-                $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-                $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-                $row[] = $event->getMember()->getName();
-                if ($event->getPerson() instanceof Person) {
-                    $row[] = $event->getPerson()->getFullName();
-                }
-                $data[] = $row;
-            }
-            $data[] = [];
-        }
-
-        return $this->renderCsv('export.csv', $data);
-    }
-
-    /**
-     * @param TranslatorInterface $translator
-     *
-     * @return string[]
-     */
-    private function getEventsHeader(TranslatorInterface $translator)
-    {
-        $start = $translator->trans('start_date_time', [], 'entity_event');
-        $end = $translator->trans('end_date_time', [], 'entity_event');
-        $member = $translator->trans('entity.name', [], 'entity_member');
-        $person = $translator->trans('entity.name', [], 'entity_person');
-
-        return [$start, $end, $member, $person];
-    }
 }

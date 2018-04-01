@@ -1,8 +1,0 @@
-services:
-    app.frontend_user_provider: '@App\Security\FrontendUserProvider'
-    app.admin_user_provider: '@App\Security\FrontendUserProvider'
-    app.exchange_service: '@App\Service\ExchangeService'
-    app.event_past_evaluation_service: '@App\Service\EventPastEvaluationService'
-    app.event_generation_service: '@App\Service\EventGenerationService'
-    app.email_service: '@App\Service\EmailService'
-    listener.entity.remove: '@App\Listener\DoctrinePreFlushListener'

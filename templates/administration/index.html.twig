@@ -1,0 +1,116 @@
+{% extends 'layout/base.html.twig' %}
+{% import "macros/events.html.twig" as events %}
+{% import "macros/event_line_models.html.twig" as event_line_model_macro %}
+{% import _self as local_macro %}
+
+{% trans_default_domain "dashboard" %}
+{% set theme_color = "blue" %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% macro event_row(event, activeMember, class = "") %}
+    {% if event.member == activeMember %}
+        {% set class = class ~ " bold" %}
+    {% endif %}
+    <tr class="{{ class }}">
+        <td>
+            {{ event.startDateTime|myDateTime }}
+        </td>
+        <td>
+            {{ event.endDateTime|myDateTime }}
+        </td>
+        <td>
+            {{ event.member }}
+        </td>
+        <td>
+            {{ event.person }}
+        </td>
+        <td>
+            {% if event.isConfirmed %}
+                <i class="icon icon-check-square"></i>
+            {% else %}
+                <a href="{{ path("administration_event_confirm", {"event" : event.id}) }}">
+                    {{ ""|trans }}
+                </a>
+            {% endif %}
+        </td>
+    </tr>
+{% endmacro %}
+
+
+{% block content %}
+    <section class="content {{ theme_color }}-background">
+        {% include "layout/parts/menu.html.twig" %}
+        {% include "layout/parts/flashbag.html.twig" %}
+
+        <div class="container list-container d-none d-md-block">
+            <div class="row tile-grid">
+                <a class="tile tile-2 default-color" href="{{ path('administration_event_index') }}">
+                    <h3>{{ "entity.plural"|trans({}, "entity_event") }}</h3>
+                    <p>
+                        {{ "entity.description"|trans({}, "entity_event") }}
+                    </p>
+                </a>
+
+                <a class="tile tile-2 default-color" href="{{ path('administration_person_index') }}">
+                    <h3>{{ "entity.plural"|trans({}, "entity_person") }}</h3>
+                    <p>
+                        {{ "entity.description"|trans({}, "entity_person") }}
+                    </p>
+                </a>
+
+                <a class="tile tile-2 default-color" href="{{ path('administration_member_index') }}">
+                    <h3>{{ "entity.plural"|trans({}, "entity_member") }}</h3>
+                    <p>
+                        {{ "entity.description"|trans({}, "entity_member") }}
+                    </p>
+                </a>
+
+                <a class="tile tile-2 default-color" href="{{ path('administration_event_line_index') }}">
+                    <h3>{{ "entity.plural"|trans({}, "entity_event_line") }}</h3>
+                    <p>
+                        {{ "entity.description"|trans({}, "entity_event_line") }}
+                    </p>
+                </a>
+            </div>
+        </div>
+        {% for eventLineModel in event_line_models %}
+            <div class="container index-container default-color list-container"><h3>
+                    {{ eventLineModel.eventLine.name }}
+                </h3>
+                <p>{{ eventLineModel.eventLine.description }}</p>
+
+                {% if eventLineModel.events|length == 0 %}
+                    <p>{{ "index.no_events"|trans({}, "dashboard") }}</p>
+                {% else %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+                                <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+                                <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                                <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
+                                <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for event in eventLineModel.activeEvents %}
+                                {{ local_macro.event_row(event, member, "table-light") }}
+                            {% endfor %}
+                            {% for event in eventLineModel.events %}
+                                {{ local_macro.event_row(event, member) }}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                <p>
+                    <a href="{{ path("event_search", {"event_line" : eventLineModel.eventLine.id}) }}">{{ "index.show_all_events"|trans }}</a>
+                </p>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}
+
