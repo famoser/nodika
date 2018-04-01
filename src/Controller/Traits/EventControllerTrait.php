@@ -12,7 +12,7 @@ namespace App\Controller\Traits;
 use App\Entity\Member;
 use App\Entity\Person;
 use App\Helper\DateTimeFormatter;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use App\Model\EventLine\EventLineModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -23,7 +23,7 @@ trait EventControllerTrait
      * @param Request $request
      * @param Member $member
      *
-     * @return SearchEventModel
+     * @return SearchModel
      * @throws \Exception
      */
     private function resolveSearchEventModel(Request $request, Member $member)
@@ -78,7 +78,7 @@ trait EventControllerTrait
             }
         }
 
-        $searchEventModel = new SearchEventModel($organisation, $startDateTime);
+        $searchEventModel = new SearchModel($organisation, $startDateTime);
         $searchEventModel->setEndDateTime($endDateTime);
         $searchEventModel->setMember($member);
         $searchEventModel->setEventLine($eventLine);

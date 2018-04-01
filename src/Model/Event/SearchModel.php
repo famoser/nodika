@@ -17,7 +17,7 @@ use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;
 
-class SearchEventModel
+class SearchModel
 {
     /**
      * @var \DateTime

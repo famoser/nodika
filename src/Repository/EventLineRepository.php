@@ -14,7 +14,7 @@ namespace App\Repository;
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use App\Model\EventLine\EventLineModel;
 use Doctrine\ORM\EntityRepository;
 
@@ -28,11 +28,11 @@ class EventLineRepository extends EntityRepository
 {
 
     /**
-     * @param SearchEventModel $searchEventModel
+     * @param SearchModel $searchEventModel
      *
      * @return EventLineModel[]
      */
-    public function findEventLineModels(SearchEventModel $searchEventModel)
+    public function findEventLineModels(SearchModel $searchEventModel)
     {
         $res = [];
 

@@ -12,9 +12,13 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseController;
+use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\EventLine;
-use App\Model\Event\SearchEventModel;
+use App\Entity\FrontendUser;
+use App\Entity\Member;
+use App\Form\Event\SearchType;
+use App\Model\Event\SearchModel;
 use App\Security\Voter\OrganisationVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +30,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @Route("/administration")
  * @Security("has_role('ROLE_USER')")
  */
-class AdministrationController extends BaseController
+class AdministrationController extends BaseFormController
 {
     use EventControllerTrait;
 
@@ -37,11 +41,12 @@ class AdministrationController extends BaseController
      */
     public function indexAction()
     {
-        $searchModel = new SearchEventModel();
+        $searchModel = new SearchModel();
         $searchModel->setIsConfirmed(false);
-        $eventLineRepository = $this->getDoctrine()->getRepository(EventLine::class);
 
+        $eventLineRepository = $this->getDoctrine()->getRepository(EventLine::class);
         $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);
+
         $arr['unconfirmed_events'] = $eventLineModels;
 
         return $this->render('administration/index.html.twig', $arr);
@@ -52,35 +57,38 @@ class AdministrationController extends BaseController
      *
      * @return Response
      */
-    public function eventsAction()
+    public function eventsAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $searchModel = new SearchModel();
 
-        $arr['organisation'] = $organisation;
-
-        return $this->renderWithBackUrl(
-            'administration/organisation/event_lines.html.twig',
-            $arr,
-            $this->generateUrl('administration_organisation_administer', ['organisation' => $organisation->getId()])
+        $this->handleForm(
+            $this->createForm(SearchType::class, $searchModel),
+            $request,
+            function ($form) {
+                return $form;
+            }
         );
+
+        $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
+        $eventLineModels = $eventLineRepo->findEventLineModels($searchModel);
+
+        $arr["event_line_models"] = $eventLineModels;
+
+        return $this->render('administration/event_lines.html.twig', $arr);
     }
 
     /**
-     * @Route("/persons", name="administration_persons")
+     * @Route("/frontend_users", name="administration_frontend_users")
      *
      * @return Response
      */
-    public function personsAction()
+    public function frontendUsersAction()
     {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $frontendUserRepo = $this->getDoctrine()->getRepository(FrontendUser::class);
 
-        $arr['organisation'] = $organisation;
+        $arr["frontend_users"] = $frontendUserRepo->findBy(["isEnabled" => true]);
 
-        return $this->renderWithBackUrl(
-            'administration/organisation/members.html.twig',
-            $arr,
-            $this->generateUrl('administration_organisation_administer', ['organisation' => $organisation->getId()])
-        );
+        return $this->render('administration/frontend_users.html.twig', $arr);
     }
 
     /**
@@ -90,15 +98,11 @@ class AdministrationController extends BaseController
      */
     public function membersAction()
     {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $memberRepo = $this->getDoctrine()->getRepository(Member::class);
 
-        $arr['organisation'] = $organisation;
+        $arr["members"] = $memberRepo->findBy(["isEnabled" => true]);
 
-        return $this->renderWithBackUrl(
-            'administration/organisation/members.html.twig',
-            $arr,
-            $this->generateUrl('administration_organisation_administer', ['organisation' => $organisation->getId()])
-        );
+        return $this->render('administration/members.html.twig', $arr);
     }
 
     /**
@@ -108,72 +112,10 @@ class AdministrationController extends BaseController
      */
     public function eventLinesAction()
     {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
+        $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
 
-        $arr['organisation'] = $organisation;
+        $arr["event_lines"] = $eventLineRepo->findAll();
 
-        return $this->renderWithBackUrl(
-            'administration/organisation/event_lines.html.twig',
-            $arr,
-            $this->generateUrl('administration_organisation_administer', ['organisation' => $organisation->getId()])
-        );
-    }
-
-
-    /**
-     * @Route("/setup", name="administration_organisation_setup")
-     *
-     * @return Response
-     */
-    public function setupAction()
-    {
-        $organisation = $this->getOrganisation();
-        $setupStatus = $this->getDoctrine()->getRepository('App:Organisation')->getSetupStatus($organisation);
-
-        $arr['organisation'] = $organisation;
-
-        return $this->renderWithBackUrl(
-            'administration/organisation/setup.html.twig',
-            $arr + ['setupStatus' => $setupStatus],
-            $this->generateUrl('administration_organisation_administer', ['organisation' => $organisation->getId()])
-        );
-    }
-
-    /**
-     * @Route("/settings", name="administration_organisation_settings")
-     *
-     * @param Request $request
-     * @param Organisation $organisation
-     * @param TranslatorInterface $translator
-     *
-     * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function settingsAction(Request $request, Organisation $organisation, TranslatorInterface $translator)
-    {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
-        $this->getDoctrine()->getRepository('App:ApplicationEvent')->registerEventOccurred($organisation, ApplicationEventType::VISITED_SETTINGS);
-        $organisationSetting = $this->getDoctrine()->getRepository('App:OrganisationSetting')->getByOrganisation($organisation);
-
-        $form = $this->handleCrudForm(
-            $request,
-            $translator,
-            $organisationSetting,
-            SubmitButtonType::EDIT
-        );
-
-        if ($form instanceof Response) {
-            return $form;
-        }
-
-        $arr['settings_form'] = $form->createView();
-        $arr['organisation'] = $organisation;
-
-        return $this->renderWithBackUrl(
-            'administration/organisation/settings.html.twig',
-            $arr,
-            $this->generateUrl('administration_organisation_administer', ['organisation' => $organisation->getId()])
-        );
+        return $this->render('administration/event_lines.html.twig', $arr);
     }
 }

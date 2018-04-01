@@ -13,7 +13,7 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
 use App\Entity\EventLine;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -30,7 +30,7 @@ class DashboardController extends BaseDoctrineController
      */
     public function indexAction()
     {
-        $searchModel = new SearchEventModel();
+        $searchModel = new SearchModel();
         $eventLineRepository = $this->getDoctrine()->getRepository(EventLine::class);
 
         $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);

@@ -18,7 +18,7 @@ use App\Entity\Member;
 use App\Entity\Person;
 use App\Enum\EventChangeType;
 use App\Helper\DateTimeFormatter;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use App\Model\EventLine\EventLineModel;
 use App\Service\EventPastEvaluationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -242,11 +242,6 @@ class EventController extends BaseFrontendController
      */
     public function searchAction(Request $request, TranslatorInterface $translator)
     {
-        $member = $this->getMember();
-        if (null === $member) {
-            return $this->redirectToRoute('dashboard_index');
-        }
-
         $organisationRepo = $this->getDoctrine()->getRepository('App:Organisation');
 
         $searchEventModel = $this->resolveSearchEventModel($request, $member);

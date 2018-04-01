@@ -21,7 +21,7 @@ use App\Enum\EventChangeType;
 use App\Enum\OfferStatus;
 use App\Enum\TradeTag;
 use App\Helper\DateTimeConverter;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use App\Service\EventPastEvaluationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -189,12 +189,12 @@ class OfferController extends BaseFrontendController
 
         $organisationSettings = $settingRepo->getByOrganisation($ownMember->getOrganisation());
         $threshHold = DateTimeConverter::addDays(new \DateTime(), $organisationSettings->getTradeEventDays());
-        $myEvents = new SearchEventModel($ownMember->getOrganisation(), $threshHold);
+        $myEvents = new SearchModel($ownMember->getOrganisation(), $threshHold);
         $myEvents->setMember($eventOffer->getOfferedByMember());
         $myEvents->setFrontendUser($eventOffer->getOfferedByPerson());
         $arr['myEventLineModels'] = $repo->findEventLineModels($myEvents);
 
-        $theirEvents = new SearchEventModel($ownMember->getOrganisation(), $threshHold);
+        $theirEvents = new SearchModel($ownMember->getOrganisation(), $threshHold);
         $theirEvents->setMember($eventOffer->getOfferedToMember());
         $theirEvents->setFrontendUser($eventOffer->getOfferedToPerson());
         $arr['theirEventLineModels'] = $repo->findEventLineModels($theirEvents);

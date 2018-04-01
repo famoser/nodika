@@ -28,16 +28,19 @@ use App\Form\Base\BaseAbstractType;
 use App\Form\BaseCrudAbstractType;
 use App\Form\Person\PersonType;
 use App\Helper\StaticMessageHelper;
+use App\Model\Event\SearchModel;
 use App\Repository\MemberRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventType extends BaseAbstractType
+class SearchType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -45,16 +48,18 @@ class EventType extends BaseAbstractType
 
         $builder->add('startDateTime', DateTimeType::class, $dateArray);
         $builder->add('endDateTime', DateTimeType::class, $dateArray);
-        $builder->add('member', EntityType::class, ["class" => Member::class]);
-        $builder->add('person', EntityType::class, ["class" => FrontendUser::class]);
-        $builder->add('eventLine', EntityType::class, ['class' => EventLine::class]);
+        $builder->add('eventLine', EntityType::class, ['class' => EventLine::class, "required" => false]);
+        $builder->add('member', EntityType::class, ["class" => Member::class, "required" => false]);
+        $builder->add('person', EntityType::class, ["class" => FrontendUser::class, "required" => false]);
+        $builder->add('isConfirmed', CheckboxType::class, ["required" => false]);
+        $builder->add('maxResults', NumberType::class, ["required" => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Event::class,
-            'translation_domain' => 'entity_event'
+            'data_class' => SearchModel::class,
+            'translation_domain' => 'model_event_search'
         ]);
     }
 }

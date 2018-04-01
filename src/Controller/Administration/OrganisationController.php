@@ -20,7 +20,7 @@ use App\Enum\ApplicationEventType;
 use App\Enum\SubmitButtonType;
 use App\Form\Organisation\OrganisationType;
 use App\Helper\HashHelper;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use App\Security\Voter\OrganisationVoter;
 use App\Service\EmailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

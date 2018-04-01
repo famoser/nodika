@@ -17,7 +17,7 @@ use App\Entity\EventLine;
 use App\Entity\Member;
 use App\Entity\Person;
 use App\Helper\DateTimeFormatter;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,7 +63,7 @@ class CronJobController extends BaseDoctrineController
 
             //get all events which might be a problem
             $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
-            $eventSearchModel = new SearchEventModel();
+            $eventSearchModel = new SearchModel();
             $eventSearchModel->setStartDateTime(new \DateTime());
             $eventSearchModel->setEndDateTime(new \DateTime("now + " . $sendRemainderBy . " days"));
             $eventSearchModel->setIsConfirmed(false);
@@ -99,7 +99,7 @@ class CronJobController extends BaseDoctrineController
 
         //get all events which might be a problem
         $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
-        $eventSearchModel = new SearchEventModel();
+        $eventSearchModel = new SearchModel();
         $eventSearchModel->setStartDateTime(new \DateTime());
         $eventSearchModel->setEndDateTime(new \DateTime("now + " . $mustConfirmBy . " days"));
         $eventSearchModel->setIsConfirmed(false);

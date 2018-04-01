@@ -10,7 +10,7 @@ namespace App\Form\Model\Event;
 
 
 use App\Form\BaseAbstractType;
-use App\Model\Event\SearchEventModel;
+use App\Model\Event\SearchModel;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,7 +27,7 @@ class SearchType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => SearchEventModel::class,
+            'data_class' => SearchModel::class,
         ]);
     }
 }

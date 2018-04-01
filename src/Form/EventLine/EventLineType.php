@@ -34,6 +34,5 @@ class EventLineType extends BaseAbstractType
             'data_class' => EventLine::class,
             'translation_domain' => 'entity_event_line'
         ]);
-        parent::configureOptions($resolver);
     }
 }
