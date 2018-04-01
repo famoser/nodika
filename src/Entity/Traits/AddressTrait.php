@@ -11,11 +11,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /*
@@ -25,133 +21,47 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait AddressTrait
 {
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $street;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $streetNr;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $addressLine;
 
     /**
+     * @var int
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $postalCode;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $city;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      * @Assert\Country()
      */
     private $country = 'CH';
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(AddressTrait::class)] + $defaultArray;
-        $builder->add(
-            'street',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('street')
-        );
-        $builder->add(
-            'streetNr',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('streetNr')
-        );
-        $builder->add(
-            'addressLine',
-            TextType::class,
-            ['required' => false] + $builderArray + NamingHelper::propertyToTranslationForBuilder('addressLine')
-        );
-        $builder->add(
-            'postalCode',
-            NumberType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('postalCode')
-        );
-        $builder->add(
-            'city',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('city')
-        );
-        $builder->add(
-            'country',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('country')
-        );
-
-        return $builder;
-    }
-
-    /**
-     * @param AddressTrait $source
-     */
-    public function setAddressFieldsFrom($source)
-    {
-        $this->setStreet($source->getStreet());
-        $this->setStreetNr($source->getStreetNr());
-        $this->setAddressLine($source->getAddressLine());
-        $this->setPostalCode($source->getPostalCode());
-        $this->setCity($source->getCity());
-        $this->setCountry($source->getCountry());
-    }
-
-    /**
-     * gets the street identifier.
-     *
-     * @return string
-     */
-    protected function getAddressIdentifier()
-    {
-        return implode(', ', $this->getAddressLines());
-    }
-
-    /**
-     * returns all non-empty address lines.
-     *
-     * @return string[]
-     */
-    public function getAddressLines()
-    {
-        $res = [];
-        $lineOne = $this->getStreet();
-        if (mb_strlen($lineOne) > 0 && mb_strlen($this->getStreetNr()) > 0) {
-            $lineOne .= ' ' . $this->getStreetNr();
-        }
-        if (mb_strlen($lineOne) > 0) {
-            $res[] = $lineOne;
-        }
-        if (mb_strlen($this->getAddressLine()) > 0) {
-            $res[] = $this->getAddressLine();
-        }
-        $line3 = $this->getPostalCode();
-        if (mb_strlen($line3) > 0 && mb_strlen($this->getCity() > 0)) {
-            $line3 .= ' ' . $this->getCity();
-        }
-        if (mb_strlen($line3) > 0) {
-            $res[] = $line3;
-        }
-        if (mb_strlen($this->getCountry()) > 0) {
-            $res[] = $this->getCountry();
-        }
-
-        return $res;
-    }
 
     /**
      * Get street.
@@ -291,5 +201,37 @@ trait AddressTrait
         $this->country = $country;
 
         return $this;
+    }
+
+    /**
+     * returns all non-empty address lines.
+     *
+     * @return string[]
+     */
+    public function getAddressLines()
+    {
+        $res = [];
+        $lineOne = $this->getStreet();
+        if (mb_strlen($lineOne) > 0 && mb_strlen($this->getStreetNr()) > 0) {
+            $lineOne .= ' ' . $this->getStreetNr();
+        }
+        if (mb_strlen($lineOne) > 0) {
+            $res[] = $lineOne;
+        }
+        if (mb_strlen($this->getAddressLine()) > 0) {
+            $res[] = $this->getAddressLine();
+        }
+        $line3 = $this->getPostalCode();
+        if (mb_strlen($line3) > 0 && mb_strlen($this->getCity() > 0)) {
+            $line3 .= ' ' . $this->getCity();
+        }
+        if (mb_strlen($line3) > 0) {
+            $res[] = $line3;
+        }
+        if (mb_strlen($this->getCountry()) > 0) {
+            $res[] = $this->getCountry();
+        }
+
+        return $res;
     }
 }

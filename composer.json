@@ -11,6 +11,7 @@
     "fzaninotto/faker": "^1.7",
     "javiereguiluz/easyadmin-bundle": "^1.17",
     "php-coveralls/php-coveralls": "^2.0",
+    "ramsey/uuid": "^3",
     "sensio/framework-extra-bundle": "^5.1",
     "sensiolabs/security-checker": "^4.0",
     "symfony/apache-pack": "^1.0",

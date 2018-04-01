@@ -1,0 +1,25 @@
+{% extends "single_content_base.html.twig" %}
+{% set theme_color = globals_theme_color_member %}
+{% import "macros/members.html.twig" as members %}
+
+{% block title %}{{ "members.title"|trans }}{% endblock %}
+{% block description %}{{ "members.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_organisation" %}
+
+{% block single_content %}
+    <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
+    <p>
+        {{ "entity.description"|trans({}, "entity_member") }}
+    </p>
+    {{ members.show_table(organisation, organisation.members, true) }}
+    <p>
+        <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "members.new_action"|trans }}</a>
+        <br/>
+        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "members.import_action"|trans }}</a>
+        <br/>
+        <a href="{{ path("administration_organisation_members_invite", {"organisation" : organisation.id}) }}">{{ "members.invite_action"|trans }}</a>
+        <br/>
+        <a href="{{ path("administration_organisation_persons_invite", {"organisation" : organisation.id}) }}">{{ "members.invite_person_action"|trans }}</a>
+    </p>
+{% endblock %}

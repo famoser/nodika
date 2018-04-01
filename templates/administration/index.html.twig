@@ -73,6 +73,30 @@
                         {{ "entity.description"|trans({}, "entity_event_line") }}
                     </p>
                 </a>
+
+                <a class="tile tile-4 default-color" href="{{ path('administration_event_line_index') }}">
+                    <h3>{{ "entity.plural"|trans({}, "entity_event_line") }}</h3>
+                    <p>
+                        {{ "entity.description"|trans({}, "entity_event_line") }}
+                    </p>
+                </a>
+
+                {% if setup_finished %}
+                    <a class="tile tile-4 default-color" href="{{ path('administration_setup') }}">
+                        <h3>{{ "entity.plural"|trans({}, "entity_event_line") }}</h3>
+                        <p>
+                            {{ "entity.description"|trans({}, "entity_event_line") }}
+                        </p>
+                    </a>
+                {% else %}
+                    <a class="tile tile-4 default-color" href="{{ path('administration_settings') }}">
+                        <h3>{{ "entity.plural"|trans({}, "entity_event_line") }}</h3>
+                        <p>
+                            {{ "entity.description"|trans({}, "entity_event_line") }}
+                        </p>
+                    </a>
+
+                {% endif %}
             </div>
         </div>
         {% for eventLineModel in event_line_models %}

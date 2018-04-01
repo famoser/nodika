@@ -52,13 +52,6 @@ class Member extends BaseEntity
     private $persons;
 
     /**
-     * @var Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="members")
-     */
-    private $organisation;
-
-    /**
      * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="member")
@@ -76,30 +69,6 @@ class Member extends BaseEntity
     }
 
     /**
-     * Add person.
-     *
-     * @param Person $person
-     *
-     * @return Member
-     */
-    public function addPerson(Person $person)
-    {
-        $this->persons[] = $person;
-
-        return $this;
-    }
-
-    /**
-     * Remove person.
-     *
-     * @param Person $person
-     */
-    public function removePerson(Person $person)
-    {
-        $this->persons->removeElement($person);
-    }
-
-    /**
      * Get persons.
      *
      * @return \Doctrine\Common\Collections\Collection|Person[]
@@ -107,54 +76,6 @@ class Member extends BaseEntity
     public function getPersons()
     {
         return $this->persons;
-    }
-
-    /**
-     * Get organisation.
-     *
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * Set organisation.
-     *
-     * @param Organisation $organisation
-     *
-     * @return Member
-     */
-    public function setOrganisation(Organisation $organisation = null)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * Add event.
-     *
-     * @param Event $event
-     *
-     * @return Member
-     */
-    public function addEvent(Event $event)
-    {
-        $this->events[] = $event;
-
-        return $this;
-    }
-
-    /**
-     * Remove event.
-     *
-     * @param Event $event
-     */
-    public function removeEvent(Event $event)
-    {
-        $this->events->removeElement($event);
     }
 
     /**

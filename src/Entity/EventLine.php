@@ -37,13 +37,6 @@ class EventLine extends BaseEntity
     private $displayOrder = 1;
 
     /**
-     * @var Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="eventLines")
-     */
-    private $organisation;
-
-    /**
      * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="eventLine")
@@ -66,30 +59,6 @@ class EventLine extends BaseEntity
     {
         $this->events = new ArrayCollection();
         $this->eventLineGenerations = new ArrayCollection();
-    }
-
-    /**
-     * Get organisation.
-     *
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * Set organisation.
-     *
-     * @param Organisation $organisation
-     *
-     * @return EventLine
-     */
-    public function setOrganisation(Organisation $organisation = null)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
     }
 
     /**

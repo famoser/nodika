@@ -11,13 +11,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Helper\HashHelper;
-use App\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait UserTrait
@@ -50,7 +44,7 @@ trait UserTrait
      *
      * @ORM\Column(type="boolean")
      */
-    private $isActive;
+    private $isEnabled = true;
 
     /**
      * @var \DateTime
@@ -63,6 +57,7 @@ trait UserTrait
      * @var bool
      *
      * @ORM\Column(type="boolean", options={"default": false})
+     * @Assert\IsTrue()
      */
     private $agbAccepted = false;
 
@@ -71,144 +66,6 @@ trait UserTrait
      */
     private $plainPassword;
     private $repeatPlainPassword;
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $defaultArray
-     * @param bool $agb
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getRegisterUserBuilder(FormBuilderInterface $builder, $defaultArray = [], $agb = true)
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builderArray);
-        static::getPlainPasswordBuilder($builder, $builderArray);
-        if ($agb) {
-            $builder->add(
-                'agbAccepted',
-                CheckboxType::class,
-                $builderArray + NamingHelper::propertyToTranslationForBuilder('agbAccepted')
-            );
-        }
-
-        return $builder;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $builderArray
-     */
-    private static function getEmailBuilder(FormBuilderInterface $builder, $builderArray)
-    {
-        $builder->add(
-            'email',
-            EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('email')
-        );
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $builderArray
-     */
-    private static function getPlainPasswordBuilder(FormBuilderInterface $builder, $builderArray)
-    {
-        $builder->add(
-            'plainPassword',
-            PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('plainPassword')
-        );
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getLoginBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builderArray);
-        static::getPlainPasswordBuilder($builder, $builderArray);
-
-        return $builder;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getResetUserBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getEmailBuilder($builder, $builderArray);
-
-        return $builder;
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getSetPasswordBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(UserTrait::class)] + $defaultArray;
-        static::getPlainPasswordBuilder($builder, $builderArray);
-        $builder->add(
-            'repeatPlainPassword',
-            PasswordType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('repeatPlainPassword')
-        );
-
-        return $builder;
-    }
-
-    /**
-     * @param $email
-     *
-     * sets all fields of the user object
-     *
-     * @return static
-     */
-    private static function createUserFromEmail($email)
-    {
-        $object = new static();
-        $object->setRegistrationDate(new \DateTime());
-        $object->setIsActive(true);
-        $object->setEmail($email);
-        $object->setPlainPassword(uniqid());
-        $object->persistNewPassword();
-
-        return $object;
-    }
-
-    /**
-     * hashes the password if valid, and erases credentials.
-     */
-    public function persistNewPassword()
-    {
-        $this->setPasswordHash(password_hash($this->getPlainPassword(), PASSWORD_BCRYPT));
-        $this->eraseCredentials();
-        $this->setResetHash(HashHelper::createNewResetHash());
-    }
-
-    /**
-     * Removes sensitive data from the user.
-     *
-     * This is important if, at any given point, sensitive information like
-     * the plain-text password is stored on this object.
-     */
-    public function eraseCredentials()
-    {
-        $this->setPlainPassword(null);
-        $this->setRepeatPlainPassword(null);
-    }
 
     /**
      * @return string
@@ -231,21 +88,13 @@ trait UserTrait
     }
 
     /**
-     * @return boolean
-     */
-    public function getIsActive()
-    {
-        return $this->isActive;
-    }
-
-    /**
-     * @param boolean $isActive
+     * @param boolean $isEnabled
      *
      * @return static
      */
-    public function setIsActive($isActive)
+    public function setIsEnabled($isEnabled)
     {
-        $this->isActive = $isActive;
+        $this->isEnabled = $isEnabled;
 
         return $this;
     }
@@ -275,18 +124,6 @@ trait UserTrait
     }
 
     /**
-     * @param string $resetHash
-     *
-     * @return static
-     */
-    public function setResetHash($resetHash)
-    {
-        $this->resetHash = $resetHash;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isAgbAccepted()
@@ -300,46 +137,6 @@ trait UserTrait
     public function setAgbAccepted($agbAccepted)
     {
         $this->agbAccepted = $agbAccepted;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepeatPlainPassword()
-    {
-        return $this->repeatPlainPassword;
-    }
-
-    /**
-     * @param string $plainPassword
-     *
-     * @return static
-     */
-    public function setRepeatPlainPassword($plainPassword)
-    {
-        $this->repeatPlainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function tryLoginWithPlainPassword()
-    {
-        if ($this->isValidPlainPassword()) {
-            return password_verify($this->getPlainPassword(), $this->getPasswordHash());
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isValidPlainPassword()
-    {
-        return mb_strlen($this->getPlainPassword()) >= 8;
     }
 
     /**
@@ -365,19 +162,19 @@ trait UserTrait
     /**
      * @return string
      */
-    public function getPasswordHash()
+    public function getRepeatPlainPassword()
     {
-        return $this->passwordHash;
+        return $this->repeatPlainPassword;
     }
 
     /**
-     * @param string $passwordHash
+     * @param string $plainPassword
      *
      * @return static
      */
-    public function setPasswordHash($passwordHash)
+    public function setRepeatPlainPassword($plainPassword)
     {
-        $this->passwordHash = $passwordHash;
+        $this->repeatPlainPassword = $plainPassword;
 
         return $this;
     }
@@ -389,7 +186,7 @@ trait UserTrait
      */
     public function canLogin()
     {
-        return $this->isActive;
+        return $this->isEnabled;
     }
 
     /**
@@ -402,7 +199,7 @@ trait UserTrait
      */
     public function getPassword()
     {
-        return $this->getPasswordHash();
+        return $this->passwordHash;
     }
 
     /**
@@ -474,15 +271,7 @@ trait UserTrait
      */
     public function isEnabled()
     {
-        return $this->isActive;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersistsHandler()
-    {
-        $this->resetHash = uniqid();
+        return $this->isEnabled;
     }
 
     /**
@@ -493,6 +282,18 @@ trait UserTrait
     protected function getUserIdentifier()
     {
         return $this->email;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        $this->setPlainPassword(null);
+        $this->setRepeatPlainPassword(null);
     }
 
     /**
@@ -509,7 +310,7 @@ trait UserTrait
             return false;
         }
 
-        if ($this->getPasswordHash() !== $user->getPasswordHash()) {
+        if ($this->getPassword() !== $user->getPassword()) {
             return false;
         }
 
@@ -524,5 +325,41 @@ trait UserTrait
     public function getUsername()
     {
         return $this->email;
+    }
+
+    /**
+     * hashes the plainPassword and erases credentials.
+     */
+    public function setPassword()
+    {
+        $this->passwordHash = password_hash($this->getPlainPassword(), PASSWORD_BCRYPT);
+        $this->setPlainPassword(null);
+        $this->setRepeatPlainPassword(null);
+    }
+
+    /**
+     * creates a new reset hash
+     */
+    public function setResetHash()
+    {
+        $newHash = '';
+        //0-9, A-Z, a-z
+        $allowedRanges = [[48, 57], [65, 90], [97, 122]];
+        for ($i = 0; $i < 20; ++$i) {
+            $rand = mt_rand(20, 160);
+            $allowed = false;
+            for ($j = 0; $j < count($allowedRanges); ++$j) {
+                if ($allowedRanges[$j][0] <= $rand && $allowedRanges[$j][1] >= $rand) {
+                    $allowed = true;
+                }
+            }
+            if ($allowed) {
+                $newHash .= chr($rand);
+            } else {
+                --$i;
+            }
+        }
+
+        $this->resetHash = $newHash;
     }
 }

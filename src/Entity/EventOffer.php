@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\TimeTrait;
 use App\Enum\OfferStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,28 +28,32 @@ use Doctrine\ORM\Mapping as ORM;
 class EventOffer extends BaseEntity
 {
     use IdTrait;
+    use TimeTrait;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createDateTime;
-
-    /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $openDateTime;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $closeDateTime;
 
     /**
+     * @var int
+     *
      * @ORM\Column(type="integer")
      */
     private $status = OfferStatus::CREATING;
@@ -94,30 +99,6 @@ class EventOffer extends BaseEntity
     public function __construct()
     {
         $this->eventOfferEntries = new ArrayCollection();
-    }
-
-    /**
-     * Get openDateTime.
-     *
-     * @return \DateTime
-     */
-    public function getCreateDateTime()
-    {
-        return $this->createDateTime;
-    }
-
-    /**
-     * Set openDateTime.
-     *
-     * @param \DateTime $createDateTime
-     *
-     * @return EventOffer
-     */
-    public function setCreateDateTime($createDateTime)
-    {
-        $this->createDateTime = $createDateTime;
-
-        return $this;
     }
 
     /**
@@ -307,17 +288,6 @@ class EventOffer extends BaseEntity
     {
         return $this->eventOfferEntries;
     }
-
-    /**
-     * returns a string representation of this entity.
-     *
-     * @return string
-     */
-    public function getFullIdentifier()
-    {
-        return $this->getDescription();
-    }
-
     /**
      * Get description.
      *

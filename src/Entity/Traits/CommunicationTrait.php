@@ -11,22 +11,21 @@
 
 namespace App\Entity\Traits;
 
-use App\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait CommunicationTrait
 {
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $phone;
 
     /**
+     * @var string
+     *
      * @Assert\NotBlank()
      * @Assert\Email()
      * @ORM\Column(type="text")
@@ -34,37 +33,23 @@ trait CommunicationTrait
     private $email;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Assert\Url()
+     * @return string
      */
-    private $webpage;
+    public function getPhone()
+    {
+        return $this->phone;
+    }
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
+     * @param string $phone
      *
-     * @return FormBuilderInterface
+     * @return static
      */
-    public static function getCommunicationBuilder(FormBuilderInterface $builder, $defaultArray = [])
+    public function setPhone($phone)
     {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(CommunicationTrait::class)] + $defaultArray;
-        $builder->add(
-            'phone',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('phone') + ['required' => false]
-        );
-        $builder->add(
-            'email',
-            EmailType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('email')
-        );
-        $builder->add(
-            'webpage',
-            UrlType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('webpage') + ['required' => false]
-        );
+        $this->phone = $phone;
 
-        return $builder;
+        return $this;
     }
 
     /**
@@ -88,26 +73,6 @@ trait CommunicationTrait
     }
 
     /**
-     * @param CommunicationTrait $source
-     */
-    public function setCommunicationFieldsFrom($source)
-    {
-        $this->setPhone($source->getPhone());
-        $this->setEmail($source->getEmail());
-        $this->setWebpage($source->getWebpage());
-    }
-
-    /**
-     * get the communication identifier.
-     *
-     * @return string
-     */
-    protected function getCommunicationIdentifier()
-    {
-        return implode(',', $this->getCommunicationLines());
-    }
-
-    /**
      * get non-empty communication lines.
      *
      * @return string[]
@@ -126,41 +91,5 @@ trait CommunicationTrait
         }
 
         return $res;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param mixed $phone
-     *
-     * @return static
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getWebpage()
-    {
-        return $this->webpage;
-    }
-
-    /**
-     * @param mixed $webpage
-     */
-    public function setWebpage($webpage)
-    {
-        $this->webpage = $webpage;
     }
 }

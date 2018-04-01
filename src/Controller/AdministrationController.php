@@ -12,6 +12,7 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseFrontendController;
+use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Organisation;
 use App\Enum\ApplicationEventType;
 use App\Enum\SubmitButtonType;
@@ -29,6 +30,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class AdministrationController extends BaseFrontendController
 {
+    use EventControllerTrait;
+
     /**
      * @Route("/", name="administration_index")
      *
@@ -36,8 +39,8 @@ class AdministrationController extends BaseFrontendController
      */
     public function indexAction()
     {
-        $member = $this->getMember();
-        $searchModel = new SearchEventModel($member->getOrganisation(), new \DateTime());
+        $organisation = $this->getOrganisation();
+        $searchModel = new SearchEventModel($organisation, new \DateTime());
         $searchModel->setEndDateTime(new \DateTime('today + 1 month'));
 
         $organisationRepo = $this->getDoctrine()->getRepository('App:Organisation');
@@ -45,19 +48,12 @@ class AdministrationController extends BaseFrontendController
         $eventLineModels = $organisationRepo->findEventLineModels($searchModel);
         $arr['has_active_events'] = $organisationRepo->addActiveEvents($eventLineModels);
         $arr['event_line_models'] = $eventLineModels;
-        $arr['organisation'] = $member->getOrganisation();
-        $arr['member'] = $member;
 
 
         $setupStatus = $this->getDoctrine()->getRepository('App:Organisation')->getSetupStatus($organisation);
-        if (!$setupStatus->getAllDone()) {
-            $this->displayInfo(
-                $translator->trans('messages.not_fully_setup', [], 'administration_organisation'),
-                $this->generateUrl('administration_organisation_setup', ['organisation' => $organisation->getId()])
-            );
-        }
+        $arr["setup_finished"] = $setupStatus->getAllDone();
 
-        return $this->renderNoBackUrl('dashboard/index.html.twig', $arr, 'dashboard!');
+        return $this->renderNoBackUrl('administration/index.html.twig', $arr, 'dashboard!');
     }
 
     /**

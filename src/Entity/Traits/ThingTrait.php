@@ -11,10 +11,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /*
@@ -24,68 +21,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ThingTrait
 {
     /**
+     * @var string
+     *
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      */
     private $name;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getThingBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(ThingTrait::class)] + $defaultArray;
-        $builder->add(
-            'name',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('name')
-        );
-        $builder->add(
-            'description',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('description') + ['required' => false]
-        );
-
-        return $builder;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     *
-     * @return static
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * returns the name of this thing.
-     *
-     * @return string
-     */
-    public function getThingIdentifier()
-    {
-        return $this->getName();
-    }
 
     /**
      * @return string
@@ -108,11 +56,22 @@ trait ThingTrait
     }
 
     /**
-     * @param ThingTrait $source
+     * @return string
      */
-    public function setThingFieldsFrom($source)
+    public function getDescription()
     {
-        $this->setName($source->getName());
-        $this->setDescription($source->getDescription());
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return static
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

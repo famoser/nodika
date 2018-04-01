@@ -12,7 +12,10 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
+use App\Entity\Traits\AddressTrait;
+use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\PersonTrait;
 use App\Entity\Traits\UserTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,114 +30,62 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class FrontendUser extends BaseEntity implements AdvancedUserInterface, EquatableInterface
 {
     use IdTrait;
-    use UserTrait;
+    use PersonTrait;
+    use AddressTrait;
+    use CommunicationTrait;
+    use UserTrait {
+        CommunicationTrait::getEmail insteadof UserTrait::getEmail;
+        CommunicationTrait::setEmail insteadof UserTrait::setEmail;
+    }
 
     /**
-     * @var Setting[]|ArrayCollection
+     * @var Member[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Setting", mappedBy="frontendUser")
+     * @ORM\ManyToMany(targetEntity="Member", inversedBy="persons")
+     * @ORM\JoinTable(name="person_members")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
-    private $settings;
+    private $members;
 
     /**
-     * @var Person
+     * @var Event[]|ArrayCollection
      *
-     * @ORM\OneToOne(targetEntity="Person", inversedBy="frontendUser")
+     * @ORM\OneToMany(targetEntity="Event", mappedBy="person")
+     * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
-    private $person;
+    private $events;
 
     /**
-     * User constructor.
+     * Constructor.
      */
     public function __construct()
     {
-        $this->settings = new ArrayCollection();
+        $this->members = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     /**
-     * @param Person $person
+     * Get members.
      *
-     * @return static
+     * @return \Doctrine\Common\Collections\Collection|Member[]
      */
-    public static function createFromPerson(Person $person)
+    public function getMembers()
     {
-        $user = static::createUserFromEmail($person->getEmail());
-        $user->setPerson($person);
-
-        return $user;
+        return $this->members;
     }
 
     /**
-     * Add setting.
-     *
-     * @param Setting $setting
-     *
-     * @return FrontendUser
-     */
-    public function addSetting(Setting $setting)
-    {
-        $this->settings[] = $setting;
-
-        return $this;
-    }
-
-    /**
-     * Remove setting.
-     *
-     * @param Setting $setting
-     */
-    public function removeSetting(Setting $setting)
-    {
-        $this->settings->removeElement($setting);
-    }
-
-    /**
-     * Get settings.
+     * Get events.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getSettings()
+    public function getEvents()
     {
-        return $this->settings;
-    }
-
-    /**
-     * Get person.
-     *
-     * @return Person
-     */
-    public function getPerson()
-    {
-        return $this->person;
-    }
-
-    /**
-     * Set person.
-     *
-     * @param Person $person
-     *
-     * @return FrontendUser
-     */
-    public function setPerson(Person $person = null)
-    {
-        $this->person = $person;
-
-        return $this;
+        return $this->events;
     }
 
     /**
      * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
      *
      * @return array (Role|string)[] The user roles
      */
@@ -144,14 +95,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     }
 
     /**
-     * The equality comparison should neither be done by referential equality
-     * nor by comparing identities (i.e. getId() === getId()).
-     *
-     * However, you do not need to compare every attribute, but only those that
-     * are relevant for assessing whether re-authentication is required.
-     *
-     * Also implementation should consider that $user instance may implement
-     * the extended user interface `AdvancedUserInterface`.
+     * check if this is the same user
      *
      * @param UserInterface $user
      *
@@ -164,15 +108,5 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
         }
 
         return $this->isEqualToUser($user);
-    }
-
-    /**
-     * returns a string representation of this entity.
-     *
-     * @return string
-     */
-    public function getFullIdentifier()
-    {
-        return $this->getEmail();
     }
 }
