@@ -12,6 +12,7 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseController;
+use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
 use App\Entity\EventLine;
 use App\Entity\Member;
@@ -35,45 +36,30 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @Route("/event_line")
  * @Security("has_role('ROLE_USER')")
  */
-class EventLineController extends BaseController
+class EventLineController extends BaseFormController
 {
     /**
      * @Route("/new", name="administration_event_line_new")
      *
      * @param Request $request
-     * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function newAction(Request $request, TranslatorInterface $translator)
+    public function newAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(OrganisationVoter::ADMINISTRATE, $organisation);
-
         $eventLine = new EventLine();
-        $myForm = $this->handleCrudForm(
+        $myForm = $this->handleCreateForm(
             $request,
-            $translator,
-            $eventLine,
-            SubmitButtonType::CREATE,
-            function ($form, $entity) use ($organisation) {
-                /* @var Form $form */
-                /* @var Member $entity */
-                return $this->redirectToRoute('administration_organisation_event_line_administer', ['organisation' => $organisation->getId(), 'eventLine' => $entity->getId()]);
-            }
+            $eventLine
         );
 
         if ($myForm instanceof Response) {
             return $myForm;
         }
 
-        $arr['organisation'] = $organisation;
         $arr['new_form'] = $myForm->createView();
 
-        return $this->renderWithBackUrl(
-            'administration/organisation/event_line/new.html.twig',
-            $arr,
-            $this->generateUrl('administration_organisation_event_lines', ['organisation' => $organisation->getId()])
-        );
+        return $this->render('administration/event_line/new.html.twig');
     }
 
     /**

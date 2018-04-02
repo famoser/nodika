@@ -12,20 +12,20 @@
 namespace App\Model\EventPast;
 
 use App\Entity\Member;
-use App\Entity\Person;
+use App\Entity\FrontendUser;
 use App\Enum\EventChangeType;
 
 class EventPastEvaluation
 {
     private $changedAtDateTime;
-    private $changedByPerson;
+    private $changedByFrontendUser;
     private $eventChangeType;
     private $hasChangedMember = false;
     private $oldMember;
     private $newMember;
-    private $hasChangedPerson = false;
-    private $oldPerson;
-    private $newPerson;
+    private $hasChangedFrontendUser = false;
+    private $oldFrontendUser;
+    private $newFrontendUser;
     private $hasChangedStartDateTime = false;
     private $oldStartDateTime;
     private $newStartDateTime;
@@ -37,13 +37,13 @@ class EventPastEvaluation
      * EventPastEvaluation constructor.
      *
      * @param \DateTime $changedAtDateTime
-     * @param Person $changedByPerson
+     * @param FrontendUser $changedByFrontendUser
      * @param int $eventChangeType
      */
-    public function __construct(\DateTime $changedAtDateTime, Person $changedByPerson, $eventChangeType)
+    public function __construct(\DateTime $changedAtDateTime, FrontendUser $changedByFrontendUser, $eventChangeType)
     {
         $this->changedAtDateTime = $changedAtDateTime;
-        $this->changedByPerson = $changedByPerson;
+        $this->changedByFrontendUser = $changedByFrontendUser;
         $this->eventChangeType = $eventChangeType;
     }
 
@@ -61,16 +61,16 @@ class EventPastEvaluation
     }
 
     /**
-     * call this function to show that the assigned Person has changed.
+     * call this function to show that the assigned FrontendUser has changed.
      *
-     * @param Person $oldPerson
-     * @param Person $newPerson
+     * @param FrontendUser $oldFrontendUser
+     * @param FrontendUser $newFrontendUser
      */
-    public function setPersonChanged(Person $oldPerson = null, Person $newPerson = null)
+    public function setFrontendUserChanged(FrontendUser $oldFrontendUser = null, FrontendUser $newFrontendUser = null)
     {
-        $this->hasChangedPerson = true;
-        $this->oldPerson = $oldPerson;
-        $this->newPerson = $newPerson;
+        $this->hasChangedFrontendUser = true;
+        $this->oldFrontendUser = $oldFrontendUser;
+        $this->newFrontendUser = $newFrontendUser;
     }
 
     /**
@@ -108,11 +108,11 @@ class EventPastEvaluation
     }
 
     /**
-     * @return Person
+     * @return FrontendUser
      */
-    public function getChangedByPerson()
+    public function getChangedByFrontendUser()
     {
-        return $this->changedByPerson;
+        return $this->changedByFrontendUser;
     }
 
     /**
@@ -150,25 +150,25 @@ class EventPastEvaluation
     /**
      * @return bool
      */
-    public function hasChangedPerson()
+    public function hasChangedFrontendUser()
     {
-        return $this->hasChangedPerson;
+        return $this->hasChangedFrontendUser;
     }
 
     /**
-     * @return Person
+     * @return FrontendUser
      */
-    public function getOldPerson()
+    public function getOldFrontendUser()
     {
-        return $this->oldPerson;
+        return $this->oldFrontendUser;
     }
 
     /**
-     * @return Person
+     * @return FrontendUser
      */
-    public function getNewPerson()
+    public function getNewFrontendUser()
     {
-        return $this->newPerson;
+        return $this->newFrontendUser;
     }
 
     /**

@@ -11,6 +11,7 @@
 
 namespace App\Controller\Base;
 
+use App\Entity\FrontendUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -96,5 +97,13 @@ class BaseController extends AbstractController
             $message = '<a href="' . $link . '">' . $message . '</a>';
         }
         $this->get('session')->getFlashBag()->set($type, $message);
+    }
+
+    /**
+     * @return FrontendUser
+     */
+    protected function getUser()
+    {
+        return parent::getUser();
     }
 }

@@ -17,6 +17,7 @@ use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\InvitedTrait;
 use App\Entity\Traits\PersonTrait;
+use App\Entity\Traits\SoftDeleteTrait;
 use App\Entity\Traits\UserTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,6 +40,7 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
         UserTrait::getEmail insteadof CommunicationTrait::getEmail;
         UserTrait::setEmail insteadof CommunicationTrait::setEmail;
     }
+    use SoftDeleteTrait;
 
     /**
      * @var Member[]|ArrayCollection

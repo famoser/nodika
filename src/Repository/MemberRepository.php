@@ -26,6 +26,22 @@ use Doctrine\ORM\NonUniqueResultException;
 class MemberRepository extends EntityRepository
 {
     /**
+     * adds a default ordering
+     *
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param null $limit
+     * @param null $offset
+     * @return array
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        $orderBy = $orderBy === null ? array('name' => 'ASC') : $orderBy;
+        return parent::findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+
+    /**
      * @param Member $member
      * @param FrontendUser $frontendUser
      * @param int $dayThreshold

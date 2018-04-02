@@ -13,6 +13,7 @@ namespace App\Service\Interfaces;
 
 use App\Entity\Event;
 use App\Entity\EventPast;
+use App\Entity\FrontendUser;
 use App\Entity\Person;
 use App\Model\EventPast\EventPastEvaluation;
 
@@ -30,12 +31,12 @@ interface EventPastEvaluationServiceInterface
     /**
      * creates the EventPast object.
      *
-     * @param Person $changePerson
+     * @param FrontendUser $changePerson
      * @param Event $oldEvent
      * @param Event $newEvent
      * @param $eventChangeType
      *
      * @return EventPast
      */
-    public function createEventPast(Person $changePerson, $oldEvent, Event $newEvent, $eventChangeType);
+    public function createEventPast(FrontendUser $changePerson, $oldEvent, Event $newEvent, $eventChangeType);
 }

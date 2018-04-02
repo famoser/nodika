@@ -16,6 +16,7 @@ use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\InvitedTrait;
+use App\Entity\Traits\SoftDeleteTrait;
 use App\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,6 +35,7 @@ class Member extends BaseEntity
     use AddressTrait;
     use CommunicationTrait;
     use InvitedTrait;
+    use SoftDeleteTrait;
 
     /**
      * @var FrontendUser[]|ArrayCollection

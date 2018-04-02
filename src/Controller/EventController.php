@@ -11,6 +11,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Base\BaseFormController;
 use App\Controller\Base\BaseFrontendController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
@@ -30,7 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @Route("/event")
  * @Security("has_role('ROLE_USER')")
  */
-class EventController extends BaseFrontendController
+class EventController extends BaseFormController
 {
     use EventControllerTrait;
 

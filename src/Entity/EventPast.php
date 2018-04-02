@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\ChangeAwareTrait;
+use App\Entity\Traits\EventTrait;
 use App\Entity\Traits\IdTrait;
 use App\Enum\EventChangeType;
 use App\Helper\DateTimeFormatter;
@@ -29,6 +30,17 @@ class EventPast extends BaseEntity
 {
     use IdTrait;
     use ChangeAwareTrait;
+    use EventTrait;
+
+    public function __construct(Event $event = null, $eventChangeType = null, FrontendUser $user = null)
+    {
+        if ($event != null && $eventChangeType != null && $user != null) {
+            $this->writeValues($event);
+            $this->event = $event;
+            $this->eventChangeType = $eventChangeType;
+            $this->registerChangeBy($user);
+        }
+    }
 
     /**
      * @var int
@@ -36,20 +48,6 @@ class EventPast extends BaseEntity
      * @ORM\Column(type="integer")
      */
     private $eventChangeType = EventChangeType::MANUALLY_CREATED_BY_ADMIN;
-
-    /**
-     * the event before the change occurred.
-     *
-     * @ORM\Column(type="text")
-     */
-    private $beforeEventJson;
-
-    /**
-     * the event after the change occurred.
-     *
-     * @ORM\Column(type="text")
-     */
-    private $afterEventJson;
 
     /**
      * @var Event
@@ -72,38 +70,6 @@ class EventPast extends BaseEntity
     public function setEventChangeType(int $eventChangeType): void
     {
         $this->eventChangeType = $eventChangeType;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBeforeEventJson()
-    {
-        return $this->beforeEventJson;
-    }
-
-    /**
-     * @param mixed $beforeEventJson
-     */
-    public function setBeforeEventJson($beforeEventJson): void
-    {
-        $this->beforeEventJson = $beforeEventJson;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAfterEventJson()
-    {
-        return $this->afterEventJson;
-    }
-
-    /**
-     * @param mixed $afterEventJson
-     */
-    public function setAfterEventJson($afterEventJson): void
-    {
-        $this->afterEventJson = $afterEventJson;
     }
 
     /**
