@@ -14,6 +14,7 @@ namespace App\Controller;
 use App\Controller\Base\BaseDoctrineController;
 use App\Entity\EventLine;
 use App\Model\Event\SearchModel;
+use App\Service\Interfaces\SettingServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,10 +22,10 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Route("/dashboard")
  * @Security("has_role('ROLE_USER')")
  */
-class DashboardController extends BaseDoctrineController
+class IndexController extends BaseDoctrineController
 {
     /**
-     * @Route("/", name="dashboard_index")
+     * @Route("/", name="index_index")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -37,5 +38,26 @@ class DashboardController extends BaseDoctrineController
         $arr['event_line_models'] = $eventLineModels;
 
         return $this->render('dashboard/index.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/confirm", name="index_confirm")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function confirmAction(SettingServiceInterface $settingService)
+    {
+        $searchModel = new SearchModel();
+        $searchModel->setIsConfirmed(false);
+        $searchModel->setFrontendUser($this->getUser());
+        $end = new \DateTime();
+        $end->add($settingService->getCanConfirmEventAt());
+        $searchModel->setStartDateTime(new \DateTime());
+        $searchModel->setEndDateTime($end);
+
+        $eventLines = $this->getDoctrine()->getRepository('App:EventLine')->findEventLineModels($searchModel);
+
+
+        return $this->renderWithBackUrl('event/confirm.html.twig', $arr, $this->generateUrl('dashboard_index'));
     }
 }

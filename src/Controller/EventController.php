@@ -105,31 +105,14 @@ class EventController extends BaseFormController
     }
 
     /**
-     * @Route("/confirm", name="event_confirm")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function confirmAction()
-    {
-        $member = $this->getMember();
-        if (null === $member) {
-            return $this->redirectToRoute('dashboard_index');
-        }
-
-        $arr['events'] = $this->getDoctrine()->getRepository('App:Member')->findUnconfirmedEvents($member, $this->getPerson());
-
-        return $this->renderWithBackUrl('event/confirm.html.twig', $arr, $this->generateUrl('dashboard_index'));
-    }
-
-    /**
-     * @Route("/{event}/confirm", name="event_confirm_member")
+     * @Route("/{event}/confirm", name="event_confirm")
      *
      * @param Event $event
      *
      * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmMemberAction(Event $event, TranslatorInterface $translator)
+    public function confirmAction(Event $event, TranslatorInterface $translator)
     {
         $event->setConfirmDateTime(new \DateTime());
         $eventPast = new EventPast($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
@@ -143,6 +126,7 @@ class EventController extends BaseFormController
      *
      * @param TranslatorInterface $translator
      *
+     * @param SettingServiceInterface $settingService
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirmAllAction(TranslatorInterface $translator, SettingServiceInterface $settingService)
@@ -213,5 +197,4 @@ class EventController extends BaseFormController
 
         return $this->render('event/search.html.twig', $arr);
     }
-
 }
