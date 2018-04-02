@@ -12,17 +12,19 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use App\Controller\Base\BaseFrontendController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
-use App\Entity\Member;
-use App\Entity\Person;
+use App\Entity\EventLine;
+use App\Entity\EventPast;
 use App\Enum\EventChangeType;
+use App\Form\Model\Event\SearchType;
 use App\Helper\DateTimeFormatter;
 use App\Model\Event\SearchModel;
-use App\Model\EventLine\EventLineModel;
-use App\Service\EventPastEvaluationService;
+use App\Service\Interfaces\CsvServiceInterface;
+use App\Service\Interfaces\SettingServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -40,11 +42,10 @@ class EventController extends BaseFormController
      *
      * @param Request $request
      * @param TranslatorInterface $translator
-     * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function assignAction(Request $request, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
+    public function assignAction(Request $request, TranslatorInterface $translator)
     {
         $member = $this->getMember();
         if (null === $member) {
@@ -121,80 +122,19 @@ class EventController extends BaseFormController
     }
 
     /**
-     * @Route("/confirm/person/{event}", name="event_confirm_person")
+     * @Route("/{event}/confirm", name="event_confirm_member")
      *
      * @param Event $event
-     * @param TranslatorInterface $translator
-     * @param EventPastEvaluationService $eventPastEvaluationService
      *
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmPersonAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
+    public function confirmMemberAction(Event $event, TranslatorInterface $translator)
     {
-        $member = $this->getMember();
-        if (null === $member) {
-            return $this->redirectToRoute('dashboard_index');
-        }
-
-        if ($this->canConfirmEvent($member, $event) && $event->getFrontendUser()->getId() === $this->getPerson()->getId()) {
-            $oldEvent = clone $event;
-            $event->setIsConfirmed(true);
-            $event->setIsConfirmedDateTime(new \DateTime());
-            $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::CONFIRMED_BY_PERSON);
-            $this->fastSave($eventPast, $event);
-            $this->displaySuccess($translator->trans('confirm.messages.confirm_successful', [], 'event'));
-        } else {
-            $this->displayError($translator->trans('confirm.messages.no_access', [], 'event'));
-        }
-
-        return $this->redirectToRoute('event_confirm');
-    }
-
-    /**
-     * @param Member $member
-     * @param Event $event
-     *
-     * @return bool
-     */
-    private function canConfirmEvent(Member $member, Event $event)
-    {
-        $availableEvents = $this->getDoctrine()->getRepository('App:Member')->findUnconfirmedEvents($member, $this->getPerson());
-        foreach ($availableEvents as $availableEvent) {
-            if ($availableEvent->getId() === $event->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @Route("/confirm/member/{event}", name="event_confirm_member")
-     *
-     * @param Event $event
-     * @param TranslatorInterface $translator
-     * @param EventPastEvaluationService $eventPastEvaluationService
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function confirmMemberAction(Event $event, TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
-    {
-        $member = $this->getMember();
-        if (null === $member) {
-            return $this->redirectToRoute('dashboard_index');
-        }
-
-        if ($this->canConfirmEvent($member, $event) && null === $event->getFrontendUser() && $event->getMember()->getId() === $this->getMember()->getId()) {
-            $oldEvent = clone $event;
-            $event->setIsConfirmed(true);
-            $event->setIsConfirmedDateTime(new \DateTime());
-            $eventPast = $eventPastEvaluationService->createEventPast($this->getPerson(), $oldEvent, $event, EventChangeType::CONFIRMED_BY_MEMBER);
-            $this->fastSave($eventPast, $event);
-            $this->displaySuccess($translator->trans('confirm.messages.confirm_successful', [], 'event'));
-        } else {
-            $this->displayError($translator->trans('confirm.messages.no_access', [], 'event'));
-        }
-
+        $event->setConfirmDateTime(new \DateTime());
+        $eventPast = new EventPast($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
+        $this->fastSave($eventPast, $event);
+        $this->displaySuccess($translator->trans('confirm.messages.confirm_successful', [], 'event'));
         return $this->redirectToRoute('event_confirm');
     }
 
@@ -202,32 +142,35 @@ class EventController extends BaseFormController
      * @Route("/confirm/all", name="event_confirm_all")
      *
      * @param TranslatorInterface $translator
-     * @param EventPastEvaluationService $eventPastEvaluationService
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function confirmAllAction(TranslatorInterface $translator, EventPastEvaluationService $eventPastEvaluationService)
+    public function confirmAllAction(TranslatorInterface $translator, SettingServiceInterface $settingService)
     {
-        $member = $this->getMember();
-        if (null === $member) {
-            return $this->redirectToRoute('dashboard_index');
-        }
+        $searchModel = new SearchModel();
+        $searchModel->setIsConfirmed(false);
+        $searchModel->setFrontendUser($this->getUser());
+        $end = new \DateTime();
+        $end->add($settingService->getCanConfirmEventAt());
+        $searchModel->setStartDateTime(new \DateTime());
+        $searchModel->setEndDateTime($end);
 
-        $person = $this->getPerson();
-        $events = $this->getDoctrine()->getRepository('App:Member')->findUnconfirmedEvents($member, $person);
-        foreach ($events as $event) {
-            $oldEvent = clone $event;
-            $event->setIsConfirmed(true);
-            $event->setIsConfirmedDateTime(new \DateTime());
-            $eventPast = $eventPastEvaluationService->createEventPast(
-                $person,
-                $oldEvent,
-                $event,
-                $event->getFrontendUser() instanceof Person ? EventChangeType::CONFIRMED_BY_PERSON : EventChangeType::CONFIRMED_BY_MEMBER
-            );
-            $this->fastSave($event, $eventPast);
+        $eventLines = $this->getDoctrine()->getRepository('App:EventLine')->findEventLineModels($searchModel);
+
+        $manager = $this->getDoctrine()->getManager();
+        $total = 0;
+        foreach ($eventLines as $eventLine) {
+            foreach ($eventLine->events as $event) {
+                $event->setConfirmDateTime(new \DateTime());
+                $eventPast = new EventPast($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
+                $manager->persist($event);
+                $manager->persist($eventPast);
+                $total++;
+            }
         }
-        $this->displaySuccess($translator->trans('confirm.messages.confirm_all_successful', ['%count%' => count($events)], 'event'));
+        $manager->flush();
+
+        $this->displaySuccess($translator->trans('confirm.messages.confirm_all_successful', ['%count%' => $total], 'event'));
 
         return $this->redirectToRoute('event_confirm');
     }
@@ -241,36 +184,34 @@ class EventController extends BaseFormController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function searchAction(Request $request, TranslatorInterface $translator)
+    public function searchAction(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
     {
-        $organisationRepo = $this->getDoctrine()->getRepository('App:Organisation');
+        $searchModel = new SearchModel();
 
-        $searchEventModel = $this->resolveSearchEventModel($request, $member);
-        $eventLineModels = $organisationRepo->findEventLineModels($searchEventModel);
-
-        if ('csv' === $request->query->get('view')) {
-            return $this->renderCsv("export.csv", $this->toDataTable($eventLineModels, $translator));
-        }
-        $arr['event_line_models'] = $eventLineModels;
-
-        $arr['event_lines'] = $this->getOrganisation()->getEventLines();
-        $arr['members'] = $this->getOrganisation()->getMembers();
-        $arr['member'] = $member;
-        $persons = [];
-        foreach ($this->getOrganisation()->getMembers() as $lMember) {
-            foreach ($lMember->getPersons() as $lPerson) {
-                $persons[$lPerson->getId()] = $lPerson;
+        $export = false;
+        $form = $this->handleForm(
+            $this->createForm(SearchType::class, $searchModel)
+                ->add("search", SubmitType::class)
+                ->add("export", SubmitType::class),
+            $request,
+            function ($form) use (&$export) {
+                /* @var Form $form */
+                $export = $form->get('export')->isClicked();
+                return $form;
             }
+        );
+
+        $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
+        $eventLineModels = $eventLineRepo->findEventLineModels($searchModel);
+
+        if ($export) {
+            return $csvService->renderCsv("export.csv", $this->toDataTable($eventLineModels, $translator), $this->getEventsHeader($translator));
         }
-        $arr['persons'] = $persons;
 
-        $arr['selected_member'] = $searchEventModel->getMember();
-        $arr['selected_person'] = $searchEventModel->getFrontendUser();
-        $arr['selected_event_line'] = $searchEventModel->getEventLine();
-        $arr['start_date_time'] = $searchEventModel->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-        $arr['end_date_time'] = $searchEventModel->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        $arr["event_line_models"] = $eventLineModels;
+        $arr["search_form"] = $form;
 
-        return $this->renderWithBackUrl('event/search.html.twig', $arr, $this->generateUrl('dashboard_index'));
+        return $this->render('event/search.html.twig', $arr);
     }
 
 }

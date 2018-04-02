@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\Event;
+namespace App\Form\Model\Event;
 
 /*
  * Created by PhpStorm.
@@ -22,12 +22,7 @@ use App\Entity\Event;
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
-use App\Entity\Organisation;
-use App\Enum\SubmitButtonType;
 use App\Form\Base\BaseAbstractType;
-use App\Form\BaseCrudAbstractType;
-use App\Form\Person\PersonType;
-use App\Helper\StaticMessageHelper;
 use App\Model\Event\SearchModel;
 use App\Repository\MemberRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -40,17 +35,11 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SearchType extends BaseAbstractType
+class AdvancedSearchType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $dateArray = ['date_widget' => 'single_text', 'time_widget' => 'single_text'];
-
-        $builder->add('startDateTime', DateTimeType::class, $dateArray);
-        $builder->add('endDateTime', DateTimeType::class, $dateArray);
-        $builder->add('eventLine', EntityType::class, ['class' => EventLine::class, "required" => false]);
-        $builder->add('member', EntityType::class, ["class" => Member::class, "required" => false]);
-        $builder->add('person', EntityType::class, ["class" => FrontendUser::class, "required" => false]);
+        $builder->add('search', SearchType::class, ["inherit_data" => true, "label" => false]);
         $builder->add('isConfirmed', CheckboxType::class, ["required" => false]);
         $builder->add('maxResults', NumberType::class, ["required" => false]);
     }
@@ -59,7 +48,7 @@ class SearchType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'data_class' => SearchModel::class,
-            'translation_domain' => 'model_event_search'
+            'translation_domain' => 'model_event_advanced_search'
         ]);
     }
 }

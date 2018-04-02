@@ -26,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An EventLineGeneration is the result of one of the generation algorithms.
  *
  * @ORM\Table
- * @ORM\Entity(repositoryClass="App\Repository\EventLineGenerationRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
 class EventLineGeneration extends BaseEntity

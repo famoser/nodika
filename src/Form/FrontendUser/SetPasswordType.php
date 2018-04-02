@@ -6,7 +6,7 @@
  * Time: 17:17
  */
 
-namespace App\Form\AppUser;
+namespace App\Form\FrontendUser;
 
 use App\Entity\FrontendUser;
 use App\Form\Base\BaseAbstractType;

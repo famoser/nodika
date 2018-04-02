@@ -11,11 +11,10 @@
 
 namespace App\Controller\Administration\Generate;
 
-use App\Controller\Administration\Organisation\EventLine\Generate\Base\BaseGenerationController;
+use App\Controller\Administration\Generate\Base\BaseGenerationController;
 use App\Entity\EventLine;
 use App\Entity\EventLineGeneration;
 use App\Entity\Member;
-use App\Entity\Organisation;
 use App\Enum\DistributionType;
 use App\Enum\EventGenerationServicePersistResponse;
 use App\Enum\NodikaStatusCode;

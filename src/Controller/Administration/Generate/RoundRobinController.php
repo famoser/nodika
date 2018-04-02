@@ -11,11 +11,10 @@
 
 namespace App\Controller\Administration\Generate;
 
-use App\Controller\Administration\Organisation\EventLine\Generate\Base\BaseGenerationController;
+use App\Controller\Administration\Generate\Base\BaseGenerationController;
 use App\Entity\EventLine;
 use App\Entity\EventLineGeneration;
 use App\Entity\Member;
-use App\Entity\Organisation;
 use App\Enum\DistributionType;
 use App\Enum\EventGenerationServicePersistResponse;
 use App\Enum\RoundRobinStatusCode;
@@ -45,7 +44,7 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/new", name="administration_organisation_event_line_generate_round_robin_new")
      *
-     * 
+     *
      * @param EventLine $eventLine
      *
      * @return Response
@@ -66,7 +65,7 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/start", name="administration_organisation_event_line_generate_round_robin_start")
      *
-     * 
+     *
      * @param EventLine $eventLine
      *
      * @return Response
@@ -95,7 +94,7 @@ class RoundRobinController extends BaseGenerationController
      * @Route("/{generation}/choose_period", name="administration_organisation_event_line_generate_round_robin_choose_period")
      *
      * @param Request $request
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      * @param TranslatorInterface $translator
@@ -145,7 +144,7 @@ class RoundRobinController extends BaseGenerationController
 
     /**
      * @param EventLineGeneration $generation
-     * 
+     *
      *
      * @return RoundRobinConfiguration
      */
@@ -165,7 +164,7 @@ class RoundRobinController extends BaseGenerationController
 
     /**
      * @param RoundRobinConfiguration $configuration
-     * 
+     *
      */
     private function addMemberConfiguration(RoundRobinConfiguration $configuration, Organisation $organisation)
     {
@@ -250,7 +249,7 @@ class RoundRobinController extends BaseGenerationController
      * @Route("/{generation}/no_conflicts", name="administration_organisation_event_line_generate_round_robin_no_conflicts")
      *
      * @param Request $request
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
@@ -304,7 +303,7 @@ class RoundRobinController extends BaseGenerationController
      * @Route("/{generation}/choose_members", name="administration_organisation_event_line_generate_round_robin_choose_members")
      *
      * @param Request $request
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
@@ -355,7 +354,7 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/randomize_member_order", name="administration_organisation_event_line_generate_round_robin_randomize_member_order")
      *
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
@@ -379,7 +378,7 @@ class RoundRobinController extends BaseGenerationController
      * @Route("/{generation}/set_order", name="administration_organisation_event_line_generate_round_robin_set_order")
      *
      * @param Request $request
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
@@ -453,7 +452,7 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/start_generation", name="administration_organisation_event_line_generate_round_robin_start_generation")
      *
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
@@ -478,7 +477,7 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/do_generate", name="administration_organisation_event_line_generate_round_robin_do_generate")
      *
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      * @param TranslatorInterface $translator
@@ -541,7 +540,7 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/confirm_generation", name="administration_organisation_event_line_generate_round_robin_confirm_generation")
      *
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      *
@@ -574,7 +573,7 @@ class RoundRobinController extends BaseGenerationController
     /**
      * @Route("/{generation}/apply_generation", name="administration_organisation_event_line_generate_round_robin_apply_generation")
      *
-     * 
+     *
      * @param EventLine $eventLine
      * @param EventLineGeneration $generation
      * @param EventGenerationService $eventGenerationService

@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\FrontendUserRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
 class FrontendUser extends BaseEntity implements AdvancedUserInterface, EquatableInterface
@@ -37,8 +37,8 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     use PersonTrait;
     use AddressTrait;
     use CommunicationTrait {
-        UserTrait::getEmail insteadof CommunicationTrait::getEmail;
-        UserTrait::setEmail insteadof CommunicationTrait::setEmail;
+        UserTrait::getEmail insteadof CommunicationTrait;
+        UserTrait::setEmail insteadof CommunicationTrait;
     }
     use SoftDeleteTrait;
 

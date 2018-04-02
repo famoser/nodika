@@ -6,7 +6,7 @@
  * Time: 11:35
  */
 
-namespace App\Controller\Frontend;
+namespace App\Controller;
 
 use App\Controller\Base\BaseLoginController;
 use App\Entity\FrontendUser;
