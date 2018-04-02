@@ -47,11 +47,7 @@ class EventLineController extends BaseFormController
      */
     public function newAction(Request $request)
     {
-        $eventLine = new EventLine();
-        $myForm = $this->handleCreateForm(
-            $request,
-            $eventLine
-        );
+        $myForm = $this->handleCreateForm($request, new EventLine());
 
         if ($myForm instanceof Response) {
             return $myForm;
@@ -72,12 +68,7 @@ class EventLineController extends BaseFormController
      */
     public function editAction(Request $request, EventLine $eventLine)
     {
-        $this->denyAccessUnlessGranted(EventLineVoter::EDIT, $eventLine);
-
-        $myForm = $this->handleUpdateForm(
-            $request,
-            $eventLine
-        );
+        $myForm = $this->handleUpdateForm($request, $eventLine);
 
         if ($myForm instanceof Response) {
             return $myForm;
@@ -98,12 +89,7 @@ class EventLineController extends BaseFormController
      */
     public function removeAction(Request $request, EventLine $eventLine)
     {
-        $this->denyAccessUnlessGranted(EventLineVoter::REMOVE, $eventLine);
-
-        $myForm = $this->handleRemoveForm(
-            $request,
-            $eventLine
-        );
+        $myForm = $this->handleRemoveForm($request, $eventLine);
 
         if ($myForm instanceof Response) {
             return $myForm;
