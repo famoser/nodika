@@ -25,6 +25,7 @@ use App\Model\Form\ImportFileModel;
 use App\Security\Voter\EventLineVoter;
 use App\Security\Voter\OrganisationVoter;
 use App\Service\ExchangeService;
+use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;

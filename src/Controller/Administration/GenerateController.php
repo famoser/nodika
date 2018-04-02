@@ -27,12 +27,11 @@ class GenerateController extends BaseController
     /**
      * @Route("/", name="administration_generate_index")
      *
-     * @param Organisation $organisation
      * @param EventLine $eventLine
      *
      * @return Response
      */
-    public function chooseAction(Organisation $organisation, EventLine $eventLine)
+    public function chooseAction(EventLine $eventLine)
     {
         $arr['organisation'] = $organisation;
         $arr['eventLine'] = $eventLine;

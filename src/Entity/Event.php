@@ -36,7 +36,7 @@ class Event extends BaseEntity
     /**
      * @var EventPast[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event", cascade={"all"})
      */
     private $eventPast;
 
