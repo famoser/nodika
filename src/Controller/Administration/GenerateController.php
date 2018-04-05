@@ -16,6 +16,10 @@ use App\Controller\Base\BaseFormController;
 use App\Entity\EventGeneration;
 use App\Entity\EventLine;
 use App\Entity\Organisation;
+use App\Form\EventGeneration\BasicDataType;
+use App\Form\EventGeneration\ChooseRecipientsType;
+use App\Form\EventGeneration\SaveType;
+use App\Form\EventGenerationConflictAvoid\EventGenerationConflictAvoidType;
 use App\Helper\DateTimeFormatter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -67,31 +71,57 @@ class GenerateController extends BaseFormController
     }
 
     /**
+     * @param Request $request
+     * @param EventGeneration $generation
+     * @param $formClass
+     * @param $onAnswerSubmitted
+     * @return array|Response
+     */
+    private function handleStepForm(Request $request, EventGeneration $generation, $formClass, $onAnswerSubmitted)
+    {
+        $saved = false;
+        $form = $this->handleForm(
+            $this->createForm($formClass, $generation),
+            $request,
+            function ($form) use (&$saved, $generation) {
+                $this->fastSave($generation);
+                $saved = true;
+                return $form;
+            }
+        );
+
+        if ($saved) {
+            return $onAnswerSubmitted;
+        }
+
+
+        $arr["form"] = $form;
+
+        return $arr;
+    }
+
+    /**
      * @Route("/{generation}/basic", name="administration_generate_basic")
      *
      * @param Request $request
      * @param EventGeneration $generation
      * @return Response
      */
-    public function chooseAction(Request $request, EventGeneration $generation)
+    public function basicAction(Request $request, EventGeneration $generation)
     {
-        $saved = false;
-        $form = $this->handleCreateForm(
+        $arr = $this->handleStepForm(
             $request,
             $generation,
-            function () use (&$saved) {
-                $saved = true;
-                return true;
+            BasicDataType::class,
+            function () use ($generation) {
+                return $this->redirectToRoute("administration_generate_recipients", ["generation" => $generation->getId()]);
             }
         );
 
-        if ($saved) {
-            return $this->redirectToRoute("administration_generate_basic", ["generation" => $generation->getId()]);
-        }
+        if ($arr instanceof Response)
+            return $arr;
 
-        return $this->render(
-            'administration/generate/basic.html.twig'
-        );
+        return $this->render('administration/generate/basic.html.twig', $arr);
     }
 
     /**
@@ -103,22 +133,37 @@ class GenerateController extends BaseFormController
      */
     public function recipientAction(Request $request, EventGeneration $generation)
     {
-        return $this->render(
-            'administration/generate/recipients.html.twig'
+        $arr = $this->handleStepForm(
+            $request,
+            $generation,
+            ChooseRecipientsType::class,
+            function () use ($generation) {
+                return $this->redirectToRoute("administration_generate_conflicts", ["generation" => $generation->getId()]);
+            }
         );
+
+        return $this->render('administration/generate/recipients.html.twig', $arr);
     }
 
     /**
      * @Route("/{generation}/conflicts", name="administration_generate_conflicts")
      *
+     * @param Request $request
      * @param EventGeneration $generation
      * @return Response
      */
     public function conflictsAction(Request $request, EventGeneration $generation)
     {
-        return $this->render(
-            'administration/generate/conflicts.html.twig'
+        $arr = $this->handleStepForm(
+            $request,
+            $generation,
+            EventGenerationConflictAvoidType::class,
+            function () use ($generation) {
+                return $this->redirectToRoute("administration_generate_weights", ["generation" => $generation->getId()]);
+            }
         );
+
+        return $this->render('administration/generate/conflicts.html.twig', $arr);
     }
 
     /**
@@ -129,9 +174,16 @@ class GenerateController extends BaseFormController
      */
     public function weightsAction(Request $request, EventGeneration $generation)
     {
-        return $this->render(
-            'administration/generate/weights.html.twig'
+        $arr = $this->handleStepForm(
+            $request,
+            $generation,
+            EventGenerationConflictAvoidType::class,
+            function () use ($generation) {
+                return $this->redirectToRoute("administration_generate_save", ["generation" => $generation->getId()]);
+            }
         );
+
+        return $this->render('administration/generate/weights.html.twig', $arr);
     }
 
     /**
@@ -142,8 +194,15 @@ class GenerateController extends BaseFormController
      */
     public function saveAction(Request $request, EventGeneration $generation)
     {
-        return $this->render(
-            'administration/generate/save.html.twig'
+        $arr = $this->handleStepForm(
+            $request,
+            $generation,
+            SaveType::class,
+            function () use ($generation) {
+                return $this->redirectToRoute("administration_generate_index", ["generation" => $generation->getId()]);
+            }
         );
+
+        return $this->render('administration/generate/save.html.twig', $arr);
     }
 }
