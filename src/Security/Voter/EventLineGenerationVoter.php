@@ -13,7 +13,7 @@ namespace App\Security\Voter;
 
 use App\Entity\Event;
 use App\Entity\EventLine;
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -28,7 +28,7 @@ class EventLineGenerationVoter extends EventLineVoter
     protected function supports($attribute, $subject)
     {
         // only vote on Post objects inside this voter
-        if (!$subject instanceof EventLineGeneration) {
+        if (!$subject instanceof EventGeneration) {
             return false;
         }
 

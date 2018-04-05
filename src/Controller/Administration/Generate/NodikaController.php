@@ -13,11 +13,11 @@ namespace App\Controller\Administration\Generate;
 
 use App\Controller\Administration\Generate\Base\BaseGenerationController;
 use App\Entity\EventLine;
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\Member;
 use App\Enum\DistributionType;
 use App\Enum\EventGenerationServicePersistResponse;
-use App\Enum\NodikaStatusCode;
+use App\Enum\GenerationStatus;
 use App\Form\EventLineGeneration\Nodika\ChoosePeriodType;
 use App\Helper\DateTimeFormatter;
 use App\Model\EventLineGeneration\Base\EventLineConfiguration;
@@ -74,7 +74,7 @@ class NodikaController extends BaseGenerationController
     {
         $this->denyAccessUnlessGranted(EventLineVoter::ADMINISTRATE, $eventLine);
 
-        $eventLineGeneration = new EventLineGeneration();
+        $eventLineGeneration = new EventGeneration();
         $eventLineGeneration->setEventLine($eventLine);
         $eventLineGeneration->setCreatedByPerson($this->getPerson());
         $eventLineGeneration->setCreatedAtDateTime(new \DateTime());
@@ -96,12 +96,12 @@ class NodikaController extends BaseGenerationController
      * @param Request $request
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function choosePeriodAction(Request $request, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
+    public function choosePeriodAction(Request $request, EventLine $eventLine, EventGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -146,12 +146,12 @@ class NodikaController extends BaseGenerationController
     }
 
     /**
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * 
      *
      * @return NodikaConfiguration
      */
-    private function getDistributionConfiguration(EventLineGeneration $generation, Organisation $organisation)
+    private function getDistributionConfiguration(EventGeneration $generation, Organisation $organisation)
     {
         $configuration = new NodikaConfiguration(json_decode($generation->getDistributionConfigurationJson()));
         $this->addMemberConfiguration($configuration, $organisation);
@@ -203,10 +203,10 @@ class NodikaController extends BaseGenerationController
     }
 
     /**
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param $configuration
      */
-    private function saveDistributionConfiguration(EventLineGeneration $generation, NodikaConfiguration $configuration)
+    private function saveDistributionConfiguration(EventGeneration $generation, NodikaConfiguration $configuration)
     {
         $generation->setDistributionConfiguration($configuration);
         $this->fastSave($generation);
@@ -260,11 +260,11 @@ class NodikaController extends BaseGenerationController
      * @param Request $request
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function noConflictsAction(Request $request, EventLine $eventLine, EventLineGeneration $generation)
+    public function noConflictsAction(Request $request, EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -315,11 +315,11 @@ class NodikaController extends BaseGenerationController
      * @param Request $request
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function chooseMembersAction(Request $request, EventLine $eventLine, EventLineGeneration $generation)
+    public function chooseMembersAction(Request $request, EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -368,11 +368,11 @@ class NodikaController extends BaseGenerationController
      * @param Request $request
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function relativeDistributionAction(Request $request, EventLine $eventLine, EventLineGeneration $generation)
+    public function relativeDistributionAction(Request $request, EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -432,12 +432,12 @@ class NodikaController extends BaseGenerationController
      * @param Request $request
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function distributionSettingsAction(Request $request, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
+    public function distributionSettingsAction(Request $request, EventLine $eventLine, EventGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -543,12 +543,12 @@ class NodikaController extends BaseGenerationController
      *
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param EventGenerationService $eventGenerationService
      *
      * @return Response
      */
-    public function doDistributionAction(EventLine $eventLine, EventLineGeneration $generation, EventGenerationService $eventGenerationService)
+    public function doDistributionAction(EventLine $eventLine, EventGeneration $generation, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -568,11 +568,11 @@ class NodikaController extends BaseGenerationController
      *
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function distributionConfirmAction(EventLine $eventLine, EventLineGeneration $generation)
+    public function distributionConfirmAction(EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -605,12 +605,12 @@ class NodikaController extends BaseGenerationController
      * @param Request $request
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function assignmentSettingsAction(Request $request, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
+    public function assignmentSettingsAction(Request $request, EventLine $eventLine, EventGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -695,11 +695,11 @@ class NodikaController extends BaseGenerationController
      *
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function startGenerationAction(EventLine $eventLine, EventLineGeneration $generation)
+    public function startGenerationAction(EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
 
@@ -720,13 +720,13 @@ class NodikaController extends BaseGenerationController
      *
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param TranslatorInterface $translator
      * @param EventGenerationService $eventGenerationService
      *
      * @return Response
      */
-    public function doGenerationAction(EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator, EventGenerationService $eventGenerationService)
+    public function doGenerationAction(EventLine $eventLine, EventGeneration $generation, TranslatorInterface $translator, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -739,7 +739,7 @@ class NodikaController extends BaseGenerationController
             }
         );
         if ($nodikaOutput instanceof NodikaOutput) {
-            if (NodikaStatusCode::SUCCESSFUL === $nodikaOutput->nodikaStatusCode) {
+            if (GenerationStatus::SUCCESSFUL === $nodikaOutput->nodikaStatusCode) {
                 $this->saveNodikaOutput($generation, $nodikaOutput);
 
                 return $this->redirectToRoute(
@@ -750,9 +750,9 @@ class NodikaController extends BaseGenerationController
         } else {
             $this->displayError(
                 $translator->trans(
-                    NodikaStatusCode::getTranslation(NodikaStatusCode::UNKNOWN_ERROR),
+                    GenerationStatus::getTranslation(GenerationStatus::UNKNOWN_ERROR),
                     [],
-                    NodikaStatusCode::getTranslationDomainStatic()
+                    GenerationStatus::getTranslationDomainStatic()
                 )
             );
         }
@@ -764,10 +764,10 @@ class NodikaController extends BaseGenerationController
     }
 
     /**
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param NodikaOutput $nodikaOutput
      */
-    private function saveNodikaOutput(EventLineGeneration $generation, NodikaOutput $nodikaOutput)
+    private function saveNodikaOutput(EventGeneration $generation, NodikaOutput $nodikaOutput)
     {
         $generation->setGenerationResult($nodikaOutput->generationResult);
         $generation->setDistributionOutput($nodikaOutput);
@@ -779,11 +779,11 @@ class NodikaController extends BaseGenerationController
      *
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function confirmGenerationAction(EventLine $eventLine, EventLineGeneration $generation)
+    public function confirmGenerationAction(EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);
@@ -812,12 +812,12 @@ class NodikaController extends BaseGenerationController
      *
      * 
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param EventGenerationService $eventGenerationService
      *
      * @return Response
      */
-    public function applyGenerationAction(EventLine $eventLine, EventLineGeneration $generation, EventGenerationService $eventGenerationService)
+    public function applyGenerationAction(EventLine $eventLine, EventGeneration $generation, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);

@@ -7,6 +7,7 @@
     "ext-iconv": "*",
     "ext-pdo_sqlite": "*",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
+    "dragonmantank/cron-expression": "^2.0",
     "erusev/parsedown": "^1.6",
     "fzaninotto/faker": "^1.7",
     "javiereguiluz/easyadmin-bundle": "^1.17",

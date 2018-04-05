@@ -10,26 +10,15 @@ namespace App\Entity\Traits;
 
 
 use App\Entity\EventLine;
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
+use App\Enum\EventType;
 use App\Enum\TradeTag;
 
 trait EventTrait
 {
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $startDateTime;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $endDateTime;
+    use StartEndTrait;
 
     /**
      * @var \DateTime|null
@@ -53,6 +42,12 @@ trait EventTrait
     private $tradeTag = TradeTag::MAYBE_TRADE;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    private $eventType = EventType::UNSPECIFIED;
+
+    /**
      * @var Member
      *
      * @ORM\ManyToOne(targetEntity="Member", inversedBy="events")
@@ -74,44 +69,11 @@ trait EventTrait
     private $eventLine;
 
     /**
-     * @var EventLineGeneration|null
+     * @var EventGeneration|null
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\EventLineGeneration", inversedBy="generatedEvents")
      */
     private $generatedBy;
-
-
-    /**
-     * @return \DateTime
-     */
-    public function getStartDateTime(): ?\DateTime
-    {
-        return $this->startDateTime;
-    }
-
-    /**
-     * @param \DateTime $startDateTime
-     */
-    public function setStartDateTime(\DateTime $startDateTime): void
-    {
-        $this->startDateTime = $startDateTime;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getEndDateTime(): ?\DateTime
-    {
-        return $this->endDateTime;
-    }
-
-    /**
-     * @param \DateTime $endDateTime
-     */
-    public function setEndDateTime(\DateTime $endDateTime): void
-    {
-        $this->endDateTime = $endDateTime;
-    }
 
     /**
      * @return \DateTime|null
@@ -210,17 +172,17 @@ trait EventTrait
     }
 
     /**
-     * @return EventLineGeneration|null
+     * @return EventGeneration|null
      */
-    public function getGeneratedBy(): ?EventLineGeneration
+    public function getGeneratedBy(): ?EventGeneration
     {
         return $this->generatedBy;
     }
 
     /**
-     * @param EventLineGeneration|null $generatedBy
+     * @param EventGeneration|null $generatedBy
      */
-    public function setGeneratedBy(?EventLineGeneration $generatedBy): void
+    public function setGeneratedBy(?EventGeneration $generatedBy): void
     {
         $this->generatedBy = $generatedBy;
     }
@@ -230,8 +192,8 @@ trait EventTrait
      */
     protected function writeValues(EventTrait $eventTrait)
     {
-        $this->startDateTime = $eventTrait->getStartDateTime();
-        $this->endDateTime = $eventTrait->getEndDateTime();
+        $this->setStartDateTime($eventTrait->getStartDateTime());
+        $this->setEndDateTime($eventTrait->getEndDateTime());
         $this->confirmDateTime = $eventTrait->getConfirmDateTime();
         $this->lastRemainderEmailSent = $eventTrait->getLastRemainderEmailSent();
         $this->tradeTag = $eventTrait->getTradeTag();

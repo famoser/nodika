@@ -13,7 +13,7 @@ namespace App\Controller\Administration\Generate;
 
 use App\Controller\Administration\Generate\Base\BaseGenerationController;
 use App\Entity\EventLine;
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\Member;
 use App\Enum\DistributionType;
 use App\Enum\EventGenerationServicePersistResponse;
@@ -74,7 +74,7 @@ class RoundRobinController extends BaseGenerationController
     {
         $this->denyAccessUnlessGranted(EventLineVoter::ADMINISTRATE, $eventLine);
 
-        $eventLineGeneration = new EventLineGeneration();
+        $eventLineGeneration = new EventGeneration();
         $eventLineGeneration->setEventLine($eventLine);
         $eventLineGeneration->setCreatedByPerson($this->getPerson());
         $eventLineGeneration->setCreatedAtDateTime(new \DateTime());
@@ -96,12 +96,12 @@ class RoundRobinController extends BaseGenerationController
      * @param Request $request
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function choosePeriodAction(Request $request, EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator)
+    public function choosePeriodAction(Request $request, EventLine $eventLine, EventGeneration $generation, TranslatorInterface $translator)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -143,12 +143,12 @@ class RoundRobinController extends BaseGenerationController
     }
 
     /**
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      *
      * @return RoundRobinConfiguration
      */
-    private function getDistributionConfiguration(EventLineGeneration $generation, Organisation $organisation)
+    private function getDistributionConfiguration(EventGeneration $generation, Organisation $organisation)
     {
         $configuration = new RoundRobinConfiguration(json_decode($generation->getDistributionConfigurationJson()));
         $this->addMemberConfiguration($configuration, $organisation);
@@ -236,10 +236,10 @@ class RoundRobinController extends BaseGenerationController
     }
 
     /**
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param $configuration
      */
-    private function saveDistributionConfiguration(EventLineGeneration $generation, RoundRobinConfiguration $configuration)
+    private function saveDistributionConfiguration(EventGeneration $generation, RoundRobinConfiguration $configuration)
     {
         $generation->setDistributionConfiguration($configuration);
         $this->fastSave($generation);
@@ -251,11 +251,11 @@ class RoundRobinController extends BaseGenerationController
      * @param Request $request
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function noConflictsAction(Request $request, EventLine $eventLine, EventLineGeneration $generation)
+    public function noConflictsAction(Request $request, EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -305,11 +305,11 @@ class RoundRobinController extends BaseGenerationController
      * @param Request $request
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function chooseMembersAction(Request $request, EventLine $eventLine, EventLineGeneration $generation)
+    public function chooseMembersAction(Request $request, EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -356,11 +356,11 @@ class RoundRobinController extends BaseGenerationController
      *
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function randomizeMemberOrderAction(EventLine $eventLine, EventLineGeneration $generation)
+    public function randomizeMemberOrderAction(EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -380,11 +380,11 @@ class RoundRobinController extends BaseGenerationController
      * @param Request $request
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function setOrderAction(Request $request, EventLine $eventLine, EventLineGeneration $generation)
+    public function setOrderAction(Request $request, EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -454,11 +454,11 @@ class RoundRobinController extends BaseGenerationController
      *
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function startGenerationAction(EventLine $eventLine, EventLineGeneration $generation)
+    public function startGenerationAction(EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
 
@@ -479,7 +479,7 @@ class RoundRobinController extends BaseGenerationController
      *
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param TranslatorInterface $translator
      * @param EventGenerationService $eventGenerationService
      * @param LoggerInterface $logger
@@ -488,7 +488,7 @@ class RoundRobinController extends BaseGenerationController
      *
      * @internal param Request $request
      */
-    public function doGenerationAction(EventLine $eventLine, EventLineGeneration $generation, TranslatorInterface $translator, EventGenerationService $eventGenerationService, LoggerInterface $logger)
+    public function doGenerationAction(EventLine $eventLine, EventGeneration $generation, TranslatorInterface $translator, EventGenerationService $eventGenerationService, LoggerInterface $logger)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $config = $this->getDistributionConfiguration($generation, $organisation);
@@ -527,10 +527,10 @@ class RoundRobinController extends BaseGenerationController
     }
 
     /**
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param RoundRobinOutput $roundRobinOutput
      */
-    private function saveRoundRobinOutput(EventLineGeneration $generation, RoundRobinOutput $roundRobinOutput)
+    private function saveRoundRobinOutput(EventGeneration $generation, RoundRobinOutput $roundRobinOutput)
     {
         $generation->setGenerationResult($roundRobinOutput->generationResult);
         $generation->setDistributionOutput($roundRobinOutput);
@@ -542,11 +542,11 @@ class RoundRobinController extends BaseGenerationController
      *
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return Response
      */
-    public function confirmGenerationAction(EventLine $eventLine, EventLineGeneration $generation)
+    public function confirmGenerationAction(EventLine $eventLine, EventGeneration $generation)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);
@@ -575,12 +575,12 @@ class RoundRobinController extends BaseGenerationController
      *
      *
      * @param EventLine $eventLine
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param EventGenerationService $eventGenerationService
      *
      * @return Response
      */
-    public function applyGenerationAction(EventLine $eventLine, EventLineGeneration $generation, EventGenerationService $eventGenerationService)
+    public function applyGenerationAction(EventLine $eventLine, EventGeneration $generation, EventGenerationService $eventGenerationService)
     {
         $this->denyAccessUnlessGranted(EventLineGenerationVoter::ADMINISTRATE, $generation);
         $generationResult = $this->getGenerationResult($generation);

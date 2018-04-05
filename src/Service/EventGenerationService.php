@@ -12,11 +12,11 @@
 namespace App\Service;
 
 use App\Entity\Event;
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\Person;
 use App\Enum\EventChangeType;
 use App\Enum\EventGenerationServicePersistResponse;
-use App\Enum\NodikaStatusCode;
+use App\Enum\GenerationStatus;
 use App\Enum\RoundRobinStatusCode;
 use App\Helper\StaticMessageHelper;
 use App\Model\EventGenerationService\IdealQueueMember;
@@ -355,13 +355,13 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * persist the events associated with this generation in the database.
      *
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param GenerationResult $generationResult
      * @param Person $person
      *
      * @return bool
      */
-    public function persist(EventLineGeneration $generation, GenerationResult $generationResult, Person $person)
+    public function persist(EventGeneration $generation, GenerationResult $generationResult, Person $person)
     {
         $memberById = [];
         foreach ($this->doctrine->getRepository('App:Member')->findBy(['organisation' => $generation->getEventLine()->getOrganisation()->getId()]) as $item) {
@@ -691,11 +691,6 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable)
     {
-        /**
-         * BUGS:
-         * not generated till end
-         * wrong weekdays assigned.
-         */
         $generationResult = new GenerationResult(null);
         $generationResult->generationDateTime = new \DateTime();
 
@@ -928,7 +923,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                     */
                 }
                 if (!$assignmentFound) {
-                    return $this->returnNodikaError($nodikaOutput, NodikaStatusCode::NO_ALLOWED_MEMBER_FOR_EVENT);
+                    return $this->returnNodikaError($nodikaOutput, GenerationStatus::NO_ALLOWED_MEMBER_FOR_EVENT);
                 }
             }
 
@@ -987,9 +982,9 @@ class EventGenerationService implements EventGenerationServiceInterface
     {
         $this->displayError(
             $this->translator->trans(
-                NodikaStatusCode::getTranslation($status),
+                GenerationStatus::getTranslation($status),
                 [],
-                NodikaStatusCode::getTranslationDomainStatic()
+                GenerationStatus::getTranslationDomainStatic()
             )
         );
 
@@ -1005,12 +1000,12 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     private function returnNodikaSuccess(NodikaOutput $nodikaOutput)
     {
-        $status = NodikaStatusCode::SUCCESSFUL;
+        $status = GenerationStatus::SUCCESSFUL;
         $this->displaySuccess(
             $this->translator->trans(
-                NodikaStatusCode::getTranslation($status),
+                GenerationStatus::getTranslation($status),
                 [],
-                NodikaStatusCode::getTranslationDomainStatic()
+                GenerationStatus::getTranslationDomainStatic()
             )
         );
 

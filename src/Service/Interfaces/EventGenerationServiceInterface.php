@@ -11,7 +11,7 @@
 
 namespace App\Service\Interfaces;
 
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\Person;
 use App\Model\EventLineGeneration\GenerationResult;
 use App\Model\EventLineGeneration\Nodika\NodikaConfiguration;
@@ -46,13 +46,13 @@ interface EventGenerationServiceInterface
     /**
      * persist the events associated with this generation in the database.
      *
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      * @param GenerationResult $generationResult
      * @param Person $person
      *
      * @return bool
      */
-    public function persist(EventLineGeneration $generation, GenerationResult $generationResult, Person $person);
+    public function persist(EventGeneration $generation, GenerationResult $generationResult, Person $person);
 
     /**
      * @param NodikaConfiguration $nodikaConfiguration

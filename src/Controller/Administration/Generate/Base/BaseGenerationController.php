@@ -13,7 +13,7 @@ namespace App\Controller\Administration\Generate\Base;
 
 use App\Controller\Base\BaseController;
 use App\Entity\EventLine;
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\Organisation;
 use App\Model\EventLineGeneration\Base\BaseConfiguration;
 use App\Model\EventLineGeneration\Base\EventLineConfiguration;
@@ -22,11 +22,11 @@ use App\Model\EventLineGeneration\GenerationResult;
 class BaseGenerationController extends BaseController
 {
     /**
-     * @param EventLineGeneration $generation
+     * @param EventGeneration $generation
      *
      * @return GenerationResult
      */
-    protected function getGenerationResult(EventLineGeneration $generation)
+    protected function getGenerationResult(EventGeneration $generation)
     {
         return new GenerationResult(json_decode($generation->getGenerationResultJson()));
     }
@@ -34,9 +34,9 @@ class BaseGenerationController extends BaseController
     /**
      * @param BaseConfiguration $configuration
      * @param Organisation $organisation
-     * @param EventLineGeneration $eventLineGeneration
+     * @param EventGeneration $eventLineGeneration
      */
-    protected function addEventLineConfiguration(BaseConfiguration $configuration, Organisation $organisation, EventLineGeneration $eventLineGeneration)
+    protected function addEventLineConfiguration(BaseConfiguration $configuration, Organisation $organisation, EventGeneration $eventLineGeneration)
     {
         /* @var EventLine[] $eventLineById */
         $eventLineById = [];

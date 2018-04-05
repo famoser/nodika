@@ -15,6 +15,7 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\EventTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\SoftDeleteTrait;
+use App\Enum\EventType;
 use App\Enum\TradeTag;
 use App\Helper\DateTimeFormatter;
 use Doctrine\Common\Collections\ArrayCollection;

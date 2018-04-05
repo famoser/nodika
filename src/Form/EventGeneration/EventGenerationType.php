@@ -9,24 +9,29 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\EventLineGeneration\RoundRobin;
+namespace App\Form\EventGeneration;
 
-use App\Form\EventLineGeneration\Base\BaseChoosePeriodType;
-use App\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
+use App\Entity\EventGeneration;
+use App\Entity\Member;
+use App\Form\Base\BaseAbstractType;
+use App\Form\Traits\Address\AddressType;
+use App\Form\Traits\Communication\CommunicationType;
+use App\Form\Traits\Thing\ThingType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ChoosePeriodType extends BaseChoosePeriodType
+class EventGenerationType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->addFields($builder, ['translation_domain' => 'administration_organisation_event_line_generate_round_robin']);
+        $builder->add("thing", ThingType::class, ["inherit_data" => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => RoundRobinConfiguration::class,
+            'data_class' => EventGeneration::class,
+            'translation_domain' => 'entity_event_generation'
         ]);
     }
 }

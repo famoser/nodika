@@ -13,7 +13,7 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventLine;
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\Member;
 use App\Entity\Person;
 use App\Enum\DistributionType;
@@ -62,7 +62,7 @@ class LoadEventData extends BaseFixture
             return true;
         });
 
-        $eventLineGeneration = new EventLineGeneration();
+        $eventLineGeneration = new EventGeneration();
         $eventLineGeneration->setEventLine($eventLines[0]);
         $eventLineGeneration->setCreatedAtDateTime(new \DateTime());
         $eventLineGeneration->setCreatedByPerson($admin);

@@ -13,7 +13,7 @@ namespace App\Enum;
 
 use App\Enum\Base\BaseEnum;
 
-class NodikaStatusCode extends BaseEnum
+class GenerationStatus extends BaseEnum
 {
     const SUCCESSFUL = 1;
     const NO_MATCHING_MEMBER = 2;

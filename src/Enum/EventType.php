@@ -13,8 +13,9 @@ namespace App\Enum;
 
 use App\Enum\Base\BaseEnum;
 
-class NodikaEventType extends BaseEnum
+class EventType extends BaseEnum
 {
+    const UNSPECIFIED = 0;
     const WEEKDAY = 1;
     const SATURDAY = 2;
     const SUNDAYS = 3;

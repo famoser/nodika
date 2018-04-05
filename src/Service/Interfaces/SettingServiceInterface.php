@@ -11,7 +11,7 @@
 
 namespace App\Service\Interfaces;
 
-use App\Entity\EventLineGeneration;
+use App\Entity\EventGeneration;
 use App\Entity\Person;
 use App\Model\EventLineGeneration\GenerationResult;
 use App\Model\EventLineGeneration\Nodika\NodikaConfiguration;
