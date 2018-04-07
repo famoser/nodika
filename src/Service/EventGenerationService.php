@@ -13,32 +13,11 @@ namespace App\Service;
 
 use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\Person;
-use App\Enum\EventChangeType;
-use App\Enum\EventGenerationServicePersistResponse;
+use App\Enum\EventType;
 use App\Enum\GenerationStatus;
-use App\Enum\RoundRobinStatusCode;
-use App\Helper\StaticMessageHelper;
 use App\Model\EventGenerationService\IdealQueueMember;
-use App\Model\EventLineGeneration\Base\BaseConfiguration;
-use App\Model\EventLineGeneration\Base\BaseMemberConfiguration;
-use App\Model\EventLineGeneration\GeneratedEvent;
-use App\Model\EventLineGeneration\GenerationResult;
-use App\Model\EventLineGeneration\Nodika\EventTypeConfiguration;
-use App\Model\EventLineGeneration\Nodika\MemberConfiguration as NMemberConfiguration;
-use App\Model\EventLineGeneration\Nodika\MemberEventTypeDistribution;
-use App\Model\EventLineGeneration\Nodika\NodikaConfiguration;
-use App\Model\EventLineGeneration\Nodika\NodikaOutput;
-use App\Model\EventLineGeneration\RoundRobin\MemberConfiguration as RRMemberConfiguration;
-use App\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
-use App\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 use App\Service\Interfaces\EventGenerationServiceInterface;
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Cron\CronExpression;
 
 class EventGenerationService implements EventGenerationServiceInterface
 {
@@ -836,14 +815,92 @@ class EventGenerationService implements EventGenerationServiceInterface
         return $this->returnNodikaSuccess($nodikaOutput);
     }
 
+    private function constructEvents(EventGeneration $eventGeneration)
+    {
+        $now = new \DateTime();
+
+        $startExpression = CronExpression::factory($eventGeneration->getStartCronExpression());
+        $currentStartDate = $startExpression->getNextRunDate($eventGeneration->getStartDateTime(), 0, true, $now->getTimezone()->getName());
+
+        $endExpression = CronExpression::factory($eventGeneration->getEndCronExpression());
+        $currentEndDate = $endExpression->getNextRunDate($currentStartDate, 0, true, $now->getTimezone()->getName());
+
+        /* @var Event[] $result */
+        $result = [];
+        while ($currentStartDate < $eventGeneration->getEndDateTime()) {
+            $event = new Event();
+            $event->setStartDateTime($currentStartDate);
+            $event->setEndDateTime($currentEndDate);
+            $event->setGeneratedBy($eventGeneration);
+            $result[] = $event;
+
+            $currentStartDate = $startExpression->getNextRunDate();
+            $currentEndDate = $endExpression->getNextRunDate();
+        }
+
+        return $result;
+    }
+
+    /**
+     * applies specified exceptions to algorithm
+     *
+     * @param EventGeneration $eventGeneration
+     * @param Event[] $events
+     */
+    private function assignEventType(EventGeneration $eventGeneration, array $events)
+    {
+        foreach ($events as $event) {
+            $dayOfWeek = $event->getStartDateTime()->format('N');
+            if (7 === $dayOfWeek) {
+                $event->setEventType(EventType::SUNDAYS);
+            } elseif (6 === $dayOfWeek) {
+                $event->setEventType(EventType::SATURDAY);
+            } else {
+                $event->setEventType(EventType::WEEKDAY);
+            }
+        }
+    }
+
+    /**
+     * applies specified exceptions to algorithm
+     *
+     * @param EventGeneration $eventGeneration
+     * @param Event[] $events
+     */
+    private function processExceptions(EventGeneration $eventGeneration, array $events)
+    {
+        foreach ($events as $event) {
+            foreach ($eventGeneration->getDateExceptions() as $dateException) {
+                //if inside the specified range
+                if (
+                    $event->getStartDateTime() >= $dateException->getStartDateTime() &&
+                    $event->getStartDateTime() <= $dateException->getEndDateTime()
+                ) {
+                    $event->setEventType($dateException->getEventType());
+                }
+            }
+
+        }
+    }
+
+    private function constructTargetQueue(EventGeneration $eventGeneration)
+    {
+
+    }
+
     /**
      * tries to generate the events
      * returns true if successful.
      *
+     * @param EventGeneration $eventGeneration
      * @return Event[]
      */
     public function generate(EventGeneration $eventGeneration)
     {
+        $events = $this->constructEvents($eventGeneration);
+        $this->assignEventType($eventGeneration, $events);
+        $this->processExceptions($eventGeneration, $events);
+
         return [];
     }
 }

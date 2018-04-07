@@ -76,6 +76,22 @@ trait EventTrait
     private $generatedBy;
 
     /**
+     * @return int
+     */
+    public function getEventType(): int
+    {
+        return $this->eventType;
+    }
+
+    /**
+     * @param int $eventType
+     */
+    public function setEventType(int $eventType): void
+    {
+        $this->eventType = $eventType;
+    }
+
+    /**
      * @return \DateTime|null
      */
     public function getConfirmDateTime(): ?\DateTime

@@ -6,8 +6,3 @@ app_administration:
     resource: "../src/Controller/Administration/"
     type:     annotation
     prefix:   /administration
-
-app_administration_generate:
-    resource: "../src/Controller/Administration/Generate"
-    type:     annotation
-    prefix:   /administration/generate/

@@ -16,11 +16,6 @@ use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\StartEndTrait;
 use App\Entity\Traits\ThingTrait;
-use App\Enum\DistributionType;
-use App\Helper\DateTimeFormatter;
-use App\Model\EventLineGeneration\Base\BaseConfiguration;
-use App\Model\EventLineGeneration\Base\BaseOutput;
-use App\Model\EventLineGeneration\GenerationResult;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -49,24 +44,24 @@ class EventGeneration extends BaseEntity
     private $minimalGapBetweenEvents = 1;
 
     /**
-     * a cron expression specifies when a new event starts
+     * this cron expression specifies when a new event starts
      * https://crontab.guru/
      *
      * @var string
      *
      * @ORM\Column(type="text")
      */
-    private $cronExpression = "* 8 * * *";
+    private $startCronExpression = "* 8 * * *";
 
     /**
-     * how long the event lasts in seconds
-     * set it to 0 to expand to max size
+     * this cron expression specifies when a new event ends
+     * https://crontab.guru/
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="text")
      */
-    private $eventLength;
+    private $endCronExpression = "* 8 * * *";
 
     /**
      * @var double
@@ -174,17 +169,33 @@ class EventGeneration extends BaseEntity
     /**
      * @return string
      */
-    public function getCronExpression(): string
+    public function getStartCronExpression(): string
     {
-        return $this->cronExpression;
+        return $this->startCronExpression;
     }
 
     /**
-     * @param string $cronExpression
+     * @param string $startCronExpression
      */
-    public function setCronExpression(string $cronExpression): void
+    public function setStartCronExpression(string $startCronExpression): void
     {
-        $this->cronExpression = $cronExpression;
+        $this->startCronExpression = $startCronExpression;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndCronExpression(): string
+    {
+        return $this->endCronExpression;
+    }
+
+    /**
+     * @param string $endCronExpression
+     */
+    public function setEndCronExpression(string $endCronExpression): void
+    {
+        $this->endCronExpression = $endCronExpression;
     }
 
     /**
@@ -329,21 +340,5 @@ class EventGeneration extends BaseEntity
     public function setMembers($members): void
     {
         $this->members = $members;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEventLength(): int
-    {
-        return $this->eventLength;
-    }
-
-    /**
-     * @param int $eventLength
-     */
-    public function setEventLength(int $eventLength): void
-    {
-        $this->eventLength = $eventLength;
     }
 }

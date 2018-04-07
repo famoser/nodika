@@ -15,10 +15,6 @@ use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventLine;
 use App\Entity\EventGeneration;
 use App\Entity\Member;
-use App\Entity\Person;
-use App\Enum\DistributionType;
-use App\Model\EventLineGeneration\RoundRobin\MemberConfiguration;
-use App\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadEventData extends BaseFixture

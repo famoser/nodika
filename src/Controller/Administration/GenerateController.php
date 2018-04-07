@@ -14,8 +14,6 @@ namespace App\Controller\Administration;
 use App\Controller\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\EventGeneration;
-use App\Entity\EventLine;
-use App\Entity\Organisation;
 use App\Form\EventGeneration\BasicDataType;
 use App\Form\EventGeneration\ChooseRecipientsType;
 use App\Form\EventGeneration\SaveType;

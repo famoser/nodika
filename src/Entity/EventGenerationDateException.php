@@ -12,16 +12,9 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
-use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\StartEndTrait;
-use App\Enum\DistributionType;
 use App\Enum\EventType;
-use App\Helper\DateTimeFormatter;
-use App\Model\EventLineGeneration\Base\BaseConfiguration;
-use App\Model\EventLineGeneration\Base\BaseOutput;
-use App\Model\EventLineGeneration\GenerationResult;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

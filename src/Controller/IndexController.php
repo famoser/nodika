@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/dashboard")
+ * @Route("/")
  * @Security("has_role('ROLE_USER')")
  */
 class IndexController extends BaseDoctrineController
@@ -55,9 +55,9 @@ class IndexController extends BaseDoctrineController
         $searchModel->setStartDateTime(new \DateTime());
         $searchModel->setEndDateTime($end);
 
-        $eventLines = $this->getDoctrine()->getRepository('App:EventLine')->findEventLineModels($searchModel);
+        $eventLineModels = $this->getDoctrine()->getRepository('App:EventLine')->findEventLineModels($searchModel);
+        $arr['event_line_models'] = $eventLineModels;
 
-
-        return $this->renderWithBackUrl('event/confirm.html.twig', $arr, $this->generateUrl('dashboard_index'));
+        return $this->render('event/confirm.html.twig', $arr);
     }
 }
