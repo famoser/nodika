@@ -44,31 +44,6 @@ class EventGenerationService implements EventGenerationServiceInterface
 {
     const ACCURACY_THRESHOLD = 0.0001;
     const RANDOM_ACCURACY = 1000;
-    /* @var RegistryInterface $doctrine */
-    private $doctrine;
-    /* @var TranslatorInterface $translator */
-    private $translator;
-
-    /* the accuracy of double comparision at critical points */
-    /* @var Session $session */
-    private $session;
-
-    /* the random accuracy used. must be a valid input for random_int. */
-    /* @var EventPastEvaluationService $eventPastEvaluationService */
-    private $eventPastEvaluationService;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(RegistryInterface $doctrine, TranslatorInterface $translator, SessionInterface $session, EventPastEvaluationService $eventPastEvaluationService, LoggerInterface $logger)
-    {
-        $this->doctrine = $doctrine;
-        $this->translator = $translator;
-        $this->session = $session;
-        $this->eventPastEvaluationService = $eventPastEvaluationService;
-        $this->logger = $logger;
-    }
 
     /**
      * tries to generate the events
@@ -295,112 +270,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * @param RoundRobinOutput $roundRobinResult
-     * @param int $status
-     *
-     * @return RoundRobinOutput
-     */
-    private function returnRoundRobinError(RoundRobinOutput $roundRobinResult, $status)
-    {
-        $this->displayError(
-            $this->translator->trans(
-                RoundRobinStatusCode::getTranslation($status),
-                [],
-                RoundRobinStatusCode::getTranslationDomainStatic()
-            )
-        );
-
-        $roundRobinResult->roundRobinStatusCode = $status;
-
-        return $roundRobinResult;
-    }
-
-    /**
-     * @param $message
-     */
-    private function displayError($message)
-    {
-        $this->session->getFlashBag()->set(StaticMessageHelper::FLASH_ERROR, $message);
-    }
-
-    /**
-     * @param RoundRobinOutput $roundRobinResult
-     *
-     * @return RoundRobinOutput
-     */
-    private function returnRoundRobinSuccess(RoundRobinOutput $roundRobinResult)
-    {
-        $status = RoundRobinStatusCode::SUCCESSFUL;
-        $this->displaySuccess(
-            $this->translator->trans(
-                RoundRobinStatusCode::getTranslation($status),
-                [],
-                RoundRobinStatusCode::getTranslationDomainStatic()
-            )
-        );
-
-        $roundRobinResult->roundRobinStatusCode = $status;
-
-        return $roundRobinResult;
-    }
-
-    /**
-     * @param $message
-     */
-    private function displaySuccess($message)
-    {
-        $this->session->getFlashBag()->set(StaticMessageHelper::FLASH_SUCCESS, $message);
-    }
-
-    /**
-     * persist the events associated with this generation in the database.
-     *
-     * @param EventGeneration $generation
-     * @param GenerationResult $generationResult
-     * @param Person $person
-     *
-     * @return bool
-     */
-    public function persist(EventGeneration $generation, GenerationResult $generationResult, Person $person)
-    {
-        $memberById = [];
-        foreach ($this->doctrine->getRepository('App:Member')->findBy(['organisation' => $generation->getEventLine()->getOrganisation()->getId()]) as $item) {
-            $memberById[$item->getId()] = $item;
-        }
-        $em = $this->doctrine->getManager();
-        foreach ($generationResult->events as $event) {
-            if (isset($memberById[$event->memberId])) {
-                $newEvent = new Event();
-                $newEvent->setStartDateTime($event->startDateTime);
-                $newEvent->setEndDateTime($event->endDateTime);
-                $newEvent->setEventLine($generation->getEventLine());
-                $newEvent->setMember($memberById[$event->memberId]);
-                $newEvent->setGeneratedBy($generation);
-
-                $eventPast = $this->eventPastEvaluationService->createEventPast($person, null, $newEvent, EventChangeType::GENERATED_BY_ADMIN);
-                $em->persist($eventPast);
-
-                $em->persist($newEvent);
-            } else {
-                $this->displayError(
-                    $this->translator->trans(
-                        'member_not_found_anymore',
-                        [],
-                        'enum_event_generation_service_persist_response'
-                    )
-                );
-
-                return EventGenerationServicePersistResponse::MEMBER_NOT_FOUND_ANYMORE;
-            }
-        }
-        $generation->setApplied(true);
-        $em->persist($generation);
-        $em->flush();
-
-        return EventGenerationServicePersistResponse::SUCCESSFUL;
-    }
-
-    /**
      * @param NodikaConfiguration $nodikaConfiguration
      *
      * @return bool
@@ -499,6 +368,19 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         return true;
+    }
+
+    /**
+     * creates a lucky score.
+     *
+     * @param $totalPoints
+     * @param $reachedPoints
+     *
+     * @return float
+     */
+    private function convertToLuckyScore($totalPoints, $reachedPoints)
+    {
+        return ($reachedPoints / $totalPoints) * 100.0;
     }
 
     /**
@@ -633,51 +515,33 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         }
 
-        try {
-            //choose winner per bucket
-            $winnerPerBucket = [];
-            foreach ($bucketMembers as $bucketIndex => $members) {
-                if (1 === count($members)) {
-                    //fully filled out!
-                    $winnerPerBucket[$bucketIndex] = array_keys($members)[0];
-                } else {
-                    //we need to choose randomly!
-                    $randomValue = random_int(0, $bucketSize * 1000);
-                    $randomValue = $randomValue / 1000.0;
+        //choose winner per bucket
+        $winnerPerBucket = [];
+        foreach ($bucketMembers as $bucketIndex => $members) {
+            if (1 === count($members)) {
+                //fully filled out!
+                $winnerPerBucket[$bucketIndex] = array_keys($members)[0];
+            } else {
+                //we need to choose randomly!
+                $randomValue = random_int(0, $bucketSize * 1000);
+                $randomValue = $randomValue / 1000.0;
 
-                    asort($members);
-                    $totalPart = 0;
-                    foreach ($members as $memberId => $memberPart) {
-                        //directly set a winner, so we have a match for sure
-                        $winnerPerBucket[$bucketIndex] = $memberId;
+                asort($members);
+                $totalPart = 0;
+                foreach ($members as $memberId => $memberPart) {
+                    //directly set a winner, so we have a match for sure
+                    $winnerPerBucket[$bucketIndex] = $memberId;
 
-                        $totalPart += $memberPart;
-                        if ($totalPart > $randomValue) {
-                            // "winner" found
-                            break;
-                        }
+                    $totalPart += $memberPart;
+                    if ($totalPart > $randomValue) {
+                        // "winner" found
+                        break;
                     }
                 }
             }
-        } catch (\Exception $e) {
-            //try/catch because of random_int which throws an exception if not enough entropy can be found
-            $this->logger->log(Logger::CRITICAL, 'no randomness sources could be found');
         }
 
         return $winnerPerBucket;
-    }
-
-    /**
-     * creates a lucky score.
-     *
-     * @param $totalPoints
-     * @param $reachedPoints
-     *
-     * @return float
-     */
-    private function convertToLuckyScore($totalPoints, $reachedPoints)
-    {
-        return ($reachedPoints / $totalPoints) * 100.0;
     }
 
     /**
@@ -973,44 +837,13 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * @param NodikaOutput $nodikaOutput
-     * @param int $status
+     * tries to generate the events
+     * returns true if successful.
      *
-     * @return NodikaOutput
+     * @return Event[]
      */
-    private function returnNodikaError(NodikaOutput $nodikaOutput, $status)
+    public function generate(EventGeneration $eventGeneration)
     {
-        $this->displayError(
-            $this->translator->trans(
-                GenerationStatus::getTranslation($status),
-                [],
-                GenerationStatus::getTranslationDomainStatic()
-            )
-        );
-
-        $nodikaOutput->nodikaStatusCode = $status;
-
-        return $nodikaOutput;
-    }
-
-    /**
-     * @param NodikaOutput $nodikaOutput
-     *
-     * @return NodikaOutput
-     */
-    private function returnNodikaSuccess(NodikaOutput $nodikaOutput)
-    {
-        $status = GenerationStatus::SUCCESSFUL;
-        $this->displaySuccess(
-            $this->translator->trans(
-                GenerationStatus::getTranslation($status),
-                [],
-                GenerationStatus::getTranslationDomainStatic()
-            )
-        );
-
-        $nodikaOutput->nodikaStatusCode = $status;
-
-        return $nodikaOutput;
+        return [];
     }
 }

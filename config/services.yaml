@@ -34,7 +34,7 @@ services:
         arguments: ["@doctrine"]
 
     App\Service\EventGenerationService:
-        arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
+        arguments: ["@doctrine","@translator","@session"]
 
     App\Service\EmailService:
         arguments: ["@mailer", "@doctrine", "@logger","@twig","%env(CONTACT_EMAIL)%"]

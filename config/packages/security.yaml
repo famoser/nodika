@@ -11,9 +11,9 @@ security:
 
     providers:
         frontend_user_provider:
-            id: app.frontend_user_provider
+            id: App\Security\FrontendUserProvider
         admin_user_provider:
-            id: app.admin_user_provider
+            id: App\Security\AdminUserProvider
 
     firewalls:
         # disables authentication for assets and the profiler

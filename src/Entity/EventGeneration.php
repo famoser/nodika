@@ -59,6 +59,16 @@ class EventGeneration extends BaseEntity
     private $cronExpression = "* 8 * * *";
 
     /**
+     * how long the event lasts in seconds
+     * set it to 0 to expand to max size
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $eventLength;
+
+    /**
      * @var double
      *
      * @ORM\Column(type="decimal")
@@ -319,5 +329,21 @@ class EventGeneration extends BaseEntity
     public function setMembers($members): void
     {
         $this->members = $members;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEventLength(): int
+    {
+        return $this->eventLength;
+    }
+
+    /**
+     * @param int $eventLength
+     */
+    public function setEventLength(int $eventLength): void
+    {
+        $this->eventLength = $eventLength;
     }
 }

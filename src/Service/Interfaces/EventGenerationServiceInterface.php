@@ -11,13 +11,8 @@
 
 namespace App\Service\Interfaces;
 
+use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\Person;
-use App\Model\EventLineGeneration\GenerationResult;
-use App\Model\EventLineGeneration\Nodika\NodikaConfiguration;
-use App\Model\EventLineGeneration\Nodika\NodikaOutput;
-use App\Model\EventLineGeneration\RoundRobin\RoundRobinConfiguration;
-use App\Model\EventLineGeneration\RoundRobin\RoundRobinOutput;
 
 interface EventGenerationServiceInterface
 {
@@ -25,39 +20,7 @@ interface EventGenerationServiceInterface
      * tries to generate the events
      * returns true if successful.
      *
-     * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
-     *
-     * @return RoundRobinOutput
+     * @return Event[]
      */
-    public function generateRoundRobin(RoundRobinConfiguration $roundRobinConfiguration, $memberAllowedCallable);
-
-    /**
-     * tries to generate the events
-     * returns true if successful.
-     *
-     * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
-     *
-     * @return NodikaOutput
-     */
-    public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable);
-
-    /**
-     * persist the events associated with this generation in the database.
-     *
-     * @param EventGeneration $generation
-     * @param GenerationResult $generationResult
-     * @param Person $person
-     *
-     * @return bool
-     */
-    public function persist(EventGeneration $generation, GenerationResult $generationResult, Person $person);
-
-    /**
-     * @param NodikaConfiguration $nodikaConfiguration
-     *
-     * @return bool
-     */
-    public function setEventTypeDistribution(NodikaConfiguration $nodikaConfiguration);
+    public function generate(EventGeneration $eventGeneration);
 }

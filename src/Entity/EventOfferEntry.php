@@ -29,7 +29,7 @@ class EventOfferEntry extends BaseEntity
     /**
      * @var EventOffer
      *
-     * @ORM\ManyToOne(targetEntity="EventOffer", inversedBy="eventOfferEntries")
+     * @ORM\ManyToOne(targetEntity="EventOffer", inversedBy="entries")
      */
     private $eventOffer;
 
@@ -39,6 +39,27 @@ class EventOfferEntry extends BaseEntity
      * @ORM\ManyToOne(targetEntity="Event")
      */
     private $event;
+
+    /**
+     * @var FrontendUser
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     */
+    private $targetFrontendUser;
+
+    /**
+     * @var Member
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Member")
+     */
+    private $targetMember;
+
+    /**
+     * @var EventOfferAuthorization
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\EventOfferAuthorization", inversedBy="authorizes")
+     */
+    private $eventOfferAuthorization;
 
     /**
      * @return EventOffer
@@ -70,6 +91,54 @@ class EventOfferEntry extends BaseEntity
     public function setEvent(Event $event): void
     {
         $this->event = $event;
+    }
+
+    /**
+     * @return FrontendUser
+     */
+    public function getTargetFrontendUser(): FrontendUser
+    {
+        return $this->targetFrontendUser;
+    }
+
+    /**
+     * @param FrontendUser $targetFrontendUser
+     */
+    public function setTargetFrontendUser(FrontendUser $targetFrontendUser): void
+    {
+        $this->targetFrontendUser = $targetFrontendUser;
+    }
+
+    /**
+     * @return Member
+     */
+    public function getTargetMember(): Member
+    {
+        return $this->targetMember;
+    }
+
+    /**
+     * @param Member $targetMember
+     */
+    public function setTargetMember(Member $targetMember): void
+    {
+        $this->targetMember = $targetMember;
+    }
+
+    /**
+     * @return EventOfferAuthorization
+     */
+    public function getEventOfferAuthorization(): EventOfferAuthorization
+    {
+        return $this->eventOfferAuthorization;
+    }
+
+    /**
+     * @param EventOfferAuthorization $eventOfferAuthorization
+     */
+    public function setEventOfferAuthorization(EventOfferAuthorization $eventOfferAuthorization): void
+    {
+        $this->eventOfferAuthorization = $eventOfferAuthorization;
     }
 
 }

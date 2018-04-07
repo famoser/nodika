@@ -35,21 +35,7 @@ class EventOffer extends BaseEntity
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $openDateTime;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $closeDateTime;
+    private $message;
 
     /**
      * @var int
@@ -59,46 +45,26 @@ class EventOffer extends BaseEntity
     private $status = OfferStatus::CREATING;
 
     /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     */
-    private $offeredByMember;
-
-    /**
-     * @var Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person")
-     */
-    private $offeredByPerson;
-
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     */
-    private $offeredToMember;
-
-    /**
-     * @var Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person")
-     */
-    private $offeredToPerson;
-
-    /**
      * @var EventOfferEntry[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventOfferEntry", mappedBy="eventOffer")
      */
-    private $eventOfferEntries;
+    private $entries;
+
+    /**
+     * @var EventOfferAuthorization[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\EventOfferAuthorization", mappedBy="eventOffer")
+     */
+    private $authorizations;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->eventOfferEntries = new ArrayCollection();
+        $this->entries = new ArrayCollection();
+        $this->authorizations = new ArrayCollection();
     }
 
     /**
@@ -150,164 +116,25 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get status.
-     *
-     * @return int
-     */
-    public function getStatusText()
-    {
-        return OfferStatus::getTranslation($this->status);
-    }
-
-    /**
-     * Get offeredByMember.
-     *
-     * @return Member
-     */
-    public function getOfferedByMember()
-    {
-        return $this->offeredByMember;
-    }
-
-    /**
-     * Set offeredByMember.
-     *
-     * @param Member $offeredByMember
-     *
-     * @return EventOffer
-     */
-    public function setOfferedByMember(Member $offeredByMember = null)
-    {
-        $this->offeredByMember = $offeredByMember;
-
-        return $this;
-    }
-
-    /**
-     * Get offeredByPerson.
-     *
-     * @return Person
-     */
-    public function getOfferedByPerson()
-    {
-        return $this->offeredByPerson;
-    }
-
-    /**
-     * Set offeredByPerson.
-     *
-     * @param Person $offeredByPerson
-     *
-     * @return EventOffer
-     */
-    public function setOfferedByPerson(Person $offeredByPerson = null)
-    {
-        $this->offeredByPerson = $offeredByPerson;
-
-        return $this;
-    }
-
-    /**
-     * Get offeredToMember.
-     *
-     * @return Member
-     */
-    public function getOfferedToMember()
-    {
-        return $this->offeredToMember;
-    }
-
-    /**
-     * Set offeredToMember.
-     *
-     * @param Member $offeredToMember
-     *
-     * @return EventOffer
-     */
-    public function setOfferedToMember(Member $offeredToMember = null)
-    {
-        $this->offeredToMember = $offeredToMember;
-
-        return $this;
-    }
-
-    /**
-     * Get offeredToPerson.
-     *
-     * @return Person
-     */
-    public function getOfferedToPerson()
-    {
-        return $this->offeredToPerson;
-    }
-
-    /**
-     * Set offeredToPerson.
-     *
-     * @param Person $offeredToPerson
-     *
-     * @return EventOffer
-     */
-    public function setOfferedToPerson(Person $offeredToPerson = null)
-    {
-        $this->offeredToPerson = $offeredToPerson;
-
-        return $this;
-    }
-
-    /**
-     * Add eventOfferEntry.
-     *
-     * @param EventOfferEntry $eventOfferEntry
-     *
-     * @return EventOffer
-     */
-    public function addEventOfferEntry(EventOfferEntry $eventOfferEntry)
-    {
-        $this->eventOfferEntries[] = $eventOfferEntry;
-
-        return $this;
-    }
-
-    /**
-     * Remove eventOfferEntry.
-     *
-     * @param EventOfferEntry $eventOfferEntry
-     */
-    public function removeEventOfferEntry(EventOfferEntry $eventOfferEntry)
-    {
-        $this->eventOfferEntries->removeElement($eventOfferEntry);
-    }
-
-    /**
-     * Get eventOfferEntries.
-     *
-     * @return \Doctrine\Common\Collections\Collection|EventOfferEntry[]
-     */
-    public function getEventOfferEntries()
-    {
-        return $this->eventOfferEntries;
-    }
-    /**
      * Get description.
      *
      * @return string
      */
-    public function getDescription()
+    public function getMessage()
     {
-        return $this->description;
+        return $this->message;
     }
 
     /**
      * Set description.
      *
-     * @param string $description
+     * @param string $message
      *
      * @return EventOffer
      */
-    public function setDescription($description)
+    public function setMessage($message)
     {
-        $this->description = $description;
+        $this->message = $message;
 
         return $this;
     }
@@ -326,5 +153,39 @@ class EventOffer extends BaseEntity
     public function setCloseDateTime($closeDateTime)
     {
         $this->closeDateTime = $closeDateTime;
+    }
+
+    /**
+     * Get eventOfferEntries.
+     *
+     * @return ArrayCollection|EventOfferEntry[]
+     */
+    public function getEntries()
+    {
+        return $this->entries;
+    }
+
+    /**
+     * @param EventOfferEntry[]|ArrayCollection $entries
+     */
+    public function setEntries($entries): void
+    {
+        $this->entries = $entries;
+    }
+
+    /**
+     * @return EventOfferAuthorization[]|ArrayCollection
+     */
+    public function getAuthorizations()
+    {
+        return $this->authorizations;
+    }
+
+    /**
+     * @param EventOfferAuthorization[]|ArrayCollection $authorizations
+     */
+    public function setAuthorizations($authorizations): void
+    {
+        $this->authorizations = $authorizations;
     }
 }
