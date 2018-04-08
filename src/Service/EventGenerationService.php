@@ -15,13 +15,13 @@ use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
+use App\Exception\GenerationException;
 use App\Model\EventGenerationService\IdealQueueMember;
 use App\Service\Interfaces\EventGenerationServiceInterface;
 use Cron\CronExpression;
 
 class EventGenerationService implements EventGenerationServiceInterface
 {
-    const ACCURACY_THRESHOLD = 0.0001;
     const RANDOM_ACCURACY = 1000;
 
     /**
@@ -385,88 +385,103 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param float $dayValue the value of this day for $distributedPointsArray calculation
      * @param int $dayCount the amount of
      * @param int $dayKey the key of this day used in $distributedDaysArray
+     * @throws GenerationException
      */
     private function distributeDays(&$partiesArray, &$distributedDaysArray, $dayValue, $dayCount, $dayKey)
     {
-        //get holiday assignment
-        $bucketAssignment = $this->bucketsAlgorithm($partiesArray, $dayCount);
+        //prepare party sizes
+        $myParties = [];
+        foreach ($partiesArray as $partyId => $partySize) {
+            $myParties[$partyId] = (int)($partySize * 10000);
+        }
+
+        //get assignment
+        $bucketAssignment = $this->bucketsAlgorithm($myParties, $dayCount);
+
         //add points to $distributedPointsArray
-        foreach ($bucketAssignment as $bucketId => $memberId) {
-            $partiesArray[$memberId] -= $dayValue;
-            $distributedDaysArray[$memberId][$dayKey] += 1;
+        foreach ($bucketAssignment as $memberId => $bucketCount) {
+            $partiesArray[$memberId] -= $dayValue * $bucketCount;
+            $distributedDaysArray[$memberId][$dayKey] += $bucketCount;
         }
     }
 
     /**
+     * distribute a fixed amount of elements to weighted parties
+     *
      * the buckets algorithm puts the parties into equal size buckets
-     * according to the share of one party into the bucket it secures that bucket with that probability
+     * according to the share of one party it secures that bucket with that probability
      * the parties are distributed to the buckets to be in as few buckets as possible.
      *
-     * @param array $parties is an array of the form (int => double)
+     * @param array $parties is an array of the form (partyId => relativeSize) (int => int)
      * @param int $bucketsCount the number of buckets to distribute
      *
-     * @return array is an array of the form (int => int)
+     * @return array is an array of the form (partyId => bucketsAssigned) (int => int)
+     * @throws GenerationException
      */
     private function bucketsAlgorithm($parties, $bucketsCount)
     {
-        //prepare party sizes
-        $myParties = [];
-        foreach ($parties as $partyId => $partySize) {
-            $myParties[$partyId] = (int)($partySize * 10000);
-        }
+        //result
+        $partyBucketAssignments = [];
 
-        //prepare parties (and sort by size)
-        $sizes = [];
+        //prepare parties
+        $assignmentSizes = [];
         $totalSize = 0;
-        foreach ($myParties as $partyId => $partySize) {
-            $sizes[$partySize][] = $partyId;
+        foreach ($parties as $partyId => $partySize) {
+            $assignmentSizes[$partySize][] = $partyId;
             $totalSize += $partySize;
         }
 
-        $totalSize2 = 0;
-        foreach ($sizes as $size => $val) {
-            $totalSize2 += $size * count($val);
-        }
-
-        //bucket behaves differently depending if more parties or more space is available
-        if ($bucketsCount < count($myParties)) {
-            krsort($sizes);
-
-            //issue: if one small party is the last, he will have to distribute over multiple buckets!
-        } else {
-            ksort($sizes);
-        }
-
-        //prepare buckets
+        //calculate bucket size
         $bucketSize = (float)$totalSize / $bucketsCount;
 
-        $remainingBucketSizes = [];
-        $bucketMembers = [];
-        for ($i = 0; $i < $bucketsCount; ++$i) {
-            $remainingBucketSizes[$i] = $bucketSize;
-            $bucketMembers[$i] = [];
+        ### go once over all parties and distribute "full" buckets, so get rid of guaranteed assignments
+
+        $distributedBuckets = 0;
+        $missingAssignments = [];
+        foreach ($assignmentSizes as $partySize => $partiesOfThisSize) {
+            //calculate how many full buckets
+            $times = (int)$partySize / $bucketSize;
+            $newPartySize = (int)($partySize - $bucketSize * $times);
+
+            //assign full buckets, and put rest in missingAssignments
+            foreach ($partiesOfThisSize as $currentPartyId) {
+                $missingAssignments[$newPartySize][] = $currentPartyId;
+                $partyBucketAssignments[$currentPartyId] = $times;
+                $distributedBuckets += $times;
+            }
         }
 
-        $bucketsAssigned = 0;
-        $totalSizes = 0;
+        ### distribute part buckets, ensure the parties are in as few buckets as possible
+
+        //sort by size so big parties are in one bucket for sure
+        krsort($assignmentSizes);
+
+        //create buckets
+        $buckets = [];
+        $bucketsNeeded = $bucketsCount - $distributedBuckets;
+        for ($i = 0; $i < $bucketsNeeded; $i++) {
+            $buckets[$i] = $bucketSize;
+        }
+
         //distribute parties to buckets
-        foreach ($sizes as $partySize => $partiesOfThisSize) {
-            foreach ($partiesOfThisSize as $party) {
-                $totalSizes += $partySize;
-                $myPartSize = $partySize;
-                $max = 10000;
-                while ($myPartSize + static::ACCURACY_THRESHOLD > 0) {
-                    if ($max-- <= 0) {
+        $bucketMembers = [];
+        foreach ($assignmentSizes as $partySize => $partiesOfThisSize) {
+            foreach ($partiesOfThisSize as $currentPartyId) {
+                $currentPartSize = $partySize;
+
+                $maxIterations = 50000;
+                while ($currentPartSize > 0) {
+                    if ($maxIterations-- <= 0) {
                         //wops, no way! terminate I guess?
-                        break;
+                        throw new GenerationException(GenerationStatus::TIMEOUT);
                     }
 
                     //find biggest remaining bucket
                     $biggestRemaining = 0;
                     $biggestRemainingIndex = 0;
                     for ($i = 0; $i < $bucketsCount; ++$i) {
-                        if ($biggestRemaining < $remainingBucketSizes[$i]) {
-                            $biggestRemaining = $remainingBucketSizes[$i];
+                        if ($biggestRemaining < $buckets[$i]) {
+                            $biggestRemaining = $buckets[$i];
                             $biggestRemainingIndex = $i;
                             if ($biggestRemaining === $bucketSize) {
                                 break;
@@ -474,53 +489,63 @@ class EventGenerationService implements EventGenerationServiceInterface
                         }
                     }
 
-                    if ($biggestRemaining + static::ACCURACY_THRESHOLD > $myPartSize) {
-                        //party is fully resolved
-                        $bucketMembers[$biggestRemainingIndex][$party] = $myPartSize;
+                    //check if party can be placed in bucket fully
+                    //0.0001 is the accuracy threshold
+                    if ($biggestRemaining + 0.0001 > $currentPartSize) {
+                        $bucketMembers[$biggestRemainingIndex][$currentPartyId] = $currentPartSize;
 
                         //adapt bucket sizes
-                        $remainingBucketSizes[$biggestRemainingIndex] -= $myPartSize;
-                        ++$bucketsAssigned;
+                        $buckets[$biggestRemainingIndex] -= $currentPartSize;
 
                         break;
-                    }
-                    $bucketMembers[$biggestRemainingIndex][$party] = $biggestRemaining;
-                    //adapt bucket sizes
-                    $myPartSize -= $biggestRemaining;
-                    $remainingBucketSizes[$biggestRemainingIndex] = 0;
+                    } else {
+                        //party does not fit fully into bucket, therefore we have to continue
+                        $currentPartSize -= $biggestRemaining;
 
-                    ++$bucketsAssigned;
-                }
-            }
-        }
+                        $bucketMembers[$biggestRemainingIndex][$currentPartyId] = $biggestRemaining;
 
-        //choose winner per bucket
-        $winnerPerBucket = [];
-        foreach ($bucketMembers as $bucketIndex => $members) {
-            if (1 === count($members)) {
-                //fully filled out!
-                $winnerPerBucket[$bucketIndex] = array_keys($members)[0];
-            } else {
-                //we need to choose randomly!
-                $randomValue = random_int(0, $bucketSize * 1000);
-                $randomValue = $randomValue / 1000.0;
-
-                asort($members);
-                $totalPart = 0;
-                foreach ($members as $memberId => $memberPart) {
-                    //directly set a winner, so we have a match for sure
-                    $winnerPerBucket[$bucketIndex] = $memberId;
-
-                    $totalPart += $memberPart;
-                    if ($totalPart > $randomValue) {
-                        // "winner" found
-                        break;
+                        //adapt bucket sizes
+                        $buckets[$biggestRemainingIndex] = 0;
                     }
                 }
             }
         }
 
-        return $winnerPerBucket;
+        ### randomly assign a bucket to a containing member
+
+        //shuffle array
+        $bucketIds = array_keys($bucketMembers);
+        shuffle($buckets);
+        $step = $bucketSize / count($buckets);
+        $currentStep = 0;
+        foreach ($bucketIds as $bucketId) {
+            $members = $bucketMembers[$bucketId];
+
+            //sort by value size, so big parties are more likely to get assigned
+            arsort($members);
+            $memberIds = array_keys($members);
+
+            //chose member inside threshold range
+            $currentSize = 0;
+            $chosenMember = $memberIds[0];
+            foreach ($memberIds as $memberId) {
+                if ($currentSize > $currentStep) {
+                    //take member from last iteration
+                    break;
+                }
+
+                $chosenMember = $memberId;
+                $currentSize += $members[$memberId];
+            }
+
+            //preserve result
+            $partyBucketAssignments[$chosenMember] += 1;
+
+            //increase threshold
+            $currentStep += $step;
+        }
+
+        return $partyBucketAssignments;
     }
 
     /**
@@ -778,41 +803,6 @@ class EventGenerationService implements EventGenerationServiceInterface
                 break;
             }
         }
-
-        $startDateTime = clone $nodikaConfiguration->startDateTime;
-
-        $assignedEventCount = 0;
-        $queueIndex = 0;
-        while ($startDateTime < $nodikaConfiguration->endDateTime) {
-            $endDate = clone $startDateTime;
-            $endDate = $this->addInterval($endDate, $nodikaConfiguration);
-
-            $targetMember = $idealQueueMembers[$idealQueue[$queueIndex]];
-
-            $event = new GeneratedEvent();
-            $event->memberId = $targetMember->id;
-            $event->startDateTime = $startDateTime;
-            $event->endDateTime = $endDate;
-            $generationResult->events[] = $event;
-
-            ++$queueIndex;
-            ++$assignedEventCount;
-            $startDateTime = clone $startDateTime;
-            $startDateTime = $this->addInterval($startDateTime, $nodikaConfiguration);
-
-            if (!($queueIndex < $totalEvents)) {
-                break;
-            }
-        }
-
-        //prepare RR result
-        $nodikaOutput->endDateTime = $startDateTime;
-        $nodikaOutput->lengthInHours = $nodikaConfiguration->lengthInHours;
-        $nodikaOutput->memberConfiguration = $members;
-        $nodikaOutput->beforeEvents = array_merge((array)($nodikaConfiguration->beforeEvents), $idealQueue);
-        $nodikaOutput->generationResult = $generationResult;
-
-        return $this->returnNodikaSuccess($nodikaOutput);
     }
 
     private function constructEvents(EventGeneration $eventGeneration)
@@ -876,6 +866,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                     $event->getStartDateTime() >= $dateException->getStartDateTime() &&
                     $event->getStartDateTime() <= $dateException->getEndDateTime()
                 ) {
+                    //apply the special stuff
                     $event->setEventType($dateException->getEventType());
                 }
             }

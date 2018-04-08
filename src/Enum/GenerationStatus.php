@@ -18,5 +18,6 @@ class GenerationStatus extends BaseEnum
     const SUCCESSFUL = 1;
     const NO_MATCHING_MEMBER = 2;
     const NO_ALLOWED_MEMBER_FOR_EVENT = 3;
+    const TIMEOUT = 4;
     const UNKNOWN_ERROR = 10;
 }
