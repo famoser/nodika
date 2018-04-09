@@ -28,6 +28,13 @@ trait EventGenerationTarget
     private $generationScore;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $order = 1;
+
+    /**
      * @return float
      */
     public function getWeight(): float
@@ -57,5 +64,21 @@ trait EventGenerationTarget
     public function setGenerationScore(?float $generationScore): void
     {
         $this->generationScore = $generationScore;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrder(): int
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param int $order
+     */
+    public function setOrder(int $order): void
+    {
+        $this->order = $order;
     }
 }

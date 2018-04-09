@@ -23,18 +23,18 @@ class QueueGenerator
 
     /**
      * IdealQueueHelper constructor.
-     * @param array $queueMemberSize the members of the queue (memberId => relativeSize) (int => double)
+     * @param array $memberRelativeSize the members of the queue (memberId => relativeSize) (int => double)
      */
-    public function __construct($queueMemberSize)
+    public function __construct($memberRelativeSize)
     {
         $totalSum = 0;
-        foreach ($queueMemberSize as $size) {
+        foreach ($memberRelativeSize as $size) {
             $totalSum += $size;
         }
         $this->totalScore = $totalSum;
 
         //construct queue
-        foreach ($queueMemberSize as $member => $size) {
+        foreach ($memberRelativeSize as $member => $size) {
             $queueEntry = new QueueEntry($member, $size, $totalSum);
             $this->queueEntries[$queueEntry->getPayload()] = $queueEntry;
         }

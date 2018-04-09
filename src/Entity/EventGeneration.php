@@ -64,6 +64,13 @@ class EventGeneration extends BaseEntity
     private $endCronExpression = "* 8 * * *";
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $differentiateByEventType;
+
+    /**
      * @var double
      *
      * @ORM\Column(type="decimal")
@@ -90,6 +97,13 @@ class EventGeneration extends BaseEntity
      * @ORM\Column(type="decimal")
      */
     private $holidayWeight = 1;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $mindPreviousEvents = true;
 
     /**
      * @var int
@@ -340,5 +354,37 @@ class EventGeneration extends BaseEntity
     public function setMembers($members): void
     {
         $this->members = $members;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getMindPreviousEvents(): bool
+    {
+        return $this->mindPreviousEvents;
+    }
+
+    /**
+     * @param bool $mindPreviousEvents
+     */
+    public function setMindPreviousEvents(bool $mindPreviousEvents): void
+    {
+        $this->mindPreviousEvents = $mindPreviousEvents;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getDifferentiateByEventType(): bool
+    {
+        return $this->differentiateByEventType;
+    }
+
+    /**
+     * @param bool $differentiateByEventType
+     */
+    public function setDifferentiateByEventType(bool $differentiateByEventType): void
+    {
+        $this->differentiateByEventType = $differentiateByEventType;
     }
 }

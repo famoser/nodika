@@ -48,6 +48,11 @@ class SearchModel
      */
     private $maxResults = 3000;
 
+    /**
+     * @var bool
+     */
+    private $invertOrder = false;
+
     public function __construct($size = "month")
     {
         $this->startDateTime = new \DateTime();
@@ -164,5 +169,21 @@ class SearchModel
     public function setMaxResults(int $maxResults): void
     {
         $this->maxResults = $maxResults;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInvertOrder(): bool
+    {
+        return $this->invertOrder;
+    }
+
+    /**
+     * @param bool $invertOrder
+     */
+    public function setInvertOrder(bool $invertOrder): void
+    {
+        $this->invertOrder = $invertOrder;
     }
 }
