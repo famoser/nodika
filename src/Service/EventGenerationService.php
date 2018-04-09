@@ -15,6 +15,8 @@ use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
+use App\EventGeneration\EventTarget;
+use App\EventGeneration\QueueGenerator;
 use App\Exception\GenerationException;
 use App\Model\EventGenerationService\IdealQueueMember;
 use App\Service\Interfaces\EventGenerationServiceInterface;
@@ -874,9 +876,17 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
     }
 
-    private function constructTargetQueue(EventGeneration $eventGeneration)
+    private function getEventTargets(EventGeneration $eventGeneration)
     {
-
+        $targets = [];
+        $currentId = 1;
+        foreach ($eventGeneration->getFrontendUsers() as $frontendUser) {
+            $targets[] = EventTarget::fromFrontendUser($currentId++, $frontendUser);
+        }
+        foreach ($eventGeneration->getMembers() as $member) {
+            $targets[] = EventTarget::fromMember($currentId++, $member);
+        }
+        return $targets;
     }
 
     /**
@@ -891,6 +901,10 @@ class EventGenerationService implements EventGenerationServiceInterface
         $events = $this->constructEvents($eventGeneration);
         $this->assignEventType($eventGeneration, $events);
         $this->processExceptions($eventGeneration, $events);
+
+        $targets = $this->getEventTargets($eventGeneration);
+
+        $queueGenerator = new QueueGenerator();
 
         return [];
     }

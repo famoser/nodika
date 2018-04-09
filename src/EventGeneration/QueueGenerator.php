@@ -17,29 +17,65 @@ class QueueGenerator
     private $queueEntries;
 
     /**
+     * @var int|mixed
+     */
+    private $totalScore;
+
+    /**
      * IdealQueueHelper constructor.
      * @param array $queueMemberSize the members of the queue (memberId => relativeSize) (int => double)
-     * @param array $initQueueMemberSize if you want to specify what happened before
      */
-    public function __construct($queueMemberSize, $fixedStart = [])
+    public function __construct($queueMemberSize)
     {
         $totalSum = 0;
         foreach ($queueMemberSize as $size) {
             $totalSum += $size;
         }
+        $this->totalScore = $totalSum;
 
         //construct queue
         foreach ($queueMemberSize as $member => $size) {
             $queueEntry = new QueueEntry($member, $size, $totalSum);
             $this->queueEntries[$queueEntry->getPayload()] = $queueEntry;
         }
+    }
 
-        //ensure the elements are unique
-        $fixedStart = array_unique($fixedStart, SORT_NUMERIC);
+    /**
+     * @param array $entries if you want to specify what happened before
+     */
+    public function warmUp($entries)
+    {
+        //preserve original scores
+        $originalScores = [];
+        foreach ($this->queueEntries as $id => $queueEntry) {
+            $originalScores[$id] = $queueEntry->getScore();
+        }
 
-        //force next
-        foreach ($fixedStart as $item) {
-            $this->forceNext($item);
+        //simulate queue for $entries
+        $accessed = [];
+        foreach ($entries as $entry) {
+            if (isset($this->queueEntries[$entry])) {
+                $this->incrementAll();
+                $this->queueEntries[$entry]->issue();
+                $accessed[$entry] = true;
+            }
+        }
+
+        //reset scores of those which did not occur in $entries
+        $totalScore = 0;
+        foreach ($this->queueEntries as $id => $entry) {
+            if (!isset($accessed[$id])) {
+                $entry->setScore($originalScores[$id]);
+            }
+            $totalScore += $entry->getScore();
+        }
+
+        //normalize scores
+        if ($totalScore != 0) {
+            $diff = $this->totalScore / (double)$totalScore;
+            foreach ($this->queueEntries as $queueEntry) {
+                $queueEntry->setScore($queueEntry->getScore() * $diff);
+            }
         }
     }
 

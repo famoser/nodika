@@ -28,13 +28,6 @@ trait EventGenerationTarget
     private $generationScore;
 
     /**
-     * @var \DateTime[]
-     *
-     * @ORM\Column(type="decimal", nullable=true)
-     */
-    public $holidays;
-
-    /**
      * @return float
      */
     public function getWeight(): float
