@@ -28,7 +28,6 @@ class CommunicationType extends BaseAbstractType
     {
         $builder->add("phone", TextType::class, ["required" => false]);
         $builder->add("email", EmailType::class);
-        $builder->add("webpage", UrlType::class, ["required" => false]);
     }
 
     /**

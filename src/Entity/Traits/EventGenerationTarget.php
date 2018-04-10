@@ -32,7 +32,7 @@ trait EventGenerationTarget
      *
      * @ORM\Column(type="integer")
      */
-    private $order = 1;
+    private $defaultOrder = 1;
 
     /**
      * @return float
@@ -69,16 +69,16 @@ trait EventGenerationTarget
     /**
      * @return int
      */
-    public function getOrder(): int
+    public function getDefaultOrder(): int
     {
-        return $this->order;
+        return $this->defaultOrder;
     }
 
     /**
-     * @param int $order
+     * @param int $defaultOrder
      */
-    public function setOrder(int $order): void
+    public function setDefaultOrder(int $defaultOrder): void
     {
-        $this->order = $order;
+        $this->defaultOrder = $defaultOrder;
     }
 }

@@ -70,39 +70,9 @@
                     </a>
                 {% endif %}
 
-                {# case 2: not in an active organisation; probably failed setup? #}
-                {% if organisation is not defined %}
-                    <a class="tile tile-4 default-color" href="{{ path("help_users") }}">
-                        <h3>{{ "index.welcome"|trans }}</h3>
-                        <p>
-                            {{ "index.welcome_description"|trans }}
-                        </p>
-                    </a>
-                    <a class="tile tile-4 default-color" href="mailto:support@nodika.ch">
-                        <h3>{{ "index.questions"|trans }}</h3>
-                        <p>
-                            {{ "index.questions_description"|trans }}
-                            <br/>
-                            <b>support@nodika.ch</b>
-                        </p>
-                    </a>
-                {% endif %}
-
-                {% for organisation in change_organisations %}
-                    <a class="tile tile-2 {% if loop.index0 % 2 == 0 %}tile-left{% else %}tile-right{% endif %} default-color"
-                       href="{{ path("organisation_change_to", {"organisation" : organisation.id}) }}">
-                        <h3>{{ "index.change_organisation"|trans }}</h3>
-                        <p>
-                            {{ "index.change_organisation_description"|trans }}
-                            <br/>
-                            <b>{{ organisation.name }}</b>
-                        </p>
-                    </a>
-                {% endfor %}
-
                 {% for organisation in leading_organisations %}
                     <a class="tile tile-4 default-color"
-                       href="{{ path("administration_organisation_administer", {"organisation" : organisation.id}) }}">
+                       href="{{ path("administration_index") }}">
                         <h3>{{ "index.administer_organisations"|trans }}</h3>
                         <p>
                             {{ "index.administer_organisations_description"|trans }}

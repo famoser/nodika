@@ -16,6 +16,8 @@ use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\StartEndTrait;
 use App\Entity\Traits\ThingTrait;
+use App\Enum\GenerationStatus;
+use App\Enum\GenerationStep;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -110,7 +112,14 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private $status = GenerationStatus::STARTED;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $step = GenerationStep::CHOOSE_TARGETS;
 
     /**
      * @var EventLine
@@ -139,6 +148,13 @@ class EventGeneration extends BaseEntity
      * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationMember", mappedBy="eventGeneration")
      */
     private $members;
+
+    /**
+     * @var EventGenerationConflictAvoid[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationConflictAvoid", mappedBy="eventGeneration")
+     */
+    private $conflictAvoids;
 
     /**
      * @var Event[]|ArrayCollection
@@ -386,5 +402,37 @@ class EventGeneration extends BaseEntity
     public function setDifferentiateByEventType(bool $differentiateByEventType): void
     {
         $this->differentiateByEventType = $differentiateByEventType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStep(): int
+    {
+        return $this->step;
+    }
+
+    /**
+     * @param int $step
+     */
+    public function setStep(int $step): void
+    {
+        $this->step = $step;
+    }
+
+    /**
+     * @return EventGenerationConflictAvoid[]|ArrayCollection
+     */
+    public function getConflictAvoids()
+    {
+        return $this->conflictAvoids;
+    }
+
+    /**
+     * @param EventGenerationConflictAvoid[]|ArrayCollection $conflictAvoids
+     */
+    public function setConflictAvoids($conflictAvoids): void
+    {
+        $this->conflictAvoids = $conflictAvoids;
     }
 }

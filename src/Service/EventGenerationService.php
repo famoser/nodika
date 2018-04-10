@@ -258,15 +258,15 @@ class EventGenerationService implements EventGenerationServiceInterface
             $event->setGeneratedBy($eventGeneration);
             $result[] = $event;
 
-            $currentStartDate = $startExpression->getNextRunDate();
-            $currentEndDate = $endExpression->getNextRunDate();
+            $currentStartDate = $startExpression->getNextRunDate($currentStartDate);
+            $currentEndDate = $endExpression->getNextRunDate($currentEndDate);
         }
 
         return $result;
     }
 
     /**
-     * applies specified exceptions to algorithm
+     * assigns the default event types (weekdays, saturdays, sundays)
      *
      * @param EventGeneration $eventGeneration
      * @param Event[] $events
@@ -301,7 +301,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                     $event->getStartDateTime() <= $dateException->getEndDateTime()
                 ) {
                     //apply the special stuff
-                    $event->setEventType($dateException->getEventType());
+                    if ($dateException->getEventType() != null)
+                        $event->setEventType($dateException->getEventType());
                 }
             }
 
@@ -339,7 +340,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         /** @var EventTarget[][] $orderable */
         $orderable = [];
         foreach ($eventTargets as $eventTarget) {
-            $orderable[$eventTarget->getTarget()->getOrder()][] = $eventTarget;
+            $orderable[$eventTarget->getTarget()->getDefaultOrder()][] = $eventTarget;
         }
 
         ksort($orderable);
@@ -492,6 +493,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $queueGenerator->warmUp($warmUpEvents);
         }
 
+        //assign events
         if (!$eventGeneration->getDifferentiateByEventType()) {
             foreach ($events as $event) {
                 $target = $this->getEventTargetOfEvent($event, $orderedTargets);

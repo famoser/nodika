@@ -71,7 +71,7 @@ trait EventTrait
     /**
      * @var EventGeneration|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\EventLineGeneration", inversedBy="generatedEvents")
+     * @ORM\ManyToOne(targetEntity="EventGeneration", inversedBy="generatedEvents")
      */
     private $generatedBy;
 

@@ -13,12 +13,12 @@ namespace App\Enum;
 
 use App\Enum\Base\BaseEnum;
 
-class GenerationStatus extends BaseEnum
+class GenerationStep extends BaseEnum
 {
-    const STARTED = 0;
-    const SUCCESSFUL = 1;
-    const NO_MATCHING_MEMBER = 2;
-    const NO_ALLOWED_MEMBER_FOR_EVENT = 3;
-    const TIMEOUT = 4;
-    const UNKNOWN_ERROR = 10;
+    const SET_START_END = 0;
+    const CHOOSE_TARGETS = 1;
+    const AVOID_CONFLICTS = 2;
+    const SET_WEEKDAYS = 3;
+    const CONFIRM = 4;
+    const FINISHED = 5;
 }

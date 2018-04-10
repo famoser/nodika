@@ -30,23 +30,23 @@ class EventGenerationDateException extends BaseEntity
     use StartEndTrait;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var int|null
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $eventType = EventType::UNSPECIFIED;
+    private $eventType = null;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getEventType(): int
+    public function getEventType(): ?int
     {
         return $this->eventType;
     }
 
     /**
-     * @param int $eventType
+     * @param int|null $eventType
      */
-    public function setEventType(int $eventType): void
+    public function setEventType(?int $eventType): void
     {
         $this->eventType = $eventType;
     }
