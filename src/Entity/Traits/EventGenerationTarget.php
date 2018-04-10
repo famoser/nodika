@@ -30,7 +30,7 @@ trait EventGenerationTarget
     /**
      * @var int
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="int")
      */
     private $defaultOrder = 1;
 
