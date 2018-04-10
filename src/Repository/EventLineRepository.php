@@ -84,7 +84,7 @@ class EventLineRepository extends EntityRepository
                 }
             }
 
-
+            $qb->orderBy("e.startDateTime", $searchEventModel->isInvertOrder() ? "DESC" : "ASC");
             $qb->setMaxResults($searchEventModel->getMaxResults());
 
             $eventLineModel->events = $qb->getQuery()->getResult();

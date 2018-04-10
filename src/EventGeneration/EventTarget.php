@@ -13,53 +13,51 @@ use App\Entity\EventGenerationFrontendUser;
 use App\Entity\EventGenerationMember;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
+use App\Entity\Traits\EventGenerationTarget;
 
 class EventTarget
 {
+    const NONE_IDENTIFIER = 0;
+    private static $nextIdentifier = 1;
+
     /**
      * @var int
      */
     private $identifier;
 
     /**
-     * @var EventGenerationFrontendUser
+     * @var EventGenerationFrontendUser|null
      */
     private $frontendUser;
 
     /**
-     * @var EventGenerationMember
+     * @var EventGenerationMember|null
      */
     private $member;
 
-    /**
-     * EventTarget constructor.
-     * @param $identifier
-     */
-    public function __construct($identifier)
+    public function __construct()
     {
-        $this->identifier = $identifier;
+        $this->identifier = static::$nextIdentifier++;
     }
 
     /**
-     * @param $identifier
      * @param EventGenerationFrontendUser $frontendUser
      * @return static
      */
-    public static function fromFrontendUser($identifier, EventGenerationFrontendUser $frontendUser)
+    public static function fromFrontendUser(EventGenerationFrontendUser $frontendUser)
     {
-        $new = new static($identifier);
+        $new = new static();
         $new->frontendUser = $frontendUser;
         return $new;
     }
 
     /**
-     * @param $identifier
      * @param EventGenerationMember $member
      * @return static
      */
-    public static function fromMember($identifier, EventGenerationMember $member)
+    public static function fromMember(EventGenerationMember $member)
     {
-        $new = new static($identifier);
+        $new = new static();
         $new->member = $member;
         return $new;
     }
@@ -70,5 +68,38 @@ class EventTarget
     public function getIdentifier(): int
     {
         return $this->identifier;
+    }
+
+    /**
+     * @return EventGenerationTarget
+     */
+    public function getTarget()
+    {
+        if ($this->frontendUser == null) {
+            return $this->member;
+        }
+        return $this->frontendUser;
+    }
+
+    /**
+     * @return FrontendUser|null
+     */
+    public function getFrontendUser(): ?FrontendUser
+    {
+        if ($this->frontendUser != null) {
+            return $this->frontendUser->getFrontendUser();
+        }
+        return null;
+    }
+
+    /**
+     * @return Member|null
+     */
+    public function getMember(): ?Member
+    {
+        if ($this->member != null) {
+            return $this->member->getMember();
+        }
+        return null;
     }
 }
