@@ -48,7 +48,7 @@ class EventLine extends BaseEntity
      * @var EventGeneration[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventGeneration", mappedBy="eventLine", cascade={"all"})
-     * @ORM\OrderBy({"createdAtDateTime" = "ASC"})
+     * @ORM\OrderBy({"createdAt" = "ASC"})
      */
     private $eventLineGenerations;
 

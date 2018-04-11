@@ -32,6 +32,12 @@ class EventPast extends BaseEntity
     use ChangeAwareTrait;
     use EventTrait;
 
+    /**
+     * EventPast constructor.
+     * @param Event|null $event
+     * @param null $eventChangeType
+     * @param FrontendUser|null $user
+     */
     public function __construct(Event $event = null, $eventChangeType = null, FrontendUser $user = null)
     {
         if ($event != null && $eventChangeType != null && $user != null) {

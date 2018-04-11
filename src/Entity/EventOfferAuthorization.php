@@ -31,7 +31,7 @@ class EventOfferAuthorization extends BaseEntity
     /**
      * @var EventOffer
      *
-     * @ORM\ManyToOne(targetEntity="EventOffer", inversedBy="entries")
+     * @ORM\ManyToOne(targetEntity="EventOffer", inversedBy="authorizations")
      */
     private $eventOffer;
 

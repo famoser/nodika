@@ -13,7 +13,6 @@ namespace App\DataFixtures\Production;
 
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\AdminUser;
-use Doctrine\Common\DataFixtures\BadMethodCallException;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadAdminUserData extends BaseFixture
@@ -30,13 +29,10 @@ class LoadAdminUserData extends BaseFixture
         $user = new AdminUser();
         $user->setEmail('info@nodika.ch');
         $user->setPlainPassword('jhagfgawefgajwef');
-        $user->persistNewPassword();
+        $user->setPassword();
         $user->setRegistrationDate(new \DateTime());
-        $user->setIsActive(true);
         $manager->persist($user);
         $manager->flush();
-
-        $this->addReference('user-1', $user);
     }
 
     public function getOrder()
@@ -49,7 +45,7 @@ class LoadAdminUserData extends BaseFixture
      *
      * @return mixed
      */
-    protected function getAllRandomInstance()
+    protected function getRandomInstance()
     {
         return null;
     }

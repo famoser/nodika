@@ -39,7 +39,7 @@ class EventGenerationMember extends BaseEntity
     /**
      * @var EventGeneration
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\EventGeneration", inversedBy="frontendUsers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\EventGeneration", inversedBy="members")
      */
     private $eventGeneration;
 

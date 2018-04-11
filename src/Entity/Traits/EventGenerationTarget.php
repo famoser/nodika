@@ -10,6 +10,7 @@ namespace App\Entity\Traits;
 
 
 use App\Entity\EventGeneration;
+use Doctrine\ORM\Mapping as ORM;
 
 trait EventGenerationTarget
 {
@@ -30,7 +31,7 @@ trait EventGenerationTarget
     /**
      * @var int
      *
-     * @ORM\Column(type="int")
+     * @ORM\Column(type="integer")
      */
     private $defaultOrder = 1;
 

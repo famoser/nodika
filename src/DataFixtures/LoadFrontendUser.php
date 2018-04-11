@@ -13,11 +13,12 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\FrontendUser;
-use App\Entity\Person;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadDevFrontendUserData extends BaseFixture
+class LoadFrontendUser extends BaseFixture
 {
+    const ORDER = 1;
+
     /**
      * Load data fixtures with the passed EntityManager.
      *
@@ -25,37 +26,36 @@ class LoadDevFrontendUserData extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        /* @var Person $person */
-        $person = $this->getReference('person-1');
+        $this->loadSomeRandoms($manager, 30);
+        $manager->flush();
 
-        $user = FrontendUser::createFromPerson($person);
-        $user->setPlainPassword('asdf1234');
-        $user->persistNewPassword();
-
-        $manager->persist($user);
-
-        $person = $this->getReference('person-2');
-        $user = FrontendUser::createFromPerson($person);
-        $user->setPlainPassword('asdf1234');
-        $user->persistNewPassword();
+        $user = $this->getRandomInstance();
+        $user->setEmail("info@nodkia.ch");
+        $user->setPlainPassword("asdf1234");
+        $user->setPassword();
 
         $manager->persist($user);
-        $manager->persist($person);
         $manager->flush();
     }
 
     public function getOrder()
     {
-        return 30;
+        return static::ORDER;
     }
 
     /**
      * create an instance with all random values.
      *
-     * @return mixed
+     * @return FrontendUser
      */
-    protected function getAllRandomInstance()
+    protected function getRandomInstance()
     {
-        return null;
+        $frontendUser = new FrontendUser();
+        $this->fillAddress($frontendUser);
+        $this->fillCommunication($frontendUser);
+        $this->fillPerson($frontendUser);
+        $this->fillUser($frontendUser);
+
+        return $frontendUser;
     }
 }
