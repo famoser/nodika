@@ -333,13 +333,11 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     private function orderEventTargets(array $eventTargets)
     {
-        ### order
-
         //put in orderable array
         /** @var EventTarget[][] $orderable */
         $orderable = [];
         foreach ($eventTargets as $eventTarget) {
-            $orderable[$eventTarget->getTarget()->getOrder()][] = $eventTarget;
+            $orderable[$eventTarget->getTarget()->getDefaultOrder()][] = $eventTarget;
         }
 
         ksort($orderable);
