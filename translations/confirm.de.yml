@@ -1,6 +1,6 @@
 index:
   title: 'Termine bestätigen'
-  description: 'Bestätigen Sie die demnächst kommenden Termine'
+  description: 'Bestätigen Sie Ihre demnächst aktuellen Termine'
   no_person_assigned: 'kein Mitarbeiter zugewiesen '
   assigned_to_member: 'Ihrer Praxis zugewiesene Termine'
   assigned_to_person: 'Ihnen zugewiesene Termine'

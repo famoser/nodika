@@ -33,7 +33,7 @@ security:
                 csrf_token_generator: security.csrf.token_manager
                 # field names for the username and password fields
                 username_parameter: login[email]
-                password_parameter: login[plainPassword]
+                password_parameter: login[password]
             logout:       true
             anonymous:    true
             logout_on_user_change: true

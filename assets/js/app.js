@@ -13,7 +13,8 @@ const fontawesome = require('@fortawesome/fontawesome');
 fontawesome.library.add(
     require('@fortawesome/fontawesome-pro-solid/faSignOut'),
     require('@fortawesome/fontawesome-pro-solid/faUser'),
-    require('@fortawesome/fontawesome-pro-solid/faQuestion')
+    require('@fortawesome/fontawesome-pro-solid/faQuestion'),
+    require('@fortawesome/fontawesome-pro-solid/faCheck')
 );
 
 

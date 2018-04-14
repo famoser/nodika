@@ -1,133 +1,145 @@
-{% extends 'layout/base.html.twig' %}
-{% import "macros/events.html.twig" as events %}
-{% import "macros/event_line_models.html.twig" as event_line_model_macro %}
+{% extends 'layout_base.html.twig' %}
 {% import _self as local_macro %}
-
-{% trans_default_domain "dashboard" %}
-{% set theme_color = "blue" %}
 
 {% block title %}{{ "index.title"|trans }}{% endblock %}
 {% block description %}{{ "index.description"|trans }}{% endblock %}
 
-{% macro event_row(event, activeMember, class = "") %}
-    {% if event.member == activeMember %}
+{% trans_default_domain "index" %}
+
+{% macro event_row(event, user, class = "") %}
+    {% if event.member in user.members %}
         {% set class = class ~ " bold" %}
     {% endif %}
     <tr class="{{ class }}">
         <td>
-            {{ event.startDateTime|myDateTime }}
+            {{ event.startDateTime|dateTimeFormat }}
         </td>
         <td>
-            {{ event.endDateTime|myDateTime }}
+            {{ event.endDateTime|dateTimeFormat }}
         </td>
         <td>
             {{ event.member }}
         </td>
         <td>
-            {{ event.person }}
+            {{ event.frontendUser }}
         </td>
         <td>
             {% if event.isConfirmed %}
-                <i class="icon icon-check-square"></i>
+                <i class="fab fa-check"></i>
             {% endif %}
         </td>
     </tr>
 {% endmacro %}
 
+{% macro quick_link(name, description, link) %}
+    <div class="card w-25" href="{{ path('assign_index') }}">
+        <div class="card-header">
+            {{ name }}
+        </div>
+        <div class="card-body">
+            <p>
+                {{ description }}
+            </p>
+            <a class="btn btn-outline-primary" href="{{ link }}">
+                {{ name }}
+            </a>
+        </div>
+    </div>
+{% endmacro %}
+
 
 {% block content %}
-<section class="content {{ theme_color }}-background">
-    {% include "layout/parts/menu.html.twig" %}
-    {% include "layout/parts/flashbag.html.twig" %}
 
-    <div class="container list-container d-none d-md-block">
-        <div class="row tile-grid">
-            <a class="tile tile-2 default-color" href="{{ path('event_assign') }}">
-                <h3>{{ "index.assign_events"|trans }}</h3>
-                <p>
-                    {{ "index.assign_events_description"|trans }}
-                </p>
-            </a>
-            <a class="tile tile-2 default-color" href="{{ path('offer_index') }}">
-                <h3>{{ "index.trade_events"|trans }}</h3>
-                <p>
-                    {{ "index.trade_events_description"|trans }}
-                </p>
-            </a>
-            <a class="tile tile-2 default-color" href="{{ path('event_confirm') }}">
-                <h3>{{ "index.confirm_events"|trans }}</h3>
-                <p>
-                    {{ "index.confirm_events_description"|trans }}
-                </p>
-            </a>
-            <a class="tile tile-2 default-color" href="{{ path('event_search') }}">
-                <h3>{{ "index.search_events"|trans }}</h3>
-                <p>
-                    {{ "index.search_events_description"|trans }}
-                </p>
-            </a>
+    <div class="container">
+        <div class="row">
 
-            {% if show_admin_link %}
-                <a class="tile tile-4 default-color" href="{{ path('administration_index') }}">
-                    <h3>{{ "ad"|trans }}</h3>
+            {{ local_macro.quick_link("index.title"|trans({}, "assign"), "index.description"|trans({}, "assign"), path("assign_index")) }}
+            {{ local_macro.quick_link("index.title"|trans({}, "trade"), "index.description"|trans({}, "trade"), path("trade_index")) }}
+            {{ local_macro.quick_link("index.title"|trans({}, "confirm"), "index.description"|trans({}, "confirm"), path("confirm_index")) }}
+            {{ local_macro.quick_link("index.title"|trans({}, "search"), "index.description"|trans({}, "search"), path("search_index")) }}
+
+            {% if user.administrator %}
+                {{ local_macro.quick_link("index.title"|trans({}, "administration"), "index.description"|trans({}, "administration"), path("administration_index")) }}
+            {% endif %}
+
+            {% for eventLineModel in event_line_models %}
+                <div class="card w-100">
+                    <div class="card-body">
+                        <h3>
+                            {{ eventLineModel.eventLine.name }}
+                        </h3>
+                        <p>{{ eventLineModel.eventLine.description }}</p>
+
+                        {% if eventLineModel.events|length == 0 %}
+                            <p>{{ "index.no_events"|trans }}</p>
+                        {% else %}
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
+                                        <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+                                        <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                                        <th>{{ "entity.name"|trans({}, "entity_frontend_user") }}</th>
+                                        <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for event in eventLineModel.activeEvents %}
+                                        {{ local_macro.event_row(event, user, "table-light") }}
+                                    {% endfor %}
+                                    {% for event in eventLineModel.events %}
+                                        {{ local_macro.event_row(event, user) }}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                        <p>
+                            <a href="{{ path("search_index", {"event_line" : eventLineModel.eventLine.id}) }}">{{ "index.show_all_events"|trans }}</a>
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {#
+    <section class="content {{ theme_color }}-background">
+
+        <div class="container">
+            <div class="row">
+                <a class="tile tile-2 default-color" href="{{ path('offer_index') }}">
+                    <h3>{{ "index.trade_events"|trans }}</h3>
+                    <p>
+                        {{ "index.trade_events_description"|trans }}
+                    </p>
+                </a>
+                <a class="tile tile-2 default-color" href="{{ path('event_confirm') }}">
+                    <h3>{{ "index.confirm_events"|trans }}</h3>
+                    <p>
+                        {{ "index.confirm_events_description"|trans }}
+                    </p>
+                </a>
+                <a class="tile tile-2 default-color" href="{{ path('event_search') }}">
+                    <h3>{{ "index.search_events"|trans }}</h3>
                     <p>
                         {{ "index.search_events_description"|trans }}
                     </p>
                 </a>
-                    <p>{{ "index.no_event_lines"|trans }}
-                        <br/>
-                        {{ "index.are_you_administrator"|trans }}
-                        <a href="{{ path("administration_index") }}">
-                            {{ "index.to_organisation_administration"|trans }}
-                        </a>
+
+                <a class="tile tile-4 default-color" href="{{ path('administration_index') }}">
+                    <h3>{{ "index.title"|trans({}, "administration") }}</h3>
+                    <p>
+                        {{ "index.search_events_description"|trans }}
                     </p>
+                </a>
 
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    {% for eventLineModel in event_line_models %}
-        <div class="container index-container default-color list-container"><h3>
-                {{ eventLineModel.eventLine.name }}
-            </h3>
-            <p>{{ eventLineModel.eventLine.description }}</p>
-
-            {% if eventLineModel.events|length == 0 %}
-                <p>{{ "index.no_events"|trans({}, "dashboard") }}</p>
-            {% else %}
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                        <tr>
-                            <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
-                            <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
-                            <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
-                            <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
-                            <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for event in eventLineModel.activeEvents %}
-                            {{ local_macro.event_row(event, member, "table-light") }}
-                        {% endfor %}
-                        {% for event in eventLineModel.events %}
-                            {{ local_macro.event_row(event, member) }}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
-            <p>
-                <a href="{{ path("event_search", {"event_line" : eventLineModel.eventLine.id}) }}">{{ "index.show_all_events"|trans }}</a>
-            </p>
-        </div>
-    {% endfor %}
-    {% endif %}
-    {% else %}
-        <div class="container index-container default-color list-container">
-            <p>{{ "index.not_part_of_organisation"|trans }}</p>
-        </div>
-    {% endif %}
-</section>
+    </section>
+    #}
 {% endblock %}
 

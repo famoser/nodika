@@ -1,6 +1,6 @@
 index:
   title: 'Termine zuweisen'
-  description: 'Termine einem Mitarbeiter zuordnen'
+  description: 'Weisen Sie Termine einem Account zu.'
   assigned_person: 'Zugewiesener Mitarbeiter'
   no_assigned_person: 'Noch keinem Mitarbeiter zugewiesen'
   choose_person: 'Mitarbeiter auswählen'
@@ -14,6 +14,7 @@ index:
     no_events: 'Keine Termine ausgewählt'
     no_person: 'Kein Mitarbeiter ausgewählt'
     assigned: 'Erfolgreich %count% Termine zugewiesen'
+  hel: 'assign'
 
 confirm:
   title: 'Termine bestätigen'

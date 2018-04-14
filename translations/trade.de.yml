@@ -1,6 +1,6 @@
 index:
-  title: 'Tauschen'
-  description: 'Termine tauschen'
+  title: 'Termine tauschen'
+  description: 'Tauschen Sie Termine mit einem Tauschpartner ab.'
   author_of_offers: 'Von Ihnen gestellte Tauschanfragen'
   author_of_offers_description: 'Sie sind der Author der Anfragen in diesem Bereich. Sie können diese hier bearbeiten oder zurückziehen'
   open_offers: 'Offene Anfragen'

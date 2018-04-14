@@ -36,29 +36,8 @@ class IndexController extends BaseDoctrineController
 
         $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);
         $arr['event_line_models'] = $eventLineModels;
+        $arr["user"] = $this->getUser();
 
-        $arr["show_admin_link"] = $this->getUser()->isAdministrator();
-        return $this->render('dashboard/index.html.twig', $arr);
-    }
-
-    /**
-     * @Route("/confirm", name="index_confirm")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function confirmAction(SettingServiceInterface $settingService)
-    {
-        $searchModel = new SearchModel();
-        $searchModel->setIsConfirmed(false);
-        $searchModel->setFrontendUser($this->getUser());
-        $end = new \DateTime();
-        $end->add($settingService->getCanConfirmEventAt());
-        $searchModel->setStartDateTime(new \DateTime());
-        $searchModel->setEndDateTime($end);
-
-        $eventLineModels = $this->getDoctrine()->getRepository('App:EventLine')->findEventLineModels($searchModel);
-        $arr['event_line_models'] = $eventLineModels;
-
-        return $this->render('event/confirm.html.twig', $arr);
+        return $this->render('index/index.html.twig', $arr);
     }
 }

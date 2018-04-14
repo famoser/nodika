@@ -54,7 +54,7 @@ class EventLineRepository extends EntityRepository
                 ->from('App:Event', 'e')
                 ->join('e.eventLine', 'el')
                 ->leftJoin('e.member', 'm')
-                ->leftJoin('e.person', 'p')
+                ->leftJoin('e.frontendUser', 'f')
                 ->where('el = :eventLine')
                 ->setParameter('eventLine', $eventLine);
 
@@ -77,8 +77,8 @@ class EventLineRepository extends EntityRepository
             }
 
             if ($searchModel->getFrontendUser() instanceof FrontendUser) {
-                $qb->andWhere('p = :person')
-                    ->setParameter('person', $searchModel->getFrontendUser());
+                $qb->andWhere('f = :frontendUser')
+                    ->setParameter('frontendUser', $searchModel->getFrontendUser());
             }
 
             if ($searchModel->getIsConfirmed() != null) {
