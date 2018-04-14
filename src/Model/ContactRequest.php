@@ -2,27 +2,32 @@
 /**
  * Created by PhpStorm.
  * User: famoser
- * Date: 30/01/2018
- * Time: 19:02
+ * Date: 23/02/2018
+ * Time: 16:22
  */
 
-namespace App\Model\ContactRequest;
+namespace App\Model;
 
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ContactRequest
 {
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
      * @var string
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $message;
 

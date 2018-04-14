@@ -2,9 +2,8 @@
 index:
   title: 'Login'
   description: 'In einen existierenden Account einloggen'
-  login_form_header: 'Login'
+  problems: "Probleme mit Einloggen?"
   forgot_password_action: 'Passwort vergessen'
-  register_action: 'Neu registrieren'
   errors:
     login_failed: 'Login fehlgeschlagen'
 

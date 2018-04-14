@@ -66,6 +66,9 @@ class EmailService implements EmailServiceInterface
 
     /**
      * @param Email $email
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     private function processEmail(Email $email)
     {
@@ -88,17 +91,13 @@ class EmailService implements EmailServiceInterface
         $message->setBody($body, 'text/plain');
 
         if (EmailType::PLAIN_EMAIL !== $email->getEmailType()) {
-            try {
-                $message->addPart(
-                    $this->twig->render(
-                        'email/email.html.twig',
-                        ['email' => $email]
-                    ),
-                    'text/html'
-                );
-            } catch (\Exception $e) {
-                $this->logger->log(Logger::ERROR, 'can not render email', $e);
-            }
+            $message->addPart(
+                $this->twig->render(
+                    'email/view.html.twig',
+                    ['email' => $email]
+                ),
+                'text/html'
+            );
         }
 
         foreach ($email->getCarbonCopyArray() as $item) {
@@ -114,6 +113,9 @@ class EmailService implements EmailServiceInterface
      * @param string[] $carbonCopy
      *
      * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = [])
     {
@@ -136,6 +138,9 @@ class EmailService implements EmailServiceInterface
      * @param string[] $carbonCopy
      *
      * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = [])
     {
@@ -158,6 +163,9 @@ class EmailService implements EmailServiceInterface
      * @param string[] $carbonCopy
      *
      * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = [])
     {

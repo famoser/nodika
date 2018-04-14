@@ -86,9 +86,6 @@ trait CommunicationTrait
         if (mb_strlen($this->getEmail()) > 0) {
             $res[] = $this->getEmail();
         }
-        if (mb_strlen($this->getWebpage()) > 0) {
-            $res[] = $this->getWebpage();
-        }
 
         return $res;
     }

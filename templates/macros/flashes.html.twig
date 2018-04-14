@@ -1,0 +1,19 @@
+{% macro display(flashes) %}
+    {% if flashes|length > 0 %}
+        {# flashbag #}
+        <div class="container">
+            <div class="row">
+                {% for type, messages in flashes %}
+                    {% for message in messages %}
+                        <div class="col-md-12 alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                            {{ message|raw }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}

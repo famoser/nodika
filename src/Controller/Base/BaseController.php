@@ -12,7 +12,9 @@
 namespace App\Controller\Base;
 
 use App\Entity\FrontendUser;
+use App\Model\Breadcrumb;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
@@ -109,15 +111,31 @@ class BaseController extends AbstractController
      */
     protected function getUser()
     {
-        if (null === $token = $this->container->get('security.token_storage')->getToken()) {
-            return null;
-        }
+        return parent::getUser();
+    }
 
-        if (!is_object($user = $token->getUser())) {
-            // e.g. anonymous authentication
-            return null;
-        }
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [];
+    }
 
-        return $user;
+    /**
+     * Renders a view.
+     *
+     * @param string $view
+     * @param array $parameters
+     * @param Response|null $response
+     * @param Breadcrumb[] $breadcrumbs
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function render(string $view, array $parameters = array(), Response $response = null, array $breadcrumbs = array()): Response
+    {
+        $parameters["breadcrumbs"] = array_merge($this->getIndexBreadcrumbs(), $breadcrumbs);
+        return parent::render($view, $parameters);
     }
 }

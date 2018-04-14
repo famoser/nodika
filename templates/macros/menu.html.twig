@@ -1,0 +1,45 @@
+{% macro menu_entry(name, link) %}
+    {% if app.request.requestUri == link %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ link }}">
+                {{ name }}
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+                {{ name }}</a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro dropdown_entry(name, link) %}
+    {% if app.request.requestUri == link %}
+        <a class="dropdown-item active" href="{{ link }}">
+            {{ name }}
+            <span class="sr-only">(current)</span>
+        </a>
+    {% else %}
+        <a class="dropdown-item" href="{{ link }}">
+            {{ name }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
+{% macro menu_icon_entry(icon, link) %}
+    {% if app.request.requestUri == link %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ link }}">
+                <i class="{{ icon }}"></i>
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+                <i class="{{ icon }}"></i>
+            </a>
+        </li>
+    {% endif %}
+{% endmacro %}

@@ -15,6 +15,7 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
 use App\Enum\EmailType;
 use Doctrine\ORM\Mapping as ORM;
+use function GuzzleHttp\Psr7\str;
 
 /**
  * An Email is a sent email to the specified receivers.
@@ -166,7 +167,9 @@ class Email extends BaseEntity
      */
     public function getCarbonCopyArray()
     {
-        return explode(", ", $this->carbonCopy);
+        if (strlen($this->carbonCopy) > 0)
+            return explode(",", $this->carbonCopy);
+        return [];
     }
 
     /**
@@ -174,7 +177,7 @@ class Email extends BaseEntity
      */
     public function setCarbonCopyArray($carbonCopy)
     {
-        $this->carbonCopy = implode(", ", $carbonCopy);
+        $this->carbonCopy = implode(",", $carbonCopy);
     }
 
     /**

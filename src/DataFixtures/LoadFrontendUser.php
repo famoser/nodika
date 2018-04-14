@@ -30,9 +30,10 @@ class LoadFrontendUser extends BaseFixture
         $manager->flush();
 
         $user = $this->getRandomInstance();
-        $user->setEmail("info@nodkia.ch");
+        $user->setEmail("info@nodika.ch");
         $user->setPlainPassword("asdf1234");
         $user->setPassword();
+        $user->setIsAdministrator(true);
 
         $manager->persist($user);
         $manager->flush();

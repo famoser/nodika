@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HelpController extends BaseDoctrineController
 {
     /**
-     * @Route("/", name="account_index")
+     * @Route("/", name="help_index")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

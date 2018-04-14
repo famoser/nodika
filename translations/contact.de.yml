@@ -1,0 +1,14 @@
+index:
+  title: 'Administrator kontaktieren'
+  description: 'Benachrichtigen Sie den Administrator'
+  success:
+    email_sent: "Das Email wurde erfolreich versandt"
+
+contact_email:
+  subject: "Kontaktanfrage erhalten"
+  description: >
+    Sie haben auf %url% eine Kontaktanfrage erhalten.
+
+    Email: %email%
+    Name: %name%
+    Nachricht: %message%

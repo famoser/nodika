@@ -20,6 +20,9 @@ interface EmailServiceInterface
      * @param string[] $carbonCopy
      *
      * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = []);
 
@@ -30,6 +33,9 @@ interface EmailServiceInterface
      * @param string[] $carbonCopy
      *
      * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = []);
 
@@ -42,6 +48,9 @@ interface EmailServiceInterface
      * @param string[] $carbonCopy
      *
      * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = []);
 }

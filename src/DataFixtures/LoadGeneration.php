@@ -38,7 +38,6 @@ class LoadGeneration extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-
         $eventLines = $manager->getRepository(EventLine::class)->findAll();
         foreach ($eventLines as $eventLine) {
             $generation = new EventGeneration();
@@ -61,31 +60,15 @@ class LoadGeneration extends BaseFixture
                 $exception->setEventGeneration($generation);
             }
 
-            $setting = $manager->getRepository(Settings::class)->findSingle();
+            $members = $manager->getRepository(Member::class)->findAll();
+            $skipPossibility = count($members);
 
-            if ($setting->getUseMembers()) {
-                $members = $manager->getRepository(Member::class)->findAll();
-                $skipPossibility = count($members);
-
-                foreach ($members as $member) {
-                    if (rand(0, $skipPossibility) !== 0) {
-                        $target = new EventGenerationMember();
-                        $target->setEventGeneration($generation);
-                        $target->setMember($member);
-                        $manager->persist($target);
-                    }
-                }
-            } else {
-                $frontendUsers = $manager->getRepository(FrontendUser::class)->findAll();
-                $skipPossibility = count($frontendUsers);
-
-                foreach ($frontendUsers as $frontendUser) {
-                    if (rand(0, $skipPossibility) !== 0) {
-                        $target = new EventGenerationFrontendUser();
-                        $target->setEventGeneration($generation);
-                        $target->setFrontendUser($frontendUser);
-                        $manager->persist($target);
-                    }
+            foreach ($members as $member) {
+                if (rand(0, $skipPossibility) !== 0) {
+                    $target = new EventGenerationMember();
+                    $target->setEventGeneration($generation);
+                    $target->setMember($member);
+                    $manager->persist($target);
                 }
             }
 

@@ -32,10 +32,12 @@ class LoginController extends BaseLoginController
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $form = $this->createForm(LoginType::class);
+        $user = new FrontendUser();
+        $form = $this->createForm(LoginType::class, $user);
         $form->add("form.login", SubmitType::class);
+        $this->checkLoginForm($request, $user, $form);
         $arr["form"] = $form->createView();
         return $this->render('login/index.html.twig', $arr);
     }
@@ -76,7 +78,7 @@ class LoginController extends BaseLoginController
                     $translator->trans("recover.email.reset_password.subject", [], "login"),
                     $translator->trans("recover.email.reset_password.message", [], "login"),
                     $translator->trans("recover.email.reset_password.action_text", [], "login"),
-                    $this->generateUrl("frontend_login_reset", ["resetHash" => $exitingUser->getResetHash()], UrlGeneratorInterface::ABSOLUTE_URL)
+                    $this->generateUrl("login_reset", ["resetHash" => $exitingUser->getResetHash()], UrlGeneratorInterface::ABSOLUTE_URL)
                 );
 
                 return $form;
@@ -98,8 +100,7 @@ class LoginController extends BaseLoginController
     {
         $user = $this->getDoctrine()->getRepository(FrontendUser::class)->findOneBy(["resetHash" => $resetHash]);
         if (null === $user) {
-            $this->displayError($translator->trans("reset.error.invalid_hash", [], "login"));
-            return $this->redirectToRoute("frontend_login_invalid", ["resetHash" => $resetHash]);
+            return $this->render('login/invalid.html.twig');
         }
 
         $form = $this->handleForm(

@@ -32,7 +32,7 @@ class LoadSettings extends BaseFixture
         $setting->setFrontendUserName("Mitarbeiter");
         $setting->setMemberName("Praxis");
         $setting->setOrganisationName("knbu.ch");
-        $setting->setUseMembers(true);
+        $setting->setSupportMail('support@famoser.ch');
         $manager->persist($setting);
         $manager->flush();
     }

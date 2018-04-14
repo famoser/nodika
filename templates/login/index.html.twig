@@ -10,8 +10,13 @@
     {{ form_errors(form) }}
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     {{ form_end(form) }}
-    <p>
-        <a href="{{ path("login_recover") }}">{{ "index.forgot_password_action"|trans }}</a>
-    </p>
+{% endblock %}
 
+{% block form_description %}
+    <p>
+        {{ "index.problems"|trans }}<br/>
+        <a href="{{ path("login_recover") }}">{{ "recover.title"|trans }}</a><br/>
+        <a href="{{ path("invite_request") }}">{{ "request.title"|trans({}, "invite") }}</a><br/>
+        <a href="{{ path("contact_index") }}">{{ "index.title"|trans({}, "contact") }}</a><br/>
+    </p>
 {% endblock %}

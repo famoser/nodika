@@ -1,0 +1,10 @@
+entity:
+  name: 'Kontaktanfrage'
+  description: 'Nehmen Sie Kontakt mit uns auf'
+
+form:
+  send: senden
+
+name: Name
+email: Email
+message: Nachricht

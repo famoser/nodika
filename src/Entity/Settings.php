@@ -36,6 +36,14 @@ class Settings extends BaseEntity
     use ChangeAwareTrait;
 
     /**
+     * the mail where enquiries submitted over the webpage are sent
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
+    private $supportMail;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="text")
@@ -55,13 +63,6 @@ class Settings extends BaseEntity
      * @ORM\Column(type="text")
      */
     private $frontendUserName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $useMembers = true;
 
     /**
      * @return string
@@ -114,16 +115,16 @@ class Settings extends BaseEntity
     /**
      * @return string
      */
-    public function getUseMembers(): string
+    public function getSupportMail(): string
     {
-        return $this->useMembers;
+        return $this->supportMail;
     }
 
     /**
-     * @param string $useMembers
+     * @param string $supportMail
      */
-    public function setUseMembers(string $useMembers): void
+    public function setSupportMail(string $supportMail): void
     {
-        $this->useMembers = $useMembers;
+        $this->supportMail = $supportMail;
     }
 }

@@ -45,4 +45,22 @@ class InviteController extends BaseLoginController
             return $this->render('invite/invalid.html.twig');
         }
     }
+
+    /**
+     * @Route("/request", name="invite_request")
+     *
+     * @return Response
+     */
+    public function requestAction()
+    {
+        $user = $this->getDoctrine()->getRepository(FrontendUser::class)->findBy(["invitationIdentifier" => $guid]);
+        if ($user instanceof FrontendUser) {
+            $form = $this->createForm(SetPasswordType::class);
+            $form->add("set_password", SubmitType::class);
+            $arr["form"] = $form->createView();
+            return $this->render('invite/index.html.twig', $arr);
+        } else {
+            return $this->render('invite/invalid.html.twig');
+        }
+    }
 }

@@ -39,10 +39,8 @@ class BaseLoginController extends BaseFormController
      * @param Request $request
      * @param UserTrait|BaseEntity $user
      * @param FormInterface $loginForm
-     *
-     * @return FormInterface
      */
-    protected function handleLoginForm(Request $request, BaseEntity $user, FormInterface $loginForm)
+    protected function checkLoginForm(Request $request, BaseEntity $user, FormInterface $loginForm)
     {
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
@@ -58,7 +56,7 @@ class BaseLoginController extends BaseFormController
             $error = null;
         }
         if (null !== $error) {
-            $this->displayError($this->getTranslator()->trans('index.errors.login_failed', [], 'frontend_login'));
+            $this->displayError($this->getTranslator()->trans('index.errors.login_failed', [], 'login'));
         }
 
         // last username entered by the user
@@ -70,8 +68,6 @@ class BaseLoginController extends BaseFormController
         if ($loginForm->isSubmitted()) {
             throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
         }
-
-        return $loginForm;
     }
 
     /**
