@@ -29,13 +29,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @Route("/offer")
+ * @Route("/trade")
  * @Security("has_role('ROLE_USER')")
  */
-class OfferController extends BaseFormController
+class TradeController extends BaseFormController
 {
     /**
-     * @Route("/", name="offer_index")
+     * @Route("/", name="trade_index")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

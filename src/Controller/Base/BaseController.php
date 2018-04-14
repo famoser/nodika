@@ -14,12 +14,17 @@ namespace App\Controller\Base;
 use App\Entity\FrontendUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class BaseController extends AbstractController
 {
     public static function getSubscribedServices()
     {
-        return parent::getSubscribedServices() + ['kernel' => KernelInterface::class];
+        return parent::getSubscribedServices() +
+            [
+                'kernel' => KernelInterface::class,
+                'security.token_storage' => TokenStorageInterface::class
+            ];
     }
 
     /**
@@ -100,10 +105,19 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @return FrontendUser
+     * @return FrontendUser|null
      */
     protected function getUser()
     {
-        return parent::getUser();
+        if (null === $token = $this->container->get('security.token_storage')->getToken()) {
+            return null;
+        }
+
+        if (!is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
+            return null;
+        }
+
+        return $user;
     }
 }

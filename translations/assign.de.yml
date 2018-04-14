@@ -1,9 +1,4 @@
 index:
-  title: 'Termin ansehen'
-  description: 'Nähere Informationen zu diesem Termin'
-  history: 'Änderungen an diesem Termin'
-
-assign:
   title: 'Termine zuweisen'
   description: 'Termine einem Mitarbeiter zuordnen'
   assigned_person: 'Zugewiesener Mitarbeiter'

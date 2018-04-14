@@ -2,19 +2,19 @@
 {% import "widgets/breadcrumb.html.twig" as breadcrumb %}
 
 {% block content %}
-    <section class="content">
-        {% if breadcrumbs is defined %}
-            {{ breadcrumb.breadcrumbs(breadcrumbs, app.request, block("title")) }}
-        {% endif %}
-        <div class="container jumbotron">
-            <h1 class="display-3">{{ block("title") }}</h1>
-            <p class="lead">{% block description %}{% endblock %}</p>
-        </div>
+    {% if breadcrumbs is defined %}
+        {{ breadcrumb.breadcrumbs(breadcrumbs, app.request, block("title")) }}
+    {% endif %}
 
-        <div class="container card">
+    <div class="container">
+        <div class="card">
             <div class="card-body">
+                <h1 class="display-3">{{ block("title") }}</h1>
+                <p class="lead">{% block description %}{% endblock %}</p>
+
                 <div class="row">
                     <div class="col-md-8 index-container primary-area">
+                        <hr/>
                         {% block form_content %}
                             {{ form(form) }}
                         {% endblock %}
@@ -27,5 +27,6 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
 {% endblock %}

@@ -2,7 +2,11 @@
 trait:
  name: Benutzer
 
+form:
+  login: Einloggen
+
 #properties
+password: Passwort
 plain_password: Passwort
 repeat_plain_password: Passwort wiederholen
 email: Email

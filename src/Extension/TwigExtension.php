@@ -18,23 +18,42 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 use Twig_SimpleFilter;
 
-class MyTwigExtension extends Twig_Extension
+class TwigExtension extends Twig_Extension
 {
     private $translator;
 
+    /**
+     * @param TranslatorInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
+    /**
+     * makes the filters available to twig
+     *
+     * @return array
+     */
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('myDate', [$this, 'dateFilter']),
-            new Twig_SimpleFilter('myDateTime', [$this, 'dateTimeFilter']),
-            new Twig_SimpleFilter('myBoolean', [$this, 'booleanFilter']),
-            new Twig_SimpleFilter('themeColorToHex', [$this, 'themeColorToHexFilter'])
+            new Twig_SimpleFilter('dateFormat', [$this, 'dateFormatFilter']),
+            new Twig_SimpleFilter('dateTimeFormat', [$this, 'dateTimeFilter']),
+            new Twig_SimpleFilter('booleanFormat', [$this, 'booleanFilter']),
+            new Twig_SimpleFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
+
         ];
+    }
+
+    /**
+     * @param string $propertyName
+     *
+     * @return string
+     */
+    public function camelCaseToUnderscoreFilter($propertyName)
+    {
+        return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $propertyName));
     }
 
     /**
@@ -42,18 +61,13 @@ class MyTwigExtension extends Twig_Extension
      *
      * @return string
      */
-    public function dateFilter($date)
+    public function dateFormatFilter($date)
     {
         if ($date instanceof \DateTime) {
             return $this->prependDayName($date) . ', ' . $date->format(DateTimeFormatter::DATE_FORMAT);
         }
 
         return '-';
-    }
-
-    private function prependDayName(DateTime $date)
-    {
-        return $this->translator->trans('date_time.' . $date->format('D'), [], 'framework');
     }
 
     /**
@@ -71,20 +85,13 @@ class MyTwigExtension extends Twig_Extension
     }
 
     /**
-     * @param string $color
-     *
+     * translates the day of the week
+     * @param DateTime $date
      * @return string
      */
-    public function themeColorToHexFilter($color)
+    private function prependDayName(DateTime $date)
     {
-        $colorArray = [
-            "blue" => "555F76",
-            "brown" => "B19E7A",
-            "green" => "618D61",
-            "green2" => "496A6A",
-            "red" => "B17A7A"
-        ];
-        return "#" . $colorArray[$color];
+        return $this->translator->trans('date_time.' . $date->format('D'), [], 'framework');
     }
 
     /**
@@ -95,9 +102,9 @@ class MyTwigExtension extends Twig_Extension
     public function booleanFilter($value)
     {
         if ($value) {
-            return $this->translator->trans(BooleanType::getTranslation(BooleanType::YES), [], 'enum_boolean_type');
+            return BooleanType::getTranslationForValue(BooleanType::YES, $this->translator);
         }
 
-        return $this->translator->trans(BooleanType::getTranslation(BooleanType::NO), [], 'enum_boolean_type');
+        return BooleanType::getTranslationForValue(BooleanType::NO, $this->translator);
     }
 }

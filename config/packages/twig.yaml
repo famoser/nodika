@@ -3,8 +3,4 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes:
-        ['form/bootstrap_4_layout.html.twig']
-    globals:
-        globals_register_fee: '%env(REGISTER_FEE)%'
-        globals_yearly_fee: '%env(YEARLY_FEE)%'
-        globals_free_period_days: '%env(FREE_PERIOD_DAYS)%'
+        ['form/form_layout.html.twig', 'form/fields.html.twig']

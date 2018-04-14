@@ -5,15 +5,16 @@ var multiselect = require("bootstrap-multiselect/dist/js/bootstrap-multiselect.j
 
 window.$ = $;
 
-FontAwesomeConfig = { autoAddCss: false };
+FontAwesomeConfig = {autoAddCss: false};
 
 //icons
 const fontawesome = require('@fortawesome/fontawesome');
-const building = require('@fortawesome/fontawesome-pro-light/faBuilding');
-const gavel = require('@fortawesome/fontawesome-pro-light/faGavel');
-const user = require('@fortawesome/fontawesome-pro-light/faUser');
 
-fontawesome.library.add(user, building, gavel);
+fontawesome.library.add(
+    require('@fortawesome/fontawesome-pro-solid/faSignOut'),
+    require('@fortawesome/fontawesome-pro-solid/faUser'),
+    require('@fortawesome/fontawesome-pro-solid/faQuestion')
+);
 
 
 //prevent double submit & give user instant feedback

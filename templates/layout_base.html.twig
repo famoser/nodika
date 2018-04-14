@@ -12,6 +12,19 @@
     {% endif %}
 {% endmacro %}
 
+{% macro dropdown_entry(name, link) %}
+    {% if app.request.requestUri == link %}
+        <a class="dropdown-item active" href="{{ link }}">
+            {{ name }}
+            <span class="sr-only">(current)</span>
+        </a>
+    {% else %}
+        <a class="dropdown-item" href="{{ link }}">
+            {{ name }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
 {% import _self as self %}
 
 <!DOCTYPE html>
@@ -51,55 +64,59 @@
 <header class="header">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ path("index_index") }}">{{ ""|trans({}, "layout") }}</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown link
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="{{ path('index_index') }}">{{ "index.title"|trans({}, "static") }}</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="{{ path("index_index") }}">{{ "base.brand"|trans({}, "layout") }}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    {{ self.menu_entry("index.title"|trans({}, "index"), path("index_index")) }}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            {{ "base.events_menu.title"|trans({}, "layout") }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            {{ self.dropdown_entry("base.events_menu.assign"|trans({}, "layout"), path("assign_index")) }}
+                            {{ self.dropdown_entry("base.events_menu.trade"|trans({}, "layout"), path("trade_index")) }}
+                            {{ self.dropdown_entry("base.events_menu.confirm"|trans({}, "layout"), path("confirm_index")) }}
+                            <div class="dropdown-divider"></div>
+                            {{ self.dropdown_entry("base.events_menu.search"|trans({}, "layout"), path("search_index")) }}
+
+                        </div>
+                    </li>
+                </ul>
+
                 <ul class="navbar-nav ml-auto">
-                    {{ self.menu_entry("index.title"|trans({}, "static"), path("index_index")) }}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path("login_logout") }}">
+                            <i class="fas fa-question"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path("account_index") }}">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path("login_logout") }}">
+                            <i class="fas fa-sign-out"></i>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
 
-{% block content %}
 
-{% endblock %}
+<div class="content-wrapper">
+    {% block content %}
+
+    {% endblock %}
+</div>
 
 <script src="{{ asset('dist/app.js') }}"></script>
 {% block javascript %}
