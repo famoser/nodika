@@ -3,24 +3,18 @@ $font-family-sans-serif: 'Open Sans' -apple-system, BlinkMacSystemFont, "Segoe U
 
 /* libraries */
 @import '~bootstrap/scss/bootstrap'
-@import "~open-iconic/font/css/open-iconic-bootstrap.scss"
 @import "~@fortawesome/fontawesome/styles.css"
 
 /* mixins */
 @import 'mixins'
 
-/* layout & typography */
+/* additional elements to bootstrap */
+@import 'card'
 @import 'fonts'
-@import 'layout'
+@import 'forms'
+@import 'tables'
 @import 'type'
 @import 'print'
 
 /* elements, pages & general purpose */
-@import 'elements/bootstrap_custom'
-@import 'elements/form'
-@import 'elements/switch'
-@import 'elements/table'
-@import 'general_purpose'
-
-/* special classes for pages */
-@import "pages/index"
+@import 'components/switch'

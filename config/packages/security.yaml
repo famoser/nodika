@@ -27,9 +27,9 @@ security:
             anonymous: ~
             provider: frontend_user_provider
             form_login:
-                login_path: access_login
-                check_path: access_login_check
-                default_target_path: dashboard_index
+                login_path: login_index
+                check_path: login_check
+                default_target_path: index_index
                 csrf_token_generator: security.csrf.token_manager
                 # field names for the username and password fields
                 username_parameter: frontend_user_login[email]
@@ -60,7 +60,7 @@ security:
 
     access_control:
         #enable login
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/invite, role: IS_AUTHENTICATED_ANONYMOUSLY }
