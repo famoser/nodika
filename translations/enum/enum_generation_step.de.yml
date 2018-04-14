@@ -1,0 +1,6 @@
+set_start_end: 'Start / Ende setzen'
+choose_targets: 'Empfänger auswählen'
+avoid_conflicts: 'Konflikte verhindern'
+set_weekdays: 'Wochentage'
+confirm: 'Bestätigen'
+finished: 'Fertig'

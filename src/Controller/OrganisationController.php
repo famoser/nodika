@@ -23,11 +23,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrganisationController extends BaseController
 {
     /**
-     * @Route("/", name="organisation_view")
+     * @Route("/", name="organisation_index")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
+        $arr["members"] = $this->getDoctrine()->getRepository(Member::class)->findAll();
+        return $this->render("organisation/index.html.twig", $arr);
     }
 }

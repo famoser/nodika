@@ -4,51 +4,11 @@ login:
   description: 'In einen existierenden Account einloggen'
   login_form_header: 'Login'
   forgot_password_action: 'Passwort vergessen'
-  register_action: 'Neu registrieren'
-  no_account: 'Noch keinen Account?'
-  no_account_description: 'Ihr Organisator lässt Ihnen Zugangsdaten zukommen oder registrieren Sie sich, um selber eine Organisation zu erstellen'
   forgot_password: 'Passwort vergessen?'
   forgot_password_description: 'Drücken Sie auf ''"Passwort vergessen" unterhalb des Loginformulars und verifizieren Sie sich mit der hinterlegten E-Mail'
   invitation_not_received: "Einladung nicht bekommen?"
   invitation_not_received_description: "Sind Sie Teil einer Organisation, aber haben die Einladung nicht bekommen?"
   invitation_not_received_action: "Einladung erneut anfordern"
-
-#register page
-register:
-  title: 'Registrieren'
-  description: 'Mitglied auf nodika.ch werden'
-  register_form_header: 'Registrierungsformular'
-  register: 'Registrieren'
-  register_description: >
-    Nach der Registrierung erhalten Sie eine E-Mail mit einem Link, um die Registrierung abzuschliessen.
-    Danach können Sie mit der Einrichtung Ihrer Organisation beginnen
-  personal_data: 'Persönliche Daten'
-  personal_data_description: >
-    Ihre persönlichen Daten bleiben sicher auf unserem Server verwahrt und werden selbstverständlich nicht an Dritte weitergegeben.
-    Sie werden weder Werbung per E-Mail noch auf dem Postweg erhalten.
-  pricing: 'Kosten'
-  pricing_description: >
-    Nach der gratis %free_period_days%-tägigen Testphase können Sie ein Abo für Ihre Organisation lösen.
-    Die einmalige Registrierungsgebühr beträgt %register_fee% CHF und die Jahresgebühr ist %yearly_fee% CHF.
-  register_action: 'Erstellen Sie zuerst einen persönlichen Account'
-  register_disclaimer: 'Achtung!'
-  register_disclaimer_description: >
-    Registrieren Sie sich nur hier, falls sie der Organisator sind.
-    Sind Sie ein Mitglied einer Organisation haben Sie eine Einladung in Ihrem E-Mail Postfach bekommen
-    (schauen Sie beim Spam, lassen Sie sich die Einladung erneut zustellen oder fragen Sie Ihren Administrator, falls Sie das E-Mail nicht finden können)'
-  resend_invitation: "Einladung erneut zustellen"
-
-#register/check page
-register_check:
-  title: "Registrieren"
-  description: "Möchten Sie einen neuen Account erstellen?"
-  help: "Nur der Administrator Ihrer Organisation muss sich registrieren. Sonst bekommen Sie vom Organisator eine Einladung zugesandt."
-  am_administrator: "ich bin Administrator"
-  now_register: "Registrieren Sie sich und richten Sie Ihre Organisation ein."
-  now_register_action: "Jetzt registrieren"
-  am_memeber: "Ich bin nicht der Adminsitrator"
-  resend_email: "Einladung verpasst? Lassen Sie sich die Einladung erneut zustellen"
-  resend_email_action: "Einladung erneut senden"
 
 invite_resend:
   title: "Einladung erneut versenden"

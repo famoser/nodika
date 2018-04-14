@@ -111,7 +111,7 @@ class AdministrationController extends BaseFormController
     }
 
     /**
-     * @Route("/members", name="administration_organisation_members")
+     * @Route("/members", name="administration_members")
      *
      * @return Response
      */
@@ -125,7 +125,7 @@ class AdministrationController extends BaseFormController
     }
 
     /**
-     * @Route("/event_lines", name="administration_organisation_event_lines")
+     * @Route("/event_lines", name="administration_event_lines")
      *
      * @return Response
      */

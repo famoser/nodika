@@ -45,7 +45,7 @@ security:
 
         #backend firewall for admins
         backend:
-            pattern:   ^/
+            pattern:   ^/backend
             anonymous: ~
             provider: admin_user_provider
             form_login:
@@ -77,6 +77,3 @@ security:
 
         #level1: user
         - { path: ^/, role: ROLE_USER }
-
-        #level2: admin
-        - { path: ^/backend/, role: ROLE_ADMIN }

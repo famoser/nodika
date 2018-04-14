@@ -37,6 +37,7 @@ class IndexController extends BaseDoctrineController
         $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);
         $arr['event_line_models'] = $eventLineModels;
 
+        $arr["show_admin_link"] = $this->getUser()->isAdministrator();
         return $this->render('dashboard/index.html.twig', $arr);
     }
 

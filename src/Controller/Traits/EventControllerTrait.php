@@ -11,7 +11,6 @@ namespace App\Controller\Traits;
 
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
-use App\Form\Event\SearchType;
 use App\Helper\DateTimeFormatter;
 use App\Model\Event\SearchModel;
 use App\Model\EventLine\EventLineModel;
@@ -62,7 +61,7 @@ trait EventControllerTrait
         $start = $translator->trans('start_date_time', [], 'entity_event');
         $end = $translator->trans('end_date_time', [], 'entity_event');
         $member = $translator->trans('entity.name', [], 'entity_member');
-        $person = $translator->trans('entity.name', [], 'entity_person');
+        $person = $translator->trans('entity.name', [], 'entity_frontend_user');
 
         return [$start, $end, $member, $person];
     }

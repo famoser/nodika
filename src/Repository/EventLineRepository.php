@@ -28,18 +28,18 @@ class EventLineRepository extends EntityRepository
 {
 
     /**
-     * @param SearchModel $searchEventModel
+     * @param SearchModel $searchModel
      *
      * @return EventLineModel[]
      */
-    public function findEventLineModels(SearchModel $searchEventModel)
+    public function findEventLineModels(SearchModel $searchModel)
     {
         $res = [];
 
         //get event lines to be converted
         $eventLines = [];
-        if ($searchEventModel->getEventLine() instanceof EventLine) {
-            $eventLines[] = $searchEventModel->getEventLine();
+        if ($searchModel->getEventLine() instanceof EventLine) {
+            $eventLines[] = $searchModel->getEventLine();
         } else {
             $eventLines = $this->findAll();
         }
@@ -59,33 +59,38 @@ class EventLineRepository extends EntityRepository
                 ->setParameter('eventLine', $eventLine);
 
             $qb->andWhere('e.startDateTime > :startDateTime')
-                ->setParameter('startDateTime', $searchEventModel->getStartDateTime());
+                ->setParameter('startDateTime', $searchModel->getStartDateTime());
 
-            if ($searchEventModel->getEndDateTime() instanceof \DateTime) {
+            if ($searchModel->getEndDateTime() instanceof \DateTime) {
                 $qb->andWhere('e.endDateTime < :endDateTime')
-                    ->setParameter('endDateTime', $searchEventModel->getEndDateTime());
+                    ->setParameter('endDateTime', $searchModel->getEndDateTime());
             }
 
-            if ($searchEventModel->getMember() instanceof Member) {
+            if ($searchModel->getMember() instanceof Member) {
                 $qb->andWhere('m = :member')
-                    ->setParameter('member', $searchEventModel->getMember());
+                    ->setParameter('member', $searchModel->getMember());
             }
 
-            if ($searchEventModel->getFrontendUser() instanceof FrontendUser) {
+            if ($searchModel->getMembers() != null) {
+                $qb->andWhere("m in (:members)")
+                    ->setParameter("members", $searchModel->getMembers());
+            }
+
+            if ($searchModel->getFrontendUser() instanceof FrontendUser) {
                 $qb->andWhere('p = :person')
-                    ->setParameter('person', $searchEventModel->getFrontendUser());
+                    ->setParameter('person', $searchModel->getFrontendUser());
             }
 
-            if ($searchEventModel->getIsConfirmed() != null) {
-                if ($searchEventModel->getIsConfirmed()) {
+            if ($searchModel->getIsConfirmed() != null) {
+                if ($searchModel->getIsConfirmed()) {
                     $qb->andWhere("e.confirmDateTime IS NOT NULL");
                 } else {
                     $qb->andWhere("e.confirmDateTime IS NULL");
                 }
             }
 
-            $qb->orderBy("e.startDateTime", $searchEventModel->isInvertOrder() ? "DESC" : "ASC");
-            $qb->setMaxResults($searchEventModel->getMaxResults());
+            $qb->orderBy("e.startDateTime", $searchModel->isInvertOrder() ? "DESC" : "ASC");
+            $qb->setMaxResults($searchModel->getMaxResults());
 
             $eventLineModel->events = $qb->getQuery()->getResult();
             $res[] = $eventLineModel;

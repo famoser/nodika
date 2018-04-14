@@ -16,6 +16,7 @@ use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Entity\Organisation;
 use App\Entity\Person;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class SearchModel
 {
@@ -47,6 +48,11 @@ class SearchModel
      * @var int
      */
     private $maxResults = 3000;
+
+    /**
+     * @var Member[]|ArrayCollection
+     */
+    private $members;
 
     /**
      * @var bool
@@ -185,5 +191,21 @@ class SearchModel
     public function setInvertOrder(bool $invertOrder): void
     {
         $this->invertOrder = $invertOrder;
+    }
+
+    /**
+     * @return Member[]|ArrayCollection
+     */
+    public function getMembers()
+    {
+        return $this->members;
+    }
+
+    /**
+     * @param Member[]|ArrayCollection $members
+     */
+    public function setMembers($members): void
+    {
+        $this->members = $members;
     }
 }

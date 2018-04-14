@@ -28,7 +28,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class LoginController extends BaseLoginController
 {
     /**
-     * @Route("/", name="frontend_login_index")
+     * @Route("/", name="login_index")
      *
      * @return Response
      */
@@ -41,7 +41,7 @@ class LoginController extends BaseLoginController
     }
 
     /**
-     * @Route("/recover", name="frontend_login_recover")
+     * @Route("/recover", name="login_recover")
      *
      * @param Request $request
      * @param EmailServiceInterface $emailService
@@ -87,7 +87,7 @@ class LoginController extends BaseLoginController
     }
 
     /**
-     * @Route("/reset/{resetHash}", name="frontend_login_reset")
+     * @Route("/reset/{resetHash}", name="login_reset")
      *
      * @param Request $request
      * @param $resetHash
@@ -123,7 +123,7 @@ class LoginController extends BaseLoginController
 
                 //login user & redirect
                 $this->loginUser($request, $user);
-                return $this->redirectToRoute("dashboard_index");
+                return $this->redirectToRoute("index_index");
             }
         );
 
@@ -136,17 +136,7 @@ class LoginController extends BaseLoginController
     }
 
     /**
-     * @Route("/invalid/{resetHash}", name="frontend_login_invalid")
-     *
-     * @return Response
-     */
-    public function invalidAction()
-    {
-        return $this->render('login/invalid.html.twig');
-    }
-
-    /**
-     * @Route("/login_check", name="frontend_login_check")
+     * @Route("/login_check", name="login_check")
      */
     public function loginCheck()
     {
@@ -154,7 +144,7 @@ class LoginController extends BaseLoginController
     }
 
     /**
-     * @Route("/logout", name="frontend_login_logout")
+     * @Route("/logout", name="login_logout")
      */
     public function logoutAction()
     {
