@@ -1,27 +1,26 @@
+/* override defaults of libraries below */
+$font-family-sans-serif: 'Open Sans' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+
 /* libraries */
 @import '~bootstrap/scss/bootstrap'
+@import "~open-iconic/font/css/open-iconic-bootstrap.scss"
 @import "~@fortawesome/fontawesome/styles.css"
 
-/* fonts */
-@import 'nodika-icons/style'
-
-/* colors & helper functions */
-@import 'variables'
+/* mixins */
 @import 'mixins'
 
 /* layout & typography */
 @import 'fonts'
 @import 'layout'
-@import 'typography'
+@import 'type'
 @import 'print'
 
 /* elements, pages & general purpose */
 @import 'elements/bootstrap_custom'
 @import 'elements/form'
-@import 'elements/go_button'
-@import 'elements/menu'
 @import 'elements/switch'
 @import 'elements/table'
-@import 'elements/tile'
-@import 'pages/index'
 @import 'general_purpose'
+
+/* special classes for pages */
+@import "pages/index"
