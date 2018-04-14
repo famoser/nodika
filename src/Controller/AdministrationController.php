@@ -67,7 +67,6 @@ class AdministrationController extends BaseFormController
      */
     public function eventsAction(Request $request, CsvServiceInterface $csvService, TranslatorInterface $translator)
     {
-
         $searchModel = new SearchModel();
 
         $export = false;

@@ -16,6 +16,9 @@ Encore
     // allow legacy applications to use $/jQuery as a global variable
     .autoProvidejQuery()
 
+    // enable vue.js loader
+    .enableVueLoader()
+
     // allow debugging of minified assets
     .enableSourceMaps(!Encore.isProduction())
 
@@ -27,9 +30,6 @@ Encore
 
     // create hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
-
-    // faster builds
-    .enableSassLoader()
 ;
 
 // export the final configuration

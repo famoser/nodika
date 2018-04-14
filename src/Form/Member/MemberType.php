@@ -11,11 +11,13 @@
 
 namespace App\Form\Member;
 
+use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\Address\AddressType;
 use App\Form\Traits\Communication\CommunicationType;
 use App\Form\Traits\Thing\ThingType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -26,6 +28,7 @@ class MemberType extends BaseAbstractType
         $builder->add("thing", ThingType::class, ["inherit_data" => true]);
         $builder->add("address", AddressType::class, ["inherit_data" => true]);
         $builder->add("communication", CommunicationType::class, ["inherit_data" => true]);
+        $builder->add("frontendUsers", EntityType::class, ["class" => FrontendUser::class, "multiple" => true, "by_reference" => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

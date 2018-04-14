@@ -46,7 +46,7 @@ class SearchController extends BaseFormController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function searchAction(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
+    public function indexAction(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
     {
         $searchModel = new SearchModel();
 
@@ -73,6 +73,6 @@ class SearchController extends BaseFormController
         $arr["event_line_models"] = $eventLineModels;
         $arr["search_form"] = $form;
 
-        return $this->render('event/search.html.twig', $arr);
+        return $this->render('search/index.html.twig', $arr);
     }
 }

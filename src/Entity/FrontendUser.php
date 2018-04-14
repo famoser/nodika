@@ -136,4 +136,12 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     {
         $this->isAdministrator = $isAdministrator;
     }
+
+    /**
+     * @param Member[]|ArrayCollection $members
+     */
+    public function setMembers($members): void
+    {
+        $this->members = $members;
+    }
 }

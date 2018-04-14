@@ -81,4 +81,22 @@ class Member extends BaseEntity
     {
         return $this->events;
     }
+
+    /**
+     * @param FrontendUser $frontendUser
+     */
+    public function addFrontendUser(FrontendUser $frontendUser)
+    {
+        $this->frontendUsers->add($frontendUser);
+        $frontendUser->getMembers()->add($this);
+    }
+
+    /**
+     * @param FrontendUser $frontendUser
+     */
+    public function removeFrontendUser(FrontendUser $frontendUser)
+    {
+        $this->frontendUsers->remove($frontendUser);
+        $frontendUser->getMembers()->remove($this);
+    }
 }
