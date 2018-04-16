@@ -12,11 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
-use App\Controller\Base\BaseFrontendController;
 use App\Entity\EventLine;
-use App\Entity\Member;
-use App\Entity\Person;
-use App\Helper\DateTimeFormatter;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,6 +45,9 @@ class CronJobController extends BaseDoctrineController
      * @param EmailService $emailService
      *
      * @return Response
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     public function dailyAction($secret, TranslatorInterface $translator, EmailService $emailService)
     {

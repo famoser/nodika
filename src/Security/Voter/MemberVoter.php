@@ -13,13 +13,12 @@ namespace App\Security\Voter;
 
 use App\Entity\FrontendUser;
 use App\Entity\Member;
+use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class MemberVoter extends OrganisationVoter
+class MemberVoter extends BaseVoter
 {
     /**
-     * Determines if the attribute and subject are supported by this voter.
-     *
      * @param string $attribute An attribute
      * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
      *
@@ -27,17 +26,7 @@ class MemberVoter extends OrganisationVoter
      */
     protected function supports($attribute, $subject)
     {
-        // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW, self::EDIT, self::REMOVE, self::ADMINISTRATE], true)) {
-            return false;
-        }
-
-        // only vote on Post objects inside this voter
-        if (!$subject instanceof Member) {
-            return false;
-        }
-
-        return true;
+        return $subject instanceof Member;
     }
 
     /**
@@ -59,20 +48,6 @@ class MemberVoter extends OrganisationVoter
         }
 
         //check if own member
-        $own = $subject->getFrontendUsers()->contains($user->getPerson());
-
-        $organisation = $subject->getOrganisation();
-
-        switch ($attribute) {
-            case self::VIEW:
-                return $own || parent::voteOnAttribute(self::VIEW, $organisation, $token);
-            case self::EDIT:
-                return $own || parent::voteOnAttribute(self::ADMINISTRATE, $organisation, $token);
-            case self::ADMINISTRATE:
-            case self::REMOVE:
-                return parent::voteOnAttribute(self::ADMINISTRATE, $organisation, $token);
-        }
-
-        throw new \LogicException('This code should not be reached!');
+        return $user->getMembers()->contains($subject) || $user->isAdministrator();
     }
 }

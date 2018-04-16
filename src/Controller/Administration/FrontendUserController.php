@@ -11,21 +11,13 @@
 
 namespace App\Controller\Administration;
 
-use App\Controller\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\FrontendUser;
-use App\Entity\Organisation;
-use App\Entity\Person;
-use App\Enum\SubmitButtonType;
 use App\Form\FrontendUser\RemoveFrontendUserType;
-use App\Security\Voter\FrontendUserVoter;
-use App\Security\Voter\PersonVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/frontend_users")

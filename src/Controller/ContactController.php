@@ -11,13 +11,11 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseDoctrineController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Settings;
 use App\Form\Model\ContactRequest\ContactRequestType;
 use App\Model\ContactRequest;
 use App\Service\EmailService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

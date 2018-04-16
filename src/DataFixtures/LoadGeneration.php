@@ -12,16 +12,12 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
+use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
-use App\Entity\EventGenerationFrontendUser;
 use App\Entity\EventGenerationMember;
 use App\Entity\EventLine;
-use App\Entity\EventGeneration;
-use App\Entity\FrontendUser;
 use App\Entity\Member;
-use App\Entity\Settings;
 use App\Enum\EventType;
-use App\Enum\GenerationStatus;
 use App\Helper\DateTimeFormatter;
 use Doctrine\Common\Persistence\ObjectManager;
 

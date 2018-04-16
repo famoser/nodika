@@ -13,18 +13,11 @@ namespace App\Form\EventGenerationDateException;
 
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
-use App\Entity\EventGenerationFrontendUser;
-use App\Entity\EventGenerationMember;
-use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Enum\EventType;
 use App\Form\Base\BaseAbstractType;
-use App\Form\Traits\Address\AddressType;
-use App\Form\Traits\Communication\CommunicationType;
-use App\Form\Traits\Thing\ThingType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

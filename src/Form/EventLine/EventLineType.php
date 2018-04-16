@@ -12,9 +12,7 @@
 namespace App\Form\EventLine;
 
 use App\Entity\EventLine;
-use App\Entity\Traits\ThingTrait;
 use App\Form\Base\BaseAbstractType;
-use App\Form\BaseCrudAbstractType;
 use App\Form\Traits\Thing\ThingType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;

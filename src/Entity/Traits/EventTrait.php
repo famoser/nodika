@@ -8,8 +8,10 @@
 
 namespace App\Entity\Traits;
 
+
 use App\Entity\EventLine;
 use App\Entity\EventGeneration;
+use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Enum\EventType;

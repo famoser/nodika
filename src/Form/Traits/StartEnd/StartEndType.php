@@ -11,11 +11,8 @@
 
 namespace App\Form\Traits\StartEnd;
 
-use App\Entity\EventGeneration;
 use App\Form\Base\BaseAbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

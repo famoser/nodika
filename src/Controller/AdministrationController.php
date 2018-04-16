@@ -11,21 +11,17 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Form\Model\Event\AdvancedSearchType;
-use App\Form\Model\Event\SearchType;
 use App\Model\Event\SearchModel;
-use App\Security\Voter\OrganisationVoter;
 use App\Service\Interfaces\CsvServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

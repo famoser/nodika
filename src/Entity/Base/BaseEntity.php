@@ -11,9 +11,6 @@
 
 namespace App\Entity\Base;
 
-use App\Framework\TranslatableObject;
-use Symfony\Component\Form\FormBuilderInterface;
-
 abstract class BaseEntity
 {
 }

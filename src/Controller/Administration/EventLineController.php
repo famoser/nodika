@@ -11,27 +11,12 @@
 
 namespace App\Controller\Administration;
 
-use App\Controller\Base\BaseController;
 use App\Controller\Base\BaseFormController;
-use App\Entity\Event;
 use App\Entity\EventLine;
-use App\Entity\Member;
-use App\Entity\Organisation;
-use App\Enum\SubmitButtonType;
-use App\Form\Event\ImportEventsType;
-use App\Helper\DateTimeFormatter;
-use App\Helper\StaticMessageHelper;
-use App\Model\Form\ImportFileModel;
-use App\Security\Voter\EventLineVoter;
-use App\Security\Voter\OrganisationVoter;
-use App\Service\ExchangeService;
-use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/event_line")

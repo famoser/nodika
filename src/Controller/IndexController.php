@@ -14,7 +14,6 @@ namespace App\Controller;
 use App\Controller\Base\BaseDoctrineController;
 use App\Entity\EventLine;
 use App\Model\Event\SearchModel;
-use App\Service\Interfaces\SettingServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
