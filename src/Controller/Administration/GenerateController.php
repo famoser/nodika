@@ -11,7 +11,6 @@
 
 namespace App\Controller\Administration;
 
-use App\Controller\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\EventGeneration;
 use App\Form\EventGeneration\BasicDataType;

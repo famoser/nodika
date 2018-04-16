@@ -14,8 +14,6 @@ namespace App\Model\Event;
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
-use App\Entity\Organisation;
-use App\Entity\Person;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class SearchModel

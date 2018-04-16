@@ -12,7 +12,6 @@
 namespace App\Entity\Traits;
 
 use App\Entity\FrontendUser;
-use App\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 /*
@@ -110,6 +109,6 @@ trait ChangeAwareTrait
         if ($this->createdBy == null) {
             $this->createdBy = $frontendUser;
         }
-        $this->changedBy = $frontendUser;
+        $this->lastChangedBy = $frontendUser;
     }
 }

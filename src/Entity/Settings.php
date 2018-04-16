@@ -12,19 +12,9 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
-use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\ChangeAwareTrait;
-use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\IdTrait;
-use App\Entity\Traits\InvitedTrait;
-use App\Entity\Traits\PersonTrait;
-use App\Entity\Traits\SoftDeleteTrait;
-use App\Entity\Traits\UserTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Symfony\Component\Security\Core\User\EquatableInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SettingsRepository")
@@ -63,6 +53,13 @@ class Settings extends BaseEntity
      * @ORM\Column(type="text")
      */
     private $frontendUserName;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $confirmDaysAdvance;
 
     /**
      * @return string
@@ -126,5 +123,21 @@ class Settings extends BaseEntity
     public function setSupportMail(string $supportMail): void
     {
         $this->supportMail = $supportMail;
+    }
+
+    /**
+     * @return int
+     */
+    public function getConfirmDaysAdvance(): int
+    {
+        return $this->confirmDaysAdvance;
+    }
+
+    /**
+     * @param int $confirmDaysAdvance
+     */
+    public function setConfirmDaysAdvance(int $confirmDaysAdvance): void
+    {
+        $this->confirmDaysAdvance = $confirmDaysAdvance;
     }
 }

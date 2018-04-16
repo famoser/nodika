@@ -11,12 +11,8 @@
 
 namespace App\Repository;
 
-use App\Entity\Event;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
 use App\Entity\Settings;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * MemberRepository.

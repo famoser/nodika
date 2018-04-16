@@ -16,7 +16,6 @@ use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\EventTrait;
 use App\Entity\Traits\IdTrait;
 use App\Enum\EventChangeType;
-use App\Helper\DateTimeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

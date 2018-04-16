@@ -16,12 +16,8 @@ namespace App\Form\EventOfferAuthorization;
 use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Entity\EventOfferAuthorization;
-use App\Entity\EventOfferEntry;
 use App\Form\Base\BaseAbstractType;
-use App\Form\Event\EventType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

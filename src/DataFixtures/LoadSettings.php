@@ -12,8 +12,6 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
 use App\Entity\Settings;
 use Doctrine\Common\Persistence\ObjectManager;
 

@@ -14,14 +14,12 @@ namespace App\Service;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Entity\EventLine;
-use App\Entity\Traits\EventGenerationTarget;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
 use App\EventGeneration\EventTarget;
 use App\EventGeneration\QueueGenerator;
 use App\Exception\GenerationException;
 use App\Model\Event\SearchModel;
-use App\Model\EventGenerationService\IdealQueueMember;
 use App\Service\Interfaces\EventGenerationServiceInterface;
 use Cron\CronExpression;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -268,10 +266,9 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * assigns the default event types (weekdays, saturdays, sundays)
      *
-     * @param EventGeneration $eventGeneration
      * @param Event[] $events
      */
-    private function assignEventType(EventGeneration $eventGeneration, array $events)
+    private function assignNaiveEventType(array $events)
     {
         foreach ($events as $event) {
             $dayOfWeek = $event->getStartDateTime()->format('N');
@@ -318,11 +315,11 @@ class EventGenerationService implements EventGenerationServiceInterface
         $targets = [];
         $currentId = 1;
         foreach ($eventGeneration->getFrontendUsers() as $frontendUser) {
-            $targets[$currentId] = EventTarget::fromFrontendUser($currentId, $frontendUser);
+            $targets[$currentId] = EventTarget::fromFrontendUser($frontendUser);
             $currentId++;
         }
         foreach ($eventGeneration->getMembers() as $member) {
-            $targets[$currentId] = EventTarget::fromMember($currentId, $member);
+            $targets[$currentId] = EventTarget::fromMember($member);
             $currentId++;
         }
         return $targets;
@@ -470,7 +467,7 @@ class EventGenerationService implements EventGenerationServiceInterface
     {
         //create events & fill out properties
         $events = $this->constructEvents($eventGeneration);
-        $this->assignEventType($eventGeneration, $events);
+        $this->assignNaiveEventType($events);
         $this->processExceptions($eventGeneration, $events);
         if (count($events) == 0) {
             return $events;

@@ -12,8 +12,8 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
-use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\ChangeAwareTrait;
+use App\Entity\Traits\IdTrait;
 use App\Enum\OfferStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -68,30 +68,6 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * Get closeDateTime.
-     *
-     * @return \DateTime
-     */
-    public function getOpenDateTime()
-    {
-        return $this->openDateTime;
-    }
-
-    /**
-     * Set closeDateTime.
-     *
-     * @param \DateTime $openDateTime
-     *
-     * @return EventOffer
-     */
-    public function setOpenDateTime($openDateTime)
-    {
-        $this->openDateTime = $openDateTime;
-
-        return $this;
-    }
-
-    /**
      * Get status.
      *
      * @return int
@@ -137,22 +113,6 @@ class EventOffer extends BaseEntity
         $this->message = $message;
 
         return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCloseDateTime()
-    {
-        return $this->closeDateTime;
-    }
-
-    /**
-     * @param \DateTime $closeDateTime
-     */
-    public function setCloseDateTime($closeDateTime)
-    {
-        $this->closeDateTime = $closeDateTime;
     }
 
     /**

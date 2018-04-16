@@ -9,13 +9,9 @@
 namespace App\Controller\Traits;
 
 
-use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Helper\DateTimeFormatter;
-use App\Model\Event\SearchModel;
 use App\Model\EventLine\EventLineModel;
-use App\Repository\EventLineRepository;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Translation\TranslatorInterface;
 
 trait EventControllerTrait

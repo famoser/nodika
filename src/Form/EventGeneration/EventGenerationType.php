@@ -12,10 +12,7 @@
 namespace App\Form\EventGeneration;
 
 use App\Entity\EventGeneration;
-use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
-use App\Form\Traits\Address\AddressType;
-use App\Form\Traits\Communication\CommunicationType;
 use App\Form\Traits\Thing\ThingType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

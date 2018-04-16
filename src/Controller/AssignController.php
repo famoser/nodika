@@ -12,22 +12,10 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use App\Controller\Traits\EventControllerTrait;
-use App\Entity\Event;
 use App\Entity\EventLine;
-use App\Entity\EventPast;
-use App\Enum\EventChangeType;
-use App\Form\Model\Event\SearchType;
-use App\Helper\DateTimeFormatter;
 use App\Model\Event\SearchModel;
-use App\Service\Interfaces\CsvServiceInterface;
-use App\Service\Interfaces\SettingServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/assign")

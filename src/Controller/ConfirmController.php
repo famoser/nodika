@@ -16,16 +16,10 @@ use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
 use App\Entity\EventLine;
 use App\Entity\EventPast;
+use App\Entity\Settings;
 use App\Enum\EventChangeType;
-use App\Form\Model\Event\SearchType;
-use App\Helper\DateTimeFormatter;
 use App\Model\Event\SearchModel;
-use App\Service\Interfaces\CsvServiceInterface;
-use App\Service\Interfaces\SettingServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -77,16 +71,18 @@ class ConfirmController extends BaseFormController
      *
      * @param TranslatorInterface $translator
      *
-     * @param SettingServiceInterface $settingService
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
      */
-    public function allAction(TranslatorInterface $translator, SettingServiceInterface $settingService)
+    public function allAction(TranslatorInterface $translator)
     {
+        $setting = $this->getDoctrine()->getRepository(Settings::class)->findSingle();
+
         $searchModel = new SearchModel();
         $searchModel->setIsConfirmed(false);
         $searchModel->setFrontendUser($this->getUser());
         $end = new \DateTime();
-        $end->add($settingService->getCanConfirmEventAt());
+        $end->add(new \DateInterval("P" . $setting->getConfirmDaysAdvance()."T"));
         $searchModel->setStartDateTime(new \DateTime());
         $searchModel->setEndDateTime($end);
 

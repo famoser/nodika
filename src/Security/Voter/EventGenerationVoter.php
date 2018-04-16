@@ -11,13 +11,14 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Event;
+use App\Entity\EventGeneration;
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class EventLineVoter extends BaseVoter
+class EventGenerationVoter extends BaseVoter
 {
     /**
      * @param string $attribute An attribute
@@ -27,6 +28,6 @@ class EventLineVoter extends BaseVoter
      */
     protected function supports($attribute, $subject)
     {
-        return $subject instanceof EventLine;
+        return $subject instanceof EventGeneration;
     }
 }

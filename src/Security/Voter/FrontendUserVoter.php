@@ -11,13 +11,12 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Event;
-use App\Entity\EventLine;
-use App\Entity\EventGeneration;
 use App\Entity\FrontendUser;
+use App\Entity\Member;
+use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class EventLineGenerationVoter extends EventLineVoter
+class FrontendUserVoter extends BaseVoter
 {
     /**
      * @param string $attribute An attribute
@@ -27,17 +26,15 @@ class EventLineGenerationVoter extends EventLineVoter
      */
     protected function supports($attribute, $subject)
     {
-        // only vote on Post objects inside this voter
-        if (!$subject instanceof EventGeneration) {
-            return false;
-        }
-
-        return true;
+        return $subject instanceof FrontendUser;
     }
 
     /**
+     * Perform a single access check operation on a given attribute, subject and token.
+     * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
+     *
      * @param string $attribute
-     * @param Event $subject
+     * @param FrontendUser $subject
      * @param TokenInterface $token
      *
      * @return bool
@@ -50,11 +47,7 @@ class EventLineGenerationVoter extends EventLineVoter
             return false;
         }
 
-        $eventLine = $subject->getEventLine();
-        if (!$eventLine instanceof EventLine) {
-            return false;
-        }
-
-        return parent::voteOnAttribute(self::ADMINISTRATE, $eventLine, $token);
+        //check if own member
+        return $user->getId() == $subject->getId() ||  $user->isAdministrator();
     }
 }

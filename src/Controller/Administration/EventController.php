@@ -11,27 +11,17 @@
 
 namespace App\Controller\Administration;
 
-use App\Controller\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
-use App\Entity\EventLine;
 use App\Entity\EventPast;
-use App\Entity\Organisation;
 use App\Enum\EventChangeType;
-use App\Enum\SubmitButtonType;
 use App\Form\Event\RemoveEventType;
-use App\Model\EventPast\EventPastEvaluation;
-use App\Security\Voter\EventLineVoter;
-use App\Security\Voter\EventVoter;
-use App\Service\EventPastEvaluationService;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/events")

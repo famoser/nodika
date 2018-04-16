@@ -11,9 +11,6 @@
 
 namespace App\Service\Interfaces;
 
-use App\Entity\Event;
-use App\Entity\EventGeneration;
-
 interface IdealQueueServiceInterface
 {
     /**
