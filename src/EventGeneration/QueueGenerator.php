@@ -8,7 +8,6 @@
 
 namespace App\EventGeneration;
 
-
 class QueueGenerator
 {
     /**
@@ -93,8 +92,9 @@ class QueueGenerator
     {
         $this->incrementAll();
 
-        if (isset($this->queueEntries[$member]))
+        if (isset($this->queueEntries[$member])) {
             $this->queueEntries[$member]->issue();
+        }
     }
 
     /**x

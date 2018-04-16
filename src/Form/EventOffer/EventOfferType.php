@@ -11,7 +11,6 @@
 
 namespace App\Form\EventOffer;
 
-
 use App\Entity\EventOffer;
 use App\Form\Base\BaseAbstractType;
 use App\Form\EventOfferEntry\EventOfferEntryType;

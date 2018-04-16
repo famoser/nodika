@@ -8,7 +8,6 @@
 
 namespace App\EventGeneration;
 
-
 class QueueEntry
 {
     /**

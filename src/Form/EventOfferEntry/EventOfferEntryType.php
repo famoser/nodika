@@ -11,8 +11,6 @@
 
 namespace App\Form\EventOfferEntry;
 
-
-
 use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Entity\EventOfferAuthorization;

@@ -140,5 +140,4 @@ class EventOfferEntry extends BaseEntity
     {
         $this->eventOfferAuthorization = $eventOfferAuthorization;
     }
-
 }

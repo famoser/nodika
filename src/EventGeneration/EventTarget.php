@@ -8,7 +8,6 @@
 
 namespace App\EventGeneration;
 
-
 use App\Entity\EventGenerationFrontendUser;
 use App\Entity\EventGenerationMember;
 use App\Entity\FrontendUser;

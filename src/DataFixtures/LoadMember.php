@@ -52,7 +52,6 @@ class LoadMember extends BaseFixture
                     $manager->persist($user);
                 }
             }
-
         }
 
         $manager->flush();

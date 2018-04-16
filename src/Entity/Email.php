@@ -167,8 +167,9 @@ class Email extends BaseEntity
      */
     public function getCarbonCopyArray()
     {
-        if (strlen($this->carbonCopy) > 0)
+        if (strlen($this->carbonCopy) > 0) {
             return explode(",", $this->carbonCopy);
+        }
         return [];
     }
 

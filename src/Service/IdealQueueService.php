@@ -8,8 +8,6 @@
 
 namespace App\Service;
 
-
 class IdealQueueService
 {
-
 }

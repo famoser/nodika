@@ -116,8 +116,9 @@ class GenerateController extends BaseFormController
             }
         );
 
-        if ($arr instanceof Response)
+        if ($arr instanceof Response) {
             return $arr;
+        }
 
         return $this->render('administration/generate/basic.html.twig', $arr);
     }

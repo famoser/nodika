@@ -301,11 +301,11 @@ class EventGenerationService implements EventGenerationServiceInterface
                     $event->getStartDateTime() <= $dateException->getEndDateTime()
                 ) {
                     //apply the special stuff
-                    if ($dateException->getEventType() != null)
+                    if ($dateException->getEventType() != null) {
                         $event->setEventType($dateException->getEventType());
+                    }
                 }
             }
-
         }
     }
 
@@ -413,7 +413,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             } else {
                 $result[] = $eventTarget::NONE_IDENTIFIER;
             }
-
         }
         return $result;
     }
@@ -436,7 +435,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             foreach ($eventTargets as $eventTarget) {
                 if ($eventTarget->getFrontendUser() != null) {
                     $this->eventTargetFrontendUserCache[$eventTarget->getFrontendUser()->getId()] = $eventTarget;
-                } else if ($eventTarget->getMember() != null) {
+                } elseif ($eventTarget->getMember() != null) {
                     $this->eventTargetMemberCache[$eventTarget->getMember()->getId()] = $eventTarget;
                 }
             }

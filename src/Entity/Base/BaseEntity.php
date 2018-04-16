@@ -16,5 +16,4 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 abstract class BaseEntity
 {
-
 }

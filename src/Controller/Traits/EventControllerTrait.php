@@ -8,7 +8,6 @@
 
 namespace App\Controller\Traits;
 
-
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Helper\DateTimeFormatter;

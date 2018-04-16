@@ -8,7 +8,6 @@
 
 namespace App\Entity\Traits;
 
-
 use App\Entity\EventGeneration;
 use Doctrine\ORM\Mapping as ORM;
 
