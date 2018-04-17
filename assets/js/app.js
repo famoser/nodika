@@ -1,7 +1,7 @@
 require("../sass/app.sass");
-var $ = require("jquery");
-var bootstrap = require("bootstrap");
-var multiselect = require("bootstrap-multiselect/dist/js/bootstrap-multiselect.js");
+const $ = require("jquery");
+const bootstrap = require("bootstrap");
+const multiselect = require("bootstrap-multiselect/dist/js/bootstrap-multiselect.js");
 
 window.$ = $;
 
@@ -19,15 +19,15 @@ fontawesome.library.add(
 
 
 //prevent double submit & give user instant feedback
-var disableFormButton = function () {
-    var $form = $(this);
-    var $buttons = $(".btn", $form);
+const disableFormButton = function () {
+    const $form = $(this);
+    const $buttons = $(".btn", $form);
     if (!$buttons.hasClass("no-disable")) {
         $buttons.addClass("disabled");
     }
 };
 
-var initializeSelects = function () {
+const initializeSelects = function () {
     $('select[multiple]').multiselect({
         buttonClass: 'btn btn-secondary',
         templates: {
@@ -41,17 +41,17 @@ var initializeSelects = function () {
     });
 };
 
-var initializeAjax = function (event) {
+const initializeAjax = function (event) {
     event.preventDefault();
-    var $form = $(this);
-    var url = $form.attr("action");
+    const $form = $(this);
+    const url = $form.attr("action");
 
     $.ajax({
         type: "POST",
         url: url,
         data: $form.serialize(), // serializes the form's elements.
         success: function (data) {
-            var $buttons = $(".btn", $form);
+            const $buttons = $(".btn", $form);
             $buttons.removeClass("disabled");
         }
     });

@@ -62,6 +62,12 @@
 
                         </div>
                     </li>
+                    {% if user is defined and user.administrator %}
+                        <div class="form-inline">
+                            <a class="btn btn-sm btn-outline-secondary" type="button"
+                               href="{{ path("administration_index") }}">{{ "index.title"|trans({}, "administration") }}</a>
+                        </div>
+                    {% endif %}
                 </ul>
 
                 <ul class="navbar-nav ml-auto">

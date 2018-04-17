@@ -33,9 +33,6 @@
 
 {% macro quick_link(name, description, link) %}
     <div class="card w-25" href="{{ path('assign_index') }}">
-        <div class="card-header">
-            {{ name }}
-        </div>
         <div class="card-body">
             <p>
                 {{ description }}
@@ -57,10 +54,6 @@
             {{ local_macro.quick_link("index.title"|trans({}, "trade"), "index.description"|trans({}, "trade"), path("trade_index")) }}
             {{ local_macro.quick_link("index.title"|trans({}, "confirm"), "index.description"|trans({}, "confirm"), path("confirm_index")) }}
             {{ local_macro.quick_link("index.title"|trans({}, "search"), "index.description"|trans({}, "search"), path("search_index")) }}
-
-            {% if user.administrator %}
-                {{ local_macro.quick_link("index.title"|trans({}, "administration"), "index.description"|trans({}, "administration"), path("administration_index")) }}
-            {% endif %}
 
             {% for eventLineModel in event_line_models %}
                 <div class="card w-100">

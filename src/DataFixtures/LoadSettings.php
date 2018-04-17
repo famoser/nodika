@@ -31,6 +31,7 @@ class LoadSettings extends BaseFixture
         $setting->setMemberName("Praxis");
         $setting->setOrganisationName("knbu.ch");
         $setting->setSupportMail('support@famoser.ch');
+        $setting->setConfirmDaysAdvance(10);
         $manager->persist($setting);
         $manager->flush();
     }
