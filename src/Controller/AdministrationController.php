@@ -16,6 +16,7 @@ use App\Controller\Traits\EventControllerTrait;
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
+use App\Entity\Settings;
 use App\Form\Model\Event\AdvancedSearchType;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
@@ -100,8 +101,10 @@ class AdministrationController extends BaseFormController
     {
         $frontendUserRepo = $this->getDoctrine()->getRepository(FrontendUser::class);
 
-        $arr["frontend_users"] = $frontendUserRepo->findBy(["isEnabled" => true]);
+        /* @var FrontendUser[] $frontendUsers */
+        $frontendUsers = $frontendUserRepo->findBy(["isEnabled" => true]);
 
+        $arr["frontend_users"] = $frontendUsers;
         return $this->render('administration/frontend_users.html.twig', $arr);
     }
 
@@ -131,5 +134,19 @@ class AdministrationController extends BaseFormController
         $arr["event_lines"] = $eventLineRepo->findAll();
 
         return $this->render('administration/event_lines.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/settings", name="administration_settings")
+     *
+     * @return Response
+     */
+    public function settingsAction()
+    {
+        $settings = $this->getDoctrine()->getRepository(Settings::class)->findSingle();
+
+        $arr["settings"] = $settings;
+
+        return $this->render('administration/settings.html.twig', $arr);
     }
 }

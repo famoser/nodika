@@ -2,3 +2,23 @@
 index:
   title: 'Administration'
   description: 'Verwalten Sie die Benutzer und Termine'
+
+frontend_users:
+  title: 'Benutzerverwaltung'
+  description: 'Benutzer erstellen und bearbeiten, Passwörter zusenden und zurücksetzen, ...'
+
+members:
+  title: 'Mitgliederverwaltung'
+  description: 'Mitglieder erstellen und bearbeiten, Benutzer zuweisen, ...'
+
+events:
+  title: 'Terminverwaltung'
+  description: 'Termine  erstellen und bearbeiten, bestätigen, neu zuweisen, ändern, generieren, exportieren, ...'
+
+settings:
+  title: 'Einstellungen'
+  description: 'Emailversand ändern, Limiten festlegen, ...'
+
+event_lines:
+  title: 'Termingruppenverwaltung'
+  description: 'Terminegruppen erstellen und bearbeiten'

@@ -1,25 +1,51 @@
 {% extends "single_content_base.html.twig" %}
-{% set theme_color = globals_theme_color_member %}
-{% import "macros/members.html.twig" as members %}
 
-{% block title %}{{ "members.title"|trans }}{% endblock %}
-{% block description %}{{ "members.description"|trans }}{% endblock %}
+{% block title %}{{ "frontend_users.title"|trans }}{% endblock %}
+{% block description %}{{ "frontend_users.description"|trans }}{% endblock %}
 
-{% trans_default_domain "administration_organisation" %}
+{% trans_default_domain "administration" %}
 
 {% block single_content %}
-    <h3>{{ "entity.name"|trans({}, "entity_member") }}</h3>
+
     <p>
-        {{ "entity.description"|trans({}, "entity_member") }}
+        <a class="btn btn-secondary" href="{{ path("administration_frontend_user_new") }}">
+            {{ "new.title"|trans({}, "administration_frontend_user") }}
+        </a>
     </p>
-    {{ members.show_table(organisation, organisation.members, true) }}
-    <p>
-        <a href="{{ path("administration_organisation_member_new", {"organisation" : organisation.id}) }}">{{ "members.new_action"|trans }}</a>
-        <br/>
-        <a href="{{ path("administration_organisation_member_import", {"organisation" : organisation.id}) }}">{{ "members.import_action"|trans }}</a>
-        <br/>
-        <a href="{{ path("administration_organisation_members_invite", {"organisation" : organisation.id}) }}">{{ "members.invite_action"|trans }}</a>
-        <br/>
-        <a href="{{ path("administration_organisation_persons_invite", {"organisation" : organisation.id}) }}">{{ "members.invite_person_action"|trans }}</a>
-    </p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ "full_name"|trans({}, "trait_person") }}</th>
+            <th>{{ "email"|trans({}, "trait_user") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_member") }}</th>
+            <th>{{ "can_login"|trans({}, "trait_user") }}</th>
+            <th class="minimal-width"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for frontend_user in frontend_users %}
+            <tr>
+                <td>{{ frontend_user.fullName }}</td>
+                <td>{{ frontend_user.email }}</td>
+                <td>{{ frontend_user.members|join(", ") }}</td>
+                <td>
+                    {{ frontend_user.canLogin|booleanFormat }}
+                    <br/>
+                    <a href="{{ path("administration_frontend_user_toggle_login_enabled", {"frontendUser" : frontend_user.id}) }}">
+                        {{ "toggle_login_enabled.change"|trans({}, "administration_frontend_user") }}
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-secondary"
+                       href="{{ path("administration_frontend_user_edit", {"frontendUser" : frontend_user.id}) }}">
+                        <i class="fas fa-edit"></i>
+
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
 {% endblock %}

@@ -1,26 +1,16 @@
-#new page
 new:
-  title: 'Neuer Mitarbeiter'
-  description: 'Fügen Sie einen neuen Mitarbeiter zur Praxis hinzu'
-  person_add_form: 'Mitarbeiter erfassen'
-  about: 'Mitarbeiter'
-  about_description: 'Ein Mitarbeiter ist Teil einer Praxis.'
-  person_address: 'Adresse'
-  person_address_description: 'Adresse des Mitarbeiter. Sie können auch nur den Namen der Person ausfüllen, und sie ergänzt dann selber die fehlenden Informationen'
-  person_contact: 'Kontaktinformationen'
-  person_contact_description: 'An diese hinterlegte E-Mail werden die E-Mails versandt (z.B. zu Registrierung oder Terminerinnerungen)'
+  title: 'Neuer Benutzer'
+  description: 'Neuer Benutzer erstellen'
 
-#edit page
 edit:
-  title: 'Mitarbeiter bearbeiten'
-  description: 'Editieren Sie diesen Mitarbeiter'
-  person_edit_form: 'Mitarbeiter ändern'
+  title: 'Benutzer bearbeiten'
+  description: 'Ändern Sie Adresse, Email & Namen des Benutzers'
 
-#remove description
 remove:
-  title: 'Mitarbeiter entfernen'
-  description: 'Löschen Sie den Mitarbeiter und alle damit verbundenen Daten'
-  person_remove_form: 'Mitarbeiter entfernen'
-  remove: 'Mitarbeiter entfernen'
-  remove_description: 'Entfernen Sie den Mitarbeiter und damit alle seine verbundenen Daten.'
+  title: 'Benutzer entfernen'
+  description: 'Löschen Sie den Benutzer und alle damit verbundenen Daten'
+
+toggle_login_enabled:
+  title: 'Login erlauben ändern'
+  change: 'ändern'
   

@@ -99,4 +99,19 @@ class FrontendUserController extends BaseFormController
 
         return $this->render('administration/frontend_user/remove.html.twig');
     }
+
+
+    /**
+     * @Route("/{frontendUser}/toggle_login_enabled", name="administration_frontend_user_toggle_login_enabled")
+     *
+     * @param FrontendUser $frontendUser
+     *
+     * @return Response
+     */
+    public function toggleLoginEnabled(FrontendUser $frontendUser)
+    {
+        $frontendUser->setIsEnabled(!$frontendUser->isEnabled());
+        $this->fastSave($frontendUser);
+        return $this->redirectToRoute("administration_frontend_users");
+    }
 }

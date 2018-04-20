@@ -99,4 +99,9 @@ class Member extends BaseEntity
         $this->frontendUsers->remove($frontendUser);
         $frontendUser->getMembers()->remove($this);
     }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
 }

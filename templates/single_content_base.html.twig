@@ -1,19 +1,17 @@
 {% extends 'layout_base.html.twig' %}
-{% import "widgets/breadcrumb.html.twig" as breadcrumb %}
 
 {% block content %}
     <section class="content">
-        {% if breadcrumbs is defined %}
-            {{ breadcrumb.breadcrumbs(breadcrumbs, app.request, block("title")) }}
-        {% endif %}
-        <div class="container index-container white-color">
-            <h1>{{ block("title") }}</h1>
-            <h2>{% block description %}{% endblock %}</h2>
+        <div class="container jumbotron">
+            <h1 class="display-3">{{ block("title") }}</h1>
+            <p class="lead">{% block description %}{% endblock %}</p>
         </div>
 
-        <div class="container index-container default-color">
-            {% block single_content %}
-            {% endblock single_content %}
+        <div class="container card">
+            <div class="card-body">
+                {% block single_content %}
+                {% endblock single_content %}
+            </div>
         </div>
     </section>
 {% endblock %}

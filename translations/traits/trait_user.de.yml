@@ -10,3 +10,4 @@ password: Passwort
 plain_password: Passwort
 repeat_plain_password: Passwort wiederholen
 email: Email
+can_login: 'Login möglich'
