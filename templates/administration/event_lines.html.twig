@@ -1,6 +1,5 @@
 {% extends "single_content_base.html.twig" %}
 {% set theme_color = globals_theme_color_event_line %}
-{% import "macros/event_lines.html.twig" as event_lines %}
 
 {% block title %}{{ "event_lines.title"|trans }}{% endblock %}
 {% block description %}{{ "event_lines.description"|trans }}{% endblock %}
@@ -12,7 +11,9 @@
     <p>
         {{ "entity.description"|trans({}, "entity_event_line") }}
     </p>
-    {{ event_lines.show_table(organisation, organisation.eventLines, true) }}
+    <table class="table">
+
+    </table>
     <p>
         <a href="{{ path("administration_organisation_event_line_new", {"organisation" : organisation.id}) }}">{{ "event_lines.new_action"|trans }}</a>
     </p>

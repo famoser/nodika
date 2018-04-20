@@ -15,10 +15,10 @@
     {% endif %}
     <tr class="{{ class }}">
         <td>
-            {{ event.startDateTime|myDateTime }}
+            {{ event.startDateTime|dateTimeFormat }}
         </td>
         <td>
-            {{ event.endDateTime|myDateTime }}
+            {{ event.endDateTime|dateTimeFormat }}
         </td>
         <td>
             {{ event.member }}

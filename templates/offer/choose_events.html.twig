@@ -22,7 +22,7 @@
                     <h4>{{ myEventLineModel.eventLine.name }}</h4>
                     {% if myEventLineModel.events|length > 0 %}
                         {% for event in myEventLineModel.events %}
-                            {{ kitchen_sink.toggle_form_field("event_" ~ event.id, event.id in offered, event.startDateTime|myDateTime ~ " - " ~ event.endDateTime|myDateTime) }}
+                            {{ kitchen_sink.toggle_form_field("event_" ~ event.id, event.id in offered, event.startDateTime|dateTimeFormat ~ " - " ~ event.endDateTime|dateTimeFormat) }}
                         {% endfor %}
                     {% else %}
                         <p>{{ "choose_events.no_available_events"|trans }}</p>
@@ -46,7 +46,7 @@
                     <h4>{{ theirEventLineModel.eventLine.name }}</h4>
                     {% if theirEventLineModel.events|length > 0 %}
                         {% for event in theirEventLineModel.events %}
-                            {{ kitchen_sink.toggle_form_field("event_" ~ event.id, event.id in offered, event.startDateTime|myDateTime ~ " - " ~ event.endDateTime|myDateTime) }}
+                            {{ kitchen_sink.toggle_form_field("event_" ~ event.id, event.id in offered, event.startDateTime|dateTimeFormat ~ " - " ~ event.endDateTime|dateTimeFormat) }}
                         {% endfor %}
                     {% else %}
                         <p>{{ "choose_events.no_available_events"|trans }}</p>

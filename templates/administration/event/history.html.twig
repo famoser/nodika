@@ -10,11 +10,11 @@
 
 {% block primary_content %}
     <h3>{{ "view.title"|trans }}</h3>
-    {{ kitchen_sink.view_property("start_date_time"|trans({}, "entity_event"), event.startDateTime|myDateTime) }}
+    {{ kitchen_sink.view_property("start_date_time"|trans({}, "entity_event"), event.startDateTime|dateTimeFormat) }}
     <h3>{{ "entity.plural"|trans({}, "entity_event_past") }}</h3>
     <hr/>
     {% for eventPast in eventPasts %}
-        {{ kitchen_sink.view_property("changed_at_date_time"|trans({}, "model_event_past_evaluation"), eventPast.changedAtDateTime|myDateTime) }}
+        {{ kitchen_sink.view_property("changed_at_date_time"|trans({}, "model_event_past_evaluation"), eventPast.changedAtDateTime|dateTimeFormat) }}
         {{ kitchen_sink.view_property("event_change_type"|trans({}, "model_event_past_evaluation"), eventPast.eventChangeTypeText|trans({}, "enum_event_change_type")) }}
         {{ kitchen_sink.view_property("changed_by_person"|trans({}, "model_event_past_evaluation"), eventPast.changedByPerson.fullName) }}
         <p>
@@ -34,14 +34,14 @@
             <br/>
             {{ "view.changed_start_date_time"|trans }}:
             {% if eventPast.hasChangedStartDateTime %}
-                {{ "view.yes_part_1"|trans }}{{ eventPast.oldStartDateTime|myDateTime }}{{ "view.yes_part_2"|trans }}{{ eventPast.newStartDateTime|myDateTime }}{{ "view.yes_part_3"|trans }}
+                {{ "view.yes_part_1"|trans }}{{ eventPast.oldStartDateTime|dateTimeFormat }}{{ "view.yes_part_2"|trans }}{{ eventPast.newStartDateTime|dateTimeFormat }}{{ "view.yes_part_3"|trans }}
             {% else %}
                 {{ "view.no_part_1"|trans }}
             {% endif %}
             <br/>
             {{ "view.changed_end_date_time"|trans }}:
             {% if eventPast.hasChangedEndDateTime %}
-                {{ "view.yes_part_1"|trans }}{{ eventPast.oldEndDateTime|myDateTime }}{{ "view.yes_part_2"|trans }}{{ eventPast.newEndDateTime|myDateTime }}{{ "view.yes_part_3"|trans }}
+                {{ "view.yes_part_1"|trans }}{{ eventPast.oldEndDateTime|dateTimeFormat }}{{ "view.yes_part_2"|trans }}{{ eventPast.newEndDateTime|dateTimeFormat }}{{ "view.yes_part_3"|trans }}
             {% else %}
                 {{ "view.no_part_1"|trans }}
             {% endif %}
