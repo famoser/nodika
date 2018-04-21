@@ -1,7 +1,4 @@
 entity:
-  name: 'Termingruppe'
-  description: 'Termine werden Termingruppen zugeteilt, die dann jeweils einzeln administriert werden können. Für jede Termingruppe können Termine auf verschiedene Arten importiert oder generiert werden.'
-  plural: 'Termingruppen'
-
-events: Termine
-display_order: Reihenfolge
+  name: 'Tag'
+  description: 'Termine können Tags hinzugefügt werden, um unterschiedliche Arten von Terminen für Ihre Mitglieder unterscheidbar zu machen.'
+  plural: 'Tags'

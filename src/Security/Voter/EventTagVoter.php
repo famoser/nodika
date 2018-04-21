@@ -17,7 +17,7 @@ use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class EventLineVoter extends BaseVoter
+class EventTagVoter extends BaseVoter
 {
     /**
      * @param string $attribute An attribute

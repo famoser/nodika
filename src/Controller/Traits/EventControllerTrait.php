@@ -29,13 +29,15 @@ trait EventControllerTrait
         $data[] = $this->getEventsHeader($translator);
         foreach ($events as $event) {
             $row = [];
-            $row[] = $event->eventLine->getName();
-            $row[] = $event->eventLine->getDescription();
             $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
             $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
             $row[] = $event->getMember() instanceof Member ? $event->getMember()->getName() : "";
             $row[] = $event->getFrontendUser() instanceof FrontendUser ? $event->getFrontendUser()->getFullName() : "";
-            $row[] = $event->getEventLine() instanceof EventTag ? $event->getEventLine() : "";
+            $tags = [];
+            foreach ($event->getEventTags() as $eventTag) {
+                $tags[] = $eventTag->getName();
+            }
+            $row[] = implode(",", $tags);
             $data[] = $row;
         }
         $data[] = [];
@@ -56,6 +58,7 @@ trait EventControllerTrait
         $end = $translator->trans('end_date_time', [], 'entity_event');
         $member = $translator->trans('entity.name', [], 'entity_member');
         $person = $translator->trans('entity.name', [], 'entity_frontend_user');
+        $person = $translator->trans('entity.plural', [], 'entity_event_tag');
 
         return [$start, $end, $member, $person];
     }

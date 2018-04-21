@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An EventTag allows to describe events.
  *
- * @ORM\Table
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
 class EventTag extends BaseEntity
@@ -30,31 +30,8 @@ class EventTag extends BaseEntity
     use ThingTrait;
     use SoftDeleteTrait;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $stuff;
-
     public function __toString()
     {
         return $this->getName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getStuff(): string
-    {
-        return $this->stuff;
-    }
-
-    /**
-     * @param string $stuff
-     */
-    public function setStuff(string $stuff): void
-    {
-        $this->stuff = $stuff;
     }
 }

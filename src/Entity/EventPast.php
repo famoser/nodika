@@ -21,7 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An EventPast saves the state of the event when action occurred.
  *
- * @ORM\Table
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */

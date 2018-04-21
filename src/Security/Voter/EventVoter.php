@@ -16,7 +16,7 @@ use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class EventVoter extends EventLineVoter
+class EventVoter extends EventTagVoter
 {
     /**
      * @param string $attribute An attribute

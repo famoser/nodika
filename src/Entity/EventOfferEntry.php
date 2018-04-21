@@ -18,7 +18,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An EventOfferEntry is part of an EventOffer, and specified which events are about to be traded.
  *
- * @ORM\Table
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */

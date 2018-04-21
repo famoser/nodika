@@ -19,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An EventGeneration is the result of one of the generation algorithms.
  *
- * @ORM\Table
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */

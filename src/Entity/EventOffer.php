@@ -21,7 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An EventOffer can be accepted or declined, and allows one Person to propose one or more Events to change.
  *
- * @ORM\Table
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */

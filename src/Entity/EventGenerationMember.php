@@ -19,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An EventGenerationMember specifies additional properties for a member
  *
- * @ORM\Table
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */

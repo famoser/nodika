@@ -22,7 +22,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An Event is a time unit which is assigned to a member or a person.
  *
- * @ORM\Table
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
  * @ORM\HasLifecycleCallbacks
  */
