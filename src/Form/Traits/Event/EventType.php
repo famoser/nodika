@@ -30,8 +30,8 @@ class EventType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('member', EntityType::class, ["class" => Member::class, "translation_domain" => "entity_member", "label" => "entity.name"]);
-        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "translation_domain" => "entity_frontend_user", "label" => "entity.name"]);
+        $builder->add('member', EntityType::class, ["class" => Member::class, "translation_domain" => "entity_member", "label" => "entity.name", "required" => false]);
+        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "translation_domain" => "entity_frontend_user", "label" => "entity.name", "required" => false]);
         $builder->add('eventType', ChoiceType::class, \App\Enum\EventType::getBuilderArguments());
     }
 
