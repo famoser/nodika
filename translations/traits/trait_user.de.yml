@@ -1,13 +1,16 @@
 #name
 trait:
- name: Benutzer
+ name: 'Benutzer'
 
 form:
-  login: Einloggen
+  login: 'Einloggen'
+
+error:
+  email_not_unique: 'Email bereits vergeben'
 
 #properties
-password: Passwort
-plain_password: Passwort
-repeat_plain_password: Passwort wiederholen
-email: Email
+password: 'Passwort'
+plain_password: 'Passwort'
+repeat_plain_password: 'Passwort wiederholen'
+email: 'Email'
 can_login: 'Login möglich'

@@ -25,10 +25,15 @@ class MemberType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add(
+            "frontendUsers",
+            EntityType::class,
+            ["class" => FrontendUser::class, "multiple" => true, "by_reference" => false, "translation_domain" => "entity_frontend_user", "label" => "entity.plural"]
+        );
+
         $builder->add("thing", ThingType::class, ["inherit_data" => true]);
-        $builder->add("address", AddressType::class, ["inherit_data" => true]);
         $builder->add("communication", CommunicationType::class, ["inherit_data" => true]);
-        $builder->add("frontendUsers", EntityType::class, ["class" => FrontendUser::class, "multiple" => true, "by_reference" => false]);
+        $builder->add("address", AddressType::class, ["inherit_data" => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

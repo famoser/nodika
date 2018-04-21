@@ -14,10 +14,12 @@ namespace App\Controller\Administration;
 use App\Controller\Base\BaseFormController;
 use App\Entity\FrontendUser;
 use App\Form\FrontendUser\RemoveFrontendUserType;
+use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/frontend_users")
@@ -26,23 +28,50 @@ use Symfony\Component\HttpFoundation\Response;
 class FrontendUserController extends BaseFormController
 {
     /**
+     * checks if the email is already used, and shows an error to the user if so
+     *
+     * @param FrontendUser $user
+     * @param TranslatorInterface $translator
+     * @return bool
+     */
+    private function emailNotUsed(FrontendUser $user, TranslatorInterface $translator)
+    {
+        $existing = $this->getDoctrine()->getRepository(FrontendUser::class)->findBy(["email" => $user->getEmail()]);
+        if (count($existing) > 0) {
+            $this->displayError($translator->trans("error.email_not_unique", [], "trait_user"));
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * @Route("/new", name="administration_frontend_user_new")
      *
      * @param Request $request
      *
      * @return Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, TranslatorInterface $translator)
     {
-        $myForm = $this->handleCreateForm($request, new FrontendUser());
+        $user = new FrontendUser();
+        $user->setPlainPassword(uniqid());
+        $user->setPassword();
+        $user->setRegistrationDate(new \DateTime());
 
+        $myForm = $this->handleCreateForm(
+            $request,
+            $user,
+            function () use ($user, $translator) {
+                return $this->emailNotUsed($user, $translator);
+            }
+        );
         if ($myForm instanceof Response) {
             return $myForm;
         }
 
-        $arr['new_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/frontend_user/new.html.twig');
+        return $this->render('administration/frontend_user/new.html.twig', $arr);
     }
 
     /**
@@ -53,21 +82,28 @@ class FrontendUserController extends BaseFormController
      *
      * @return Response
      */
-    public function editAction(Request $request, FrontendUser $frontendUser)
+    public function editAction(Request $request, FrontendUser $frontendUser, TranslatorInterface $translator)
     {
-        $myForm = $this->handleUpdateForm($request, $frontendUser);
+        $myForm = $this->handleUpdateForm(
+            $request,
+            $frontendUser,
+            function () use ($frontendUser, $translator) {
+                return $this->emailNotUsed($frontendUser, $translator);
+            }
+        );
 
         if ($myForm instanceof Response) {
             return $myForm;
         }
 
-        $arr['edit_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/frontend_user/edit.html.twig');
+        return $this->render('administration/frontend_user/edit.html.twig', $arr);
     }
 
     /**
-     * @Route("/{frontendUser}/remove", name="administration_frontend_user_remove")
+     * disable this route, as it is not safe
+     * @*Route("/{frontendUser}/remove", name="administration_frontend_user_remove")
      *
      * @param Request $request
      * @param FrontendUser $frontendUser
@@ -95,11 +131,10 @@ class FrontendUserController extends BaseFormController
         }
 
         $arr["can_delete"] = $canDelete;
-        $arr['remove_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/frontend_user/remove.html.twig');
+        return $this->render('administration/frontend_user/remove.html.twig', $arr);
     }
-
 
     /**
      * @Route("/{frontendUser}/toggle_login_enabled", name="administration_frontend_user_toggle_login_enabled")
@@ -113,5 +148,24 @@ class FrontendUserController extends BaseFormController
         $frontendUser->setIsEnabled(!$frontendUser->isEnabled());
         $this->fastSave($frontendUser);
         return $this->redirectToRoute("administration_frontend_users");
+    }
+
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl("administration_index"),
+                $this->getTranslator()->trans("index.title", [], "administration")
+            ),
+            new Breadcrumb(
+                $this->generateUrl("administration_frontend_users"),
+                $this->getTranslator()->trans("frontend_users.title", [], "administration")
+            )
+        ];
     }
 }

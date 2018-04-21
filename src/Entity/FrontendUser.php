@@ -144,4 +144,9 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     {
         $this->members = $members;
     }
+
+    public function __toString()
+    {
+        return $this->getFullName();
+    }
 }

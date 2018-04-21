@@ -1,6 +1,6 @@
 #name
 trait:
-  name: zu Ihrer Person
+  name: Name
 
 #properties
 job_title: Titel (freiwillig)

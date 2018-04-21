@@ -26,9 +26,9 @@ trait CommunicationTrait
     /**
      * @var string
      *
+     * @ORM\Column(type="text")
      * @Assert\NotBlank()
      * @Assert\Email()
-     * @ORM\Column(type="text")
      */
     private $email;
 

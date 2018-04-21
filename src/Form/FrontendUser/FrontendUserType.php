@@ -12,6 +12,7 @@
 namespace App\Form\FrontendUser;
 
 use App\Entity\FrontendUser;
+use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\Address\AddressType;
 use App\Form\Traits\Communication\CommunicationType;
@@ -28,10 +29,10 @@ class FrontendUserType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add("members", EntityType::class, ["class" => Member::class, "multiple" => true, 'translation_domain' => 'entity_member', 'label' => 'entity.plural']);
         $builder->add("person", PersonType::class, ["inherit_data" => true]);
-        $builder->add("address", AddressType::class, ["inherit_data" => true]);
         $builder->add("communication", CommunicationType::class, ["inherit_data" => true]);
-        $builder->add("frontendUsers", EntityType::class, ["class" => FrontendUser::class, "multiple" => true]);
+        $builder->add("address", AddressType::class, ["inherit_data" => true]);
     }
 
     /**

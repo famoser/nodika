@@ -13,11 +13,13 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
+use App\Entity\EventGeneration;
 use App\Entity\EventLine;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Entity\Settings;
 use App\Form\Model\Event\AdvancedSearchType;
+use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -102,7 +104,7 @@ class AdministrationController extends BaseFormController
         $frontendUserRepo = $this->getDoctrine()->getRepository(FrontendUser::class);
 
         /* @var FrontendUser[] $frontendUsers */
-        $frontendUsers = $frontendUserRepo->findBy(["isEnabled" => true]);
+        $frontendUsers = $frontendUserRepo->findBy(["deletedAt" => null]);
 
         $arr["frontend_users"] = $frontendUsers;
         return $this->render('administration/frontend_users.html.twig', $arr);
@@ -117,7 +119,7 @@ class AdministrationController extends BaseFormController
     {
         $memberRepo = $this->getDoctrine()->getRepository(Member::class);
 
-        $arr["members"] = $memberRepo->findBy(["isEnabled" => true]);
+        $arr["members"] = $memberRepo->findBy(["deletedAt" => null]);
 
         return $this->render('administration/members.html.twig', $arr);
     }
@@ -148,5 +150,34 @@ class AdministrationController extends BaseFormController
         $arr["settings"] = $settings;
 
         return $this->render('administration/settings.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/generations", name="administration_generations")
+     *
+     * @return Response
+     */
+    public function generationsAction()
+    {
+        $eventGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
+
+        $arr["event_generations"] = $eventGenerations;
+
+        return $this->render('administration/settings.html.twig', $arr);
+    }
+
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl("administration_index"),
+                $this->getTranslator()->trans("index.title", [], "administration")
+            )
+        ];
     }
 }

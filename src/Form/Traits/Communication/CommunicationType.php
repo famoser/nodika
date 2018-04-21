@@ -35,7 +35,8 @@ class CommunicationType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'trait_communication'
+            'translation_domain' => 'trait_communication',
+            'label' => 'trait.name'
         ]);
     }
 }

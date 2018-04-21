@@ -34,7 +34,8 @@ class StartEndType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'trait_start_end'
+            'translation_domain' => 'trait_start_end',
+            'label' => 'trait.name'
         ]);
     }
 }

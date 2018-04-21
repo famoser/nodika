@@ -87,7 +87,7 @@ class Member extends BaseEntity
      */
     public function addFrontendUser(FrontendUser $frontendUser)
     {
-        $this->frontendUsers->add($frontendUser);
+        $this->getFrontendUsers()->add($frontendUser);
         $frontendUser->getMembers()->add($this);
     }
 
@@ -96,8 +96,8 @@ class Member extends BaseEntity
      */
     public function removeFrontendUser(FrontendUser $frontendUser)
     {
-        $this->frontendUsers->remove($frontendUser);
-        $frontendUser->getMembers()->remove($this);
+        $this->getFrontendUsers()->removeElement($frontendUser);
+        $frontendUser->getMembers()->removeElement($this);
     }
 
     public function __toString()

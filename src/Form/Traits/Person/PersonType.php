@@ -34,7 +34,8 @@ class PersonType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'trait_person'
+            'translation_domain' => 'trait_person',
+            'label' => 'trait.name'
         ]);
     }
 }

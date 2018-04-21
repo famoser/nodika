@@ -13,6 +13,7 @@ namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\EventLine;
+use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,5 +85,24 @@ class EventLineController extends BaseFormController
         $arr['remove_form'] = $myForm->createView();
 
         return $this->render('administration/event_line/remove.html.twig');
+    }
+
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl("administration_index"),
+                $this->getTranslator()->trans("index.title", [], "administration")
+            ),
+            new Breadcrumb(
+                $this->generateUrl("administration_event_lines"),
+                $this->getTranslator()->trans("event_lines.title", [], "administration")
+            )
+        ];
     }
 }

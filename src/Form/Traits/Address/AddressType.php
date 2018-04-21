@@ -26,12 +26,12 @@ class AddressType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('street', TextType::class);
-        $builder->add('streetNr', TextType::class);
+        $builder->add('street', TextType::class, ["required" => false]);
+        $builder->add('streetNr', TextType::class, ["required" => false]);
         $builder->add('addressLine', TextType::class, ["required" => false]);
-        $builder->add('postalCode', NumberType::class);
-        $builder->add('city', TextType::class);
-        $builder->add('country', CountryType::class);
+        $builder->add('postalCode', NumberType::class, ["required" => false]);
+        $builder->add('city', TextType::class, ["required" => false]);
+        $builder->add('country', CountryType::class, ["required" => false]);
     }
 
     /**
@@ -40,7 +40,8 @@ class AddressType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'trait_address'
+            'translation_domain' => 'trait_address',
+            'label' => 'trait.name'
         ]);
     }
 }

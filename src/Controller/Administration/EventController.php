@@ -16,6 +16,7 @@ use App\Entity\Event;
 use App\Entity\EventPast;
 use App\Enum\EventChangeType;
 use App\Form\Event\RemoveEventType;
+use App\Model\Breadcrumb;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -138,5 +139,24 @@ class EventController extends BaseFormController
         $arr["event"] = $event;
 
         return $this->render('administration/event/history.html.twig', $arr);
+    }
+
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl("administration_index"),
+                $this->getTranslator()->trans("index.title", [], "administration")
+            ),
+            new Breadcrumb(
+                $this->generateUrl("administration_events"),
+                $this->getTranslator()->trans("events.title", [], "administration")
+            )
+        ];
     }
 }

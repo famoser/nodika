@@ -4,7 +4,7 @@
 {% block description %}{{ "new.description"|trans }}{% endblock %}
 
 {% block form_description %}
-    <p>{{ "entity.description"|trans({}, "entity_member") }}</p>
+    <p>{{ "entity.description"|trans({}, "entity_frontend_user") }}</p>
 {% endblock %}
 
-{% trans_default_domain "administration_member" %}
+{% trans_default_domain "administration_frontend_user" %}

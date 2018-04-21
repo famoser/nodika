@@ -14,6 +14,7 @@ namespace App\Controller\Administration;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Member;
 use App\Form\Member\RemoveMemberType;
+use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,9 +41,9 @@ class MemberController extends BaseFormController
             return $myForm;
         }
 
-        $arr['new_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/member/new.html.twig');
+        return $this->render('administration/member/new.html.twig', $arr);
     }
 
     /**
@@ -61,9 +62,9 @@ class MemberController extends BaseFormController
             return $myForm;
         }
 
-        $arr['edit_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/member/edit.html.twig');
+        return $this->render('administration/member/edit.html.twig', $arr);
     }
 
     /**
@@ -81,6 +82,7 @@ class MemberController extends BaseFormController
             $this->createForm(RemoveMemberType::class, $member),
             $request,
             function () use ($member, $canDelete) {
+                $member->delete();
                 if ($canDelete) {
                     $this->fastRemove($member);
                 } else {
@@ -95,8 +97,27 @@ class MemberController extends BaseFormController
         }
 
         $arr["can_delete"] = $canDelete;
-        $arr['remove_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/member/remove.html.twig');
+        return $this->render('administration/member/remove.html.twig', $arr);
+    }
+
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl("administration_index"),
+                $this->getTranslator()->trans("index.title", [], "administration")
+            ),
+            new Breadcrumb(
+                $this->generateUrl("administration_members"),
+                $this->getTranslator()->trans("members.title", [], "administration")
+            )
+        ];
     }
 }

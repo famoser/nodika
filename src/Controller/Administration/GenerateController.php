@@ -18,6 +18,7 @@ use App\Form\EventGeneration\ChooseRecipientsType;
 use App\Form\EventGeneration\SaveType;
 use App\Form\EventGenerationConflictAvoid\EventGenerationConflictAvoidType;
 use App\Helper\DateTimeFormatter;
+use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -202,5 +203,24 @@ class GenerateController extends BaseFormController
         );
 
         return $this->render('administration/generate/save.html.twig', $arr);
+    }
+
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl("administration_index"),
+                $this->getTranslator()->trans("index.title", [], "administration")
+            ),
+            new Breadcrumb(
+                $this->generateUrl("administration_generations"),
+                $this->getTranslator()->trans("frontend_users.title", [], "administration")
+            )
+        ];
     }
 }
