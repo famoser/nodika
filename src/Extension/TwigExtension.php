@@ -102,9 +102,9 @@ class TwigExtension extends Twig_Extension
     public function booleanFilter($value)
     {
         if ($value) {
-            return BooleanType::getTranslationForValue(BooleanType::YES, $this->translator);
+            return BooleanType::getTranslation(BooleanType::YES, $this->translator);
         }
 
-        return BooleanType::getTranslationForValue(BooleanType::NO, $this->translator);
+        return BooleanType::getTranslation(BooleanType::NO, $this->translator);
     }
 }

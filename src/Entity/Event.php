@@ -35,6 +35,7 @@ class Event extends BaseEntity
      * @var EventPast[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event", cascade={"all"})
+     * @ORM\OrderBy({"createdAt": "DESC"})
      */
     private $eventPast;
 

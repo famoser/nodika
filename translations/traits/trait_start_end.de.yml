@@ -1,0 +1,7 @@
+#name
+trait:
+  name: Anfangs- und Endzeiten
+
+#properties
+start_date_time: Anfang
+end_date_time: Ende

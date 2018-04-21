@@ -21,18 +21,18 @@ trait EventTrait
     use StartEndTrait;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $confirmDateTime = null;
+
+    /**
+     * @var FrontendUser|null
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     */
+    private $confirmedBy = null;
 
     /**
      * @var \DateTime|null
@@ -92,22 +92,6 @@ trait EventTrait
     }
 
     /**
-     * @return null|string
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param null|string $description
-     */
-    public function setDescription(?string $description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
      * @return \DateTime|null
      */
     public function getConfirmDateTime(): ?\DateTime
@@ -116,11 +100,11 @@ trait EventTrait
     }
 
     /**
-     * @param \DateTime|null $confirmDateTime
+     * @return FrontendUser|null
      */
-    public function setConfirmDateTime(?\DateTime $confirmDateTime): void
+    public function getConfirmedBy(): ?FrontendUser
     {
-        $this->confirmDateTime = $confirmDateTime;
+        return $this->confirmedBy;
     }
 
     /**
@@ -156,17 +140,17 @@ trait EventTrait
     }
 
     /**
-     * @return Member
+     * @return Member|null
      */
-    public function getMember(): Member
+    public function getMember(): ?Member
     {
         return $this->member;
     }
 
     /**
-     * @param Member $member
+     * @param Member|null $member
      */
-    public function setMember(Member $member): void
+    public function setMember(?Member $member): void
     {
         $this->member = $member;
     }
@@ -204,14 +188,36 @@ trait EventTrait
     }
 
     /**
+     * @return bool
+     */
+    public function isConfirmed()
+    {
+        return $this->getConfirmDateTime() != null;
+    }
+
+    public function confirm(FrontendUser $user)
+    {
+        $this->confirmDateTime = new \DateTime();
+        $this->confirmedBy = $user;
+    }
+
+    public function undoConfirm()
+    {
+        $this->confirmedBy = null;
+        $this->confirmDateTime = null;
+    }
+
+    /**
      * @param EventTrait $eventTrait
      */
-    protected function writeValues(EventTrait $eventTrait)
+    protected function writeValues($eventTrait)
     {
         $this->setStartDateTime($eventTrait->getStartDateTime());
         $this->setEndDateTime($eventTrait->getEndDateTime());
         $this->confirmDateTime = $eventTrait->getConfirmDateTime();
+        $this->confirmedBy = $eventTrait->getConfirmedBy();
         $this->lastRemainderEmailSent = $eventTrait->getLastRemainderEmailSent();
+        $this->eventType = $this->getEventType();
         $this->tradeTag = $eventTrait->getTradeTag();
         $this->member = $eventTrait->getMember();
         $this->frontendUser = $eventTrait->getFrontendUser();

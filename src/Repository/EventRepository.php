@@ -37,11 +37,10 @@ class EventRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('e')
             ->from('App:Event', 'e')
-            ->join('e.eventTags', 'et')
+            ->leftJoin('e.eventTags', 'et')
+            ->leftJoin('e.eventPast', 'ep')
             ->leftJoin('e.member', 'm')
             ->leftJoin('e.frontendUser', 'f');
-
-        $qb->where("1 == 1");
 
         if ($searchModel->getStartDateTime() instanceof \DateTime) {
             $qb->andWhere('e.startDateTime > :startDateTime')

@@ -9,41 +9,40 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\Event;
-
-/*
- * Created by PhpStorm.
- * User: famoser
- * Date: 19/05/2017
- * Time: 19:13
- */
+namespace App\Form\Traits\Event;
 
 use App\Entity\Event;
-use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
-use App\Form\Traits\StartEnd\StartEndType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends BaseAbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('startEnd', StartEndType::class, ["inherit_data" => true]);
-        $builder->add('event', \App\Form\Traits\Event\EventType::class, ["inherit_data" => true]);
-        $builder->add('eventTags', EntityType::class, ["class" => EventTag::class, "multiple" => true, "translation_domain" => "entity_event_tag", "label" => "entity.plural", "required" => false]);
+        $builder->add('member', EntityType::class, ["class" => Member::class, "translation_domain" => "entity_member", "label" => "entity.name"]);
+        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "translation_domain" => "entity_frontend_user", "label" => "entity.name"]);
+        $builder->add('eventType', ChoiceType::class, \App\Enum\EventType::getBuilderArguments());
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Event::class,
-            'translation_domain' => 'entity_event'
+            'translation_domain' => 'trait_event',
+            'label' => 'trait.name'
         ]);
     }
 }

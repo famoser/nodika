@@ -32,18 +32,19 @@ class EventPast extends BaseEntity
 
     /**
      * EventPast constructor.
-     * @param Event|null $event
-     * @param null $eventChangeType
-     * @param FrontendUser|null $user
+     * @param Event $event
+     * @param int $eventChangeType
+     * @param FrontendUser $user
+     * @return EventPast
      */
-    public function __construct(Event $event = null, $eventChangeType = null, FrontendUser $user = null)
+    public static function create(Event $event, int $eventChangeType, FrontendUser $user)
     {
-        if ($event != null && $eventChangeType != null && $user != null) {
-            $this->writeValues($event);
-            $this->event = $event;
-            $this->eventChangeType = $eventChangeType;
-            $this->registerChangeBy($user);
-        }
+        $eventPast = new static();
+        $eventPast->writeValues($event);
+        $eventPast->event = $event;
+        $eventPast->eventChangeType = $eventChangeType;
+        $eventPast->registerChangeBy($user);
+        return $eventPast;
     }
 
     /**
@@ -51,7 +52,7 @@ class EventPast extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $eventChangeType = EventChangeType::MANUALLY_CREATED_BY_ADMIN;
+    private $eventChangeType = EventChangeType::CREATED_BY_ADMIN;
 
     /**
      * @var Event
@@ -66,6 +67,14 @@ class EventPast extends BaseEntity
     public function getEventChangeType(): int
     {
         return $this->eventChangeType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEventChangeTypeText(): string
+    {
+        return EventChangeType::getText($this->eventChangeType);
     }
 
     /**

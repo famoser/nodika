@@ -82,14 +82,14 @@ class AdministrationController extends BaseFormController
             }
         );
 
-        $eventLineRepo = $this->getDoctrine()->getRepository(Event::class);
-        $eventLineModels = $eventLineRepo->search($searchModel);
+        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $events = $eventRepo->search($searchModel);
 
         if ($export) {
-            return $csvService->renderCsv("export.csv", $this->toDataTable($eventLineModels, $translator), $this->getEventsHeader($translator));
+            return $csvService->renderCsv("export.csv", $this->toDataTable($events, $translator), $this->getEventsHeader($translator));
         }
 
-        $arr["event_line_models"] = $eventLineModels;
+        $arr["events"] = $events;
         $arr["search_form"] = $form;
 
         return $this->render('administration/events.html.twig', $arr);

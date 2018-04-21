@@ -18,6 +18,6 @@ class EventType extends BaseEnum
     const UNSPECIFIED = 0;
     const WEEKDAY = 1;
     const SATURDAY = 2;
-    const SUNDAYS = 3;
-    const HOLIDAYS = 4;
+    const SUNDAY = 3;
+    const HOLIDAY = 4;
 }

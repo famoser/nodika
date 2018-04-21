@@ -13,6 +13,7 @@ namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
+use App\Entity\EventGeneration;
 use App\Entity\EventPast;
 use App\Enum\EventChangeType;
 use App\Form\Event\RemoveEventType;
@@ -45,7 +46,7 @@ class EventController extends BaseFormController
             $event,
             function ($manager) use ($event) {
                 /* @var ObjectManager $manager */
-                $eventPast = new EventPast($event, EventChangeType::MANUALLY_CREATED_BY_ADMIN);
+                $eventPast = EventPast::create($event, EventChangeType::CREATED_BY_ADMIN, $this->getUser());
                 $manager->persist($eventPast);
 
                 return true;
@@ -56,7 +57,7 @@ class EventController extends BaseFormController
             return $myForm;
         }
 
-        $arr['new_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
         return $this->render('administration/event/new.html.twig', $arr);
     }
@@ -66,6 +67,7 @@ class EventController extends BaseFormController
      *
      * @param Request $request
      *
+     * @param Event $event
      * @return Response
      */
     public function editAction(Request $request, Event $event)
@@ -75,7 +77,7 @@ class EventController extends BaseFormController
             $event,
             function ($manager) use ($event) {
                 /* @var ObjectManager $manager */
-                $eventPast = new EventPast($event, EventChangeType::MANUALLY_CHANGED_BY_ADMIN);
+                $eventPast = EventPast::create($event, EventChangeType::CHANGED_BY_ADMIN, $this->getUser());
                 $manager->persist($eventPast);
 
                 return true;
@@ -86,7 +88,7 @@ class EventController extends BaseFormController
             return $myForm;
         }
 
-        $arr['edit_form'] = $myForm->createView();
+        $arr['form'] = $myForm->createView();
 
         return $this->render('administration/event/edit.html.twig', $arr);
     }
@@ -108,7 +110,7 @@ class EventController extends BaseFormController
             function () use ($event) {
                 /* @var FormInterface $form */
                 $event->delete();
-                $eventPast = new EventPast($event, EventChangeType::MANUALLY_REMOVED_BY_ADMIN);
+                $eventPast = EventPast::create($event, EventChangeType::REMOVED_BY_ADMIN, $this->getUser());
 
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($eventPast);
@@ -139,6 +141,28 @@ class EventController extends BaseFormController
         $arr["event"] = $event;
 
         return $this->render('administration/event/history.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/{event}/toggle_confirm", name="administration_event_toggle_confirm")
+     *
+     * @param Event $event
+     *
+     * @return Response
+     */
+
+    public function toggleConfirm(Event $event)
+    {
+        if ($event->isConfirmed()) {
+            $event->undoConfirm();
+        } else {
+            $event->confirm($this->getUser());
+        }
+
+        $eventPast = EventPast::create($event, EventChangeType::CHANGED_BY_ADMIN, $this->getUser());
+        $this->fastSave($event, $eventPast);
+
+        return $this->redirectToRoute("administration_events");
     }
 
     /**

@@ -1,44 +1,63 @@
 {% extends "single_content_base.html.twig" %}
 
-{% block title %}{{ "members.title"|trans }}{% endblock %}
-{% block description %}{{ "members.description"|trans }}{% endblock %}
+{% block title %}{{ "events.title"|trans }}{% endblock %}
+{% block description %}{{ "events.description"|trans }}{% endblock %}
 
 {% trans_default_domain "administration" %}
 
 {% block single_content %}
     <p>
-        <a class="btn btn-secondary" href="{{ path("administration_member_new") }}">
-            {{ "new.title"|trans({}, "administration_member") }}
+        <a class="btn btn-secondary" href="{{ path("administration_event_new") }}">
+            {{ "new.title"|trans({}, "administration_event") }}
         </a>
     </p>
     <table class="table table-striped table-hover table-responsive-xl">
         <thead>
         <tr>
-            <th>{{ "name"|trans({}, "trait_thing") }}</th>
-            <th>{{ "description"|trans({}, "trait_thing") }}</th>
-            <th>{{ "email"|trans({}, "trait_communication") }}</th>
+            <th>{{ "start_date_time"|trans({}, "trait_start_end") }}</th>
+            <th>{{ "end_date_time"|trans({}, "trait_start_end") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_member") }}</th>
             <th>{{ "entity.plural"|trans({}, "entity_frontend_user") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_event_tag") }}</th>
+            <th>{{ "is_confirmed"|trans({}, "trait_event") }}</th>
+            <th>{{ "history.title"|trans({}, "administration_event") }}</th>
+            <th class="minimal-width"></th>
             <th class="minimal-width"></th>
             <th class="minimal-width"></th>
         </tr>
         </thead>
         <tbody>
 
-        {% for member in event_line_models %}
+        {% for event in events %}
             <tr>
-                <td>{{ member.name }}</td>
-                <td>{{ member.description }}</td>
-                <td>{{ member.email }}</td>
-                <td>{{ member.frontendUsers|join(", ") }}</td>
+                <td>{{ event.startDateTime|dateTimeFormat }}</td>
+                <td>{{ event.endDateTime|dateTimeFormat }}</td>
+                <td>{{ event.member|default("") }}</td>
+                <td>{{ event.frontendUser|default("") }}</td>
+                <td>{{ event.eventTags|join(", ") }}</td>
+                <td>
+                    {% if event.confirmed %}
+                        <i class="fas fa-check"></i>
+                    {% endif %}
+                    <a href="{{ path("administration_event_toggle_confirm", {"event": event.id}) }}">
+                        {{ "toggle_confirmed.change"|trans({}, "administration_event") }}
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-outline-secondary"
+                       href="{{ path("administration_event_history", {"event": event.id}) }}">
+                        {{ event.eventPast|length }}
+                    </a>
+                </td>
                 <td>
                     <a class="btn btn-secondary"
-                       href="{{ path("administration_member_edit", {"member" : member.id}) }}">
+                       href="{{ path("administration_event_edit", {"event" : event.id}) }}">
                         <i class="fas fa-edit"></i>
                     </a>
                 </td>
                 <td>
                     <a class="btn btn-secondary"
-                       href="{{ path("administration_member_remove", {"member" : member.id}) }}">
+                       href="{{ path("administration_event_remove", {"event" : event.id}) }}">
                         <i class="fas fa-trash"></i>
                     </a>
                 </td>

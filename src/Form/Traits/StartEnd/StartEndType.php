@@ -24,8 +24,10 @@ class StartEndType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('startDateTime', DateTimeType::class);
-        $builder->add('endDateTime', DateTimeType::class);
+        $dateArray = ['date_widget' => 'single_text', 'time_widget' => 'single_text'];
+
+        $builder->add('startDateTime', DateTimeType::class, $dateArray);
+        $builder->add('endDateTime', DateTimeType::class, $dateArray);
     }
 
     /**

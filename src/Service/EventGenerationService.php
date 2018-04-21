@@ -245,7 +245,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $currentStartDate = $startExpression->getNextRunDate($eventGeneration->getStartDateTime(), 0, true, $now->getTimezone()->getName());
 
         $endExpression = CronExpression::factory($eventGeneration->getEndCronExpression());
-        $currentEndDate = $endExpression->getNextRunDate($currentStartDate, 0, true, $now->getTimezone()->getName());
+        $currentEndDate = $endExpression->getNextRunDate($currentStartDate, 0, false, $now->getTimezone()->getName());
 
         /* @var Event[] $result */
         $result = [];
@@ -273,7 +273,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         foreach ($events as $event) {
             $dayOfWeek = $event->getStartDateTime()->format('N');
             if (7 === $dayOfWeek) {
-                $event->setEventType(EventType::SUNDAYS);
+                $event->setEventType(EventType::SUNDAY);
             } elseif (6 === $dayOfWeek) {
                 $event->setEventType(EventType::SATURDAY);
             } else {
@@ -502,7 +502,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         }
 
-
-        return [];
+        return $events;
     }
 }

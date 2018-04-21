@@ -39,7 +39,7 @@ class PublicSearchType extends BaseAbstractType
         $builder->add('startDateTime', DateTimeType::class, $dateArray);
         $builder->add('endDateTime', DateTimeType::class, $dateArray);
         $builder->add('member', EntityType::class, ["class" => Member::class, "required" => false]);
-        $builder->add('person', EntityType::class, ["class" => FrontendUser::class, "required" => false]);
+        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "required" => false]);
         $builder->add('isConfirmed', CheckboxType::class, ["required" => false]);
         $builder->add('maxResults', NumberType::class, ["required" => false]);
     }

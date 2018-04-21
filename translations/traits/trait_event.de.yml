@@ -1,0 +1,11 @@
+#name
+trait:
+  name: Termin
+
+#properties
+confirm_date_time: Bestätigt um
+last_remainder_email_sent: Letztes Erinnerungsemail versandt
+confirmed_by: 'Bestätigt von'
+
+#methods
+is_confirmed: bestätigt
