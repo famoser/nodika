@@ -12,10 +12,10 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadEventLine extends BaseFixture
+class LoadEventTag extends BaseFixture
 {
     const ORDER = 1;
 
@@ -44,11 +44,11 @@ class LoadEventLine extends BaseFixture
     /**
      * create an instance with all random values.
      *
-     * @return EventLine
+     * @return EventTag
      */
     protected function getRandomInstance()
     {
-        $eventLine = new EventLine();
+        $eventLine = new EventTag();
         $this->fillThing($eventLine);
 
         return $eventLine;

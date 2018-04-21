@@ -8,41 +8,38 @@
 
 namespace App\Controller\Traits;
 
-use App\Entity\EventLine;
+use App\Entity\Event;
+use App\Entity\EventTag;
 use App\Entity\FrontendUser;
+use App\Entity\Member;
 use App\Helper\DateTimeFormatter;
-use App\Model\EventLine\EventLineModel;
 use Symfony\Component\Translation\TranslatorInterface;
 
 trait EventControllerTrait
 {
     /**
-     * @param EventLineModel[] $eventModels
+     * @param Event[] $events
      * @param TranslatorInterface $translator
      *
      * @return string[][]
      */
-    private function toDataTable($eventModels, TranslatorInterface $translator)
+    private function toDataTable($events, TranslatorInterface $translator)
     {
         $data = [];
-        foreach ($eventModels as $eventModel) {
+        $data[] = $this->getEventsHeader($translator);
+        foreach ($events as $event) {
             $row = [];
-            $row[] = $eventModel->eventLine->getName();
-            $row[] = $eventModel->eventLine->getDescription();
+            $row[] = $event->eventLine->getName();
+            $row[] = $event->eventLine->getDescription();
+            $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+            $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+            $row[] = $event->getMember() instanceof Member ? $event->getMember()->getName() : "";
+            $row[] = $event->getFrontendUser() instanceof FrontendUser ? $event->getFrontendUser()->getFullName() : "";
+            $row[] = $event->getEventLine() instanceof EventTag ? $event->getEventLine() : "";
             $data[] = $row;
-            $data[] = $this->getEventsHeader($translator);
-            foreach ($eventModel->events as $event) {
-                $row = [];
-                $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-                $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-                $row[] = $event->getMember()->getName();
-                if ($event->getFrontendUser() instanceof FrontendUser) {
-                    $row[] = $event->getFrontendUser()->getFullName();
-                }
-                $data[] = $row;
-            }
-            $data[] = [];
         }
+        $data[] = [];
+
 
         return $data;
     }
@@ -52,7 +49,8 @@ trait EventControllerTrait
      *
      * @return string[]
      */
-    private function getEventsHeader(TranslatorInterface $translator)
+    private
+    function getEventsHeader(TranslatorInterface $translator)
     {
         $start = $translator->trans('start_date_time', [], 'entity_event');
         $end = $translator->trans('end_date_time', [], 'entity_event');

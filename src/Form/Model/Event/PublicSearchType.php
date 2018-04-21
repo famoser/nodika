@@ -18,7 +18,7 @@ namespace App\Form\Model\Event;
  * Time: 19:13
  */
 
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
@@ -30,7 +30,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SearchType extends BaseAbstractType
+class PublicSearchType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -38,7 +38,6 @@ class SearchType extends BaseAbstractType
 
         $builder->add('startDateTime', DateTimeType::class, $dateArray);
         $builder->add('endDateTime', DateTimeType::class, $dateArray);
-        $builder->add('eventLine', EntityType::class, ['class' => EventLine::class, "required" => false]);
         $builder->add('member', EntityType::class, ["class" => Member::class, "required" => false]);
         $builder->add('person', EntityType::class, ["class" => FrontendUser::class, "required" => false]);
         $builder->add('isConfirmed', CheckboxType::class, ["required" => false]);

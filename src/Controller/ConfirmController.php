@@ -14,7 +14,7 @@ namespace App\Controller;
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\EventPast;
 use App\Entity\Settings;
 use App\Enum\EventChangeType;
@@ -42,9 +42,9 @@ class ConfirmController extends BaseFormController
         $searchModel->setMembers($this->getUser()->getMembers());
         $searchModel->setStartDateTime(new \DateTime());
 
-        $eventLineModels = $this->getDoctrine()->getRepository(EventLine::class)->findEventLineModels($searchModel);
+        $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
-        $arr["event_line_models"] = $eventLineModels;
+        $arr["events"] = $events;
 
         return $this->render('event/search.html.twig', $arr);
     }
@@ -86,7 +86,7 @@ class ConfirmController extends BaseFormController
         $searchModel->setStartDateTime(new \DateTime());
         $searchModel->setEndDateTime($end);
 
-        $eventLines = $this->getDoctrine()->getRepository('App:EventLine')->findEventLineModels($searchModel);
+        $eventLines = $this->getDoctrine()->getRepository('EventTag')->findEvents($searchModel);
 
         $manager = $this->getDoctrine()->getManager();
         $total = 0;

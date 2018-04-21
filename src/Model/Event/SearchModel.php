@@ -11,7 +11,7 @@
 
 namespace App\Model\Event;
 
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,14 +22,12 @@ class SearchModel
      * @var \DateTime
      */
     private $startDateTime;
+
     /**
      * @var \DateTime
      */
     private $endDateTime;
-    /**
-     * @var EventLine|null
-     */
-    private $eventLine;
+
     /**
      * @var Member|null
      */
@@ -51,6 +49,11 @@ class SearchModel
      * @var Member[]|ArrayCollection
      */
     private $members;
+
+    /**
+     * @var EventTag[]|ArrayCollection
+     */
+    private $eventTags;
 
     /**
      * @var bool
@@ -93,22 +96,6 @@ class SearchModel
     public function setEndDateTime(\DateTime $endDateTime): void
     {
         $this->endDateTime = $endDateTime;
-    }
-
-    /**
-     * @return EventLine|null
-     */
-    public function getEventLine(): ?EventLine
-    {
-        return $this->eventLine;
-    }
-
-    /**
-     * @param EventLine|null $eventLine
-     */
-    public function setEventLine(?EventLine $eventLine): void
-    {
-        $this->eventLine = $eventLine;
     }
 
     /**
@@ -205,5 +192,21 @@ class SearchModel
     public function setMembers($members): void
     {
         $this->members = $members;
+    }
+
+    /**
+     * @return EventTag[]|ArrayCollection
+     */
+    public function getEventTags()
+    {
+        return $this->eventTags;
+    }
+
+    /**
+     * @param EventTag[]|ArrayCollection $eventTags
+     */
+    public function setEventTags($eventTags): void
+    {
+        $this->eventTags = $eventTags;
     }
 }

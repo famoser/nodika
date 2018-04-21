@@ -12,7 +12,8 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
-use App\Entity\EventLine;
+use App\Entity\Event;
+use App\Entity\EventTag;
 use App\Model\Event\SearchModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,9 +32,9 @@ class IndexController extends BaseDoctrineController
     public function indexAction()
     {
         $searchModel = new SearchModel();
-        $eventLineRepository = $this->getDoctrine()->getRepository(EventLine::class);
+        $eventRepository = $this->getDoctrine()->getRepository(Event::class);
 
-        $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);
+        $eventLineModels = $eventRepository->search($searchModel);
         $arr['event_line_models'] = $eventLineModels;
         $arr["user"] = $this->getUser();
 

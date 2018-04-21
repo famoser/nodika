@@ -8,16 +8,24 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\EventGeneration;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Enum\EventType;
 use App\Enum\TradeTag;
+use Doctrine\ORM\Mapping as ORM;
 
 trait EventTrait
 {
     use StartEndTrait;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     /**
      * @var \DateTime|null
@@ -61,13 +69,6 @@ trait EventTrait
     private $frontendUser;
 
     /**
-     * @var EventLine
-     *
-     * @ORM\ManyToOne(targetEntity="EventLine", inversedBy="events")
-     */
-    private $eventLine;
-
-    /**
      * @var EventGeneration|null
      *
      * @ORM\ManyToOne(targetEntity="EventGeneration", inversedBy="generatedEvents")
@@ -88,6 +89,22 @@ trait EventTrait
     public function setEventType(int $eventType): void
     {
         $this->eventType = $eventType;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param null|string $description
+     */
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 
     /**
@@ -171,22 +188,6 @@ trait EventTrait
     }
 
     /**
-     * @return EventLine
-     */
-    public function getEventLine(): EventLine
-    {
-        return $this->eventLine;
-    }
-
-    /**
-     * @param EventLine $eventLine
-     */
-    public function setEventLine(EventLine $eventLine): void
-    {
-        $this->eventLine = $eventLine;
-    }
-
-    /**
      * @return EventGeneration|null
      */
     public function getGeneratedBy(): ?EventGeneration
@@ -214,7 +215,6 @@ trait EventTrait
         $this->tradeTag = $eventTrait->getTradeTag();
         $this->member = $eventTrait->getMember();
         $this->frontendUser = $eventTrait->getFrontendUser();
-        $this->eventLine = $eventTrait->getEventLine();
         $this->generatedBy = $eventTrait->getGeneratedBy();
     }
 }

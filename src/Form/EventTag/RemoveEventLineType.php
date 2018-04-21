@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\EventLine;
+namespace App\Form\EventTag;
 
 use App\Form\Generic\RemoveThingType;
 

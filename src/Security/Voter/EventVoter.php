@@ -12,7 +12,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Event;
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 

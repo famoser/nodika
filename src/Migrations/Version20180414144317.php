@@ -20,7 +20,7 @@ class Version20180414144317 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_3BAE0AA77887A021 ON event (frontend_user_id)');
         $this->addSql('CREATE INDEX IDX_3BAE0AA7C82CDCED ON event (event_line_id)');
         $this->addSql('CREATE INDEX IDX_3BAE0AA71BDD81B ON event (generated_by_id)');
-        $this->addSql('CREATE TABLE event_line (id INTEGER NOT NULL, display_order INTEGER NOT NULL, name CLOB NOT NULL, description CLOB DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE event_tag (id INTEGER NOT NULL, display_order INTEGER NOT NULL, name CLOB NOT NULL, description CLOB DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE frontend_user (id INTEGER NOT NULL, is_administrator BOOLEAN NOT NULL, email CLOB NOT NULL, password_hash CLOB NOT NULL, reset_hash CLOB NOT NULL, is_enabled BOOLEAN NOT NULL, registration_date DATETIME NOT NULL, agb_accepted BOOLEAN DEFAULT \'0\' NOT NULL, invitation_identifier CLOB DEFAULT NULL, job_title CLOB DEFAULT NULL, given_name CLOB NOT NULL, family_name CLOB NOT NULL, street CLOB DEFAULT NULL, street_nr CLOB DEFAULT NULL, address_line CLOB DEFAULT NULL, postal_code INTEGER DEFAULT NULL, city CLOB DEFAULT NULL, country CLOB DEFAULT NULL, phone CLOB DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_E2D1DEAE7927C74 ON frontend_user (email)');
         $this->addSql('CREATE TABLE person_members (frontend_user_id INTEGER NOT NULL, member_id INTEGER NOT NULL, PRIMARY KEY(frontend_user_id, member_id))');
@@ -76,7 +76,7 @@ class Version20180414144317 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('DROP TABLE event');
-        $this->addSql('DROP TABLE event_line');
+        $this->addSql('DROP TABLE event_tag');
         $this->addSql('DROP TABLE frontend_user');
         $this->addSql('DROP TABLE person_members');
         $this->addSql('DROP TABLE event_generation');

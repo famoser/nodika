@@ -6,13 +6,12 @@
 {% trans_default_domain "administration" %}
 
 {% block single_content %}
-
     <p>
         <a class="btn btn-secondary" href="{{ path("administration_member_new") }}">
             {{ "new.title"|trans({}, "administration_member") }}
         </a>
     </p>
-    <table class="table table-striped">
+    <table class="table table-striped table-hover table-responsive-xl">
         <thead>
         <tr>
             <th>{{ "name"|trans({}, "trait_thing") }}</th>

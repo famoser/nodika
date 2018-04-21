@@ -13,8 +13,9 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
-use App\Entity\EventLine;
-use App\Form\Model\Event\SearchType;
+use App\Entity\Event;
+use App\Entity\EventTag;
+use App\Form\Model\Event\PublicSearchType;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -47,7 +48,7 @@ class SearchController extends BaseFormController
 
         $export = false;
         $form = $this->handleForm(
-            $this->createForm(SearchType::class, $searchModel)
+            $this->createForm(PublicSearchType::class, $searchModel)
                 ->add("search", SubmitType::class)
                 ->add("export", SubmitType::class),
             $request,
@@ -58,14 +59,14 @@ class SearchController extends BaseFormController
             }
         );
 
-        $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
-        $eventLineModels = $eventLineRepo->findEventLineModels($searchModel);
+        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $events = $eventRepo->search($searchModel);
 
         if ($export) {
-            return $csvService->renderCsv("export.csv", $this->toDataTable($eventLineModels, $translator), $this->getEventsHeader($translator));
+            return $csvService->renderCsv("export.csv", $this->toDataTable($events, $translator), $this->getEventsHeader($translator));
         }
 
-        $arr["event_line_models"] = $eventLineModels;
+        $arr["events"] = $events;
         $arr["search_form"] = $form;
 
         return $this->render('search/index.html.twig', $arr);

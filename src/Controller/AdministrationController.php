@@ -13,8 +13,9 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
+use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Entity\Settings;
@@ -48,8 +49,8 @@ class AdministrationController extends BaseFormController
         $searchModel = new SearchModel();
         $searchModel->setIsConfirmed(false);
 
-        $eventLineRepository = $this->getDoctrine()->getRepository(EventLine::class);
-        $eventLineModels = $eventLineRepository->findEventLineModels($searchModel);
+        $eventRepository = $this->getDoctrine()->getRepository(Event::class);
+        $eventLineModels = $eventRepository->search($searchModel);
 
         $arr['unconfirmed_events'] = $eventLineModels;
 
@@ -81,8 +82,8 @@ class AdministrationController extends BaseFormController
             }
         );
 
-        $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
-        $eventLineModels = $eventLineRepo->findEventLineModels($searchModel);
+        $eventLineRepo = $this->getDoctrine()->getRepository(Event::class);
+        $eventLineModels = $eventLineRepo->search($searchModel);
 
         if ($export) {
             return $csvService->renderCsv("export.csv", $this->toDataTable($eventLineModels, $translator), $this->getEventsHeader($translator));
@@ -122,20 +123,6 @@ class AdministrationController extends BaseFormController
         $arr["members"] = $memberRepo->findBy(["deletedAt" => null]);
 
         return $this->render('administration/members.html.twig', $arr);
-    }
-
-    /**
-     * @Route("/event_lines", name="administration_event_lines")
-     *
-     * @return Response
-     */
-    public function eventLinesAction()
-    {
-        $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
-
-        $arr["event_lines"] = $eventLineRepo->findAll();
-
-        return $this->render('administration/event_lines.html.twig', $arr);
     }
 
     /**

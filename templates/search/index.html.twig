@@ -23,7 +23,7 @@
         <div class="col-md-3">
             <h3>{{ "search.filter"|trans }}</h3>
             <form action="{{ path("event_search") }}" method="get">
-                {{ kitchen.select_form_field("event_line", selected_event_line, event_lines, "entity.name"|trans({}, "entity_event_line"), true) }}
+                {{ kitchen.select_form_field("event_tag", selected_event_line, event_lines, "entity.name"|trans({}, "entity_event_line"), true) }}
                 {{ kitchen.select_form_field("member", selected_member, members, "entity.name"|trans({}, "entity_member"), true) }}
                 {{ kitchen.select_form_field("person", selected_person, persons, "entity.name"|trans({}, "entity_person"), true) }}
                 {{ kitchen.form_field("start", start_date_time, "start_date_time"|trans({}, "entity_event", "datetime")) }}

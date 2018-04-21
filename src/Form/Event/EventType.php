@@ -19,7 +19,7 @@ namespace App\Form\Event;
  */
 
 use App\Entity\Event;
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
@@ -38,7 +38,6 @@ class EventType extends BaseAbstractType
         $builder->add('endDateTime', DateTimeType::class, $dateArray);
         $builder->add('member', EntityType::class, ["class" => Member::class]);
         $builder->add('person', EntityType::class, ["class" => FrontendUser::class]);
-        $builder->add('eventLine', EntityType::class, ['class' => EventLine::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

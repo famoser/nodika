@@ -156,7 +156,7 @@ class GenerateController extends BaseFormController
         $arr = $this->handleStepForm(
             $request,
             $generation,
-            EventGenerationConflictAvoidType::class,
+            null,
             function () use ($generation) {
                 return $this->redirectToRoute("administration_generate_weights", ["generation" => $generation->getId()]);
             }
@@ -176,7 +176,7 @@ class GenerateController extends BaseFormController
         $arr = $this->handleStepForm(
             $request,
             $generation,
-            EventGenerationConflictAvoidType::class,
+            null,
             function () use ($generation) {
                 return $this->redirectToRoute("administration_generate_save", ["generation" => $generation->getId()]);
             }

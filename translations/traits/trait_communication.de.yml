@@ -3,6 +3,5 @@ trait:
   name: Kontaktinformationen
 
 #properties
-phone: Telefonnummer (freiwillig)
+phone: Telefonnummer
 email: Email
-webpage: Webseite (freiwillig)

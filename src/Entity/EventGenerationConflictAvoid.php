@@ -29,7 +29,7 @@ class EventGenerationConflictAvoid extends BaseEntity
     /**
      * @var FrontendUser
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\EventLine")
+     * @ORM\ManyToOne(targetEntity="EventTag")
      */
     private $eventLine;
 

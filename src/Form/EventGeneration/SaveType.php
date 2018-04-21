@@ -12,9 +12,10 @@
 namespace App\Form\EventGeneration;
 
 use App\Entity\EventGeneration;
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Form\Base\BaseAbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,7 +23,7 @@ class SaveType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("eventLine", EntityType::class, ["class" => EventLine::class]);
+        $builder->add("eventDescription", TextType::class, ["required" => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

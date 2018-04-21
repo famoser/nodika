@@ -3,7 +3,6 @@ trait:
   name: Name
 
 #properties
-job_title: Titel (freiwillig)
 given_name: Vorname
 family_name: Nachname
 

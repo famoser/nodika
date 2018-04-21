@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An Event is a time unit which is assigned to a member or a person.
  *
  * @ORM\Table
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Event extends BaseEntity
@@ -40,11 +40,20 @@ class Event extends BaseEntity
     private $eventPast;
 
     /**
+     * @var EventTag[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
+     * @ORM\JoinTable(name="event_event_tags")
+     */
+    private $eventTags;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->eventPast = new ArrayCollection();
+        $this->eventTags = new ArrayCollection();
     }
 
     /**
@@ -66,5 +75,13 @@ class Event extends BaseEntity
             $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT) .
             " - " .
             $this->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+    }
+
+    /**
+     * @return EventTag[]|ArrayCollection
+     */
+    public function getEventTags()
+    {
+        return $this->eventTags;
     }
 }

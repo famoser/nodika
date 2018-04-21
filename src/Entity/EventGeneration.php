@@ -122,11 +122,12 @@ class EventGeneration extends BaseEntity
     private $step = GenerationStep::CHOOSE_TARGETS;
 
     /**
-     * @var EventLine
+     * @var EventTag[]|ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="EventLine", inversedBy="eventLineGenerations")
+     * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
+     * @ORM\JoinTable(name="event_generation_event_tags")
      */
-    private $eventLine;
+    private $conflictEventTags;
 
     /**
      * @var EventGenerationDateException[]|ArrayCollection
@@ -150,13 +151,6 @@ class EventGeneration extends BaseEntity
     private $members;
 
     /**
-     * @var EventGenerationConflictAvoid[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationConflictAvoid", mappedBy="eventGeneration")
-     */
-    private $conflictAvoids;
-
-    /**
      * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="generatedBy")
@@ -170,6 +164,7 @@ class EventGeneration extends BaseEntity
         $this->frontendUsers = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->generatedEvents = new ArrayCollection();
+        $this->conflictEventTags = new ArrayCollection();
     }
 
     /**
@@ -309,22 +304,6 @@ class EventGeneration extends BaseEntity
     }
 
     /**
-     * @return EventLine
-     */
-    public function getEventLine(): EventLine
-    {
-        return $this->eventLine;
-    }
-
-    /**
-     * @param EventLine $eventLine
-     */
-    public function setEventLine(EventLine $eventLine): void
-    {
-        $this->eventLine = $eventLine;
-    }
-
-    /**
      * @return EventGenerationDateException[]|ArrayCollection
      */
     public function getDateExceptions()
@@ -421,18 +400,10 @@ class EventGeneration extends BaseEntity
     }
 
     /**
-     * @return EventGenerationConflictAvoid[]|ArrayCollection
+     * @return EventTag[]|ArrayCollection
      */
-    public function getConflictAvoids()
+    public function getConflictEventTags()
     {
-        return $this->conflictAvoids;
-    }
-
-    /**
-     * @param EventGenerationConflictAvoid[]|ArrayCollection $conflictAvoids
-     */
-    public function setConflictAvoids($conflictAvoids): void
-    {
-        $this->conflictAvoids = $conflictAvoids;
+        return $this->conflictEventTags;
     }
 }

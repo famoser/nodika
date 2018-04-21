@@ -12,7 +12,8 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use App\Entity\EventLine;
+use App\Entity\Event;
+use App\Entity\EventTag;
 use App\Model\Event\SearchModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +35,7 @@ class AssignController extends BaseFormController
         $searchEventModel->setMembers($this->getUser()->getMembers());
         $searchEventModel->setStartDateTime(new \DateTime());
 
-        $events = $this->getDoctrine()->getRepository(EventLine::class)->findEventLineModels($searchEventModel);
+        $events = $this->getDoctrine()->getRepository(Event::class)->search($searchEventModel);
 
         $arr["events"] = $events;
         return $this->render('assign/index.html.twig', $arr);

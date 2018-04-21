@@ -13,7 +13,7 @@ namespace App\Service;
 
 use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
 use App\EventGeneration\EventTarget;
@@ -382,10 +382,10 @@ class EventGenerationService implements EventGenerationServiceInterface
         $searchModel = new SearchModel();
         $searchModel->setStartDateTime(((new \DateTime())->setTimestamp(0)));
         $searchModel->setEndDateTime($end);
-        $searchModel->setEventLine($eventGeneration->getEventLine());
         $searchModel->setMaxResults($limit);
+        $searchModel->setEventTags($eventGeneration->getConflictEventTags());
 
-        $eventLines = $this->doctrine->getRepository(EventLine::class)->findEventLineModels($searchModel);
+        $eventLines = $this->doctrine->getRepository(Event::class)->search($searchModel);
         $events = [];
         foreach ($eventLines as $eventLine) {
             foreach ($eventLine->events as $event) {

@@ -9,28 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\EventLine;
+namespace App\Form\EventTag;
 
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\Thing\ThingType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventLineType extends BaseAbstractType
+class EventTagType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add("thing", ThingType::class, ["inherit_data" => true]);
-        $builder->add('displayOrder', NumberType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => EventLine::class,
-            'translation_domain' => 'entity_event_line'
+            'data_class' => EventTag::class,
+            'translation_domain' => 'entity_event_tag'
         ]);
     }
 }

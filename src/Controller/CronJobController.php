@@ -12,7 +12,8 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
-use App\Entity\EventLine;
+use App\Entity\Event;
+use App\Entity\EventTag;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,25 +62,23 @@ class CronJobController extends BaseDoctrineController
             $sendRemainderBy = $this->getParameter('SEND_REMAINDER_BY');
 
             //get all events which might be a problem
-            $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
+            $eventRepo = $this->getDoctrine()->getRepository(Event::class);
             $eventSearchModel = new SearchModel();
             $eventSearchModel->setStartDateTime(new \DateTime());
             $eventSearchModel->setEndDateTime(new \DateTime("now + " . $sendRemainderBy . " days"));
             $eventSearchModel->setIsConfirmed(false);
-            $eventLines = $eventLineRepo->findEventLineModels($eventSearchModel);
+            $events = $eventRepo->search($eventSearchModel);
 
             //count all events which need to be remainded
             $emailRemainder = [];
-            foreach ($eventLines as $eventLine) {
-                foreach ($eventLine->events as $event) {
-                    if ($event->getFrontendUser() != null) {
-                        $emailRemainder[$event->getFrontendUser()->getEmail()]++;
-                    } else {
-                        $emailRemainder[$event->getMember()->getEmail()]++;
-                    }
-                    $event->setLastRemainderEmailSent(new \DateTime());
-                    $this->fastSave($event);
+            foreach ($events as $event) {
+                if ($event->getFrontendUser() != null) {
+                    $emailRemainder[$event->getFrontendUser()->getEmail()]++;
+                } else {
+                    $emailRemainder[$event->getMember()->getEmail()]++;
                 }
+                $event->setLastRemainderEmailSent(new \DateTime());
+                $this->fastSave($event);
             }
 
             //send remainders
@@ -97,12 +96,12 @@ class CronJobController extends BaseDoctrineController
         $mustConfirmBy = $this->getParameter('MUST_CONFIRM_EVENT_BY');
 
         //get all events which might be a problem
-        $eventLineRepo = $this->getDoctrine()->getRepository(EventLine::class);
+        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $eventSearchModel = new SearchModel();
         $eventSearchModel->setStartDateTime(new \DateTime());
         $eventSearchModel->setEndDateTime(new \DateTime("now + " . $mustConfirmBy . " days"));
         $eventSearchModel->setIsConfirmed(false);
-        $eventLines = $eventLineRepo->findEventLineModels($eventSearchModel);
+        $events = $eventRepo->search($eventSearchModel);
 
 
         //get admin emails
@@ -115,35 +114,33 @@ class CronJobController extends BaseDoctrineController
 
 
         //send an extra email for each late event
-        foreach ($eventLines as $eventLine) {
-            foreach ($eventLine->events as $event) {
-                $targetEmail = null;
-                $ownerName = null;
-                if ($event->getFrontendUser() != null) {
-                    $targetEmail = $event->getFrontendUser()->getEmail();
-                    $ownerName = $event->getFrontendUser()->getFullName();
-                } else {
-                    $targetEmail = $event->getMember()->getEmail();
-                    $ownerName = $event->getMember()->getName();
-                }
-
-                //send email to member
-                $subject = $translator->trans('too_late_remainder.subject', [], 'email_cronjob');
-                $body = $translator->trans(
-                    'too_late_remainder.message',
-                    [
-                        '%event_short%' => $event->toShort(),
-                        '%owner%' => $ownerName . " (" . $targetEmail . ")"
-                    ],
-                    'email_cronjob'
-                );
-                $actionText = $translator->trans('too_late_remainder.action_text', [], 'email_cronjob');
-                $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
-                $emailService->sendActionEmail($targetEmail, $subject, $body, $actionText, $actionLink, $adminEmails);
-
-                $event->setLastRemainderEmailSent(new \DateTime());
-                $this->fastSave($event);
+        foreach ($events as $event) {
+            $targetEmail = null;
+            $ownerName = null;
+            if ($event->getFrontendUser() != null) {
+                $targetEmail = $event->getFrontendUser()->getEmail();
+                $ownerName = $event->getFrontendUser()->getFullName();
+            } else {
+                $targetEmail = $event->getMember()->getEmail();
+                $ownerName = $event->getMember()->getName();
             }
+
+            //send email to member
+            $subject = $translator->trans('too_late_remainder.subject', [], 'email_cronjob');
+            $body = $translator->trans(
+                'too_late_remainder.message',
+                [
+                    '%event_short%' => $event->toShort(),
+                    '%owner%' => $ownerName . " (" . $targetEmail . ")"
+                ],
+                'email_cronjob'
+            );
+            $actionText = $translator->trans('too_late_remainder.action_text', [], 'email_cronjob');
+            $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $emailService->sendActionEmail($targetEmail, $subject, $body, $actionText, $actionLink, $adminEmails);
+
+            $event->setLastRemainderEmailSent(new \DateTime());
+            $this->fastSave($event);
         }
 
         return new Response('finished');

@@ -11,7 +11,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\EventLine;
+use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -27,6 +27,6 @@ class EventLineVoter extends BaseVoter
      */
     protected function supports($attribute, $subject)
     {
-        return $subject instanceof EventLine;
+        return $subject instanceof EventTag;
     }
 }
