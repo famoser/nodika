@@ -11,12 +11,8 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\EventTag;
-use App\Entity\FrontendUser;
 use App\Security\Voter\Base\BaseVoter;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class EventGenerationVoter extends BaseVoter
 {

@@ -46,7 +46,6 @@ abstract class BaseEnum
      *
      * @param $enumValue
      *
-     * @param TranslatorInterface $translator
      * @return string
      */
     public static function getText($enumValue)

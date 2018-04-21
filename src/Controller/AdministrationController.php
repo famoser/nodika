@@ -15,7 +15,6 @@ use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Entity\Settings;

@@ -9,7 +9,6 @@
 namespace App\Controller\Traits;
 
 use App\Entity\Event;
-use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Helper\DateTimeFormatter;

@@ -14,7 +14,6 @@ namespace App\Form\EventTag;
 use App\Entity\EventTag;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\Thing\ThingType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

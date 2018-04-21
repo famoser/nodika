@@ -13,7 +13,6 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Event;
-use App\Entity\EventTag;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\Response;

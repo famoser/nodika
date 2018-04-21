@@ -16,7 +16,6 @@ use App\Entity\EventGeneration;
 use App\Form\EventGeneration\BasicDataType;
 use App\Form\EventGeneration\ChooseRecipientsType;
 use App\Form\EventGeneration\SaveType;
-use App\Form\EventGenerationConflictAvoid\EventGenerationConflictAvoidType;
 use App\Helper\DateTimeFormatter;
 use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -168,6 +167,7 @@ class GenerateController extends BaseFormController
     /**
      * @Route("/{generation}/weights", name="administration_generate_weights")
      *
+     * @param Request $request
      * @param EventGeneration $generation
      * @return Response
      */
@@ -188,6 +188,7 @@ class GenerateController extends BaseFormController
     /**
      * @Route("/{generation}/save", name="administration_generate_save")
      *
+     * @param Request $request
      * @param EventGeneration $generation
      * @return Response
      */

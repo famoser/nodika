@@ -20,13 +20,9 @@ namespace App\Form\Event;
 
 use App\Entity\Event;
 use App\Entity\EventTag;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\StartEnd\StartEndType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

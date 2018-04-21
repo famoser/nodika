@@ -30,6 +30,7 @@ class LoginController extends BaseLoginController
     /**
      * @Route("/", name="login_index")
      *
+     * @param Request $request
      * @return Response
      */
     public function indexAction(Request $request)

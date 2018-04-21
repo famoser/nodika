@@ -49,6 +49,7 @@ class FrontendUserController extends BaseFormController
      *
      * @param Request $request
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function newAction(Request $request, TranslatorInterface $translator)
@@ -80,6 +81,7 @@ class FrontendUserController extends BaseFormController
      * @param Request $request
      * @param FrontendUser $frontendUser
      *
+     * @param TranslatorInterface $translator
      * @return Response
      */
     public function editAction(Request $request, FrontendUser $frontendUser, TranslatorInterface $translator)

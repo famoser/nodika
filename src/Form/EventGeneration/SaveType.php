@@ -12,9 +12,7 @@
 namespace App\Form\EventGeneration;
 
 use App\Entity\EventGeneration;
-use App\Entity\EventTag;
 use App\Form\Base\BaseAbstractType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

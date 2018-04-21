@@ -13,7 +13,6 @@ namespace App\Service;
 
 use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\EventTag;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
 use App\EventGeneration\EventTarget;
@@ -365,7 +364,6 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * @param EventGeneration $eventGeneration
-     * @param EventTarget[] $eventTargets
      * @param $newEventCount
      * @param $newTargetCount
      *

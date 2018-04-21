@@ -14,7 +14,6 @@ namespace App\Controller;
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
-use App\Entity\EventTag;
 use App\Form\Model\Event\PublicSearchType;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
@@ -39,8 +38,8 @@ class SearchController extends BaseFormController
      * @param Request $request
      * @param TranslatorInterface $translator
      *
+     * @param CsvServiceInterface $csvService
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
      */
     public function indexAction(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
     {

@@ -18,7 +18,6 @@ namespace App\Form\Model\Event;
  * Time: 19:13
  */
 
-use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;

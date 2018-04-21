@@ -16,7 +16,6 @@ use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
 use App\Entity\EventGenerationMember;
 use App\Entity\EventPast;
-use App\Entity\EventTag;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Enum\EventChangeType;

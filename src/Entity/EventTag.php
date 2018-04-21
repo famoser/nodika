@@ -15,7 +15,6 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\SoftDeleteTrait;
 use App\Entity\Traits\ThingTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

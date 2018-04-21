@@ -13,7 +13,6 @@ namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
-use App\Entity\EventGeneration;
 use App\Entity\EventPast;
 use App\Enum\EventChangeType;
 use App\Form\Event\RemoveEventType;

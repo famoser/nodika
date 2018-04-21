@@ -12,7 +12,6 @@
 namespace App\Security\Voter;
 
 use App\Entity\FrontendUser;
-use App\Entity\Member;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 

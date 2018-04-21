@@ -14,7 +14,6 @@ namespace App\Controller;
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
-use App\Entity\EventTag;
 use App\Entity\EventPast;
 use App\Entity\Settings;
 use App\Enum\EventChangeType;
@@ -59,8 +58,8 @@ class ConfirmController extends BaseFormController
      */
     public function eventAction(Event $event, TranslatorInterface $translator)
     {
-        $event->setConfirmDateTime(new \DateTime());
-        $eventPast = new EventPast($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
+        $event->confirm($this->getUser());
+        $eventPast = EventPast::create($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
         $this->fastSave($eventPast, $event);
         $this->displaySuccess($translator->trans('confirm.messages.confirm_successful', [], 'event'));
         return $this->redirectToRoute('confirm_index');
@@ -82,22 +81,20 @@ class ConfirmController extends BaseFormController
         $searchModel->setIsConfirmed(false);
         $searchModel->setFrontendUser($this->getUser());
         $end = new \DateTime();
-        $end->add(new \DateInterval("P" . $setting->getConfirmDaysAdvance()."T"));
+        $end->add(new \DateInterval("P" . $setting->getConfirmDaysAdvance() . "T"));
         $searchModel->setStartDateTime(new \DateTime());
         $searchModel->setEndDateTime($end);
 
-        $eventLines = $this->getDoctrine()->getRepository('EventTag')->findEvents($searchModel);
+        $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
         $manager = $this->getDoctrine()->getManager();
         $total = 0;
-        foreach ($eventLines as $eventLine) {
-            foreach ($eventLine->events as $event) {
-                $event->setConfirmDateTime(new \DateTime());
-                $eventPast = new EventPast($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
-                $manager->persist($event);
-                $manager->persist($eventPast);
-                $total++;
-            }
+        foreach ($events as $event) {
+            $event->confirm($this->getUser());
+            $eventPast = EventPast::create($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
+            $manager->persist($event);
+            $manager->persist($eventPast);
+            $total++;
         }
         $manager->flush();
 

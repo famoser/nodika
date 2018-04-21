@@ -8,13 +8,6 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\EventTag;
-use App\Entity\EventGeneration;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
-use App\Enum\EventType;
-use App\Enum\TradeTag;
-
 trait StartEndTrait
 {
     /**
