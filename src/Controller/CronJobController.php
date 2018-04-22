@@ -13,6 +13,7 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Event;
+use App\Entity\Setting;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,16 +56,14 @@ class CronJobController extends BaseDoctrineController
             return new Response('access denied');
         }
 
-        $remainderEmailInterval = $this->getParameter('REMAINDER_EMAIL_INTERVAL');
+        $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
+        $remainderEmailInterval = $setting->getSendRemainderDaysInterval();
         if (date('z') % $remainderEmailInterval == 0) {
-            //send regular remainders
-            $sendRemainderBy = $this->getParameter('SEND_REMAINDER_BY');
-
             //get all events which might be a problem
             $eventRepo = $this->getDoctrine()->getRepository(Event::class);
             $eventSearchModel = new SearchModel();
             $eventSearchModel->setStartDateTime(new \DateTime());
-            $eventSearchModel->setEndDateTime(new \DateTime("now + " . $sendRemainderBy . " days"));
+            $eventSearchModel->setEndDateTime(new \DateTime("now + " . $setting->getCanConfirmDaysAdvance() - $setting->getSendRemainderDaysInterval() . " days"));
             $eventSearchModel->setIsConfirmed(false);
             $events = $eventRepo->search($eventSearchModel);
 
@@ -86,13 +85,13 @@ class CronJobController extends BaseDoctrineController
                 $subject = $translator->trans('remainder.subject', [], 'email_cronjob');
                 $body = $translator->trans('remainder.message', ['%count%' => $eventCount], 'email_cronjob');
                 $actionText = $translator->trans('remainder.action_text', [], 'email_cronjob');
-                $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
+                $actionLink = $this->generateUrl('confirm_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
                 $emailService->sendActionEmail($email, $subject, $body, $actionText, $actionLink);
             }
         }
 
         //send the daily, annoying remainders
-        $mustConfirmBy = $this->getParameter('MUST_CONFIRM_EVENT_BY');
+        $mustConfirmBy = $setting->getMustConfirmDaysAdvance();
 
         //get all events which might be a problem
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
@@ -110,7 +109,6 @@ class CronJobController extends BaseDoctrineController
         foreach ($admins as $admin) {
             $adminEmails[] = $admin->getEmail();
         }
-
 
         //send an extra email for each late event
         foreach ($events as $event) {
@@ -135,7 +133,7 @@ class CronJobController extends BaseDoctrineController
                 'email_cronjob'
             );
             $actionText = $translator->trans('too_late_remainder.action_text', [], 'email_cronjob');
-            $actionLink = $this->generateUrl('event_confirm', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $actionLink = $this->generateUrl('confirm_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
             $emailService->sendActionEmail($targetEmail, $subject, $body, $actionText, $actionLink, $adminEmails);
 
             $event->setLastRemainderEmailSent(new \DateTime());

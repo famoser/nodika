@@ -33,8 +33,8 @@ class IndexController extends BaseDoctrineController
         $searchModel = new SearchModel();
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
 
-        $eventLineModels = $eventRepository->search($searchModel);
-        $arr['event_line_models'] = $eventLineModels;
+        $events = $eventRepository->search($searchModel);
+        $arr['events'] = $events;
         $arr["user"] = $this->getUser();
 
         return $this->render('index/index.html.twig', $arr);

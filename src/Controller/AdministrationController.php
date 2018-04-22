@@ -17,7 +17,7 @@ use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
-use App\Entity\Settings;
+use App\Entity\Setting;
 use App\Form\Model\Event\AdvancedSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
@@ -122,20 +122,6 @@ class AdministrationController extends BaseFormController
         $arr["members"] = $memberRepo->findBy(["deletedAt" => null]);
 
         return $this->render('administration/members.html.twig', $arr);
-    }
-
-    /**
-     * @Route("/settings", name="administration_settings")
-     *
-     * @return Response
-     */
-    public function settingsAction()
-    {
-        $settings = $this->getDoctrine()->getRepository(Settings::class)->findSingle();
-
-        $arr["settings"] = $settings;
-
-        return $this->render('administration/settings.html.twig', $arr);
     }
 
     /**

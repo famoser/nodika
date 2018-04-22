@@ -222,4 +222,10 @@ trait EventTrait
         $this->frontendUser = $eventTrait->getFrontendUser();
         $this->generatedBy = $eventTrait->getGeneratedBy();
     }
+
+    public function isActive()
+    {
+        $now = new \DateTime();
+        return $this->getStartDateTime() < $now && $this->getEndDateTime() > $now;
+    }
 }

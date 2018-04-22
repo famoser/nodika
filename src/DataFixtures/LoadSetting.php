@@ -12,10 +12,10 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
-use App\Entity\Settings;
+use App\Entity\Setting;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadSettings extends BaseFixture
+class LoadSetting extends BaseFixture
 {
     const ORDER = 1;
 
@@ -26,12 +26,14 @@ class LoadSettings extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        $setting = new Settings();
+        $setting = new Setting();
         $setting->setFrontendUserName("Mitarbeiter");
         $setting->setMemberName("Praxis");
         $setting->setOrganisationName("knbu.ch");
         $setting->setSupportMail('support@famoser.ch');
-        $setting->setConfirmDaysAdvance(10);
+        $setting->setCanConfirmDaysAdvance(30);
+        $setting->setMustConfirmDaysAdvance(3);
+        $setting->setSendRemainderDaysInterval(1);
         $manager->persist($setting);
         $manager->flush();
     }

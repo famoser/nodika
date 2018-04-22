@@ -15,7 +15,7 @@ use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
 use App\Entity\EventPast;
-use App\Entity\Settings;
+use App\Entity\Setting;
 use App\Enum\EventChangeType;
 use App\Model\Event\SearchModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -75,13 +75,13 @@ class ConfirmController extends BaseFormController
      */
     public function allAction(TranslatorInterface $translator)
     {
-        $setting = $this->getDoctrine()->getRepository(Settings::class)->findSingle();
+        $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
 
         $searchModel = new SearchModel();
         $searchModel->setIsConfirmed(false);
         $searchModel->setFrontendUser($this->getUser());
         $end = new \DateTime();
-        $end->add(new \DateInterval("P" . $setting->getConfirmDaysAdvance() . "T"));
+        $end->add(new \DateInterval("P" . $setting->getCanConfirmDaysAdvance() . "T"));
         $searchModel->setStartDateTime(new \DateTime());
         $searchModel->setEndDateTime($end);
 

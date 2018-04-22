@@ -12,7 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use App\Entity\Settings;
+use App\Entity\Setting;
 use App\Form\Model\ContactRequest\ContactRequestType;
 use App\Model\ContactRequest;
 use App\Service\EmailService;
@@ -43,7 +43,7 @@ class ContactController extends BaseFormController
                 ->add("form.send", SubmitType::class),
             $request,
             function () use ($request, $contactRequest, $translator, $emailService) {
-                $setting = $this->getDoctrine()->getRepository(Settings::class)->findSingle();
+                $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
                 /* @var FormInterface $form */
                 $emailService->sendTextEmail(
                     $setting->getSupportMail(),

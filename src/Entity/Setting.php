@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\SettingsRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Settings extends BaseEntity
+class Setting extends BaseEntity
 {
     use IdTrait;
     use ChangeAwareTrait;
@@ -59,7 +59,21 @@ class Settings extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $confirmDaysAdvance;
+    private $canConfirmDaysAdvance;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $mustConfirmDaysAdvance;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $send_remainder_days_interval;
 
     /**
      * @return string
@@ -128,16 +142,48 @@ class Settings extends BaseEntity
     /**
      * @return int
      */
-    public function getConfirmDaysAdvance(): int
+    public function getCanConfirmDaysAdvance(): int
     {
-        return $this->confirmDaysAdvance;
+        return $this->canConfirmDaysAdvance;
     }
 
     /**
-     * @param int $confirmDaysAdvance
+     * @param int $canConfirmDaysAdvance
      */
-    public function setConfirmDaysAdvance(int $confirmDaysAdvance): void
+    public function setCanConfirmDaysAdvance(int $canConfirmDaysAdvance): void
     {
-        $this->confirmDaysAdvance = $confirmDaysAdvance;
+        $this->canConfirmDaysAdvance = $canConfirmDaysAdvance;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMustConfirmDaysAdvance(): int
+    {
+        return $this->mustConfirmDaysAdvance;
+    }
+
+    /**
+     * @param int $mustConfirmDaysAdvance
+     */
+    public function setMustConfirmDaysAdvance(int $mustConfirmDaysAdvance): void
+    {
+        $this->mustConfirmDaysAdvance = $mustConfirmDaysAdvance;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSendRemainderDaysInterval(): int
+    {
+        return $this->send_remainder_days_interval;
+    }
+
+    /**
+     * @param int $send_remainder_days_interval
+     */
+    public function setSendRemainderDaysInterval(int $send_remainder_days_interval): void
+    {
+        $this->send_remainder_days_interval = $send_remainder_days_interval;
     }
 }

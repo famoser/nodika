@@ -11,7 +11,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Settings;
+use App\Entity\Setting;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -23,7 +23,7 @@ use Doctrine\ORM\EntityRepository;
 class SettingsRepository extends EntityRepository
 {
     /**
-     * @return Settings
+     * @return Setting
      */
     public function findSingle()
     {
@@ -31,6 +31,6 @@ class SettingsRepository extends EntityRepository
         if (count($all) > 0) {
             return $all[0];
         }
-        return new Settings();
+        return new Setting();
     }
 }
