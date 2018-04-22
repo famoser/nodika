@@ -3,4 +3,7 @@ entity:
   description: 'Ein Benutzer kann sich einloggen, und einem oder mehreren Mitgliedern zugeordnet werden'
   plural: 'Benutzer'
 
+form:
+  save: 'speichern'
+
 email: Email

@@ -1,0 +1,22 @@
+#login page
+index:
+  title: 'Profil'
+  description: 'Profil & Passwort'
+  change_password: 'Passwort ändern'
+  update: 'Daten ändern'
+  your_infos: 'Hallo %name%'
+  info_member: "Sie wurden vom Administrator zu %member% zugeordnet"
+  info_no_member: "Sie sind keinem Mitglied zugeordnet"
+
+#errors
+error:
+  email_already_registered: 'Diese E-Mail ist bereits vergeben. Loggen Sie sich ein oder setzen Sie das Passwort zurück.'
+  already_logged_in: 'Sie sind bereits eingeloggt. Loggen Sie sich aus um die Einladung annehmen zu können.'
+  passwords_do_not_match: 'Die Passwörter stimmen nicht überein'
+  new_password_not_valid: 'Das Passwort ist nicht sicher genug. Bitte verwenden Sie mindestens ein 8 stelliges Passwort'
+  login_failed: 'Login fehlgeschlagen'
+  must_accept_agb: 'Sie müssen die AGB''s akzeptieren um fortzufahren'
+
+success:
+  password_set: 'Neues Passwort erfolgreich gesetzt'
+  person_assigned: 'Sie haben die Einladung angenommen'

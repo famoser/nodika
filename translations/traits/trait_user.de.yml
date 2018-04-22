@@ -4,6 +4,8 @@ trait:
 
 form:
   login: 'Einloggen'
+  change_password: 'Passwort ändern'
+  save: 'Speichern'
 
 error:
   email_not_unique: 'Email bereits vergeben'

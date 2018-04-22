@@ -1,0 +1,27 @@
+{% extends 'single_content_base.html.twig' %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "assign" %}
+
+{% block single_content %}
+    <div class="row" id="assign">
+        <div class="col-md-4">
+            {% verbatim %}
+            <frontend-user-select
+                v-for="item in frontendUsers"
+                v-bind:frontend_user="item"
+                v-bind:key="item.id">
+            </frontend-user-select>
+
+            {% endverbatim %}
+        </div>
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+{% endblock %}

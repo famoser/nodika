@@ -12,7 +12,7 @@ use App\Controller\Base\BaseLoginController;
 use App\Entity\FrontendUser;
 use App\Form\Traits\User\LoginType;
 use App\Form\Traits\User\RecoverType;
-use App\Form\Traits\User\SetPasswordType;
+use App\Form\Traits\User\ChangePasswordType;
 use App\Service\Interfaces\EmailServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
@@ -105,7 +105,7 @@ class LoginController extends BaseLoginController
         }
 
         $form = $this->handleForm(
-            $this->createForm(SetPasswordType::class, $user, ["data_class" => FrontendUser::class])
+            $this->createForm(ChangePasswordType::class, $user, ["data_class" => FrontendUser::class])
                 ->add("form.set_password", SubmitType::class),
             $request,
             function ($form) use ($user, $translator, $request) {

@@ -3,6 +3,8 @@ const $ = require("jquery");
 const bootstrap = require("bootstrap");
 const multiselect = require("bootstrap-multiselect/dist/js/bootstrap-multiselect.js");
 
+require("../js/assign.js");
+
 window.$ = $;
 
 FontAwesomeConfig = {autoAddCss: false};
@@ -72,4 +74,3 @@ $(document).ready(function () {
 
     $('form.ajax-form').on("submit", initializeAjax);
 });
-

@@ -26,6 +26,9 @@
                 <i class="fab fa-check"></i>
             {% endif %}
         </td>
+        <td>
+            {{ event.eventTags|join(", ") }}
+        </td>
     </tr>
 {% endmacro %}
 
@@ -63,6 +66,7 @@
                                 <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
                                 <th>{{ "entity.name"|trans({}, "entity_frontend_user") }}</th>
                                 <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
+                                <th>{{ "entity.plural"|trans({}, "entity_event_tag") }}</th>
                             </tr>
                             </thead>
                             <tbody>

@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Form\Traits\User;
+namespace App\Form\FrontendUser;
 
+use App\Entity\FrontendUser;
+use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use App\Form\Traits\Address\AddressType;
+use App\Form\Traits\Communication\CommunicationType;
+use App\Form\Traits\Person\PersonType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SetPasswordType extends BaseAbstractType
+class PublicFrontendUserType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -24,8 +29,9 @@ class SetPasswordType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('plainPassword', PasswordType::class);
-        $builder->add('repeatPlainPassword', PasswordType::class);
+        $builder->add("person", PersonType::class, ["inherit_data" => true]);
+        $builder->add("communication", CommunicationType::class, ["inherit_data" => true]);
+        $builder->add("address", AddressType::class, ["inherit_data" => true]);
     }
 
     /**
@@ -34,7 +40,8 @@ class SetPasswordType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'trait_user'
+            'data_class' => FrontendUser::class,
+            'translation_domain' => 'entity_frontend_user'
         ]);
     }
 }
