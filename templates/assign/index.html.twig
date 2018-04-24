@@ -12,9 +12,9 @@
             <frontend-user-select
                 v-for="item in frontendUsers"
                 v-bind:frontend_user="item"
-                v-bind:key="item.id">
+                v-bind:key="item.id"
+                v-on:select="selectFrontendUser(item)">
             </frontend-user-select>
-
             {% endverbatim %}
         </div>
         <div class="col-md-4">
