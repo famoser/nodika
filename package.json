@@ -14,8 +14,9 @@
     "@fortawesome/fontawesome-pro-light": "^5",
     "@fortawesome/fontawesome-pro-regular": "^5",
     "@fortawesome/fontawesome-pro-solid": "^5",
-    "bootstrap-multiselect": "^0.9",
+    "axios": "^0.18.0",
     "bootstrap": "^4",
+    "bootstrap-multiselect": "^0.9",
     "open-sans-fontface": "^1.4.0",
     "popper.js": "^1.12"
   }

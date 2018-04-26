@@ -13,9 +13,12 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
+use App\Entity\FrontendUser;
 use App\Model\Event\SearchModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/assign")
@@ -38,5 +41,26 @@ class AssignController extends BaseFormController
 
         $arr["events"] = $events;
         return $this->render('assign/index.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/api/assignable_users", name="assign_assignable_users")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function apiAssignableUsersAction(SerializerInterface $serializer)
+    {
+        $result = [];
+
+        $user = $this->getUser();
+        foreach ($user->getMembers() as $member) {
+            foreach ($member->getFrontendUsers() as $frontendUser) {
+                $result[$frontendUser->getId()] = $frontendUser;
+            }
+        }
+
+        $result = array_values($result);
+
+        return new JsonResponse($serializer->serialize($result, "json", ["attributes" => ["fullName", "members" => ["name"]]]), 200, [], true);
     }
 }

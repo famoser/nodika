@@ -38,3 +38,10 @@ services:
 
     App\Service\EmailService:
         arguments: ["@mailer", "@doctrine", "@logger","@twig","%env(CONTACT_EMAIL)%"]
+
+    App\Normalizer\EntityNormalizer:
+        public: false
+        autowire: true
+        autoconfigure: true
+        tags:
+          - { name: serializer.normalizer }

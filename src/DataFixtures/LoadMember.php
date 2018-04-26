@@ -40,17 +40,43 @@ class LoadMember extends BaseFixture
 
         $users = $manager->getRepository(FrontendUser::class)->findAll();
 
-        $inclusionProbability = count($realExamples) / 3;
-
+        $members = [];
         foreach ($realExamples as $realExample) {
             $member = $this->getRandomInstance();
             $member->setName($realExample[0]);
             $manager->persist($member);
-            foreach ($users as $user) {
-                if (rand(0, $inclusionProbability) === 0) {
-                    $user->getMembers()->add($member);
-                    $manager->persist($user);
-                }
+            $members[] = $member;
+        }
+
+        $userIndex = 0;
+        $memberIndex = 0;
+        $allMembersSeen = false;
+        $allUsersSeen = false;
+
+
+        $advanceWithProbability = function() {
+            return rand(0, 10) > 2;
+        };
+        while (true) {
+            $users[$userIndex]->getMembers()->add($members[$memberIndex]);
+
+            if ($advanceWithProbability) {
+                $userIndex++;
+            }
+            $memberIndex++;
+
+            if ($userIndex == count($users)) {
+                $userIndex = 0;
+                $allUsersSeen = true;
+            }
+
+            if ($memberIndex == count($members)) {
+                $memberIndex = 0;
+                $allMembersSeen = true;
+            }
+
+            if ($allMembersSeen && $allUsersSeen) {
+                break;
             }
         }
 

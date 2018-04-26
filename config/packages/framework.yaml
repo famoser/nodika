@@ -4,17 +4,19 @@ framework:
     csrf_protection: ~
     http_method_override: true
 
-    # uncomment this entire section to enable sessions
+    # enable sessions
     session:
-        # With this config, PHP's native session handling is used
-        handler_id: ~
+      # use PHP native session handling
+      handler_id: ~
 
     #esi: ~
     #fragments: ~
     php_errors:
-        log: true
+      log: true
     validation:
       enable_annotations: true
+    property_info:
+      enabled: true
 
     assets:
-        json_manifest_path: '%kernel.project_dir%/public/dist/manifest.json'
+      json_manifest_path: '%kernel.project_dir%/public/dist/manifest.json'

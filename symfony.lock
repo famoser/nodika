@@ -332,6 +332,9 @@
     "symfony/property-access": {
         "version": "v3.4.2"
     },
+    "symfony/property-info": {
+        "version": "v4.0.8"
+    },
     "symfony/requirements-checker": {
         "version": "1.0",
         "recipe": {
@@ -361,6 +364,9 @@
             "version": "3.3",
             "ref": "85834af1496735f28d831489d12ab1921a875e0d"
         }
+    },
+    "symfony/serializer": {
+        "version": "v4.0.8"
     },
     "symfony/stopwatch": {
         "version": "v3.4.2"
