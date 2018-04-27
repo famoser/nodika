@@ -1,6 +1,10 @@
 index:
   title: 'Termine zuweisen'
   description: 'Weisen Sie Termine einem Account zu.'
+  choose_frontend_user: "Benutzer auswählen"
+  choose_events: "Termine auswählen"
+  choose_all: "Alle zuweisen"
+
   assigned_person: 'Zugewiesener Mitarbeiter'
   no_assigned_person: 'Noch keinem Mitarbeiter zugewiesen'
   choose_person: 'Mitarbeiter auswählen'
@@ -15,27 +19,3 @@ index:
     no_person: 'Kein Mitarbeiter ausgewählt'
     assigned: 'Erfolgreich %count% Termine zugewiesen'
   hel: 'assign'
-
-confirm:
-  title: 'Termine bestätigen'
-  description: 'Bestätigen Sie die demnächst kommenden Termine'
-  no_person_assigned: 'kein Mitarbeiter zugewiesen '
-  assigned_to_member: 'Ihrer Praxis zugewiesene Termine'
-  assigned_to_person: 'Ihnen zugewiesene Termine'
-  confirm_events: 'Termine bestätigen'
-  confirm_events_description: 'Bitte bestätigen Sie definitiv Ihre nächsten kommenden Termine'
-  no_events: 'Alle demnächst kommenden Termine erfolgreich bestätigt!'
-  do_confirm: 'Bestätigen'
-  do_confirm_all: 'Alle Termine bestätigen'
-  messages:
-    no_access: 'Sie können diesen Termin nicht bestätigen'
-    confirm_successful: 'Termin erfolgreich bestätigt'
-    confirm_all_successful: '%count% Termine erfolgreich bestätigt'
-
-search:
-  title: 'Termine'
-  description: 'Kalender durchsuchen'
-  no_event_lines: 'Keine Termine gefunden'
-  filter: 'Filtern'
-  do_filter: 'Suchen'
-  export: 'Exportieren'

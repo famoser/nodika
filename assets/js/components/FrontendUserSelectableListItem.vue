@@ -1,9 +1,9 @@
 <template>
-    <div>
-    <button v-on:click="$emit('select', frontendUser)">{{ frontendUser.fullName }}</button>
-    <input v-model="frontendUser.fullName" title="full name">
-    <input type="checkbox" v-model="frontendUser.isSelected" title="is selected"/>
-    </div>
+    <a href="#" v-on:click.prevent="$emit('select', frontendUser)" class="card" v-bind:class="{ 'border-primary' : frontendUser.isSelected }">
+        <div class="card-body">
+            <p>{{ frontendUser.fullName }}</p>
+        </div>
+    </a>
 </template>
 
 
