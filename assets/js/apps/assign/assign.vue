@@ -106,9 +106,7 @@
                         users[i].isSelected = false;
                     }
                     this.frontendUsers = users;
-                }, (error) => {
-                    this.usersLoading = false;
-                })
+                });
         },
     }
 

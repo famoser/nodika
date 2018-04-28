@@ -13,8 +13,10 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
+use App\Entity\EventPast;
 use App\Entity\FrontendUser;
 use App\Entity\Setting;
+use App\Enum\EventChangeType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -112,7 +114,9 @@ class AssignController extends BaseFormController
     public function apiAssignAction(SerializerInterface $serializer, Event $event, FrontendUser $frontendUser)
     {
         $event->setFrontendUser($frontendUser);
-        $this->fastSave($event);
+        $eventPast = EventPast::create($event, EventChangeType::PERSON_ASSIGNED_BY_MEMBER, $this->getUser());
+        $this->fastSave($event, $eventPast);
+
         return new JsonResponse($serializer->serialize($event, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
     }
 

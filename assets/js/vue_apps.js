@@ -5,26 +5,54 @@ Vue.config.productionTip = false;
 
 // translations
 Vue.use(VueI18n);
-// Ready translated locale messages
-const messages = {
-    de: {
-        choose_frontend_user: 'Mitarbeiter auswählen',
-        assign_events: 'Termine zuweisen',
-        no_user_assigned: "Keinem Mitarbeiter zugewiesen",
-        assign_all_events: "alle zuweisen"
-    }
-};
 
-const i18n = new VueI18n({
-    locale: 'de',
-    messages,
-});
-
+//assign app
 import AssignApp from './apps/assign/assign'
 
-new Vue({
-    i18n,
-    el: '#assign-app',
-    template: '<AssignApp/>',
-    components: {AssignApp}
-});
+if (document.getElementById("assign-app") != null) {
+    const messagesAssign = {
+        de: {
+            choose_frontend_user: 'Mitarbeiter auswählen',
+            assign_events: 'Termine zuweisen',
+            no_user_assigned: "Keinem Mitarbeiter zugewiesen",
+            assign_all_events: "alle zuweisen",
+            no_events: 'Keine Termine zu dieser Auswahl gefunden'
+        }
+    };
+
+    const i18nAssign = new VueI18n({
+        locale: 'de',
+        messages: messagesAssign,
+    });
+
+    new Vue({
+        i18n: i18nAssign,
+        el: '#assign-app',
+        template: '<AssignApp/>',
+        components: {AssignApp}
+    });
+}
+
+//confirm app
+import ConfirmApp from './apps/confirm/confirm'
+
+if (document.getElementById("confirm-app") != null) {
+    const messagesCofirm = {
+        de: {
+            confirm_events: "Termine bestätigen",
+            no_user_assigned: "Keinem Mitarbeiter zugewiesen"
+        }
+    };
+
+    const i18nConfirm = new VueI18n({
+        locale: 'de',
+        messages: messagesCofirm,
+    });
+
+    new Vue({
+        i18n: i18nConfirm,
+        el: '#confirm-app',
+        template: '<ConfirmApp/>',
+        components: {ConfirmApp}
+    });
+}

@@ -8,6 +8,9 @@
                 @select="selectEvent(event)"
         >
         </EventSelectableListItem>
+        <div v-if="events.length === 0">
+            <p>{{ $t("no_events")}}</p>
+        </div>
     </div>
 </template>
 

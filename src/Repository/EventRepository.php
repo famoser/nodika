@@ -71,11 +71,11 @@ class EventRepository extends EntityRepository
                 ->setParameter('frontendUser', $searchModel->getFrontendUser());
         }
 
-        if ($searchModel->getIsConfirmed() != null) {
+        if ($searchModel->getIsConfirmed() !== null) {
             if ($searchModel->getIsConfirmed()) {
-                $qb->andWhere("e.confirmDateTime IS NOT NULL");
+                $qb->andWhere("e.confirmDateTime IS NOT NULL AND (e.frontendUser = e.confirmedBy OR e.frontendUser IS NULL)");
             } else {
-                $qb->andWhere("e.confirmDateTime IS NULL");
+                $qb->andWhere("e.confirmDateTime IS NULL OR e.frontendUser != e.confirmedBy");
             }
         }
 

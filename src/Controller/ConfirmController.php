@@ -19,7 +19,10 @@ use App\Entity\Setting;
 use App\Enum\EventChangeType;
 use App\Model\Event\SearchModel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -31,75 +34,52 @@ class ConfirmController extends BaseFormController
     use EventControllerTrait;
 
     /**
-     * @Route("/", name="confirm_index")
+     * @Route("/api/events", name="confirm_events")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param SerializerInterface $serializer
+     * @return JsonResponse
+     * @throws \Exception
      */
-    public function indexAction()
+    public function apiEventsAction(SerializerInterface $serializer)
     {
+        //get all assignable events
+        $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
+
         $searchModel = new SearchModel();
         $searchModel->setMembers($this->getUser()->getMembers());
         $searchModel->setStartDateTime(new \DateTime());
-
+        $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval("P" . $settings->getCanConfirmDaysAdvance() . "D")));
+        $searchModel->setIsConfirmed(false);
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
-        $arr["events"] = $events;
+        $apiEvents = [];
+        foreach ($events as $event) {
+            if ($event->getFrontendUser() == null || $event->getFrontendUser()->getId() == $this->getUser()->getId()) {
+                $apiEvents[] = $event;
+            }
+        }
 
-        return $this->render('event/search.html.twig', $arr);
+        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**
-     * @Route("/{event}", name="confirm_event")
+     * @Route("/api/event/{event}", name="confirm_event")
      *
-     * @param Event $event
-     *
-     * @param TranslatorInterface $translator
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function eventAction(Event $event, TranslatorInterface $translator)
-    {
-        $event->confirm($this->getUser());
-        $eventPast = EventPast::create($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
-        $this->fastSave($eventPast, $event);
-        $this->displaySuccess($translator->trans('confirm.messages.confirm_successful', [], 'event'));
-        return $this->redirectToRoute('confirm_index');
-    }
-
-    /**
-     * @Route("/all", name="confirm_all")
-     *
-     * @param TranslatorInterface $translator
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param SerializerInterface $serializer
+     * @return Response
      * @throws \Exception
      */
-    public function allAction(TranslatorInterface $translator)
+    public function apiConfirmAction(SerializerInterface $serializer, Event $event)
     {
-        $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
-
-        $searchModel = new SearchModel();
-        $searchModel->setIsConfirmed(false);
-        $searchModel->setFrontendUser($this->getUser());
-        $end = new \DateTime();
-        $end->add(new \DateInterval("P" . $setting->getCanConfirmDaysAdvance() . "T"));
-        $searchModel->setStartDateTime(new \DateTime());
-        $searchModel->setEndDateTime($end);
-
-        $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
-
-        $manager = $this->getDoctrine()->getManager();
-        $total = 0;
-        foreach ($events as $event) {
+        //either assigned to this user or of a member the user is part of
+        if ($event->getFrontendUser() != null && $event->getFrontendUser()->getId() == $this->getUser()->getId() ||
+            $this->getUser()->getMembers()->contains($event->getMember())) {
             $event->confirm($this->getUser());
             $eventPast = EventPast::create($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
-            $manager->persist($event);
-            $manager->persist($eventPast);
-            $total++;
+            $this->fastSave($event, $eventPast);
+            return new Response("ACK");
         }
-        $manager->flush();
 
-        $this->displaySuccess($translator->trans('confirm.messages.confirm_all_successful', ['%count%' => $total], 'event'));
-
-        return $this->redirectToRoute('confirm_index');
+        return new Response("NACK");
     }
 }
