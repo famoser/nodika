@@ -12,12 +12,10 @@
 namespace App\Form\FrontendUser;
 
 use App\Entity\FrontendUser;
-use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\Address\AddressType;
 use App\Form\Traits\Communication\CommunicationType;
 use App\Form\Traits\Person\PersonType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

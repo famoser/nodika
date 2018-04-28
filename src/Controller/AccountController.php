@@ -11,9 +11,7 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseDoctrineController;
 use App\Controller\Base\BaseFormController;
-use App\Form\FrontendUser\FrontendUserType;
 use App\Form\FrontendUser\PublicFrontendUserType;
 use App\Form\Traits\User\ChangePasswordType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

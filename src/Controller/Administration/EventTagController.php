@@ -98,10 +98,6 @@ class EventTagController extends BaseFormController
             new Breadcrumb(
                 $this->generateUrl("administration_index"),
                 $this->getTranslator()->trans("index.title", [], "administration")
-            ),
-            new Breadcrumb(
-                $this->generateUrl("administration_event_tags"),
-                $this->getTranslator()->trans("event_tags.title", [], "administration")
             )
         ];
     }

@@ -9,11 +9,9 @@
 namespace App\Normalizer;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\LogicException;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class DateTimeNormalizer implements NormalizerInterface

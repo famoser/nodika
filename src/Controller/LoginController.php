@@ -10,9 +10,9 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseLoginController;
 use App\Entity\FrontendUser;
+use App\Form\Traits\User\ChangePasswordType;
 use App\Form\Traits\User\LoginType;
 use App\Form\Traits\User\RecoverType;
-use App\Form\Traits\User\ChangePasswordType;
 use App\Service\Interfaces\EmailServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;

@@ -17,7 +17,6 @@ use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
-use App\Entity\Setting;
 use App\Form\Model\Event\AdvancedSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;

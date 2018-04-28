@@ -18,11 +18,8 @@ namespace App\Form\Setting;
  * Time: 19:13
  */
 
-use App\Entity\Event;
-use App\Entity\EventTag;
 use App\Entity\Setting;
 use App\Form\Base\BaseAbstractType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
