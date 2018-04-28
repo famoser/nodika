@@ -50,8 +50,8 @@ class LoadMember extends BaseFixture
 
         $userIndex = 0;
         $memberIndex = 0;
-        $allMembersSeen = false;
-        $allUsersSeen = false;
+        $allMembersSeen = 0;
+        $allUsersSeen = 0;
 
 
         $advanceWithProbability = function() {
@@ -67,15 +67,15 @@ class LoadMember extends BaseFixture
 
             if ($userIndex == count($users)) {
                 $userIndex = 0;
-                $allUsersSeen = true;
+                $allUsersSeen++;
             }
 
             if ($memberIndex == count($members)) {
                 $memberIndex = 0;
-                $allMembersSeen = true;
+                $allMembersSeen++;
             }
 
-            if ($allMembersSeen && $allUsersSeen) {
+            if ($allMembersSeen > 1 && $allUsersSeen > 1) {
                 break;
             }
         }

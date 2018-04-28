@@ -1,7 +1,9 @@
 <template>
     <a href="#" v-on:click.prevent="$emit('select', frontendUser)" class="card" v-bind:class="{ 'border-primary' : frontendUser.isSelected }">
         <div class="card-body">
-            <p>{{ frontendUser.fullName }}</p>
+            <p>{{ frontendUser.fullName }}<br>
+                <span class="text-secondary">{{ frontendUser.members.map(v => v.name).join(", ")}}</span>
+            </p>
         </div>
     </a>
 </template>

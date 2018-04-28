@@ -17,7 +17,10 @@
     "axios": "^0.18.0",
     "bootstrap": "^4",
     "bootstrap-multiselect": "^0.9",
+    "date-fns": "^1.29.0",
+    "epic-spinners": "^1.0.3",
     "open-sans-fontface": "^1.4.0",
-    "popper.js": "^1.12"
+    "popper.js": "^1.12",
+    "vue-i18n": "^7.6.0"
   }
 }
