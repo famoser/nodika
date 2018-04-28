@@ -45,9 +45,8 @@ class ConfirmController extends BaseFormController
         //get all assignable events
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
 
-        $searchModel = new SearchModel();
+        $searchModel = new SearchModel(SearchModel::NONE);
         $searchModel->setMembers($this->getUser()->getMembers());
-        $searchModel->setStartDateTime(new \DateTime());
         $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval("P" . $settings->getCanConfirmDaysAdvance() . "D")));
         $searchModel->setIsConfirmed(false);
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);

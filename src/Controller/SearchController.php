@@ -43,13 +43,13 @@ class SearchController extends BaseFormController
      */
     public function indexAction(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
     {
-        $searchModel = new SearchModel();
+        $searchModel = new SearchModel(SearchModel::MONTH);
 
         $export = false;
         $form = $this->handleForm(
             $this->createForm(PublicSearchType::class, $searchModel)
-                ->add("search", SubmitType::class)
-                ->add("export", SubmitType::class),
+                ->add("filter", SubmitType::class, ["label" => "form.filter"])
+                ->add("export", SubmitType::class, ["label" => "form.export"]),
             $request,
             function ($form) use (&$export) {
                 /* @var Form $form */
@@ -66,7 +66,7 @@ class SearchController extends BaseFormController
         }
 
         $arr["events"] = $events;
-        $arr["search_form"] = $form;
+        $arr["form"] = $form->createView();
 
         return $this->render('search/index.html.twig', $arr);
     }

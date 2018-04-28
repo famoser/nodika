@@ -18,6 +18,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class SearchModel
 {
+    const NONE = 0;
+    const MONTH = 1;
+    const YEAR = 2;
+
     /**
      * @var \DateTime
      */
@@ -60,10 +64,17 @@ class SearchModel
      */
     private $invertOrder = false;
 
-    public function __construct($size = "month")
+    public function __construct($size)
     {
         $this->startDateTime = new \DateTime();
-        $this->endDateTime = new \DateTime("now + 1 " . $size);
+
+        if ($size == SearchModel::MONTH) {
+            $this->endDateTime = new \DateTime("now + 1 month");
+        } elseif ($size == SearchModel::YEAR) {
+            $this->endDateTime = new \DateTime("now + 1 year");
+        } elseif ($size != SearchModel::NONE) {
+            throw new \InvalidArgumentException();
+        }
     }
 
     /**

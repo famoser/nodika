@@ -30,7 +30,7 @@ class IndexController extends BaseDoctrineController
      */
     public function indexAction()
     {
-        $searchModel = new SearchModel();
+        $searchModel = new SearchModel(SearchModel::MONTH);
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
 
         $events = $eventRepository->search($searchModel);

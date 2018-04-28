@@ -37,9 +37,8 @@ class AssignController extends BaseFormController
      */
     public function assignAction()
     {
-        $searchEventModel = new SearchModel();
+        $searchEventModel = new SearchModel(SearchModel::YEAR);
         $searchEventModel->setMembers($this->getUser()->getMembers());
-        $searchEventModel->setStartDateTime(new \DateTime());
 
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchEventModel);
 
@@ -93,9 +92,8 @@ class AssignController extends BaseFormController
         //get all assignable events
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
 
-        $searchModel = new SearchModel();
+        $searchModel = new SearchModel(SearchModel::NONE);
         $searchModel->setMembers($members);
-        $searchModel->setStartDateTime(new \DateTime());
         $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval("P" . $settings->getCanConfirmDaysAdvance() . "D")));
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 

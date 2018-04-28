@@ -45,7 +45,7 @@ class AdministrationController extends BaseFormController
      */
     public function indexAction()
     {
-        $searchModel = new SearchModel();
+        $searchModel = new SearchModel(SearchModel::MONTH);
         $searchModel->setIsConfirmed(false);
 
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
@@ -66,7 +66,7 @@ class AdministrationController extends BaseFormController
      */
     public function eventsAction(Request $request, CsvServiceInterface $csvService, TranslatorInterface $translator)
     {
-        $searchModel = new SearchModel();
+        $searchModel = new SearchModel(SearchModel::MONTH);
 
         $export = false;
         $form = $this->handleForm(

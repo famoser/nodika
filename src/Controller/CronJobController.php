@@ -61,8 +61,7 @@ class CronJobController extends BaseDoctrineController
         if (date('z') % $remainderEmailInterval == 0) {
             //get all events which might be a problem
             $eventRepo = $this->getDoctrine()->getRepository(Event::class);
-            $eventSearchModel = new SearchModel();
-            $eventSearchModel->setStartDateTime(new \DateTime());
+            $eventSearchModel = new SearchModel(SearchModel::NONE);
             $eventSearchModel->setEndDateTime(new \DateTime("now + " . $setting->getCanConfirmDaysAdvance() - $setting->getSendRemainderDaysInterval() . " days"));
             $eventSearchModel->setIsConfirmed(false);
             $events = $eventRepo->search($eventSearchModel);
@@ -85,7 +84,7 @@ class CronJobController extends BaseDoctrineController
                 $subject = $translator->trans('remainder.subject', [], 'email_cronjob');
                 $body = $translator->trans('remainder.message', ['%count%' => $eventCount], 'email_cronjob');
                 $actionText = $translator->trans('remainder.action_text', [], 'email_cronjob');
-                $actionLink = $this->generateUrl('confirm_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+                $actionLink = $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
                 $emailService->sendActionEmail($email, $subject, $body, $actionText, $actionLink);
             }
         }
@@ -95,8 +94,7 @@ class CronJobController extends BaseDoctrineController
 
         //get all events which might be a problem
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
-        $eventSearchModel = new SearchModel();
-        $eventSearchModel->setStartDateTime(new \DateTime());
+        $eventSearchModel = new SearchModel(SearchModel::NONE);
         $eventSearchModel->setEndDateTime(new \DateTime("now + " . $mustConfirmBy . " days"));
         $eventSearchModel->setIsConfirmed(false);
         $events = $eventRepo->search($eventSearchModel);
@@ -133,7 +131,7 @@ class CronJobController extends BaseDoctrineController
                 'email_cronjob'
             );
             $actionText = $translator->trans('too_late_remainder.action_text', [], 'email_cronjob');
-            $actionLink = $this->generateUrl('confirm_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $actionLink = $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
             $emailService->sendActionEmail($targetEmail, $subject, $body, $actionText, $actionLink, $adminEmails);
 
             $event->setLastRemainderEmailSent(new \DateTime());

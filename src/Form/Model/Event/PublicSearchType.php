@@ -21,6 +21,7 @@ namespace App\Form\Model\Event;
 use App\Entity\FrontendUser;
 use App\Entity\Member;
 use App\Form\Base\BaseAbstractType;
+use App\Form\Traits\StartEnd\StartEndType;
 use App\Model\Event\SearchModel;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -33,14 +34,9 @@ class PublicSearchType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $dateArray = ['date_widget' => 'single_text', 'time_widget' => 'single_text'];
-
-        $builder->add('startDateTime', DateTimeType::class, $dateArray);
-        $builder->add('endDateTime', DateTimeType::class, $dateArray);
-        $builder->add('member', EntityType::class, ["class" => Member::class, "required" => false]);
-        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "required" => false]);
-        $builder->add('isConfirmed', CheckboxType::class, ["required" => false]);
-        $builder->add('maxResults', NumberType::class, ["required" => false]);
+        $builder->add('startEnd', StartEndType::class, ["inherit_data" => true]);
+        $builder->add('member', EntityType::class, ["class" => Member::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_member"]);
+        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_frontend_user"]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
