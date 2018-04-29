@@ -56,3 +56,28 @@ if (document.getElementById("confirm-app") != null) {
         components: {ConfirmApp}
     });
 }
+
+//trade app
+import TradeApp from './apps/trade/trade'
+
+if (document.getElementById("trade-app") != null) {
+    const messagesTrade = {
+        de: {
+            choose_your_events: "Aus Ihren Terminen auswählen",
+            choose_their_events: "Termine Ihres Tauschpartners auswählen",
+            no_user_assigned: "Keinem Mitarbeiter zugewiesen"
+        }
+    };
+
+    const i18nTrade = new VueI18n({
+        locale: 'de',
+        messages: messagesTrade,
+    });
+
+    new Vue({
+        i18n: i18nTrade,
+        el: '#trade-app',
+        template: '<TradeApp/>',
+        components: {TradeApp}
+    });
+}

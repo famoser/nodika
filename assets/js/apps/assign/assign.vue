@@ -1,6 +1,5 @@
 <template>
     <div id="assign-app">
-
         <div class="row">
             <div class="col-md-4">
                 <p class="lead">{{ $t("choose_frontend_user") }}</p>

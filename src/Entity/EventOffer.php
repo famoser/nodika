@@ -125,26 +125,10 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * @param EventOfferEntry[]|ArrayCollection $entries
-     */
-    public function setEntries($entries): void
-    {
-        $this->entries = $entries;
-    }
-
-    /**
      * @return EventOfferAuthorization[]|ArrayCollection
      */
     public function getAuthorizations()
     {
         return $this->authorizations;
-    }
-
-    /**
-     * @param EventOfferAuthorization[]|ArrayCollection $authorizations
-     */
-    public function setAuthorizations($authorizations): void
-    {
-        $this->authorizations = $authorizations;
     }
 }

@@ -12,16 +12,10 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Base\BaseFormController;
-use App\Entity\Event;
-use App\Entity\EventPast;
 use App\Entity\Setting;
-use App\Enum\EventChangeType;
-use App\Form\Event\RemoveEventType;
 use App\Model\Breadcrumb;
-use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

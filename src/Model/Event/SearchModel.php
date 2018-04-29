@@ -36,14 +36,17 @@ class SearchModel
      * @var Member|null
      */
     private $member;
+
     /**
      * @var FrontendUser|null
      */
     private $frontendUser;
+
     /**
      * @var boolean|null
      */
     private $isConfirmed;
+
     /**
      * @var int
      */
