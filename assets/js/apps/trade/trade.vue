@@ -28,6 +28,30 @@
                         @selected="eventSelected">
                 </EventList>
             </div>
+            <div class="col-md-4">
+                <p class="lead">{{ $t("your_trade") }}</p>
+                <div v-if="sender != null && theirSelectedEvents.length > 0">
+                    <Participant
+                            v-bind:user="sender"/>
+                    <p>{{$t("receives")}}</p>
+                    <EventList
+                            v-bind:events="theirSelectedEvents"
+                            @selected="eventSelected">
+                    </EventList>
+                    <hr/>
+                </div>
+
+                <div v-if="receiver != null && mySelectedEvents.length > 0">
+                    <Participant
+                            v-bind:user="receiver"/>
+                    <p>{{$t("receives")}}</p>
+                    <EventList
+                            v-bind:events="mySelectedEvents"
+                            @selected="eventSelected">
+                    </EventList>
+                    <hr/>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -36,6 +60,7 @@
     import EventList from "./components/EventList"
     import {AtomSpinner} from 'epic-spinners'
     import axios from "axios"
+    import Participant from "./components/Participant";
 
     export default {
         data() {
@@ -43,17 +68,27 @@
                 myEvents: [],
                 myEventsLoading: false,
                 theirEvents: [],
-                theirEventsLoading: false
+                theirEventsLoading: false,
+                sender: null,
+                receiver: null
             }
         },
         components: {
+            Participant,
             EventList,
             AtomSpinner
         },
         methods: {
             eventSelected: function (event) {
-                event.isLoading = true;
-                console.log("changed");
+                event.isSelected = !event.isSelected;
+            }
+        },
+        computed: {
+            mySelectedEvents: function () {
+                return this.myEvents.filter(e => e.isSelected);
+            },
+            theirSelectedEvents: function () {
+                return this.theirEvents.filter(e => e.isSelected);
             }
         },
         mounted() {
@@ -77,6 +112,12 @@
                     }
                     this.theirEvents = events;
                     this.theirEventsLoading = false;
+                });
+
+            axios.get("/trade/api/possible_senders")
+                .then((response) => {
+                    this.sender = response.data;
+                    console.log(this.sender)
                 });
         },
     }

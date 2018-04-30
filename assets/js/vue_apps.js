@@ -65,7 +65,9 @@ if (document.getElementById("trade-app") != null) {
         de: {
             choose_your_events: "Aus Ihren Terminen auswählen",
             choose_their_events: "Termine Ihres Tauschpartners auswählen",
-            no_user_assigned: "Keinem Mitarbeiter zugewiesen"
+            no_user_assigned: "Keinem Mitarbeiter zugewiesen",
+            your_trade: "Ihre Tauchanfrage",
+            receives: "bekommt neu folgende Termine: "
         }
     };
 

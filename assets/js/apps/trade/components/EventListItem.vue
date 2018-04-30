@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-12">
         <a href="#" v-on:click.prevent="$emit('select', event)" class="card"
-           v-bind:class="{ 'border-success disabled' : event.isLoading }">
+           v-bind:class="{ 'border-primary' : event.isSelected }">
             <div class="card-header">
                 {{ formatDateTime(event.startDateTime) }} - {{ formatDateTime(event.endDateTime) }}
             </div>

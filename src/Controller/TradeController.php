@@ -95,11 +95,23 @@ class TradeController extends BaseFormController
     }
 
     /**
-     * @Route("/api/check_possible_receivers", name="trade_possible_receivers")
+     * @Route("/api/possible_senders", name="trade_possible_senders")
      *
+     * @param Request $request
      * @param SerializerInterface $serializer
      * @return JsonResponse
-     * @throws \Exception
+     */
+    public function apiPossibleSenders(SerializerInterface $serializer)
+    {
+        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName", "members" => ["name"]]]), 200, [], true);
+    }
+
+    /**
+     * @Route("/api/possible_receivers", name="trade_possible_receivers")
+     *
+     * @param Request $request
+     * @param SerializerInterface $serializer
+     * @return JsonResponse
      */
     public function apiPossibleReceivers(Request $request, SerializerInterface $serializer)
     {
@@ -109,7 +121,7 @@ class TradeController extends BaseFormController
         $eventIds = $request->request->get("their_event_ids");
         $events = $this->getEventsFromIds($eventIds);
         if ($events !== false) {
-            return new JsonResponse($serializer->serialize($this->getPossibleReceivers($events), "json", ["attributes" => ["id", "fullName"]]), 200, true);
+            return new JsonResponse($serializer->serialize($this->getPossibleReceivers($events), "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
         } else {
             return new JsonResponse([]);
         }
