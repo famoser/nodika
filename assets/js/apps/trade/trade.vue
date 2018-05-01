@@ -81,6 +81,7 @@
         methods: {
             eventSelected: function (event) {
                 event.isSelected = !event.isSelected;
+                //this.$forceUpdate();
             }
         },
         computed: {
