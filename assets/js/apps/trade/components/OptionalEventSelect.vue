@@ -36,6 +36,11 @@
             EventList,
             AtomSpinner
         },
+        data() {
+            return {
+                noneSelected: false
+            }
+        },
         props: {
             events: {
                 type: Array,
@@ -44,14 +49,15 @@
             eventsLoading: {
                 type: Boolean,
                 required: true
-            },
-            noneSelected: {
-                type: Boolean,
-                required: true
+            }
+        },
+        watch: {
+            noneSelected: function () {
+                this.$emit("none_selected_changed", this.noneSelected)
             }
         },
         methods: {
-            noMineSelected: function() {
+            noMineSelected: function () {
                 this.noneSelected = !this.noneSelected;
             }
         }

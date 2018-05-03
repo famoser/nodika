@@ -4,22 +4,22 @@
             <div class="col-md-4">
                 <p class="lead">{{ $t("choose_your_events") }}</p>
                 <OptionEventSelectList v-bind:events="myEvents" v-bind:events-loading="myEventsLoading"
-                                       v-bind:none-selected="noMine"/>
+                                       @none_selected_changed="noMineAssigned"/>
             </div>
             <div class="col-md-4">
                 <p class="lead">{{ $t("choose_their_events") }}</p>
                 <OptionEventSelectList v-bind:events="theirEvents" v-bind:events-loading="theirEventsLoading"
-                                       v-bind:none-selected="noTheirs"/>
+                                       @none_selected_changed="noTheirsAssigned"/>
             </div>
             <div class="col-md-4">
                 <p class="lead">{{ $t("your_trade") }}</p>
                 <div v-if="theirSelectedEvents.length > 0 || noTheirs">
-
                     <TradePartner v-bind:users="possibleSenders" v-bind:selected-user="selectedSender"
                                   v-bind:users-loading="senderLoading" v-bind:selected-member="senderMember"
-                                  v-bind:events="theirSelectedEvents"/>
+                                  v-bind:events="theirSelectedEvents"
+                                  v-bind:verify-events="mySelectedEvents"
+                                  @state_valid="senderValidChanged"/>
                 </div>
-
             </div>
         </div>
     </div>
@@ -46,6 +46,7 @@
                 selectedSender: null,
                 senderLoading: true,
                 senderMember: null,
+                senderValid: true,
                 possibleReceivers: [],
                 selectedReceiver: null,
                 receiverLoading: true
@@ -58,7 +59,17 @@
             AtomSpinner,
             OptionEventSelectList
         },
-        methods: {},
+        methods: {
+            senderValidChanged: function (state) {
+                this.senderValid = state;
+            },
+            noMineAssigned: function (state) {
+                this.noMine = state
+            },
+            noTheirsAssigned: function (state) {
+                this.noTheirs = state
+            }
+        },
         computed: {
             mySelectedEvents: function () {
                 return this.myEvents.filter(e => e.isSelected);
