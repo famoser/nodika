@@ -1,6 +1,6 @@
 <template>
     <div class="col-md-12">
-        <a href="#" v-on:click.prevent="$emit('select', event)" class="card"
+        <a href="#" v-on:click.prevent="selectEvent" class="card"
            v-bind:class="{ 'border-primary' : event.isSelected }">
             <div class="card-header">
                 {{ formatDateTime(event.startDateTime) }} - {{ formatDateTime(event.endDateTime) }}
@@ -35,6 +35,9 @@
                     return null;
                 }
                 return user.fullName;
+            },
+            selectEvent: function () {
+                this.event.isSelected = !this.event.isSelected;
             }
         }
     }

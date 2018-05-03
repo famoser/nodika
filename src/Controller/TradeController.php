@@ -17,6 +17,7 @@ use App\Entity\EventOffer;
 use App\Entity\EventOfferAuthorization;
 use App\Entity\EventOfferEntry;
 use App\Entity\FrontendUser;
+use App\Entity\Member;
 use App\Entity\Setting;
 use App\Enum\OfferStatus;
 use App\Enum\SignatureStatus;
@@ -68,7 +69,7 @@ class TradeController extends BaseFormController
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["id", "name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**
@@ -91,40 +92,32 @@ class TradeController extends BaseFormController
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["id", "name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**
-     * @Route("/api/possible_senders", name="trade_possible_senders")
+     * @Route("/api/members", name="trade_members")
      *
      * @param Request $request
      * @param SerializerInterface $serializer
      * @return JsonResponse
      */
-    public function apiPossibleSenders(SerializerInterface $serializer)
+    public function apiMembers(SerializerInterface $serializer)
     {
-        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName", "members" => ["name"]]]), 200, [], true);
+        $members = $this->getDoctrine()->getRepository(Member::class)->findBy(["deletedAt" => null], ["name" => "ASC"]);
+        return new JsonResponse($serializer->serialize($members, "json", ["attributes" => ["id", "name"]]), 200, [], true);
     }
 
     /**
-     * @Route("/api/possible_receivers", name="trade_possible_receivers")
+     * @Route("/api/users/{member}", name="trade_members")
      *
-     * @param Request $request
      * @param SerializerInterface $serializer
+     * @param Member $member
      * @return JsonResponse
      */
-    public function apiPossibleReceivers(Request $request, SerializerInterface $serializer)
+    public function users(SerializerInterface $serializer, Member $member)
     {
-        if (!$request->request->has("their_event_ids")) {
-            return new JsonResponse([]);
-        }
-        $eventIds = $request->request->get("their_event_ids");
-        $events = $this->getEventsFromIds($eventIds);
-        if ($events !== false) {
-            return new JsonResponse($serializer->serialize($this->getPossibleReceivers($events), "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
-        } else {
-            return new JsonResponse([]);
-        }
+        return new JsonResponse($serializer->serialize($member->getActiveFrontendUsers(), "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
     }
 
     /**
@@ -148,33 +141,121 @@ class TradeController extends BaseFormController
     }
 
     /**
-     * @param Event[] $events
-     * @return array
+     * contructs the event offer, returns false if any values are wrong
+     *
+     * @param $values
+     * @return EventOffer|bool
      */
-    private function getPossibleReceivers($events)
+    private function constructEventOffer($values)
     {
-        if (count($events) == 0) {
-            return [];
+        //check POST parameters
+        $required = ["my_event_ids", "their_event_ids", "target_member_id", "target_user_id", "source_member_id"];
+        foreach ($required as $item) {
+            if (!isset($values[$item])) {
+                return false;
+            }
+        }
+        if (count($values) > count($required)) {
+            return false;
+        }
+
+        //check events can be traded with chosen target
+        $theirEvents = $this->getEventsFromIds($values["their_event_ids"]);
+        if (!$theirEvents) {
+            return false;
+        }
+
+        //get targets
+        $targetMember = $this->getDoctrine()->getRepository(Member::class)->find((int)$values["target_member_id"]);
+        $targetFrontendUser = $this->getDoctrine()->getRepository(FrontendUser::class)->find((int)$values["target_user_id"]);
+
+        //ensure both are set now
+        if ($targetFrontendUser == null || $targetMember == null) {
+            return false;
+        }
+
+        //check both are alive & connected
+        if (!$targetFrontendUser->getMembers()->contains($targetMember) || $targetMember->isDeleted() || $targetFrontendUser->isDeleted()) {
+            return false;
         }
 
         //events must be from same member, and at least one user must be able to authorize the trade
-        $member = $events[0]->getMember();
-        $frontendUser = $events[0]->getFrontendUser();
-        foreach ($events as $event) {
-            if ($member !== $event->getMember() || ($event->getFrontendUser() !== null && $frontendUser !== $event->getFrontendUser())) {
-                return [];
+        foreach ($theirEvents as $event) {
+
+            //ensure member matches
+            if ($targetMember !== $event->getMember()) {
+                return false;
             }
 
-            if ($event->getFrontendUser() !== null) {
-                $frontendUser = $event->getFrontendUser();
+            //ensure only single frontend user part of trade
+            if ($event->getFrontendUser() !== null && $event->getFrontendUser() !== $targetFrontendUser) {
+                return false;
             }
         }
 
-        if ($frontendUser != null) {
-            return [$frontendUser];
-        } else {
-            return $member->getFrontendUsers()->toArray();
+
+        //check source can indeed trade all these events
+        $myEvents = $this->getEventsFromIds($values["my_event_ids"]);
+        if (!$myEvents) {
+            return false;
         }
+
+        //get source
+        $sourceMember = $this->getDoctrine()->getRepository(Member::class)->find((int)$values["source_member_id"]);
+        $sourceUser = $this->getUser();
+
+        //check both are alive & connected
+        if (!$this->getUser()->getMembers()->contains($sourceMember) || $sourceMember->isDeleted() || $sourceUser->isDeleted()) {
+            return false;
+        }
+
+        //check events belong to user
+        foreach ($myEvents as $myEvent) {
+            if ($myEvent->getMember() !== $sourceMember) {
+                return false;
+            }
+
+            if ($myEvent->getFrontendUser() != null && $myEvent->getFrontendUser() !== $sourceUser) {
+                return false;
+            }
+        }
+
+        //construct the offer
+        $eventOffer = new EventOffer();
+        $eventOffer->setStatus(OfferStatus::OPEN);
+        if (isset($values["description"])) {
+            $eventOffer->setMessage($values["description"]);
+        }
+
+        //my events which are new the events of the the receiver of the trade offer
+        $eventOfferAuthorization = new EventOfferAuthorization();
+        $eventOfferAuthorization->setEventOffer($eventOffer);
+        $eventOfferAuthorization->setSignatureStatus(SignatureStatus::PENDING);
+        $eventOfferAuthorization->setSignedBy($targetFrontendUser);
+        foreach ($myEvents as $myEvent) {
+            $eventOfferEntry = new EventOfferEntry();
+            $eventOfferEntry->setEvent($myEvent);
+            $eventOfferEntry->setEventOffer($eventOffer);
+            $eventOfferEntry->setTargetMember($targetMember);
+            $eventOfferEntry->setTargetFrontendUser($targetFrontendUser);
+            $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
+        }
+
+        //their events which are new the events of the creator of the trade offer
+        $eventOfferAuthorization = new EventOfferAuthorization();
+        $eventOfferAuthorization->setEventOffer($eventOffer);
+        $eventOfferAuthorization->setSignatureStatus(SignatureStatus::SIGNED);
+        $eventOfferAuthorization->setSignedBy($this->getUser());
+        foreach ($theirEvents as $theirEvent) {
+            $eventOfferEntry = new EventOfferEntry();
+            $eventOfferEntry->setEvent($theirEvent);
+            $eventOfferEntry->setEventOffer($eventOffer);
+            $eventOfferEntry->setTargetFrontendUser($sourceUser);
+            $eventOfferEntry->setTargetMember($sourceMember);
+            $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
+        }
+
+        return $eventOffer;
     }
 
     /**
@@ -190,67 +271,22 @@ class TradeController extends BaseFormController
      */
     public function apiCreate(Request $request, EmailService $emailService, TranslatorInterface $translator)
     {
-        if (!$request->request->has("my_event_ids") || !$request->request->has("their_event_ids") || !$request->request->has("target_user")) {
+        //try to contruct offer from POST values
+        $eventOffer = $this->constructEventOffer($request->request->all());
+        if (!$eventOffer)
             return new Response("NACK");
+
+        //send out all authorization request emails
+        foreach ($eventOffer->getAuthorizations() as $authorization) {
+            if ($authorization->getSignatureStatus() == SignatureStatus::PENDING) {
+                $emailService->sendActionEmail(
+                    $authorization->getSignedBy()->getEmail(),
+                    $translator->trans("emails.new_offer.subject", [], "trade"),
+                    $translator->trans("emails.new_offer.message", [], "trade"),
+                    $translator->trans("emails.new_offer.action_text", [], "trade"),
+                    $this->generateUrl("trade_index"));
+            }
         }
-
-        //check events can be traded with chosen target
-        $theirEvents = $this->getEventsFromIds($request->request->get("their_event_ids"));
-        $possibleReceivers = $this->getPossibleReceivers($theirEvents);
-        $targetUser = $this->getDoctrine()->getRepository(FrontendUser::class)->find($request->request->get("target_user"));
-        if (!in_array($targetUser, $possibleReceivers)) {
-            return new Response("NACK");
-        }
-
-        //check source can indeed trade all these events
-        $myEvents = $this->getEventsFromIds($request->request->get("my_event_ids"));
-        $possibleReceivers = $this->getPossibleReceivers($myEvents);
-        if (!in_array($this->getUser(), $possibleReceivers)) {
-            return new Response("NACK");
-        }
-
-        //construct the offer
-        $eventOffer = new EventOffer();
-        $eventOffer->setStatus(OfferStatus::OPEN);
-        if ($request->request->has("description")) {
-            $eventOffer->setMessage($request->request->get("description"));
-        }
-
-        //my events which are new the events of the the receiver of the trade offer
-        $eventOfferAuthorization = new EventOfferAuthorization();
-        $eventOfferAuthorization->setEventOffer($eventOffer);
-        $eventOfferAuthorization->setSignatureStatus(SignatureStatus::PENDING);
-        $eventOfferAuthorization->setSignedBy($targetUser);
-        foreach ($myEvents as $myEvent) {
-            $eventOfferEntry = new EventOfferEntry();
-            $eventOfferEntry->setEvent($myEvent);
-            $eventOfferEntry->setEventOffer($eventOffer);
-            $eventOfferEntry->setTargetFrontendUser($targetUser);
-            $eventOfferEntry->setTargetMember($targetUser->getMembers()->first());
-            $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
-        }
-
-        //their events which are new the events of the creator of the trade offer
-        $eventOfferAuthorization = new EventOfferAuthorization();
-        $eventOfferAuthorization->setEventOffer($eventOffer);
-        $eventOfferAuthorization->setSignatureStatus(SignatureStatus::SIGNED);
-        $eventOfferAuthorization->setSignedBy($this->getUser());
-        foreach ($theirEvents as $theirEvent) {
-            $eventOfferEntry = new EventOfferEntry();
-            $eventOfferEntry->setEvent($theirEvent);
-            $eventOfferEntry->setEventOffer($eventOffer);
-            $eventOfferEntry->setTargetFrontendUser($this->getUser());
-            $eventOfferEntry->setTargetMember($this->getUser()->getMembers()->first());
-            $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
-        }
-
-        $emailService->sendActionEmail(
-            $targetUser->getEmail(),
-            $translator->trans("emails.new_offer.subject", [], "trade"),
-            $translator->trans("emails.new_offer.message", [], "trade"),
-            $translator->trans("emails.new_offer.action_text", [], "trade"),
-            $this->generateUrl("trade_index"));
-
         return new Response("ACK");
     }
 }

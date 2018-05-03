@@ -103,4 +103,18 @@ class Member extends BaseEntity
     {
         return $this->getName();
     }
+
+    /**
+     * @return FrontendUser[]
+     */
+    public function getActiveFrontendUsers()
+    {
+        $res = [];
+        foreach ($this->getFrontendUsers() as $frontendUser) {
+            if (!$frontendUser->isDeleted()) {
+                $res[] = $frontendUser;
+            }
+        }
+        return $res;
+    }
 }

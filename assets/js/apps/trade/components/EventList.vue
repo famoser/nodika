@@ -3,8 +3,7 @@
         <EventListItem
                 v-for="event in events"
                 v-bind:key="event.id"
-                v-bind:event="event"
-                @select="selectEvent(event)">
+                v-bind:event="event">
         </EventListItem>
     </div>
 </template>
@@ -24,6 +23,10 @@
             }
         },
         methods: {
+            eventSelected: function (event) {
+                event.isSelected = !event.isSelected;
+                //this.$forceUpdate();
+            },
             selectEvent: function (event) {
                 this.$emit("selected", event);
             }
