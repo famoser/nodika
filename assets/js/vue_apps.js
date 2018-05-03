@@ -71,7 +71,9 @@ if (document.getElementById("trade-app") != null) {
             select_no_events: "Keine Termine auswählen",
             no_events_selected: "Keine Termine ausgewählt",
             invalid_state: "Achtung!",
-            invalid_state_explanation: "Die gewählten Termine können nicht einem einzigen Verantwortlichen zugeordnet werden."
+            invalid_state_explanation: "Die gewählten Termine können nicht einem einzigen Verantwortlichen zugeordnet werden.",
+            create_offer: "Tauschanfrage stellen",
+            description: "Kurze Nachricht"
         }
     };
 

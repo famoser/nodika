@@ -14,11 +14,29 @@
             <div class="col-md-4">
                 <p class="lead">{{ $t("your_trade") }}</p>
                 <div v-if="theirSelectedEvents.length > 0 || noTheirs">
-                    <TradePartner v-bind:users="possibleSenders" v-bind:selected-user="selectedSender"
-                                  v-bind:users-loading="senderLoading" v-bind:selected-member="senderMember"
+                    <TradePartner v-bind:users="possibleSenders"
+                                  v-bind:users-loading="senderLoading"
                                   v-bind:events="theirSelectedEvents"
                                   v-bind:verify-events="mySelectedEvents"
+                                  v-bind:other-state-valid="receiverValid"
                                   @state_valid="senderValidChanged"/>
+                </div>
+                <div v-if="mySelectedEvents.length > 0 || noMine">
+                    <TradePartner v-bind:users="possibleReceivers"
+                                  v-bind:users-loading="receiverLoading"
+                                  v-bind:events="mySelectedEvents"
+                                  v-bind:verify-events="theirSelectedEvents"
+                                  v-bind:other-state-valid="senderValid"
+                                  @state_valid="receiverValidChanged"/>
+                </div>
+                <div v-if="receiverValid && senderValid">
+                    <div class="form-group">
+                        <label for="description" class="col-form-label">{{ $t("description")}}</label>
+                        <textarea class="form-control" id="description" v-model="description"></textarea>
+                    </div>
+                    <button class="btn btn-primary">
+                        {{ $t("create_offer")}}
+                    </button>
                 </div>
             </div>
         </div>
@@ -49,7 +67,9 @@
                 senderValid: true,
                 possibleReceivers: [],
                 selectedReceiver: null,
-                receiverLoading: true
+                receiverLoading: true,
+                receiverValid: true,
+                description: ""
             }
         },
         components: {
@@ -62,6 +82,9 @@
         methods: {
             senderValidChanged: function (state) {
                 this.senderValid = state;
+            },
+            receiverValidChanged: function (state) {
+                this.receiverValid = state;
             },
             noMineAssigned: function (state) {
                 this.noMine = state
@@ -103,8 +126,14 @@
                 .then((response) => {
                     const sender = response.data;
                     this.possibleSenders = [sender];
-                    this.selectedSender = sender;
                     this.senderLoading = false;
+                });
+
+            axios.get("/trade/api/users")
+                .then((response) => {
+                    this.possibleReceivers = response.data;
+                    console.log(this.possibleReceivers);
+                    this.receiverLoading = false;
                 });
         },
     }

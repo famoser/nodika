@@ -1,17 +1,17 @@
 <template>
     <div>
-        <div v-if="stateValid">
+        <div v-if="stateValid && otherStateValid">
 
             <div class="row">
                 <div class="col-md-12">
-                <span v-if="users.length > 1">
+                <span v-if="possibleUsers.length > 1">
                     <select v-model="selectedUser">
-                        <option v-for="option in users" v-bind:value="option">
+                        <option v-for="option in possibleUsers" v-bind:value="option">
                             {{ option.fullName }}
                         </option>
                     </select>
                 </span>
-                    <span v-if="users.length === 1 && selectedUser">
+                    <span v-if="possibleUsers.length === 1 && selectedUser">
                     {{ selectedUser.fullName }}
                 </span>
 
@@ -37,7 +37,7 @@
                 <p>{{$t("no_events_selected")}}</p>
             </div>
         </div>
-        <div v-else>
+        <div v-else-if="!stateValid">
             <p>
                 <span class="text-danger">{{$t("invalid_state")}}</span><br/>
                 {{$t("invalid_state_explanation")}}
@@ -63,7 +63,8 @@
                 allMembers: [],
                 stateValid: true,
                 selectedUser: null,
-                selectedMember: null
+                selectedMember: null,
+                possibleUsers: []
             }
         },
         props: {
@@ -82,6 +83,10 @@
             verifyEvents: {
                 type: Array,
                 required: true
+            },
+            otherStateValid: {
+                type: Boolean,
+                required: true
             }
         },
         mounted() {
@@ -98,35 +103,52 @@
             },
             stateValid: function () {
                 this.$emit("state_valid", this.stateValid);
+            },
+            verifyEvents: function () {
+                this.refreshMembers()
+            },
+            events: function () {
+                this.refreshMembers()
             }
         },
         computed: {
-          members: function () {
-              //check if there is an allowed member
-              if (this.verifyEvents.length > 0) {
-                  let allowedMember = this.verifyEvents[0].member;
+            members: function () {
+                let res;
+                //check if there is an allowed member
+                if (this.verifyEvents.length > 0) {
+                    let allowedMember = this.verifyEvents[0].member;
 
-                  //check if member is contained in memberlist
-                  if (this.allMembers.filter(m => m.id === allowedMember.id).length === 0) {
-                      this.stateValid = false;
-                      return
-                  }
+                    //check if member is contained in memberlist
+                    if (this.allMembers.filter(m => m.id === allowedMember.id).length === 0) {
+                        this.stateValid = false;
+                        return
+                    }
 
-                  //check if all events belong to same member
-                  for (let i = 1; i < this.verifyEvents.length; i++) {
-                      if (this.verifyEvents[i].member.id !== allowedMember.id) {
-                          this.stateValid = false;
-                          return
-                      }
-                  }
+                    //check if all events belong to same member
+                    for (let i = 1; i < this.verifyEvents.length; i++) {
+                        if (this.verifyEvents[i].member.id !== allowedMember.id) {
+                            this.stateValid = false;
+                            return
+                        }
+                    }
 
-                  this.selectedMember = allowedMember;
-                  return [allowedMember];
-              } else {
-                  this.selectedMember = this.allMembers[0];
-                  return this.allMembers;
-              }
-          }
+                    this.selectedMember = allowedMember;
+                    res = [allowedMember];
+                } else {
+                    this.selectedMember = this.allMembers[0];
+                    res = this.allMembers;
+                }
+
+                //set possibleUsers
+                if (res.length > 0) {
+                    this.possibleUsers = this.users.filter(u => res.filter(m => u.members.filter(m2 => m2.id === m.id).length > 0).length > 0);
+                } else {
+                    this.possibleUsers = [];
+                }
+
+                this.stateValid = true;
+                return res;
+            }
         },
         methods: {
             refreshMembers: function () {

@@ -103,12 +103,12 @@ class TradeController extends BaseFormController
      */
     public function apiUsers(SerializerInterface $serializer)
     {
-        $members = $this->getDoctrine()->getRepository(FrontendUser::class)->findBy(["deletedAt" => null], ["name" => "ASC"]);
-        return new JsonResponse($serializer->serialize($members, "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
+        $members = $this->getDoctrine()->getRepository(FrontendUser::class)->findBy(["deletedAt" => null], ["familyName" => "ASC", "givenName" => "ASC"]);
+        return new JsonResponse($serializer->serialize($members, "json", ["attributes" => ["id", "fullName", "members" => ["id", "name"]]]), 200, [], true);
     }
 
     /**
-     * @Route("/api/members/{frontendUser}", name="trade_users")
+     * @Route("/api/members/{frontendUser}", name="trade_members")
      *
      * @param SerializerInterface $serializer
      * @param FrontendUser $frontendUser
@@ -127,7 +127,7 @@ class TradeController extends BaseFormController
      */
     public function apiUser(SerializerInterface $serializer)
     {
-        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName", "members" => ["id", "name"]]]), 200, [], true);
     }
 
     /**
