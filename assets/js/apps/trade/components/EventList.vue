@@ -3,7 +3,8 @@
         <EventListItem
                 v-for="event in events"
                 v-bind:key="event.id"
-                v-bind:event="event">
+                v-bind:event="event"
+                v-bind:selection-enabled="selectionEnabled">
         </EventListItem>
     </div>
 </template>
@@ -19,16 +20,12 @@
         props: {
             events: {
                 type: Array,
-                required: false
-            }
-        },
-        methods: {
-            eventSelected: function (event) {
-                event.isSelected = !event.isSelected;
-                //this.$forceUpdate();
+                required: true
             },
-            selectEvent: function (event) {
-                this.$emit("selected", event);
+            selectionEnabled: {
+                type: Boolean,
+                required: false,
+                default: true
             }
         }
     }

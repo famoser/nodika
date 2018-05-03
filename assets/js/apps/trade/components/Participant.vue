@@ -1,9 +1,4 @@
 <template>
-    <div class="row">
-        <div class="col-md-12">
-            {{ user.fullName }} <span class="text-secondary">{{ user.members[0].name }}</span>
-        </div>
-    </div>
 </template>
 
 

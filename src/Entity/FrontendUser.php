@@ -149,4 +149,15 @@ class FrontendUser extends BaseEntity implements AdvancedUserInterface, Equatabl
     {
         return $this->getFullName();
     }
+
+    public function getActiveMembers()
+    {
+        $res = [];
+        foreach ($this->getMembers() as $member) {
+            if (!$member->isDeleted()) {
+                $res[] = $member;
+            }
+        }
+        return $res;
+    }
 }

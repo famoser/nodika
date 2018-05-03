@@ -68,7 +68,8 @@ if (document.getElementById("trade-app") != null) {
             no_user_assigned: "Keinem Mitarbeiter zugewiesen",
             your_trade: "Ihre Tauchanfrage",
             receives: "bekommt neu folgende Termine: ",
-            select_no_events: "Keine Termine auswählen"
+            select_no_events: "Keine Termine auswählen",
+            no_events_selected: "Keine Termine ausgewählt"
         }
     };
 

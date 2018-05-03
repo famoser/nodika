@@ -3,35 +3,23 @@
         <div class="row">
             <div class="col-md-4">
                 <p class="lead">{{ $t("choose_your_events") }}</p>
-                <OptionEventSelectList v-bind:events="myEvents" v-bind:events-loading="myEventsLoading" v-bind:none-selected="noMine" />
+                <OptionEventSelectList v-bind:events="myEvents" v-bind:events-loading="myEventsLoading"
+                                       v-bind:none-selected="noMine"/>
             </div>
             <div class="col-md-4">
                 <p class="lead">{{ $t("choose_their_events") }}</p>
-                <OptionEventSelectList v-bind:events="theirEvents" v-bind:events-loading="theirEventsLoading" v-bind:none-selected="noTheirs" />
+                <OptionEventSelectList v-bind:events="theirEvents" v-bind:events-loading="theirEventsLoading"
+                                       v-bind:none-selected="noTheirs"/>
             </div>
             <div class="col-md-4">
                 <p class="lead">{{ $t("your_trade") }}</p>
-                <div v-if="sender != null && theirSelectedEvents.length > 0">
-                    <Participant
-                            v-bind:users="sender"/>
-                    <p>{{$t("receives")}}</p>
-                    <EventList
-                            v-bind:events="theirSelectedEvents"
-                            @selected="eventSelected">
-                    </EventList>
-                    <hr/>
+                <div v-if="theirSelectedEvents.length > 0 || noTheirs">
+
+                    <TradePartner v-bind:users="possibleSenders" v-bind:selected-user="selectedSender"
+                                  v-bind:users-loading="senderLoading" v-bind:selected-member="senderMember"
+                                  v-bind:events="theirSelectedEvents"/>
                 </div>
 
-                <div v-if="receiver != null && mySelectedEvents.length > 0">
-                    <Participant
-                            v-bind:users="receiver"/>
-                    <p>{{$t("receives")}}</p>
-                    <EventList
-                            v-bind:events="mySelectedEvents"
-                            @selected="eventSelected">
-                    </EventList>
-                    <hr/>
-                </div>
             </div>
         </div>
     </div>
@@ -43,29 +31,34 @@
     import {AtomSpinner} from 'epic-spinners'
     import axios from "axios"
     import Participant from "./components/Participant";
+    import TradePartner from "./components/TradePartner";
 
     export default {
         data() {
             return {
                 myEvents: [],
-                myEventsLoading: false,
-                theirEvents: [],
-                theirEventsLoading: false,
-                noTheirs: false,
+                myEventsLoading: true,
                 noMine: false,
-                sender: null,
-                receiver: null
+                theirEvents: [],
+                theirEventsLoading: true,
+                noTheirs: false,
+                possibleSenders: [],
+                selectedSender: null,
+                senderLoading: true,
+                senderMember: null,
+                possibleReceivers: [],
+                selectedReceiver: null,
+                receiverLoading: true
             }
         },
         components: {
+            TradePartner,
             Participant,
             EventList,
             AtomSpinner,
             OptionEventSelectList
         },
-        methods: {
-
-        },
+        methods: {},
         computed: {
             mySelectedEvents: function () {
                 return this.myEvents.filter(e => e.isSelected);
@@ -75,7 +68,6 @@
             }
         },
         mounted() {
-            this.myEventsLoading = true;
             axios.get("/trade/api/my_events")
                 .then((response) => {
                     const events = response.data;
@@ -86,7 +78,6 @@
                     this.myEventsLoading = false;
                 });
 
-            this.theirEventsLoading = true;
             axios.get("/trade/api/their_events")
                 .then((response) => {
                     const events = response.data;
@@ -97,10 +88,12 @@
                     this.theirEventsLoading = false;
                 });
 
-            axios.get("/trade/api/possible_senders")
+            axios.get("/trade/api/user")
                 .then((response) => {
-                    this.sender = response.data;
-                    console.log(this.sender)
+                    const sender = response.data;
+                    this.possibleSenders = [sender];
+                    this.selectedSender = sender;
+                    this.senderLoading = false;
                 });
         },
     }

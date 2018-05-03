@@ -96,28 +96,38 @@ class TradeController extends BaseFormController
     }
 
     /**
-     * @Route("/api/members", name="trade_members")
+     * @Route("/api/users", name="trade_users")
      *
-     * @param Request $request
      * @param SerializerInterface $serializer
      * @return JsonResponse
      */
-    public function apiMembers(SerializerInterface $serializer)
+    public function apiUsers(SerializerInterface $serializer)
     {
-        $members = $this->getDoctrine()->getRepository(Member::class)->findBy(["deletedAt" => null], ["name" => "ASC"]);
-        return new JsonResponse($serializer->serialize($members, "json", ["attributes" => ["id", "name"]]), 200, [], true);
+        $members = $this->getDoctrine()->getRepository(FrontendUser::class)->findBy(["deletedAt" => null], ["name" => "ASC"]);
+        return new JsonResponse($serializer->serialize($members, "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
     }
 
     /**
-     * @Route("/api/users/{member}", name="trade_members")
+     * @Route("/api/members/{frontendUser}", name="trade_users")
      *
      * @param SerializerInterface $serializer
-     * @param Member $member
+     * @param FrontendUser $frontendUser
      * @return JsonResponse
      */
-    public function users(SerializerInterface $serializer, Member $member)
+    public function apiMembers(SerializerInterface $serializer, FrontendUser $frontendUser)
     {
-        return new JsonResponse($serializer->serialize($member->getActiveFrontendUsers(), "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($frontendUser->getActiveMembers(), "json", ["attributes" => ["id", "name"]]), 200, [], true);
+    }
+
+    /**
+     * @Route("/api/user", name="trade_user")
+     *
+     * @param SerializerInterface $serializer
+     * @return JsonResponse
+     */
+    public function apiUser(SerializerInterface $serializer)
+    {
+        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName"]]), 200, [], true);
     }
 
     /**
