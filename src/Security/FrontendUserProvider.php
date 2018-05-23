@@ -49,6 +49,11 @@ class FrontendUserProvider extends BaseUserProvider
             return $user;
         }
 
+        $user = $this->registry->getRepository('App:Person')->findOneBy(['email' => $username]);
+        if (null !== $user) {
+            return $user->getFrontendUser();
+        }
+
         throw new UsernameNotFoundException(
             sprintf('Username "%s" does not exist in UserProvider.', $username)
         );

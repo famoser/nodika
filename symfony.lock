@@ -101,9 +101,6 @@
     "fzaninotto/faker": {
         "version": "v1.7.1"
     },
-    "gecko-packages/gecko-php-unit": {
-        "version": "v3.0"
-    },
     "gitonomy/gitlib": {
         "version": "v1.0.2"
     },
@@ -307,6 +304,9 @@
             "version": "3.3",
             "ref": "179470cb6492db92dffee208cfdb436f175c93b4"
         }
+    },
+    "symfony/polyfill-ctype": {
+        "version": "v1.8.0"
     },
     "symfony/polyfill-intl-icu": {
         "version": "v1.6.0"
