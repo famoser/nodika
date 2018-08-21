@@ -2,6 +2,8 @@ index:
   title: "Einladung einlösen"
   description: "Willkommen auf nodika!"
 
-request:
-  title: "Einladung anfordern"
-  description: "Wenn der Administrator Ihre E-Mail erfasst hat, können Sie hier eine Einladung anfordern"
+invite:
+  email:
+    subject: 'Einladung für nodika'
+    message: 'Willkommen! Sie wurden auf nodika eingeladen, der Notfalldienstverwaltung für Tierärzte.'
+    action_text: 'Einladung annehmen'

@@ -104,7 +104,7 @@ class FrontendUserController extends BaseFormController
     }
 
     /**
-     * disable this route, as it is not safe
+     * disable this route, as removing is not safe
      * @*Route("/{frontendUser}/remove", name="administration_frontend_user_remove")
      *
      * @param Request $request

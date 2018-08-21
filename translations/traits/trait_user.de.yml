@@ -6,6 +6,8 @@ form:
   login: 'Einloggen'
   change_password: 'Passwort ändern'
   save: 'Speichern'
+  request_invite: "Einladung anfordern"
+  recover: "Passwort zurücksetzen"
 
 error:
   email_not_unique: 'Email bereits vergeben'

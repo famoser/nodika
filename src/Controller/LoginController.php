@@ -13,6 +13,8 @@ use App\Entity\FrontendUser;
 use App\Form\Traits\User\ChangePasswordType;
 use App\Form\Traits\User\LoginType;
 use App\Form\Traits\User\RecoverType;
+use App\Form\Traits\User\RequestInviteType;
+use App\Model\Breadcrumb;
 use App\Service\Interfaces\EmailServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
@@ -135,6 +137,63 @@ class LoginController extends BaseLoginController
 
         $arr["form"] = $form->createView();
         return $this->render('login/reset.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/request_invite", name="login_request_invite")
+     *
+     * @param Request $request
+     * @param EmailServiceInterface $emailService
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
+    public function requestAction(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator)
+    {
+        $form = $this->handleForm(
+            $this->createForm(RequestInviteType::class)
+                ->add("form.request_invite", SubmitType::class),
+            $request,
+            function ($form) use ($emailService, $translator) {
+                /* @var FormInterface $form */
+
+                //display success
+                $this->displaySuccess($translator->trans("request_invite.success.email_sent", [], "login"));
+
+                //check if user exists
+                $exitingUser = $this->getDoctrine()->getRepository(FrontendUser::class)->findOneBy(["email" => $form->getData()["email"]]);
+                if (null === $exitingUser) {
+                    return $form;
+                }
+
+                //sent invite email
+                $emailService->sendActionEmail(
+                    $exitingUser->getEmail(),
+                    $translator->trans("invite.email.subject", [], "invite"),
+                    $translator->trans("invite.email.message", [], "invite"),
+                    $translator->trans("invite.email.action_text", [], "invite"),
+                    $this->generateUrl("invite_index", ["guid" => $exitingUser->getInvitationIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL)
+                );
+
+                return $form;
+            }
+        );
+        $arr["form"] = $form->createView();
+        return $this->render('login/request_invite.html.twig', $arr);
+    }
+
+    /**
+     * get the breadcrumbs leading to this controller
+     *
+     * @return Breadcrumb[]
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl("login_index"),
+                $this->getTranslator()->trans("index.title", [], "login")
+            )
+        ];
     }
 
     /**

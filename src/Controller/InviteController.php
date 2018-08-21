@@ -11,9 +11,16 @@ namespace App\Controller;
 use App\Controller\Base\BaseLoginController;
 use App\Entity\FrontendUser;
 use App\Form\Traits\User\ChangePasswordType;
+use App\Form\Traits\User\RequestInviteType;
+use App\Model\Breadcrumb;
+use App\Service\Interfaces\EmailServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/invite")
@@ -37,15 +44,5 @@ class InviteController extends BaseLoginController
         } else {
             return $this->render('invite/invalid.html.twig');
         }
-    }
-
-    /**
-     * @Route("/request", name="invite_request")
-     *
-     * @return Response
-     */
-    public function requestAction()
-    {
-        return $this->render('invite/request.html.twig');
     }
 }
