@@ -69,7 +69,7 @@ class DoctorProvider extends BaseUserProvider
      */
     public function loadUserByUsername($username)
     {
-        $user = $this->registry->getRepository('Doctor')->findOneBy(['email' => $username]);
+        $user = $this->registry->getRepository(Doctor::class)->findOneBy(['email' => $username]);
         if (null !== $user) {
             return $user;
         }

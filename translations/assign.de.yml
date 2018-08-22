@@ -1,7 +1,6 @@
 index:
   title: 'Termine zuweisen'
   description: 'Weisen Sie Termine einem Account zu.'
-  choose_doctor: "Benutzer auswählen"
   choose_events: "Termine auswählen"
   choose_all: "Alle zuweisen"
 

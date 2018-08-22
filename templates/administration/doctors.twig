@@ -1,15 +1,15 @@
 {% extends "single_content_base.html.twig" %}
 
-{% block title %}{{ "frontend_users.title"|trans }}{% endblock %}
-{% block description %}{{ "frontend_users.description"|trans }}{% endblock %}
+{% block title %}{{ "doctors.title"|trans }}{% endblock %}
+{% block description %}{{ "doctors.description"|trans }}{% endblock %}
 
 {% trans_default_domain "administration" %}
 
 {% block single_content %}
 
     <p>
-        <a class="btn btn-secondary" href="{{ path("administration_frontend_user_new") }}">
-            {{ "new.title"|trans({}, "administration_frontend_user") }}
+        <a class="btn btn-secondary" href="{{ path("administration_doctor_new") }}">
+            {{ "new.title"|trans({}, "administration_doctor") }}
         </a>
     </p>
     <table class="table table-striped">
@@ -24,21 +24,21 @@
         </thead>
         <tbody>
 
-        {% for frontend_user in frontend_users %}
+        {% for doctor in doctors %}
             <tr>
-                <td>{{ frontend_user.fullName }}</td>
-                <td>{{ frontend_user.email }}</td>
-                <td>{{ frontend_user.clinics|join(", ") }}</td>
+                <td>{{ doctor.fullName }}</td>
+                <td>{{ doctor.email }}</td>
+                <td>{{ doctor.clinics|join(", ") }}</td>
                 <td>
-                    {{ frontend_user.canLogin|booleanFormat }}
+                    {{ doctor.canLogin|booleanFormat }}
                     <br/>
-                    <a href="{{ path("administration_frontend_user_toggle_login_enabled", {"doctor" : frontend_user.id}) }}">
-                        {{ "toggle_login_enabled.change"|trans({}, "administration_frontend_user") }}
+                    <a href="{{ path("administration_doctor_toggle_login_enabled", {"doctor" : doctor.id}) }}">
+                        {{ "toggle_login_enabled.change"|trans({}, "administration_doctor") }}
                     </a>
                 </td>
                 <td>
                     <a class="btn btn-secondary"
-                       href="{{ path("administration_frontend_user_edit", {"doctor" : frontend_user.id}) }}">
+                       href="{{ path("administration_doctor_edit", {"doctor" : doctor.id}) }}">
                         <i class="fas fa-edit"></i>
                     </a>
                 </td>
