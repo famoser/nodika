@@ -124,10 +124,10 @@
 {% endif %}
 
 <div class="content-wrapper">
-    {% if flashes is defined and flashes|length > 0 %}
+    {% if app.session.flashbag.keys|length > 0 %}
         <div class="container">
             <div class="row">
-                {% for type, messages in flashes %}
+                {% for type, messages in app.session.flashbag.all %}
                     {% for message in messages %}
                         <div class="col-md-12 alert alert-{{ type }} alert-dismissible fade show" role="alert">
                             {{ message|raw }}

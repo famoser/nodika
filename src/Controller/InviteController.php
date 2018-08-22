@@ -8,7 +8,7 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseLoginController;
+use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Doctor;
 use App\Form\Traits\User\ChangePasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/invite")
  */
-class InviteController extends BaseLoginController
+class InviteController extends BaseDoctrineController
 {
     /**
      * @Route("/{guid}", name="invite_index")

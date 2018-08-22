@@ -16,6 +16,8 @@ use App\Form\Traits\User\RecoverType;
 use App\Form\Traits\User\RequestInviteType;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EmailServiceInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,6 +42,7 @@ class LoginController extends BaseFormController
     {
         return parent::getSubscribedServices() +
             [
+                'event_dispatcher' => EventDispatcherInterface::class,
                 'security.token_storage' => TokenStorageInterface::class,
                 'translator' => TranslatorInterface::class
             ];
@@ -70,7 +73,6 @@ class LoginController extends BaseFormController
         $user = new Doctor();
         $form = $this->createForm(LoginType::class, $user);
         $form->add("form.login", SubmitType::class, ["translation_domain" => "login", "label" => "login.do_login"]);
-
 
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
@@ -107,13 +109,13 @@ class LoginController extends BaseFormController
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function recoverAction(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator)
+    public function recoverAction(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator, LoggerInterface $logger)
     {
         $form = $this->handleForm(
             $this->createForm(RecoverType::class)
-                ->add("form.recover", SubmitType::class),
+                ->add("form.recover", SubmitType::class, ["translation_domain" => "login", "label" => "recover.title"]),
             $request,
-            function ($form) use ($emailService, $translator) {
+            function ($form) use ($emailService, $translator, $logger) {
                 /* @var FormInterface $form */
 
                 //display success
@@ -122,6 +124,7 @@ class LoginController extends BaseFormController
                 //check if user exists
                 $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["email" => $form->getData()["email"]]);
                 if (null === $exitingUser) {
+                    $logger->warning("tried to reset passwort for non-exitant email " . $form->getData()["email"]);
                     return $form;
                 }
 
@@ -137,6 +140,7 @@ class LoginController extends BaseFormController
                     $translator->trans("recover.email.reset_password.action_text", [], "login"),
                     $this->generateUrl("login_reset", ["resetHash" => $exitingUser->getResetHash()], UrlGeneratorInterface::ABSOLUTE_URL)
                 );
+                $logger->warning("reset email sent to " . $exitingUser->getEmail());
 
                 return $form;
             }
@@ -157,13 +161,13 @@ class LoginController extends BaseFormController
     {
         $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["resetHash" => $resetHash]);
         if (null === $user) {
-            $this->displayError($translator->trans("reset.danger.invalid_hash",[],"login"));
+            $this->displayError($translator->trans("reset.danger.invalid_hash", [], "login"));
             return new RedirectResponse($this->generateUrl("login"));
         }
 
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user, ["data_class" => Doctor::class])
-                ->add("form.set_password", SubmitType::class),
+                ->add("form.set_password", SubmitType::class, ["translation_domain" => "login", "label" => "reset.set_password"]),
             $request,
             function ($form) use ($user, $translator, $request) {
                 //check for valid password

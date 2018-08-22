@@ -4,3 +4,9 @@
 {% block description %}{{ "recover.description"|trans }}{% endblock %}
 
 {% trans_default_domain "login" %}
+
+
+{% block form_content %}
+    <p class="text-secondary">{{ "recover.use_login_email"|trans }}</p>
+    {{ form((form)) }}
+{% endblock %}

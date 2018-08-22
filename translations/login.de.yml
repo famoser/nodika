@@ -9,19 +9,20 @@ login:
 recover:
   title: 'Passwort zurücksetzen'
   description: 'Setzen Sie Ihr Passwort mit Ihrer E-Mail zurück'
-  set_email_form_description: 'Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.'
+  send_email: 'E-Mail zusenden'
+  use_login_email: 'Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.'
   success:
     email_sent: 'Sofern diese E-Mail in unserem System gefunden wurde, haben wir Ihnen soeben eine E-Mail versandt'
   email:
     reset_password:
       subject: 'Passwort zurücksetzen'
-      message: 'Wir wurden beauftragt Ihr Passwort zurückzusetzen. Sie können diese E-Mail ignorieren wenn nicht Sie diese Anfrage gestellt haben.'
+      message: 'Sie können mit dem Knopf unten Ihr Passwort zurücksetzen. Haben Sie dieses E-Mail nicht angefordert, können Sie es ignorieren.'
       action_text: 'Jetzt Passwort zurücksetzen'
 
 reset:
   title: 'Passwort setzen'
   description: 'Setzen Sie Ihr neues Passwort'
-  reset_password_form_description: 'Setzen Sie Ihr neues Passwort'
+  set_password: 'Passwort setzen'
   success:
     password_set: 'Neues Passwort erfolgreich gesetzt'
   danger:
