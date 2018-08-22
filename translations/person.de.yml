@@ -11,7 +11,7 @@ index:
   remove_itself_description: 'Sie können sich selbst den Zugriff zu Ihrer Praxis wieder entfernen (weil Sie z.B. nicht mehr dort arbeiten)'
 
 #edit_doctoral page
-edit_doctoral:
+edit_doctor:
   title: 'Persönliche Daten ändern'
   description: 'Editieren Sie Ihre persönlichen Daten'
   doctor_edit_form: 'Account ändern'

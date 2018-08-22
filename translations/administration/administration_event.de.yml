@@ -1,21 +1,17 @@
-#new page
 new:
   title: 'Neuer Termin'
   description: 'Fügen Sie einen neuen Termin hinzu'
   help: 'Generierung / Import Funktionen'
   help_description: 'Benützen Sie die umfangreichen Import- und Generierungsoptionen um Zeit zu sparen'
 
-#edit page
 edit:
   title: 'Termin bearbeiten'
   description: 'Editieren Sie den Termin'
 
-#remove page
 remove:
   title: 'Termin entfernen'
   description: 'Löschen Sie den Termin und alle damit verbundenen Daten'
 
-#view page
 history:
   title: 'Änderungen'
   description: 'Änderungen an diesem Termin ansehen'

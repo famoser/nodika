@@ -1,7 +1,5 @@
-#name
 trait:
-  name: Objekt
+  name: 'Objekt'
 
-#properties
-name: Name
-description: Beschreibung
+name: 'Name'
+description: 'Beschreibung'

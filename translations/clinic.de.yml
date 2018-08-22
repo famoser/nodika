@@ -8,7 +8,6 @@ index:
   remove_doctor: 'Zugriff entfernen'
   remove_doctor_description: 'Sie können einem Mitarbeiter den Zugriff zu dieser Praxis entziehen (z.B. weil er/sie nicht mehr dort arbeitet)'
 
-#edit page
 edit:
   title: 'Praxis ändern'
   description: 'Editieren Sie die Daten Ihrer Praxis'
@@ -18,8 +17,7 @@ edit:
   clinic_contact: 'Kontaktinformationen'
   clinic_contact_description: 'An diese hinterlegte E-Mail werden die Nachrichten an Ihre Praxis versandt, sowie Erinnerungen für nicht zugeordnete Termine'
 
-#remove_doctor page
-remove_doctor:
+remove:
   title: 'Mitarbeiter entfernen'
   description: 'Möchten Sie diesen Mitarbeiter wirklich von dieser Praxis entfernen?'
   really_remove: 'Ich möchte diesen Mitarbeiter wirklich von meiner Praxis entfernen. Ich verstehe die damit entstehenden Konsequenzen.'

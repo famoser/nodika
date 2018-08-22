@@ -1,28 +1,23 @@
-#general
 index:
   title: 'Termingruppen'
   description: 'Termingruppen verwalten'
 
-#new page
 new:
   title: 'Neue Termingruppe'
   description: 'Fügen Sie ein neue Termingruppe zu Ihrer Organisation hinzu'
   add_form: 'Termingruppe erstellen'
 
-#edit page
 edit:
   title: 'Termingruppe bearbeiten'
   description: 'Editieren Sie die Termingruppe'
   edit_form: 'Termingruppe bearbeiten'
 
-#remove page
 remove:
   title: 'Termingruppe entfernen'
   description: 'Löschen Sie die Termingruppe und alle damit verbundenen Daten'
   remove: 'Endgültig entfernen'
   remove_description: 'Alle mit der Termingruppe verbunden Termine und Generierungen werden ebenfalls entfernt!'
 
-#administer page
 administer:
   title: 'Verwalten'
   description: 'Termingruppen verwalten'
@@ -33,7 +28,6 @@ administer:
   import_events_actions: 'Termine importieren'
   generate_events_actions: 'Termine generieren'
 
-#import description
 import:
   title: 'Termine importieren'
   description: 'Laden Sie eine .csv (Excel) Datei hoch mit den Terminen'
@@ -44,7 +38,6 @@ import:
   import_events_required_description: 'Zwingend erforderlich ist für jeden Termin Anfangs- und Enddatum und die zugehörige Praxis'
   no_clinics: 'Sie haben noch keine Mitglieder hinzugefügt'
 
-#generate page
 generate:
   title: 'Algorithmus auswählen'
   description: 'Wählen Sie den Algorithmus aus, der die Termine generieren soll'

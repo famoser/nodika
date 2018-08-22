@@ -1,7 +1,5 @@
-#name
 trait:
-  name: Kontaktinformationen
+  name: 'Kontaktinformationen'
 
-#properties
-phone: Telefonnummer
-email: Email
+phone: 'Telefonnummer'
+email: 'Email'

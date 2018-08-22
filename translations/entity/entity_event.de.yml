@@ -3,7 +3,6 @@ entity:
   description: 'Ein Termin hat einen Start- und einen Endzeitpunkt sowie ein Verantwortlicher'
   plural: 'Termine'
 
-start_date_time: Start
-end_date_time: Ende
-clinic_id: Praxis Id
-is_confirmed: Bestätigt
+start_date_time: 'Start'
+end_date_time: 'Ende'
+is_confirmed: 'Bestätigt'

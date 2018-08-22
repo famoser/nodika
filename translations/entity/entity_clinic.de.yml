@@ -1,6 +1,6 @@
 entity:
-  name: 'Mitglied'
-  description: 'Den Mitgliedern Ihrer Organisation können Termine und Benutzer zugeteilt werden'
-  plural: 'Mitglieder'
+  name: 'Praxis'
+  description: 'Den Praxen Ihrer Organisation können Termine und Benutzer zugeteilt werden'
+  plural: 'Praxen'
 
-has_been_invited: Einladung versandt
+has_been_invited: 'Einladung wurde versandt.'

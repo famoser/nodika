@@ -1,22 +1,15 @@
-#login page
 login:
-  title: 'Login'
-  description: 'In einen existierenden Account einloggen'
-  login_form_header: 'Login'
-  forgot_password_action: 'Passwort vergessen'
-  forgot_password: 'Passwort vergessen?'
-  forgot_password_description: 'Drücken Sie auf ''"Passwort vergessen" unterhalb des Loginformulars und verifizieren Sie sich mit der hinterlegten E-Mail'
-  invitation_not_received: "Einladung nicht bekommen?"
-  invitation_not_received_description: "Sind Sie Teil einer Organisation, aber haben die Einladung nicht bekommen?"
+  title: 'Willkommen zurück'
+  description: 'Bitte einloggen'
   danger:
     login_failed: 'Login fehlgeschlagen'
 
 
 invite_resend:
-  title: "Einladung erneut anfordern"
+  title: "Einladung anfordern"
   description: "Lassen Sie sich eine verpasste Einladung neu zustellen"
-  help: "Geben Sie hier Ihre E-Mail ein. Wurde an diese E-Mail eine Einladung versandt versenden wir sie erneut."
-  email_not_received: "Email nicht erhalten: Mögliche Ursachen"
+  help: "Geben Sie hier Ihre E-Mail ein. Wurde an diese E-Mail eine Einladung versandt, versenden wir sie erneut."
+  email_not_received: "E-Mail nicht erhalten: Mögliche Ursachen"
   email_not_received_description: "Überprüfen Sie, dass Ihr Postfach nicht voll ist und dass unsere E-Mail nicht im Spam Ordner gelandet ist."
   email_not_received_help:
     header: "Keine E-Mail erhalten?"
@@ -31,7 +24,7 @@ invite_resend:
     email_not_found: "Diese E-Mail wurde nicht gefunden. Kontaktieren Sie Ihren Administrator."
 
 reset:
-  title: 'Passwort zurücksetzen.'
+  title: 'Passwort zurücksetzen'
   description: 'Setzen Sie Ihr Passwort mit Ihrer E-Mail zurück.'
   help: 'Geben Sie die E-Mail an, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.'
   success:

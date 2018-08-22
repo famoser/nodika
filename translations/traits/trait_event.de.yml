@@ -1,11 +1,8 @@
-#name
 trait:
-  name: Termin
+  name: 'Termin'
 
-#properties
-confirm_date_time: Bestätigt um
-last_remainder_email_sent: Letztes Erinnerungsemail versandt
+confirmed: 'bestätigt'
+confirm_date_time: 'Bestätigt um'
 confirmed_by: 'Bestätigt von'
+last_remainder_email_sent: 'Letztes Erinnerungsemail versandt'
 
-#methods
-is_confirmed: bestätigt
