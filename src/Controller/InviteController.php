@@ -9,7 +9,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseLoginController;
-use App\Entity\FrontendUser;
+use App\Entity\Doctor;
 use App\Form\Traits\User\ChangePasswordType;
 use App\Form\Traits\User\RequestInviteType;
 use App\Model\Breadcrumb;
@@ -35,8 +35,8 @@ class InviteController extends BaseLoginController
      */
     public function indexAction($guid)
     {
-        $user = $this->getDoctrine()->getRepository(FrontendUser::class)->findBy(["invitationIdentifier" => $guid]);
-        if ($user instanceof FrontendUser) {
+        $user = $this->getDoctrine()->getRepository(Doctor::class)->findBy(["invitationIdentifier" => $guid]);
+        if ($user instanceof Doctor) {
             $form = $this->createForm(ChangePasswordType::class);
             $form->add("set_password", SubmitType::class);
             $arr["form"] = $form->createView();

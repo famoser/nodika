@@ -3,15 +3,15 @@ security:
         strategy: unanimous
 
     encoders:
-        App\Entity\FrontendUser: bcrypt
+        App\Entity\Doctor: bcrypt
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
-        frontend_user_provider:
-            id: App\Security\FrontendUserProvider
+        doctor_provider:
+            id: App\Security\DoctorProvider
         admin_user_provider:
             id: App\Security\AdminUserProvider
 
@@ -25,7 +25,7 @@ security:
         main:
             pattern:   ^/
             anonymous: ~
-            provider: frontend_user_provider
+            provider: doctor_provider
             form_login:
                 login_path: login_index
                 check_path: login_check

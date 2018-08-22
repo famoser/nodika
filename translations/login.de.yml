@@ -18,12 +18,6 @@ recover:
       message: 'Wir wurden beauftragt Ihr Passwort zurückzusetzen. Sie können diese E-Mail ignorieren wenn nicht Sie diese Anfrage gestellt haben.'
       action_text: 'Jetzt Passwort zurücksetzen'
 
-request_invite:
-  title: "Einladung anfordern"
-  description: "Wenn der Administrator Ihre E-Mail erfasst hat, können Sie hier eine Einladung anfordern"
-  success:
-    email_sent: "Die Einladung wurde versandt, sofern wir die E-Mail in der Datenbank gefunden wurde."
-
 reset:
   title: 'Passwort zurücksetzen'
   description: 'Setzen Sie Ihr neues Passwort'
@@ -33,17 +27,3 @@ reset:
   error:
     passwords_do_not_match: 'Die Passwörter stimmen nicht überein'
     invalid_hash: "Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann."
-
-invalid:
-  title: 'Link ungültig'
-  description: 'Der aufgerufene Link ist ungültig'
-
-register:
-  subject: 'Registrierung abschliessen'
-  message: 'Vielen Dank für Ihr Interesse! Ihr Account wurde erstellt.'
-  action_text: 'Registrierung abschliessen'
-
-resend_invitation:
-  subject: "Einladung für nodika"
-  message: "Sie wurden auf nodika eingeladen. Folgen Sie dem Link, um die Einladung anzunehmen"
-  action_text: 'Jetzt Einladung annehmen'

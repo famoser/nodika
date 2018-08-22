@@ -13,7 +13,7 @@ namespace App\Form\EventGenerationDateException;
 
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
-use App\Entity\Member;
+use App\Entity\Clinic;
 use App\Enum\EventType;
 use App\Form\Base\BaseAbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,7 +26,7 @@ class EventGenerationDateExceptionType extends BaseAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add("startDateTime", EntityType::class, ["class" => EventGeneration::class]);
-        $builder->add("endDateTime", EntityType::class, ["class" => Member::class]);
+        $builder->add("endDateTime", EntityType::class, ["class" => Clinic::class]);
         $builder->add("eventType", ChoiceType::class, EventType::getBuilderArguments());
     }
 

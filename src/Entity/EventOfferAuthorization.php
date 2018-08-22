@@ -35,9 +35,9 @@ class EventOfferAuthorization extends BaseEntity
     private $eventOffer;
 
     /**
-     * @var FrontendUser
+     * @var Doctor
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
     private $signedBy;
 
@@ -87,17 +87,17 @@ class EventOfferAuthorization extends BaseEntity
     }
 
     /**
-     * @return FrontendUser
+     * @return Doctor
      */
-    public function getSignedBy(): FrontendUser
+    public function getSignedBy(): Doctor
     {
         return $this->signedBy;
     }
 
     /**
-     * @param FrontendUser $signedBy
+     * @param Doctor $signedBy
      */
-    public function setSignedBy(FrontendUser $signedBy): void
+    public function setSignedBy(Doctor $signedBy): void
     {
         $this->signedBy = $signedBy;
     }

@@ -11,7 +11,7 @@
 
 namespace App\Security\Voter\Base;
 
-use App\Entity\FrontendUser;
+use App\Entity\Doctor;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -31,7 +31,7 @@ abstract class BaseVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (!$user instanceof FrontendUser) {
+        if (!$user instanceof Doctor) {
             return false;
         }
 

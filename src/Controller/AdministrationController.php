@@ -15,8 +15,8 @@ use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Form\Model\Event\AdvancedSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
@@ -98,29 +98,29 @@ class AdministrationController extends BaseFormController
      *
      * @return Response
      */
-    public function frontendUsersAction()
+    public function doctorsAction()
     {
-        $frontendUserRepo = $this->getDoctrine()->getRepository(FrontendUser::class);
+        $doctorRepo = $this->getDoctrine()->getRepository(Doctor::class);
 
-        /* @var FrontendUser[] $frontendUsers */
-        $frontendUsers = $frontendUserRepo->findBy(["deletedAt" => null]);
+        /* @var Doctor[] $doctors */
+        $doctors = $doctorRepo->findBy(["deletedAt" => null]);
 
-        $arr["frontend_users"] = $frontendUsers;
+        $arr["frontend_users"] = $doctors;
         return $this->render('administration/frontend_users.html.twig', $arr);
     }
 
     /**
-     * @Route("/members", name="administration_members")
+     * @Route("/clinics", name="administration_clinics")
      *
      * @return Response
      */
-    public function membersAction()
+    public function clinicsAction()
     {
-        $memberRepo = $this->getDoctrine()->getRepository(Member::class);
+        $clinicRepo = $this->getDoctrine()->getRepository(Clinic::class);
 
-        $arr["members"] = $memberRepo->findBy(["deletedAt" => null]);
+        $arr["clinics"] = $clinicRepo->findBy(["deletedAt" => null]);
 
-        return $this->render('administration/members.html.twig', $arr);
+        return $this->render('administration/clinics.html.twig', $arr);
     }
 
     /**

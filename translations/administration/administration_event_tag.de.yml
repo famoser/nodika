@@ -42,7 +42,7 @@ import:
   import_events_template_download: 'Musterdatei herunterladen'
   import_events_required: 'Zwingende Felder'
   import_events_required_description: 'Zwingend erforderlich ist für jeden Termin Anfangs- und Enddatum und die zugehörige Praxis'
-  no_members: 'Sie haben noch keine Mitglieder hinzugefügt'
+  no_clinics: 'Sie haben noch keine Mitglieder hinzugefügt'
 
 #generate page
 generate:

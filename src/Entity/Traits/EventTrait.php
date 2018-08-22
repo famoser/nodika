@@ -9,8 +9,8 @@
 namespace App\Entity\Traits;
 
 use App\Entity\EventGeneration;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Enum\EventType;
 use App\Enum\TradeTag;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,9 +27,9 @@ trait EventTrait
     private $confirmDateTime = null;
 
     /**
-     * @var FrontendUser|null
+     * @var Doctor|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
     private $confirmedBy = null;
 
@@ -54,18 +54,18 @@ trait EventTrait
     private $eventType = EventType::UNSPECIFIED;
 
     /**
-     * @var Member
+     * @var Clinic
      *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="events")
+     * @ORM\ManyToOne(targetEntity="Clinic", inversedBy="events")
      */
-    private $member;
+    private $clinic;
 
     /**
-     * @var FrontendUser|null
+     * @var Doctor|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser", inversedBy="events")
+     * @ORM\ManyToOne(targetEntity="Doctor", inversedBy="events")
      */
-    private $frontendUser;
+    private $doctor;
 
     /**
      * @var EventGeneration|null
@@ -99,9 +99,9 @@ trait EventTrait
     }
 
     /**
-     * @return FrontendUser|null
+     * @return Doctor|null
      */
-    public function getConfirmedBy(): ?FrontendUser
+    public function getConfirmedBy(): ?Doctor
     {
         return $this->confirmedBy;
     }
@@ -139,35 +139,35 @@ trait EventTrait
     }
 
     /**
-     * @return Member|null
+     * @return Clinic|null
      */
-    public function getMember(): ?Member
+    public function getClinic(): ?Clinic
     {
-        return $this->member;
+        return $this->clinic;
     }
 
     /**
-     * @param Member|null $member
+     * @param Clinic|null $clinic
      */
-    public function setMember(?Member $member): void
+    public function setClinic(?Clinic $clinic): void
     {
-        $this->member = $member;
+        $this->clinic = $clinic;
     }
 
     /**
-     * @return FrontendUser|null
+     * @return Doctor|null
      */
-    public function getFrontendUser(): ?FrontendUser
+    public function getDoctor(): ?Doctor
     {
-        return $this->frontendUser;
+        return $this->doctor;
     }
 
     /**
-     * @param FrontendUser|null $frontendUser
+     * @param Doctor|null $doctor
      */
-    public function setFrontendUser(?FrontendUser $frontendUser): void
+    public function setDoctor(?Doctor $doctor): void
     {
-        $this->frontendUser = $frontendUser;
+        $this->doctor = $doctor;
     }
 
     /**
@@ -194,12 +194,12 @@ trait EventTrait
         return
             $this->getConfirmDateTime() != null &&
             (
-                $this->getFrontendUser() == null ||
-                ($this->getConfirmedBy() != null && $this->getConfirmedBy()->getId() == $this->getFrontendUser()->getId())
+                $this->getDoctor() == null ||
+                ($this->getConfirmedBy() != null && $this->getConfirmedBy()->getId() == $this->getDoctor()->getId())
             );
     }
 
-    public function confirm(FrontendUser $user)
+    public function confirm(Doctor $user)
     {
         $this->confirmDateTime = new \DateTime();
         $this->confirmedBy = $user;
@@ -223,8 +223,8 @@ trait EventTrait
         $this->lastRemainderEmailSent = $eventTrait->getLastRemainderEmailSent();
         $this->eventType = $this->getEventType();
         $this->tradeTag = $eventTrait->getTradeTag();
-        $this->member = $eventTrait->getMember();
-        $this->frontendUser = $eventTrait->getFrontendUser();
+        $this->clinic = $eventTrait->getClinic();
+        $this->doctor = $eventTrait->getDoctor();
         $this->generatedBy = $eventTrait->getGeneratedBy();
     }
 

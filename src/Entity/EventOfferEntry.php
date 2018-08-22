@@ -40,18 +40,18 @@ class EventOfferEntry extends BaseEntity
     private $event;
 
     /**
-     * @var FrontendUser
+     * @var Doctor
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
-    private $targetFrontendUser;
+    private $targetDoctor;
 
     /**
-     * @var Member
+     * @var Clinic
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Member")
+     * @ORM\ManyToOne(targetEntity="Clinic")
      */
-    private $targetMember;
+    private $targetClinic;
 
     /**
      * @var EventOfferAuthorization
@@ -93,35 +93,35 @@ class EventOfferEntry extends BaseEntity
     }
 
     /**
-     * @return FrontendUser
+     * @return Doctor
      */
-    public function getTargetFrontendUser(): FrontendUser
+    public function getTargetDoctor(): Doctor
     {
-        return $this->targetFrontendUser;
+        return $this->targetDoctor;
     }
 
     /**
-     * @param FrontendUser $targetFrontendUser
+     * @param Doctor $targetDoctor
      */
-    public function setTargetFrontendUser(FrontendUser $targetFrontendUser): void
+    public function setTargetDoctor(Doctor $targetDoctor): void
     {
-        $this->targetFrontendUser = $targetFrontendUser;
+        $this->targetDoctor = $targetDoctor;
     }
 
     /**
-     * @return Member
+     * @return Clinic
      */
-    public function getTargetMember(): Member
+    public function getTargetClinic(): Clinic
     {
-        return $this->targetMember;
+        return $this->targetClinic;
     }
 
     /**
-     * @param Member $targetMember
+     * @param Clinic $targetClinic
      */
-    public function setTargetMember(Member $targetMember): void
+    public function setTargetClinic(Clinic $targetClinic): void
     {
-        $this->targetMember = $targetMember;
+        $this->targetClinic = $targetClinic;
     }
 
     /**

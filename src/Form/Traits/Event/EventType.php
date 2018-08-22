@@ -11,8 +11,8 @@
 
 namespace App\Form\Traits\Event;
 
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Form\Base\BaseAbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -27,8 +27,8 @@ class EventType extends BaseAbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('member', EntityType::class, ["class" => Member::class, "translation_domain" => "entity_member", "label" => "entity.name", "required" => false]);
-        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "translation_domain" => "entity_frontend_user", "label" => "entity.name", "required" => false]);
+        $builder->add('clinic', EntityType::class, ["class" => Clinic::class, "translation_domain" => "entity_clinic", "label" => "entity.name", "required" => false]);
+        $builder->add('doctor', EntityType::class, ["class" => Doctor::class, "translation_domain" => "entity_frontend_user", "label" => "entity.name", "required" => false]);
         $builder->add('eventType', ChoiceType::class, \App\Enum\EventType::getBuilderArguments());
     }
 

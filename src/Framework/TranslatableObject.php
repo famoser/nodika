@@ -16,7 +16,7 @@ use App\Helper\NamingHelper;
 abstract class TranslatableObject
 {
     /**
-     * the array for the builder including the translation_domain member.
+     * the array for the builder including the translation_domain clinic.
      *
      * @return string[]
      */
@@ -28,7 +28,7 @@ abstract class TranslatableObject
     }
 
     /**
-     * the array for the builder including the translation_domain member.
+     * the array for the builder including the translation_domain clinic.
      *
      * @return string[]
      */
@@ -57,7 +57,7 @@ abstract class TranslatableObject
     abstract protected function getTranslationDomainPrefix();
 
     /**
-     * the array for the builder including the translation_domain member.
+     * the array for the builder including the translation_domain clinic.
      *
      * @return string
      */

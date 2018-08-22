@@ -69,10 +69,10 @@ class CronJobController extends BaseDoctrineController
             //count all events which need to be remainded
             $emailRemainder = [];
             foreach ($events as $event) {
-                if ($event->getFrontendUser() != null) {
-                    $emailRemainder[$event->getFrontendUser()->getEmail()]++;
+                if ($event->getDoctor() != null) {
+                    $emailRemainder[$event->getDoctor()->getEmail()]++;
                 } else {
-                    $emailRemainder[$event->getMember()->getEmail()]++;
+                    $emailRemainder[$event->getClinic()->getEmail()]++;
                 }
                 $event->setLastRemainderEmailSent(new \DateTime());
                 $this->fastSave($event);
@@ -80,7 +80,7 @@ class CronJobController extends BaseDoctrineController
 
             //send remainders
             foreach ($emailRemainder as $email => $eventCount) {
-                //send email to member
+                //send email to clinic
                 $subject = $translator->trans('remainder.subject', [], 'email_cronjob');
                 $body = $translator->trans('remainder.message', ['%count%' => $eventCount], 'email_cronjob');
                 $actionText = $translator->trans('remainder.action_text', [], 'email_cronjob');
@@ -101,7 +101,7 @@ class CronJobController extends BaseDoctrineController
 
 
         //get admin emails
-        $userRepo = $this->getDoctrine()->getRepository('App:FrontendUser');
+        $userRepo = $this->getDoctrine()->getRepository('Doctor');
         $admins = $userRepo->findBy(["isAdministrator" => true]);
         $adminEmails = [];
         foreach ($admins as $admin) {
@@ -112,15 +112,15 @@ class CronJobController extends BaseDoctrineController
         foreach ($events as $event) {
             $targetEmail = null;
             $ownerName = null;
-            if ($event->getFrontendUser() != null) {
-                $targetEmail = $event->getFrontendUser()->getEmail();
-                $ownerName = $event->getFrontendUser()->getFullName();
+            if ($event->getDoctor() != null) {
+                $targetEmail = $event->getDoctor()->getEmail();
+                $ownerName = $event->getDoctor()->getFullName();
             } else {
-                $targetEmail = $event->getMember()->getEmail();
-                $ownerName = $event->getMember()->getName();
+                $targetEmail = $event->getClinic()->getEmail();
+                $ownerName = $event->getClinic()->getName();
             }
 
-            //send email to member
+            //send email to clinic
             $subject = $translator->trans('too_late_remainder.subject', [], 'email_cronjob');
             $body = $translator->trans(
                 'too_late_remainder.message',

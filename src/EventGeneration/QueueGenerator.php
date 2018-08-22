@@ -22,19 +22,19 @@ class QueueGenerator
 
     /**
      * IdealQueueHelper constructor.
-     * @param array $memberRelativeSize the members of the queue (memberId => relativeSize) (int => double)
+     * @param array $clinicRelativeSize the clinics of the queue (clinicId => relativeSize) (int => double)
      */
-    public function __construct($memberRelativeSize)
+    public function __construct($clinicRelativeSize)
     {
         $totalSum = 0;
-        foreach ($memberRelativeSize as $size) {
+        foreach ($clinicRelativeSize as $size) {
             $totalSum += $size;
         }
         $this->totalScore = $totalSum;
 
         //construct queue
-        foreach ($memberRelativeSize as $member => $size) {
-            $queueEntry = new QueueEntry($member, $size, $totalSum);
+        foreach ($clinicRelativeSize as $clinic => $size) {
+            $queueEntry = new QueueEntry($clinic, $size, $totalSum);
             $this->queueEntries[$queueEntry->getPayload()] = $queueEntry;
         }
     }
@@ -86,14 +86,14 @@ class QueueGenerator
     }
 
     /**
-     * @param int $member
+     * @param int $clinic
      */
-    public function forceNext($member)
+    public function forceNext($clinic)
     {
         $this->incrementAll();
 
-        if (isset($this->queueEntries[$member])) {
-            $this->queueEntries[$member]->issue();
+        if (isset($this->queueEntries[$clinic])) {
+            $this->queueEntries[$clinic]->issue();
         }
     }
 

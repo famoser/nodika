@@ -6,7 +6,7 @@
         </div>
         <div class="card-body">
             <p>
-                {{ displayFrontendUser(event.frontendUser) || $t('no_user_assigned') }}<br/>
+                {{ displaydoctor(event.frontendUser) || $t('no_user_assigned') }}<br/>
                 <span class="text-secondary">{{event.member.name}}</span>
             </p>
         </div>

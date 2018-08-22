@@ -9,8 +9,8 @@
 {% block title %}{{ "index.title"|trans }}{% endblock %}
 {% block description %}{{ "index.description"|trans }}{% endblock %}
 
-{% macro event_row(event, activeMember, class = "") %}
-    {% if event.member == activeMember %}
+{% macro event_row(event, activeClinic, class = "") %}
+    {% if event.clinic == activeClinic %}
         {% set class = class ~ " bold" %}
     {% endif %}
     <tr class="{{ class }}">
@@ -21,7 +21,7 @@
             {{ event.endDateTime|dateTimeFormat }}
         </td>
         <td>
-            {{ event.member }}
+            {{ event.clinic }}
         </td>
         <td>
             {{ event.person }}
@@ -60,10 +60,10 @@
                     </p>
                 </a>
 
-                <a class="tile tile-2 default-color" href="{{ path('administration_member_index') }}">
-                    <h3>{{ "entity.plural"|trans({}, "entity_member") }}</h3>
+                <a class="tile tile-2 default-color" href="{{ path('administration_clinic_index') }}">
+                    <h3>{{ "entity.plural"|trans({}, "entity_clinic") }}</h3>
                     <p>
-                        {{ "entity.description"|trans({}, "entity_member") }}
+                        {{ "entity.description"|trans({}, "entity_clinic") }}
                     </p>
                 </a>
 
@@ -114,17 +114,17 @@
                             <tr>
                                 <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
                                 <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
-                                <th>{{ "entity.name"|trans({}, "entity_member") }}</th>
+                                <th>{{ "entity.name"|trans({}, "entity_clinic") }}</th>
                                 <th>{{ "entity.name"|trans({}, "entity_person") }}</th>
                                 <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for event in eventLineModel.activeEvents %}
-                                {{ local_macro.event_row(event, member, "table-light") }}
+                                {{ local_macro.event_row(event, clinic, "table-light") }}
                             {% endfor %}
                             {% for event in eventLineModel.events %}
-                                {{ local_macro.event_row(event, member) }}
+                                {{ local_macro.event_row(event, clinic) }}
                             {% endfor %}
                             </tbody>
                         </table>

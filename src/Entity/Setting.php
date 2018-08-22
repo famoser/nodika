@@ -45,14 +45,14 @@ class Setting extends BaseEntity
      *
      * @ORM\Column(type="text")
      */
-    private $memberName;
+    private $clinicName;
 
     /**
      * @var string
      *
      * @ORM\Column(type="text")
      */
-    private $frontendUserName;
+    private $doctorName;
 
     /**
      * @var int
@@ -94,33 +94,33 @@ class Setting extends BaseEntity
     /**
      * @return string
      */
-    public function getMemberName(): string
+    public function getClinicName(): string
     {
-        return $this->memberName;
+        return $this->clinicName;
     }
 
     /**
-     * @param string $memberName
+     * @param string $clinicName
      */
-    public function setMemberName(string $memberName): void
+    public function setClinicName(string $clinicName): void
     {
-        $this->memberName = $memberName;
+        $this->clinicName = $clinicName;
     }
 
     /**
      * @return string
      */
-    public function getFrontendUserName(): string
+    public function getDoctorName(): string
     {
-        return $this->frontendUserName;
+        return $this->doctorName;
     }
 
     /**
-     * @param string $frontendUserName
+     * @param string $doctorName
      */
-    public function setFrontendUserName(string $frontendUserName): void
+    public function setDoctorName(string $doctorName): void
     {
-        $this->frontendUserName = $frontendUserName;
+        $this->doctorName = $doctorName;
     }
 
     /**

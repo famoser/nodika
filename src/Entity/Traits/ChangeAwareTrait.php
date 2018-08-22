@@ -11,7 +11,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\FrontendUser;
+use App\Entity\Doctor;
 use Doctrine\ORM\Mapping as ORM;
 
 /*
@@ -35,16 +35,16 @@ trait ChangeAwareTrait
     private $lastChangedAt;
 
     /**
-     * @var FrontendUser
+     * @var Doctor
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
     private $createdBy;
 
     /**
-     * @var FrontendUser
+     * @var Doctor
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\FrontendUser")
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
     private $lastChangedBy;
 
@@ -84,17 +84,17 @@ trait ChangeAwareTrait
     }
 
     /**
-     * @return FrontendUser
+     * @return Doctor
      */
-    public function getCreatedBy(): FrontendUser
+    public function getCreatedBy(): Doctor
     {
         return $this->createdBy;
     }
 
     /**
-     * @return FrontendUser
+     * @return Doctor
      */
-    public function getLastChangedBy(): FrontendUser
+    public function getLastChangedBy(): Doctor
     {
         return $this->lastChangedBy;
     }
@@ -102,13 +102,13 @@ trait ChangeAwareTrait
     /**
      * register who has changed the entity
      *
-     * @param FrontendUser $frontendUser
+     * @param Doctor $doctor
      */
-    public function registerChangeBy(FrontendUser $frontendUser)
+    public function registerChangeBy(Doctor $doctor)
     {
         if ($this->createdBy == null) {
-            $this->createdBy = $frontendUser;
+            $this->createdBy = $doctor;
         }
-        $this->lastChangedBy = $frontendUser;
+        $this->lastChangedBy = $doctor;
     }
 }

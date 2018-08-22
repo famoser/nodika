@@ -1,0 +1,49 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "frontend_users.title"|trans }}{% endblock %}
+{% block description %}{{ "frontend_users.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration" %}
+
+{% block single_content %}
+
+    <p>
+        <a class="btn btn-secondary" href="{{ path("administration_frontend_user_new") }}">
+            {{ "new.title"|trans({}, "administration_frontend_user") }}
+        </a>
+    </p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ "full_name"|trans({}, "trait_person") }}</th>
+            <th>{{ "email"|trans({}, "trait_user") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_clinic") }}</th>
+            <th>{{ "can_login"|trans({}, "trait_user") }}</th>
+            <th class="minimal-width"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for frontend_user in frontend_users %}
+            <tr>
+                <td>{{ frontend_user.fullName }}</td>
+                <td>{{ frontend_user.email }}</td>
+                <td>{{ frontend_user.clinics|join(", ") }}</td>
+                <td>
+                    {{ frontend_user.canLogin|booleanFormat }}
+                    <br/>
+                    <a href="{{ path("administration_frontend_user_toggle_login_enabled", {"doctor" : frontend_user.id}) }}">
+                        {{ "toggle_login_enabled.change"|trans({}, "administration_frontend_user") }}
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-secondary"
+                       href="{{ path("administration_frontend_user_edit", {"doctor" : frontend_user.id}) }}">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

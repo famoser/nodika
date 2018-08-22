@@ -45,19 +45,19 @@ class ConfirmController extends BaseFormController
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
 
         $searchModel = new SearchModel(SearchModel::NONE);
-        $searchModel->setMembers($this->getUser()->getMembers());
+        $searchModel->setClinics($this->getUser()->getClinics());
         $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval("P" . $settings->getCanConfirmDaysAdvance() . "D")));
         $searchModel->setIsConfirmed(false);
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
         $apiEvents = [];
         foreach ($events as $event) {
-            if ($event->getFrontendUser() == null || $event->getFrontendUser()->getId() == $this->getUser()->getId()) {
+            if ($event->getDoctor() == null || $event->getDoctor()->getId() == $this->getUser()->getId()) {
                 $apiEvents[] = $event;
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**
@@ -69,9 +69,9 @@ class ConfirmController extends BaseFormController
      */
     public function apiConfirmAction(SerializerInterface $serializer, Event $event)
     {
-        //either assigned to this user or of a member the user is part of
-        if ($event->getFrontendUser() != null && $event->getFrontendUser()->getId() == $this->getUser()->getId() ||
-            $this->getUser()->getMembers()->contains($event->getMember())) {
+        //either assigned to this user or of a clinic the user is part of
+        if ($event->getDoctor() != null && $event->getDoctor()->getId() == $this->getUser()->getId() ||
+            $this->getUser()->getClinics()->contains($event->getClinic())) {
             $event->confirm($this->getUser());
             $eventPast = EventPast::create($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
             $this->fastSave($event, $eventPast);

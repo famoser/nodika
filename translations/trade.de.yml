@@ -16,8 +16,8 @@ index:
 new:
   title: 'Neue Tauschanfrage erstellen'
   description: 'erstellen Sie eine neue Tauschanfrage'
-  choose_person: 'Wählen Sie den Empfänger / die Empfängerin Ihrer Tauschanfrage aus'
-  choose_person_description: 'Sie können Termine austauschen, die Ihnen zugewiesen sind, mit Terminen, die Ihrem Empfänger zugewiesen sind'
+  choose_doctor: 'Wählen Sie den Empfänger / die Empfängerin Ihrer Tauschanfrage aus'
+  choose_doctor_description: 'Sie können Termine austauschen, die Ihnen zugewiesen sind, mit Terminen, die Ihrem Empfänger zugewiesen sind'
   assign_events: 'Termine zuweisen'
   assign_events_description: 'Verwenden Sie den Menupunkt "Termine zuweisen" um sich Termine zuzuweisen.'
 

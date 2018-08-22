@@ -1,9 +1,40 @@
-index:
-  title: "Einladung einlösen"
-  description: "Willkommen auf nodika!"
+invite_invalid:
+  title: 'Einladung nicht mehr gültig'
+  description: 'Dieser Link ist nicht (mehr) gültig.'
 
-invite:
-  email:
-    subject: 'Einladung für nodika'
-    message: 'Willkommen! Sie wurden auf nodika eingeladen, der Notfalldienstverwaltung für Tierärzte.'
-    action_text: 'Einladung annehmen'
+doctor:
+  title: 'Willkomen auf nodika!'
+  description: 'Setzen Sie Ihr Passwort um den Zugang freizuschalten.'
+  success:
+    access_created: 'Ihr Zugang wurde freigeschaltet! Willkommen auf nodika :)'
+  danger:
+    invitation_already_accepted: 'Sie haben diese Einladung schon angenommen.'
+  warning:
+    automatically_logged_out: 'Sie waren bereits mit einem anderem Account (als %name%, %email%) eingeloggt. Wir haben Sie automatisch ausgeloggt, damit Sie diese Einladung annehmen können.'
+
+clinic:
+  title: 'Willkommen auf nodika!'
+  description: 'Erstellen Sie einen Zugang für die Praxis %name%.'
+  already_logged_in:
+    info: 'Sie sind bereits eingeloggt (als %name%, %email%). Möchten Sie diesen Account verwenden für Zugriff zu dieser Praxis, oder einen neuen Account erstellen?'
+    create_new_account: 'Neuer Zugang mit neuer E-Mail erstellen.'
+    use_same_account: 'Gleicher Zugang verwenden.'
+  warning:
+    email_already_in_use: 'Die E-Mail %email% ist bereits in unserem System. Loggen Sie sich ein und kehren Sie hierhin zurück, oder benutzen Sie eine andere E-Mail.'
+  success:
+    account_created: 'Ihr Zugang wurde erfolgreich erstellt, Willkommen auf nodika :)'
+    access_granted: 'Sie haben nun Zugriff auf die Praxis %name%.'
+
+request_invite:
+  title: 'Zugriff neu anfordern.'
+  description: "Wird Ihre E-Mail in unserer Datenbank gefunden senden wir Ihnen die E-Mail mit der Zugriffsbestätigung."
+  clinic_email:
+    subject: 'Zugriffsbestätigung für nodika'
+    message: 'Willkommen! Sie haben auf nodika, der Notfalldienstverwaltung für Tierärzte, Zugriff auf Ihre Praxis %name% erhalten.'
+    action_text: 'Zugang einrichten'
+  doctor_email:
+    subject: 'Zugriffsbestätigung für nodika'
+    message: 'Willkommen! Sie haben auf nodika, der Notfalldienstverwaltung für Tierärzte, mit der E-Mail %mail% Zugriff auf Ihre Praxis %name% erhalten.'
+    action_text: 'Zugang einrichten'
+  success:
+    email_sent: "Die Einladung wurde versandt, sofern wir die E-Mail in der Datenbank gefunden wurde."

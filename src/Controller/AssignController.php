@@ -14,7 +14,7 @@ namespace App\Controller;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
 use App\Entity\EventPast;
-use App\Entity\FrontendUser;
+use App\Entity\Doctor;
 use App\Entity\Setting;
 use App\Enum\EventChangeType;
 use App\Model\Breadcrumb;
@@ -38,7 +38,7 @@ class AssignController extends BaseFormController
     public function assignAction()
     {
         $searchEventModel = new SearchModel(SearchModel::YEAR);
-        $searchEventModel->setMembers($this->getUser()->getMembers());
+        $searchEventModel->setClinics($this->getUser()->getClinics());
 
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchEventModel);
 
@@ -57,35 +57,35 @@ class AssignController extends BaseFormController
 
         //array of users
         $user = $this->getUser();
-        foreach ($user->getMembers() as $member) {
-            foreach ($member->getFrontendUsers() as $frontendUser) {
-                $result[$frontendUser->getId()] = $frontendUser;
+        foreach ($user->getClinics() as $clinic) {
+            foreach ($clinic->getDoctors() as $doctor) {
+                $result[$doctor->getId()] = $doctor;
             }
         }
         $result = array_values($result);
 
-        return new JsonResponse($serializer->serialize($result, "json", ["attributes" => ["id", "fullName", "members" => ["name"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($result, "json", ["attributes" => ["id", "fullName", "clinics" => ["name"]]]), 200, [], true);
     }
 
     /**
-     * @Route("/api/assignable_events/{frontendUser}", name="assign_assignable_events")
+     * @Route("/api/assignable_events/{doctor}", name="assign_assignable_events")
      *
      * @param SerializerInterface $serializer
-     * @param FrontendUser $frontendUser
+     * @param Doctor $doctor
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function apiAssignableEventsAction(SerializerInterface $serializer, FrontendUser $frontendUser)
+    public function apiAssignableEventsAction(SerializerInterface $serializer, Doctor $doctor)
     {
-        //get all common members of current user & selected one
+        //get all common clinics of current user & selected one
         $allowedFilter = [];
-        foreach ($this->getUser()->getMembers() as $member) {
-            $allowedFilter[] = $member->getId();
+        foreach ($this->getUser()->getClinics() as $clinic) {
+            $allowedFilter[] = $clinic->getId();
         }
-        $members = [];
-        foreach ($frontendUser->getMembers() as $member) {
-            if (in_array($member->getId(), $allowedFilter)) {
-                $members[] = $member;
+        $clinics = [];
+        foreach ($doctor->getClinics() as $clinic) {
+            if (in_array($clinic->getId(), $allowedFilter)) {
+                $clinics[] = $clinic;
             }
         }
 
@@ -93,29 +93,29 @@ class AssignController extends BaseFormController
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
 
         $searchModel = new SearchModel(SearchModel::NONE);
-        $searchModel->setMembers($members);
+        $searchModel->setClinics($clinics);
         $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval("P" . $settings->getCanConfirmDaysAdvance() . "D")));
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
-        return new JsonResponse($serializer->serialize($events, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($events, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**
-     * @Route("/api/assign/{event}/{frontendUser}", name="assign_assign")
+     * @Route("/api/assign/{event}/{doctor}", name="assign_assign")
      *
      * @param SerializerInterface $serializer
      * @param Event $event
-     * @param FrontendUser $frontendUser
+     * @param Doctor $doctor
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function apiAssignAction(SerializerInterface $serializer, Event $event, FrontendUser $frontendUser)
+    public function apiAssignAction(SerializerInterface $serializer, Event $event, Doctor $doctor)
     {
-        $event->setFrontendUser($frontendUser);
-        $eventPast = EventPast::create($event, EventChangeType::PERSON_ASSIGNED_BY_MEMBER, $this->getUser());
+        $event->setDoctor($doctor);
+        $eventPast = EventPast::create($event, EventChangeType::PERSON_ASSIGNED_BY_CLINIC, $this->getUser());
         $this->fastSave($event, $eventPast);
 
-        return new JsonResponse($serializer->serialize($event, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($event, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**

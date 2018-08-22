@@ -69,7 +69,7 @@ class NamingHelper
     }
 
     /**
-     * the property to be converted to a array for the builder including the label member.
+     * the property to be converted to a array for the builder including the label clinic.
      *
      * @param $propertyName
      *
@@ -93,7 +93,7 @@ class NamingHelper
     }
 
     /**
-     * the name of the trait to be converted to a array for the builder including the label member.
+     * the name of the trait to be converted to a array for the builder including the label clinic.
      *
      * @param $trait
      *

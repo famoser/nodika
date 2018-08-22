@@ -1,9 +1,0 @@
-reset:
-  subject: 'Passwort zurücksetzen'
-  message: 'Möchten Sie Ihr Passwort zurücksetzen?'
-  action_text: 'Jetzt Passwort zurücksetzen'
-
-resend_invitation:
-  subject: "Einladung für nodika"
-  message: "Sie wurden auf nodika eingeladen. Folgen Sie dem Link, um die Einladung anzunehmen"
-  action_text: 'Jetzt Einladung annehmen'

@@ -38,8 +38,8 @@ no_conflicts:
     Mindestabstand in Stunden zwischen Terminen der anderen Termingruppen und den generierten Terminen.
     Wird dieser Abstand nicht eingehalten zählt es als Konflikt.
 
-#choose_members page
-choose_members:
+#choose_clinics page
+choose_clinics:
   title: 'Praxen wählen'
   description: 'Wählen Sie aus Ihren aktiven Praxen die aus, die Termine zugeteilt bekommen sollen'
   help: 'Deaktivieren Sie die Praxen die nicht beachtet werden sollen bei der Generierung'
@@ -48,13 +48,13 @@ choose_members:
 relative_distribution:
   title: 'Relative Verteilung an die Praxen'
   description: 'Bestimmen Sie wieviel Termine die Praxis übernehmen soll'
-  member_points: 'Praxenpunkte'
-  member_points_description:
+  clinic_points: 'Praxenpunkte'
+  clinic_points_description:
     Ein Praxenpunkt definiert wieviele Termine die Praxis relativ zu den anderen übernehmen soll.
     Der Wert muss eine Zahl grösser / gleich 0 sein.
     Ist der Wert einer Praxis verglichen zu einem anderen verdoppelt, wird die entsprechende Praxis auch doppelt so viele Tage zugewiesen bekommen
-  member_lucky_score: 'Lucky Score'
-  member_lucky_score_description:
+  clinic_lucky_score: 'Lucky Score'
+  clinic_lucky_score_description:
     Da die Generierung oft nicht die Termine ganz fair verteilen kann (zum Beispiel weil zwei Praxen drei Termine übernehmen müssen)
     wird der Unterschied als "Lucky Score" gespeichert. Es ist also eine Zahl die angibt, wieviel Glück die Praxis bei der letzten Generierung hatte.
     Wird diese Generierung zum ersten Mal durchgeführt kann sie einfach 0 gelassen werden
@@ -109,8 +109,8 @@ assignment_settings:
     Praxis A mit der ID 98 ist am 29.12. zugeordnet, Praxis B mit der ID 62 ist am 30.12. zugeordnet und Praxis c mit der ID 86 am 31.12.
     Dann füllen Sie in die Liste mit 98,62,86 aus.
     Sie können zudem die "0" als Platzhalter verwenden. Möchten Sie also nur den Termin der Praxis B definieren dann füllen Sie das Feld mit 62,0 aus
-  members_table: 'Praxen'
-  members_table_description: 'Eine Tabelle aller Praxen mit ihren jeweiligen Ids'
+  clinics_table: 'Praxen'
+  clinics_table_description: 'Eine Tabelle aller Praxen mit ihren jeweiligen Ids'
 
 #start_generation page
 start_generation:
@@ -128,13 +128,13 @@ confirm_generation:
     Scrollen Sie nach unten und speichern Sie die Termine wenn alles in Ordnung ist,
     oder gehen Sie zurück und versuchen Sie die Generierung von Neuem
   persist_now: 'Termine speichern'
-  member_name: 'Praxis'
+  clinic_name: 'Praxis'
   start_date_time: 'Anfangszeit'
   end_date_time: 'Endzeit'
 
 #erros
 error:
-  member_not_found_anymore: 'Eine Praxis die einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Praxen'
+  clinic_not_found_anymore: 'Eine Praxis die einem Termin zugeordnet werden sollte wurde nicht mehr gefunden. Bitte überprüfen Sie Ihre Praxen'
   date_format_invalid: 'Das Datum %date% ist nicht korrekt formatiert. Bitte formatieren Sie das Datum gemäss dd.mm.yyyy, also zum Beispiel 01.01.1995'
-  member_format_invalid: 'Die bestehenden Termine sind nicht korrekt formatiert (an der Stelle %part%). Bitte stellen Sie sicher das Sie die Ids der Praxen als Identifizierung verwenden.'
-  member_not_found: 'Die Praxis mit der ID %id% wurde nicht gefunden. Bitte stellen Sie sicher das Sie die Ids der Praxen als Identifizierung verwenden.'
+  clinic_format_invalid: 'Die bestehenden Termine sind nicht korrekt formatiert (an der Stelle %part%). Bitte stellen Sie sicher das Sie die Ids der Praxen als Identifizierung verwenden.'
+  clinic_not_found: 'Die Praxis mit der ID %id% wurde nicht gefunden. Bitte stellen Sie sicher das Sie die Ids der Praxen als Identifizierung verwenden.'

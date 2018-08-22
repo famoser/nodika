@@ -13,10 +13,10 @@
             </h3>
 
             <p>
-                {% if user.members|length > 0 %}
-                    {{ "index.info_member"|trans({"%member%": user.members|join(", ")}) }}
+                {% if user.clinics|length > 0 %}
+                    {{ "index.info_clinic"|trans({"%clinic%": user.clinics|join(", ")}) }}
                 {% else %}
-                    {{ "index.info_no_member"|trans }}
+                    {{ "index.info_no_clinic"|trans }}
                 {% endif %}
             </p>
 

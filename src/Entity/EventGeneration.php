@@ -136,18 +136,18 @@ class EventGeneration extends BaseEntity
     private $dateExceptions;
 
     /**
-     * @var EventGenerationFrontendUser[]|ArrayCollection
+     * @var EventGenerationTargetDoctor[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationFrontendUser", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="EventGenerationTargetDoctor", mappedBy="eventGeneration")
      */
-    private $frontendUsers;
+    private $doctors;
 
     /**
-     * @var EventGenerationMember[]|ArrayCollection
+     * @var EventGenerationTargetClinic[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationMember", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="EventGenerationTargetClinic", mappedBy="eventGeneration")
      */
-    private $members;
+    private $clinics;
 
     /**
      * @var Event[]|ArrayCollection
@@ -160,8 +160,8 @@ class EventGeneration extends BaseEntity
     public function __construct()
     {
         $this->dateExceptions = new ArrayCollection();
-        $this->frontendUsers = new ArrayCollection();
-        $this->members = new ArrayCollection();
+        $this->doctors = new ArrayCollection();
+        $this->clinics = new ArrayCollection();
         $this->generatedEvents = new ArrayCollection();
         $this->conflictEventTags = new ArrayCollection();
     }
@@ -319,35 +319,35 @@ class EventGeneration extends BaseEntity
     }
 
     /**
-     * @return EventGenerationFrontendUser[]|ArrayCollection
+     * @return EventGenerationTargetDoctor[]|ArrayCollection
      */
-    public function getFrontendUsers()
+    public function getDoctors()
     {
-        return $this->frontendUsers;
+        return $this->doctors;
     }
 
     /**
-     * @param EventGenerationFrontendUser[]|ArrayCollection $frontendUsers
+     * @param EventGenerationTargetDoctor[]|ArrayCollection $doctors
      */
-    public function setFrontendUsers($frontendUsers): void
+    public function setDoctors($doctors): void
     {
-        $this->frontendUsers = $frontendUsers;
+        $this->doctors = $doctors;
     }
 
     /**
-     * @return EventGenerationMember[]|ArrayCollection
+     * @return EventGenerationTargetClinic[]|ArrayCollection
      */
-    public function getMembers()
+    public function getClinics()
     {
-        return $this->members;
+        return $this->clinics;
     }
 
     /**
-     * @param EventGenerationMember[]|ArrayCollection $members
+     * @param EventGenerationTargetClinic[]|ArrayCollection $clinics
      */
-    public function setMembers($members): void
+    public function setClinics($clinics): void
     {
-        $this->members = $members;
+        $this->clinics = $clinics;
     }
 
     /**

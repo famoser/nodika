@@ -8,10 +8,10 @@
 
 namespace App\EventGeneration;
 
-use App\Entity\EventGenerationFrontendUser;
-use App\Entity\EventGenerationMember;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\EventGenerationTargetDoctor;
+use App\Entity\EventGenerationTargetClinic;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Entity\Traits\EventGenerationTarget;
 
 class EventTarget
@@ -25,14 +25,14 @@ class EventTarget
     private $identifier;
 
     /**
-     * @var EventGenerationFrontendUser|null
+     * @var EventGenerationTargetDoctor|null
      */
-    private $frontendUser;
+    private $doctor;
 
     /**
-     * @var EventGenerationMember|null
+     * @var EventGenerationTargetClinic|null
      */
-    private $member;
+    private $clinic;
 
     public function __construct()
     {
@@ -40,24 +40,24 @@ class EventTarget
     }
 
     /**
-     * @param EventGenerationFrontendUser $frontendUser
+     * @param EventGenerationTargetDoctor $doctor
      * @return static
      */
-    public static function fromFrontendUser(EventGenerationFrontendUser $frontendUser)
+    public static function fromDoctor(EventGenerationTargetDoctor $doctor)
     {
         $new = new static();
-        $new->frontendUser = $frontendUser;
+        $new->doctor = $doctor;
         return $new;
     }
 
     /**
-     * @param EventGenerationMember $member
+     * @param EventGenerationTargetClinic $clinic
      * @return static
      */
-    public static function fromMember(EventGenerationMember $member)
+    public static function fromClinic(EventGenerationTargetClinic $clinic)
     {
         $new = new static();
-        $new->member = $member;
+        $new->clinic = $clinic;
         return $new;
     }
 
@@ -74,30 +74,30 @@ class EventTarget
      */
     public function getTarget()
     {
-        if ($this->frontendUser == null) {
-            return $this->member;
+        if ($this->doctor == null) {
+            return $this->clinic;
         }
-        return $this->frontendUser;
+        return $this->doctor;
     }
 
     /**
-     * @return FrontendUser|null
+     * @return Doctor|null
      */
-    public function getFrontendUser(): ?FrontendUser
+    public function getDoctor(): ?Doctor
     {
-        if ($this->frontendUser != null) {
-            return $this->frontendUser->getFrontendUser();
+        if ($this->doctor != null) {
+            return $this->doctor->getDoctor();
         }
         return null;
     }
 
     /**
-     * @return Member|null
+     * @return Clinic|null
      */
-    public function getMember(): ?Member
+    public function getClinic(): ?Clinic
     {
-        if ($this->member != null) {
-            return $this->member->getMember();
+        if ($this->clinic != null) {
+            return $this->clinic->getClinic();
         }
         return null;
     }

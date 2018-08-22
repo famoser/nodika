@@ -7,7 +7,7 @@ frontend_users:
   title: 'Benutzerverwaltung'
   description: 'Benutzer erstellen und bearbeiten, Passwörter zusenden und zurücksetzen, ...'
 
-members:
+clinics:
   title: 'Mitgliederverwaltung'
   description: 'Mitglieder erstellen und bearbeiten, Benutzer zuweisen, ...'
 

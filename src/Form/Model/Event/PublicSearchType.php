@@ -18,8 +18,8 @@ namespace App\Form\Model\Event;
  * Time: 19:13
  */
 
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\StartEnd\StartEndType;
 use App\Model\Event\SearchModel;
@@ -32,8 +32,8 @@ class PublicSearchType extends BaseAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('startEnd', StartEndType::class, ["inherit_data" => true]);
-        $builder->add('member', EntityType::class, ["class" => Member::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_member"]);
-        $builder->add('frontendUser', EntityType::class, ["class" => FrontendUser::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_frontend_user"]);
+        $builder->add('clinic', EntityType::class, ["class" => Clinic::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_clinic"]);
+        $builder->add('doctor', EntityType::class, ["class" => Doctor::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_frontend_user"]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

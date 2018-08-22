@@ -66,10 +66,10 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * distribute the days to the members.
+     * distribute the days to the clinics.
      *
-     * @param array $partiesArray is an array of the form (int => double) (target points per member)
-     * @param array $distributedDaysArray is an array of the form (int => (int => int)) (distributed dayKey => dayCount per member)
+     * @param array $partiesArray is an array of the form (int => double) (target points per clinic)
+     * @param array $distributedDaysArray is an array of the form (int => (int => int)) (distributed dayKey => dayCount per clinic)
      * @param float $dayValue the value of this day for $distributedPointsArray calculation
      * @param int $dayCount the amount of
      * @param int $dayKey the key of this day used in $distributedDaysArray
@@ -87,9 +87,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         $bucketAssignment = $this->bucketsAlgorithm($myParties, $dayCount);
 
         //add points to $distributedPointsArray
-        foreach ($bucketAssignment as $memberId => $bucketCount) {
-            $partiesArray[$memberId] -= $dayValue * $bucketCount;
-            $distributedDaysArray[$memberId][$dayKey] += $bucketCount;
+        foreach ($bucketAssignment as $clinicId => $bucketCount) {
+            $partiesArray[$clinicId] -= $dayValue * $bucketCount;
+            $distributedDaysArray[$clinicId][$dayKey] += $bucketCount;
         }
     }
 
@@ -152,7 +152,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         //distribute parties to buckets
-        $bucketMembers = [];
+        $bucketClinics = [];
         foreach ($assignmentSizes as $partySize => $partiesOfThisSize) {
             foreach ($partiesOfThisSize as $currentPartyId) {
                 $currentPartSize = $partySize;
@@ -180,7 +180,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                     //check if party can be placed in bucket fully
                     //0.0001 is the accuracy threshold
                     if ($biggestRemaining + 0.0001 > $currentPartSize) {
-                        $bucketMembers[$biggestRemainingIndex][$currentPartyId] = $currentPartSize;
+                        $bucketClinics[$biggestRemainingIndex][$currentPartyId] = $currentPartSize;
 
                         //adapt bucket sizes
                         $buckets[$biggestRemainingIndex] -= $currentPartSize;
@@ -190,7 +190,7 @@ class EventGenerationService implements EventGenerationServiceInterface
                         //party does not fit fully into bucket, therefore we have to continue
                         $currentPartSize -= $biggestRemaining;
 
-                        $bucketMembers[$biggestRemainingIndex][$currentPartyId] = $biggestRemaining;
+                        $bucketClinics[$biggestRemainingIndex][$currentPartyId] = $biggestRemaining;
 
                         //adapt bucket sizes
                         $buckets[$biggestRemainingIndex] = 0;
@@ -199,35 +199,35 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
         }
 
-        ### randomly assign a bucket to a containing member
+        ### randomly assign a bucket to a containing clinic
 
         //shuffle array
-        $bucketIds = array_keys($bucketMembers);
+        $bucketIds = array_keys($bucketClinics);
         shuffle($buckets);
         $step = $bucketSize / count($buckets);
         $currentStep = 0;
         foreach ($bucketIds as $bucketId) {
-            $members = $bucketMembers[$bucketId];
+            $clinics = $bucketClinics[$bucketId];
 
             //sort by value size, so big parties are more likely to get assigned
-            arsort($members);
-            $memberIds = array_keys($members);
+            arsort($clinics);
+            $clinicIds = array_keys($clinics);
 
-            //chose member inside threshold range
+            //chose clinic inside threshold range
             $currentSize = 0;
-            $chosenMember = $memberIds[0];
-            foreach ($memberIds as $memberId) {
+            $chosenClinic = $clinicIds[0];
+            foreach ($clinicIds as $clinicId) {
                 if ($currentSize > $currentStep) {
-                    //take member from last iteration
+                    //take clinic from last iteration
                     break;
                 }
 
-                $chosenMember = $memberId;
-                $currentSize += $members[$memberId];
+                $chosenClinic = $clinicId;
+                $currentSize += $clinics[$clinicId];
             }
 
             //preserve result
-            $partyBucketAssignments[$chosenMember] += 1;
+            $partyBucketAssignments[$chosenClinic] += 1;
 
             //increase threshold
             $currentStep += $step;
@@ -313,12 +313,12 @@ class EventGenerationService implements EventGenerationServiceInterface
     {
         $targets = [];
         $currentId = 1;
-        foreach ($eventGeneration->getFrontendUsers() as $frontendUser) {
-            $targets[$currentId] = EventTarget::fromFrontendUser($frontendUser);
+        foreach ($eventGeneration->getDoctors() as $doctor) {
+            $targets[$currentId] = EventTarget::fromDoctor($doctor);
             $currentId++;
         }
-        foreach ($eventGeneration->getMembers() as $member) {
-            $targets[$currentId] = EventTarget::fromMember($member);
+        foreach ($eventGeneration->getClinics() as $clinic) {
+            $targets[$currentId] = EventTarget::fromClinic($clinic);
             $currentId++;
         }
         return $targets;
@@ -353,7 +353,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param EventTarget[] $eventTargets
      * @return array (int => float)
      */
-    private function getMemberRelativeSizeArray(array $eventTargets)
+    private function getClinicRelativeSizeArray(array $eventTargets)
     {
         $result = [];
         foreach ($eventTargets as $eventTarget) {
@@ -377,7 +377,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $limit = min(1000, $limit);
 
         $end = $eventGeneration->getStartDateTime();
-        $searchModel = new SearchModel();
+        $searchModel = new SearchModel(SearchModel::NONE);
         $searchModel->setStartDateTime(((new \DateTime())->setTimestamp(0)));
         $searchModel->setEndDateTime($end);
         $searchModel->setMaxResults($limit);
@@ -412,10 +412,10 @@ class EventGenerationService implements EventGenerationServiceInterface
         return $result;
     }
 
-    /** @var EventTarget[] $eventTargetFrontendUserCache */
-    private $eventTargetFrontendUserCache = null;
-    /** @var EventTarget[] $eventTargetMemberCache */
-    private $eventTargetMemberCache = null;
+    /** @var EventTarget[] $eventTargetDoctorCache */
+    private $eventTargetDoctorCache = null;
+    /** @var EventTarget[] $eventTargetClinicCache */
+    private $eventTargetClinicCache = null;
 
     /**
      * @param Event $event
@@ -424,30 +424,30 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     private function getEventTargetOfEvent(Event $event, array $eventTargets)
     {
-        if ($this->eventTargetFrontendUserCache == null) {
-            $this->eventTargetFrontendUserCache = [];
-            $this->eventTargetMemberCache = [];
+        if ($this->eventTargetDoctorCache == null) {
+            $this->eventTargetDoctorCache = [];
+            $this->eventTargetClinicCache = [];
             foreach ($eventTargets as $eventTarget) {
-                if ($eventTarget->getFrontendUser() != null) {
-                    $this->eventTargetFrontendUserCache[$eventTarget->getFrontendUser()->getId()] = $eventTarget;
-                } elseif ($eventTarget->getMember() != null) {
-                    $this->eventTargetMemberCache[$eventTarget->getMember()->getId()] = $eventTarget;
+                if ($eventTarget->getDoctor() != null) {
+                    $this->eventTargetDoctorCache[$eventTarget->getDoctor()->getId()] = $eventTarget;
+                } elseif ($eventTarget->getClinic() != null) {
+                    $this->eventTargetClinicCache[$eventTarget->getClinic()->getId()] = $eventTarget;
                 }
             }
         }
 
-        $members = $this->eventTargetMemberCache;
-        $frontendUsers = $this->eventTargetFrontendUserCache;
+        $clinics = $this->eventTargetClinicCache;
+        $doctors = $this->eventTargetDoctorCache;
 
-        if ($event->getFrontendUser() != null) {
-            if (isset($frontendUsers[$event->getFrontendUser()->getId()])) {
-                return $frontendUsers[$event->getFrontendUser()->getId()];
+        if ($event->getDoctor() != null) {
+            if (isset($doctors[$event->getDoctor()->getId()])) {
+                return $doctors[$event->getDoctor()->getId()];
             }
         }
 
-        if ($event->getMember() != null) {
-            if (isset($members[$event->getMember()->getId()])) {
-                return $members[$event->getMember()->getId()];
+        if ($event->getClinic() != null) {
+            if (isset($clinics[$event->getClinic()->getId()])) {
+                return $clinics[$event->getClinic()->getId()];
             }
         }
 
@@ -478,7 +478,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         //get the order the event targets should be applied
-        $queueGenerator = new QueueGenerator($this->getMemberRelativeSizeArray($orderedTargets));
+        $queueGenerator = new QueueGenerator($this->getClinicRelativeSizeArray($orderedTargets));
         if ($eventGeneration->getMindPreviousEvents()) {
             $previousEvents = $this->getPreviousEvents($eventGeneration, count($events), count($targets));
             $warmUpEvents = $this->eventsToWarmupArray($previousEvents, $orderedTargets);
@@ -492,8 +492,8 @@ class EventGenerationService implements EventGenerationServiceInterface
                 if ($target == null) {
                     $nextQueue = $queueGenerator->getNext();
                     $target = $orderedTargets[$nextQueue];
-                    $event->setFrontendUser($target->getFrontendUser());
-                    $event->setMember($target->getMember());
+                    $event->setDoctor($target->getDoctor());
+                    $event->setClinic($target->getClinic());
                 } else {
                     $queueGenerator->forceNext($target->getIdentifier());
                 }

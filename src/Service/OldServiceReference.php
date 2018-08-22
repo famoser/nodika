@@ -17,11 +17,11 @@ class OldServiceReference
      * returns true if successful.
      *
      * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable $clinicAllowedCallable with arguments $startDateTime, $endDateTime, $clinic which returns a boolean if the event can happen
      *
      * @return RoundRobinOutput
      */
-    public function generateRoundRobin(RoundRobinConfiguration $roundRobinConfiguration, $memberAllowedCallable)
+    public function generateRoundRobin(RoundRobinConfiguration $roundRobinConfiguration, $clinicAllowedCallable)
     {
         $generationResult = new GenerationResult(null);
         $generationResult->generationDateTime = new \DateTime();
@@ -31,77 +31,77 @@ class OldServiceReference
 
         $conflictCallable = $this->buildConflictBuffer($roundRobinConfiguration);
 
-        /* @var RRMemberConfiguration[] $members */
-        $members = [];
-        foreach ($roundRobinConfiguration->memberConfigurations as $memberConfiguration) {
-            if ($memberConfiguration->isEnabled) {
-                $members[$memberConfiguration->order] = $memberConfiguration;
+        /* @var RRClinicConfiguration[] $clinics */
+        $clinics = [];
+        foreach ($roundRobinConfiguration->clinicConfigurations as $clinicConfiguration) {
+            if ($clinicConfiguration->isEnabled) {
+                $clinics[$clinicConfiguration->order] = $clinicConfiguration;
             }
         }
         //sorts by key
-        ksort($members);
-        $members = array_values($members);
+        ksort($clinics);
+        $clinics = array_values($clinics);
 
         $assignedEventCount = 0;
         $activeIndex = 0;
-        $totalMembers = count($members);
-        /* @var RRMemberConfiguration[] $priorityQueue */
+        $totalClinics = count($clinics);
+        /* @var RRClinicConfiguration[] $priorityQueue */
         $priorityQueue = [];
         $currentDate = clone $roundRobinConfiguration->startDateTime;
         while ($currentDate < $roundRobinConfiguration->endDateTime) {
             $endDate = clone $currentDate;
             $endDate = $this->addInterval($endDate, $roundRobinConfiguration);
             //check if something in priority queue
-            /* @var RRMemberConfiguration $matchMember */
-            $matchMember = null;
+            /* @var RRClinicConfiguration $matchClinic */
+            $matchClinic = null;
             if (count($priorityQueue) > 0) {
                 $i = 0;
                 for (; $i < count($priorityQueue); ++$i) {
                     if (
-                        $memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
+                        $clinicAllowedCallable($currentDate, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
                         $conflictCallable($assignedEventCount, $priorityQueue[$i])
                     ) {
-                        $matchMember = $priorityQueue[$i];
+                        $matchClinic = $priorityQueue[$i];
                         break;
                     }
                 }
-                if (null !== $matchMember) {
+                if (null !== $matchClinic) {
                     unset($priorityQueue[$i]);
                     //reset keys in array (0,1,2,3,4,...)
                     $priorityQueue = array_values($priorityQueue);
                 }
             }
-            if (null === $matchMember) {
+            if (null === $matchClinic) {
                 $startIndex = $activeIndex;
                 while (true) {
-                    $myMember = $members[$activeIndex];
-                    if ($memberAllowedCallable($currentDate, $endDate, $assignedEventCount, $myMember) &&
-                        $conflictCallable($assignedEventCount, $myMember)) {
-                        $matchMember = $myMember;
+                    $myClinic = $clinics[$activeIndex];
+                    if ($clinicAllowedCallable($currentDate, $endDate, $assignedEventCount, $myClinic) &&
+                        $conflictCallable($assignedEventCount, $myClinic)) {
+                        $matchClinic = $myClinic;
                         ++$activeIndex;
                         break;
                     }
-                    $priorityQueue[] = $myMember;
+                    $priorityQueue[] = $myClinic;
                     ++$activeIndex;
                     //wrap around index
-                    if ($activeIndex >= $totalMembers) {
+                    if ($activeIndex >= $totalClinics) {
                         $activeIndex = 0;
                     }
                     if ($startIndex === $activeIndex) {
-                        return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER);
+                        return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_CLINIC);
                     }
                 }
                 //wrap around index
-                if ($activeIndex >= $totalMembers) {
+                if ($activeIndex >= $totalClinics) {
                     $activeIndex = 0;
                 }
             }
 
-            if (null === $matchMember) {
-                return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_MEMBER_2);
+            if (null === $matchClinic) {
+                return $this->returnRoundRobinError($roundRobinResult, RoundRobinStatusCode::NO_MATCHING_CLINIC_2);
             }
             $event = new GeneratedEvent();
-            $event->memberId = $matchMember->id;
+            $event->clinicId = $matchClinic->id;
             $event->startDateTime = $currentDate;
             $event->endDateTime = $endDate;
             $generationResult->events[] = $event;
@@ -113,7 +113,7 @@ class OldServiceReference
         //prepare RR result
         $roundRobinResult->endDateTime = $currentDate;
         $roundRobinResult->lengthInHours = $roundRobinConfiguration->lengthInHours;
-        $roundRobinResult->memberConfiguration = $members;
+        $roundRobinResult->clinicConfiguration = $clinics;
         $roundRobinResult->priorityQueue = $priorityQueue;
         $roundRobinResult->activeIndex = $activeIndex;
         $roundRobinResult->generationResult = $generationResult;
@@ -124,7 +124,7 @@ class OldServiceReference
     /**
      * @param BaseConfiguration $configuration
      *
-     * @return \Closure with arguments ($currentEventCount, $memberId)
+     * @return \Closure with arguments ($currentEventCount, $clinicId)
      */
     private function buildConflictBuffer(BaseConfiguration $configuration)
     {
@@ -138,7 +138,7 @@ class OldServiceReference
                     $myArr = [];
                     $myArr['start'] = $eventEntry->startDateTime->getTimestamp() - $conflictPufferInSeconds;
                     $myArr['end'] = $eventEntry->endDateTime->getTimestamp() + $conflictPufferInSeconds;
-                    $myArr['id'] = $eventEntry->memberId;
+                    $myArr['id'] = $eventEntry->clinicId;
                     $eventLineEvents[$eventEntry->startDateTime->getTimestamp()][] = $myArr;
                 }
                 ksort($eventLineEvents);
@@ -198,9 +198,9 @@ class OldServiceReference
             $currentDate = $endDate;
         }
 
-        $myFunc = function ($currentEventCount, $member) use ($conflictBuffer) {
-            /* @var BaseMemberConfiguration $member */
-            return !in_array($member->id, $conflictBuffer[$currentEventCount], true);
+        $myFunc = function ($currentEventCount, $clinic) use ($conflictBuffer) {
+            /* @var BaseClinicConfiguration $clinic */
+            return !in_array($clinic->id, $conflictBuffer[$currentEventCount], true);
         };
 
         return $myFunc;
@@ -243,11 +243,11 @@ class OldServiceReference
      */
     public function setEventTypeDistribution(NodikaConfiguration $nodikaConfiguration)
     {
-        /* @var NMemberConfiguration[] $enabledMembers */
-        $enabledMembers = [];
-        foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
-            if ($memberConfiguration->isEnabled) {
-                $enabledMembers[] = $memberConfiguration;
+        /* @var NClinicConfiguration[] $enabledClinics */
+        $enabledClinics = [];
+        foreach ($nodikaConfiguration->clinicConfigurations as $clinicConfiguration) {
+            if ($clinicConfiguration->isEnabled) {
+                $enabledClinics[] = $clinicConfiguration;
             }
         }
 
@@ -289,24 +289,24 @@ class OldServiceReference
         $totalPoints += $saturdayCount * $eventTypeAssignment->saturday;
         $totalPoints += $weekdayCount * $eventTypeAssignment->weekday;
 
-        $totalMemberPoints = 0;
-        foreach ($enabledMembers as $enabledMember) {
-            $totalMemberPoints += $enabledMember->points;
+        $totalClinicPoints = 0;
+        foreach ($enabledClinics as $enabledClinic) {
+            $totalClinicPoints += $enabledClinic->points;
         }
 
-        $pointsPerMemberPoint = $totalPoints / $totalMemberPoints;
+        $pointsPerClinicPoint = $totalPoints / $totalClinicPoints;
 
         //initialize partiesArray to distribute days with the bucket algorithm
         $partiesArray = [];
         $distributedDaysArray = [];
-        foreach ($enabledMembers as $memberConfiguration) {
-            $partiesArray[$memberConfiguration->id] = $pointsPerMemberPoint * $memberConfiguration->points;
-            $partiesArray[$memberConfiguration->id] += $this->convertFromLuckyScore($totalPoints, $memberConfiguration->luckyScore);
-            $distributedDaysArray[$memberConfiguration->id] = [];
-            $distributedDaysArray[$memberConfiguration->id][0] = 0;
-            $distributedDaysArray[$memberConfiguration->id][1] = 0;
-            $distributedDaysArray[$memberConfiguration->id][2] = 0;
-            $distributedDaysArray[$memberConfiguration->id][3] = 0;
+        foreach ($enabledClinics as $clinicConfiguration) {
+            $partiesArray[$clinicConfiguration->id] = $pointsPerClinicPoint * $clinicConfiguration->points;
+            $partiesArray[$clinicConfiguration->id] += $this->convertFromLuckyScore($totalPoints, $clinicConfiguration->luckyScore);
+            $distributedDaysArray[$clinicConfiguration->id] = [];
+            $distributedDaysArray[$clinicConfiguration->id][0] = 0;
+            $distributedDaysArray[$clinicConfiguration->id][1] = 0;
+            $distributedDaysArray[$clinicConfiguration->id][2] = 0;
+            $distributedDaysArray[$clinicConfiguration->id][3] = 0;
         }
 
         //distribute days to parties
@@ -316,22 +316,22 @@ class OldServiceReference
         $this->distributeDays($partiesArray, $distributedDaysArray, $eventTypeAssignment->weekday, $weekdayCount, 0);
 
         //create configurations
-        $nodikaConfiguration->memberEventTypeDistributions = [];
-        foreach ($enabledMembers as $enabledMember) {
-            $memberEventTypeDistribution = new MemberEventTypeDistribution(null);
-            $member = clone $enabledMember;
-            $member->endScore = round($partiesArray[$enabledMember->id], 2);
-            $member->luckyScore = round($this->convertToLuckyScore($totalPoints, $member->points), 2);
-            $memberEventTypeDistribution->newMemberConfiguration = $member;
+        $nodikaConfiguration->clinicEventTypeDistributions = [];
+        foreach ($enabledClinics as $enabledClinic) {
+            $clinicEventTypeDistribution = new ClinicEventTypeDistribution(null);
+            $clinic = clone $enabledClinic;
+            $clinic->endScore = round($partiesArray[$enabledClinic->id], 2);
+            $clinic->luckyScore = round($this->convertToLuckyScore($totalPoints, $clinic->points), 2);
+            $clinicEventTypeDistribution->newClinicConfiguration = $clinic;
 
             $eventTypeAssignment = new EventTypeConfiguration(null);
-            $eventTypeAssignment->holiday = $distributedDaysArray[$enabledMember->id][3];
-            $eventTypeAssignment->sunday = $distributedDaysArray[$enabledMember->id][2];
-            $eventTypeAssignment->saturday = $distributedDaysArray[$enabledMember->id][1];
-            $eventTypeAssignment->weekday = $distributedDaysArray[$enabledMember->id][0];
-            $memberEventTypeDistribution->eventTypeAssignment = $eventTypeAssignment;
+            $eventTypeAssignment->holiday = $distributedDaysArray[$enabledClinic->id][3];
+            $eventTypeAssignment->sunday = $distributedDaysArray[$enabledClinic->id][2];
+            $eventTypeAssignment->saturday = $distributedDaysArray[$enabledClinic->id][1];
+            $eventTypeAssignment->weekday = $distributedDaysArray[$enabledClinic->id][0];
+            $clinicEventTypeDistribution->eventTypeAssignment = $eventTypeAssignment;
 
-            $nodikaConfiguration->memberEventTypeDistributions[] = $memberEventTypeDistribution;
+            $nodikaConfiguration->clinicEventTypeDistributions[] = $clinicEventTypeDistribution;
         }
 
         return true;
@@ -342,11 +342,11 @@ class OldServiceReference
      * returns true if successful.
      *
      * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable $memberAllowedCallable with arguments $startDateTime, $endDateTime, $member which returns a boolean if the event can happen
+     * @param callable $clinicAllowedCallable with arguments $startDateTime, $endDateTime, $clinic which returns a boolean if the event can happen
      *
      * @return NodikaOutput
      */
-    public function generateNodika(NodikaConfiguration $nodikaConfiguration, $memberAllowedCallable)
+    public function generateNodika(NodikaConfiguration $nodikaConfiguration, $clinicAllowedCallable)
     {
         $generationResult = new GenerationResult(null);
         $generationResult->generationDateTime = new \DateTime();
@@ -356,34 +356,34 @@ class OldServiceReference
 
         $conflictCallable = $this->buildConflictBuffer($nodikaConfiguration);
 
-        /* @var NMemberConfiguration[] $members */
-        $members = [];
-        foreach ($nodikaConfiguration->memberConfigurations as $memberConfiguration) {
-            if ($memberConfiguration->isEnabled) {
-                $members[$memberConfiguration->id] = $memberConfiguration;
+        /* @var NClinicConfiguration[] $clinics */
+        $clinics = [];
+        foreach ($nodikaConfiguration->clinicConfigurations as $clinicConfiguration) {
+            if ($clinicConfiguration->isEnabled) {
+                $clinics[$clinicConfiguration->id] = $clinicConfiguration;
             }
         }
 
         /* @var EventTypeConfiguration[] $eventTypeDistributions */
         $eventTypeDistributions = [];
-        foreach ($nodikaConfiguration->memberEventTypeDistributions as $memberEventTypeDistribution) {
-            $eventTypeDistributions[$memberEventTypeDistribution->newMemberConfiguration->id] = clone $memberEventTypeDistribution->eventTypeAssignment;
+        foreach ($nodikaConfiguration->clinicEventTypeDistributions as $clinicEventTypeDistribution) {
+            $eventTypeDistributions[$clinicEventTypeDistribution->newClinicConfiguration->id] = clone $clinicEventTypeDistribution->eventTypeAssignment;
         }
 
         $totalEvents = 0;
 
-        /* @var IdealQueueMember[] $idealQueueMembers */
-        $idealQueueMembers = [];
-        foreach ($members as $member) {
-            $idealQueueMember = new IdealQueueMember();
-            $idealQueueMember->id = $member->id;
-            $idealQueueMember->totalWeekdayCount = $eventTypeDistributions[$member->id]->weekday;
-            $idealQueueMember->totalSaturdayCount = $eventTypeDistributions[$member->id]->saturday;
-            $idealQueueMember->totalSundayCount = $eventTypeDistributions[$member->id]->sunday;
-            $idealQueueMember->totalHolidayCount = $eventTypeDistributions[$member->id]->holiday;
-            $idealQueueMember->calculateTotalEventCount();
-            $totalEvents += $idealQueueMember->totalEventCount;
-            $idealQueueMembers[$idealQueueMember->id] = $idealQueueMember;
+        /* @var IdealQueueClinic[] $idealQueueClinics */
+        $idealQueueClinics = [];
+        foreach ($clinics as $clinic) {
+            $idealQueueClinic = new IdealQueueClinic();
+            $idealQueueClinic->id = $clinic->id;
+            $idealQueueClinic->totalWeekdayCount = $eventTypeDistributions[$clinic->id]->weekday;
+            $idealQueueClinic->totalSaturdayCount = $eventTypeDistributions[$clinic->id]->saturday;
+            $idealQueueClinic->totalSundayCount = $eventTypeDistributions[$clinic->id]->sunday;
+            $idealQueueClinic->totalHolidayCount = $eventTypeDistributions[$clinic->id]->holiday;
+            $idealQueueClinic->calculateTotalEventCount();
+            $totalEvents += $idealQueueClinic->totalEventCount;
+            $idealQueueClinics[$idealQueueClinic->id] = $idealQueueClinic;
         }
 
         $idealQueue = (array)($nodikaConfiguration->beforeEvents);
@@ -392,14 +392,14 @@ class OldServiceReference
             $idealQueue = array_slice($idealQueue, $totalEvents);
         }
 
-        foreach ($idealQueueMembers as $idealQueueMember) {
+        foreach ($idealQueueClinics as $idealQueueClinic) {
             foreach ($idealQueue as $item) {
-                if ($item === $idealQueueMember->id) {
-                    ++$idealQueueMember->totalEventCount;
-                    ++$idealQueueMember->doneEventCount;
+                if ($item === $idealQueueClinic->id) {
+                    ++$idealQueueClinic->totalEventCount;
+                    ++$idealQueueClinic->doneEventCount;
                 }
             }
-            $idealQueueMember->calculatePartDone();
+            $idealQueueClinic->calculatePartDone();
         }
 
         //cut off beforeEvents again
@@ -408,7 +408,7 @@ class OldServiceReference
             //find lowest part done
             $lowestPartDone = 1;
             $lowestIndex = 0;
-            foreach ($idealQueueMembers as $key => $value) {
+            foreach ($idealQueueClinics as $key => $value) {
                 if ($lowestPartDone > $value->partDone) {
                     $lowestPartDone = $value->partDone;
                     $lowestIndex = $key;
@@ -416,20 +416,20 @@ class OldServiceReference
             }
 
             if (1 === $lowestPartDone) {
-                //all members have delivered all events
+                //all clinics have delivered all events
                 break;
             }
 
-            $myMember = $idealQueueMembers[$lowestIndex];
+            $myClinic = $idealQueueClinics[$lowestIndex];
 
-            $idealQueue[] = $myMember->id;
-            ++$myMember->doneEventCount;
-            $myMember->calculatePartDone();
+            $idealQueue[] = $myClinic->id;
+            ++$myClinic->doneEventCount;
+            $myClinic->calculatePartDone();
         }
 
         //set available to correct value
-        foreach ($idealQueueMembers as $idealQueueMember) {
-            $idealQueueMember->setAllAvailable();
+        foreach ($idealQueueClinics as $idealQueueClinic) {
+            $idealQueueClinic->setAllAvailable();
         }
 
         $holidays = [];
@@ -449,71 +449,71 @@ class OldServiceReference
             $endDate = $this->addInterval($endDate, $nodikaConfiguration);
 
             //create callable for each day type
-            $fitsFunc = function ($memberId) use (&$startDateTime, &$endDate, &$assignedEventCount, &$members, &$memberAllowedCallable, &$conflictCallable) {
+            $fitsFunc = function ($clinicId) use (&$startDateTime, &$endDate, &$assignedEventCount, &$clinics, &$clinicAllowedCallable, &$conflictCallable) {
                 $res =
-                    $memberAllowedCallable($startDateTime, $endDate, $assignedEventCount, $members[$memberId]) &&
-                    $conflictCallable($assignedEventCount, $members[$memberId]);
+                    $clinicAllowedCallable($startDateTime, $endDate, $assignedEventCount, $clinics[$clinicId]) &&
+                    $conflictCallable($assignedEventCount, $clinics[$clinicId]);
 
                 return $res;
             };
             $advancedFitsFunc = null;
             $advancedFitSuccessful = null;
             if (isset($holidays[$day->getTimestamp()])) {
-                $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
-                    /* @var IdealQueueMember $targetMember */
-                    $res = $targetMember->availableHolidayCount > 0 && $fitsFunc($targetMember->id);
+                $advancedFitsFunc = function (&$targetClinic) use (&$fitsFunc) {
+                    /* @var IdealQueueClinic $targetClinic */
+                    $res = $targetClinic->availableHolidayCount > 0 && $fitsFunc($targetClinic->id);
 
                     return $res;
                 };
-                $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
-                    /* @var IdealQueueMember $targetMember */
-                    $targetMember->assignHoliday($queueIndex);
+                $advancedFitSuccessful = function (&$targetClinic) use ($queueIndex) {
+                    /* @var IdealQueueClinic $targetClinic */
+                    $targetClinic->assignHoliday($queueIndex);
                 };
             } else {
                 $dayOfWeek = $day->format('N');
                 if (7 === $dayOfWeek) {
                     //sunday
-                    $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
-                        /* @var IdealQueueMember $targetMember */
-                        $res = $targetMember->availableSundayCount > 0 && $fitsFunc($targetMember->id);
+                    $advancedFitsFunc = function (&$targetClinic) use (&$fitsFunc) {
+                        /* @var IdealQueueClinic $targetClinic */
+                        $res = $targetClinic->availableSundayCount > 0 && $fitsFunc($targetClinic->id);
 
                         return $res;
                     };
-                    $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
-                        /* @var IdealQueueMember $targetMember */
-                        $targetMember->assignSunday($queueIndex);
+                    $advancedFitSuccessful = function (&$targetClinic) use ($queueIndex) {
+                        /* @var IdealQueueClinic $targetClinic */
+                        $targetClinic->assignSunday($queueIndex);
                     };
                 } elseif (6 === $dayOfWeek) {
                     //saturday
-                    $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
-                        /* @var IdealQueueMember $targetMember */
-                        $res = $targetMember->availableSaturdayCount > 0 && $fitsFunc($targetMember->id);
+                    $advancedFitsFunc = function (&$targetClinic) use (&$fitsFunc) {
+                        /* @var IdealQueueClinic $targetClinic */
+                        $res = $targetClinic->availableSaturdayCount > 0 && $fitsFunc($targetClinic->id);
 
                         return $res;
                     };
-                    $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
-                        /* @var IdealQueueMember $targetMember */
-                        $targetMember->assignSaturday($queueIndex);
+                    $advancedFitSuccessful = function (&$targetClinic) use ($queueIndex) {
+                        /* @var IdealQueueClinic $targetClinic */
+                        $targetClinic->assignSaturday($queueIndex);
                     };
                 } else {
                     //weekday
-                    $advancedFitsFunc = function (&$targetMember) use (&$fitsFunc) {
-                        /* @var IdealQueueMember $targetMember */
-                        $res = $targetMember->availableWeekdayCount > 0 && $fitsFunc($targetMember->id);
+                    $advancedFitsFunc = function (&$targetClinic) use (&$fitsFunc) {
+                        /* @var IdealQueueClinic $targetClinic */
+                        $res = $targetClinic->availableWeekdayCount > 0 && $fitsFunc($targetClinic->id);
 
                         return $res;
                     };
-                    $advancedFitSuccessful = function (&$targetMember) use ($queueIndex) {
-                        /* @var IdealQueueMember $targetMember */
-                        $targetMember->assignWeekday($queueIndex);
+                    $advancedFitSuccessful = function (&$targetClinic) use ($queueIndex) {
+                        /* @var IdealQueueClinic $targetClinic */
+                        $targetClinic->assignWeekday($queueIndex);
                     };
                 }
             }
 
-            $targetMember = $idealQueueMembers[$idealQueue[$queueIndex]];
-            if ($advancedFitsFunc($targetMember)) {
-                //the member fits yay; that was easy
-                $advancedFitSuccessful($targetMember);
+            $targetClinic = $idealQueueClinics[$idealQueue[$queueIndex]];
+            if ($advancedFitsFunc($targetClinic)) {
+                //the clinic fits yay; that was easy
+                $advancedFitSuccessful($targetClinic);
             } else {
                 $assignmentFound = false;
                 //the search begins; look n to the right, then continue with n+1
@@ -522,10 +522,10 @@ class OldServiceReference
                     //n to right
                     $newIndex = $queueIndex + $i;
                     if ($newIndex < $totalEvents) {
-                        $targetMember = $idealQueueMembers[$idealQueue[$newIndex]];
-                        if ($advancedFitsFunc($targetMember)) {
-                            //the member fits!
-                            $advancedFitSuccessful($targetMember);
+                        $targetClinic = $idealQueueClinics[$idealQueue[$newIndex]];
+                        if ($advancedFitsFunc($targetClinic)) {
+                            //the clinic fits!
+                            $advancedFitSuccessful($targetClinic);
                             $assignmentFound = true;
 
                             //now correct the queue
@@ -553,15 +553,15 @@ class OldServiceReference
                     /*
                     $newIndex = $queueIndex - $i;
                     if ($newIndex >= 0) {
-                        $newTargetMember = $idealQueueMembers[$idealQueue[$newIndex]];
-                        if ($advancedFitsFunc($newTargetMember)) {
-                            //the member fits!
+                        $newTargetClinic = $idealQueueClinics[$idealQueue[$newIndex]];
+                        if ($advancedFitsFunc($newTargetClinic)) {
+                            //the clinic fits!
                             //now correct the queue
                             //this is in the past! so we need to do corrections
                             //clear history
                             for ($j = $newIndex; $j < $queueIndex; $j++) {
-                                $myTargetMember = $idealQueueMembers[$idealQueue[$newIndex]];
-                                $myTargetMember->removeAssignments($newIndex);
+                                $myTargetClinic = $idealQueueClinics[$idealQueue[$newIndex]];
+                                $myTargetClinic->removeAssignments($newIndex);
                             }
 
                             //get the id
@@ -580,7 +580,7 @@ class OldServiceReference
                     */
                 }
                 if (!$assignmentFound) {
-                    return $this->returnNodikaError($nodikaOutput, GenerationStatus::NO_ALLOWED_MEMBER_FOR_EVENT);
+                    return $this->returnNodikaError($nodikaOutput, GenerationStatus::NO_ALLOWED_CLINIC_FOR_EVENT);
                 }
             }
 

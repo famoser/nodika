@@ -13,8 +13,8 @@ namespace App\Form\EventGeneration;
 
 use App\Entity\EventGeneration;
 use App\Form\Base\BaseAbstractType;
-use App\Form\EventGenerationFrontendUser\EventGenerationFrontendUserType;
-use App\Form\EventGenerationMember\EventGenerationMemberType;
+use App\Form\EventGenerationTargetDoctor\EventGenerationTargetDoctorType;
+use App\Form\EventGenerationTargetClinic\EventGenerationTargetClinicType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,8 +24,8 @@ class ChooseRecipientsType extends BaseAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $collOptions = ["allow_add" => true, "allow_delete" => true];
-        $builder->add("frontendUsers", CollectionType::class, $collOptions + ["entry_type" => EventGenerationFrontendUserType::class]);
-        $builder->add("members", CollectionType::class, $collOptions + ["entry_type" => EventGenerationMemberType::class]);
+        $builder->add("doctors", CollectionType::class, $collOptions + ["entry_type" => EventGenerationTargetDoctorType::class]);
+        $builder->add("clinics", CollectionType::class, $collOptions + ["entry_type" => EventGenerationTargetClinicType::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

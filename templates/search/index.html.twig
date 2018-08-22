@@ -13,7 +13,7 @@
                 <tr>
                     <th>{{ "start_date_time"|trans({}, "trait_start_end") }}</th>
                     <th>{{ "end_date_time"|trans({}, "trait_start_end") }}</th>
-                    <th>{{ "entity.plural"|trans({}, "entity_member") }}</th>
+                    <th>{{ "entity.plural"|trans({}, "entity_clinic") }}</th>
                     <th>{{ "entity.plural"|trans({}, "entity_frontend_user") }}</th>
                     <th>{{ "entity.plural"|trans({}, "entity_event_tag") }}</th>
                     <th>{{ "is_confirmed"|trans({}, "trait_event") }}</th>
@@ -25,8 +25,8 @@
                     <tr>
                         <td>{{ event.startDateTime|dateTimeFormat }}</td>
                         <td>{{ event.endDateTime|dateTimeFormat }}</td>
-                        <td>{{ event.member|default("") }}</td>
-                        <td>{{ event.frontendUser|default("") }}</td>
+                        <td>{{ event.clinic|default("") }}</td>
+                        <td>{{ event.doctor|default("") }}</td>
                         <td>{{ event.eventTags|join(", ") }}</td>
                         <td>
                             {% if event.confirmed %}

@@ -9,8 +9,8 @@
 namespace App\Controller\Traits;
 
 use App\Entity\Event;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Helper\DateTimeFormatter;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -30,8 +30,8 @@ trait EventControllerTrait
             $row = [];
             $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
             $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-            $row[] = $event->getMember() instanceof Member ? $event->getMember()->getName() : "";
-            $row[] = $event->getFrontendUser() instanceof FrontendUser ? $event->getFrontendUser()->getFullName() : "";
+            $row[] = $event->getClinic() instanceof Clinic ? $event->getClinic()->getName() : "";
+            $row[] = $event->getDoctor() instanceof Doctor ? $event->getDoctor()->getFullName() : "";
             $tags = [];
             foreach ($event->getEventTags() as $eventTag) {
                 $tags[] = $eventTag->getName();
@@ -55,10 +55,10 @@ trait EventControllerTrait
     {
         $start = $translator->trans('start_date_time', [], 'entity_event');
         $end = $translator->trans('end_date_time', [], 'entity_event');
-        $member = $translator->trans('entity.name', [], 'entity_member');
+        $clinic = $translator->trans('entity.name', [], 'entity_clinic');
         $person = $translator->trans('entity.name', [], 'entity_frontend_user');
         $person = $translator->trans('entity.plural', [], 'entity_event_tag');
 
-        return [$start, $end, $member, $person];
+        return [$start, $end, $clinic, $person];
     }
 }

@@ -5,9 +5,9 @@ index:
   choose_events: "Termine auswählen"
   choose_all: "Alle zuweisen"
 
-  assigned_person: 'Zugewiesener Mitarbeiter'
-  no_assigned_person: 'Noch keinem Mitarbeiter zugewiesen'
-  choose_person: 'Mitarbeiter auswählen'
+  assigned_doctor: 'Zugewiesener Mitarbeiter'
+  no_assigned_doctor: 'Noch keinem Mitarbeiter zugewiesen'
+  choose_doctor: 'Mitarbeiter auswählen'
   select_events: 'Termine auswählen, die Sie zuweisen wollen:'
   no_events_can_be_assigned: 'Zurzeit können Sie keine Termine zuweisen'
   assign_events: 'Termine zuweisen'
@@ -16,6 +16,6 @@ index:
   assign_why_desription: 'Zugewiesene Termine können nur vom zugewiesenen Mitarbeiter getauscht werden. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt'
   messages:
     no_events: 'Keine Termine ausgewählt'
-    no_person: 'Kein Mitarbeiter ausgewählt'
+    no_doctor: 'Kein Mitarbeiter ausgewählt'
     assigned: 'Erfolgreich %count% Termine zugewiesen'
   hel: 'assign'

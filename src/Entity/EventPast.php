@@ -34,10 +34,10 @@ class EventPast extends BaseEntity
      * EventPast constructor.
      * @param Event $event
      * @param int $eventChangeType
-     * @param FrontendUser $user
+     * @param Doctor $user
      * @return EventPast
      */
-    public static function create(Event $event, int $eventChangeType, FrontendUser $user)
+    public static function create(Event $event, int $eventChangeType, Doctor $user)
     {
         $eventPast = new static();
         $eventPast->writeValues($event);

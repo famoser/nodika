@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * An Event is a time unit which is assigned to a member or a person.
+ * An Event is a time unit which is assigned to a clinic or a person.
  *
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
  * @ORM\HasLifecycleCallbacks

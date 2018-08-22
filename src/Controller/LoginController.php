@@ -9,7 +9,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseLoginController;
-use App\Entity\FrontendUser;
+use App\Entity\Doctor;
 use App\Form\Traits\User\ChangePasswordType;
 use App\Form\Traits\User\LoginType;
 use App\Form\Traits\User\RecoverType;
@@ -37,7 +37,7 @@ class LoginController extends BaseLoginController
      */
     public function indexAction(Request $request)
     {
-        $user = new FrontendUser();
+        $user = new Doctor();
         $form = $this->createForm(LoginType::class, $user);
         $form->add("form.login", SubmitType::class);
         $this->checkLoginForm($request, $user, $form);
@@ -66,7 +66,7 @@ class LoginController extends BaseLoginController
                 $this->displaySuccess($translator->trans("recover.success.email_sent", [], "login"));
 
                 //check if user exists
-                $exitingUser = $this->getDoctrine()->getRepository(FrontendUser::class)->findOneBy(["email" => $form->getData()["email"]]);
+                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["email" => $form->getData()["email"]]);
                 if (null === $exitingUser) {
                     return $form;
                 }
@@ -101,13 +101,13 @@ class LoginController extends BaseLoginController
      */
     public function resetAction(Request $request, $resetHash, TranslatorInterface $translator)
     {
-        $user = $this->getDoctrine()->getRepository(FrontendUser::class)->findOneBy(["resetHash" => $resetHash]);
+        $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["resetHash" => $resetHash]);
         if (null === $user) {
             return $this->render('login/invalid.html.twig');
         }
 
         $form = $this->handleForm(
-            $this->createForm(ChangePasswordType::class, $user, ["data_class" => FrontendUser::class])
+            $this->createForm(ChangePasswordType::class, $user, ["data_class" => Doctor::class])
                 ->add("form.set_password", SubmitType::class),
             $request,
             function ($form) use ($user, $translator, $request) {
@@ -160,7 +160,7 @@ class LoginController extends BaseLoginController
                 $this->displaySuccess($translator->trans("request_invite.success.email_sent", [], "login"));
 
                 //check if user exists
-                $exitingUser = $this->getDoctrine()->getRepository(FrontendUser::class)->findOneBy(["email" => $form->getData()["email"]]);
+                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["email" => $form->getData()["email"]]);
                 if (null === $exitingUser) {
                     return $form;
                 }

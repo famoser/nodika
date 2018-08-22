@@ -12,8 +12,8 @@
 namespace App\Repository;
 
 use App\Entity\Event;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Model\Event\SearchModel;
 use Doctrine\ORM\EntityRepository;
 
@@ -38,8 +38,8 @@ class EventRepository extends EntityRepository
             ->from('App:Event', 'e')
             ->leftJoin('e.eventTags', 'et')
             ->leftJoin('e.eventPast', 'ep')
-            ->leftJoin('e.member', 'm')
-            ->leftJoin('e.frontendUser', 'f');
+            ->leftJoin('e.clinic', 'm')
+            ->leftJoin('e.doctor', 'f');
 
         if ($searchModel->getStartDateTime() instanceof \DateTime) {
             $qb->andWhere('e.startDateTime > :startDateTime')
@@ -51,14 +51,14 @@ class EventRepository extends EntityRepository
                 ->setParameter('endDateTime', $searchModel->getEndDateTime());
         }
 
-        if ($searchModel->getMember() instanceof Member) {
-            $qb->andWhere('m = :member')
-                ->setParameter('member', $searchModel->getMember());
+        if ($searchModel->getClinic() instanceof Clinic) {
+            $qb->andWhere('m = :clinic')
+                ->setParameter('clinic', $searchModel->getClinic());
         }
 
-        if ($searchModel->getMembers() != null) {
-            $qb->andWhere("m in (:members)")
-                ->setParameter("members", $searchModel->getMembers());
+        if ($searchModel->getClinics() != null) {
+            $qb->andWhere("m in (:clinics)")
+                ->setParameter("clinics", $searchModel->getClinics());
         }
 
         if ($searchModel->getEventTags() != null) {
@@ -66,16 +66,16 @@ class EventRepository extends EntityRepository
                 ->setParameter("eventTags", $searchModel->getEventTags());
         }
 
-        if ($searchModel->getFrontendUser() instanceof FrontendUser) {
-            $qb->andWhere('f = :frontendUser')
-                ->setParameter('frontendUser', $searchModel->getFrontendUser());
+        if ($searchModel->getDoctor() instanceof Doctor) {
+            $qb->andWhere('f = :doctor')
+                ->setParameter('doctor', $searchModel->getDoctor());
         }
 
         if ($searchModel->getIsConfirmed() !== null) {
             if ($searchModel->getIsConfirmed()) {
-                $qb->andWhere("e.confirmDateTime IS NOT NULL AND (e.frontendUser = e.confirmedBy OR e.frontendUser IS NULL)");
+                $qb->andWhere("e.confirmDateTime IS NOT NULL AND (e.doctor = e.confirmedBy OR e.doctor IS NULL)");
             } else {
-                $qb->andWhere("e.confirmDateTime IS NULL OR e.frontendUser != e.confirmedBy");
+                $qb->andWhere("e.confirmDateTime IS NULL OR e.doctor != e.confirmedBy");
             }
         }
 

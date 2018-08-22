@@ -12,7 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use App\Form\FrontendUser\PublicFrontendUserType;
+use App\Form\Doctor\EditAccountType;
 use App\Form\Traits\User\ChangePasswordType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -59,7 +59,7 @@ class AccountController extends BaseFormController
         $arr["change_password_form"] = $form->createView();
 
         $form = $this->handleForm(
-            $this->createForm(PublicFrontendUserType::class, $user)
+            $this->createForm(EditAccountType::class, $user)
                 ->add("form.save", SubmitType::class),
             $request,
             function ($form) use ($user, $translator) {

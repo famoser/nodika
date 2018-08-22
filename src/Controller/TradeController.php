@@ -16,8 +16,8 @@ use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Entity\EventOfferAuthorization;
 use App\Entity\EventOfferEntry;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Entity\Setting;
 use App\Enum\OfferStatus;
 use App\Enum\SignatureStatus;
@@ -59,17 +59,17 @@ class TradeController extends BaseFormController
     {
         //get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
-        $searchModel->setMembers($this->getUser()->getMembers());
+        $searchModel->setClinics($this->getUser()->getClinics());
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
         $apiEvents = [];
         foreach ($events as $event) {
-            if ($event->getFrontendUser() == null || $event->getFrontendUser()->getId() == $this->getUser()->getId()) {
+            if ($event->getDoctor() == null || $event->getDoctor()->getId() == $this->getUser()->getId()) {
                 $apiEvents[] = $event;
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["id", "name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["id", "name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**
@@ -87,12 +87,12 @@ class TradeController extends BaseFormController
 
         $apiEvents = [];
         foreach ($events as $event) {
-            if (!$this->getUser()->getMembers()->contains($event->getMember())) {
+            if (!$this->getUser()->getClinics()->contains($event->getClinic())) {
                 $apiEvents[] = $event;
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "member" => ["id", "name"], "frontendUser" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["id", "name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
     }
 
     /**
@@ -103,20 +103,27 @@ class TradeController extends BaseFormController
      */
     public function apiUsers(SerializerInterface $serializer)
     {
-        $members = $this->getDoctrine()->getRepository(FrontendUser::class)->findBy(["deletedAt" => null], ["familyName" => "ASC", "givenName" => "ASC"]);
-        return new JsonResponse($serializer->serialize($members, "json", ["attributes" => ["id", "fullName", "members" => ["id", "name"]]]), 200, [], true);
+        $clinics = $this->getDoctrine()->getRepository(Doctor::class)->findBy(["deletedAt" => null], ["familyName" => "ASC", "givenName" => "ASC"]);
+        return new JsonResponse($serializer->serialize($clinics, "json", ["attributes" => ["id", "fullName", "clinics" => ["id", "name"]]]), 200, [], true);
     }
 
     /**
-     * @Route("/api/members/{frontendUser}", name="trade_members")
+     * @Route("/api/clinics/{doctor}", name="trade_clinics")
      *
      * @param SerializerInterface $serializer
-     * @param FrontendUser $frontendUser
+     * @param Doctor $doctor
      * @return JsonResponse
      */
-    public function apiMembers(SerializerInterface $serializer, FrontendUser $frontendUser)
+    public function apiClinics(SerializerInterface $serializer, Doctor $doctor)
     {
-        return new JsonResponse($serializer->serialize($frontendUser->getActiveMembers(), "json", ["attributes" => ["id", "name"]]), 200, [], true);
+        $activeClinics = [];
+        foreach ($doctor->getClinics() as $clinic) {
+            if (!$clinic->isDeleted()) {
+                $activeClinics[] = $clinic;
+            }
+        }
+
+        return new JsonResponse($serializer->serialize($activeClinics, "json", ["attributes" => ["id", "name"]]), 200, [], true);
     }
 
     /**
@@ -127,7 +134,7 @@ class TradeController extends BaseFormController
      */
     public function apiUser(SerializerInterface $serializer)
     {
-        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName", "members" => ["id", "name"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName", "clinics" => ["id", "name"]]]), 200, [], true);
     }
 
     /**
@@ -159,7 +166,7 @@ class TradeController extends BaseFormController
     private function constructEventOffer($values)
     {
         //check POST parameters
-        $required = ["my_event_ids", "their_event_ids", "target_member_id", "target_user_id", "source_member_id"];
+        $required = ["my_event_ids", "their_event_ids", "target_clinic_id", "target_user_id", "source_clinic_id"];
         foreach ($required as $item) {
             if (!isset($values[$item])) {
                 return false;
@@ -176,29 +183,29 @@ class TradeController extends BaseFormController
         }
 
         //get targets
-        $targetMember = $this->getDoctrine()->getRepository(Member::class)->find((int)$values["target_member_id"]);
-        $targetFrontendUser = $this->getDoctrine()->getRepository(FrontendUser::class)->find((int)$values["target_user_id"]);
+        $targetClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["target_clinic_id"]);
+        $targetDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int)$values["target_user_id"]);
 
         //ensure both are set now
-        if ($targetFrontendUser == null || $targetMember == null) {
+        if ($targetDoctor == null || $targetClinic == null) {
             return false;
         }
 
         //check both are alive & connected
-        if (!$targetFrontendUser->getMembers()->contains($targetMember) || $targetMember->isDeleted() || $targetFrontendUser->isDeleted()) {
+        if (!$targetDoctor->getClinics()->contains($targetClinic) || $targetClinic->isDeleted() || $targetDoctor->isDeleted()) {
             return false;
         }
 
-        //events must be from same member, and at least one user must be able to authorize the trade
+        //events must be from same clinic, and at least one user must be able to authorize the trade
         foreach ($theirEvents as $event) {
 
-            //ensure member matches
-            if ($targetMember !== $event->getMember()) {
+            //ensure clinic matches
+            if ($targetClinic !== $event->getClinic()) {
                 return false;
             }
 
             //ensure only single frontend user part of trade
-            if ($event->getFrontendUser() !== null && $event->getFrontendUser() !== $targetFrontendUser) {
+            if ($event->getDoctor() !== null && $event->getDoctor() !== $targetDoctor) {
                 return false;
             }
         }
@@ -211,21 +218,21 @@ class TradeController extends BaseFormController
         }
 
         //get source
-        $sourceMember = $this->getDoctrine()->getRepository(Member::class)->find((int)$values["source_member_id"]);
+        $sourceClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["source_clinic_id"]);
         $sourceUser = $this->getUser();
 
         //check both are alive & connected
-        if (!$this->getUser()->getMembers()->contains($sourceMember) || $sourceMember->isDeleted() || $sourceUser->isDeleted()) {
+        if (!$this->getUser()->getClinics()->contains($sourceClinic) || $sourceClinic->isDeleted() || $sourceUser->isDeleted()) {
             return false;
         }
 
         //check events belong to user
         foreach ($myEvents as $myEvent) {
-            if ($myEvent->getMember() !== $sourceMember) {
+            if ($myEvent->getClinic() !== $sourceClinic) {
                 return false;
             }
 
-            if ($myEvent->getFrontendUser() != null && $myEvent->getFrontendUser() !== $sourceUser) {
+            if ($myEvent->getDoctor() != null && $myEvent->getDoctor() !== $sourceUser) {
                 return false;
             }
         }
@@ -241,13 +248,13 @@ class TradeController extends BaseFormController
         $eventOfferAuthorization = new EventOfferAuthorization();
         $eventOfferAuthorization->setEventOffer($eventOffer);
         $eventOfferAuthorization->setSignatureStatus(SignatureStatus::PENDING);
-        $eventOfferAuthorization->setSignedBy($targetFrontendUser);
+        $eventOfferAuthorization->setSignedBy($targetDoctor);
         foreach ($myEvents as $myEvent) {
             $eventOfferEntry = new EventOfferEntry();
             $eventOfferEntry->setEvent($myEvent);
             $eventOfferEntry->setEventOffer($eventOffer);
-            $eventOfferEntry->setTargetMember($targetMember);
-            $eventOfferEntry->setTargetFrontendUser($targetFrontendUser);
+            $eventOfferEntry->setTargetClinic($targetClinic);
+            $eventOfferEntry->setTargetDoctor($targetDoctor);
             $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
         }
 
@@ -260,8 +267,8 @@ class TradeController extends BaseFormController
             $eventOfferEntry = new EventOfferEntry();
             $eventOfferEntry->setEvent($theirEvent);
             $eventOfferEntry->setEventOffer($eventOffer);
-            $eventOfferEntry->setTargetFrontendUser($sourceUser);
-            $eventOfferEntry->setTargetMember($sourceMember);
+            $eventOfferEntry->setTargetDoctor($sourceUser);
+            $eventOfferEntry->setTargetClinic($sourceClinic);
             $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
         }
 

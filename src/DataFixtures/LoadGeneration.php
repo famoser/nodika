@@ -14,10 +14,10 @@ namespace App\DataFixtures;
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
-use App\Entity\EventGenerationMember;
+use App\Entity\EventGenerationTargetClinic;
 use App\Entity\EventPast;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use App\Enum\EventChangeType;
 use App\Enum\EventType;
 use App\Helper\DateTimeFormatter;
@@ -25,7 +25,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadGeneration extends BaseFixture
 {
-    const ORDER = LoadSetting::ORDER + LoadMember::ORDER + LoadFrontendUser::ORDER + LoadEventTag::ORDER;
+    const ORDER = LoadSetting::ORDER + LoadClinic::ORDER + LoadDoctor::ORDER + LoadEventTag::ORDER;
 
     /**
      * Load data fixtures with the passed EntityManager.
@@ -55,17 +55,17 @@ class LoadGeneration extends BaseFixture
             $exception->setEventGeneration($generation);
         }
 
-        $members = $manager->getRepository(Member::class)->findAll();
-        $skipPossibility = count($members);
+        $clinics = $manager->getRepository(Clinic::class)->findAll();
+        $skipPossibility = count($clinics);
 
-        foreach ($members as $member) {
+        foreach ($clinics as $clinic) {
             if (rand(0, $skipPossibility) !== 0) {
-                $target = new EventGenerationMember();
-                $target->setMember($member);
+                $target = new EventGenerationTargetClinic();
+                $target->setClinic($clinic);
                 $target->setEventGeneration($generation);
                 $manager->persist($target);
 
-                $generation->getMembers()->add($target);
+                $generation->getClinics()->add($target);
             }
         }
 
@@ -74,7 +74,7 @@ class LoadGeneration extends BaseFixture
         $manager->flush();
 
         //generate & persist all events
-        $admin = $manager->getRepository(FrontendUser::class)->findOneBy(["isAdministrator" => true]);
+        $admin = $manager->getRepository(Doctor::class)->findOneBy(["isAdministrator" => true]);
         $events = $this->getEventGenerationService()->generate($generation);
         foreach ($events as $event) {
             $eventPast = EventPast::create($event, EventChangeType::GENERATED_BY_ADMIN, $admin);
@@ -85,7 +85,7 @@ class LoadGeneration extends BaseFixture
         //confirm first 10 events
         for ($i = 0; $i < 10; $i++) {
             $event = $events[$i];
-            $event->confirm($event->getMember()->getFrontendUsers()->first());
+            $event->confirm($event->getClinic()->getDoctors()->first());
         }
 
         $manager->flush();

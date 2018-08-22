@@ -11,7 +11,7 @@
 
 namespace App\Controller\Base;
 
-use App\Entity\FrontendUser;
+use App\Entity\Doctor;
 use App\Model\Breadcrumb;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -107,7 +107,7 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @return FrontendUser|null
+     * @return Doctor|null
      */
     protected function getUser()
     {

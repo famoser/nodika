@@ -12,8 +12,8 @@
 namespace App\Model\Event;
 
 use App\Entity\EventTag;
-use App\Entity\FrontendUser;
-use App\Entity\Member;
+use App\Entity\Doctor;
+use App\Entity\Clinic;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class SearchModel
@@ -33,14 +33,14 @@ class SearchModel
     private $endDateTime;
 
     /**
-     * @var Member|null
+     * @var Clinic|null
      */
-    private $member;
+    private $clinic;
 
     /**
-     * @var FrontendUser|null
+     * @var Doctor|null
      */
-    private $frontendUser;
+    private $doctor;
 
     /**
      * @var boolean|null
@@ -53,9 +53,9 @@ class SearchModel
     private $maxResults = 3000;
 
     /**
-     * @var Member[]|ArrayCollection
+     * @var Clinic[]|ArrayCollection
      */
-    private $members;
+    private $clinics;
 
     /**
      * @var EventTag[]|ArrayCollection
@@ -113,35 +113,35 @@ class SearchModel
     }
 
     /**
-     * @return Member|null
+     * @return Clinic|null
      */
-    public function getMember(): ?Member
+    public function getClinic(): ?Clinic
     {
-        return $this->member;
+        return $this->clinic;
     }
 
     /**
-     * @param Member|null $member
+     * @param Clinic|null $clinic
      */
-    public function setMember(?Member $member): void
+    public function setClinic(?Clinic $clinic): void
     {
-        $this->member = $member;
+        $this->clinic = $clinic;
     }
 
     /**
-     * @return FrontendUser|null
+     * @return Doctor|null
      */
-    public function getFrontendUser(): ?FrontendUser
+    public function getDoctor(): ?Doctor
     {
-        return $this->frontendUser;
+        return $this->doctor;
     }
 
     /**
-     * @param FrontendUser|null $frontendUser
+     * @param Doctor|null $doctor
      */
-    public function setFrontendUser(?FrontendUser $frontendUser): void
+    public function setDoctor(?Doctor $doctor): void
     {
-        $this->frontendUser = $frontendUser;
+        $this->doctor = $doctor;
     }
 
     /**
@@ -193,19 +193,19 @@ class SearchModel
     }
 
     /**
-     * @return Member[]|ArrayCollection
+     * @return Clinic[]|ArrayCollection
      */
-    public function getMembers()
+    public function getClinics()
     {
-        return $this->members;
+        return $this->clinics;
     }
 
     /**
-     * @param Member[]|ArrayCollection $members
+     * @param Clinic[]|ArrayCollection $clinics
      */
-    public function setMembers($members): void
+    public function setClinics($clinics): void
     {
-        $this->members = $members;
+        $this->clinics = $clinics;
     }
 
     /**
