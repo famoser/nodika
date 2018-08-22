@@ -11,8 +11,8 @@
 
 namespace App\Form\Clinic;
 
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\Address\AddressType;
 use App\Form\Traits\Communication\CommunicationType;
@@ -28,7 +28,7 @@ class ClinicType extends BaseAbstractType
         $builder->add(
             "doctors",
             EntityType::class,
-            ["class" => Doctor::class, "multiple" => true, "by_reference" => false, "translation_domain" => "entity_frontend_user", "label" => "entity.plural"]
+            ["class" => Doctor::class, "multiple" => true, "by_reference" => false, "translation_domain" => "entity_doctor", "label" => "entity.plural"]
         );
 
         $builder->add("thing", ThingType::class, ["inherit_data" => true]);

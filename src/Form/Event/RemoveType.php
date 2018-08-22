@@ -13,6 +13,6 @@ namespace App\Form\Event;
 
 use App\Form\Generic\RemoveThingType;
 
-class RemoveEventType extends RemoveThingType
+class RemoveType extends RemoveThingType
 {
 }

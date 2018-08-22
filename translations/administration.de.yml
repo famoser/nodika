@@ -2,7 +2,7 @@ index:
   title: 'Administration'
   description: 'Verwalten Sie die Benutzer und Termine'
 
-frontend_users:
+doctors:
   title: 'Benutzerverwaltung'
   description: 'Benutzer erstellen und bearbeiten, Passwörter zusenden und zurücksetzen, ...'
 

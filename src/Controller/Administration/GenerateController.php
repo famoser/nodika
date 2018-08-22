@@ -220,7 +220,7 @@ class GenerateController extends BaseFormController
             ),
             new Breadcrumb(
                 $this->generateUrl("administration_generations"),
-                $this->getTranslator()->trans("frontend_users.title", [], "administration")
+                $this->getTranslator()->trans("doctors.title", [], "administration")
             )
         ];
     }

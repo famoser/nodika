@@ -1,6 +1,50 @@
-{% import "macros/menu.html.twig" as menu_macros %}
-{% import "macros/breadcrumbs.html.twig" as breadcrumb_macros %}
-{% import "macros/flashes.html.twig" as flash_macros %}
+{% macro menu_entry(name, link) %}
+    {% if app.request.requestUri == link %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ link }}">
+                {{ name }}
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+                {{ name }}</a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro dropdown_entry(name, link) %}
+    {% if app.request.requestUri == link %}
+        <a class="dropdown-item active" href="{{ link }}">
+            {{ name }}
+            <span class="sr-only">(current)</span>
+        </a>
+    {% else %}
+        <a class="dropdown-item" href="{{ link }}">
+            {{ name }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
+{% macro menu_icon_entry(icon, link) %}
+    {% if app.request.requestUri == link %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ link }}">
+                <i class="{{ icon }}"></i>
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+                <i class="{{ icon }}"></i>
+            </a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% import _self as own_macros %}
 
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
@@ -31,13 +75,9 @@
     <base href="/" target="_self">
 </head>
 <body>
-<!--[if lte IE 9]>
-<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-    your browser</a> to improve your experience and security.</p>
-<![endif]-->
 
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 <header class="header">
-
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{{ path("index_index") }}">{{ "base.brand"|trans({}, "layout") }}</a>
@@ -47,18 +87,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    {{ menu_macros.menu_entry("index.title"|trans({}, "index"), path("index_index")) }}
+                    {{ own_macros.menu_entry("index.title"|trans({}, "index"), path("index_index")) }}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             {{ "base.events_menu.title"|trans({}, "layout") }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            {{ menu_macros.dropdown_entry("base.events_menu.assign"|trans({}, "layout"), path("assign_index")) }}
-                            {{ menu_macros.dropdown_entry("base.events_menu.trade"|trans({}, "layout"), path("trade_index")) }}
+                            {{ own_macros.dropdown_entry("base.events_menu.assign"|trans({}, "layout"), path("assign_index")) }}
+                            {{ own_macros.dropdown_entry("base.events_menu.trade"|trans({}, "layout"), path("trade_index")) }}
                             <div class="dropdown-divider"></div>
-                            {{ menu_macros.dropdown_entry("base.events_menu.search"|trans({}, "layout"), path("search_index")) }}
-
+                            {{ own_macros.dropdown_entry("base.events_menu.search"|trans({}, "layout"), path("search_index")) }}
                         </div>
                     </li>
                     {% if user is defined and user.administrator %}
@@ -70,19 +109,62 @@
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
-                    {{ menu_macros.menu_icon_entry("fas fa-question", path("help_index")) }}
-                    {{ menu_macros.menu_icon_entry("fas fa-user", path("account_index")) }}
-                    {{ menu_macros.menu_icon_entry("fas fa-sign-out", path("login_logout")) }}
+                    {{ own_macros.menu_icon_entry("fas fa-question", path("help_index")) }}
+                    {{ own_macros.menu_icon_entry("fas fa-user", path("account_index")) }}
+                    {{ own_macros.menu_icon_entry("fas fa-sign-out", path("login_logout")) }}
                 </ul>
             </div>
         </div>
     </nav>
 </header>
+{% endif %}
 
+{% if is_granted('ROLE_ADMIN') %}
+    {# display admin menu in dark theme if inside admin area#}
+{% endif %}
 
 <div class="content-wrapper">
-    {{ flash_macros.display(app.session.flashbag.all()) }}
-    {{ breadcrumb_macros.display(breadcrumbs, app.request, block("title")) }}
+    {% if flashes is defined and flashes|length > 0 %}
+        <div class="container">
+            <div class="row">
+                {% for type, messages in flashes %}
+                    {% for message in messages %}
+                        <div class="col-md-12 alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                            {{ message|raw }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if breadcrumbs|length > 0 %}
+        <div class="container">
+            <div class="row">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        {% for breadcrumb in breadcrumbs %}
+                            {% if breadcrumb.path != app.request.pathinfo %}
+                                <li class="breadcrumb-item">
+                                    <a href="{{ breadcrumb.path }}">
+                                        {{ breadcrumb.name }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="breadcrumb-item active" aria-current="page">
+                            {{ title }}
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    {% endif %}
+
     {% block content %}
 
     {% endblock %}

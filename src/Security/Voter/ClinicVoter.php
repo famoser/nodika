@@ -11,8 +11,8 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 

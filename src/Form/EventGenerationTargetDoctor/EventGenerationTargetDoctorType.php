@@ -11,9 +11,9 @@
 
 namespace App\Form\EventGenerationTargetDoctor;
 
+use App\Entity\Doctor;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationTargetDoctor;
-use App\Entity\Doctor;
 use App\Form\Base\BaseAbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -33,7 +33,7 @@ class EventGenerationTargetDoctorType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'data_class' => EventGenerationTargetDoctor::class,
-            'translation_domain' => 'entity_event_generation_frontend_user'
+            'translation_domain' => 'entity_event_generation_doctor'
         ]);
     }
 }

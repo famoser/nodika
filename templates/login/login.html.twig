@@ -1,7 +1,7 @@
 {% extends "form_content_base.html.twig" %}
 
-{% block title %}{{ "index.title"|trans }}{% endblock %}
-{% block description %}{{ "index.description"|trans }}{% endblock %}
+{% block title %}{{ "login.title"|trans }}{% endblock %}
+{% block description %}{{ "login.description"|trans }}{% endblock %}
 
 {% trans_default_domain "login" %}
 
@@ -14,9 +14,9 @@
 
 {% block form_description %}
     <p>
-        {{ "index.problems"|trans }}<br/>
+        {{ "login.problems_with_login"|trans }}<br/>
         <a href="{{ path("login_recover") }}">{{ "recover.title"|trans }}</a><br/>
-        <a href="{{ path("login_request_invite") }}">{{ "request_invite.title"|trans({}, "login") }}</a><br/>
+        <a href="{{ path("login_request_invite") }}">{{ "request.title"|trans({}, "invite") }}</a><br/>
         <a href="{{ path("contact_index") }}">{{ "index.title"|trans({}, "contact") }}</a><br/>
     </p>
 {% endblock %}

@@ -8,7 +8,7 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseLoginController;
+use App\Controller\Base\BaseFormController;
 use App\Entity\Doctor;
 use App\Form\Traits\User\ChangePasswordType;
 use App\Form\Traits\User\LoginType;
@@ -18,19 +18,49 @@ use App\Model\Breadcrumb;
 use App\Service\Interfaces\EmailServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/login")
  */
-class LoginController extends BaseLoginController
+class LoginController extends BaseFormController
 {
+
+    public static function getSubscribedServices()
+    {
+        return parent::getSubscribedServices() +
+            [
+                'security.token_storage' => TokenStorageInterface::class,
+                'translator' => TranslatorInterface::class
+            ];
+    }
+
     /**
-     * @Route("/", name="login_index")
+     * @param Request $request
+     * @param UserInterface $user
+     */
+    protected function loginUser(Request $request, UserInterface $user)
+    {
+        //login programmatically
+        $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
+        $this->get('security.token_storage')->setToken($token);
+
+        $event = new InteractiveLoginEvent($request, $token);
+        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+    }
+
+    /**
+     * @Route("", name="login")
      *
      * @param Request $request
      * @return Response
@@ -39,10 +69,34 @@ class LoginController extends BaseLoginController
     {
         $user = new Doctor();
         $form = $this->createForm(LoginType::class, $user);
-        $form->add("form.login", SubmitType::class);
-        $this->checkLoginForm($request, $user, $form);
+        $form->add("form.login", SubmitType::class, ["translation_domain" => "login", "label" => "login.do_login"]);
+
+
+        /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
+        $session = $request->getSession();
+
+        $authErrorKey = Security::AUTHENTICATION_ERROR;
+        // get the error if any (works with forward and redirect -- see below)
+        if ($request->attributes->has($authErrorKey)) {
+            $error = $request->attributes->get($authErrorKey);
+        } elseif (null !== $session && $session->has($authErrorKey)) {
+            $error = $session->get($authErrorKey);
+            $session->remove($authErrorKey);
+        } else {
+            $error = null;
+        }
+        if (null !== $error) {
+            $this->displayError($this->getTranslator()->trans('login.danger.login_failed', [], 'login'));
+        }
+
+        // last username entered by the user
+        $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
+        $user->setEmail($lastUsername);
+
+        $form->handleRequest($request);
+
         $arr["form"] = $form->createView();
-        return $this->render('login/index.html.twig', $arr);
+        return $this->render('login/login.html.twig', $arr);
     }
 
     /**
@@ -103,7 +157,8 @@ class LoginController extends BaseLoginController
     {
         $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["resetHash" => $resetHash]);
         if (null === $user) {
-            return $this->render('login/invalid.html.twig');
+            $this->displayError($translator->trans("reset.danger.invalid_hash",[],"login"));
+            return new RedirectResponse($this->generateUrl("login"));
         }
 
         $form = $this->handleForm(
@@ -113,7 +168,7 @@ class LoginController extends BaseLoginController
             function ($form) use ($user, $translator, $request) {
                 //check for valid password
                 if ($user->getPlainPassword() != $user->getRepeatPlainPassword()) {
-                    $this->displayError($translator->trans("reset.error.passwords_do_not_match", [], "login"));
+                    $this->displayError($translator->trans("reset.danger.passwords_do_not_match", [], "login"));
                     return $form;
                 }
 
@@ -190,8 +245,8 @@ class LoginController extends BaseLoginController
     {
         return [
             new Breadcrumb(
-                $this->generateUrl("login_index"),
-                $this->getTranslator()->trans("index.title", [], "login")
+                $this->generateUrl("login"),
+                $this->getTranslator()->trans("login.title", [], "login")
             )
         ];
     }

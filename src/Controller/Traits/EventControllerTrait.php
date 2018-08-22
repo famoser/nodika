@@ -8,9 +8,9 @@
 
 namespace App\Controller\Traits;
 
-use App\Entity\Event;
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
+use App\Entity\Event;
 use App\Helper\DateTimeFormatter;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -56,7 +56,6 @@ trait EventControllerTrait
         $start = $translator->trans('start_date_time', [], 'entity_event');
         $end = $translator->trans('end_date_time', [], 'entity_event');
         $clinic = $translator->trans('entity.name', [], 'entity_clinic');
-        $person = $translator->trans('entity.name', [], 'entity_frontend_user');
         $person = $translator->trans('entity.plural', [], 'entity_event_tag');
 
         return [$start, $end, $clinic, $person];

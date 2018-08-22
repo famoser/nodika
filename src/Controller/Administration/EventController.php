@@ -15,7 +15,7 @@ use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
 use App\Entity\EventPast;
 use App\Enum\EventChangeType;
-use App\Form\Event\RemoveEventType;
+use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -104,7 +104,7 @@ class EventController extends BaseFormController
     public function removeAction(Request $request, Event $event)
     {
         $myForm = $this->handleForm(
-            $this->createForm(RemoveEventType::class, $event),
+            $this->createForm(RemoveType::class, $event),
             $request,
             function () use ($event) {
                 /* @var FormInterface $form */

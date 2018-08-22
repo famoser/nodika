@@ -8,10 +8,10 @@
 
 namespace App\EventGeneration;
 
-use App\Entity\EventGenerationTargetDoctor;
-use App\Entity\EventGenerationTargetClinic;
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
+use App\Entity\EventGenerationTargetClinic;
+use App\Entity\EventGenerationTargetDoctor;
 use App\Entity\Traits\EventGenerationTarget;
 
 class EventTarget

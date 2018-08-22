@@ -12,9 +12,9 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventPast;
-use App\Entity\Doctor;
 use App\Entity\Setting;
 use App\Enum\EventChangeType;
 use App\Model\Breadcrumb;
@@ -49,6 +49,7 @@ class AssignController extends BaseFormController
     /**
      * @Route("/api/assignable_users", name="assign_assignable_users")
      *
+     * @param SerializerInterface $serializer
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function apiAssignableUsersAction(SerializerInterface $serializer)

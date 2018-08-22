@@ -31,7 +31,7 @@ class SetPasswordType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'entity_frontend_user',
+            'translation_domain' => 'entity_doctor',
             'data_class' => Doctor::class
         ]);
     }

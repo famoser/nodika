@@ -39,7 +39,7 @@ class EditAccountType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'data_class' => Doctor::class,
-            'translation_domain' => 'entity_frontend_user'
+            'translation_domain' => 'entity_doctor'
         ]);
     }
 }

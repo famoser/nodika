@@ -13,10 +13,10 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
+use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
-use App\Entity\Doctor;
-use App\Entity\Clinic;
 use App\Form\Model\Event\AdvancedSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
@@ -94,7 +94,7 @@ class AdministrationController extends BaseFormController
     }
 
     /**
-     * @Route("/frontend_users", name="administration_frontend_users")
+     * @Route("/doctors", name="administration_doctors")
      *
      * @return Response
      */
@@ -105,8 +105,8 @@ class AdministrationController extends BaseFormController
         /* @var Doctor[] $doctors */
         $doctors = $doctorRepo->findBy(["deletedAt" => null]);
 
-        $arr["frontend_users"] = $doctors;
-        return $this->render('administration/frontend_users.html.twig', $arr);
+        $arr["doctors"] = $doctors;
+        return $this->render('administration/doctors.html.twig', $arr);
     }
 
     /**

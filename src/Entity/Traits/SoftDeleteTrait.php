@@ -41,7 +41,7 @@ trait SoftDeleteTrait
     }
 
     /**
-     * @return ?\DateTime
+     * @return \DateTime|null
      */
     public function getDeletedAt(): ?\DateTime
     {

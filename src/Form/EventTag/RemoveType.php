@@ -13,6 +13,6 @@ namespace App\Form\EventTag;
 
 use App\Form\Generic\RemoveThingType;
 
-class RemoveEventLineType extends RemoveThingType
+class RemoveType extends RemoveThingType
 {
 }

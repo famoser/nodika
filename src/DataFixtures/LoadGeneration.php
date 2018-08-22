@@ -12,12 +12,12 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
+use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
 use App\Entity\EventGenerationTargetClinic;
 use App\Entity\EventPast;
-use App\Entity\Doctor;
-use App\Entity\Clinic;
 use App\Enum\EventChangeType;
 use App\Enum\EventType;
 use App\Helper\DateTimeFormatter;

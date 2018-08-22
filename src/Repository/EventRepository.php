@@ -11,9 +11,9 @@
 
 namespace App\Repository;
 
-use App\Entity\Event;
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
+use App\Entity\Event;
 use App\Model\Event\SearchModel;
 use Doctrine\ORM\EntityRepository;
 

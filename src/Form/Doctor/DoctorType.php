@@ -11,8 +11,8 @@
 
 namespace App\Form\Doctor;
 
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\Address\AddressType;
 use App\Form\Traits\Communication\CommunicationType;
@@ -42,7 +42,7 @@ class DoctorType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'data_class' => Doctor::class,
-            'translation_domain' => 'entity_frontend_user'
+            'translation_domain' => 'entity_doctor'
         ]);
     }
 }

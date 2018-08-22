@@ -12,8 +12,6 @@ security:
     providers:
         doctor_provider:
             id: App\Security\DoctorProvider
-        admin_user_provider:
-            id: App\Security\AdminUserProvider
 
     firewalls:
         # disables authentication for assets and the profiler
@@ -27,7 +25,7 @@ security:
             anonymous: ~
             provider: doctor_provider
             form_login:
-                login_path: login_index
+                login_path: login
                 check_path: login_check
                 default_target_path: index_index
                 csrf_token_generator: security.csrf.token_manager
@@ -42,21 +40,6 @@ security:
               lifetime: 604800
               path: /
               always_remember_me: true
-
-        #backend firewall for admins
-        backend:
-            pattern:   ^/backend
-            anonymous: ~
-            provider: admin_user_provider
-            form_login:
-                login_path: backend_login
-                check_path: backend_login_check
-                default_target_path: backend_dashboard_index
-                csrf_token_generator: security.csrf.token_manager
-
-            logout:       true
-            anonymous:    true
-            logout_on_user_change: true
 
     access_control:
         #enable login

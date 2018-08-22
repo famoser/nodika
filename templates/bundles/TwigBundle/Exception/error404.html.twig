@@ -1,7 +1,9 @@
 {% extends 'bundles/TwigBundle/Exception/error.html.twig' %}
 
-{% trans_default_domain "static" %}
+{% trans_default_domain "bundles_TwigBundle_exception" %}
 
 {% block additional_error_info %}
-    <p>{{ "error.404"|trans }}</p>
+    <p class="text-secondary">{{ "index.404"|trans }}</p>
 {% endblock %}
+
+{% block image_class %}image-404-error{% endblock %}

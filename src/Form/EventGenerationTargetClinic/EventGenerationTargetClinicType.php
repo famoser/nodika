@@ -11,9 +11,9 @@
 
 namespace App\Form\EventGenerationTargetClinic;
 
+use App\Entity\Clinic;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationTargetClinic;
-use App\Entity\Clinic;
 use App\Form\Base\BaseAbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;

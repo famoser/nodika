@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @Route("/frontend_users")
+ * @Route("/doctors")
  * @Security("has_role('ROLE_USER')")
  */
 class DoctorController extends BaseFormController
@@ -45,7 +45,7 @@ class DoctorController extends BaseFormController
     }
 
     /**
-     * @Route("/new", name="administration_frontend_user_new")
+     * @Route("/new", name="administration_doctor_new")
      *
      * @param Request $request
      *
@@ -72,11 +72,11 @@ class DoctorController extends BaseFormController
 
         $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/frontend_user/new.html.twig', $arr);
+        return $this->render('administration/doctor/new.html.twig', $arr);
     }
 
     /**
-     * @Route("/{doctor}/edit", name="administration_frontend_user_edit")
+     * @Route("/{doctor}/edit", name="administration_doctor_edit")
      *
      * @param Request $request
      * @param Doctor $doctor
@@ -100,12 +100,12 @@ class DoctorController extends BaseFormController
 
         $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/frontend_user/edit.html.twig', $arr);
+        return $this->render('administration/doctor/edit.html.twig', $arr);
     }
 
     /**
      * disable this route, as removing is not safe
-     * @*Route("/{doctor}/remove", name="administration_frontend_user_remove")
+     * @*Route("/{doctor}/remove", name="administration_doctor_remove")
      *
      * @param Request $request
      * @param Doctor $doctor
@@ -135,11 +135,11 @@ class DoctorController extends BaseFormController
         $arr["can_delete"] = $canDelete;
         $arr['form'] = $myForm->createView();
 
-        return $this->render('administration/frontend_user/remove.html.twig', $arr);
+        return $this->render('administration/doctor/remove.html.twig', $arr);
     }
 
     /**
-     * @Route("/{doctor}/toggle_login_enabled", name="administration_frontend_user_toggle_login_enabled")
+     * @Route("/{doctor}/toggle_login_enabled", name="administration_doctor_toggle_login_enabled")
      *
      * @param Doctor $doctor
      *
@@ -149,7 +149,7 @@ class DoctorController extends BaseFormController
     {
         $doctor->setIsEnabled(!$doctor->isEnabled());
         $this->fastSave($doctor);
-        return $this->redirectToRoute("administration_frontend_users");
+        return $this->redirectToRoute("administration_doctors");
     }
 
     /**
@@ -165,8 +165,8 @@ class DoctorController extends BaseFormController
                 $this->getTranslator()->trans("index.title", [], "administration")
             ),
             new Breadcrumb(
-                $this->generateUrl("administration_frontend_users"),
-                $this->getTranslator()->trans("frontend_users.title", [], "administration")
+                $this->generateUrl("administration_doctors"),
+                $this->getTranslator()->trans("doctors.title", [], "administration")
             )
         ];
     }

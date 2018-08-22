@@ -12,13 +12,12 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
+use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Entity\EventOfferAuthorization;
 use App\Entity\EventOfferEntry;
-use App\Entity\Doctor;
-use App\Entity\Clinic;
-use App\Entity\Setting;
 use App\Enum\OfferStatus;
 use App\Enum\SignatureStatus;
 use App\Model\Event\SearchModel;
@@ -44,7 +43,6 @@ class TradeController extends BaseFormController
      */
     public function indexAction()
     {
-        $repo = $this->getDoctrine()->getRepository('App:EventOffer');
         return $this->render('trade/index.html.twig');
     }
 

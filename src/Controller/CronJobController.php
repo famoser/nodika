@@ -81,9 +81,9 @@ class CronJobController extends BaseDoctrineController
             //send remainders
             foreach ($emailRemainder as $email => $eventCount) {
                 //send email to clinic
-                $subject = $translator->trans('remainder.subject', [], 'email_cronjob');
-                $body = $translator->trans('remainder.message', ['%count%' => $eventCount], 'email_cronjob');
-                $actionText = $translator->trans('remainder.action_text', [], 'email_cronjob');
+                $subject = $translator->trans('remainder.subject', [], 'cron');
+                $body = $translator->trans('remainder.message', ['%count%' => $eventCount], 'cron');
+                $actionText = $translator->trans('remainder.action_text', [], 'cron');
                 $actionLink = $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
                 $emailService->sendActionEmail($email, $subject, $body, $actionText, $actionLink);
             }
@@ -121,16 +121,16 @@ class CronJobController extends BaseDoctrineController
             }
 
             //send email to clinic
-            $subject = $translator->trans('too_late_remainder.subject', [], 'email_cronjob');
+            $subject = $translator->trans('too_late_remainder.subject', [], 'cron');
             $body = $translator->trans(
                 'too_late_remainder.message',
                 [
                     '%event_short%' => $event->toShort(),
                     '%owner%' => $ownerName . " (" . $targetEmail . ")"
                 ],
-                'email_cronjob'
+                'cron'
             );
-            $actionText = $translator->trans('too_late_remainder.action_text', [], 'email_cronjob');
+            $actionText = $translator->trans('too_late_remainder.action_text', [], 'cron');
             $actionLink = $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
             $emailService->sendActionEmail($targetEmail, $subject, $body, $actionText, $actionLink, $adminEmails);
 

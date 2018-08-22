@@ -63,11 +63,10 @@ class ConfirmController extends BaseFormController
     /**
      * @Route("/api/event/{event}", name="confirm_event")
      *
-     * @param SerializerInterface $serializer
+     * @param Event $event
      * @return Response
-     * @throws \Exception
      */
-    public function apiConfirmAction(SerializerInterface $serializer, Event $event)
+    public function apiConfirmAction(Event $event)
     {
         //either assigned to this user or of a clinic the user is part of
         if ($event->getDoctor() != null && $event->getDoctor()->getId() == $this->getUser()->getId() ||

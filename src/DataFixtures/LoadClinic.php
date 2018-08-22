@@ -12,8 +12,8 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadClinic extends BaseFixture

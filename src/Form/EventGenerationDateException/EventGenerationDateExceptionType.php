@@ -11,9 +11,9 @@
 
 namespace App\Form\EventGenerationDateException;
 
+use App\Entity\Clinic;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
-use App\Entity\Clinic;
 use App\Enum\EventType;
 use App\Form\Base\BaseAbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

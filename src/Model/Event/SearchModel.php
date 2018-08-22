@@ -11,9 +11,9 @@
 
 namespace App\Model\Event;
 
-use App\Entity\EventTag;
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
+use App\Entity\EventTag;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class SearchModel

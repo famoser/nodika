@@ -13,8 +13,8 @@ namespace App\Form\EventGeneration;
 
 use App\Entity\EventGeneration;
 use App\Form\Base\BaseAbstractType;
-use App\Form\EventGenerationTargetDoctor\EventGenerationTargetDoctorType;
 use App\Form\EventGenerationTargetClinic\EventGenerationTargetClinicType;
+use App\Form\EventGenerationTargetDoctor\EventGenerationTargetDoctorType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

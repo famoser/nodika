@@ -29,6 +29,8 @@ class AccountController extends BaseFormController
     /**
      * @Route("/", name="account_index")
      *
+     * @param Request $request
+     * @param TranslatorInterface $translator
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request, TranslatorInterface $translator)
@@ -45,13 +47,13 @@ class AccountController extends BaseFormController
                     $user->getPlainPassword() != $user->getRepeatPlainPassword() ||
                     $user->getPlainPassword() == ""
                 ) {
-                    $this->displayError($translator->trans("error.passwords_do_not_match", [], "access"));
+                    $this->displaySuccess($translator->trans("reset.danger.passwords_do_not_match", [], "login"));
                     return $form;
                 }
 
                 $user->setPassword();
                 $this->fastSave($user);
-                $this->displaySuccess($translator->trans("success.password_set", [], "access"));
+                $this->displaySuccess($translator->trans("reset.success.password_set", [], "login"));
                 return $form;
             }
         );

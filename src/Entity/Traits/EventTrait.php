@@ -8,9 +8,9 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\EventGeneration;
-use App\Entity\Doctor;
 use App\Entity\Clinic;
+use App\Entity\Doctor;
+use App\Entity\EventGeneration;
 use App\Enum\EventType;
 use App\Enum\TradeTag;
 use Doctrine\ORM\Mapping as ORM;
