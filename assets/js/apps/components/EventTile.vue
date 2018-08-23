@@ -1,10 +1,10 @@
 <template>
-    <div class="col-md-6">
+    <div>
         <a href="#" v-on:click.prevent="$emit('select', event)" class="card"
-           v-bind:class="{ 'border-primary disabled' : isAssigned, 'disabled' : event.isLoading, 'border-warning' : event.isLoading }">
+           v-bind:class="{ 'border-primary' : isSelected, 'disabled' : event.isLoading || isDisabled, 'border-warning' : isLoading }">
             <div class="card-header">
                 {{ formatDateTime(event.startDateTime) }} - {{ formatDateTime(event.endDateTime) }}
-          </div>
+            </div>
             <div class="card-body">
                 <p>
                     {{ displayDoctor(event.doctor) || $t('event.no_user_assigned') }}<br/>
@@ -25,14 +25,20 @@
                 type: Object,
                 required: true
             },
-            selectedDoctor: {
-                type: Object,
-                required: true
-            }
-        },
-        computed: {
-            isAssigned: function () {
-                return this.alreadyAssigned(this.event);
+            isLoading: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            isDisabled: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            isSelected: {
+                type: Boolean,
+                required: false,
+                default: false
             }
         },
         methods: {
@@ -44,9 +50,6 @@
                     return null;
                 }
                 return user.fullName;
-            },
-            alreadyAssigned: function (event) {
-                return event.doctor != null && event.doctor.id === this.selectedDoctor.id;
             }
         }
     }

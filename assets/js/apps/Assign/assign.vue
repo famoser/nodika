@@ -31,12 +31,18 @@
                             :size="60"
                             :color="'#007bff'"
                     />
-                    <EventList
+                    <EventGrid
                             v-if="!eventsLoading"
-                            v-bind:events="events"
-                            v-bind:selected-doctor="selectedDoctor"
-                            @selected="eventSelected">
-                    </EventList>
+                            :events="events"
+                            :size="6"
+                            :selected-events="doctorEvents"
+                            :loading-events="loadingEvents"
+                            :disabled-events="doctorEvents"
+                            @event-selected="eventSelected">
+                        <template slot="placeholder">
+                            <p>{{ $t("messages.no_events_for_doctor")}}</p>
+                        </template>
+                    </EventGrid>
                 </div>
             </div>
         </div>
@@ -45,7 +51,7 @@
 
 <script>
     import DoctorList from "./components/DoctorList"
-    import EventList from "./components/EventList"
+    import EventGrid from "../components/EventGrid"
     import {AtomSpinner} from 'epic-spinners'
     import axios from "axios"
 
@@ -57,12 +63,13 @@
                 events: [],
                 usersLoading: false,
                 eventsLoading: false,
-                eventsAssigning: false
+                eventsAssigning: false,
+                loadingEvents: []
             }
         },
         components: {
             DoctorList,
-            EventList,
+            EventGrid ,
             AtomSpinner
         },
         methods: {
@@ -73,11 +80,7 @@
                 axios.get("/api/assign/events/" + doctor.id)
                     .then((response) => {
                         this.eventsLoading = false;
-                        const events = response.data;
-                        for (let i = 0; i < events.length; i++) {
-                            events[i].isLoading = false;
-                        }
-                        this.events = events;
+                        this.events = response.data;
                     });
             },
             eventSelected: function (event) {
@@ -85,15 +88,21 @@
                     return
                 }
 
+                this.loadingEvents = [event];
                 event.isLoading = true;
                 axios.get("/api/assign/assign/" + event.id + "/" + this.selectedDoctor.id)
                     .then((response) => {
-                        event.isLoading = false;
+                        this.loadingEvents = [];
                         event.doctor = response.data.doctor;
                     });
             },
             assignAll: function () {
                 this.events.forEach(e => this.eventSelected(e));
+            }
+        },
+        computed: {
+            doctorEvents: function () {
+                return this.events.filter(e => e.doctor.id === this.selectedDoctor.id);
             }
         },
         mounted() {

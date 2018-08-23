@@ -2,138 +2,208 @@
     <div id="trade-app">
         <div class="row">
             <div class="col-md-4">
-                <p class="lead">{{ $t("choose_your_events") }}</p>
-                <OptionEventSelectList v-bind:events="myEvents" v-bind:events-loading="myEventsLoading"
-                                       @none_selected_changed="noMineAssigned"/>
+                <p class="lead">{{ $t("actions.choose_sender_events") }}</p>
+
+                <EventSelect :owner="sender"/>
             </div>
             <div class="col-md-4">
-                <p class="lead">{{ $t("choose_their_events") }}</p>
-                <OptionEventSelectList v-bind:events="theirEvents" v-bind:events-loading="theirEventsLoading"
-                                       @none_selected_changed="noTheirsAssigned"/>
+                <p class="lead">{{ $t("actions.choose_receiver_events") }}</p>
+
+                <EventSelect :owner="receiver"/>
             </div>
             <div class="col-md-4">
-                <p class="lead">{{ $t("your_trade") }}</p>
-                <div v-if="theirSelectedEvents.length > 0 || noTheirs">
-                    <TradePartner v-bind:users="possibleSenders"
-                                  v-bind:users-loading="senderLoading"
-                                  v-bind:events="theirSelectedEvents"
-                                  v-bind:verify-events="mySelectedEvents"
-                                  v-bind:other-state-valid="receiverValid"
-                                  @state_valid="senderValidChanged"/>
+                <div v-if="fullyDefinedOffer">
+                    <p class="warning">
+                        {{ $t("messages.info.not_fully_defined")}}
+                    </p>
                 </div>
-                <div v-if="mySelectedEvents.length > 0 || noMine">
-                    <TradePartner v-bind:users="possibleReceivers"
-                                  v-bind:users-loading="receiverLoading"
-                                  v-bind:events="mySelectedEvents"
-                                  v-bind:verify-events="theirSelectedEvents"
-                                  v-bind:other-state-valid="senderValid"
-                                  @state_valid="receiverValidChanged"/>
+                <div v-else-if="possibleReceiverClinics.length === 0">
+                    <p class="warning">
+                        {{ $t("messages.danger.no_single_responsible")}}
+                    </p>
                 </div>
-                <div v-if="receiverValid && senderValid">
+                <div v-else-if="sender.noneSelected && receiver.noneSelected">
+                    <p class="warning">
+                        {{$t("messages.warning.no_events_selected")}}
+                    </p>
+                </div>
+                <div v-else>
+                    <p class="lead">{{ $t("offer.name") }}</p>
+
+                    <div v-if="!sender.noneSelected">
+                        <p>{{$t("messages.sender_events")}}</p>
+                        <EventGrid v-if="sender.selectedEvents.length > 0"
+                                   :events="sender.selectedEvents"
+                                   :disabled-events="sender.selectedEvents"/>
+                    </div>
+
+                    <div v-if="!receiver.noneSelected">
+                        <p>{{$t("messages.receiver_events")}}</p>
+                        <EventGrid v-if="receiver.selectedEvents.length > 0"
+                                   :events="receiver.selectedEvents"
+                                   :disabled-events="receiver.selectedEvents"/>
+                    </div>
+
+                    <p>{{$t("messages.receiver")}}</p>
+                    <select class="form-control form-control-sm" v-if="possibleReceiverClinics.length > 1"
+                            v-model="receiver.selectedClinic">
+                        <option v-for="option in possibleReceiverClinics" v-bind:value="option">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                    <span v-else class="text-secondary">{{ receiver.selectedClinic.name }}</span>
+                    
+                    <select class="form-control form-control-sm"
+                            v-if="possibleReceiverDoctors.length > 1"
+                            v-model="receiver.selectedDoctor">
+                        <option v-for="option in possibleReceiverDoctors" v-bind:value="option">
+                            {{ option.fullName }}
+                        </option>
+                    </select>
+                    <span v-else class="text-secondary">{{ receiver.selectedDoctor.fullName }}</span>
+
                     <div class="form-group">
-                        <label for="description" class="col-form-label">{{ $t("description")}}</label>
+                        <label for="description" class="col-form-label">{{ $t("offer.description")}}</label>
                         <textarea class="form-control" id="description" v-model="description"></textarea>
                     </div>
                     <button class="btn btn-primary">
-                        {{ $t("create_offer")}}
+                        {{ $t("actions.create_offer")}}
                     </button>
                 </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import EventList from "./components/EventList"
-    import OptionEventSelectList from "./components/OptionalEventSelect"
+    import EventGrid from '../components/EventGrid'
+    import EventSelect from "./components/EventSelect"
     import {AtomSpinner} from 'epic-spinners'
     import axios from "axios"
     import Participant from "./components/Participant";
-    import TradePartner from "./components/TradePartner";
 
     export default {
         data() {
             return {
-                myEvents: [],
-                myEventsLoading: true,
-                noMine: false,
-                theirEvents: [],
-                theirEventsLoading: true,
-                noTheirs: false,
-                possibleSenders: [],
-                selectedSender: null,
-                senderLoading: true,
-                senderClinic: null,
-                senderValid: true,
-                possibleReceivers: [],
-                selectedReceiver: null,
-                receiverLoading: true,
-                receiverValid: true,
+                sender: {
+                    events: [],
+                    selectedEvents: [],
+                    noneSelected: false,
+                    loading: false,
+                    doctor: null
+                },
+                receiver: {
+                    events: [],
+                    selectedEvents: [],
+                    noneSelected: false,
+                    loading: false,
+                    selectedClinic: null,
+                    selectedDoctor: null
+                },
+                clinics: [],
                 description: ""
             }
         },
         components: {
-            TradePartner,
             Participant,
-            EventList,
+            EventSelect,
             AtomSpinner,
-            OptionEventSelectList
-        },
-        methods: {
-            senderValidChanged: function (state) {
-                this.senderValid = state;
-            },
-            receiverValidChanged: function (state) {
-                this.receiverValid = state;
-            },
-            noMineAssigned: function (state) {
-                this.noMine = state
-            },
-            noTheirsAssigned: function (state) {
-                this.noTheirs = state
-            }
+            EventGrid
         },
         computed: {
-            mySelectedEvents: function () {
-                return this.myEvents.filter(e => e.isSelected);
+            possibleReceiverClinics: function () {
+                let res = this.clinics;
+                //check if there is an allowed clinic
+                if (this.receiver.selectedEvents.length === 0) {
+                    if (this.receiver.selectedClinic === null) {
+                        this.receiver.selectedClinic = this.clinics[0];
+                    }
+                    return res;
+                }
+
+                let allowedClinic = this.receiver.selectedEvents[0].clinic;
+
+                //get clinic from clinic list
+                let matchingClinics = this.clinics.filter(c => c.id === allowedClinic.id);
+                if (matchingClinics.length !== 1) {
+                    this.receiver.selectedClinic = null;
+                    return [];
+                }
+                let clinic = matchingClinics[0];
+
+                //check that all events from same clinic
+                if (this.receiver.selectedEvents.filter(e => e.clinic.id !== clinic.id).length > 0) {
+                    this.receiver.selectedClinic = null;
+                    return [];
+                }
+
+                this.receiver.selectedClinic = clinic;
+                return [clinic];
             },
-            theirSelectedEvents: function () {
-                return this.theirEvents.filter(e => e.isSelected);
+            possibleReceiverDoctors: function () {
+                if (this.receiver.selectedClinic == null) {
+                    return [];
+                }
+
+                //check for doctor assigned events
+                let allowedDoctor = null;
+                let invalid = false;
+                this.receiver.selectedEvents.forEach(e => {
+                        if (e.doctor !== null) {
+                            if (allowedDoctor === null) {
+                                allowedDoctor = e.doctor;
+                            } else if (allowedDoctor.id !== e.doctor.id) {
+                                invalid = true;
+                            }
+                        }
+                    }
+                );
+
+                if (invalid) {
+                    return [];
+                }
+
+                if (allowedDoctor != null) {
+                    return [allowedDoctor];
+                }
+
+                return this.receiver.selectedClinic.doctors;
+            },
+            fullyDefinedOffer: function () {
+                return (this.sender.selectedEvents.length === 0 && !this.sender.noneSelected) || (this.receiver.selectedEvents.length === 0 && !this.receiver.noneSelected);
+            }
+        },
+        watch: {
+            possibleReceiverDoctors: function () {
+                if (this.possibleReceiverDoctors.length > 0) {
+                    if (this.receiver.selectedDoctor === null || !this.possibleReceiverDoctors.includes(this.receiver.selectedDoctor)) {
+                        this.receiver.selectedDoctor = this.possibleReceiverDoctors[0];
+                    }
+                }
             }
         },
         mounted() {
-            axios.get("/trade/api/my_events")
+            axios.get("/api/trade/my_events")
                 .then((response) => {
-                    const events = response.data;
-                    for (let i = 0; i < events.length; i++) {
-                        events[i].isSelected = false;
-                    }
-                    this.myEvents = events;
-                    this.myEventsLoading = false;
+                    this.sender.events = response.data;
+                    this.sender.loading = false;
                 });
 
-            axios.get("/trade/api/their_events")
+            axios.get("/api/trade/their_events")
                 .then((response) => {
-                    const events = response.data;
-                    for (let i = 0; i < events.length; i++) {
-                        events[i].isSelected = false;
-                    }
-                    this.theirEvents = events;
-                    this.theirEventsLoading = false;
+                    this.receiver.events = response.data;
+                    this.receiver.loading = false;
                 });
 
-            axios.get("/trade/api/user")
+            axios.get("/api/trade/self")
                 .then((response) => {
-                    const sender = response.data;
-                    this.possibleSenders = [sender];
-                    this.senderLoading = false;
+                    this.sender.doctor = response.data;
                 });
 
-            axios.get("/trade/api/users")
+            axios.get("/api/trade/clinics")
                 .then((response) => {
-                    this.possibleReceivers = response.data;
-                    console.log(this.possibleReceivers);
-                    this.receiverLoading = false;
+                    this.clinics = response.data;
                 });
         },
     }
