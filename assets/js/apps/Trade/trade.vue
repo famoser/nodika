@@ -63,7 +63,7 @@
                 possibleSenders: [],
                 selectedSender: null,
                 senderLoading: true,
-                senderMember: null,
+                senderClinic: null,
                 senderValid: true,
                 possibleReceivers: [],
                 selectedReceiver: null,

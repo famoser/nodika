@@ -17,7 +17,7 @@
             <th>{{ "name"|trans({}, "trait_thing") }}</th>
             <th>{{ "description"|trans({}, "trait_thing") }}</th>
             <th>{{ "email"|trans({}, "trait_communication") }}</th>
-            <th>{{ "entity.plural"|trans({}, "entity_frontend_user") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_doctor") }}</th>
             <th class="minimal-width"></th>
             <th class="minimal-width"></th>
         </tr>
@@ -33,13 +33,13 @@
                 <td>
                     <a class="btn btn-secondary"
                        href="{{ path("administration_clinic_edit", {"clinic" : clinic.id}) }}">
-                        <i class="fas fa-edit"></i>
+                        <i class="fal fa-pencil"></i>
                     </a>
                 </td>
                 <td>
                     <a class="btn btn-secondary"
                        href="{{ path("administration_clinic_remove", {"clinic" : clinic.id}) }}">
-                        <i class="fas fa-trash"></i>
+                        <i class="fal fa-trash"></i>
                     </a>
                 </td>
             </tr>

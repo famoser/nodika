@@ -1,29 +1,29 @@
 <template>
     <div class="row">
-        <EventSelectableListItem
+        <Event
                 v-for="event in events"
                 v-bind:key="event.id"
                 v-bind:event="event"
-                v-bind:selected-frontend-user="selectedFrontendUser"
+                v-bind:selected-doctor="selectedDoctor"
                 @select="selectEvent(event)"
         >
-        </EventSelectableListItem>
+        </Event>
         <div v-if="events.length === 0">
-            <p>{{ $t("no_events")}}</p>
+            <p>{{ $t("messages.no_events_for_doctor")}}</p>
         </div>
     </div>
 </template>
 
 
 <script>
-    import EventSelectableListItem from "./EventSelectableListItem"
+    import Event from "./Event"
 
     export default {
         components: {
-            EventSelectableListItem
+            Event
         },
         props: {
-            selectedFrontendUser: {
+            selectedDoctor: {
                 type: Object,
                 required: true
             },

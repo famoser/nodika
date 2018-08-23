@@ -7,5 +7,14 @@ import {faSortDown} from '@fortawesome/pro-solid-svg-icons/faSortDown'
 //favorite active
 import {faStar} from '@fortawesome/pro-solid-svg-icons/faStar'
 
+// account
+import {faUser} from '@fortawesome/pro-solid-svg-icons/faUser'
+
+// logout
+import {faSignOut} from '@fortawesome/pro-solid-svg-icons/faSignOut'
+
+// event confirmed
+import {faCheck} from '@fortawesome/pro-solid-svg-icons/faCheck'
+
 // add icons
-library.add(faSortUp, faSortDown, faStar);
+library.add(faSortUp, faSortDown, faStar, faUser, faSignOut, faCheck);

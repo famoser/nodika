@@ -20,9 +20,11 @@ use App\Model\Breadcrumb;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/events")
@@ -101,12 +103,13 @@ class EventController extends BaseFormController
      * @param Event $event
      * @return Response
      */
-    public function removeAction(Request $request, Event $event)
+    public function removeAction(Request $request, Event $event, TranslatorInterface $translator)
     {
         $myForm = $this->handleForm(
-            $this->createForm(RemoveType::class, $event),
+            $this->createForm(RemoveType::class, $event)
+                ->add("remove", SubmitType::class, ["translation_domain" => "common_form", "label" => "submit.delete"]),
             $request,
-            function () use ($event) {
+            function () use ($event, $translator) {
                 /* @var FormInterface $form */
                 $event->delete();
                 $eventPast = EventPast::create($event, EventChangeType::REMOVED_BY_ADMIN, $this->getUser());
@@ -114,6 +117,8 @@ class EventController extends BaseFormController
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($eventPast);
                 $manager->persist($event);
+
+                $this->displaySuccess($translator->trans('successful.delete', [], 'common_form'));
 
                 return $this->redirectToRoute("administration_events");
             }

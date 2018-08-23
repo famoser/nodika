@@ -15,15 +15,15 @@
                     {{ selectedUser.fullName }}
                 </span>
 
-                    <span v-if="members.length > 1">
-                    <select v-model="selectedMember">
-                        <option v-for="option in members" v-bind:value="option">
+                    <span v-if="clinics.length > 1">
+                    <select v-model="selectedClinic">
+                        <option v-for="option in clinics" v-bind:value="option">
                             {{ option.name }}
                         </option>
                     </select>
                 </span>
-                    <span class="text-secondary" v-if="members.length === 1 && selectedMember">
-                    {{ selectedMember.name }}
+                    <span class="text-secondary" v-if="clinics.length === 1 && selectedClinic">
+                    {{ selectedClinic.name }}
                 </span>
                 </div>
             </div>
@@ -59,11 +59,11 @@
         },
         data() {
             return {
-                membersLoading: false,
-                allMembers: [],
+                clinicsLoading: false,
+                allClinics: [],
                 stateValid: true,
                 selectedUser: null,
-                selectedMember: null,
+                selectedClinic: null,
                 possibleUsers: []
             }
         },
@@ -92,56 +92,56 @@
         mounted() {
             if (this.users.length > 0) {
                 this.selectedUser = this.users[0];
-                this.refreshMembers();
+                this.refreshClinics();
             } else {
                 this.stateValid = false;
             }
         },
         watch: {
             selectedUser: function () {
-                this.refreshMembers();
+                this.refreshClinics();
             },
             stateValid: function () {
                 this.$emit("state_valid", this.stateValid);
             },
             verifyEvents: function () {
-                this.refreshMembers()
+                this.refreshClinics()
             },
             events: function () {
-                this.refreshMembers()
+                this.refreshClinics()
             }
         },
         computed: {
-            members: function () {
+            clinics: function () {
                 let res;
-                //check if there is an allowed member
+                //check if there is an allowed clinic
                 if (this.verifyEvents.length > 0) {
-                    let allowedMember = this.verifyEvents[0].member;
+                    let allowedClinic = this.verifyEvents[0].clinic;
 
-                    //check if member is contained in memberlist
-                    if (this.allMembers.filter(m => m.id === allowedMember.id).length === 0) {
+                    //check if clinic is contained in cliniclist
+                    if (this.allClinics.filter(m => m.id === allowedClinic.id).length === 0) {
                         this.stateValid = false;
                         return
                     }
 
-                    //check if all events belong to same member
+                    //check if all events belong to same clinic
                     for (let i = 1; i < this.verifyEvents.length; i++) {
-                        if (this.verifyEvents[i].member.id !== allowedMember.id) {
+                        if (this.verifyEvents[i].clinic.id !== allowedClinic.id) {
                             this.stateValid = false;
                             return
                         }
                     }
 
-                    this.selectedMember = allowedMember;
-                    res = [allowedMember];
+                    this.selectedClinic = allowedClinic;
+                    res = [allowedClinic];
                 } else {
-                    this.selectedMember = this.allMembers[0];
-                    res = this.allMembers;
+                    this.selectedClinic = this.allClinics[0];
+                    res = this.allClinics;
                 }
 
                 //set possibleUsers
                 if (res.length > 0) {
-                    this.possibleUsers = this.users.filter(u => res.filter(m => u.members.filter(m2 => m2.id === m.id).length > 0).length > 0);
+                    this.possibleUsers = this.users.filter(u => res.filter(m => u.clinics.filter(m2 => m2.id === m.id).length > 0).length > 0);
                 } else {
                     this.possibleUsers = [];
                 }
@@ -151,13 +151,13 @@
             }
         },
         methods: {
-            refreshMembers: function () {
-                this.membersLoading = true;
-                axios.get("/trade/api/members/" + this.selectedUser.id)
+            refreshClinics: function () {
+                this.clinicsLoading = true;
+                axios.get("/trade/api/clinics/" + this.selectedUser.id)
                     .then((response) => {
-                        this.allMembers = response.data;
+                        this.allClinics = response.data;
 
-                        this.membersLoading = false;
+                        this.clinicsLoading = false;
                         this.stateValid = true;
                     });
             }

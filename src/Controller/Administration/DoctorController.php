@@ -38,7 +38,7 @@ class DoctorController extends BaseFormController
     {
         $existing = $this->getDoctrine()->getRepository(Doctor::class)->findBy(["email" => $user->getEmail()]);
         if (count($existing) > 0) {
-            $this->displayError($translator->trans("error.email_not_unique", [], "trait_user"));
+            $this->displayError($translator->trans("new.danger.email_not_unique", [], "administration_doctor"));
             return false;
         }
         return true;
@@ -86,11 +86,12 @@ class DoctorController extends BaseFormController
      */
     public function editAction(Request $request, Doctor $doctor, TranslatorInterface $translator)
     {
+        $beforeEmail = $doctor->getEmail();
         $myForm = $this->handleUpdateForm(
             $request,
             $doctor,
-            function () use ($doctor, $translator) {
-                return $this->emailNotUsed($doctor, $translator);
+            function () use ($doctor, $translator, $beforeEmail) {
+                return $beforeEmail == $doctor->getEmail() || $this->emailNotUsed($doctor, $translator);
             }
         );
 

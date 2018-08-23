@@ -1,13 +1,12 @@
 export default {
     de: {
         actions: {
-            choose_frontend_user: 'Mitarbeiter auswählen',
+            choose_doctor: 'Mitarbeiter auswählen, dem Termine zugewiesen werden sollen',
             assign_events: 'Termine zuweisen',
             assign_all_events: "alle zuweisen",
         },
         messages: {
-            no_user_assigned: "Keinem Mitarbeiter zugewiesen",
-            no_events: 'Keine Termine zu dieser Auswahl gefunden'
+            no_events_for_doctor: 'Keine Termine gefunden'
         }
     }
 }

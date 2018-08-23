@@ -2,7 +2,7 @@
     <div id="assign-app">
         <div class="row">
             <div class="col-md-4">
-                <p class="lead">{{ $t("choose_frontend_user") }}</p>
+                <p class="lead">{{ $t("actions.choose_doctor") }}</p>
                 <AtomSpinner
                         v-if="usersLoading"
                         :animation-duration="1000"
@@ -10,18 +10,18 @@
                         :color="'#007bff'"
                 />
 
-                <FrontendUserSelectableList
-                        v-bind:frontend-users="frontendUsers"
-                        @selection-changed="frontendUserSelected">
-                </FrontendUserSelectableList>
+                <DoctorList
+                        v-bind:doctors="doctors"
+                        @selection-changed="doctorSelected">
+                </DoctorList>
             </div>
             <div class="col-md-8">
-                <div v-if="selectedFrontendUser != null">
+                <div v-if="selectedDoctor != null">
                     <div class="d-flex justify-content-between">
-                        <p class="lead">{{ $t("assign_events") }}</p>
+                        <p class="lead">{{ $t("actions.assign_events") }}</p>
                         <div>
                             <a href="#" v-on:click.prevent="assignAll" class="btn btn-sm btn-secondary" :class="{'disabled': eventsAssigning}">
-                                {{ $t("assign_all_events") }}
+                                {{ $t("actions.assign_all_events") }}
                             </a>
                         </div>
                     </div>
@@ -31,11 +31,12 @@
                             :size="60"
                             :color="'#007bff'"
                     />
-                    <EventSelectableList
+                    <EventList
+                            v-if="!eventsLoading"
                             v-bind:events="events"
-                            v-bind:selected-frontend-user="selectedFrontendUser"
+                            v-bind:selected-doctor="selectedDoctor"
                             @selected="eventSelected">
-                    </EventSelectableList>
+                    </EventList>
                 </div>
             </div>
         </div>
@@ -43,16 +44,16 @@
 </template>
 
 <script>
-    import FrontendUserSelectableList from "./components/FrontendUserSelectableList"
-    import EventSelectableList from "./components/EventSelectableList"
+    import DoctorList from "./components/DoctorList"
+    import EventList from "./components/EventList"
     import {AtomSpinner} from 'epic-spinners'
     import axios from "axios"
 
     export default {
         data() {
             return {
-                frontendUsers: [],
-                selectedFrontendUser: null,
+                doctors: [],
+                selectedDoctor: null,
                 events: [],
                 usersLoading: false,
                 eventsLoading: false,
@@ -60,16 +61,16 @@
             }
         },
         components: {
-            FrontendUserSelectableList,
-            EventSelectableList,
+            DoctorList,
+            EventList,
             AtomSpinner
         },
         methods: {
-            frontendUserSelected: function (frontendUser) {
-                this.selectedFrontendUser = frontendUser;
+            doctorSelected: function (doctor) {
+                this.selectedDoctor = doctor;
                 this.events = [];
                 this.eventsLoading = true;
-                axios.get("/assign/api/assignable_events/" + frontendUser.id)
+                axios.get("/api/assign/events/" + doctor.id)
                     .then((response) => {
                         this.eventsLoading = false;
                         const events = response.data;
@@ -80,15 +81,15 @@
                     });
             },
             eventSelected: function (event) {
-                if (event.frontendUser != null && event.frontendUser.id === this.selectedFrontendUser.id) {
+                if (event.doctor != null && event.doctor.id === this.selectedDoctor.id) {
                     return
                 }
 
                 event.isLoading = true;
-                axios.get("/assign/api/assign/" + event.id + "/" + this.selectedFrontendUser.id)
+                axios.get("/api/assign/assign/" + event.id + "/" + this.selectedDoctor.id)
                     .then((response) => {
                         event.isLoading = false;
-                        event.frontendUser = response.data.frontendUser;
+                        event.doctor = response.data.doctor;
                     });
             },
             assignAll: function () {
@@ -97,14 +98,14 @@
         },
         mounted() {
             this.usersLoading = true;
-            axios.get("/assign/api/assignable_users")
+            axios.get("/api/assign/doctors")
                 .then((response) => {
                     this.usersLoading = false;
                     const users = response.data;
                     for (let i = 0; i < users.length; i++) {
                         users[i].isSelected = false;
                     }
-                    this.frontendUsers = users;
+                    this.doctors = users;
                 });
         },
     }

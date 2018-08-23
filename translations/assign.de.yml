@@ -1,19 +1,3 @@
 index:
   title: 'Termine zuweisen'
-  description: 'Weisen Sie Termine einem Account zu.'
-  choose_events: "Termine auswählen"
-  choose_all: "Alle zuweisen"
-
-  assigned_doctor: 'Zugewiesener Mitarbeiter'
-  no_assigned_doctor: 'Noch keinem Mitarbeiter zugewiesen'
-  choose_doctor: 'Mitarbeiter auswählen'
-  select_events: 'Termine auswählen, die Sie zuweisen wollen:'
-  no_events_can_be_assigned: 'Zurzeit können Sie keine Termine zuweisen'
-  assign_events: 'Termine zuweisen'
-  assign_events_description: 'Wählen Sie einen Mitarbeiter aus und markieren Sie danach alle Termine, die Sie diesem Mitarbeiter zuweisen wollen. Drücken Sie danach auf "zuweisen", um die Änderung zu bestätigen. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt'
-  assign_why: 'Warum Termine zuweisen?'
-  assign_why_desription: 'Zugewiesene Termine können nur vom zugewiesenen Mitarbeiter getauscht werden. Erinnerungsemails für den spezifischen Termin werden an die vom Mitarbeiter erfasste E-Mail versandt'
-  messages:
-    no_events: 'Keine Termine ausgewählt'
-    no_doctor: 'Kein Mitarbeiter ausgewählt'
-    assigned: 'Erfolgreich %count% Termine zugewiesen'
+  description: 'Weisen Sie Termine einem Mitarbeiter (oder sich selbst) zu.'

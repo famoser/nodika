@@ -6,8 +6,8 @@
         </div>
         <div class="card-body">
             <p>
-                {{ displaydoctor(event.frontendUser) || $t('no_user_assigned') }}<br/>
-                <span class="text-secondary">{{event.member.name}}</span>
+                {{ displaydoctor(event.doctor) || $t('no_user_assigned') }}<br/>
+                <span class="text-secondary">{{event.clinic.name}}</span>
             </p>
         </div>
     </a>
@@ -28,7 +28,7 @@
             formatDateTime: function (date) {
                 return format(date, ["DD.MM.YYYY HH:mm"])
             },
-            displayFrontendUser: function (user) {
+            displayDoctor: function (user) {
                 if (user == null) {
                     return null;
                 }

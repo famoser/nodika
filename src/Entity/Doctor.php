@@ -139,4 +139,8 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     {
         $this->clinics = $clinics;
     }
+    public function __toString()
+    {
+        return $this->getFullName();
+    }
 }

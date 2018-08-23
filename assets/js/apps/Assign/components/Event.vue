@@ -7,8 +7,8 @@
           </div>
             <div class="card-body">
                 <p>
-                    {{ displayFrontendUser(event.frontendUser) || $t('no_user_assigned') }}<br/>
-                    <span class="text-secondary">{{event.member.name}}</span>
+                    {{ displayDoctor(event.doctor) || $t('event.no_user_assigned') }}<br/>
+                    <span class="text-secondary">{{event.clinic.name}}</span>
                 </p>
             </div>
         </a>
@@ -25,7 +25,7 @@
                 type: Object,
                 required: true
             },
-            selectedFrontendUser: {
+            selectedDoctor: {
                 type: Object,
                 required: true
             }
@@ -39,14 +39,14 @@
             formatDateTime: function (date) {
                 return format(date, ["DD.MM.YYYY HH:mm"])
             },
-            displayFrontendUser: function (user) {
+            displayDoctor: function (user) {
                 if (user == null) {
                     return null;
                 }
                 return user.fullName;
             },
             alreadyAssigned: function (event) {
-                return event.frontendUser != null && event.frontendUser.id === this.selectedFrontendUser.id;
+                return event.doctor != null && event.doctor.id === this.selectedDoctor.id;
             }
         }
     }

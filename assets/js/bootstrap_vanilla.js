@@ -6,6 +6,11 @@ window.$ = $;
 require("bootstrap");
 require("bootstrap-multiselect/dist/js/bootstrap-multiselect.js");
 
+// include fontawesome
+import { dom, library } from '@fortawesome/fontawesome-svg-core'
+dom.watch();
+
+
 //register basic usability handles
 $(document).ready(function () {
     //prevent double submit; give user instant feedback

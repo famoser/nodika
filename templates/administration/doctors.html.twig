@@ -1,0 +1,49 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "doctors.title"|trans }}{% endblock %}
+{% block description %}{{ "doctors.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration" %}
+
+{% block single_content %}
+
+    <p>
+        <a class="btn btn-secondary" href="{{ path("administration_doctor_new") }}">
+            {{ "new.title"|trans({}, "administration_doctor") }}
+        </a>
+    </p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ "full_name"|trans({}, "trait_person") }}</th>
+            <th>{{ "email"|trans({}, "trait_user") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_clinic") }}</th>
+            <th>{{ "can_login"|trans({}, "trait_user") }}</th>
+            <th class="minimal-width"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor.fullName }}</td>
+                <td>{{ doctor.email }}</td>
+                <td>{{ doctor.clinics|join(", ") }}</td>
+                <td>
+                    {{ doctor.canLogin|booleanFormat }}
+                    <br/>
+                    <a href="{{ path("administration_doctor_toggle_login_enabled", {"doctor" : doctor.id}) }}">
+                        {{ "toggle_login_enabled.change"|trans({}, "administration_doctor") }}
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-secondary"
+                       href="{{ path("administration_doctor_edit", {"doctor" : doctor.id}) }}">
+                        <i class="fal fa-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

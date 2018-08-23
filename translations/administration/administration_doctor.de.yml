@@ -1,6 +1,8 @@
 new:
   title: 'Neuer Benutzer'
   description: 'Neuer Benutzer erstellen'
+  danger:
+    email_not_unique: 'Diese E-Mail ist bereits vergeben'
 
 edit:
   title: 'Benutzer bearbeiten'

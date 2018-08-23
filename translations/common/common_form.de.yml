@@ -15,5 +15,8 @@ submit:
   confirm: 'bestätigen'
   apply: 'anwenden'
 
+fields:
+  confirm_consequences: 'Ich verstehe, das ich dies nicht rückgängig machen kann'
+
 not_required: '(freiwillig)'
 required: '*'

@@ -6,32 +6,6 @@
 
 {% trans_default_domain "index" %}
 
-{% macro event_row(event, user) %}
-
-    <tr class="{% if event.active %}table-light{% endif %} {% if event.clinic in user.clinics %}bold{% endif %}">
-        <td>
-            {{ event.startDateTime|dateTimeFormat }}
-        </td>
-        <td>
-            {{ event.endDateTime|dateTimeFormat }}
-        </td>
-        <td>
-            {{ event.clinic }}
-        </td>
-        <td>
-            {{ event.doctor }}
-        </td>
-        <td>
-            {% if event.isConfirmed %}
-                <i class="fas fa-check"></i>
-            {% endif %}
-        </td>
-        <td>
-            {{ event.eventTags|join(", ") }}
-        </td>
-    </tr>
-{% endmacro %}
-
 {% macro quick_link(name, description, link) %}
     <div class="card" href="{{ path('assign_index') }}">
         <div class="card-body">
@@ -64,14 +38,35 @@
                                 <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
                                 <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
                                 <th>{{ "entity.name"|trans({}, "entity_clinic") }}</th>
-                                <th>{{ "entity.name"|trans({}, "entity_frontend_user") }}</th>
+                                <th>{{ "entity.name"|trans({}, "entity_doctor") }}</th>
                                 <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
                                 <th>{{ "entity.plural"|trans({}, "entity_event_tag") }}</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for event in events %}
-                                {{ local_macro.event_row(event, user) }}
+                                <tr class="{% if event.active %}table-light{% endif %} {% if event.clinic in user.clinics %}bold{% endif %}">
+                                    <td>
+                                        {{ event.startDateTime|dateTimeFormat }}
+                                    </td>
+                                    <td>
+                                        {{ event.endDateTime|dateTimeFormat }}
+                                    </td>
+                                    <td>
+                                        {{ event.clinic }}
+                                    </td>
+                                    <td>
+                                        {{ event.doctor }}
+                                    </td>
+                                    <td>
+                                        {% if event.isConfirmed %}
+                                            <i class="fas fa-check"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ event.eventTags|join(", ") }}
+                                    </td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>

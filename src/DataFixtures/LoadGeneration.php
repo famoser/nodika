@@ -108,9 +108,9 @@ class LoadGeneration extends BaseFixture
      */
     protected function getRandomInstance()
     {
-        $eventLine = new EventGeneration();
-        $this->fillThing($eventLine);
+        $eventGeneration = new EventGeneration();
+        $this->fillThing($eventGeneration);
 
-        return $eventLine;
+        return $eventGeneration;
     }
 }
