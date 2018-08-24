@@ -1,7 +1,7 @@
 Introduction
 ======
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmangelio%2Fapp.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmangelio%2Fapp?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffamoser%2Fnodika.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffamoser%2Fnodika?ref=badge_shield)
 [![Travis Build Status](https://travis-ci.org/famoser/nodika.svg?branch=master)](https://travis-ci.org/famoser/nodika)
 [![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
 
