@@ -56,14 +56,14 @@ class EventRepository extends EntityRepository
                 ->setParameter('clinic', $searchModel->getClinic());
         }
 
-        if ($searchModel->getClinics() != null) {
-            $qb->andWhere("m in (:clinics)")
-                ->setParameter("clinics", $searchModel->getClinics());
+        if (null !== $searchModel->getClinics()) {
+            $qb->andWhere('m in (:clinics)')
+                ->setParameter('clinics', $searchModel->getClinics());
         }
 
-        if ($searchModel->getEventTags() != null) {
-            $qb->andWhere("et in (:eventTags)")
-                ->setParameter("eventTags", $searchModel->getEventTags());
+        if (null !== $searchModel->getEventTags()) {
+            $qb->andWhere('et in (:eventTags)')
+                ->setParameter('eventTags', $searchModel->getEventTags());
         }
 
         if ($searchModel->getDoctor() instanceof Doctor) {
@@ -71,15 +71,15 @@ class EventRepository extends EntityRepository
                 ->setParameter('doctor', $searchModel->getDoctor());
         }
 
-        if ($searchModel->getIsConfirmed() !== null) {
+        if (null !== $searchModel->getIsConfirmed()) {
             if ($searchModel->getIsConfirmed()) {
-                $qb->andWhere("e.confirmDateTime IS NOT NULL AND (e.doctor = e.confirmedBy OR e.doctor IS NULL)");
+                $qb->andWhere('e.confirmDateTime IS NOT NULL AND (e.doctor = e.confirmedBy OR e.doctor IS NULL)');
             } else {
-                $qb->andWhere("e.confirmDateTime IS NULL OR e.doctor != e.confirmedBy");
+                $qb->andWhere('e.confirmDateTime IS NULL OR e.doctor != e.confirmedBy');
             }
         }
 
-        $qb->orderBy("e.startDateTime", $searchModel->isInvertOrder() ? "DESC" : "ASC");
+        $qb->orderBy('e.startDateTime', $searchModel->isInvertOrder() ? 'DESC' : 'ASC');
         $qb->setMaxResults($searchModel->getMaxResults());
 
         return $qb->getQuery()->getResult();

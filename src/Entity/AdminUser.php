@@ -39,7 +39,7 @@ class AdminUser extends BaseEntity implements AdvancedUserInterface, EquatableIn
     }
 
     /**
-     * check if this is the same user
+     * check if this is the same user.
      *
      * @param UserInterface $user
      *

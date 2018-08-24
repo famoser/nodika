@@ -37,16 +37,16 @@ class LoadGeneration extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $generation = $this->getRandomInstance();
-        $generation->setName("example generation at " . (new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT));
+        $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT));
         $generation->setDifferentiateByEventType(false);
         $generation->setStartDateTime(new \DateTime());
-        $generation->setEndDateTime(new \DateTime("now + 1 year"));
-        $generation->setStartCronExpression("0 8 * * *");
-        $generation->setEndCronExpression("0 8 * * *");
+        $generation->setEndDateTime(new \DateTime('now + 1 year'));
+        $generation->setStartCronExpression('0 8 * * *');
+        $generation->setEndCronExpression('0 8 * * *');
 
         //date exceptions
         $dateExceptions = [
-            [EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY]
+            [EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY],
         ];
         foreach ($dateExceptions as $dateException) {
             $exception = new EventGenerationDateException();
@@ -59,7 +59,7 @@ class LoadGeneration extends BaseFixture
         $skipPossibility = count($clinics);
 
         foreach ($clinics as $clinic) {
-            if (rand(0, $skipPossibility) !== 0) {
+            if (0 !== rand(0, $skipPossibility)) {
                 $target = new EventGenerationTargetClinic();
                 $target->setClinic($clinic);
                 $target->setEventGeneration($generation);
@@ -74,7 +74,7 @@ class LoadGeneration extends BaseFixture
         $manager->flush();
 
         //generate & persist all events
-        $admin = $manager->getRepository(Doctor::class)->findOneBy(["isAdministrator" => true]);
+        $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
         $events = $this->getEventGenerationService()->generate($generation);
         foreach ($events as $event) {
             $eventPast = EventPast::create($event, EventChangeType::GENERATED_BY_ADMIN, $admin);
@@ -83,7 +83,7 @@ class LoadGeneration extends BaseFixture
         }
 
         //confirm first 10 events
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $event = $events[$i];
             $event->confirm($event->getClinic()->getDoctors()->first());
         }

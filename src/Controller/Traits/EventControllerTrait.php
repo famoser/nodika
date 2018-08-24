@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 4/1/18
- * Time: 11:23 AM
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller\Traits;
@@ -17,7 +20,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 trait EventControllerTrait
 {
     /**
-     * @param Event[] $events
+     * @param Event[]             $events
      * @param TranslatorInterface $translator
      *
      * @return string[][]
@@ -30,17 +33,16 @@ trait EventControllerTrait
             $row = [];
             $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
             $row[] = $event->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
-            $row[] = $event->getClinic() instanceof Clinic ? $event->getClinic()->getName() : "";
-            $row[] = $event->getDoctor() instanceof Doctor ? $event->getDoctor()->getFullName() : "";
+            $row[] = $event->getClinic() instanceof Clinic ? $event->getClinic()->getName() : '';
+            $row[] = $event->getDoctor() instanceof Doctor ? $event->getDoctor()->getFullName() : '';
             $tags = [];
             foreach ($event->getEventTags() as $eventTag) {
                 $tags[] = $eventTag->getName();
             }
-            $row[] = implode(",", $tags);
+            $row[] = implode(',', $tags);
             $data[] = $row;
         }
         $data[] = [];
-
 
         return $data;
     }
@@ -50,8 +52,7 @@ trait EventControllerTrait
      *
      * @return string[]
      */
-    private
-    function getEventsHeader(TranslatorInterface $translator)
+    private function getEventsHeader(TranslatorInterface $translator)
     {
         $start = $translator->trans('start_date_time', [], 'entity_event');
         $end = $translator->trans('end_date_time', [], 'entity_event');

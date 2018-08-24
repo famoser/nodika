@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 08/04/2018
- * Time: 13:03
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\EventGeneration;
@@ -21,7 +24,7 @@ class QueueEntry
     private $issuedWeight = 0;
 
     /**
-     * @var int $score
+     * @var int
      */
     private $score = 0;
 
@@ -51,20 +54,20 @@ class QueueEntry
     }
 
     /**
-     * issues the queue entry
+     * issues the queue entry.
      */
     public function issue(): void
     {
-        $this->issued++;
+        ++$this->issued;
         $this->score -= $this->issuedWeight;
     }
 
     /**
-     * issues the queue entry
+     * issues the queue entry.
      */
     public function increment(): void
     {
-        $this->issued++;
+        ++$this->issued;
         $this->score += $this->incrementWeight;
     }
 

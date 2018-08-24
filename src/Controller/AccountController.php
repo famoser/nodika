@@ -14,7 +14,6 @@ namespace App\Controller;
 use App\Controller\Base\BaseFormController;
 use App\Form\Doctor\EditAccountType;
 use App\Form\Traits\User\ChangePasswordType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,50 +27,53 @@ class AccountController extends BaseFormController
     /**
      * @Route("/", name="account_index")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request, TranslatorInterface $translator)
     {
         $user = $this->getUser();
-        $arr["user"] = $user;
+        $arr['user'] = $user;
 
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user)
-                ->add("form.change_password", SubmitType::class, ["translation_domain" => "account", "label" => "index.change_password"]),
+                ->add('form.change_password', SubmitType::class, ['translation_domain' => 'account', 'label' => 'index.change_password']),
             $request,
             function ($form) use ($user, $translator) {
                 if (
-                    $user->getPlainPassword() != $user->getRepeatPlainPassword() ||
-                    $user->getPlainPassword() == ""
+                    $user->getPlainPassword() !== $user->getRepeatPlainPassword() ||
+                    '' === $user->getPlainPassword()
                 ) {
-                    $this->displaySuccess($translator->trans("reset.danger.passwords_do_not_match", [], "login"));
+                    $this->displaySuccess($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
+
                     return $form;
                 }
 
                 $user->setPassword();
                 $this->fastSave($user);
-                $this->displaySuccess($translator->trans("reset.success.password_set", [], "login"));
+                $this->displaySuccess($translator->trans('reset.success.password_set', [], 'login'));
+
                 return $form;
             }
         );
 
-        $arr["change_password_form"] = $form->createView();
+        $arr['change_password_form'] = $form->createView();
 
         $form = $this->handleForm(
             $this->createForm(EditAccountType::class, $user)
-                ->add("form.save", SubmitType::class, ["translation_domain" => "common_form", "label" => "submit.update"]),
+                ->add('form.save', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.update']),
             $request,
             function ($form) use ($user, $translator) {
-                $this->displaySuccess($translator->trans("successful.update", [], "common_form"));
+                $this->displaySuccess($translator->trans('successful.update', [], 'common_form'));
                 $this->fastSave($user);
+
                 return $form;
             }
         );
 
-        $arr["update_form"] = $form->createView();
-
+        $arr['update_form'] = $form->createView();
 
         return $this->render('account/index.html.twig', $arr);
     }

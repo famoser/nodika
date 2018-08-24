@@ -22,7 +22,6 @@ use App\Enum\OfferStatus;
 use App\Enum\SignatureStatus;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,8 +48,10 @@ class TradeController extends BaseFormController
      * @Route("/api/my_events", name="trade_my_events")
      *
      * @param SerializerInterface $serializer
-     * @return JsonResponse
+     *
      * @throws \Exception
+     *
+     * @return JsonResponse
      */
     public function apiMyEventsAction(SerializerInterface $serializer)
     {
@@ -61,20 +62,22 @@ class TradeController extends BaseFormController
 
         $apiEvents = [];
         foreach ($events as $event) {
-            if ($event->getDoctor() == null || $event->getDoctor()->getId() == $this->getUser()->getId()) {
+            if (null === $event->getDoctor() || $event->getDoctor()->getId() === $this->getUser()->getId()) {
                 $apiEvents[] = $event;
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["id", "name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($apiEvents, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
     }
 
     /**
      * @Route("/api/their_events", name="trade_their_events")
      *
      * @param SerializerInterface $serializer
-     * @return JsonResponse
+     *
      * @throws \Exception
+     *
+     * @return JsonResponse
      */
     public function apiTheirEventsAction(SerializerInterface $serializer)
     {
@@ -89,26 +92,29 @@ class TradeController extends BaseFormController
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["id", "name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($apiEvents, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
     }
 
     /**
      * @Route("/api/users", name="trade_users")
      *
      * @param SerializerInterface $serializer
+     *
      * @return JsonResponse
      */
     public function apiUsers(SerializerInterface $serializer)
     {
-        $clinics = $this->getDoctrine()->getRepository(Doctor::class)->findBy(["deletedAt" => null], ["familyName" => "ASC", "givenName" => "ASC"]);
-        return new JsonResponse($serializer->serialize($clinics, "json", ["attributes" => ["id", "fullName", "clinics" => ["id", "name"]]]), 200, [], true);
+        $clinics = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null], ['familyName' => 'ASC', 'givenName' => 'ASC']);
+
+        return new JsonResponse($serializer->serialize($clinics, 'json', ['attributes' => ['id', 'fullName', 'clinics' => ['id', 'name']]]), 200, [], true);
     }
 
     /**
      * @Route("/api/clinics/{doctor}", name="trade_clinics")
      *
      * @param SerializerInterface $serializer
-     * @param Doctor $doctor
+     * @param Doctor              $doctor
+     *
      * @return JsonResponse
      */
     public function apiClinics(SerializerInterface $serializer, Doctor $doctor)
@@ -120,22 +126,24 @@ class TradeController extends BaseFormController
             }
         }
 
-        return new JsonResponse($serializer->serialize($activeClinics, "json", ["attributes" => ["id", "name"]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($activeClinics, 'json', ['attributes' => ['id', 'name']]), 200, [], true);
     }
 
     /**
      * @Route("/api/user", name="trade_user")
      *
      * @param SerializerInterface $serializer
+     *
      * @return JsonResponse
      */
     public function apiUser(SerializerInterface $serializer)
     {
-        return new JsonResponse($serializer->serialize($this->getUser(), "json", ["attributes" => ["id", "fullName", "clinics" => ["id", "name"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($this->getUser(), 'json', ['attributes' => ['id', 'fullName', 'clinics' => ['id', 'name']]]), 200, [], true);
     }
 
     /**
      * @param int[] $eventIds
+     *
      * @return Event[]|bool
      */
     private function getEventsFromIds($eventIds)
@@ -147,7 +155,7 @@ class TradeController extends BaseFormController
             $events[] = $eventRepo->find($eventId);
         }
 
-        if (in_array(null, $events)) {
+        if (in_array(null, $events, true)) {
             return false;
         }
 
@@ -155,15 +163,16 @@ class TradeController extends BaseFormController
     }
 
     /**
-     * contructs the event offer, returns false if any values are wrong
+     * contructs the event offer, returns false if any values are wrong.
      *
      * @param $values
+     *
      * @return EventOffer|bool
      */
     private function constructEventOffer($values)
     {
         //check POST parameters
-        $required = ["my_event_ids", "their_event_ids", "target_clinic_id", "target_user_id", "source_clinic_id"];
+        $required = ['my_event_ids', 'their_event_ids', 'target_clinic_id', 'target_user_id', 'source_clinic_id'];
         foreach ($required as $item) {
             if (!isset($values[$item])) {
                 return false;
@@ -174,17 +183,17 @@ class TradeController extends BaseFormController
         }
 
         //check events can be traded with chosen target
-        $theirEvents = $this->getEventsFromIds($values["their_event_ids"]);
+        $theirEvents = $this->getEventsFromIds($values['their_event_ids']);
         if (!$theirEvents) {
             return false;
         }
 
         //get targets
-        $targetClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["target_clinic_id"]);
-        $targetDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int)$values["target_user_id"]);
+        $targetClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['target_clinic_id']);
+        $targetDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int) $values['target_user_id']);
 
         //ensure both are set now
-        if ($targetDoctor == null || $targetClinic == null) {
+        if (null === $targetDoctor || null === $targetClinic) {
             return false;
         }
 
@@ -195,27 +204,25 @@ class TradeController extends BaseFormController
 
         //events must be from same clinic, and at least one user must be able to authorize the trade
         foreach ($theirEvents as $event) {
-
             //ensure clinic matches
             if ($targetClinic !== $event->getClinic()) {
                 return false;
             }
 
             //ensure only single frontend user part of trade
-            if ($event->getDoctor() !== null && $event->getDoctor() !== $targetDoctor) {
+            if (null !== $event->getDoctor() && $event->getDoctor() !== $targetDoctor) {
                 return false;
             }
         }
 
-
         //check source can indeed trade all these events
-        $myEvents = $this->getEventsFromIds($values["my_event_ids"]);
+        $myEvents = $this->getEventsFromIds($values['my_event_ids']);
         if (!$myEvents) {
             return false;
         }
 
         //get source
-        $sourceClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["source_clinic_id"]);
+        $sourceClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['source_clinic_id']);
         $sourceUser = $this->getUser();
 
         //check both are alive & connected
@@ -229,7 +236,7 @@ class TradeController extends BaseFormController
                 return false;
             }
 
-            if ($myEvent->getDoctor() != null && $myEvent->getDoctor() !== $sourceUser) {
+            if (null !== $myEvent->getDoctor() && $myEvent->getDoctor() !== $sourceUser) {
                 return false;
             }
         }
@@ -237,8 +244,8 @@ class TradeController extends BaseFormController
         //construct the offer
         $eventOffer = new EventOffer();
         $eventOffer->setStatus(OfferStatus::OPEN);
-        if (isset($values["description"])) {
-            $eventOffer->setMessage($values["description"]);
+        if (isset($values['description'])) {
+            $eventOffer->setMessage($values['description']);
         }
 
         //my events which are new the events of the the receiver of the trade offer
@@ -275,32 +282,36 @@ class TradeController extends BaseFormController
     /**
      * @Route("/api/create", name="trade_possible_receivers")
      *
-     * @param Request $request
-     * @param EmailService $emailService
+     * @param Request             $request
+     * @param EmailService        $emailService
      * @param TranslatorInterface $translator
-     * @return Response
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     *
+     * @return Response
      */
     public function apiCreate(Request $request, EmailService $emailService, TranslatorInterface $translator)
     {
         //try to contruct offer from POST values
         $eventOffer = $this->constructEventOffer($request->request->all());
-        if (!$eventOffer)
-            return new Response("NACK");
+        if (!$eventOffer) {
+            return new Response('NACK');
+        }
 
         //send out all authorization request emails
         foreach ($eventOffer->getAuthorizations() as $authorization) {
-            if ($authorization->getSignatureStatus() == SignatureStatus::PENDING) {
+            if (SignatureStatus::PENDING === $authorization->getSignatureStatus()) {
                 $emailService->sendActionEmail(
                     $authorization->getSignedBy()->getEmail(),
-                    $translator->trans("emails.new_offer.subject", [], "trade"),
-                    $translator->trans("emails.new_offer.message", [], "trade"),
-                    $translator->trans("emails.new_offer.action_text", [], "trade"),
-                    $this->generateUrl("trade_index"));
+                    $translator->trans('emails.new_offer.subject', [], 'trade'),
+                    $translator->trans('emails.new_offer.message', [], 'trade'),
+                    $translator->trans('emails.new_offer.action_text', [], 'trade'),
+                    $this->generateUrl('trade_index'));
             }
         }
-        return new Response("ACK");
+
+        return new Response('ACK');
     }
 }

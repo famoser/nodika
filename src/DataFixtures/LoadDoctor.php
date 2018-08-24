@@ -30,8 +30,8 @@ class LoadDoctor extends BaseFixture
         $manager->flush();
 
         $user = $this->getRandomInstance();
-        $user->setEmail("info@nodika.ch");
-        $user->setPlainPassword("asdf1234");
+        $user->setEmail('info@nodika.ch');
+        $user->setPlainPassword('asdf1234');
         $user->setPassword();
         $user->setIsAdministrator(true);
 

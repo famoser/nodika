@@ -31,16 +31,16 @@ class PublicSearchType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('startEnd', StartEndType::class, ["inherit_data" => true]);
-        $builder->add('clinic', EntityType::class, ["class" => Clinic::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_clinic"]);
-        $builder->add('doctor', EntityType::class, ["class" => Doctor::class, "required" => false, "label" => "entity.name", "translation_domain" => "entity_doctor"]);
+        $builder->add('startEnd', StartEndType::class, ['inherit_data' => true]);
+        $builder->add('clinic', EntityType::class, ['class' => Clinic::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_clinic']);
+        $builder->add('doctor', EntityType::class, ['class' => Doctor::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_doctor']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => SearchModel::class,
-            'translation_domain' => 'model_event_search'
+            'translation_domain' => 'model_event_search',
         ]);
     }
 }

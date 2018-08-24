@@ -32,9 +32,11 @@ class EventPast extends BaseEntity
 
     /**
      * EventPast constructor.
-     * @param Event $event
-     * @param int $eventChangeType
+     *
+     * @param Event  $event
+     * @param int    $eventChangeType
      * @param Doctor $user
+     *
      * @return EventPast
      */
     public static function create(Event $event, int $eventChangeType, Doctor $user)
@@ -44,6 +46,7 @@ class EventPast extends BaseEntity
         $eventPast->event = $event;
         $eventPast->eventChangeType = $eventChangeType;
         $eventPast->registerChangeBy($user);
+
         return $eventPast;
     }
 

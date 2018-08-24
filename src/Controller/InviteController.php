@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 22/02/2018
- * Time: 11:35
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -24,18 +27,20 @@ class InviteController extends BaseDoctrineController
      * @Route("/{guid}", name="invite_index")
      *
      * @param $guid
+     *
      * @return Response
      */
     public function indexAction($guid)
     {
-        $user = $this->getDoctrine()->getRepository(Doctor::class)->findBy(["invitationIdentifier" => $guid]);
+        $user = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['invitationIdentifier' => $guid]);
         if ($user instanceof Doctor) {
             $form = $this->createForm(ChangePasswordType::class);
-            $form->add("set_password", SubmitType::class);
-            $arr["form"] = $form->createView();
+            $form->add('set_password', SubmitType::class);
+            $arr['form'] = $form->createView();
+
             return $this->render('invite/index.html.twig', $arr);
-        } else {
-            return $this->render('invite/invalid.html.twig');
         }
+
+        return $this->render('invite/invalid.html.twig');
     }
 }

@@ -1,23 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 4/9/18
- * Time: 1:36 PM
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service;
 
 class OldServiceReference
 {
-
-
     /**
      * tries to generate the events
      * returns true if successful.
      *
      * @param RoundRobinConfiguration $roundRobinConfiguration
-     * @param callable $clinicAllowedCallable with arguments $startDateTime, $endDateTime, $clinic which returns a boolean if the event can happen
+     * @param callable                $clinicAllowedCallable   with arguments $startDateTime, $endDateTime, $clinic which returns a boolean if the event can happen
      *
      * @return RoundRobinOutput
      */
@@ -218,17 +219,17 @@ class OldServiceReference
         if ($hours >= 12) {
             ++$days;
             $hours = 24 - $hours;
-            $daysAddInterval = new \DateInterval('P' . $days . 'D');
+            $daysAddInterval = new \DateInterval('P'.$days.'D');
             $dateTime->add($daysAddInterval);
-            $hoursRemoveInterval = new \DateInterval('PT' . $hours . 'H');
+            $hoursRemoveInterval = new \DateInterval('PT'.$hours.'H');
             $dateTime->sub($hoursRemoveInterval);
         } else {
             if ($days > 0) {
-                $daysAddInterval = new \DateInterval('P' . $days . 'D');
+                $daysAddInterval = new \DateInterval('P'.$days.'D');
                 $dateTime->add($daysAddInterval);
             }
             if ($hours > 0) {
-                $hoursAddInterval = new \DateInterval('PT' . $hours . 'H');
+                $hoursAddInterval = new \DateInterval('PT'.$hours.'H');
                 $dateTime->sub($hoursAddInterval);
             }
         }
@@ -342,7 +343,7 @@ class OldServiceReference
      * returns true if successful.
      *
      * @param NodikaConfiguration $nodikaConfiguration
-     * @param callable $clinicAllowedCallable with arguments $startDateTime, $endDateTime, $clinic which returns a boolean if the event can happen
+     * @param callable            $clinicAllowedCallable with arguments $startDateTime, $endDateTime, $clinic which returns a boolean if the event can happen
      *
      * @return NodikaOutput
      */
@@ -386,7 +387,7 @@ class OldServiceReference
             $idealQueueClinics[$idealQueueClinic->id] = $idealQueueClinic;
         }
 
-        $idealQueue = (array)($nodikaConfiguration->beforeEvents);
+        $idealQueue = (array) ($nodikaConfiguration->beforeEvents);
         if (count($idealQueue) > $totalEvents) {
             //cut off too large beginning arrays
             $idealQueue = array_slice($idealQueue, $totalEvents);

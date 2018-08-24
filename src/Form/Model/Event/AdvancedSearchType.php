@@ -29,16 +29,16 @@ class AdvancedSearchType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('search', PublicSearchType::class, ["inherit_data" => true, "label" => false]);
-        $builder->add('isConfirmed', CheckboxType::class, ["required" => false]);
-        $builder->add('maxResults', NumberType::class, ["required" => false]);
+        $builder->add('search', PublicSearchType::class, ['inherit_data' => true, 'label' => false]);
+        $builder->add('isConfirmed', CheckboxType::class, ['required' => false]);
+        $builder->add('maxResults', NumberType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => SearchModel::class,
-            'translation_domain' => 'model_event_advanced_search'
+            'translation_domain' => 'model_event_advanced_search',
         ]);
     }
 }

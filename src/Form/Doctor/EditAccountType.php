@@ -23,13 +23,13 @@ class EditAccountType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("person", PersonType::class, ["inherit_data" => true]);
-        $builder->add("communication", CommunicationType::class, ["inherit_data" => true]);
-        $builder->add("address", AddressType::class, ["inherit_data" => true]);
+        $builder->add('person', PersonType::class, ['inherit_data' => true]);
+        $builder->add('communication', CommunicationType::class, ['inherit_data' => true]);
+        $builder->add('address', AddressType::class, ['inherit_data' => true]);
     }
 
     /**
@@ -39,7 +39,7 @@ class EditAccountType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'data_class' => Doctor::class,
-            'translation_domain' => 'entity_doctor'
+            'translation_domain' => 'entity_doctor',
         ]);
     }
 }

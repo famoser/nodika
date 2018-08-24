@@ -48,11 +48,11 @@ class EmailService implements EmailServiceInterface
     /**
      * EmailService constructor.
      *
-     * @param \Swift_Mailer $mailer
+     * @param \Swift_Mailer     $mailer
      * @param RegistryInterface $registry
-     * @param LoggerInterface $logger
-     * @param Environment $twig
-     * @param string $contactEmail
+     * @param LoggerInterface   $logger
+     * @param Environment       $twig
+     * @param string            $contactEmail
      */
     public function __construct(\Swift_Mailer $mailer, RegistryInterface $registry, LoggerInterface $logger, Environment $twig, string $contactEmail)
     {
@@ -65,6 +65,7 @@ class EmailService implements EmailServiceInterface
 
     /**
      * @param Email $email
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -85,7 +86,7 @@ class EmailService implements EmailServiceInterface
 
         $body = $email->getBody();
         if (null !== $email->getActionLink()) {
-            $body .= "\n\n" . $email->getActionText() . ': ' . $email->getActionLink();
+            $body .= "\n\n".$email->getActionText().': '.$email->getActionLink();
         }
         $message->setBody($body, 'text/plain');
 
@@ -106,15 +107,16 @@ class EmailService implements EmailServiceInterface
     }
 
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
+     * @param string   $receiver
+     * @param string   $subject
+     * @param string   $body
      * @param string[] $carbonCopy
      *
-     * @return bool
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     *
+     * @return bool
      */
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = [])
     {
@@ -133,13 +135,14 @@ class EmailService implements EmailServiceInterface
      * @param string $subject
      * @param string $body
      * @param $actionText
-     * @param string $actionLink
+     * @param string   $actionLink
      * @param string[] $carbonCopy
      *
-     * @return bool
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     *
+     * @return bool
      */
     public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = [])
     {
@@ -156,15 +159,16 @@ class EmailService implements EmailServiceInterface
     }
 
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
+     * @param string   $receiver
+     * @param string   $subject
+     * @param string   $body
      * @param string[] $carbonCopy
      *
-     * @return bool
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     *
+     * @return bool
      */
     public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = [])
     {

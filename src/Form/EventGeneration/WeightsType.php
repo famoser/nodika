@@ -23,21 +23,21 @@ class WeightsType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $numOptions = ["scale" => 3];
-        $collOptions = ["allow_add" => true, "allow_delete" => true];
+        $numOptions = ['scale' => 3];
+        $collOptions = ['allow_add' => true, 'allow_delete' => true];
 
-        $builder->add("weekdayWeight", NumberType::class, $numOptions);
-        $builder->add("saturdayWeight", NumberType::class, $numOptions);
-        $builder->add("sundayWeight", NumberType::class, $numOptions);
-        $builder->add("holidayWeight", NumberType::class, $numOptions);
-        $builder->add("dateExceptions", CollectionType::class, $collOptions + ["data_class" => EventGenerationDateExceptionType::class]);
+        $builder->add('weekdayWeight', NumberType::class, $numOptions);
+        $builder->add('saturdayWeight', NumberType::class, $numOptions);
+        $builder->add('sundayWeight', NumberType::class, $numOptions);
+        $builder->add('holidayWeight', NumberType::class, $numOptions);
+        $builder->add('dateExceptions', CollectionType::class, $collOptions + ['data_class' => EventGenerationDateExceptionType::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventGeneration::class,
-            'translation_domain' => 'entity_event_generation'
+            'translation_domain' => 'entity_event_generation',
         ]);
     }
 }

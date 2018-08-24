@@ -24,16 +24,16 @@ class EventGenerationTargetClinicType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("eventGeneration", EntityType::class, ["class" => EventGeneration::class]);
-        $builder->add("clinic", EntityType::class, ["class" => Clinic::class]);
-        $builder->add("weight", NumberType::class);
+        $builder->add('eventGeneration', EntityType::class, ['class' => EventGeneration::class]);
+        $builder->add('clinic', EntityType::class, ['class' => Clinic::class]);
+        $builder->add('weight', NumberType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventGenerationTargetClinic::class,
-            'translation_domain' => 'entity_event_generation_clinic'
+            'translation_domain' => 'entity_event_generation_clinic',
         ]);
     }
 }

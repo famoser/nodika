@@ -12,7 +12,6 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
-use App\Controller\Base\BaseFormController;
 use App\Entity\EventGeneration;
 use App\Form\EventGeneration\BasicDataType;
 use App\Form\EventGeneration\ChooseRecipientsType;
@@ -20,7 +19,6 @@ use App\Form\EventGeneration\SaveType;
 use App\Helper\DateTimeFormatter;
 use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -33,8 +31,9 @@ class GenerateController extends BaseController
     /**
      * @Route("/", name="administration_generate_index")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function indexAction(Request $request, TranslatorInterface $translator)
@@ -42,7 +41,7 @@ class GenerateController extends BaseController
         $now = new \DateTime();
 
         $generation = new EventGeneration();
-        $generation->setName($translator->trans("entity.default_name", ["%date%" => $now->format(DateTimeFormatter::DATE_TIME_FORMAT)], "entity_event_generation"));
+        $generation->setName($translator->trans('entity.default_name', ['%date%' => $now->format(DateTimeFormatter::DATE_TIME_FORMAT)], 'entity_event_generation'));
         $generation->registerChangeBy($this->getUser());
 
         $submitted = false;
@@ -51,27 +50,29 @@ class GenerateController extends BaseController
             $generation,
             function () use (&$submitted) {
                 $submitted = true;
+
                 return true;
             }
         );
 
         if ($submitted) {
-            return $this->redirectToRoute("administration_generate_basic", ["generation" => $generation->getId()]);
+            return $this->redirectToRoute('administration_generate_basic', ['generation' => $generation->getId()]);
         }
 
-        $arr["form"] = $form;
+        $arr['form'] = $form;
 
         $generations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
-        $arr["generations"] = $generations;
+        $arr['generations'] = $generations;
 
         return $this->render('administration/generate/index.html.twig', $arr);
     }
 
     /**
-     * @param Request $request
+     * @param Request         $request
      * @param EventGeneration $generation
      * @param $formClass
      * @param $onAnswerSubmitted
+     *
      * @return array|Response
      */
     private function handleStepForm(Request $request, EventGeneration $generation, $formClass, $onAnswerSubmitted)
@@ -83,6 +84,7 @@ class GenerateController extends BaseController
             function ($form) use (&$saved, $generation) {
                 $this->fastSave($generation);
                 $saved = true;
+
                 return $form;
             }
         );
@@ -91,8 +93,7 @@ class GenerateController extends BaseController
             return $onAnswerSubmitted;
         }
 
-
-        $arr["form"] = $form;
+        $arr['form'] = $form;
 
         return $arr;
     }
@@ -100,8 +101,9 @@ class GenerateController extends BaseController
     /**
      * @Route("/{generation}/basic", name="administration_generate_basic")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param EventGeneration $generation
+     *
      * @return Response
      */
     public function basicAction(Request $request, EventGeneration $generation)
@@ -111,7 +113,7 @@ class GenerateController extends BaseController
             $generation,
             BasicDataType::class,
             function () use ($generation) {
-                return $this->redirectToRoute("administration_generate_recipients", ["generation" => $generation->getId()]);
+                return $this->redirectToRoute('administration_generate_recipients', ['generation' => $generation->getId()]);
             }
         );
 
@@ -125,8 +127,9 @@ class GenerateController extends BaseController
     /**
      * @Route("/{generation}/recipients", name="administration_generate_recipients")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param EventGeneration $generation
+     *
      * @return Response
      */
     public function recipientAction(Request $request, EventGeneration $generation)
@@ -136,7 +139,7 @@ class GenerateController extends BaseController
             $generation,
             ChooseRecipientsType::class,
             function () use ($generation) {
-                return $this->redirectToRoute("administration_generate_conflicts", ["generation" => $generation->getId()]);
+                return $this->redirectToRoute('administration_generate_conflicts', ['generation' => $generation->getId()]);
             }
         );
 
@@ -146,8 +149,9 @@ class GenerateController extends BaseController
     /**
      * @Route("/{generation}/conflicts", name="administration_generate_conflicts")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param EventGeneration $generation
+     *
      * @return Response
      */
     public function conflictsAction(Request $request, EventGeneration $generation)
@@ -157,7 +161,7 @@ class GenerateController extends BaseController
             $generation,
             null,
             function () use ($generation) {
-                return $this->redirectToRoute("administration_generate_weights", ["generation" => $generation->getId()]);
+                return $this->redirectToRoute('administration_generate_weights', ['generation' => $generation->getId()]);
             }
         );
 
@@ -167,8 +171,9 @@ class GenerateController extends BaseController
     /**
      * @Route("/{generation}/weights", name="administration_generate_weights")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param EventGeneration $generation
+     *
      * @return Response
      */
     public function weightsAction(Request $request, EventGeneration $generation)
@@ -178,7 +183,7 @@ class GenerateController extends BaseController
             $generation,
             null,
             function () use ($generation) {
-                return $this->redirectToRoute("administration_generate_save", ["generation" => $generation->getId()]);
+                return $this->redirectToRoute('administration_generate_save', ['generation' => $generation->getId()]);
             }
         );
 
@@ -188,8 +193,9 @@ class GenerateController extends BaseController
     /**
      * @Route("/{generation}/save", name="administration_generate_save")
      *
-     * @param Request $request
+     * @param Request         $request
      * @param EventGeneration $generation
+     *
      * @return Response
      */
     public function saveAction(Request $request, EventGeneration $generation)
@@ -199,7 +205,7 @@ class GenerateController extends BaseController
             $generation,
             SaveType::class,
             function () use ($generation) {
-                return $this->redirectToRoute("administration_generate_index", ["generation" => $generation->getId()]);
+                return $this->redirectToRoute('administration_generate_index', ['generation' => $generation->getId()]);
             }
         );
 
@@ -207,7 +213,7 @@ class GenerateController extends BaseController
     }
 
     /**
-     * get the breadcrumbs leading to this controller
+     * get the breadcrumbs leading to this controller.
      *
      * @return Breadcrumb[]
      */
@@ -215,9 +221,9 @@ class GenerateController extends BaseController
     {
         return parent::getIndexBreadcrumbs() + [
             new Breadcrumb(
-                $this->generateUrl("administration_generations"),
-                $this->getTranslator()->trans("doctors.title", [], "administration")
-            )
+                $this->generateUrl('administration_generations'),
+                $this->getTranslator()->trans('doctors.title', [], 'administration')
+            ),
         ];
     }
 }

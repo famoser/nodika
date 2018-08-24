@@ -21,7 +21,6 @@ use App\Form\Model\Event\AdvancedSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,9 +56,10 @@ class AdministrationController extends BaseFormController
     /**
      * @Route("/events", name="administration_events")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param CsvServiceInterface $csvService
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function eventsAction(Request $request, CsvServiceInterface $csvService, TranslatorInterface $translator)
@@ -69,12 +69,13 @@ class AdministrationController extends BaseFormController
         $export = false;
         $form = $this->handleForm(
             $this->createForm(AdvancedSearchType::class, $searchModel)
-                ->add("search", SubmitType::class)
-                ->add("export", SubmitType::class),
+                ->add('search', SubmitType::class)
+                ->add('export', SubmitType::class),
             $request,
             function ($form) use (&$export) {
                 /* @var Form $form */
                 $export = $form->get('export')->isClicked();
+
                 return $form;
             }
         );
@@ -83,11 +84,11 @@ class AdministrationController extends BaseFormController
         $events = $eventRepo->search($searchModel);
 
         if ($export) {
-            return $csvService->renderCsv("export.csv", $this->toDataTable($events, $translator), $this->getEventsHeader($translator));
+            return $csvService->renderCsv('export.csv', $this->toDataTable($events, $translator), $this->getEventsHeader($translator));
         }
 
-        $arr["events"] = $events;
-        $arr["search_form"] = $form;
+        $arr['events'] = $events;
+        $arr['search_form'] = $form;
 
         return $this->render('administration/events.html.twig', $arr);
     }
@@ -102,9 +103,10 @@ class AdministrationController extends BaseFormController
         $doctorRepo = $this->getDoctrine()->getRepository(Doctor::class);
 
         /* @var Doctor[] $doctors */
-        $doctors = $doctorRepo->findBy(["deletedAt" => null]);
+        $doctors = $doctorRepo->findBy(['deletedAt' => null]);
 
-        $arr["doctors"] = $doctors;
+        $arr['doctors'] = $doctors;
+
         return $this->render('administration/doctors.html.twig', $arr);
     }
 
@@ -117,7 +119,7 @@ class AdministrationController extends BaseFormController
     {
         $clinicRepo = $this->getDoctrine()->getRepository(Clinic::class);
 
-        $arr["clinics"] = $clinicRepo->findBy(["deletedAt" => null]);
+        $arr['clinics'] = $clinicRepo->findBy(['deletedAt' => null]);
 
         return $this->render('administration/clinics.html.twig', $arr);
     }
@@ -131,13 +133,13 @@ class AdministrationController extends BaseFormController
     {
         $eventGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
 
-        $arr["event_generations"] = $eventGenerations;
+        $arr['event_generations'] = $eventGenerations;
 
         return $this->render('administration/settings.html.twig', $arr);
     }
 
     /**
-     * get the breadcrumbs leading to this controller
+     * get the breadcrumbs leading to this controller.
      *
      * @return Breadcrumb[]
      */
@@ -145,9 +147,9 @@ class AdministrationController extends BaseFormController
     {
         return [
             new Breadcrumb(
-                $this->generateUrl("administration_index"),
-                $this->getTranslator()->trans("index.title", [], "administration")
-            )
+                $this->generateUrl('administration_index'),
+                $this->getTranslator()->trans('index.title', [], 'administration')
+            ),
         ];
     }
 }

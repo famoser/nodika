@@ -44,7 +44,7 @@ class NamingHelper
      * if $isRemoveType is true then the remove form is returned.
      *
      * @param string $classWithNamespace
-     * @param bool $isRemoveType
+     * @param bool   $isRemoveType
      *
      * @return string
      */
@@ -53,7 +53,7 @@ class NamingHelper
         $prepend = $isRemoveType ? 'Remove' : '';
         $className = mb_substr($classWithNamespace, mb_strrpos($classWithNamespace, '\\') + 1);
 
-        return 'App\\Form\\' . $className . '\\' . $prepend . $className . 'Type';
+        return 'App\\Form\\'.$className.'\\'.$prepend.$className.'Type';
     }
 
     /**
@@ -115,6 +115,6 @@ class NamingHelper
     {
         $traitName = mb_substr($traitWithNamespace, mb_strrpos($traitWithNamespace, '\\') + 1);
         // subtract 5 because strlen("Trait") == 5
-        return 'trait_' . static::camelCaseToTranslation(mb_substr($traitName, 0, -5));
+        return 'trait_'.static::camelCaseToTranslation(mb_substr($traitName, 0, -5));
     }
 }

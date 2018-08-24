@@ -26,21 +26,21 @@ class ClinicType extends BaseAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            "doctors",
+            'doctors',
             EntityType::class,
-            ["class" => Doctor::class, "multiple" => true, "by_reference" => false, "translation_domain" => "entity_doctor", "label" => "entity.plural"]
+            ['class' => Doctor::class, 'multiple' => true, 'by_reference' => false, 'translation_domain' => 'entity_doctor', 'label' => 'entity.plural']
         );
 
-        $builder->add("thing", ThingType::class, ["inherit_data" => true]);
-        $builder->add("communication", CommunicationType::class, ["inherit_data" => true]);
-        $builder->add("address", AddressType::class, ["inherit_data" => true]);
+        $builder->add('thing', ThingType::class, ['inherit_data' => true]);
+        $builder->add('communication', CommunicationType::class, ['inherit_data' => true]);
+        $builder->add('address', AddressType::class, ['inherit_data' => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Clinic::class,
-            'translation_domain' => 'entity_clinic'
+            'translation_domain' => 'entity_clinic',
         ]);
     }
 }

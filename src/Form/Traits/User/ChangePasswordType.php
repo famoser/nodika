@@ -20,7 +20,7 @@ class ChangePasswordType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -34,7 +34,7 @@ class ChangePasswordType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'trait_user'
+            'translation_domain' => 'trait_user',
         ]);
     }
 }

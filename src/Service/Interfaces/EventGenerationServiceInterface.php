@@ -21,6 +21,7 @@ interface EventGenerationServiceInterface
      * returns true if successful.
      *
      * @param EventGeneration $eventGeneration
+     *
      * @return Event[]
      */
     public function generate(EventGeneration $eventGeneration);

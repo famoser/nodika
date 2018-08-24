@@ -12,7 +12,6 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
-use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
 use App\Entity\EventPast;
 use App\Enum\EventChangeType;
@@ -20,7 +19,6 @@ use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,8 +65,8 @@ class EventController extends BaseController
      * @Route("/{event}/edit", name="administration_event_edit")
      *
      * @param Request $request
+     * @param Event   $event
      *
-     * @param Event $event
      * @return Response
      */
     public function editAction(Request $request, Event $event)
@@ -98,16 +96,15 @@ class EventController extends BaseController
      * @Route("/{event}/remove", name="administration_event_remove")
      *
      * @param Request $request
+     * @param Event   $event
      *
-     *
-     * @param Event $event
      * @return Response
      */
     public function removeAction(Request $request, Event $event, TranslatorInterface $translator)
     {
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $event)
-                ->add("remove", SubmitType::class, ["translation_domain" => "common_form", "label" => "submit.delete"]),
+                ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
             $request,
             function () use ($event, $translator) {
                 /* @var FormInterface $form */
@@ -120,7 +117,7 @@ class EventController extends BaseController
 
                 $this->displaySuccess($translator->trans('successful.delete', [], 'common_form'));
 
-                return $this->redirectToRoute("administration_events");
+                return $this->redirectToRoute('administration_events');
             }
         );
 
@@ -142,7 +139,7 @@ class EventController extends BaseController
      */
     public function historyAction(Event $event)
     {
-        $arr["event"] = $event;
+        $arr['event'] = $event;
 
         return $this->render('administration/event/history.html.twig', $arr);
     }
@@ -154,7 +151,6 @@ class EventController extends BaseController
      *
      * @return Response
      */
-
     public function toggleConfirm(Event $event)
     {
         if ($event->isConfirmed()) {
@@ -166,11 +162,11 @@ class EventController extends BaseController
         $eventPast = EventPast::create($event, EventChangeType::CHANGED_BY_ADMIN, $this->getUser());
         $this->fastSave($event, $eventPast);
 
-        return $this->redirectToRoute("administration_events");
+        return $this->redirectToRoute('administration_events');
     }
 
     /**
-     * get the breadcrumbs leading to this controller
+     * get the breadcrumbs leading to this controller.
      *
      * @return Breadcrumb[]
      */
@@ -178,9 +174,9 @@ class EventController extends BaseController
     {
         return parent::getIndexBreadcrumbs() + [
             new Breadcrumb(
-                $this->generateUrl("administration_events"),
-                $this->getTranslator()->trans("events.title", [], "administration")
-            )
+                $this->generateUrl('administration_events'),
+                $this->getTranslator()->trans('events.title', [], 'administration')
+            ),
         ];
     }
 }

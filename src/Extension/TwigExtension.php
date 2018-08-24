@@ -31,7 +31,7 @@ class TwigExtension extends Twig_Extension
     }
 
     /**
-     * makes the filters available to twig
+     * makes the filters available to twig.
      *
      * @return array
      */
@@ -42,7 +42,6 @@ class TwigExtension extends Twig_Extension
             new Twig_SimpleFilter('dateTimeFormat', [$this, 'dateTimeFilter']),
             new Twig_SimpleFilter('booleanFormat', [$this, 'booleanFilter']),
             new Twig_SimpleFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
-
         ];
     }
 
@@ -64,7 +63,7 @@ class TwigExtension extends Twig_Extension
     public function dateFormatFilter($date)
     {
         if ($date instanceof \DateTime) {
-            return $this->prependDayName($date) . ', ' . $date->format(DateTimeFormatter::DATE_FORMAT);
+            return $this->prependDayName($date).', '.$date->format(DateTimeFormatter::DATE_FORMAT);
         }
 
         return '-';
@@ -78,20 +77,22 @@ class TwigExtension extends Twig_Extension
     public function dateTimeFilter($date)
     {
         if ($date instanceof \DateTime) {
-            return $this->prependDayName($date) . ', ' . $date->format(DateTimeFormatter::DATE_TIME_FORMAT);
+            return $this->prependDayName($date).', '.$date->format(DateTimeFormatter::DATE_TIME_FORMAT);
         }
 
         return '-';
     }
 
     /**
-     * translates the day of the week
+     * translates the day of the week.
+     *
      * @param DateTime $date
+     *
      * @return string
      */
     private function prependDayName(DateTime $date)
     {
-        return $this->translator->trans('date_time.' . $date->format('D'), [], 'framework');
+        return $this->translator->trans('date_time.'.$date->format('D'), [], 'framework');
     }
 
     /**

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 4/2/18
- * Time: 10:10 AM
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Traits;
@@ -192,10 +195,10 @@ trait EventTrait
     public function isConfirmed()
     {
         return
-            $this->getConfirmDateTime() != null &&
+            null !== $this->getConfirmDateTime() &&
             (
-                $this->getDoctor() == null ||
-                ($this->getConfirmedBy() != null && $this->getConfirmedBy()->getId() == $this->getDoctor()->getId())
+                null === $this->getDoctor() ||
+                (null !== $this->getConfirmedBy() && $this->getConfirmedBy()->getId() === $this->getDoctor()->getId())
             );
     }
 
@@ -231,6 +234,7 @@ trait EventTrait
     public function isActive()
     {
         $now = new \DateTime();
+
         return $this->getStartDateTime() < $now && $this->getEndDateTime() > $now;
     }
 }

@@ -12,11 +12,8 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
-use App\Controller\Base\BaseFormController;
 use App\Entity\EventTag;
-use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,7 +45,7 @@ class EventTagController extends BaseController
     /**
      * @Route("/{eventTag}/edit", name="administration_event_tag_edit")
      *
-     * @param Request $request
+     * @param Request  $request
      * @param EventTag $eventTag
      *
      * @return Response
@@ -69,7 +66,7 @@ class EventTagController extends BaseController
     /**
      * @Route("/{eventTag}/remove", name="administration_event_tag_remove")
      *
-     * @param Request $request
+     * @param Request  $request
      * @param EventTag $eventTag
      *
      * @return Response

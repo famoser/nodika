@@ -105,6 +105,6 @@ trait PersonTrait
      */
     public function getFullName()
     {
-        return $this->getGivenName() . ' ' . $this->getFamilyName();
+        return $this->getGivenName().' '.$this->getFamilyName();
     }
 }

@@ -26,7 +26,8 @@ class Setting extends BaseEntity
     use ChangeAwareTrait;
 
     /**
-     * the mail where enquiries submitted over the webpage are sent
+     * the mail where enquiries submitted over the webpage are sent.
+     *
      * @var string
      *
      * @ORM\Column(type="text")

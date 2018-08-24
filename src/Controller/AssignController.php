@@ -12,17 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use App\Entity\Doctor;
-use App\Entity\Event;
-use App\Entity\EventPast;
-use App\Entity\Setting;
-use App\Enum\EventChangeType;
-use App\Model\Breadcrumb;
-use App\Model\Event\SearchModel;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/assign")

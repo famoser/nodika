@@ -1,13 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 4/26/18
- * Time: 10:23 AM
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Normalizer;
-
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -19,16 +21,19 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 class EntityNormalizer extends ObjectNormalizer
 {
     /**
-     * Entity manager
+     * Entity manager.
+     *
      * @var EntityManagerInterface
      */
     protected $em;
+
     /**
-     * Entity normalizer
-     * @param EntityManagerInterface $em
-     * @param ClassMetadataFactoryInterface|null $classMetadataFactory
-     * @param NameConverterInterface|null $nameConverter
-     * @param PropertyAccessorInterface|null $propertyAccessor
+     * Entity normalizer.
+     *
+     * @param EntityManagerInterface              $em
+     * @param ClassMetadataFactoryInterface|null  $classMetadataFactory
+     * @param NameConverterInterface|null         $nameConverter
+     * @param PropertyAccessorInterface|null      $propertyAccessor
      * @param PropertyTypeExtractorInterface|null $propertyTypeExtractor
      */
     public function __construct(
@@ -42,15 +47,17 @@ class EntityNormalizer extends ObjectNormalizer
         // Entity manager
         $this->em = $em;
     }
+
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return strpos($type, 'App\\Entity\\') === 0 && (is_numeric($data) || is_string($data));
+        return 0 === mb_strpos($type, 'App\\Entity\\') && (is_numeric($data) || is_string($data));
     }
+
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {

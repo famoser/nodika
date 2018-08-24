@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 22/02/2018
- * Time: 17:17
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form\Doctor;
@@ -18,7 +21,7 @@ class SetPasswordType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,7 +35,7 @@ class SetPasswordType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'entity_doctor',
-            'data_class' => Doctor::class
+            'data_class' => Doctor::class,
         ]);
     }
 }

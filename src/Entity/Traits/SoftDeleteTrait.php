@@ -23,17 +23,17 @@ trait SoftDeleteTrait
     private $deletedAt = null;
 
     /**
-     * returns if the person can be invited
+     * returns if the person can be invited.
      *
      * @return bool
      */
     public function isDeleted()
     {
-        return $this->deletedAt != null;
+        return null !== $this->deletedAt;
     }
 
     /**
-     * soft deletes
+     * soft deletes.
      */
     public function delete()
     {

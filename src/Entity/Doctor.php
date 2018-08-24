@@ -101,7 +101,7 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     }
 
     /**
-     * check if this is the same user
+     * check if this is the same user.
      *
      * @param UserInterface $user
      *
@@ -139,6 +139,7 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     {
         $this->clinics = $clinics;
     }
+
     public function __toString()
     {
         return $this->getFullName();

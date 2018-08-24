@@ -30,16 +30,16 @@ class EventType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('startEnd', StartEndType::class, ["inherit_data" => true]);
-        $builder->add('event', \App\Form\Traits\Event\EventType::class, ["inherit_data" => true]);
-        $builder->add('eventTags', EntityType::class, ["class" => EventTag::class, "multiple" => true, "translation_domain" => "entity_event_tag", "label" => "entity.plural", "required" => false]);
+        $builder->add('startEnd', StartEndType::class, ['inherit_data' => true]);
+        $builder->add('event', \App\Form\Traits\Event\EventType::class, ['inherit_data' => true]);
+        $builder->add('eventTags', EntityType::class, ['class' => EventTag::class, 'multiple' => true, 'translation_domain' => 'entity_event_tag', 'label' => 'entity.plural', 'required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
-            'translation_domain' => 'entity_event'
+            'translation_domain' => 'entity_event',
         ]);
     }
 }

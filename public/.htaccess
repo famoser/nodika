@@ -184,7 +184,8 @@ AddDefaultCharset utf-8
 # Prevent Apache from adding a trailing footer line containing
 # information about the server to the server-generated documents
 # (e.g.: error messages, directory listings, etc.)
-ServerSignature Off
+# deactivated because crashes hostpoint web server
+# ServerSignature Off
 
 # Prevent Apache from publishing exact server version
 # disabled because hostpoint deploy does not allow it

@@ -50,7 +50,6 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
         return $this->eventGenerationService;
     }
 
-
     /**
      * @return \Faker\Generator
      */

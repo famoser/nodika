@@ -27,7 +27,7 @@ class BaseController extends AbstractController
             [
                 'kernel' => KernelInterface::class,
                 'security.token_storage' => TokenStorageInterface::class,
-                'translator' => TranslatorInterface::class
+                'translator' => TranslatorInterface::class,
             ];
     }
 
@@ -36,7 +36,7 @@ class BaseController extends AbstractController
      */
     private function getKernel()
     {
-        return $this->get("kernel");
+        return $this->get('kernel');
     }
 
     /**
@@ -44,9 +44,8 @@ class BaseController extends AbstractController
      */
     protected function getTranslator()
     {
-        return $this->get("translator");
+        return $this->get('translator');
     }
-
 
     /**BaseFormController
      * get the parameter.
@@ -111,7 +110,7 @@ class BaseController extends AbstractController
     private function displayFlash($type, $message, $link = null)
     {
         if (null !== $link) {
-            $message = '<a href="' . $link . '">' . $message . '</a>';
+            $message = '<a href="'.$link.'">'.$message.'</a>';
         }
         $this->get('session')->getFlashBag()->set($type, $message);
     }
@@ -131,24 +130,26 @@ class BaseController extends AbstractController
     {
         return [
             new Breadcrumb(
-                $this->generateUrl("index_index"),
-                $this->getTranslator()->trans("index.title", [], "index")
-            )
+                $this->generateUrl('index_index'),
+                $this->getTranslator()->trans('index.title', [], 'index')
+            ),
         ];
     }
 
     /**
      * Renders a view.
      *
-     * @param string $view
-     * @param array $parameters
+     * @param string        $view
+     * @param array         $parameters
      * @param Response|null $response
-     * @param Breadcrumb[] $breadcrumbs
+     * @param Breadcrumb[]  $breadcrumbs
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function render(string $view, array $parameters = array(), Response $response = null, array $breadcrumbs = array()): Response
+    protected function render(string $view, array $parameters = [], Response $response = null, array $breadcrumbs = []): Response
     {
-        $parameters["breadcrumbs"] = array_merge($this->getIndexBreadcrumbs(), $breadcrumbs);
+        $parameters['breadcrumbs'] = array_merge($this->getIndexBreadcrumbs(), $breadcrumbs);
+
         return parent::render($view, $parameters);
     }
 }

@@ -20,7 +20,7 @@ class StartEndType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -37,7 +37,7 @@ class StartEndType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_start_end',
-            'label' => 'trait.name'
+            'label' => 'trait.name',
         ]);
     }
 }

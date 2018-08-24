@@ -87,7 +87,7 @@ trait UserTrait
     }
 
     /**
-     * @param boolean $isEnabled
+     * @param bool $isEnabled
      *
      * @return static
      */
@@ -339,7 +339,7 @@ trait UserTrait
     }
 
     /**
-     * creates a new reset hash
+     * creates a new reset hash.
      */
     public function setResetHash()
     {

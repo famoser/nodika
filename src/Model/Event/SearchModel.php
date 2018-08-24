@@ -43,7 +43,7 @@ class SearchModel
     private $doctor;
 
     /**
-     * @var boolean|null
+     * @var bool|null
      */
     private $isConfirmed;
 
@@ -71,11 +71,11 @@ class SearchModel
     {
         $this->startDateTime = new \DateTime();
 
-        if ($size == SearchModel::MONTH) {
-            $this->endDateTime = new \DateTime("now + 1 month");
-        } elseif ($size == SearchModel::YEAR) {
-            $this->endDateTime = new \DateTime("now + 1 year");
-        } elseif ($size != SearchModel::NONE) {
+        if (self::MONTH === $size) {
+            $this->endDateTime = new \DateTime('now + 1 month');
+        } elseif (self::YEAR === $size) {
+            $this->endDateTime = new \DateTime('now + 1 year');
+        } elseif (self::NONE !== $size) {
             throw new \InvalidArgumentException();
         }
     }

@@ -1,16 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 8/23/18
- * Time: 1:43 PM
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller\Api;
 
-
 use App\Controller\Api\Base\BaseApiController;
-
 use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventPast;
@@ -30,6 +31,7 @@ class AssignController extends BaseApiController
      * @Route("/doctors", name="assign_doctors")
      *
      * @param SerializerInterface $serializer
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function doctorsAction(SerializerInterface $serializer)
@@ -45,16 +47,18 @@ class AssignController extends BaseApiController
         }
         $result = array_values($result);
 
-        return new JsonResponse($serializer->serialize($result, "json", ["attributes" => ["id", "fullName", "clinics" => ["name"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($result, 'json', ['attributes' => ['id', 'fullName', 'clinics' => ['name']]]), 200, [], true);
     }
 
     /**
      * @Route("/events/{doctor}", name="assign_events")
      *
      * @param SerializerInterface $serializer
-     * @param Doctor $doctor
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Doctor              $doctor
+     *
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function eventsAction(SerializerInterface $serializer, Doctor $doctor)
     {
@@ -65,7 +69,7 @@ class AssignController extends BaseApiController
         }
         $clinics = [];
         foreach ($doctor->getClinics() as $clinic) {
-            if (in_array($clinic->getId(), $allowedFilter)) {
+            if (in_array($clinic->getId(), $allowedFilter, true)) {
                 $clinics[] = $clinic;
             }
         }
@@ -76,20 +80,22 @@ class AssignController extends BaseApiController
         //get the events for the doctor
         $searchModel = new SearchModel(SearchModel::NONE);
         $searchModel->setClinics($clinics);
-        $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval("P" . $settings->getCanConfirmDaysAdvance() . "D")));
+        $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval('P'.$settings->getCanConfirmDaysAdvance().'D')));
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
-        return new JsonResponse($serializer->serialize($events, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($events, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
     }
 
     /**
      * @Route("/assign/{event}/{doctor}", name="assign_assign")
      *
      * @param SerializerInterface $serializer
-     * @param Event $event
-     * @param Doctor $doctor
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Event               $event
+     * @param Doctor              $doctor
+     *
      * @throws \Exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function assignAction(SerializerInterface $serializer, Event $event, Doctor $doctor)
     {
@@ -97,7 +103,6 @@ class AssignController extends BaseApiController
         $eventPast = EventPast::create($event, EventChangeType::PERSON_ASSIGNED_BY_CLINIC, $this->getUser());
         $this->fastSave($event, $eventPast);
 
-        return new JsonResponse($serializer->serialize($event, "json", ["attributes" => ["id", "startDateTime", "endDateTime", "clinic" => ["name"], "doctor" => ["id", "fullName"]]]), 200, [], true);
+        return new JsonResponse($serializer->serialize($event, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
     }
-
 }

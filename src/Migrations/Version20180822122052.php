@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace DoctrineMigrations;
 
@@ -10,10 +21,10 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20180822122052 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf('sqlite' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('CREATE TABLE event_generation_target_clinic (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, clinic_id INTEGER DEFAULT NULL, event_generation_id INTEGER DEFAULT NULL, weight NUMERIC(10, 0) NOT NULL, generation_score NUMERIC(10, 0) DEFAULT NULL, default_order INTEGER NOT NULL)');
         $this->addSql('CREATE INDEX IDX_66938B43CC22AD4 ON event_generation_target_clinic (clinic_id)');
@@ -72,10 +83,10 @@ final class Version20180822122052 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_289901A2884B1443 ON event_event_tags (event_tag_id)');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf('sqlite' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('DROP TABLE event_generation_target_clinic');
         $this->addSql('DROP TABLE event_offer');

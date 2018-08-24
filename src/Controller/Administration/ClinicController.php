@@ -12,12 +12,10 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
-use App\Controller\Base\BaseFormController;
 use App\Entity\Clinic;
 use App\Form\Clinic\RemoveType;
 use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,7 +49,7 @@ class ClinicController extends BaseController
      * @Route("/{clinic}/edit", name="administration_clinic_edit")
      *
      * @param Request $request
-     * @param Clinic $clinic
+     * @param Clinic  $clinic
      *
      * @return Response
      */
@@ -70,19 +68,19 @@ class ClinicController extends BaseController
 
     /**
      * deactivated because not safe
-     * Route("/{clinic}/remove", name="administration_clinic_remove")
+     * Route("/{clinic}/remove", name="administration_clinic_remove").
      *
      * @param Request $request
-     * @param Clinic $clinic
+     * @param Clinic  $clinic
      *
      * @return Response
      */
     public function removeAction(Request $request, Clinic $clinic)
     {
-        $canDelete = $clinic->getEvents()->count() == 0;
+        $canDelete = 0 === $clinic->getEvents()->count();
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $clinic)
-            ->add("remove", SubmitType::class, ["translation_domain" => "common_form", "label" => "submit.delete"]),
+            ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
             $request,
             function () use ($clinic, $canDelete) {
                 $clinic->delete();
@@ -92,7 +90,8 @@ class ClinicController extends BaseController
                     $clinic->delete();
                     $this->fastSave($clinic);
                 }
-                return $this->redirectToRoute("administration_clinics");
+
+                return $this->redirectToRoute('administration_clinics');
             }
         );
 
@@ -100,23 +99,23 @@ class ClinicController extends BaseController
             return $myForm;
         }
 
-        $arr["can_delete"] = $canDelete;
+        $arr['can_delete'] = $canDelete;
         $arr['form'] = $myForm->createView();
 
         return $this->render('administration/clinic/remove.html.twig', $arr);
     }
 
     /**
-     * get the breadcrumbs leading to this controller
+     * get the breadcrumbs leading to this controller.
      *
      * @return Breadcrumb[]
      */
     protected function getIndexBreadcrumbs()
     {
         return parent::getIndexBreadcrumbs() + [new Breadcrumb(
-            $this->generateUrl("administration_clinics"),
-            $this->getTranslator()->trans("clinics.title", [], "administration")
-        )
+            $this->generateUrl('administration_clinics'),
+            $this->getTranslator()->trans('clinics.title', [], 'administration')
+        ),
         ];
     }
 }

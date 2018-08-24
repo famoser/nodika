@@ -21,14 +21,14 @@ class SaveType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("eventDescription", TextType::class, ["required" => false]);
+        $builder->add('eventDescription', TextType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventGeneration::class,
-            'translation_domain' => 'entity_event_generation'
+            'translation_domain' => 'entity_event_generation',
         ]);
     }
 }

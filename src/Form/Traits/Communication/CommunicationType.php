@@ -21,12 +21,12 @@ class CommunicationType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("phone", TextType::class, ["required" => false]);
-        $builder->add("email", EmailType::class);
+        $builder->add('phone', TextType::class, ['required' => false]);
+        $builder->add('email', EmailType::class);
     }
 
     /**
@@ -36,7 +36,7 @@ class CommunicationType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_communication',
-            'label' => 'trait.name'
+            'label' => 'trait.name',
         ]);
     }
 }

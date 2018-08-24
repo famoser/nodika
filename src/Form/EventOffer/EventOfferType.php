@@ -23,16 +23,16 @@ class EventOfferType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("message", TextType::class, ["inherit_data" => true]);
-        $builder->add('entries', CollectionType::class, ["allow_add" => true, "allow_delete" => true, "entry_type" => EventOfferEntryType::class]);
-        $builder->add('authorizations', CollectionType::class, ["allow_add" => true, "allow_delete" => true, "entry_type" => EventOfferEntryType::class]);
+        $builder->add('message', TextType::class, ['inherit_data' => true]);
+        $builder->add('entries', CollectionType::class, ['allow_add' => true, 'allow_delete' => true, 'entry_type' => EventOfferEntryType::class]);
+        $builder->add('authorizations', CollectionType::class, ['allow_add' => true, 'allow_delete' => true, 'entry_type' => EventOfferEntryType::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventOffer::class,
-            'translation_domain' => 'entity_event_offer'
+            'translation_domain' => 'entity_event_offer',
         ]);
     }
 }

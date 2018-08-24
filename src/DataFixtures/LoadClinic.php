@@ -28,14 +28,14 @@ class LoadClinic extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $realExamples = [
-            ["kleintierpraxis-baselwest"],
-            ["Kleintierpraxis am Ring"],
-            ["VET 4 PET"],
-            ["Tierklinik Rossweid"],
-            ["Tierarztpraxis Haerer"],
-            ["Tierarztpraxis Stebler"],
-            ["Aloha Kleintierpraxis"],
-            ["Zentrum Frohwies"]
+            ['kleintierpraxis-baselwest'],
+            ['Kleintierpraxis am Ring'],
+            ['VET 4 PET'],
+            ['Tierklinik Rossweid'],
+            ['Tierarztpraxis Haerer'],
+            ['Tierarztpraxis Stebler'],
+            ['Aloha Kleintierpraxis'],
+            ['Zentrum Frohwies'],
         ];
 
         $users = $manager->getRepository(Doctor::class)->findAll();
@@ -53,26 +53,25 @@ class LoadClinic extends BaseFixture
         $allClinicsSeen = 0;
         $allUsersSeen = 0;
 
-
-        $advanceWithProbability = function() {
+        $advanceWithProbability = function () {
             return rand(0, 10) > 2;
         };
         while (true) {
             $users[$userIndex]->getClinics()->add($clinics[$clinicIndex]);
 
             if ($advanceWithProbability) {
-                $userIndex++;
+                ++$userIndex;
             }
-            $clinicIndex++;
+            ++$clinicIndex;
 
-            if ($userIndex == count($users)) {
+            if ($userIndex === count($users)) {
                 $userIndex = 0;
-                $allUsersSeen++;
+                ++$allUsersSeen;
             }
 
-            if ($clinicIndex == count($clinics)) {
+            if ($clinicIndex === count($clinics)) {
                 $clinicIndex = 0;
-                $allClinicsSeen++;
+                ++$allClinicsSeen;
             }
 
             if ($allClinicsSeen > 1 && $allUsersSeen > 1) {

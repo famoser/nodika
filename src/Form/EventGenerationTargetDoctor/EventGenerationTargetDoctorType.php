@@ -24,16 +24,16 @@ class EventGenerationTargetDoctorType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("eventGeneration", EntityType::class, ["class" => EventGeneration::class]);
-        $builder->add("doctor", EntityType::class, ["class" => Doctor::class]);
-        $builder->add("weight", NumberType::class);
+        $builder->add('eventGeneration', EntityType::class, ['class' => EventGeneration::class]);
+        $builder->add('doctor', EntityType::class, ['class' => Doctor::class]);
+        $builder->add('weight', NumberType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventGenerationTargetDoctor::class,
-            'translation_domain' => 'entity_event_generation_doctor'
+            'translation_domain' => 'entity_event_generation_doctor',
         ]);
     }
 }

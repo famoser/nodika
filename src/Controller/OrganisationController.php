@@ -13,7 +13,6 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseController;
 use App\Entity\Clinic;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -28,7 +27,8 @@ class OrganisationController extends BaseController
      */
     public function indexAction()
     {
-        $arr["clinics"] = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
-        return $this->render("organisation/index.html.twig", $arr);
+        $arr['clinics'] = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
+
+        return $this->render('organisation/index.html.twig', $arr);
     }
 }

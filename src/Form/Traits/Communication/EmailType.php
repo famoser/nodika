@@ -19,11 +19,11 @@ class EmailType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("email", \Symfony\Component\Form\Extension\Core\Type\EmailType::class);
+        $builder->add('email', \Symfony\Component\Form\Extension\Core\Type\EmailType::class);
     }
 
     /**
@@ -32,7 +32,7 @@ class EmailType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'trait_communication'
+            'translation_domain' => 'trait_communication',
         ]);
     }
 }

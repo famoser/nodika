@@ -21,12 +21,12 @@ class ThingType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', TextType::class);
-        $builder->add('description', TextareaType::class, ["required" => false]);
+        $builder->add('description', TextareaType::class, ['required' => false]);
     }
 
     /**
@@ -36,7 +36,7 @@ class ThingType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_thing',
-            'label' => 'trait.name'
+            'label' => 'trait.name',
         ]);
     }
 }

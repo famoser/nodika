@@ -27,9 +27,9 @@ class LoadSetting extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $setting = new Setting();
-        $setting->setDoctorName("Mitarbeiter");
-        $setting->setClinicName("Praxis");
-        $setting->setOrganisationName("knbu.ch");
+        $setting->setDoctorName('Mitarbeiter');
+        $setting->setClinicName('Praxis');
+        $setting->setOrganisationName('knbu.ch');
         $setting->setSupportMail('support@famoser.ch');
         $setting->setCanConfirmDaysAdvance(30);
         $setting->setMustConfirmDaysAdvance(3);

@@ -36,9 +36,9 @@ class EventGeneration extends BaseEntity
 
     /**
      * in average event lengths
-     * so add all event lengths, divide through event count, multiply with $minimalGapBetweenEvents to get the minimal gap between a participant
+     * so add all event lengths, divide through event count, multiply with $minimalGapBetweenEvents to get the minimal gap between a participant.
      *
-     * @var double
+     * @var float
      *
      * @ORM\Column(type="decimal")
      */
@@ -46,54 +46,54 @@ class EventGeneration extends BaseEntity
 
     /**
      * this cron expression specifies when a new event starts
-     * https://crontab.guru/
+     * https://crontab.guru/.
      *
      * @var string
      *
      * @ORM\Column(type="text")
      */
-    private $startCronExpression = "* 8 * * *";
+    private $startCronExpression = '* 8 * * *';
 
     /**
      * this cron expression specifies when a new event ends
-     * https://crontab.guru/
+     * https://crontab.guru/.
      *
      * @var string
      *
      * @ORM\Column(type="text")
      */
-    private $endCronExpression = "* 8 * * *";
+    private $endCronExpression = '* 8 * * *';
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean")
      */
     private $differentiateByEventType;
 
     /**
-     * @var double
+     * @var float
      *
      * @ORM\Column(type="decimal")
      */
     private $weekdayWeight = 1;
 
     /**
-     * @var double
+     * @var float
      *
      * @ORM\Column(type="decimal")
      */
     private $saturdayWeight = 1;
 
     /**
-     * @var double
+     * @var float
      *
      * @ORM\Column(type="decimal")
      */
     private $sundayWeight = 1;
 
     /**
-     * @var double
+     * @var float
      *
      * @ORM\Column(type="decimal")
      */

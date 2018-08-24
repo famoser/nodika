@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 22/02/2018
- * Time: 11:35
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -37,19 +40,18 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class LoginController extends BaseFormController
 {
-
     public static function getSubscribedServices()
     {
         return parent::getSubscribedServices() +
             [
                 'event_dispatcher' => EventDispatcherInterface::class,
                 'security.token_storage' => TokenStorageInterface::class,
-                'translator' => TranslatorInterface::class
+                'translator' => TranslatorInterface::class,
             ];
     }
 
     /**
-     * @param Request $request
+     * @param Request       $request
      * @param UserInterface $user
      */
     protected function loginUser(Request $request, UserInterface $user)
@@ -66,13 +68,14 @@ class LoginController extends BaseFormController
      * @Route("", name="login")
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function indexAction(Request $request)
     {
         $user = new Doctor();
         $form = $this->createForm(LoginType::class, $user);
-        $form->add("form.login", SubmitType::class, ["translation_domain" => "login", "label" => "login.do_login"]);
+        $form->add('form.login', SubmitType::class, ['translation_domain' => 'login', 'label' => 'login.do_login']);
 
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
@@ -97,34 +100,37 @@ class LoginController extends BaseFormController
 
         $form->handleRequest($request);
 
-        $arr["form"] = $form->createView();
+        $arr['form'] = $form->createView();
+
         return $this->render('login/login.html.twig', $arr);
     }
 
     /**
      * @Route("/recover", name="login_recover")
      *
-     * @param Request $request
+     * @param Request               $request
      * @param EmailServiceInterface $emailService
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface   $translator
+     *
      * @return Response
      */
     public function recoverAction(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator, LoggerInterface $logger)
     {
         $form = $this->handleForm(
             $this->createForm(RecoverType::class)
-                ->add("form.recover", SubmitType::class, ["translation_domain" => "login", "label" => "recover.title"]),
+                ->add('form.recover', SubmitType::class, ['translation_domain' => 'login', 'label' => 'recover.title']),
             $request,
             function ($form) use ($emailService, $translator, $logger) {
                 /* @var FormInterface $form */
 
                 //display success
-                $this->displaySuccess($translator->trans("recover.success.email_sent", [], "login"));
+                $this->displaySuccess($translator->trans('recover.success.email_sent', [], 'login'));
 
                 //check if user exists
-                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["email" => $form->getData()["email"]]);
+                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
-                    $logger->warning("tried to reset passwort for non-exitant email " . $form->getData()["email"]);
+                    $logger->warning('tried to reset passwort for non-exitant email '.$form->getData()['email']);
+
                     return $form;
                 }
 
@@ -135,17 +141,18 @@ class LoginController extends BaseFormController
                 //sent according email
                 $emailService->sendActionEmail(
                     $exitingUser->getEmail(),
-                    $translator->trans("recover.email.reset_password.subject", [], "login"),
-                    $translator->trans("recover.email.reset_password.message", [], "login"),
-                    $translator->trans("recover.email.reset_password.action_text", [], "login"),
-                    $this->generateUrl("login_reset", ["resetHash" => $exitingUser->getResetHash()], UrlGeneratorInterface::ABSOLUTE_URL)
+                    $translator->trans('recover.email.reset_password.subject', [], 'login'),
+                    $translator->trans('recover.email.reset_password.message', [], 'login'),
+                    $translator->trans('recover.email.reset_password.action_text', [], 'login'),
+                    $this->generateUrl('login_reset', ['resetHash' => $exitingUser->getResetHash()], UrlGeneratorInterface::ABSOLUTE_URL)
                 );
-                $logger->warning("reset email sent to " . $exitingUser->getEmail());
+                $logger->warning('reset email sent to '.$exitingUser->getEmail());
 
                 return $form;
             }
         );
-        $arr["form"] = $form->createView();
+        $arr['form'] = $form->createView();
+
         return $this->render('login/recover.html.twig', $arr);
     }
 
@@ -155,29 +162,32 @@ class LoginController extends BaseFormController
      * @param Request $request
      * @param $resetHash
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function resetAction(Request $request, $resetHash, TranslatorInterface $translator)
     {
-        $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["resetHash" => $resetHash]);
+        $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['resetHash' => $resetHash]);
         if (null === $user) {
-            $this->displayError($translator->trans("reset.danger.invalid_hash", [], "login"));
-            return new RedirectResponse($this->generateUrl("login"));
+            $this->displayError($translator->trans('reset.danger.invalid_hash', [], 'login'));
+
+            return new RedirectResponse($this->generateUrl('login'));
         }
 
         $form = $this->handleForm(
-            $this->createForm(ChangePasswordType::class, $user, ["data_class" => Doctor::class])
-                ->add("form.set_password", SubmitType::class, ["translation_domain" => "login", "label" => "reset.set_password"]),
+            $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
+                ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
             $request,
             function ($form) use ($user, $translator, $request) {
                 //check for valid password
-                if ($user->getPlainPassword() != $user->getRepeatPlainPassword()) {
-                    $this->displayError($translator->trans("reset.danger.passwords_do_not_match", [], "login"));
+                if ($user->getPlainPassword() !== $user->getRepeatPlainPassword()) {
+                    $this->displayError($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
+
                     return $form;
                 }
 
                 //display success
-                $this->displaySuccess($translator->trans("reset.success.password_set", [], "login"));
+                $this->displaySuccess($translator->trans('reset.success.password_set', [], 'login'));
 
                 //set new password & save
                 $user->setPassword();
@@ -186,7 +196,8 @@ class LoginController extends BaseFormController
 
                 //login user & redirect
                 $this->loginUser($request, $user);
-                return $this->redirectToRoute("index_index");
+
+                return $this->redirectToRoute('index_index');
             }
         );
 
@@ -194,32 +205,34 @@ class LoginController extends BaseFormController
             return $form;
         }
 
-        $arr["form"] = $form->createView();
+        $arr['form'] = $form->createView();
+
         return $this->render('login/reset.html.twig', $arr);
     }
 
     /**
      * @Route("/request_invite", name="login_request_invite")
      *
-     * @param Request $request
+     * @param Request               $request
      * @param EmailServiceInterface $emailService
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface   $translator
+     *
      * @return Response
      */
     public function requestAction(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator)
     {
         $form = $this->handleForm(
             $this->createForm(RequestInviteType::class)
-                ->add("form.request_invite", SubmitType::class),
+                ->add('form.request_invite', SubmitType::class),
             $request,
             function ($form) use ($emailService, $translator) {
                 /* @var FormInterface $form */
 
                 //display success
-                $this->displaySuccess($translator->trans("request_invite.success.email_sent", [], "login"));
+                $this->displaySuccess($translator->trans('request_invite.success.email_sent', [], 'login'));
 
                 //check if user exists
-                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(["email" => $form->getData()["email"]]);
+                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
                     return $form;
                 }
@@ -227,21 +240,22 @@ class LoginController extends BaseFormController
                 //sent invite email
                 $emailService->sendActionEmail(
                     $exitingUser->getEmail(),
-                    $translator->trans("invite.email.subject", [], "invite"),
-                    $translator->trans("invite.email.message", [], "invite"),
-                    $translator->trans("invite.email.action_text", [], "invite"),
-                    $this->generateUrl("invite_index", ["guid" => $exitingUser->getInvitationIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL)
+                    $translator->trans('invite.email.subject', [], 'invite'),
+                    $translator->trans('invite.email.message', [], 'invite'),
+                    $translator->trans('invite.email.action_text', [], 'invite'),
+                    $this->generateUrl('invite_index', ['guid' => $exitingUser->getInvitationIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL)
                 );
 
                 return $form;
             }
         );
-        $arr["form"] = $form->createView();
+        $arr['form'] = $form->createView();
+
         return $this->render('login/request_invite.html.twig', $arr);
     }
 
     /**
-     * get the breadcrumbs leading to this controller
+     * get the breadcrumbs leading to this controller.
      *
      * @return Breadcrumb[]
      */
@@ -249,9 +263,9 @@ class LoginController extends BaseFormController
     {
         return [
             new Breadcrumb(
-                $this->generateUrl("login"),
-                $this->getTranslator()->trans("login.title", [], "login")
-            )
+                $this->generateUrl('login'),
+                $this->getTranslator()->trans('login.title', [], 'login')
+            ),
         ];
     }
 

@@ -23,16 +23,16 @@ class ChooseRecipientsType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $collOptions = ["allow_add" => true, "allow_delete" => true];
-        $builder->add("doctors", CollectionType::class, $collOptions + ["entry_type" => EventGenerationTargetDoctorType::class]);
-        $builder->add("clinics", CollectionType::class, $collOptions + ["entry_type" => EventGenerationTargetClinicType::class]);
+        $collOptions = ['allow_add' => true, 'allow_delete' => true];
+        $builder->add('doctors', CollectionType::class, $collOptions + ['entry_type' => EventGenerationTargetDoctorType::class]);
+        $builder->add('clinics', CollectionType::class, $collOptions + ['entry_type' => EventGenerationTargetClinicType::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventGeneration::class,
-            'translation_domain' => 'entity_event_generation'
+            'translation_domain' => 'entity_event_generation',
         ]);
     }
 }

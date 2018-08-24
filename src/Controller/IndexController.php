@@ -14,7 +14,6 @@ namespace App\Controller;
 use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Event;
 use App\Model\Event\SearchModel;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -34,7 +33,7 @@ class IndexController extends BaseDoctrineController
 
         $events = $eventRepository->search($searchModel);
         $arr['events'] = $events;
-        $arr["user"] = $this->getUser();
+        $arr['user'] = $this->getUser();
 
         return $this->render('index/index.html.twig', $arr);
     }

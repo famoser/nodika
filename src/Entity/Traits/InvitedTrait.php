@@ -25,7 +25,7 @@ trait InvitedTrait
 
     /**
      * gets the invitation identifier.
-     * will be null if invite is disabled, and will change when calling invite()
+     * will be null if invite is disabled, and will change when calling invite().
      *
      * @return string
      */
@@ -35,17 +35,17 @@ trait InvitedTrait
     }
 
     /**
-     * returns if the person can be invited
+     * returns if the person can be invited.
      *
      * @return bool
      */
     public function isInvited()
     {
-        return $this->invitationIdentifier != null;
+        return null !== $this->invitationIdentifier;
     }
 
     /**
-     * clears the invitation identifier, effectively stopping the invitation
+     * clears the invitation identifier, effectively stopping the invitation.
      */
     public function clearInvitation()
     {
@@ -53,7 +53,7 @@ trait InvitedTrait
     }
 
     /**
-     *  creates a new identification identifier
+     *  creates a new identification identifier.
      */
     public function invite()
     {

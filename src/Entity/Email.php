@@ -165,9 +165,10 @@ class Email extends BaseEntity
      */
     public function getCarbonCopyArray()
     {
-        if (strlen($this->carbonCopy) > 0) {
-            return explode(",", $this->carbonCopy);
+        if (mb_strlen($this->carbonCopy) > 0) {
+            return explode(',', $this->carbonCopy);
         }
+
         return [];
     }
 
@@ -176,7 +177,7 @@ class Email extends BaseEntity
      */
     public function setCarbonCopyArray($carbonCopy)
     {
-        $this->carbonCopy = implode(",", $carbonCopy);
+        $this->carbonCopy = implode(',', $carbonCopy);
     }
 
     /**
@@ -218,7 +219,7 @@ class Email extends BaseEntity
      */
     public function getFullIdentifier()
     {
-        return $this->getReceiver() . ' ' . $this->getSubject();
+        return $this->getReceiver().' '.$this->getSubject();
     }
 
     /**

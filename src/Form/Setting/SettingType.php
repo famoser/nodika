@@ -31,16 +31,16 @@ class SettingType extends BaseAbstractType
     {
         $builder->add('organisationName', TextType::class);
         $builder->add('supportMail', TextType::class);
-        $builder->add("canConfirmDaysAdvance", NumberType::class);
-        $builder->add("mustConfirmDaysAdvance", NumberType::class);
-        $builder->add("sendRemainderDaysInterval", NumberType::class);
+        $builder->add('canConfirmDaysAdvance', NumberType::class);
+        $builder->add('mustConfirmDaysAdvance', NumberType::class);
+        $builder->add('sendRemainderDaysInterval', NumberType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Setting::class,
-            'translation_domain' => 'entity_setting'
+            'translation_domain' => 'entity_setting',
         ]);
     }
 }

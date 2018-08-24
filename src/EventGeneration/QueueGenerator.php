@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 08/04/2018
- * Time: 13:01
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\EventGeneration;
@@ -22,6 +25,7 @@ class QueueGenerator
 
     /**
      * IdealQueueHelper constructor.
+     *
      * @param array $clinicRelativeSize the clinics of the queue (clinicId => relativeSize) (int => double)
      */
     public function __construct($clinicRelativeSize)
@@ -70,8 +74,8 @@ class QueueGenerator
         }
 
         //normalize scores
-        if ($totalScore != 0) {
-            $diff = $this->totalScore / (double)$totalScore;
+        if (0 !== $totalScore) {
+            $diff = $this->totalScore / (float) $totalScore;
             foreach ($this->queueEntries as $queueEntry) {
                 $queueEntry->setScore($queueEntry->getScore() * $diff);
             }
@@ -115,6 +119,7 @@ class QueueGenerator
         }
 
         $minElement->issue();
+
         return $minElement->getPayload();
     }
 }

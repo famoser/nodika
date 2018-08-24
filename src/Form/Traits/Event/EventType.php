@@ -23,12 +23,12 @@ class EventType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('clinic', EntityType::class, ["class" => Clinic::class, "translation_domain" => "entity_clinic", "label" => "entity.name", "required" => false]);
-        $builder->add('doctor', EntityType::class, ["class" => Doctor::class, "translation_domain" => "entity_doctor", "label" => "entity.name", "required" => false]);
+        $builder->add('clinic', EntityType::class, ['class' => Clinic::class, 'translation_domain' => 'entity_clinic', 'label' => 'entity.name', 'required' => false]);
+        $builder->add('doctor', EntityType::class, ['class' => Doctor::class, 'translation_domain' => 'entity_doctor', 'label' => 'entity.name', 'required' => false]);
         $builder->add('eventType', ChoiceType::class, \App\Enum\EventType::getBuilderArguments());
     }
 
@@ -39,7 +39,7 @@ class EventType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_event',
-            'label' => 'trait.name'
+            'label' => 'trait.name',
         ]);
     }
 }

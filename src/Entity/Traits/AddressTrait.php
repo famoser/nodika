@@ -213,7 +213,7 @@ trait AddressTrait
         $res = [];
         $lineOne = $this->getStreet();
         if (mb_strlen($lineOne) > 0 && mb_strlen($this->getStreetNr()) > 0) {
-            $lineOne .= ' ' . $this->getStreetNr();
+            $lineOne .= ' '.$this->getStreetNr();
         }
         if (mb_strlen($lineOne) > 0) {
             $res[] = $lineOne;
@@ -223,7 +223,7 @@ trait AddressTrait
         }
         $line3 = $this->getPostalCode();
         if (mb_strlen($line3) > 0 && mb_strlen($this->getCity() > 0)) {
-            $line3 .= ' ' . $this->getCity();
+            $line3 .= ' '.$this->getCity();
         }
         if (mb_strlen($line3) > 0) {
             $res[] = $line3;

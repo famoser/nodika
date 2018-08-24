@@ -11,7 +11,6 @@
 
 namespace AppBundle\Symfony;
 
-use App\Entity\Clinic;
 use App\Form\Member\MemberType;
 use Symfony\Component\Form\Test\TypeTestCase;
 

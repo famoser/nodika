@@ -12,12 +12,10 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
-use App\Controller\Base\BaseFormController;
 use App\Entity\Doctor;
 use App\Form\Doctor\RemoveType;
 use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -28,28 +26,31 @@ use Symfony\Component\Translation\TranslatorInterface;
 class DoctorController extends BaseController
 {
     /**
-     * checks if the email is already used, and shows an error to the user if so
+     * checks if the email is already used, and shows an error to the user if so.
      *
-     * @param Doctor $user
+     * @param Doctor              $user
      * @param TranslatorInterface $translator
+     *
      * @return bool
      */
     private function emailNotUsed(Doctor $user, TranslatorInterface $translator)
     {
-        $existing = $this->getDoctrine()->getRepository(Doctor::class)->findBy(["email" => $user->getEmail()]);
+        $existing = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['email' => $user->getEmail()]);
         if (count($existing) > 0) {
-            $this->displayError($translator->trans("new.danger.email_not_unique", [], "administration_doctor"));
+            $this->displayError($translator->trans('new.danger.email_not_unique', [], 'administration_doctor'));
+
             return false;
         }
+
         return true;
     }
 
     /**
      * @Route("/new", name="administration_doctor_new")
      *
-     * @param Request $request
-     *
+     * @param Request             $request
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function newAction(Request $request, TranslatorInterface $translator)
@@ -78,10 +79,10 @@ class DoctorController extends BaseController
     /**
      * @Route("/{doctor}/edit", name="administration_doctor_edit")
      *
-     * @param Request $request
-     * @param Doctor $doctor
-     *
+     * @param Request             $request
+     * @param Doctor              $doctor
      * @param TranslatorInterface $translator
+     *
      * @return Response
      */
     public function editAction(Request $request, Doctor $doctor, TranslatorInterface $translator)
@@ -91,7 +92,7 @@ class DoctorController extends BaseController
             $request,
             $doctor,
             function () use ($doctor, $translator, $beforeEmail) {
-                return $beforeEmail == $doctor->getEmail() || $this->emailNotUsed($doctor, $translator);
+                return $beforeEmail === $doctor->getEmail() || $this->emailNotUsed($doctor, $translator);
             }
         );
 
@@ -105,17 +106,18 @@ class DoctorController extends BaseController
     }
 
     /**
-     * deactivated because not safe
+     * deactivated because not safe.
+     *
      * @*Route("/{doctor}/remove", name="administration_doctor_remove")
      *
      * @param Request $request
-     * @param Doctor $doctor
+     * @param Doctor  $doctor
      *
      * @return Response
      */
     public function removeAction(Request $request, Doctor $doctor)
     {
-        $canDelete = $doctor->getEvents()->count() == 0;
+        $canDelete = 0 === $doctor->getEvents()->count();
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $doctor),
             $request,
@@ -133,7 +135,7 @@ class DoctorController extends BaseController
             return $myForm;
         }
 
-        $arr["can_delete"] = $canDelete;
+        $arr['can_delete'] = $canDelete;
         $arr['form'] = $myForm->createView();
 
         return $this->render('administration/doctor/remove.html.twig', $arr);
@@ -150,11 +152,12 @@ class DoctorController extends BaseController
     {
         $doctor->setIsEnabled(!$doctor->isEnabled());
         $this->fastSave($doctor);
-        return $this->redirectToRoute("administration_doctors");
+
+        return $this->redirectToRoute('administration_doctors');
     }
 
     /**
-     * get the breadcrumbs leading to this controller
+     * get the breadcrumbs leading to this controller.
      *
      * @return Breadcrumb[]
      */
@@ -162,9 +165,9 @@ class DoctorController extends BaseController
     {
         return parent::getIndexBreadcrumbs() + [
             new Breadcrumb(
-                $this->generateUrl("administration_doctors"),
-                $this->getTranslator()->trans("doctors.title", [], "administration")
-            )
+                $this->generateUrl('administration_doctors'),
+                $this->getTranslator()->trans('doctors.title', [], 'administration')
+            ),
         ];
     }
 }

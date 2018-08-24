@@ -22,7 +22,7 @@ set('shared_files', array_merge(get('shared_files'), ['var/data.sqlite']));
 set('shared_dirs', array_merge(get('shared_dirs'), ['public/upload']));
 set('symfony_env_file', '.env');
 set('composer_options', '{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader --no-scripts');
-set('env_file_path', ".env");
+set('env_file_path', '.env');
 
 // import servers
 inventory('servers.yml');
@@ -46,7 +46,6 @@ task('frontend:build', function () {
     runLocally('rsync -azP public/dist {{user}}@{{hostname}}:{{release_path}}/public');
 })->desc('Build frontend assets');
 
-
 // kill php processes to ensure symlinks are refreshed
 task('deploy:refresh_symlink', function () {
     run('killall -9 php-cgi'); //kill all php processes so symlink is refreshed
@@ -57,4 +56,3 @@ after('deploy:vendors', 'frontend:build');
 after('deploy:vendors', 'database:migrate');
 // refresh symlink
 after('deploy:symlink', 'deploy:refresh_symlink');
-

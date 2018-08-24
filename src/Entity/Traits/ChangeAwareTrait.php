@@ -48,7 +48,6 @@ trait ChangeAwareTrait
      */
     private $lastChangedBy;
 
-
     /**
      * @ORM\PrePersist()
      */
@@ -65,7 +64,6 @@ trait ChangeAwareTrait
     {
         $this->lastChangedAt = new \DateTime();
     }
-
 
     /**
      * @return \DateTime
@@ -100,13 +98,13 @@ trait ChangeAwareTrait
     }
 
     /**
-     * register who has changed the entity
+     * register who has changed the entity.
      *
      * @param Doctor $doctor
      */
     public function registerChangeBy(Doctor $doctor)
     {
-        if ($this->createdBy == null) {
+        if (null === $this->createdBy) {
             $this->createdBy = $doctor;
         }
         $this->lastChangedBy = $doctor;

@@ -17,7 +17,7 @@ class EventVoter extends EventTagVoter
 {
     /**
      * @param string $attribute An attribute
-     * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
+     * @param mixed  $subject   The subject to secure, e.g. an object the user wants to access or any other PHP type
      *
      * @return bool True if the attribute and subject are supported, false otherwise
      */

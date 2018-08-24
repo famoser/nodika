@@ -23,7 +23,7 @@ class ContactRequestType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -39,7 +39,7 @@ class ContactRequestType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'model_contact_request',
-            'data_class' => ContactRequest::class
+            'data_class' => ContactRequest::class,
         ]);
     }
 }

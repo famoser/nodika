@@ -33,7 +33,7 @@ abstract class RemoveThingType extends BaseAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            "translation_domain" => "common_form"
+            'translation_domain' => 'common_form',
         ]);
     }
 }

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 4/5/18
- * Time: 2:47 PM
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity\Traits;
@@ -13,14 +16,14 @@ use Doctrine\ORM\Mapping as ORM;
 trait EventGenerationTarget
 {
     /**
-     * @var double
+     * @var float
      *
      * @ORM\Column(type="decimal")
      */
     private $weight = 1;
 
     /**
-     * @var double|null
+     * @var float|null
      *
      * @ORM\Column(type="decimal", nullable=true)
      */

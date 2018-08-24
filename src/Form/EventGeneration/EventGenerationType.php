@@ -21,14 +21,14 @@ class EventGenerationType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("thing", ThingType::class, ["inherit_data" => true]);
+        $builder->add('thing', ThingType::class, ['inherit_data' => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventGeneration::class,
-            'translation_domain' => 'entity_event_generation'
+            'translation_domain' => 'entity_event_generation',
         ]);
     }
 }

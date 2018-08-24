@@ -14,7 +14,7 @@ namespace App\Service\Interfaces;
 interface IdealQueueServiceInterface
 {
     /**
-     * return the next queue clinic
+     * return the next queue clinic.
      */
     public function getNext();
 }

@@ -22,17 +22,19 @@ use Doctrine\ORM\EntityRepository;
 class ClinicRepository extends EntityRepository
 {
     /**
-     * adds a default ordering
+     * adds a default ordering.
      *
-     * @param array $criteria
+     * @param array      $criteria
      * @param array|null $orderBy
-     * @param null $limit
-     * @param null $offset
+     * @param null       $limit
+     * @param null       $offset
+     *
      * @return array
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $orderBy = $orderBy === null ? array('name' => 'ASC') : $orderBy;
+        $orderBy = null === $orderBy ? ['name' => 'ASC'] : $orderBy;
+
         return parent::findBy($criteria, $orderBy, $limit, $offset);
     }
 }

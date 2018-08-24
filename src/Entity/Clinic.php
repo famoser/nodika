@@ -115,6 +115,7 @@ class Clinic extends BaseEntity
                 $res[] = $doctor;
             }
         }
+
         return $res;
     }
 }

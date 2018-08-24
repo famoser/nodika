@@ -31,6 +31,7 @@ class SettingsRepository extends EntityRepository
         if (count($all) > 0) {
             return $all[0];
         }
+
         return new Setting();
     }
 }

@@ -25,16 +25,16 @@ class EventGenerationDateExceptionType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("startDateTime", EntityType::class, ["class" => EventGeneration::class]);
-        $builder->add("endDateTime", EntityType::class, ["class" => Clinic::class]);
-        $builder->add("eventType", ChoiceType::class, EventType::getBuilderArguments());
+        $builder->add('startDateTime', EntityType::class, ['class' => EventGeneration::class]);
+        $builder->add('endDateTime', EntityType::class, ['class' => Clinic::class]);
+        $builder->add('eventType', ChoiceType::class, EventType::getBuilderArguments());
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventGenerationDateException::class,
-            'translation_domain' => 'entity_event_generation_date_exception'
+            'translation_domain' => 'entity_event_generation_date_exception',
         ]);
     }
 }

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 22/02/2018
- * Time: 08:57
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service;
@@ -17,10 +20,10 @@ class CsvService implements CsvServiceInterface
     const DELIMITER = ',';
 
     /**
-     * creates a response containing the data rendered as a csv
+     * creates a response containing the data rendered as a csv.
      *
-     * @param string $filename
-     * @param string[] $header
+     * @param string     $filename
+     * @param string[]   $header
      * @param string[][] $data
      *
      * @return Response
@@ -34,7 +37,7 @@ class CsvService implements CsvServiceInterface
             //UTF-8 BOM
             fwrite($handle, "\xEF\xBB\xBF");
             //set delimiter to specified
-            fwrite($handle, "sep=" . static::DELIMITER . "\n");
+            fwrite($handle, 'sep='.static::DELIMITER."\n");
 
             if (is_array($header)) {
                 // Add the header of the CSV file
@@ -55,7 +58,7 @@ class CsvService implements CsvServiceInterface
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
 
         return $response;
     }

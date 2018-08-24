@@ -23,16 +23,16 @@ class EventOfferAuthorizationType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add("event", EntityType::class, ["class" => Event::class]);
-        $builder->add("eventOffer", EntityType::class, ["class" => EventOffer::class]);
-        $builder->add("eventOfferAuthorization", EntityType::class, ["class" => EventOfferAuthorization::class]);
+        $builder->add('event', EntityType::class, ['class' => Event::class]);
+        $builder->add('eventOffer', EntityType::class, ['class' => EventOffer::class]);
+        $builder->add('eventOfferAuthorization', EntityType::class, ['class' => EventOfferAuthorization::class]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventOfferAuthorization::class,
-            'translation_domain' => 'entity_event_offer_entry'
+            'translation_domain' => 'entity_event_offer_entry',
         ]);
     }
 }

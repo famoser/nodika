@@ -22,16 +22,16 @@ class AddressType extends BaseAbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('street', TextType::class, ["required" => false]);
-        $builder->add('streetNr', TextType::class, ["required" => false]);
-        $builder->add('addressLine', TextType::class, ["required" => false]);
-        $builder->add('postalCode', NumberType::class, ["required" => false]);
-        $builder->add('city', TextType::class, ["required" => false]);
-        $builder->add('country', CountryType::class, ["required" => false]);
+        $builder->add('street', TextType::class, ['required' => false]);
+        $builder->add('streetNr', TextType::class, ['required' => false]);
+        $builder->add('addressLine', TextType::class, ['required' => false]);
+        $builder->add('postalCode', NumberType::class, ['required' => false]);
+        $builder->add('city', TextType::class, ['required' => false]);
+        $builder->add('country', CountryType::class, ['required' => false]);
     }
 
     /**
@@ -41,7 +41,7 @@ class AddressType extends BaseAbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_address',
-            'label' => 'trait.name'
+            'label' => 'trait.name',
         ]);
     }
 }
