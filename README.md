@@ -4,6 +4,7 @@ Introduction
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffamoser%2Fnodika.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffamoser%2Fnodika?ref=badge_shield)
 [![Travis Build Status](https://travis-ci.org/famoser/nodika.svg?branch=master)](https://travis-ci.org/famoser/nodika)
 [![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffamoser%2Fnodika.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffamoser%2Fnodika?ref=badge_shield)
 
 dependencies (you need this on your machine):
  - `xampp` https://www.apachefriends.org/de/index.html
@@ -83,3 +84,7 @@ if you're setting up deployment on a new server
  - point the web directory to `~/myurl.ch/ENV/current/web`
  - deploy!
  - you may want to check with `php bin/symfony_requirements` if your server does support symfony
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffamoser%2Fnodika.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffamoser%2Fnodika?ref=badge_large)
