@@ -69,7 +69,7 @@ class AssignController extends BaseApiController
         }
         $clinics = [];
         foreach ($doctor->getClinics() as $clinic) {
-            if (in_array($clinic->getId(), $allowedFilter, true)) {
+            if (\in_array($clinic->getId(), $allowedFilter, true)) {
                 $clinics[] = $clinic;
             }
         }

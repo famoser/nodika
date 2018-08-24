@@ -36,7 +36,7 @@ class DoctorController extends BaseController
     private function emailNotUsed(Doctor $user, TranslatorInterface $translator)
     {
         $existing = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['email' => $user->getEmail()]);
-        if (count($existing) > 0) {
+        if (\count($existing) > 0) {
             $this->displayError($translator->trans('new.danger.email_not_unique', [], 'administration_doctor'));
 
             return false;

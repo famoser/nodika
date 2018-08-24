@@ -64,12 +64,12 @@ class LoadClinic extends BaseFixture
             }
             ++$clinicIndex;
 
-            if ($userIndex === count($users)) {
+            if ($userIndex === \count($users)) {
                 $userIndex = 0;
                 ++$allUsersSeen;
             }
 
-            if ($clinicIndex === count($clinics)) {
+            if ($clinicIndex === \count($clinics)) {
                 $clinicIndex = 0;
                 ++$allClinicsSeen;
             }

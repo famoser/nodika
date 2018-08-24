@@ -56,7 +56,7 @@ class LoadGeneration extends BaseFixture
         }
 
         $clinics = $manager->getRepository(Clinic::class)->findAll();
-        $skipPossibility = count($clinics);
+        $skipPossibility = \count($clinics);
 
         foreach ($clinics as $clinic) {
             if (0 !== rand(0, $skipPossibility)) {

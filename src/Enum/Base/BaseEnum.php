@@ -78,7 +78,7 @@ abstract class BaseEnum
     {
         try {
             $res = [];
-            $reflection = new ReflectionClass(get_class($this));
+            $reflection = new ReflectionClass(\get_class($this));
             $choices = $reflection->getConstants();
 
             foreach ($choices as $name => $value) {
@@ -104,7 +104,7 @@ abstract class BaseEnum
     private function getTranslationInternal($enumValue, TranslatorInterface $translator)
     {
         try {
-            $reflection = new ReflectionClass(get_class($this));
+            $reflection = new ReflectionClass(\get_class($this));
 
             return $translator->trans($this->getTextInternal($enumValue, $reflection), [], 'enum_'.$this->camelCaseToTranslation($reflection->getShortName()));
         } catch (\ReflectionException $e) {
@@ -125,7 +125,7 @@ abstract class BaseEnum
     {
         try {
             if (null === $reflection) {
-                $reflection = new ReflectionClass(get_class($this));
+                $reflection = new ReflectionClass(\get_class($this));
             }
 
             $choices = $reflection->getConstants();

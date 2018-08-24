@@ -32,14 +32,14 @@ class CsvService implements CsvServiceInterface
     {
         $response = new StreamedResponse();
         $response->setCallback(function () use ($header, $data) {
-            $handle = fopen('php://output', 'w+');
+            $handle = fopen('php://output', 'w+b');
 
             //UTF-8 BOM
             fwrite($handle, "\xEF\xBB\xBF");
             //set delimiter to specified
             fwrite($handle, 'sep='.static::DELIMITER."\n");
 
-            if (is_array($header)) {
+            if (\is_array($header)) {
                 // Add the header of the CSV file
                 fputcsv($handle, $header, static::DELIMITER);
             }

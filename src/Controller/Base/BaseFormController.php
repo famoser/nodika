@@ -58,14 +58,14 @@ class BaseFormController extends BaseDoctrineController
         $buttonLabel = $translator->trans('submit.create', [], 'common_form');
         $successfulText = $translator->trans('successful.create', [], 'common_form');
 
-        $formType = $this->classToFormType(get_class($defaultEntity));
+        $formType = $this->classToFormType(\get_class($defaultEntity));
         $startEntity = clone $defaultEntity;
 
         //create persist callable
         $myOnSuccessCallable = function ($form) use ($defaultEntity, $beforeCreateCallable, $successfulText, $formType, $startEntity, $buttonLabel) {
             $manager = $this->getDoctrine()->getManager();
 
-            if (!is_callable($beforeCreateCallable) || false !== $beforeCreateCallable($manager)) {
+            if (!\is_callable($beforeCreateCallable) || false !== $beforeCreateCallable($manager)) {
                 $manager->persist($defaultEntity);
                 $manager->flush();
                 $this->displaySuccess($successfulText);
@@ -107,7 +107,7 @@ class BaseFormController extends BaseDoctrineController
         $myOnSuccessCallable = function ($form) use ($entity, $beforeUpdateCallable, $successfulText) {
             $manager = $this->getDoctrine()->getManager();
 
-            if (!is_callable($beforeUpdateCallable) || false !== $beforeUpdateCallable($manager)) {
+            if (!\is_callable($beforeUpdateCallable) || false !== $beforeUpdateCallable($manager)) {
                 $manager->persist($entity);
                 $manager->flush();
                 $this->displaySuccess($successfulText);
@@ -118,7 +118,7 @@ class BaseFormController extends BaseDoctrineController
 
         //handle the form
         return $this->handleForm(
-            $this->createForm($this->classToFormType(get_class($entity)), $entity)
+            $this->createForm($this->classToFormType(\get_class($entity)), $entity)
                 ->add('submit', SubmitType::class, ['label' => $buttonLabel, 'translation_domain' => false]),
             $request,
             $myOnSuccessCallable
@@ -141,7 +141,7 @@ class BaseFormController extends BaseDoctrineController
         return $this->handleRemoveFormInternal(
             $request,
             $entity,
-            $this->classToFormType(get_class($entity), 'Delete'),
+            $this->classToFormType(\get_class($entity), 'Delete'),
             $translator->trans('submit.delete', [], 'common_form'),
             $translator->trans('successful.delete', [], 'common_form'),
             $beforeRemoveCallable ??

@@ -28,7 +28,7 @@ class SettingsRepository extends EntityRepository
     public function findSingle()
     {
         $all = $this->findAll();
-        if (count($all) > 0) {
+        if (\count($all) > 0) {
             return $all[0];
         }
 

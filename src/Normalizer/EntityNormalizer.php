@@ -53,7 +53,7 @@ class EntityNormalizer extends ObjectNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 0 === mb_strpos($type, 'App\\Entity\\') && (is_numeric($data) || is_string($data));
+        return 0 === mb_strpos($type, 'App\\Entity\\') && (is_numeric($data) || \is_string($data));
     }
 
     /**

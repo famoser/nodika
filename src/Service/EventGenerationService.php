@@ -205,7 +205,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         //shuffle array
         $bucketIds = array_keys($bucketClinics);
         shuffle($buckets);
-        $step = $bucketSize / count($buckets);
+        $step = $bucketSize / \count($buckets);
         $currentStep = 0;
         foreach ($bucketIds as $bucketId) {
             $clinics = $bucketClinics[$bucketId];
@@ -477,21 +477,21 @@ class EventGenerationService implements EventGenerationServiceInterface
         $events = $this->constructEvents($eventGeneration);
         $this->assignNaiveEventType($events);
         $this->processExceptions($eventGeneration, $events);
-        if (0 === count($events)) {
+        if (0 === \count($events)) {
             return $events;
         }
 
         //get event targets
         $targets = $this->getEventTargets($eventGeneration);
         $orderedTargets = $this->orderEventTargets($targets);
-        if (0 === count($orderedTargets)) {
+        if (0 === \count($orderedTargets)) {
             return $events;
         }
 
         //get the order the event targets should be applied
         $queueGenerator = new QueueGenerator($this->getClinicRelativeSizeArray($orderedTargets));
         if ($eventGeneration->getMindPreviousEvents()) {
-            $previousEvents = $this->getPreviousEvents($eventGeneration, count($events), count($targets));
+            $previousEvents = $this->getPreviousEvents($eventGeneration, \count($events), \count($targets));
             $warmUpEvents = $this->eventsToWarmupArray($previousEvents, $orderedTargets);
             $queueGenerator->warmUp($warmUpEvents);
         }

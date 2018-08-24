@@ -48,7 +48,7 @@ class DoctorProvider extends BaseUserProvider
     {
         if (!$user instanceof Doctor) {
             throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($user))
+                sprintf('Instances of "%s" are not supported.', \get_class($user))
             );
         }
 

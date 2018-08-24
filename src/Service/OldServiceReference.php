@@ -45,7 +45,7 @@ class OldServiceReference
 
         $assignedEventCount = 0;
         $activeIndex = 0;
-        $totalClinics = count($clinics);
+        $totalClinics = \count($clinics);
         /* @var RRClinicConfiguration[] $priorityQueue */
         $priorityQueue = [];
         $currentDate = clone $roundRobinConfiguration->startDateTime;
@@ -55,9 +55,9 @@ class OldServiceReference
             //check if something in priority queue
             /* @var RRClinicConfiguration $matchClinic */
             $matchClinic = null;
-            if (count($priorityQueue) > 0) {
+            if (\count($priorityQueue) > 0) {
                 $i = 0;
-                for (; $i < count($priorityQueue); ++$i) {
+                for (; $i < \count($priorityQueue); ++$i) {
                     if (
                         $clinicAllowedCallable($currentDate, $endDate, $assignedEventCount, $priorityQueue[$i]) &&
                         $conflictCallable($assignedEventCount, $priorityQueue[$i])
@@ -143,17 +143,17 @@ class OldServiceReference
                     $eventLineEvents[$eventEntry->startDateTime->getTimestamp()][] = $myArr;
                 }
                 ksort($eventLineEvents);
-                $collapsedArray = call_user_func_array('array_merge', $eventLineEvents);
+                $collapsedArray = \call_user_func_array('array_merge', $eventLineEvents);
                 $allEventLineEvents[] = $collapsedArray;
             }
         }
 
-        $eventLineCount = count($allEventLineEvents);
+        $eventLineCount = \count($allEventLineEvents);
         $activeIndexes = [];
         $eventLineCounts = [];
         for ($i = 0; $i < $eventLineCount; ++$i) {
             $activeIndexes[$i] = 0;
-            $eventLineCounts[$i] = count($allEventLineEvents[$i]);
+            $eventLineCounts[$i] = \count($allEventLineEvents[$i]);
         }
 
         $conflictBuffer = [];
@@ -201,7 +201,7 @@ class OldServiceReference
 
         $myFunc = function ($currentEventCount, $clinic) use ($conflictBuffer) {
             /* @var BaseClinicConfiguration $clinic */
-            return !in_array($clinic->id, $conflictBuffer[$currentEventCount], true);
+            return !\in_array($clinic->id, $conflictBuffer[$currentEventCount], true);
         };
 
         return $myFunc;
@@ -388,9 +388,9 @@ class OldServiceReference
         }
 
         $idealQueue = (array) ($nodikaConfiguration->beforeEvents);
-        if (count($idealQueue) > $totalEvents) {
+        if (\count($idealQueue) > $totalEvents) {
             //cut off too large beginning arrays
-            $idealQueue = array_slice($idealQueue, $totalEvents);
+            $idealQueue = \array_slice($idealQueue, $totalEvents);
         }
 
         foreach ($idealQueueClinics as $idealQueueClinic) {
@@ -439,7 +439,7 @@ class OldServiceReference
         }
 
         //this must be equal!
-        assert(count($idealQueue) === $totalEvents);
+        \assert(\count($idealQueue) === $totalEvents);
 
         $startDateTime = clone $nodikaConfiguration->startDateTime;
         $assignedEventCount = 0;

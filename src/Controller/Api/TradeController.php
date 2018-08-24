@@ -127,7 +127,7 @@ class TradeController extends BaseApiController
             $events[] = $eventRepo->find($eventId);
         }
 
-        if (in_array(null, $events, true)) {
+        if (\in_array(null, $events, true)) {
             return false;
         }
 
@@ -150,7 +150,7 @@ class TradeController extends BaseApiController
                 return false;
             }
         }
-        if (count($values) > count($required)) {
+        if (\count($values) > \count($required)) {
             return false;
         }
 

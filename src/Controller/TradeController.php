@@ -155,7 +155,7 @@ class TradeController extends BaseFormController
             $events[] = $eventRepo->find($eventId);
         }
 
-        if (in_array(null, $events, true)) {
+        if (\in_array(null, $events, true)) {
             return false;
         }
 
@@ -178,7 +178,7 @@ class TradeController extends BaseFormController
                 return false;
             }
         }
-        if (count($values) > count($required)) {
+        if (\count($values) > \count($required)) {
             return false;
         }
 
