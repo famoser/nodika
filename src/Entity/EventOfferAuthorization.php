@@ -58,7 +58,7 @@ class EventOfferAuthorization extends BaseEntity
     /**
      * @var EventOfferEntry[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventOfferEntry", mappedBy="eventOfferAuthorization")
+     * @ORM\OneToMany(targetEntity="App\Entity\EventOfferEntry", mappedBy="eventOfferAuthorization", cascade={"all"})
      */
     private $authorizes;
 

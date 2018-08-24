@@ -72,6 +72,7 @@ class TradeController extends BaseFormController
         $searchModel = new SearchModel(SearchModel::YEAR);
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
+        //exclude own events
         $apiEvents = [];
         foreach ($events as $event) {
             if (!$this->getUser()->getClinics()->contains($event->getClinic())) {
@@ -135,7 +136,7 @@ class TradeController extends BaseFormController
     private function constructEventOffer($values)
     {
         //check POST parameters
-        $required = ["my_event_ids", "their_event_ids", "target_clinic_id", "target_user_id", "source_clinic_id"];
+        $required = ["sender_event_ids", "receiver_event_ids", "sender_clinic_id", "receiver_doctor_id", "receiver_clinic_id", "description"];
         foreach ($required as $item) {
             if (!isset($values[$item])) {
                 return false;
@@ -143,17 +144,18 @@ class TradeController extends BaseFormController
         }
         if (count($values) > count($required)) {
             return false;
+
         }
 
         //check events can be traded with chosen target
-        $theirEvents = $this->getEventsFromIds($values["their_event_ids"]);
+        $theirEvents = $this->getEventsFromIds($values["receiver_event_ids"]);
         if (!$theirEvents) {
             return false;
         }
 
         //get targets
-        $targetClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["target_clinic_id"]);
-        $targetDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int)$values["target_user_id"]);
+        $targetClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["receiver_clinic_id"]);
+        $targetDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int)$values["receiver_doctor_id"]);
 
         //ensure both are set now
         if ($targetDoctor == null || $targetClinic == null) {
@@ -179,15 +181,14 @@ class TradeController extends BaseFormController
             }
         }
 
-
         //check source can indeed trade all these events
-        $myEvents = $this->getEventsFromIds($values["my_event_ids"]);
+        $myEvents = $this->getEventsFromIds($values["sender_event_ids"]);
         if (!$myEvents) {
             return false;
         }
 
         //get source
-        $sourceClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["source_clinic_id"]);
+        $sourceClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int)$values["sender_clinic_id"]);
         $sourceUser = $this->getUser();
 
         //check both are alive & connected
@@ -209,15 +210,17 @@ class TradeController extends BaseFormController
         //construct the offer
         $eventOffer = new EventOffer();
         $eventOffer->setStatus(OfferStatus::OPEN);
-        if (isset($values["description"])) {
-            $eventOffer->setMessage($values["description"]);
-        }
+        $eventOffer->setMessage($values["description"]);
 
         //my events which are new the events of the the receiver of the trade offer
         $eventOfferAuthorization = new EventOfferAuthorization();
         $eventOfferAuthorization->setEventOffer($eventOffer);
         $eventOfferAuthorization->setSignatureStatus(SignatureStatus::PENDING);
         $eventOfferAuthorization->setSignedBy($targetDoctor);
+        $eventOfferAuthorization->setEventOffer($eventOffer);
+        $eventOffer->getAuthorizations()->add($eventOfferAuthorization);
+
+        //add concrete events
         foreach ($myEvents as $myEvent) {
             $eventOfferEntry = new EventOfferEntry();
             $eventOfferEntry->setEvent($myEvent);
@@ -225,6 +228,8 @@ class TradeController extends BaseFormController
             $eventOfferEntry->setTargetClinic($targetClinic);
             $eventOfferEntry->setTargetDoctor($targetDoctor);
             $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
+            $eventOffer->getEntries()->add($eventOfferEntry);
+            $eventOfferAuthorization->getAuthorizes()->add($eventOfferEntry);
         }
 
         //their events which are new the events of the creator of the trade offer
@@ -232,6 +237,9 @@ class TradeController extends BaseFormController
         $eventOfferAuthorization->setEventOffer($eventOffer);
         $eventOfferAuthorization->setSignatureStatus(SignatureStatus::SIGNED);
         $eventOfferAuthorization->setSignedBy($this->getUser());
+        $eventOffer->getAuthorizations()->add($eventOfferAuthorization);
+
+        //add concrete events
         foreach ($theirEvents as $theirEvent) {
             $eventOfferEntry = new EventOfferEntry();
             $eventOfferEntry->setEvent($theirEvent);
@@ -239,8 +247,11 @@ class TradeController extends BaseFormController
             $eventOfferEntry->setTargetDoctor($sourceUser);
             $eventOfferEntry->setTargetClinic($sourceClinic);
             $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
+            $eventOffer->getEntries()->add($eventOfferEntry);
+            $eventOfferAuthorization->getAuthorizes()->add($eventOfferEntry);
         }
 
+        $this->fastSave($eventOffer);
         return $eventOffer;
     }
 
@@ -257,9 +268,10 @@ class TradeController extends BaseFormController
      */
     public function create(Request $request, EmailService $emailService, TranslatorInterface $translator)
     {
-        //try to contruct offer from POST values
-        $eventOffer = $this->constructEventOffer($request->request->all());
+        //try to construct offer from POST values
+        $eventOffer = $this->constructEventOffer(json_decode($request->getContent(), true));
         if (!$eventOffer) {
+            $this->displayError($translator->trans("index.danger.trade_offer_invalid", [], "trade"));
             return new Response("NACK");
         }
 
@@ -271,9 +283,11 @@ class TradeController extends BaseFormController
                     $translator->trans("emails.new_offer.subject", [], "trade"),
                     $translator->trans("emails.new_offer.message", [], "trade"),
                     $translator->trans("emails.new_offer.action_text", [], "trade"),
-                    $this->generateUrl("trade_index"));
+                    $this->generateUrl("index_index"));
             }
         }
+
+        $this->displaySuccess($translator->trans("index.success.created_trade_offer", [], "trade"));
         return new Response("ACK");
     }
 }

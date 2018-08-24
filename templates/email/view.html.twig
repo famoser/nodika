@@ -381,9 +381,6 @@
                                                 </tbody>
                                             </table>
                                         {% endif %}
-                                        <p>
-                                            {{ "generated"|trans }}
-                                        </p>
                                     </td>
                                 </tr>
                             </table>
@@ -399,11 +396,11 @@
                         <tr>
 
                             <td class="content-block">
-                                <span class="apple-link"><a
-                                            href="{{ app.request.getSchemeAndHttpHost() }}">{{ app.request.getSchemeAndHttpHost() }}</a></span>
-                                <br>{{ "questions"|trans }} <a
-                                        href="mailto:{{ "questions_email"|trans }}">{{ "questions_email"|trans }}</a>
-                                <br>
+                                {{ "generated"|trans }} <br/>
+                                <a href="{{ app.request.getSchemeAndHttpHost() }}">{{ app.request.getSchemeAndHttpHost() }}</a><br/>
+                                {{ "questions"|trans }}
+                                <a href="mailto:{{ "questions_email"|trans }}">{{ "questions_email"|trans }}</a>
+                                <br/>
                                 <a href="{{ absolute_url(path("email_view", {"identifier" : email.identifier })) }}">
                                     {{ "mail_wrong_displayed"|trans }}
                                 </a>

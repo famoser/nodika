@@ -46,14 +46,14 @@ class EventOffer extends BaseEntity
     /**
      * @var EventOfferEntry[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventOfferEntry", mappedBy="eventOffer")
+     * @ORM\OneToMany(targetEntity="EventOfferEntry", mappedBy="eventOffer", cascade={"all"})
      */
     private $entries;
 
     /**
      * @var EventOfferAuthorization[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventOfferAuthorization", mappedBy="eventOffer")
+     * @ORM\OneToMany(targetEntity="App\Entity\EventOfferAuthorization", mappedBy="eventOffer", cascade={"all"})
      */
     private $authorizations;
 

@@ -12,14 +12,20 @@
                 <EventSelect :owner="receiver"/>
             </div>
             <div class="col-md-4">
+                <p class="lead">{{ $t("offer.name") }}</p>
                 <div v-if="fullyDefinedOffer">
                     <p class="warning">
                         {{ $t("messages.info.not_fully_defined")}}
                     </p>
                 </div>
+                <div v-else-if="possibleSenderClinics.length === 0">
+                    <p class="warning">
+                        {{ $t("messages.danger.no_single_sender_responsible")}}
+                    </p>
+                </div>
                 <div v-else-if="possibleReceiverClinics.length === 0">
                     <p class="warning">
-                        {{ $t("messages.danger.no_single_responsible")}}
+                        {{ $t("messages.danger.no_single_receiver_responsible")}}
                     </p>
                 </div>
                 <div v-else-if="sender.noneSelected && receiver.noneSelected">
@@ -28,16 +34,23 @@
                     </p>
                 </div>
                 <div v-else>
-                    <p class="lead">{{ $t("offer.name") }}</p>
-
-                    <div v-if="!sender.noneSelected">
+                    <div v-if="!sender.noneSelected" class="mb-4">
                         <p>{{$t("messages.sender_events")}}</p>
                         <EventGrid v-if="sender.selectedEvents.length > 0"
                                    :events="sender.selectedEvents"
                                    :disabled-events="sender.selectedEvents"/>
                     </div>
+                    <div v-if="possibleSenderClinics.length > 1" class="mb-4">
+                        <p>{{$t("actions.choose_sender_clinic")}}</p>
+                        <select class="form-control form-control-sm"
+                                v-model="sender.selectedClinic">
+                            <option v-for="option in possibleSenderClinics" v-bind:value="option">
+                                {{ option.name }}
+                            </option>
+                        </select>
+                    </div>
 
-                    <div v-if="!receiver.noneSelected">
+                    <div v-if="!receiver.noneSelected" class="mb-4">
                         <p>{{$t("messages.receiver_events")}}</p>
                         <EventGrid v-if="receiver.selectedEvents.length > 0"
                                    :events="receiver.selectedEvents"
@@ -52,7 +65,7 @@
                         </option>
                     </select>
                     <span v-else class="text-secondary">{{ receiver.selectedClinic.name }}</span>
-                    
+
                     <select class="form-control form-control-sm"
                             v-if="possibleReceiverDoctors.length > 1"
                             v-model="receiver.selectedDoctor">
@@ -66,7 +79,7 @@
                         <label for="description" class="col-form-label">{{ $t("offer.description")}}</label>
                         <textarea class="form-control" id="description" v-model="description"></textarea>
                     </div>
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" @click="createOffer">
                         {{ $t("actions.create_offer")}}
                     </button>
                 </div>
@@ -91,6 +104,7 @@
                     selectedEvents: [],
                     noneSelected: false,
                     loading: false,
+                    selectedClinic: null,
                     doctor: null
                 },
                 receiver: {
@@ -102,7 +116,8 @@
                     selectedDoctor: null
                 },
                 clinics: [],
-                description: ""
+                description: "",
+                creatingOffer: false
             }
         },
         components: {
@@ -112,34 +127,24 @@
             EventGrid
         },
         computed: {
+            allSenderClinics: function () {
+                if (this.doctor === null || this.clinics === null) {
+                    return [];
+                }
+
+                //get clinics of doctor
+                let doctorClinicIds = this.sender.doctor.clinics.map(c => c.id);
+                return this.clinics.filter(c => doctorClinicIds.includes(c.id));
+            },
+            possibleSenderClinics: function () {
+                let clinics = this.sender.noneSelected ? this.allSenderClinics : this.possibleClinics(this.allSenderClinics, this.sender.selectedEvents);
+                this.sender.selectedClinic = this.defaultClinic(clinics, this.sender.selectedClinic);
+                return clinics;
+            },
             possibleReceiverClinics: function () {
-                let res = this.clinics;
-                //check if there is an allowed clinic
-                if (this.receiver.selectedEvents.length === 0) {
-                    if (this.receiver.selectedClinic === null) {
-                        this.receiver.selectedClinic = this.clinics[0];
-                    }
-                    return res;
-                }
-
-                let allowedClinic = this.receiver.selectedEvents[0].clinic;
-
-                //get clinic from clinic list
-                let matchingClinics = this.clinics.filter(c => c.id === allowedClinic.id);
-                if (matchingClinics.length !== 1) {
-                    this.receiver.selectedClinic = null;
-                    return [];
-                }
-                let clinic = matchingClinics[0];
-
-                //check that all events from same clinic
-                if (this.receiver.selectedEvents.filter(e => e.clinic.id !== clinic.id).length > 0) {
-                    this.receiver.selectedClinic = null;
-                    return [];
-                }
-
-                this.receiver.selectedClinic = clinic;
-                return [clinic];
+                let clinics = this.possibleClinics(this.clinics, this.receiver.selectedEvents);
+                this.receiver.selectedClinic = this.defaultClinic(clinics, this.receiver.selectedClinic);
+                return clinics;
             },
             possibleReceiverDoctors: function () {
                 if (this.receiver.selectedClinic == null) {
@@ -172,6 +177,53 @@
             },
             fullyDefinedOffer: function () {
                 return (this.sender.selectedEvents.length === 0 && !this.sender.noneSelected) || (this.receiver.selectedEvents.length === 0 && !this.receiver.noneSelected);
+            }
+        },
+        methods: {
+            createOffer: function () {
+                this.creatingOffer = true;
+                const senderEvents = this.sender.noneSelected ? [] : this.sender.selectedEvents.map(e => e.id);
+                const receiverEvents = this.receiver.noneSelected ? [] : this.receiver.selectedEvents.map(e => e.id);
+                axios.post("/api/trade/create", {
+                    "sender_event_ids": senderEvents,
+                    "receiver_event_ids": receiverEvents,
+                    "sender_clinic_id": this.sender.selectedClinic.id,
+                    "receiver_clinic_id": this.receiver.selectedClinic.id,
+                    "receiver_doctor_id": this.receiver.selectedDoctor.id,
+                    "description": this.description
+                }).then((response) => {
+                    window.location.reload(true);
+                });
+            },
+            possibleClinics: function (clinics, events) {
+                let res = clinics;
+                //check if there is an allowed clinic
+                if (events.length === 0) {
+                    return res;
+                }
+
+                let allowedClinic = events[0].clinic;
+
+                //get clinic from clinic list
+                let matchingClinics = res.filter(c => c.id === allowedClinic.id);
+                if (matchingClinics.length !== 1) {
+                    return [];
+                }
+                let clinic = matchingClinics[0];
+
+                //check that all events from same clinic
+                if (events.filter(e => e.clinic.id !== clinic.id).length > 0) {
+                    return [];
+                }
+
+                return [clinic];
+            },
+            defaultClinic: function (clinics, currentClinic) {
+                if (clinics.includes(currentClinic)) {
+                    return currentClinic;
+                }
+
+                return clinics.length > 0 ? clinics[0] : null;
             }
         },
         watch: {
