@@ -53,7 +53,6 @@ security:
         - { path: ^/_, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #allow info pages
-        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/about, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/email, role: IS_AUTHENTICATED_ANONYMOUSLY }

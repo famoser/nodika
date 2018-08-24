@@ -100,7 +100,7 @@
                             {{ own_macros.dropdown_entry("base.events_menu.search"|trans({}, "layout"), path("search_index")) }}
                         </div>
                     </li>
-                    {% if user is defined and user.administrator %}
+                    {% if app.user is defined and app.user.administrator and not (app.request.requestUri starts with "/administration") %}
                         <div class="form-inline">
                             <a class="btn btn-sm btn-outline-secondary" type="button"
                                href="{{ path("administration_index") }}">{{ "index.title"|trans({}, "administration") }}</a>

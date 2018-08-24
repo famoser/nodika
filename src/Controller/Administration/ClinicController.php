@@ -18,6 +18,7 @@ use App\Form\Clinic\RemoveType;
 use App\Model\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,7 +69,8 @@ class ClinicController extends BaseController
     }
 
     /**
-     * @Route("/{clinic}/remove", name="administration_clinic_remove")
+     * deactivated because not safe
+     * Route("/{clinic}/remove", name="administration_clinic_remove")
      *
      * @param Request $request
      * @param Clinic $clinic
@@ -79,7 +81,8 @@ class ClinicController extends BaseController
     {
         $canDelete = $clinic->getEvents()->count() == 0;
         $myForm = $this->handleForm(
-            $this->createForm(RemoveType::class, $clinic),
+            $this->createForm(RemoveType::class, $clinic)
+            ->add("remove", SubmitType::class, ["translation_domain" => "common_form", "label" => "submit.delete"]),
             $request,
             function () use ($clinic, $canDelete) {
                 $clinic->delete();
@@ -89,6 +92,7 @@ class ClinicController extends BaseController
                     $clinic->delete();
                     $this->fastSave($clinic);
                 }
+                return $this->redirectToRoute("administration_clinics");
             }
         );
 

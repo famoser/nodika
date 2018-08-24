@@ -38,4 +38,9 @@ class IndexController extends BaseDoctrineController
 
         return $this->render('index/index.html.twig', $arr);
     }
+
+    protected function getIndexBreadcrumbs()
+    {
+        return [];
+    }
 }

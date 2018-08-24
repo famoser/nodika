@@ -105,7 +105,7 @@ class DoctorController extends BaseController
     }
 
     /**
-     * disable this route, as removing is not safe
+     * deactivated because not safe
      * @*Route("/{doctor}/remove", name="administration_doctor_remove")
      *
      * @param Request $request

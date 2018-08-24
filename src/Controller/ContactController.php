@@ -12,10 +12,12 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
+use App\Entity\Doctor;
 use App\Entity\Setting;
 use App\Form\Model\ContactRequest\ContactRequestType;
 use App\Model\ContactRequest;
 use App\Service\EmailService;
+use PhpParser\Comment\Doc;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,12 +39,24 @@ class ContactController extends BaseFormController
      */
     public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
-        $contactRequest = new ContactRequest();
+        $createContactRequest = function () {
+            $contactRequest = new ContactRequest();
+            if ($this->getUser() instanceof Doctor) {
+                $contactRequest->setName($this->getUser()->getFullName());
+                $contactRequest->setEmail($this->getUser()->getEmail());
+            }
+            return $contactRequest;
+        };
+        $contactRequest = $createContactRequest();
+        $createForm = function ($contactRequest) {
+            return $this->createForm(ContactRequestType::class, $contactRequest)
+                ->add("form.send", SubmitType::class, ["translation_domain" => "contact", "label" => "index.send_mail"]);
+        };
+
         $form = $this->handleForm(
-            $this->createForm(ContactRequestType::class)
-                ->add("form.send", SubmitType::class),
+            $createForm($contactRequest),
             $request,
-            function () use ($request, $contactRequest, $translator, $emailService) {
+            function () use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm) {
                 $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
                 /* @var FormInterface $form */
                 $emailService->sendTextEmail(
@@ -62,7 +76,7 @@ class ContactController extends BaseFormController
 
                 $this->displaySuccess($translator->trans('index.success.email_sent', [], 'contact'));
 
-                return $this->createForm(ContactRequestType::class);
+                return $createForm($createContactRequest());
             }
         );
 

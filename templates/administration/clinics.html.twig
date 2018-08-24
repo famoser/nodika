@@ -19,7 +19,6 @@
             <th>{{ "email"|trans({}, "trait_communication") }}</th>
             <th>{{ "entity.plural"|trans({}, "entity_doctor") }}</th>
             <th class="minimal-width"></th>
-            <th class="minimal-width"></th>
         </tr>
         </thead>
         <tbody>
@@ -36,12 +35,14 @@
                         <i class="fal fa-pencil"></i>
                     </a>
                 </td>
+                {#
                 <td>
                     <a class="btn btn-secondary"
                        href="{{ path("administration_clinic_remove", {"clinic" : clinic.id}) }}">
                         <i class="fal fa-trash"></i>
                     </a>
                 </td>
+                #}
             </tr>
         {% endfor %}
         </tbody>

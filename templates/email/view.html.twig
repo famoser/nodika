@@ -359,7 +359,7 @@
                             <table border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <p>{{ email.body }}</p>
+                                        <p>{{ email.body|nl2br }}</p>
                                         {% if email.actionLink != null %}
                                             <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                                 <tbody>
@@ -396,14 +396,11 @@
                         <tr>
 
                             <td class="content-block">
-                                {{ "generated"|trans }} <br/>
-                                <a href="{{ app.request.getSchemeAndHttpHost() }}">{{ app.request.getSchemeAndHttpHost() }}</a><br/>
-                                {{ "questions"|trans }}
-                                <a href="mailto:{{ "questions_email"|trans }}">{{ "questions_email"|trans }}</a>
-                                <br/>
                                 <a href="{{ absolute_url(path("email_view", {"identifier" : email.identifier })) }}">
                                     {{ "mail_wrong_displayed"|trans }}
                                 </a>
+                                {{ "generated"|trans }} <br/>
+                                <a href="{{ path("contact_index") }}">{{ "questions"|trans }}</a>
                             </td>
                         </tr>
                     </table>
