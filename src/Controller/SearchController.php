@@ -26,7 +26,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/search")
- * @Security("has_role('ROLE_USER')")
  */
 class SearchController extends BaseFormController
 {

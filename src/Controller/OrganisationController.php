@@ -18,7 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/organisation")
- * @Security("has_role('ROLE_USER')")
  */
 class OrganisationController extends BaseController
 {

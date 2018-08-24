@@ -11,6 +11,7 @@
 
 namespace App\Controller\Administration;
 
+use App\Controller\Administration\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\EventTag;
 use App\Model\Breadcrumb;
@@ -21,9 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/event_tag")
- * @Security("has_role('ROLE_USER')")
  */
-class EventTagController extends BaseFormController
+class EventTagController extends BaseController
 {
     /**
      * @Route("/new", name="administration_event_tag_new")
@@ -85,20 +85,5 @@ class EventTagController extends BaseFormController
         $arr['form'] = $myForm->createView();
 
         return $this->render('administration/event_tag/remove.html.twig', $arr);
-    }
-
-    /**
-     * get the breadcrumbs leading to this controller
-     *
-     * @return Breadcrumb[]
-     */
-    protected function getIndexBreadcrumbs()
-    {
-        return [
-            new Breadcrumb(
-                $this->generateUrl("administration_index"),
-                $this->getTranslator()->trans("index.title", [], "administration")
-            )
-        ];
     }
 }

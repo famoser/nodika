@@ -11,6 +11,7 @@
 
 namespace App\Controller\Administration;
 
+use App\Controller\Administration\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Setting;
 use App\Model\Breadcrumb;
@@ -21,9 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/settings")
- * @Security("has_role('ROLE_USER')")
  */
-class SettingController extends BaseFormController
+class SettingController extends BaseController
 {
     /**
      * @Route("/edit", name="administration_setting_edit")
@@ -47,20 +47,5 @@ class SettingController extends BaseFormController
         $arr['form'] = $myForm->createView();
 
         return $this->render('administration/setting/edit.html.twig', $arr);
-    }
-
-    /**
-     * get the breadcrumbs leading to this controller
-     *
-     * @return Breadcrumb[]
-     */
-    protected function getIndexBreadcrumbs()
-    {
-        return [
-            new Breadcrumb(
-                $this->generateUrl("administration_index"),
-                $this->getTranslator()->trans("index.title", [], "administration")
-            )
-        ];
     }
 }

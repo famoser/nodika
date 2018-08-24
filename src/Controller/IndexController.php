@@ -19,7 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/")
- * @Security("has_role('ROLE_USER')")
  */
 class IndexController extends BaseDoctrineController
 {

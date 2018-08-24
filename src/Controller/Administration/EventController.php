@@ -11,6 +11,7 @@
 
 namespace App\Controller\Administration;
 
+use App\Controller\Administration\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Event;
 use App\Entity\EventPast;
@@ -28,9 +29,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/events")
- * @Security("has_role('ROLE_USER')")
  */
-class EventController extends BaseFormController
+class EventController extends BaseController
 {
     /**
      * @Route("/new", name="administration_event_new")
@@ -176,11 +176,7 @@ class EventController extends BaseFormController
      */
     protected function getIndexBreadcrumbs()
     {
-        return [
-            new Breadcrumb(
-                $this->generateUrl("administration_index"),
-                $this->getTranslator()->trans("index.title", [], "administration")
-            ),
+        return parent::getIndexBreadcrumbs() + [
             new Breadcrumb(
                 $this->generateUrl("administration_events"),
                 $this->getTranslator()->trans("events.title", [], "administration")

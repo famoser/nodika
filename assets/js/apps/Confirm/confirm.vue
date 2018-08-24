@@ -1,49 +1,50 @@
 <template>
     <div id="confirm-app">
         <div v-if="events.length > 0" class="container">
-            <div class="row d-block mb-5 mt-5 border-top border-danger pt-5 border-bottom pb-5">
-                <p class="lead">{{ $t("confirm_events") }}</p>
-                <EventList
-                        v-bind:events="events"
-                        @selected="eventSelected">
-                </EventList>
+            <div class="row d-block mb-5 mt-5 border-top border-primary pt-5 border-bottom pb-5">
+                <p class="lead">{{ $t("actions.confirm_events") }}</p>
+                <EventGrid
+                        :events="events"
+                        :loading-events="loadingEvents"
+                        :disabled-events="loadingEvents"
+                        :size="3"
+                        @event-selected="eventSelected">
+                </EventGrid>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import EventList from "./components/EventList"
     import axios from "axios"
+    import EventGrid from "../components/EventGrid"
 
     export default {
         data() {
             return {
-                events: []
+                events: [],
+                loadingEvents: []
             }
         },
         components: {
-            EventList
+            EventGrid
         },
         methods: {
             eventSelected: function (event) {
-                event.isLoading = true;
-                axios.get("/confirm/api/event/" + event.id)
+                this.loadingEvents.push(event);
+                axios.get("/api/confirm/event/" + event.id)
                     .then((response) => {
                         this.events = this.events.filter(e => {
                             return e.id !== event.id
                         });
+                        this.loadingEvents.splice(this.loadingEvents.indexOf(event), 1);
                     });
             }
         },
         mounted() {
-            axios.get("/confirm/api/events")
+            axios.get("/api/confirm/events")
                 .then((response) => {
-                    const events = response.data;
-                    for (let i = 0; i < events.length; i++) {
-                        events[i].isLoading = false;
-                    }
-                    this.events = events;
+                    this.events = response.data;
                 });
         },
     }

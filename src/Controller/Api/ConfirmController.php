@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
+use App\Controller\Api\Base\BaseApiController;
 use App\Controller\Base\BaseFormController;
 use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Event;
@@ -26,14 +27,13 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/confirm")
- * @Security("has_role('ROLE_USER')")
  */
-class ConfirmController extends BaseFormController
+class ConfirmController extends BaseApiController
 {
     use EventControllerTrait;
 
     /**
-     * @Route("/api/events", name="confirm_events")
+     * @Route("/events", name="api_confirm_events")
      *
      * @param SerializerInterface $serializer
      * @return JsonResponse
@@ -61,7 +61,7 @@ class ConfirmController extends BaseFormController
     }
 
     /**
-     * @Route("/api/event/{event}", name="confirm_event")
+     * @Route("/event/{event}", name="api_confirm_event")
      *
      * @param Event $event
      * @return Response

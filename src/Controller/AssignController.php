@@ -38,18 +38,4 @@ class AssignController extends BaseFormController
     {
         return $this->render('assign/index.html.twig');
     }
-
-    /**
-     * @return Breadcrumb[]|array
-     */
-    public function getIndexBreadcrumbs()
-    {
-        return [
-            new Breadcrumb(
-                $this->generateUrl("index_index"),
-                $this->getTranslator()->trans("index.title", [], "index")
-            )
-        ];
-
-    }
 }

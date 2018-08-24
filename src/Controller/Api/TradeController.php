@@ -11,6 +11,7 @@
 
 namespace App\Controller\Api;
 
+use App\Controller\Api\Base\BaseApiController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
@@ -33,7 +34,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * @Route("/trade")
  */
-class TradeController extends BaseFormController
+class TradeController extends BaseApiController
 {
     /**
      * @Route("/my_events", name="api_trade_my_events")

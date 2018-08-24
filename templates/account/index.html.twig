@@ -9,14 +9,16 @@
     <div class="row">
         <div class="col-md-4">
             <h3>
-                {{ "index.your_infos"|trans({"%name%": user.fullName}) }}
+                {{ "index.hi"|trans({"%name%": user.fullName}) }}
             </h3>
 
             <p>
-                {% if user.clinics|length > 0 %}
-                    {{ "index.info_clinic"|trans({"%clinic%": user.clinics|join(", ")}) }}
+                {% if user.clinics|length == 1 %}
+                    {{ "index.member_of_clinic"|trans({"%clinic%": user.clinics|join("")}) }}
+                {% elseif user.clinics|length > 1 %}
+                    {{ "index.member_of_clinics"|trans({"%clinics%": user.clinics|join(", ")}) }}
                 {% else %}
-                    {{ "index.info_no_clinic"|trans }}
+                    {{ "index.no_clinics"|trans }}
                 {% endif %}
             </p>
 

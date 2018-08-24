@@ -32,7 +32,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/trade")
- * @Security("has_role('ROLE_USER')")
  */
 class TradeController extends BaseFormController
 {

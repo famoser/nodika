@@ -11,6 +11,7 @@
 
 namespace App\Controller\Administration;
 
+use App\Controller\Administration\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\EventGeneration;
 use App\Form\EventGeneration\BasicDataType;
@@ -26,9 +27,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/generate")
- * @Security("has_role('ROLE_USER')")
  */
-class GenerateController extends BaseFormController
+class GenerateController extends BaseController
 {
     /**
      * @Route("/", name="administration_generate_index")
@@ -213,11 +213,7 @@ class GenerateController extends BaseFormController
      */
     protected function getIndexBreadcrumbs()
     {
-        return [
-            new Breadcrumb(
-                $this->generateUrl("administration_index"),
-                $this->getTranslator()->trans("index.title", [], "administration")
-            ),
+        return parent::getIndexBreadcrumbs() + [
             new Breadcrumb(
                 $this->generateUrl("administration_generations"),
                 $this->getTranslator()->trans("doctors.title", [], "administration")

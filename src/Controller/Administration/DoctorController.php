@@ -11,6 +11,7 @@
 
 namespace App\Controller\Administration;
 
+use App\Controller\Administration\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Doctor;
 use App\Form\Doctor\RemoveType;
@@ -23,9 +24,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/doctors")
- * @Security("has_role('ROLE_USER')")
  */
-class DoctorController extends BaseFormController
+class DoctorController extends BaseController
 {
     /**
      * checks if the email is already used, and shows an error to the user if so
@@ -160,11 +160,7 @@ class DoctorController extends BaseFormController
      */
     protected function getIndexBreadcrumbs()
     {
-        return [
-            new Breadcrumb(
-                $this->generateUrl("administration_index"),
-                $this->getTranslator()->trans("index.title", [], "administration")
-            ),
+        return parent::getIndexBreadcrumbs() + [
             new Breadcrumb(
                 $this->generateUrl("administration_doctors"),
                 $this->getTranslator()->trans("doctors.title", [], "administration")

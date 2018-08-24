@@ -20,24 +20,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class BaseFormController extends BaseDoctrineController
 {
     /**
-     * inject the translator service
-     *
-     * @return array
-     */
-    public static function getSubscribedServices()
-    {
-        return parent::getSubscribedServices() + ['translator' => TranslatorInterface::class];
-    }
-
-    /**
-     * @return TranslatorInterface
-     */
-    protected function getTranslator()
-    {
-        return $this->get("translator");
-    }
-
-    /**
      * @param FormInterface $form
      * @param Request $request
      * @param callable $onValidCallable with $form ass an argument

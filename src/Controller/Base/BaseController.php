@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
@@ -25,7 +26,8 @@ class BaseController extends AbstractController
         return parent::getSubscribedServices() +
             [
                 'kernel' => KernelInterface::class,
-                'security.token_storage' => TokenStorageInterface::class
+                'security.token_storage' => TokenStorageInterface::class,
+                'translator' => TranslatorInterface::class
             ];
     }
 
@@ -35,6 +37,14 @@ class BaseController extends AbstractController
     private function getKernel()
     {
         return $this->get("kernel");
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    protected function getTranslator()
+    {
+        return $this->get("translator");
     }
 
 
@@ -115,13 +125,16 @@ class BaseController extends AbstractController
     }
 
     /**
-     * get the breadcrumbs leading to this controller
-     *
-     * @return Breadcrumb[]
+     * @return Breadcrumb[]|array
      */
     protected function getIndexBreadcrumbs()
     {
-        return [];
+        return [
+            new Breadcrumb(
+                $this->generateUrl("index_index"),
+                $this->getTranslator()->trans("index.title", [], "index")
+            )
+        ];
     }
 
     /**

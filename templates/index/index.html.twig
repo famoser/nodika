@@ -21,7 +21,8 @@
 
 
 {% block content %}
-    <div id="confirm-app"></div>
+    <div id="confirm"></div>
+    <div id="offer-confirm"></div>
     <div class="container">
         <div class="row">
             <div class="d-flex">
@@ -35,11 +36,11 @@
                         <table class="table table-hover table-striped">
                             <thead>
                             <tr>
-                                <th>{{ "start_date_time"|trans({}, "entity_event") }}</th>
-                                <th>{{ "end_date_time"|trans({}, "entity_event") }}</th>
+                                <th>{{ "start_date_time"|trans({}, "trait_start_end") }}</th>
+                                <th>{{ "end_date_time"|trans({}, "trait_start_end") }}</th>
                                 <th>{{ "entity.name"|trans({}, "entity_clinic") }}</th>
                                 <th>{{ "entity.name"|trans({}, "entity_doctor") }}</th>
-                                <th>{{ "is_confirmed"|trans({}, "entity_event") }}</th>
+                                <th>{{ "is_confirmed"|trans({}, "trait_event") }}</th>
                                 <th>{{ "entity.plural"|trans({}, "entity_event_tag") }}</th>
                             </tr>
                             </thead>

@@ -11,6 +11,7 @@
 
 namespace App\Controller\Administration;
 
+use App\Controller\Administration\Base\BaseController;
 use App\Controller\Base\BaseFormController;
 use App\Entity\Clinic;
 use App\Form\Clinic\RemoveType;
@@ -22,9 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/clinics")
- * @Security("has_role('ROLE_USER')")
  */
-class ClinicController extends BaseFormController
+class ClinicController extends BaseController
 {
     /**
      * @Route("/new", name="administration_clinic_new")
@@ -109,15 +109,10 @@ class ClinicController extends BaseFormController
      */
     protected function getIndexBreadcrumbs()
     {
-        return [
-            new Breadcrumb(
-                $this->generateUrl("administration_index"),
-                $this->getTranslator()->trans("index.title", [], "administration")
-            ),
-            new Breadcrumb(
-                $this->generateUrl("administration_clinics"),
-                $this->getTranslator()->trans("clinics.title", [], "administration")
-            )
+        return parent::getIndexBreadcrumbs() + [new Breadcrumb(
+            $this->generateUrl("administration_clinics"),
+            $this->getTranslator()->trans("clinics.title", [], "administration")
+        )
         ];
     }
 }

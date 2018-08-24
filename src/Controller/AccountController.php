@@ -22,7 +22,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/account")
- * @Security("has_role('ROLE_USER')")
  */
 class AccountController extends BaseFormController
 {
@@ -40,7 +39,7 @@ class AccountController extends BaseFormController
 
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user)
-                ->add("form.change_password", SubmitType::class),
+                ->add("form.change_password", SubmitType::class, ["translation_domain" => "account", "label" => "index.change_password"]),
             $request,
             function ($form) use ($user, $translator) {
                 if (
@@ -62,7 +61,7 @@ class AccountController extends BaseFormController
 
         $form = $this->handleForm(
             $this->createForm(EditAccountType::class, $user)
-                ->add("form.save", SubmitType::class),
+                ->add("form.save", SubmitType::class, ["translation_domain" => "common_form", "label" => "submit.update"]),
             $request,
             function ($form) use ($user, $translator) {
                 $this->displaySuccess($translator->trans("successful.update", [], "common_form"));

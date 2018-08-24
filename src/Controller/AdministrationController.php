@@ -31,7 +31,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/administration")
- * @Security("has_role('ROLE_USER')")
  */
 class AdministrationController extends BaseFormController
 {
