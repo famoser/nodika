@@ -11,10 +11,14 @@
 
 namespace App\Service;
 
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
+use App\Entity\EventPast;
+use App\Enum\EventChangeType;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
+use App\Enum\GenerationStep;
 use App\EventGeneration\EventTarget;
 use App\EventGeneration\QueueGenerator;
 use App\Exception\GenerationException;
@@ -510,6 +514,43 @@ class EventGenerationService implements EventGenerationServiceInterface
                 }
             }
         }
+
+        return $events;
+    }
+
+    /**
+     * @param EventGeneration $eventGeneration
+     * @param Doctor          $creator
+     *
+     * @return Event[]
+     */
+    public function persist(EventGeneration $eventGeneration, Doctor $creator)
+    {
+        $manager = $this->doctrine->getManager();
+
+        //generate events & add to db
+        $events = $this->generate($eventGeneration);
+        foreach ($events as $event) {
+            //add past
+            $eventPast = EventPast::create($event, EventChangeType::GENERATED_BY_ADMIN, $creator);
+            $event->getEventPast()->add($eventPast);
+
+            //add tagw
+            foreach ($eventGeneration->getAssignEventTags() as $assignEventTag) {
+                $event->getEventTags()->add($assignEventTag);
+            }
+
+            //add to db
+            $manager->persist($event);
+        }
+
+        //register change
+        $eventGeneration->setStep(GenerationStep::PERSISTED);
+        $eventGeneration->registerChangeBy($creator);
+        $manager->persist($eventGeneration);
+
+        //commit
+        $manager->flush();
 
         return $events;
     }

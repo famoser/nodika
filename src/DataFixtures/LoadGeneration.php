@@ -17,8 +17,7 @@ use App\Entity\Doctor;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
 use App\Entity\EventGenerationTargetClinic;
-use App\Entity\EventPast;
-use App\Enum\EventChangeType;
+use App\Entity\EventTag;
 use App\Enum\EventType;
 use App\Helper\DateTimeFormatter;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -36,6 +35,19 @@ class LoadGeneration extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
+        $tags = $manager->getRepository(EventTag::class)->findAll();
+        foreach ($tags as $tag) {
+            $this->generateForTag($tag, $manager);
+        }
+    }
+
+    /**
+     * @param EventTag      $tag
+     * @param ObjectManager $manager
+     */
+    private function generateForTag(EventTag $tag, ObjectManager $manager)
+    {
+        //prepare a generation
         $generation = $this->getRandomInstance();
         $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT));
         $generation->setDifferentiateByEventType(false);
@@ -43,6 +55,7 @@ class LoadGeneration extends BaseFixture
         $generation->setEndDateTime(new \DateTime('now + 1 year'));
         $generation->setStartCronExpression('0 8 * * *');
         $generation->setEndCronExpression('0 8 * * *');
+        $generation->getAssignEventTags()->add($tag);
 
         //date exceptions
         $dateExceptions = [
@@ -55,9 +68,9 @@ class LoadGeneration extends BaseFixture
             $exception->setEventGeneration($generation);
         }
 
+        //add most clinics as generation target
         $clinics = $manager->getRepository(Clinic::class)->findAll();
-        $skipPossibility = \count($clinics);
-
+        $skipPossibility = \count($clinics) / 3 * 2;
         foreach ($clinics as $clinic) {
             if (0 !== rand(0, $skipPossibility)) {
                 $target = new EventGenerationTargetClinic();
@@ -75,12 +88,7 @@ class LoadGeneration extends BaseFixture
 
         //generate & persist all events
         $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
-        $events = $this->getEventGenerationService()->generate($generation);
-        foreach ($events as $event) {
-            $eventPast = EventPast::create($event, EventChangeType::GENERATED_BY_ADMIN, $admin);
-            $manager->persist($event);
-            $manager->persist($eventPast);
-        }
+        $events = $this->getEventGenerationService()->persist($generation, $admin);
 
         //confirm first 10 events
         for ($i = 0; $i < 10; ++$i) {

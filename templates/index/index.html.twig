@@ -1,5 +1,6 @@
 {% extends 'layout_base.html.twig' %}
 {% import _self as local_macro %}
+{% import 'macros/event_tag.html.twig' as event_tag_macros %}
 
 {% block title %}{{ "index.title"|trans }}{% endblock %}
 {% block description %}{{ "index.description"|trans }}{% endblock %}
@@ -41,12 +42,12 @@
                                 <th>{{ "entity.name"|trans({}, "entity_clinic") }}</th>
                                 <th>{{ "entity.name"|trans({}, "entity_doctor") }}</th>
                                 <th>{{ "is_confirmed"|trans({}, "trait_event") }}</th>
-                                <th>{{ "entity.plural"|trans({}, "entity_event_tag") }}</th>
+                                <th class="minimal-width"> </th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for event in events %}
-                                <tr class="{% if event.active %}table-light{% endif %} {% if event.clinic in user.clinics %}bold{% endif %}">
+                                <tr class="{% if event.active %}table-light{% endif %} {% if event.clinic in app.user.clinics %}bold{% endif %}">
                                     <td>
                                         {{ event.startDateTime|dateTimeFormat }}
                                     </td>
@@ -65,7 +66,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {{ event.eventTags|join(", ") }}
+                                        {{ event_tag_macros.render(event.eventTags) }}
                                     </td>
                                 </tr>
                             {% endfor %}

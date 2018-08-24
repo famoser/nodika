@@ -4,15 +4,16 @@
             <div class="col-md-4">
                 <p class="lead">{{ $t("actions.choose_doctor") }}</p>
                 <AtomSpinner
-                        v-if="usersLoading"
+                        v-if="doctorsLoading"
                         :animation-duration="1000"
                         :size="60"
                         :color="'#007bff'"
                 />
 
                 <DoctorList
-                        v-bind:doctors="doctors"
-                        @selection-changed="doctorSelected">
+                        :doctors="doctors"
+                        :selected-doctor="selectedDoctor"
+                        @doctor-selected="doctorSelected">
                 </DoctorList>
             </div>
             <div class="col-md-8">
@@ -20,7 +21,7 @@
                     <div class="d-flex justify-content-between">
                         <p class="lead">{{ $t("actions.assign_events") }}</p>
                         <div>
-                            <a href="#" v-on:click.prevent="assignAll" class="btn btn-sm btn-secondary" :class="{'disabled': eventsAssigning}">
+                            <a href="#" v-on:click.prevent="assignAll" class="btn btn-sm btn-secondary" :class="{'disabled': loadingEvents.length > 0 || eventsLoading}">
                                 {{ $t("actions.assign_all_events") }}
                             </a>
                         </div>
@@ -58,13 +59,13 @@
     export default {
         data() {
             return {
+                doctorsLoading: true,
                 doctors: [],
                 selectedDoctor: null,
-                events: [],
-                usersLoading: false,
+
                 eventsLoading: false,
-                eventsAssigning: false,
-                loadingEvents: []
+                events: [],
+                loadingEvents: [],
             }
         },
         components: {
@@ -74,25 +75,26 @@
         },
         methods: {
             doctorSelected: function (doctor) {
-                this.selectedDoctor = doctor;
-                this.events = [];
-                this.eventsLoading = true;
-                axios.get("/api/assign/events/" + doctor.id)
-                    .then((response) => {
-                        this.eventsLoading = false;
-                        this.events = response.data;
-                    });
+                if (this.selectedDoctor !== doctor) {
+                    this.selectedDoctor = doctor;
+                    this.events = [];
+                    this.eventsLoading = true;
+                    axios.get("/api/assign/events/" + doctor.id)
+                        .then((response) => {
+                            this.eventsLoading = false;
+                            this.events = response.data;
+                        });
+                }
             },
             eventSelected: function (event) {
                 if (event.doctor != null && event.doctor.id === this.selectedDoctor.id) {
                     return
                 }
 
-                this.loadingEvents = [event];
-                event.isLoading = true;
+                this.loadingEvents.push(event);
                 axios.get("/api/assign/assign/" + event.id + "/" + this.selectedDoctor.id)
                     .then((response) => {
-                        this.loadingEvents = [];
+                        this.loadingEvents.splice(this.loadingEvents.indexOf(event), 1);
                         event.doctor = response.data.doctor;
                     });
             },
@@ -102,19 +104,17 @@
         },
         computed: {
             doctorEvents: function () {
-                return this.events.filter(e => e.doctor.id === this.selectedDoctor.id);
+                if (this.selectedDoctor != null) {
+                    return this.events.filter(e => e.doctor != null && e.doctor.id === this.selectedDoctor.id);
+                }
+                return [];
             }
         },
         mounted() {
-            this.usersLoading = true;
             axios.get("/api/assign/doctors")
                 .then((response) => {
-                    this.usersLoading = false;
-                    const users = response.data;
-                    for (let i = 0; i < users.length; i++) {
-                        users[i].isSelected = false;
-                    }
-                    this.doctors = users;
+                    this.doctorsLoading = false;
+                    this.doctors = response.data;
                 });
         },
     }

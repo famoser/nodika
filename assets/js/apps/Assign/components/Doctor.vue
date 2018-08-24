@@ -1,5 +1,5 @@
 <template>
-    <a href="#" v-on:click.prevent="$emit('select', doctor)" class="card" v-bind:class="{ 'border-primary' : doctor.isSelected }">
+    <a href="#" v-on:click.prevent="$emit('select', doctor)" class="card" v-bind:class="{ 'border-primary' : isSelected }">
         <div class="card-body">
             <p>{{ doctor.fullName }}<br>
                 <span class="text-secondary">{{ doctor.clinics.map(v => v.name).join(", ")}}</span>
@@ -14,6 +14,10 @@
         props: {
             doctor: {
                 type: Object,
+                required: true
+            },
+            isSelected: {
+                type: Boolean,
                 required: true
             }
         }

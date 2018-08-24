@@ -3,4 +3,4 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes:
-        ['form/form_layout.html.twig', 'form/fields.html.twig']
+        ['bundles/TwigBridge/Form/form_layout.html.twig']

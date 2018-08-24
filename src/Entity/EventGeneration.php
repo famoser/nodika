@@ -16,7 +16,6 @@ use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\StartEndTrait;
 use App\Entity\Traits\ThingTrait;
-use App\Enum\GenerationStatus;
 use App\Enum\GenerationStep;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -111,22 +110,23 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $status = GenerationStatus::STARTED;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
     private $step = GenerationStep::CHOOSE_TARGETS;
 
     /**
      * @var EventTag[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
-     * @ORM\JoinTable(name="event_generation_event_tags")
+     * @ORM\JoinTable(name="event_generation_conflicting_event_tags")
      */
     private $conflictEventTags;
+
+    /**
+     * @var EventTag[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
+     * @ORM\JoinTable(name="event_generation_assign_event_tags")
+     */
+    private $assignEventTags;
 
     /**
      * @var EventGenerationDateException[]|ArrayCollection
@@ -164,6 +164,7 @@ class EventGeneration extends BaseEntity
         $this->clinics = new ArrayCollection();
         $this->generatedEvents = new ArrayCollection();
         $this->conflictEventTags = new ArrayCollection();
+        $this->assignEventTags = new ArrayCollection();
     }
 
     /**
@@ -287,22 +288,6 @@ class EventGeneration extends BaseEntity
     }
 
     /**
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param int $status
-     */
-    public function setStatus(int $status): void
-    {
-        $this->status = $status;
-    }
-
-    /**
      * @return EventGenerationDateException[]|ArrayCollection
      */
     public function getDateExceptions()
@@ -404,5 +389,13 @@ class EventGeneration extends BaseEntity
     public function getConflictEventTags()
     {
         return $this->conflictEventTags;
+    }
+
+    /**
+     * @return EventTag[]|ArrayCollection
+     */
+    public function getAssignEventTags()
+    {
+        return $this->assignEventTags;
     }
 }

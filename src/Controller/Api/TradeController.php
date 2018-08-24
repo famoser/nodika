@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -37,13 +36,9 @@ class TradeController extends BaseApiController
     /**
      * @Route("/my_events", name="api_trade_my_events")
      *
-     * @param SerializerInterface $serializer
-     *
-     * @throws \Exception
-     *
      * @return JsonResponse
      */
-    public function apiMyEventsAction(SerializerInterface $serializer)
+    public function apiMyEventsAction()
     {
         //get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
@@ -57,19 +52,15 @@ class TradeController extends BaseApiController
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
+        return $this->returnEvents($apiEvents);
     }
 
     /**
      * @Route("/their_events", name="ap_trade_their_events")
      *
-     * @param SerializerInterface $serializer
-     *
-     * @throws \Exception
-     *
      * @return JsonResponse
      */
-    public function theirEventsAction(SerializerInterface $serializer)
+    public function theirEventsAction()
     {
         //get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
@@ -83,34 +74,29 @@ class TradeController extends BaseApiController
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
+        return $this->returnEvents($apiEvents);
     }
 
     /**
      * @Route("/clinics", name="api_trade_clinics")
      *
-     * @param SerializerInterface $serializer
-     * @param Doctor              $doctor
-     *
      * @return JsonResponse
      */
-    public function apiClinics(SerializerInterface $serializer)
+    public function apiClinics()
     {
         $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null], ['name' => 'ASC']);
 
-        return new JsonResponse($serializer->serialize($clinics, 'json', ['attributes' => ['id', 'name', 'doctors' => ['id', 'fullName']]]), 200, [], true);
+        return $this->returnClinics($clinics);
     }
 
     /**
      * @Route("/self", name="api_trade_self")
      *
-     * @param SerializerInterface $serializer
-     *
      * @return JsonResponse
      */
-    public function self(SerializerInterface $serializer)
+    public function self()
     {
-        return new JsonResponse($serializer->serialize($this->getUser(), 'json', ['attributes' => ['id', 'fullName', 'clinics' => ['id', 'name']]]), 200, [], true);
+        return $this->returnDoctors($this->getUser());
     }
 
     /**

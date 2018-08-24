@@ -15,6 +15,7 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\SoftDeleteTrait;
 use App\Entity\Traits\ThingTrait;
+use App\Enum\EventTagColor;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,8 +30,36 @@ class EventTag extends BaseEntity
     use ThingTrait;
     use SoftDeleteTrait;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $color = EventTagColor::BLUE;
+
     public function __toString()
     {
         return $this->getName();
+    }
+
+    /**
+     * @return int
+     */
+    public function getColor(): int
+    {
+        return $this->color;
+    }
+
+    public function getColorText(): string
+    {
+        return EventTagColor::getText($this->color);
+    }
+
+    /**
+     * @param int $color
+     */
+    public function setColor(int $color): void
+    {
+        $this->color = $color;
     }
 }

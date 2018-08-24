@@ -39,6 +39,7 @@ class ContactController extends BaseFormController
      */
     public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
     {
+        //prefill contact request with user data
         $createContactRequest = function () {
             $contactRequest = new ContactRequest();
             if ($this->getUser() instanceof Doctor) {
@@ -49,11 +50,14 @@ class ContactController extends BaseFormController
             return $contactRequest;
         };
         $contactRequest = $createContactRequest();
+
+        //reuse create form logic
         $createForm = function ($contactRequest) {
             return $this->createForm(ContactRequestType::class, $contactRequest)
                 ->add('form.send', SubmitType::class, ['translation_domain' => 'contact', 'label' => 'index.send_mail']);
         };
 
+        //contact form
         $form = $this->handleForm(
             $createForm($contactRequest),
             $request,

@@ -28,14 +28,12 @@ class IndexController extends BaseDoctrineController
      */
     public function indexAction()
     {
+        //get the events from the next month
         $searchModel = new SearchModel(SearchModel::MONTH);
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
-
         $events = $eventRepository->search($searchModel);
-        $arr['events'] = $events;
-        $arr['user'] = $this->getUser();
 
-        return $this->render('index/index.html.twig', $arr);
+        return $this->render('index/index.html.twig', ['events' => $events]);
     }
 
     protected function getIndexBreadcrumbs()

@@ -34,9 +34,12 @@ class AccountController extends BaseFormController
      */
     public function indexAction(Request $request, TranslatorInterface $translator)
     {
+        $arr = [];
+
         $user = $this->getUser();
         $arr['user'] = $user;
 
+        //change password form
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user)
                 ->add('form.change_password', SubmitType::class, ['translation_domain' => 'account', 'label' => 'index.change_password']),
@@ -58,9 +61,9 @@ class AccountController extends BaseFormController
                 return $form;
             }
         );
-
         $arr['change_password_form'] = $form->createView();
 
+        //edit account form
         $form = $this->handleForm(
             $this->createForm(EditAccountType::class, $user)
                 ->add('form.save', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.update']),
@@ -72,7 +75,6 @@ class AccountController extends BaseFormController
                 return $form;
             }
         );
-
         $arr['update_form'] = $form->createView();
 
         return $this->render('account/index.html.twig', $arr);

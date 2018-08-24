@@ -13,6 +13,7 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventTag;
+use App\Enum\EventTagColor;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadEventTag extends BaseFixture
@@ -27,14 +28,15 @@ class LoadEventTag extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $realExamples = [
-            ['Notfalldienst', 'Sie kümmern sich um die Notfälle und nehmen die Anrufe der Notfalldienstnummer entgegen'],
-            ['Wochentelefon', 'Sie kümmern sich um das Wochentelefon'],
+            ['Notfalldienst', 'Sie kümmern sich um die Notfälle und nehmen die Anrufe der Notfalldienstnummer entgegen', EventTagColor::BLUE],
+            ['Wochentelefon', 'Sie kümmern sich um das Wochentelefon', EventTagColor::YELLOW],
         ];
 
         foreach ($realExamples as $realExample) {
             $eventLine = $this->getRandomInstance();
             $eventLine->setName($realExample[0]);
             $eventLine->setDescription($realExample[1]);
+            $eventLine->setColor($realExample[2]);
             $manager->persist($eventLine);
         }
 

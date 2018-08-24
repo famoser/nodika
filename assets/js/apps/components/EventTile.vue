@@ -10,6 +10,8 @@
                     {{ displayDoctor(event.doctor) || $t('event.no_user_assigned') }}<br/>
                     <span class="text-secondary">{{event.clinic.name}}</span>
                 </p>
+
+                <span v-for="eventTag in event.eventTags" class="badge" :class="'badge-' + eventTag.colorText">{{ eventTag.name }}</span>
             </div>
         </a>
     </div>

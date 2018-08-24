@@ -2,9 +2,10 @@
     <div>
         <Doctor
                 v-for="doctor in doctors"
-                v-bind:key="doctor.id"
-                v-bind:doctor="doctor"
-                @select="selectDoctor(doctor)"
+                :key="doctor.id"
+                :doctor="doctor"
+                :isSelected="selectedDoctor === doctor"
+                @select="$emit('doctor-selected', arguments[0])"
         >
         </Doctor>
     </div>
@@ -22,15 +23,10 @@
             doctors: {
                 type: Array,
                 required: true
-            }
-        },
-        methods: {
-            selectDoctor: function (doctor) {
-                this.doctors.forEach(function (f) {
-                    f.isSelected = false;
-                });
-                doctor.isSelected = true;
-                this.$emit("selection-changed", doctor);
+            },
+            selectedDoctor: {
+                type: Object,
+                required: false
             }
         }
     }

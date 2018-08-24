@@ -21,7 +21,6 @@ use App\Model\Event\SearchModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/confirm")
@@ -33,13 +32,11 @@ class ConfirmController extends BaseApiController
     /**
      * @Route("/events", name="api_confirm_events")
      *
-     * @param SerializerInterface $serializer
-     *
      * @throws \Exception
      *
      * @return JsonResponse
      */
-    public function apiEventsAction(SerializerInterface $serializer)
+    public function apiEventsAction()
     {
         //get all assignable events
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
@@ -57,7 +54,7 @@ class ConfirmController extends BaseApiController
             }
         }
 
-        return new JsonResponse($serializer->serialize($apiEvents, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
+        return $this->returnEvents($apiEvents);
     }
 
     /**

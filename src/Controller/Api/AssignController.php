@@ -18,7 +18,6 @@ use App\Entity\EventPast;
 use App\Entity\Setting;
 use App\Enum\EventChangeType;
 use App\Model\Event\SearchModel;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -47,20 +46,19 @@ class AssignController extends BaseApiController
         }
         $result = array_values($result);
 
-        return new JsonResponse($serializer->serialize($result, 'json', ['attributes' => ['id', 'fullName', 'clinics' => ['name']]]), 200, [], true);
+        return $this->returnDoctors($result);
     }
 
     /**
      * @Route("/events/{doctor}", name="assign_events")
      *
-     * @param SerializerInterface $serializer
-     * @param Doctor              $doctor
+     * @param Doctor $doctor
      *
      * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function eventsAction(SerializerInterface $serializer, Doctor $doctor)
+    public function eventsAction(Doctor $doctor)
     {
         //get all common clinics of current user & selected one
         $allowedFilter = [];
@@ -83,26 +81,23 @@ class AssignController extends BaseApiController
         $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval('P'.$settings->getCanConfirmDaysAdvance().'D')));
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
-        return new JsonResponse($serializer->serialize($events, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
+        return $this->returnEvents($events);
     }
 
     /**
      * @Route("/assign/{event}/{doctor}", name="assign_assign")
      *
-     * @param SerializerInterface $serializer
-     * @param Event               $event
-     * @param Doctor              $doctor
-     *
-     * @throws \Exception
+     * @param Event  $event
+     * @param Doctor $doctor
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function assignAction(SerializerInterface $serializer, Event $event, Doctor $doctor)
+    public function assignAction(Event $event, Doctor $doctor)
     {
         $event->setDoctor($doctor);
         $eventPast = EventPast::create($event, EventChangeType::PERSON_ASSIGNED_BY_CLINIC, $this->getUser());
         $this->fastSave($event, $eventPast);
 
-        return new JsonResponse($serializer->serialize($event, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['name'], 'doctor' => ['id', 'fullName']]]), 200, [], true);
+        return $this->returnEvents($event);
     }
 }
