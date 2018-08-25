@@ -172,11 +172,11 @@ class EventController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        return parent::getIndexBreadcrumbs() + [
+        return array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(
                 $this->generateUrl('administration_events'),
                 $this->getTranslator()->trans('events.title', [], 'administration')
             ),
-        ];
+        ]);
     }
 }

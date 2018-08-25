@@ -163,11 +163,11 @@ class DoctorController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        return parent::getIndexBreadcrumbs() + [
+        return array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(
                 $this->generateUrl('administration_doctors'),
                 $this->getTranslator()->trans('doctors.title', [], 'administration')
             ),
-        ];
+        ]);
     }
 }

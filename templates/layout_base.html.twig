@@ -76,7 +76,7 @@
 </head>
 <body>
 
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+{% if is_granted('ROLE_USER') %}
 <header class="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">

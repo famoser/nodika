@@ -219,11 +219,11 @@ class GenerateController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        return parent::getIndexBreadcrumbs() + [
+        return array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(
                 $this->generateUrl('administration_generations'),
                 $this->getTranslator()->trans('doctors.title', [], 'administration')
             ),
-        ];
+        ]);
     }
 }

@@ -80,7 +80,7 @@ class ClinicController extends BaseController
         $canDelete = 0 === $clinic->getEvents()->count();
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $clinic)
-            ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
+                ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
             $request,
             function () use ($clinic, $canDelete) {
                 $clinic->delete();
@@ -112,10 +112,11 @@ class ClinicController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        return parent::getIndexBreadcrumbs() + [new Breadcrumb(
-            $this->generateUrl('administration_clinics'),
-            $this->getTranslator()->trans('clinics.title', [], 'administration')
-        ),
-        ];
+        return array_merge(parent::getIndexBreadcrumbs(), [
+            new Breadcrumb(
+                $this->generateUrl('administration_clinics'),
+                $this->getTranslator()->trans('clinics.title', [], 'administration')
+            ),
+        ]);
     }
 }
