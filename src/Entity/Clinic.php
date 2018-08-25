@@ -15,7 +15,7 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CommunicationTrait;
 use App\Entity\Traits\IdTrait;
-use App\Entity\Traits\InvitedTrait;
+use App\Entity\Traits\InvitationTrait;
 use App\Entity\Traits\SoftDeleteTrait;
 use App\Entity\Traits\ThingTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,7 +33,7 @@ class Clinic extends BaseEntity
     use ThingTrait;
     use AddressTrait;
     use CommunicationTrait;
-    use InvitedTrait;
+    use InvitationTrait;
     use SoftDeleteTrait;
 
     /**

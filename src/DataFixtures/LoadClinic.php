@@ -24,6 +24,8 @@ class LoadClinic extends BaseFixture
      * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
+     *
+     * @throws \Exception
      */
     public function load(ObjectManager $manager)
     {
@@ -38,8 +40,9 @@ class LoadClinic extends BaseFixture
             ['Zentrum Frohwies'],
         ];
 
-        $users = $manager->getRepository(Doctor::class)->findAll();
+        $doctors = $manager->getRepository(Doctor::class)->findAll();
 
+        //create all clinics
         $clinics = [];
         foreach ($realExamples as $realExample) {
             $clinic = $this->getRandomInstance();
@@ -48,23 +51,24 @@ class LoadClinic extends BaseFixture
             $clinics[] = $clinic;
         }
 
+        //assign clinics to users randomly
         $userIndex = 0;
         $clinicIndex = 0;
         $allClinicsSeen = 0;
         $allUsersSeen = 0;
-
-        $advanceWithProbability = function () {
-            return rand(0, 10) > 2;
+        $counter = 3;
+        $advanceWithProbability = function () use (&$counter) {
+            return $counter * 2 % 7;
         };
         while (true) {
-            $users[$userIndex]->getClinics()->add($clinics[$clinicIndex]);
+            $doctors[$userIndex]->getClinics()->add($clinics[$clinicIndex]);
 
             if ($advanceWithProbability) {
                 ++$userIndex;
             }
             ++$clinicIndex;
 
-            if ($userIndex === \count($users)) {
+            if ($userIndex === \count($doctors)) {
                 $userIndex = 0;
                 ++$allUsersSeen;
             }
@@ -79,20 +83,39 @@ class LoadClinic extends BaseFixture
             }
         }
 
+        //invite a clinic
+        for ($i = 0; $i < 3; ++$i) {
+            $invitedUser = $this->getRandomInstance(false);
+            $invitedUser->invite();
+            $manager->persist($invitedUser);
+        }
+
+        //create clinic which is not invited yet
+        for ($i = 0; $i < 3; ++$i) {
+            $notInvitedUser = $this->getRandomInstance(false);
+            $manager->persist($notInvitedUser);
+        }
+
         $manager->flush();
     }
 
     /**
      * create an instance with all random values.
      *
+     * @param bool $acceptInvitation
+     *
      * @return Clinic
      */
-    protected function getRandomInstance()
+    protected function getRandomInstance($acceptInvitation = true)
     {
         $clinic = new Clinic();
         $this->fillCommunication($clinic);
         $this->fillAddress($clinic);
         $this->fillThing($clinic);
+
+        if ($acceptInvitation) {
+            $clinic->invitationAccepted();
+        }
 
         return $clinic;
     }

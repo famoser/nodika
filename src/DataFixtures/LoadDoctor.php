@@ -23,22 +23,37 @@ class LoadDoctor extends BaseFixture
      * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
+     *
+     * @throws \Exception
      */
     public function load(ObjectManager $manager)
     {
+        //load some doctors
         $this->loadSomeRandoms($manager, 30);
-        $manager->flush();
 
-        $user = $this->getRandomInstance();
-        $user->setEmail('info@nodika.ch');
-        $user->setPlainPassword('asdf1234');
-        $user->setPassword();
-        $user->setIsAdministrator(true);
+        //create admin
+        $admin = $this->getRandomInstance();
+        $admin->setEmail('info@nodika.ch');
+        $admin->setPlainPassword('asdf');
+        $admin->setPassword();
+        $admin->setIsAdministrator(true);
+        $manager->persist($admin);
 
-        $manager->persist($user);
+        //create doctor which is invited
+        $invitedUser = $this->getRandomInstance(false);
+        $invitedUser->invite();
+        $manager->persist($invitedUser);
+
+        //create doctor which is not invited yet
+        $notInvitedUser = $this->getRandomInstance(false);
+        $manager->persist($notInvitedUser);
+
         $manager->flush();
     }
 
+    /**
+     * @return int
+     */
     public function getOrder()
     {
         return static::ORDER;
@@ -47,15 +62,21 @@ class LoadDoctor extends BaseFixture
     /**
      * create an instance with all random values.
      *
+     * @param bool $acceptInvitation
+     *
      * @return Doctor
      */
-    protected function getRandomInstance()
+    protected function getRandomInstance($acceptInvitation = true)
     {
         $doctor = new Doctor();
         $this->fillAddress($doctor);
         $this->fillCommunication($doctor);
         $this->fillPerson($doctor);
         $this->fillUser($doctor);
+
+        if ($acceptInvitation) {
+            $doctor->invitationAccepted();
+        }
 
         return $doctor;
     }

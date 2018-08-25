@@ -16,7 +16,6 @@ use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\Event;
-use App\Entity\EventGeneration;
 use App\Form\Model\Event\AdvancedSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
@@ -102,10 +101,9 @@ class AdministrationController extends BaseFormController
     {
         $doctorRepo = $this->getDoctrine()->getRepository(Doctor::class);
 
-        /* @var Doctor[] $doctors */
-        $doctors = $doctorRepo->findBy(['deletedAt' => null]);
-
-        $arr['doctors'] = $doctors;
+        /* @var Doctor[] $allDoctors */
+        $allDoctors = $doctorRepo->findBy(['deletedAt' => null], ['familyName' => 'ASC', 'givenName' => 'ASC']);
+        $arr['doctors'] = $allDoctors;
 
         return $this->render('administration/doctors.html.twig', $arr);
     }
@@ -119,23 +117,9 @@ class AdministrationController extends BaseFormController
     {
         $clinicRepo = $this->getDoctrine()->getRepository(Clinic::class);
 
-        $arr['clinics'] = $clinicRepo->findBy(['deletedAt' => null]);
+        $arr['clinics'] = $clinicRepo->findBy(['deletedAt' => null], ['name' => 'ASC']);
 
         return $this->render('administration/clinics.html.twig', $arr);
-    }
-
-    /**
-     * @Route("/generations", name="administration_generations")
-     *
-     * @return Response
-     */
-    public function generationsAction()
-    {
-        $eventGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
-
-        $arr['event_generations'] = $eventGenerations;
-
-        return $this->render('administration/settings.html.twig', $arr);
     }
 
     /**

@@ -6,7 +6,6 @@
 {% trans_default_domain "administration" %}
 
 {% block single_content %}
-
     <p>
         <a class="btn btn-secondary" href="{{ path("administration_doctor_new") }}">
             {{ "new.title"|trans({}, "administration_doctor") }}
@@ -47,3 +46,7 @@
         </tbody>
     </table>
 {% endblock %}
+
+{% if  %}
+{% block pre_content %}
+{% endblock pre_content %}

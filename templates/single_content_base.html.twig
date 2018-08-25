@@ -7,6 +7,16 @@
             <p class="lead">{% block description %}{% endblock %}</p>
         </div>
 
+        {% set _pre_content = block('pre_content') %}
+        {% if _pre_content|trim is not empty %}
+            <div class="container card">
+                <div class="card-body">
+                    {% block pre_content %}
+                    {% endblock pre_content %}
+                </div>
+            </div>
+        {% endif %}
+
         <div class="container card">
             <div class="card-body">
                 {% block single_content %}
