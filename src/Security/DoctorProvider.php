@@ -14,6 +14,7 @@ namespace App\Security;
 use App\Entity\Doctor;
 use App\Security\Base\BaseUserProvider;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -50,6 +51,10 @@ class DoctorProvider extends BaseUserProvider
             throw new UnsupportedUserException(
                 sprintf('Instances of "%s" are not supported.', \get_class($user))
             );
+        }
+
+        if (!$user->isEnabled()) {
+            throw new CustomUserMessageAuthenticationException('login of user '.$user->getEmail().' is disabled');
         }
 
         return $this->loadUserByUsername($user->getUsername());

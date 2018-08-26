@@ -105,6 +105,9 @@ class AdministrationController extends BaseFormController
         $allDoctors = $doctorRepo->findBy(['deletedAt' => null], ['familyName' => 'ASC', 'givenName' => 'ASC']);
         $arr['doctors'] = $allDoctors;
 
+        $invitableDoctors = $doctorRepo->findBy(['deletedAt' => null, 'lastLoginDate' => null, 'isEnabled' => true], ['familyName' => 'ASC', 'givenName' => 'ASC']);
+        $arr['invitable_doctors'] = $invitableDoctors;
+
         return $this->render('administration/doctors.html.twig', $arr);
     }
 

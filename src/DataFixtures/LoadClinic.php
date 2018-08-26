@@ -83,19 +83,6 @@ class LoadClinic extends BaseFixture
             }
         }
 
-        //invite a clinic
-        for ($i = 0; $i < 3; ++$i) {
-            $invitedUser = $this->getRandomInstance(false);
-            $invitedUser->invite();
-            $manager->persist($invitedUser);
-        }
-
-        //create clinic which is not invited yet
-        for ($i = 0; $i < 3; ++$i) {
-            $notInvitedUser = $this->getRandomInstance(false);
-            $manager->persist($notInvitedUser);
-        }
-
         $manager->flush();
     }
 
@@ -106,16 +93,12 @@ class LoadClinic extends BaseFixture
      *
      * @return Clinic
      */
-    protected function getRandomInstance($acceptInvitation = true)
+    protected function getRandomInstance()
     {
         $clinic = new Clinic();
         $this->fillCommunication($clinic);
         $this->fillAddress($clinic);
         $this->fillThing($clinic);
-
-        if ($acceptInvitation) {
-            $clinic->invitationAccepted();
-        }
 
         return $clinic;
     }

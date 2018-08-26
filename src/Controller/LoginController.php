@@ -65,18 +65,12 @@ class LoginController extends BaseFormController
     }
 
     /**
-     * @Route("", name="login")
-     *
      * @param Request $request
      *
-     * @return Response
+     * @return string
      */
-    public function indexAction(Request $request)
+    private function getLastUsername(Request $request)
     {
-        $user = new Doctor();
-        $form = $this->createForm(LoginType::class, $user);
-        $form->add('form.login', SubmitType::class, ['translation_domain' => 'login', 'label' => 'login.do_login']);
-
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
 
@@ -90,16 +84,42 @@ class LoginController extends BaseFormController
         } else {
             $error = null;
         }
-        if (null !== $error) {
-            $this->displayError($this->getTranslator()->trans('login.danger.login_failed', [], 'login'));
-        }
 
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
-        $user->setEmail($lastUsername);
+        if (\mb_strlen($lastUsername) > 0) {
+            $lastUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $lastUsername]);
+            if (!$lastUser->isEnabled()) {
+                $this->displayError($this->getTranslator()->trans('login.danger.login_disabled', [], 'login'));
 
-        $form->handleRequest($request);
+                return $lastUsername;
+            }
+        }
 
+        if (null !== $error) {
+            $this->displayError($this->getTranslator()->trans('login.danger.login_failed', [], 'login'));
+
+            return $lastUsername;
+        }
+
+        return '';
+    }
+
+    /**
+     * @Route("", name="login")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request)
+    {
+        $user = new Doctor();
+        $user->setEmail($this->getLastUsername($request));
+
+        // create login form
+        $form = $this->createForm(LoginType::class, $user);
+        $form->add('form.login', SubmitType::class, ['translation_domain' => 'login', 'label' => 'login.do_login']);
         $arr['form'] = $form->createView();
 
         return $this->render('login/login.html.twig', $arr);
@@ -130,6 +150,13 @@ class LoginController extends BaseFormController
                 $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
                     $logger->warning('tried to reset passwort for non-exitant email '.$form->getData()['email']);
+
+                    return $form;
+                }
+
+                //do not send password reset link if not enabled
+                if (!$exitingUser->isEnabled()) {
+                    $logger->warning('tried to reset passwort for disabled account '.$form->getData()['email']);
 
                     return $form;
                 }
@@ -174,6 +201,13 @@ class LoginController extends BaseFormController
             return new RedirectResponse($this->generateUrl('login'));
         }
 
+        //ensure user can indeed login
+        if (!$user->isEnabled()) {
+            $this->displayError($translator->trans('login.danger.login_disabled', [], 'login'));
+
+            return $this->redirectToRoute('login');
+        }
+
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
                 ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
@@ -212,6 +246,7 @@ class LoginController extends BaseFormController
 
     /**
      * @Route("/request_invite", name="login_request_invite")
+     * TODO: refactor & account for changed environement
      *
      * @param Request               $request
      * @param EmailServiceInterface $emailService

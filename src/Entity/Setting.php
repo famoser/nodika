@@ -42,20 +42,6 @@ class Setting extends BaseEntity
     private $organisationName;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $clinicName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $doctorName;
-
-    /**
      * @var int
      *
      * @ORM\Column(type="integer")
@@ -74,7 +60,7 @@ class Setting extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $send_remainder_days_interval;
+    private $sendRemainderDaysInterval;
 
     /**
      * @return string
@@ -90,38 +76,6 @@ class Setting extends BaseEntity
     public function setOrganisationName(string $organisationName): void
     {
         $this->organisationName = $organisationName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClinicName(): string
-    {
-        return $this->clinicName;
-    }
-
-    /**
-     * @param string $clinicName
-     */
-    public function setClinicName(string $clinicName): void
-    {
-        $this->clinicName = $clinicName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDoctorName(): string
-    {
-        return $this->doctorName;
-    }
-
-    /**
-     * @param string $doctorName
-     */
-    public function setDoctorName(string $doctorName): void
-    {
-        $this->doctorName = $doctorName;
     }
 
     /**
@@ -177,14 +131,14 @@ class Setting extends BaseEntity
      */
     public function getSendRemainderDaysInterval(): int
     {
-        return $this->send_remainder_days_interval;
+        return $this->sendRemainderDaysInterval;
     }
 
     /**
-     * @param int $send_remainder_days_interval
+     * @param int $sendRemainderDaysInterval
      */
-    public function setSendRemainderDaysInterval(int $send_remainder_days_interval): void
+    public function setSendRemainderDaysInterval(int $sendRemainderDaysInterval): void
     {
-        $this->send_remainder_days_interval = $send_remainder_days_interval;
+        $this->sendRemainderDaysInterval = $sendRemainderDaysInterval;
     }
 }

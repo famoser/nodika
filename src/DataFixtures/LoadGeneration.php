@@ -35,9 +35,12 @@ class LoadGeneration extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
+        $cronExpressions = ['0 8 * * *', '0 8 */7 * *'];
+        $expressionIndex = 0;
+
         $tags = $manager->getRepository(EventTag::class)->findAll();
         foreach ($tags as $tag) {
-            $this->generateForTag($tag, $manager);
+            $this->generateForTag($tag, $manager, $cronExpressions[$expressionIndex++ % 2]);
         }
     }
 
@@ -45,7 +48,7 @@ class LoadGeneration extends BaseFixture
      * @param EventTag      $tag
      * @param ObjectManager $manager
      */
-    private function generateForTag(EventTag $tag, ObjectManager $manager)
+    private function generateForTag(EventTag $tag, ObjectManager $manager, $cronExpression)
     {
         //prepare a generation
         $generation = $this->getRandomInstance();
@@ -53,8 +56,8 @@ class LoadGeneration extends BaseFixture
         $generation->setDifferentiateByEventType(false);
         $generation->setStartDateTime(new \DateTime());
         $generation->setEndDateTime(new \DateTime('now + 1 year'));
-        $generation->setStartCronExpression('0 8 * * *');
-        $generation->setEndCronExpression('0 8 * * *');
+        $generation->setStartCronExpression($cronExpression);
+        $generation->setEndCronExpression($cronExpression);
         $generation->getAssignEventTags()->add($tag);
 
         //date exceptions
@@ -93,7 +96,9 @@ class LoadGeneration extends BaseFixture
         //confirm first 10 events
         for ($i = 0; $i < 10; ++$i) {
             $event = $events[$i];
-            $event->confirm($event->getClinic()->getDoctors()->first());
+            if ($event->getClinic()->getDoctors()->count() > 0) {
+                $event->confirm($event->getClinic()->getDoctors()->first());
+            }
         }
 
         $manager->flush();

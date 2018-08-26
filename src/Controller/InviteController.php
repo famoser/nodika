@@ -11,36 +11,95 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Doctor;
 use App\Form\Traits\User\ChangePasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/invite")
  */
-class InviteController extends BaseDoctrineController
+class InviteController extends LoginController
 {
     /**
-     * @Route("/{guid}", name="invite_index")
+     * @Route("/doctor/{guid}", name="invite_doctor")
      *
+     * @param Request $request
      * @param $guid
+     * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function indexAction($guid)
+    public function doctorAction(Request $request, $guid, TranslatorInterface $translator)
     {
-        $user = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['invitationIdentifier' => $guid]);
-        if ($user instanceof Doctor) {
-            $form = $this->createForm(ChangePasswordType::class);
-            $form->add('set_password', SubmitType::class);
-            $arr['form'] = $form->createView();
+        $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['invitationIdentifier' => $guid]);
+        if (null === $user) {
+            $this->displayError($translator->trans('invite_invalid.title', [], 'invite'));
 
-            return $this->render('invite/index.html.twig', $arr);
+            return $this->redirectToRoute('login');
         }
 
-        return $this->render('invite/invalid.html.twig');
+        //ensure user can indeed login
+        if (!$user->isEnabled()) {
+            $this->displayError($translator->trans('login.danger.login_disabled', [], 'login'));
+
+            return $this->redirectToRoute('login');
+        }
+
+        //check if login still valid
+        if (null !== $user->getLastLoginDate()) {
+            $this->displayError($translator->trans('doctor.danger.already_login_occurred', [], 'invite'));
+            $user->invitationAccepted();
+            $this->fastSave($user);
+
+            return $this->redirectToRoute('login');
+        }
+
+        //check not logged in currently
+        $loggedInUser = $this->getUser();
+        if ($loggedInUser instanceof Doctor) {
+            //logout
+            $token = new AnonymousToken(uniqid(), 'anon');
+            $this->get('security.token_storage')->setToken($token);
+            $this->displayDanger($translator->trans('doctor.warning.automatically_logged_out', [], 'invite'));
+        }
+
+        //present set password form
+        $form = $this->handleForm(
+            $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
+                ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
+            $request,
+            function ($form) use ($user, $translator, $request) {
+                //check for valid password
+                if ($user->getPlainPassword() !== $user->getRepeatPlainPassword()) {
+                    $this->displayError($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
+
+                    return $form;
+                }
+
+                //display success
+                $this->displaySuccess($translator->trans('doctor.success.access_created', [], 'invite'));
+
+                //set new password & save
+                $user->setPassword();
+                $user->setResetHash();
+                $this->fastSave($user);
+
+                //login user & redirect
+                $this->loginUser($request, $user);
+
+                return $this->redirectToRoute('index_index');
+            }
+        );
+
+        if ($form instanceof Response) {
+            return $form;
+        }
+
+        return $this->render('invite/doctor.html.twig', ['form' => $form->createView()]);
     }
 }

@@ -40,12 +40,12 @@ class LoadDoctor extends BaseFixture
         $manager->persist($admin);
 
         //create doctor which is invited
-        $invitedUser = $this->getRandomInstance(false);
+        $invitedUser = $this->getRandomInstance();
         $invitedUser->invite();
         $manager->persist($invitedUser);
 
         //create doctor which is not invited yet
-        $notInvitedUser = $this->getRandomInstance(false);
+        $notInvitedUser = $this->getRandomInstance();
         $manager->persist($notInvitedUser);
 
         $manager->flush();
@@ -66,17 +66,13 @@ class LoadDoctor extends BaseFixture
      *
      * @return Doctor
      */
-    protected function getRandomInstance($acceptInvitation = true)
+    protected function getRandomInstance()
     {
         $doctor = new Doctor();
         $this->fillAddress($doctor);
         $this->fillCommunication($doctor);
         $this->fillPerson($doctor);
         $this->fillUser($doctor);
-
-        if ($acceptInvitation) {
-            $doctor->invitationAccepted();
-        }
 
         return $doctor;
     }

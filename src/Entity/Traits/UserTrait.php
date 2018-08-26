@@ -49,9 +49,16 @@ trait UserTrait
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $registrationDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastLoginDate;
 
     /**
      * @var bool
@@ -109,7 +116,7 @@ trait UserTrait
     /**
      * @param \DateTime $registrationDate
      */
-    public function setRegistrationDate($registrationDate)
+    public function setRegistrationDate(?\DateTime $registrationDate)
     {
         $this->registrationDate = $registrationDate;
     }
@@ -186,6 +193,22 @@ trait UserTrait
     public function canLogin()
     {
         return $this->isEnabled;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastLoginDate(): ?\DateTime
+    {
+        return $this->lastLoginDate;
+    }
+
+    /**
+     * @param \DateTime $lastLoginDate
+     */
+    public function setLastLoginDate(\DateTime $lastLoginDate): void
+    {
+        $this->lastLoginDate = $lastLoginDate;
     }
 
     /**

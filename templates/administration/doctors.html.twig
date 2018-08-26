@@ -47,6 +47,57 @@
     </table>
 {% endblock %}
 
-{% if  %}
-{% block pre_content %}
-{% endblock pre_content %}
+{% if invitable_doctors|length > 0 %}
+    {% block pre_content %}
+        <p>
+            {{ "doctors.some_not_logged_in"|trans }}
+            <a class="btn btn-link" href="#not-logged-in-doctors" data-toggle="collapse" data-target="#not-logged-in-doctors"
+               aria-expanded="false" aria-controls="not-logged-in-doctors">
+                {{ "doctors.show"|trans }}
+            </a>
+        </p>
+
+
+        <div class="collapse" id="not-logged-in-doctors">
+            <p>
+                <a class="btn btn-outline-secondary" href="{{ path("administration_doctor_invite_all") }}">
+                    {{ "doctors.invite_all"|trans }}
+                </a>
+            </p>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ "full_name"|trans({}, "trait_person") }}</th>
+                    <th>{{ "email"|trans({}, "trait_user") }}</th>
+                    <th>{{ "entity.plural"|trans({}, "entity_clinic") }}</th>
+                    <th>{{ "last_invitation"|trans({}, "trait_invitation") }}</th>
+                    <th class="minimal-width"></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.fullName }}</td>
+                        <td>{{ doctor.email }}</td>
+                        <td>{{ doctor.clinics|join(", ") }}</td>
+                        <td>
+                            {% if doctor.lastInvitation is null %}
+                                {{ "doctors.not_invited_yet"|trans }}
+                            {% else %}
+                                {{ doctor.lastInvitation|dateTimeFormat }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-secondary"
+                               href="{{ path("administration_doctor_invite", {"doctor" : doctor.id}) }}">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock pre_content %}
+{% endif %}

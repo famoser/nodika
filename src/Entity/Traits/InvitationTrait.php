@@ -11,7 +11,6 @@
 
 namespace App\Entity\Traits;
 
-use App\Enum\InvitationStatus;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
@@ -25,11 +24,11 @@ trait InvitationTrait
     private $invitationIdentifier = null;
 
     /**
-     * @var int
+     * @var \DateTime
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $invitationStatus = InvitationStatus::NOT_INVITED;
+    private $lastInvitation;
 
     /**
      * @throws \Exception
@@ -37,7 +36,7 @@ trait InvitationTrait
     public function invite()
     {
         $this->invitationIdentifier = Uuid::uuid4();
-        $this->invitationStatus = InvitationStatus::INVITED;
+        $this->lastInvitation = new \DateTime();
 
         return $this->invitationIdentifier;
     }
@@ -45,15 +44,6 @@ trait InvitationTrait
     public function invitationAccepted()
     {
         $this->invitationIdentifier = null;
-        $this->invitationStatus = InvitationStatus::ACCEPTED;
-    }
-
-    /**
-     * @return int
-     */
-    public function getInvitationStatus(): int
-    {
-        return $this->invitationStatus;
     }
 
     /**
@@ -65,5 +55,21 @@ trait InvitationTrait
     public function getInvitationIdentifier()
     {
         return $this->invitationIdentifier;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getLastInvitation(): ?\DateTime
+    {
+        return $this->lastInvitation;
+    }
+
+    /**
+     * @param \DateTime $lastInvitation
+     */
+    public function setLastInvitation(\DateTime $lastInvitation): void
+    {
+        $this->lastInvitation = $lastInvitation;
     }
 }

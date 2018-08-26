@@ -5,6 +5,11 @@ index:
 doctors:
   title: 'Benutzerverwaltung'
   description: 'Benutzer erstellen und bearbeiten, Passwörter zusenden und zurücksetzen, ...'
+  some_not_logged_in: 'Einige der Ärzte haben sich noch nie eingeloggt'
+  invite_all: 'Alle einladen'
+  not_invited_yet: 'Noch nicht eingeladen'
+  show: 'anzeigen'
+
 
 clinics:
   title: 'Mitgliederverwaltung'

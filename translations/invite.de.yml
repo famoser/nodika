@@ -10,7 +10,7 @@ request:
     mailbox_full: 'Überprüfen Sie, das ihr Postfach nicht voll ist'
     contact_administrator: 'Kotaktieren Sie den Administrator'
   success:
-    email_send: "E-Mail erfolgreich versandt. Vergessen Sie nicht, Ihrem Spam Ordner zu überprüfen."
+    email_send: "E-Mail erfolgreich versandt. Vergessen Sie nicht, Ihren Spam Ordner zu überprüfen."
   error:
     invitation_already_accepted: "Einladung wurde bereits akzeptiert, Sie können sich mit dieser E-Mail einloggen."
     no_invitation_sent_yet: "An Sie wurde noch keine Einladung versandt. Bitte Sie Ihren Administrator dies zu tun."
@@ -27,6 +27,7 @@ doctor:
     access_created: 'Ihr Zugang wurde freigeschaltet! Willkommen auf nodika :)'
   danger:
     invitation_already_accepted: 'Sie haben diese Einladung schon angenommen.'
+    already_login_occurred: 'Sie haben sich bereits einmal eingeloggt, und können diese Einladung daher nicht mehr annehmen.'
   warning:
     automatically_logged_out: 'Sie waren bereits mit einem anderem Account (als %name%, %email%) eingeloggt. Wir haben Sie automatisch ausgeloggt, damit Sie diese Einladung annehmen können.'
 
@@ -49,10 +50,6 @@ request_invite:
   clinic_email:
     subject: 'Zugriffsbestätigung für nodika'
     message: 'Willkommen! Sie haben auf nodika, der Notfalldienstverwaltung für Tierärzte, Zugriff auf Ihre Praxis %name% erhalten.'
-    action_text: 'Zugang einrichten'
-  doctor_email:
-    subject: 'Zugriffsbestätigung für nodika'
-    message: 'Willkommen! Sie haben auf nodika, der Notfalldienstverwaltung für Tierärzte, mit der E-Mail %mail% Zugriff auf Ihre Praxis %name% erhalten.'
     action_text: 'Zugang einrichten'
   success:
     email_sent: "Die Einladung wurde versandt, sofern wir die E-Mail in der Datenbank gefunden wurde."

@@ -1,0 +1,4 @@
+trait:
+  name: 'Einladung'
+
+last_invitation: 'letzte Einladung versandt'

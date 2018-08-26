@@ -5,6 +5,7 @@ login:
   do_login: "einloggen"
   danger:
     login_failed: 'Login fehlgeschlagen'
+    login_disabled: 'Ihr Account wurde vom Administrator deaktiviert.'
 
 recover:
   title: 'Passwort zurücksetzen'
