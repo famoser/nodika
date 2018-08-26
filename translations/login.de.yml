@@ -5,6 +5,7 @@ login:
   do_login: "einloggen"
   danger:
     login_failed: 'Login fehlgeschlagen'
+    email_not_found: 'Diese E-Mail wurde nicht gefunden.'
     login_disabled: 'Ihr Account wurde vom Administrator deaktiviert.'
 
 recover:
@@ -29,3 +30,20 @@ reset:
   danger:
     passwords_do_not_match: 'Die Passwörter stimmen nicht überein'
     invalid_hash: "Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann."
+
+request:
+  title: "Zugriff anfordern"
+  description: "Lassen Sie sich eine verpasste Einladung neu zustellen"
+  request_invite: "Einladung anfordern"
+  help: "Geben Sie hier Ihre E-Mail ein. Wurde an diese E-Mail eine Einladung versandt, versenden wir sie erneut."
+  email_not_received_help:
+    header: "Keine E-Mail erhalten?"
+    look_in_spam: 'Schauen Sie im Spam Ordner nach'
+    mailbox_full: 'Stellen Sie sicher, das ihr Postfach nicht voll ist'
+    contact_administrator: 'Kontaktieren Sie den Administrator'
+  success:
+    email_sent: "E-Mail erfolgreich versandt. Vergessen Sie nicht, Ihren Spam Ordner zu überprüfen."
+  error:
+    already_successfully_logged_in: "Ihr Account ist bereits aktiviert, und Sie haben sich bereits einmal erfolgreich eingeloggt. Setzen Sie das Passwort zurück, sollten Sie es vergessen haben."
+    no_invitation_sent_yet: "An Sie wurde noch keine Einladung versandt. Bitte Sie Ihren Administrator dies zu tun."
+    email_not_found: "Diese E-Mail wurde nicht gefunden. Kontaktieren Sie Ihren Administrator."

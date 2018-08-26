@@ -1,21 +1,3 @@
-request:
-  title: "Einladung anfordern"
-  description: "Lassen Sie sich eine verpasste Einladung neu zustellen"
-  help: "Geben Sie hier Ihre E-Mail ein. Wurde an diese E-Mail eine Einladung versandt, versenden wir sie erneut."
-  email_not_received: "E-Mail nicht erhalten: Mögliche Ursachen"
-  email_not_received_description: "Überprüfen Sie, dass Ihr Postfach nicht voll ist und dass unsere E-Mail nicht im Spam Ordner gelandet ist."
-  email_not_received_help:
-    header: "Keine E-Mail erhalten?"
-    look_in_spam: 'Schauen Sie im Spam Ordner nach'
-    mailbox_full: 'Überprüfen Sie, das ihr Postfach nicht voll ist'
-    contact_administrator: 'Kotaktieren Sie den Administrator'
-  success:
-    email_send: "E-Mail erfolgreich versandt. Vergessen Sie nicht, Ihren Spam Ordner zu überprüfen."
-  error:
-    invitation_already_accepted: "Einladung wurde bereits akzeptiert, Sie können sich mit dieser E-Mail einloggen."
-    no_invitation_sent_yet: "An Sie wurde noch keine Einladung versandt. Bitte Sie Ihren Administrator dies zu tun."
-    email_not_found: "Diese E-Mail wurde nicht gefunden. Kontaktieren Sie Ihren Administrator."
-
 invite_invalid:
   title: 'Einladung nicht mehr gültig'
   description: 'Dieser Link ist nicht (mehr) gültig.'
@@ -28,8 +10,6 @@ doctor:
   danger:
     invitation_already_accepted: 'Sie haben diese Einladung schon angenommen.'
     already_login_occurred: 'Sie haben sich bereits einmal eingeloggt, und können diese Einladung daher nicht mehr annehmen.'
-  warning:
-    automatically_logged_out: 'Sie waren bereits mit einem anderem Account (als %name%, %email%) eingeloggt. Wir haben Sie automatisch ausgeloggt, damit Sie diese Einladung annehmen können.'
 
 clinic:
   title: 'Willkommen auf nodika!'
@@ -43,13 +23,3 @@ clinic:
   success:
     account_created: 'Ihr Zugang wurde erfolgreich erstellt, Willkommen auf nodika :)'
     access_granted: 'Sie haben nun Zugriff auf die Praxis %name%.'
-
-request_invite:
-  title: 'Zugriff neu anfordern.'
-  description: "Wird Ihre E-Mail in unserer Datenbank gefunden senden wir Ihnen die E-Mail mit der Zugriffsbestätigung."
-  clinic_email:
-    subject: 'Zugriffsbestätigung für nodika'
-    message: 'Willkommen! Sie haben auf nodika, der Notfalldienstverwaltung für Tierärzte, Zugriff auf Ihre Praxis %name% erhalten.'
-    action_text: 'Zugang einrichten'
-  success:
-    email_sent: "Die Einladung wurde versandt, sofern wir die E-Mail in der Datenbank gefunden wurde."

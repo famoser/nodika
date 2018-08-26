@@ -15,11 +15,10 @@ use App\Controller\Administration\Base\BaseController;
 use App\Entity\Doctor;
 use App\Form\Doctor\RemoveType;
 use App\Model\Breadcrumb;
-use App\Service\Interfaces\EmailServiceInterface;
+use App\Service\InviteEmailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -146,20 +145,20 @@ class DoctorController extends BaseController
     /**
      * @Route("/{doctor}/invite", name="administration_doctor_invite")
      *
-     * @param Doctor                $doctor
-     * @param TranslatorInterface   $translator
-     * @param EmailServiceInterface $emailService
+     * @param Doctor              $doctor
+     * @param TranslatorInterface $translator
+     * @param InviteEmailService  $emailService
      *
      * @throws \Exception
      *
      * @return Response
      */
-    public function inviteAction(Doctor $doctor, TranslatorInterface $translator, EmailServiceInterface $emailService)
+    public function inviteAction(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService)
     {
         if (!$doctor->isEnabled() || null !== $doctor->getLastLoginDate()) {
             $this->displayError($translator->trans('invite.danger.email_not_sent', [], 'administration_doctor'));
         } else {
-            $this->sentInviteEmail($doctor, $translator, $emailService);
+            $emailService->inviteDoctor($doctor);
             $this->displaySuccess($translator->trans('invite.success.email_sent', [], 'administration_doctor'));
         }
 
@@ -167,46 +166,20 @@ class DoctorController extends BaseController
     }
 
     /**
-     * @param Doctor                $doctor
-     * @param TranslatorInterface   $translator
-     * @param EmailServiceInterface $emailService
-     *
-     * @throws \Exception
-     */
-    private function sentInviteEmail(Doctor $doctor, TranslatorInterface $translator, EmailServiceInterface $emailService)
-    {
-        //map clinics to clinic name array
-        $clinics = [];
-        foreach ($doctor->getClinics() as $clinic) {
-            $clinics[] = $clinic->getName();
-        }
-
-        //sent invite email
-        $emailService->sendActionEmail(
-            $doctor->getEmail(),
-            $translator->trans('invite.email.subject', [], 'administration_doctor'),
-            $translator->trans('invite.email.message', ['%email%' => $doctor->getEmail(), '%clinics%' => implode(', ', $clinics)], 'administration_doctor'),
-            $translator->trans('invite.email.action_text', [], 'administration_doctor'),
-            $this->generateUrl('invite_doctor', ['guid' => $doctor->invite()], UrlGeneratorInterface::ABSOLUTE_URL)
-        );
-        $this->fastSave($doctor);
-    }
-
-    /**
      * @Route("/invite_all", name="administration_doctor_invite_all")
      *
-     * @param TranslatorInterface   $translator
-     * @param EmailServiceInterface $emailService
+     * @param TranslatorInterface $translator
+     * @param InviteEmailService  $emailService
      *
      * @throws \Exception
      *
      * @return Response
      */
-    public function inviteAllAction(TranslatorInterface $translator, EmailServiceInterface $emailService)
+    public function inviteAllAction(TranslatorInterface $translator, InviteEmailService $emailService)
     {
         $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null, 'lastLoginDate' => null, 'isEnabled' => true]);
         foreach ($doctors as $doctor) {
-            $this->sentInviteEmail($doctor, $translator, $emailService);
+            $emailService->inviteDoctor($doctor);
         }
         $this->displaySuccess($translator->trans('invite.success.email_sent', [], 'administration_doctor'));
 

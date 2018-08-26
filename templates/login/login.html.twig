@@ -16,7 +16,7 @@
     <p>
         {{ "login.problems_with_login"|trans }}<br/>
         <a href="{{ path("login_recover") }}">{{ "recover.title"|trans }}</a><br/>
-        <a href="{{ path("login_request_invite") }}">{{ "request.title"|trans({}, "invite") }}</a><br/>
+        <a href="{{ path("login_request") }}">{{ "request.title"|trans({}, "login") }}</a><br/>
         <a href="{{ path("contact_index") }}">{{ "index.title"|trans({}, "contact") }}</a><br/>
     </p>
 {% endblock %}

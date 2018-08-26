@@ -19,6 +19,7 @@ use App\Form\Traits\User\RecoverType;
 use App\Form\Traits\User\RequestInviteType;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EmailServiceInterface;
+use App\Service\InviteEmailService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -89,6 +90,12 @@ class LoginController extends BaseFormController
         $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
         if (\mb_strlen($lastUsername) > 0) {
             $lastUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $lastUsername]);
+            if (null === $lastUser) {
+                $this->displayError($this->getTranslator()->trans('login.danger.email_not_found', [], 'login'));
+
+                return $lastUsername;
+            }
+
             if (!$lastUser->isEnabled()) {
                 $this->displayError($this->getTranslator()->trans('login.danger.login_disabled', [], 'login'));
 
@@ -245,48 +252,61 @@ class LoginController extends BaseFormController
     }
 
     /**
-     * @Route("/request_invite", name="login_request_invite")
-     * TODO: refactor & account for changed environement
+     * @Route("/request", name="login_request")
      *
-     * @param Request               $request
-     * @param EmailServiceInterface $emailService
-     * @param TranslatorInterface   $translator
+     * @param Request             $request
+     * @param InviteEmailService  $emailService
+     * @param TranslatorInterface $translator
      *
      * @return Response
      */
-    public function requestAction(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator)
+    public function requestAction(Request $request, InviteEmailService $emailService, TranslatorInterface $translator)
     {
         $form = $this->handleForm(
             $this->createForm(RequestInviteType::class)
-                ->add('form.request_invite', SubmitType::class),
+                ->add('form.request_invite', SubmitType::class, ['translation_domain' => 'login', 'label' => 'request.request_invite']),
             $request,
             function ($form) use ($emailService, $translator) {
                 /* @var FormInterface $form */
 
-                //display success
-                $this->displaySuccess($translator->trans('request_invite.success.email_sent', [], 'login'));
-
                 //check if user exists
                 $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
+                    $this->displayError($translator->trans('request.error.email_not_found', [], 'login'));
+
                     return $form;
                 }
 
-                //sent invite email
-                $emailService->sendActionEmail(
-                    $exitingUser->getEmail(),
-                    $translator->trans('invite.email.subject', [], 'invite'),
-                    $translator->trans('invite.email.message', [], 'invite'),
-                    $translator->trans('invite.email.action_text', [], 'invite'),
-                    $this->generateUrl('invite_index', ['guid' => $exitingUser->getInvitationIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL)
-                );
+                //check that invitation was sent
+                if (null !== $exitingUser->getLastLoginDate()) {
+                    $this->displayError($translator->trans('request.error.already_successfully_logged_in', [], 'login'));
+
+                    return $this->redirectToRoute('login');
+                }
+
+                //check that invitation was sent
+                if (null === $exitingUser->getInvitationIdentifier()) {
+                    $this->displayError($translator->trans('request.error.no_invitation_sent_yet', [], 'login'));
+
+                    return $form;
+                }
+
+                //resend invite email
+                $emailService->inviteDoctor($exitingUser);
+
+                //display success
+                $this->displaySuccess($translator->trans('request.success.email_sent', [], 'login'));
 
                 return $form;
             }
         );
+        if ($form instanceof Response) {
+            return $form;
+        }
+
         $arr['form'] = $form->createView();
 
-        return $this->render('login/request_invite.html.twig', $arr);
+        return $this->render('login/request.html.twig', $arr);
     }
 
     /**

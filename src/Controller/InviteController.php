@@ -17,7 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -59,14 +58,7 @@ class InviteController extends LoginController
             return $this->redirectToRoute('login');
         }
 
-        //check not logged in currently
-        $loggedInUser = $this->getUser();
-        if ($loggedInUser instanceof Doctor) {
-            //logout
-            $token = new AnonymousToken(uniqid(), 'anon');
-            $this->get('security.token_storage')->setToken($token);
-            $this->displayDanger($translator->trans('doctor.warning.automatically_logged_out', [], 'invite'));
-        }
+        //consider displaying error & logout programmatically if already logged in
 
         //present set password form
         $form = $this->handleForm(
