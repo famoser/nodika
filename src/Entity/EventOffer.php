@@ -126,14 +126,6 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * @param bool $isResolved
-     */
-    public function setIsResolved(bool $isResolved): void
-    {
-        $this->isResolved = $isResolved;
-    }
-
-    /**
      * @return Event[]|ArrayCollection
      */
     public function getEventsWhichChangeOwner()
@@ -245,6 +237,47 @@ class EventOffer extends BaseEntity
         return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED], AuthorizationStatus::ACKNOWLEDGED);
     }
 
+    public function showReceiver()
+    {
+        if ($this->getIsResolved()) {
+            return false;
+        }
+
+        $senderStatus = $this->senderAuthorizationStatus;
+        $receiverStatus = $this->receiverAuthorizationStatus;
+
+        return
+            //either not responded yet
+            (AuthorizationStatus::ACCEPTED === $senderStatus && AuthorizationStatus::PENDING === $receiverStatus) ||
+            //or sender has withdrawn
+            (AuthorizationStatus::WITHDRAWN === $senderStatus && AuthorizationStatus::ACKNOWLEDGED !== $receiverStatus);
+    }
+
+    public function showSender()
+    {
+        if ($this->getIsResolved()) {
+            return false;
+        }
+
+        $senderStatus = $this->senderAuthorizationStatus;
+        $receiverStatus = $this->receiverAuthorizationStatus;
+
+        return
+            //either no answer so far
+            AuthorizationStatus::PENDING === $receiverStatus ||
+            //or has been answered but now acknowledged yet
+            (\in_array($receiverStatus, [AuthorizationStatus::ACCEPTED, AuthorizationStatus::DECLINED], true) && AuthorizationStatus::ACKNOWLEDGED !== $senderStatus);
+    }
+
+    public function tryMarkAsResolved()
+    {
+        if (!$this->showReceiver() && !$this->showSender()) {
+            $this->isResolved = true;
+        }
+
+        return $this->isResolved;
+    }
+
     /**
      * @param Doctor $doctor
      * @param int[]  $sourceStates
@@ -268,6 +301,8 @@ class EventOffer extends BaseEntity
 
             return true;
         }
+
+        //close if
 
         return false;
     }

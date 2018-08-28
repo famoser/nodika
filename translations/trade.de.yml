@@ -12,7 +12,19 @@ accept:
     trade_accepted: 'Sie haben den Tausch erfolgreich akzeptiert. Sobald alle Parteien Ihre Zustimmung gegeben haben, wird der Tausch ausgeführt.'
   danger:
     invalid: "Die Tauschanfrage ist nicht mehr gültig. Darin enthaltene Termine haben bereits den Eigentümer gewechselt."
+    action_invalid: 'Diese Aktion konnte nicht ausgeführt werden. Vermutlich hat sich der Tausch in der Zwischenzeit geändert.'
 
+decline:
+  success:
+     trade_decline: 'Der Tausch wurde abgelehnt.'
+
+acknowledge:
+  success:
+    trade_acknowledged: 'Kenntnissnahme gespeichert.'
+
+withdraw:
+  success:
+    trade_withdrawn: 'Der Tausch wurde zurückgezogen.'
 
 emails:
   offer_accepted:
@@ -27,4 +39,3 @@ emails:
     subject: 'Neue Tauschanfrage'
     message: 'Sie haben eine neue Tauschanfrage auf nodika erhalten.'
     action_text: "Jetzt beantworten"
-
