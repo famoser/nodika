@@ -7,6 +7,7 @@ index:
     trade_offer_invalid: 'Die Tauschanfrage konnte nicht erstellt werden. Versuchen Sie es noch einmal, oder kontaktieren Sie den Administrator.'
 
 accept:
+  title: "akzeptieren"
   success:
     trade_executed: 'Der Tausch wurde ausgeführt.'
     trade_accepted: 'Sie haben den Tausch erfolgreich akzeptiert. Sobald alle Parteien Ihre Zustimmung gegeben haben, wird der Tausch ausgeführt.'
@@ -15,16 +16,23 @@ accept:
     action_invalid: 'Diese Aktion konnte nicht ausgeführt werden. Vermutlich hat sich der Tausch in der Zwischenzeit geändert.'
 
 decline:
+  title: "ablehnen"
   success:
-     trade_decline: 'Der Tausch wurde abgelehnt.'
+    trade_decline: 'Der Tausch wurde abgelehnt.'
 
 acknowledge:
+  title: "zur Kenntniss nehmen"
   success:
     trade_acknowledged: 'Kenntnissnahme gespeichert.'
 
 withdraw:
+  title: "zurückziehen"
   success:
     trade_withdrawn: 'Der Tausch wurde zurückgezogen.'
+
+display:
+    you_get: 'Sie erhalten neu '
+    they_get: 'Ihr Tauschpartner erhält neu '
 
 emails:
   offer_accepted:
@@ -39,3 +47,4 @@ emails:
     subject: 'Neue Tauschanfrage'
     message: 'Sie haben eine neue Tauschanfrage auf nodika erhalten.'
     action_text: "Jetzt beantworten"
+

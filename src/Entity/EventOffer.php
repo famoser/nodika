@@ -91,7 +91,7 @@ class EventOffer extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $senderAuthorizationStatus = AuthorizationStatus::PENDING;
+    private $senderAuthorizationStatus = AuthorizationStatus::ACCEPTED;
 
     /**
      * Constructor.
@@ -237,41 +237,47 @@ class EventOffer extends BaseEntity
         return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED], AuthorizationStatus::ACKNOWLEDGED);
     }
 
-    public function showReceiver()
+    const ACCEPT_DECLINE = 1;
+    const ACK_ACCEPTED = 2;
+    const ACK_DECLINED = 3;
+    const WITHDRAW = 4;
+    const ACK_WITHDRAWN = 5;
+    const NONE = 6;
+
+    public function getPendingAction(Doctor $doctor)
     {
         if ($this->getIsResolved()) {
-            return false;
+            return self::NONE;
         }
 
         $senderStatus = $this->senderAuthorizationStatus;
         $receiverStatus = $this->receiverAuthorizationStatus;
 
-        return
-            //either not responded yet
-            (AuthorizationStatus::ACCEPTED === $senderStatus && AuthorizationStatus::PENDING === $receiverStatus) ||
-            //or sender has withdrawn
-            (AuthorizationStatus::WITHDRAWN === $senderStatus && AuthorizationStatus::ACKNOWLEDGED !== $receiverStatus);
-    }
-
-    public function showSender()
-    {
-        if ($this->getIsResolved()) {
-            return false;
+        if ($doctor === $this->receiver) {
+            //no response yet
+            if (AuthorizationStatus::ACCEPTED === $senderStatus && AuthorizationStatus::PENDING === $receiverStatus) {
+                return self::ACCEPT_DECLINE;
+            } elseif (AuthorizationStatus::WITHDRAWN === $senderStatus && AuthorizationStatus::ACKNOWLEDGED !== $receiverStatus) {
+                return self::ACK_WITHDRAWN;
+            }
+        } elseif ($doctor === $this->sender) {
+            //no response yet
+            if (AuthorizationStatus::PENDING === $receiverStatus) {
+                return self::WITHDRAW;
+            } elseif (AuthorizationStatus::ACKNOWLEDGED !== $senderStatus && AuthorizationStatus::ACCEPTED === $receiverStatus) {
+                return self::ACK_ACCEPTED;
+            } elseif (AuthorizationStatus::ACKNOWLEDGED !== $senderStatus && AuthorizationStatus::DECLINED === $receiverStatus) {
+                return self::ACK_DECLINED;
+            }
         }
 
-        $senderStatus = $this->senderAuthorizationStatus;
-        $receiverStatus = $this->receiverAuthorizationStatus;
-
-        return
-            //either no answer so far
-            AuthorizationStatus::PENDING === $receiverStatus ||
-            //or has been answered but now acknowledged yet
-            (\in_array($receiverStatus, [AuthorizationStatus::ACCEPTED, AuthorizationStatus::DECLINED], true) && AuthorizationStatus::ACKNOWLEDGED !== $senderStatus);
+        return self::NONE;
     }
 
     public function tryMarkAsResolved()
     {
-        if (!$this->showReceiver() && !$this->showSender()) {
+        if (self::NONE === $this->getPendingAction($this->receiver) &&
+            self::NONE === $this->getPendingAction($this->sender)) {
             $this->isResolved = true;
         }
 

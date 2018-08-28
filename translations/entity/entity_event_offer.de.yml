@@ -2,10 +2,11 @@ entity:
   name: 'Termintauschvorschlag'
   description: 'Ein Termintauschvorschlag enthält Termine, die zwischen zwei Doctoren getauscht werden können'
 
-offered_by_clinic: 'Offerte der Praxis'
-offered_by_doctor: 'Offert von Mitarbeiter'
-offered_to_clinic: 'Offerte an Praxis'
-offered_to_doctor: 'Offerte an Mitarbeiter'
-event_offer_entries: 'Anzahl Termine'
-status: 'Status'
-description: 'Nachricht'
+message: 'Nachricht'
+
+next_action:
+  accept_decline: "Sie können diesen Tausch nun annehmen oder ablehnen."
+  ack_declined: "Ihr Tausch wurde abgelehnt und daher abgebrochen."
+  ack_accepted: "Ihr Tausch wurde angenommen und ausgeführt."
+  withdraw: "Sie können den Tausch zurückziehen."
+  ack_withdrawn: "Der Tausch wurde zurückgezogen."

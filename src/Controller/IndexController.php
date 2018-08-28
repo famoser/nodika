@@ -13,6 +13,7 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Event;
+use App\Entity\EventOffer;
 use App\Model\Event\SearchModel;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,7 +34,17 @@ class IndexController extends BaseDoctrineController
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
         $events = $eventRepository->search($searchModel);
 
-        return $this->render('index/index.html.twig', ['events' => $events]);
+        //get open offers & determine which need actions
+        $offers = $this->getDoctrine()->getRepository(EventOffer::class)->findBy(['isResolved' => false]);
+        /** @var EventOffer[] $actingOffers */
+        $actingOffers = [];
+        foreach ($offers as $offer) {
+            if (EventOffer::NONE !== $offer->getPendingAction($this->getUser())) {
+                $actingOffers[] = $offer;
+            }
+        }
+
+        return $this->render('index/index.html.twig', ['events' => $events, 'offers' => $actingOffers]);
     }
 
     protected function getIndexBreadcrumbs()

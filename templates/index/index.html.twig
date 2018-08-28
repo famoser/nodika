@@ -23,7 +23,76 @@
 
 {% block content %}
     <div id="confirm"></div>
-    <div id="offer-confirm"></div>
+    {% if offers|length > 0 %}
+        <div class="container">
+            <div class="row">
+                <div class="card w-100">
+                    <div class="card-body">
+                        {% for offer in offers %}
+                            {% if loop.index0 > 0 %}
+                                <hr/>
+                            {% endif %}
+
+                            <div class="row">
+                                <div class="col">
+
+                                </div>
+                                <div class="col">
+
+                                </div>
+                                {% if offer.message|trim|length > 0 %}
+                                    <div class="col">
+                                        <p>
+                                            {{ offer.sender.fullName }}:<br/>
+                                            <span class="text-secondary">{{ offer.message }}</span>
+                                        </p>
+                                    </div>
+                                {% endif %}
+                                <div class="col">
+                                    {% if offer.pendingAction(app.user) == 1 %}
+                                        <p>{{ "next_action.accept_decline"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_accept", {"eventOffer" : offer.id}) }}">
+                                            {{ "accept.title"|trans({}, "trade") }}
+                                        </a>
+                                        <a class="btn btn-secondary"
+                                           href="{{ path("trade_decline", {"eventOffer" : offer.id}) }}">
+                                            {{ "decline.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 2 %}
+                                        <p>{{ "next_action.ack_accepted"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_acknowledge", {"eventOffer" : offer.id}) }}">
+                                            {{ "acknowledge.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 3 %}
+                                        <p>{{ "next_action.ack_declined"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_acknowledge", {"eventOffer" : offer.id}) }}">
+                                            {{ "acknowledge.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 4 %}
+                                        <p>{{ "next_action.withdraw"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_withdraw", {"eventOffer" : offer.id}) }}">
+                                            {{ "withdraw.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 5 %}
+                                        <p>{{ "next_action.ack_withdrawn"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_acknowledge", {"eventOffer" : offer.id}) }}">
+                                            {{ "acknowledge.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
     <div class="container">
         <div class="row">
             <div class="d-flex">
@@ -42,7 +111,7 @@
                                 <th>{{ "entity.name"|trans({}, "entity_clinic") }}</th>
                                 <th>{{ "entity.name"|trans({}, "entity_doctor") }}</th>
                                 <th>{{ "is_confirmed"|trans({}, "trait_event") }}</th>
-                                <th class="minimal-width"> </th>
+                                <th class="minimal-width"></th>
                             </tr>
                             </thead>
                             <tbody>

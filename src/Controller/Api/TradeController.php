@@ -17,7 +17,6 @@ use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Enum\AuthorizationStatus;
-use App\Enum\OfferStatus;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -152,12 +151,10 @@ class TradeController extends BaseApiController
 
         //construct the offer
         $eventOffer = new EventOffer();
-        $eventOffer->setIsResolved(OfferStatus::OPEN);
         $eventOffer->setMessage($values['description']);
 
         $eventOffer->setSender($senderDoctor);
         $eventOffer->setSenderClinic($senderClinic);
-        $eventOffer->accept($senderDoctor);
         foreach ($senderEvents as $senderEvent) {
             $eventOffer->getEventsWhichChangeOwner()->add($senderEvent);
         }
