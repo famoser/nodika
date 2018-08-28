@@ -16,8 +16,6 @@ use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventOffer;
-use App\Entity\EventOfferAuthorization;
-use App\Entity\EventOfferEntry;
 use App\Enum\AuthorizationStatus;
 use App\Enum\OfferStatus;
 use App\Model\Event\SearchModel;
@@ -140,93 +138,34 @@ class TradeController extends BaseApiController
             return false;
         }
 
-        //check events can be traded with chosen target
-        $theirEvents = $this->getEventsFromIds($values['receiver_event_ids']);
-        if (!$theirEvents) {
-            return false;
-        }
+        //get receiver stuff
+        $receiverEventIds = $this->getEventsFromIds($values['receiver_event_ids']);
+        $receiverEvents = $this->getDoctrine()->getRepository(Event::class)->findBy(['id' => array_values($receiverEventIds)]);
+        $receiverClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['receiver_clinic_id']);
+        $receiverDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int) $values['receiver_doctor_id']);
 
-        //get targets
-        $targetClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['receiver_clinic_id']);
-        $targetDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int) $values['receiver_doctor_id']);
-
-        //ensure both are set now
-        if (null === $targetDoctor || null === $targetClinic) {
-            return false;
-        }
-
-        //check both are alive & connected
-        if (!$targetDoctor->getClinics()->contains($targetClinic) || $targetClinic->isDeleted() || $targetDoctor->isDeleted()) {
-            return false;
-        }
-
-        //events must be from same clinic, and at most one user must be able to authorize the trade
-        foreach ($theirEvents as $event) {
-            //ensure clinic matches
-            if ($targetClinic !== $event->getClinic()) {
-                return false;
-            }
-
-            //if event has doctor assigned it must be the same
-            if (null !== $event->getDoctor() && $event->getDoctor() !== $targetDoctor) {
-                return false;
-            }
-        }
-
-        //check source can indeed trade all these events
-        $myEvents = $this->getEventsFromIds($values['sender_event_ids']);
-        if (!$myEvents) {
-            return false;
-        }
-
-        //get source
-        $sourceClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['sender_clinic_id']);
-        $sourceUser = $this->getUser();
+        //get sender stuff
+        $senderEventIds = $this->getEventsFromIds($values['sender_event_ids']);
+        $senderEvents = $this->getDoctrine()->getRepository(Event::class)->findBy(['id' => array_values($senderEventIds)]);
+        $senderClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['sender_clinic_id']);
+        $senderDoctor = $this->getUser();
 
         //construct the offer
         $eventOffer = new EventOffer();
-        $eventOffer->setStatus(OfferStatus::OPEN);
+        $eventOffer->setIsResolved(OfferStatus::OPEN);
         $eventOffer->setMessage($values['description']);
 
-        //my events which are new the events of the the receiver of the trade offer
-        $eventOfferAuthorization = new EventOfferAuthorization();
-        $eventOfferAuthorization->setEventOffer($eventOffer);
-        $eventOfferAuthorization->setReceiverAuthorizationStatus(AuthorizationStatus::PENDING);
-        $eventOfferAuthorization->setReceiverSignature($targetDoctor);
-        $eventOfferAuthorization->setSenderSignature($sourceUser);
-        $eventOfferAuthorization->setSenderAuthorizationStatus(AuthorizationStatus::SIGNED);
-        $eventOfferAuthorization->setEventOffer($eventOffer);
-        $eventOffer->getAuthorizations()->add($eventOfferAuthorization);
-
-        //add concrete events
-        foreach ($myEvents as $myEvent) {
-            $eventOfferEntry = new EventOfferEntry();
-            $eventOfferEntry->setEvent($myEvent);
-            $eventOfferEntry->setEventOffer($eventOffer);
-            $eventOfferEntry->setTargetClinic($targetClinic);
-            $eventOfferEntry->setTargetDoctor($targetDoctor);
-            $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
-            $eventOffer->getEntries()->add($eventOfferEntry);
-            $eventOfferAuthorization->getAuthorizes()->add($eventOfferEntry);
+        $eventOffer->setSender($senderDoctor);
+        $eventOffer->setSenderClinic($senderClinic);
+        $eventOffer->accept($senderDoctor);
+        foreach ($senderEvents as $senderEvent) {
+            $eventOffer->getEventsWhichChangeOwner()->add($senderEvent);
         }
 
-        //their events which are new the events of the creator of the trade offer
-        $eventOfferAuthorization = new EventOfferAuthorization();
-        $eventOfferAuthorization->setEventOffer($eventOffer);
-        $eventOfferAuthorization->setReceiverAuthorizationStatus(AuthorizationStatus::SIGNED);
-        $eventOfferAuthorization->setReceiverSignature($this->getUser());
-        $eventOffer->getAuthorizations()->add($eventOfferAuthorization);
-
-        //add concrete events
-        foreach ($theirEvents as $theirEvent) {
-            $eventOfferEntry = new EventOfferEntry();
-            $eventOfferEntry->setEvent($theirEvent);
-            $eventOfferEntry->setEventOffer($eventOffer);
-            $eventOfferEntry->setTargetDoctor($sourceUser);
-            $eventOfferEntry->setTargetClinic($sourceClinic);
-            $eventOfferEntry->setEventOfferAuthorization($eventOfferAuthorization);
-            $eventOffer->getEntries()->add($eventOfferEntry);
-            $eventOfferAuthorization->getAuthorizes()->add($eventOfferEntry);
+        $eventOffer->setReceiver($receiverDoctor);
+        $eventOffer->setReceiverClinic($receiverClinic);
+        foreach ($receiverEvents as $receiverEvent) {
+            $eventOffer->getEventsWhichChangeOwner()->add($receiverEvent);
         }
 
         //save if offer is valid

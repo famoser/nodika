@@ -12,21 +12,10 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use App\Entity\Clinic;
-use App\Entity\Doctor;
-use App\Entity\Event;
 use App\Entity\EventOffer;
-use App\Entity\EventOfferAuthorization;
-use App\Entity\EventOfferEntry;
-use App\Enum\OfferStatus;
-use App\Enum\AuthorizationStatus;
-use App\Model\Event\SearchModel;
-use App\Service\EmailService;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use App\Entity\EventPast;
+use App\Enum\EventChangeType;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -45,15 +34,49 @@ class TradeController extends BaseFormController
     }
 
     /**
-     * @Route("/{eventOffer}", name="trade_accept")
+     * @Route("/accept/{eventOffer}", name="trade_accept")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param EventOffer          $eventOffer
+     * @param TranslatorInterface $translator
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function acceptAction(EventOffer $eventOffer)
+    public function acceptAction(EventOffer $eventOffer, TranslatorInterface $translator)
     {
-        $user = $this->getUser();
-        foreach ($eventOffer->getAuthorizations() as $authorization) {
-            if ($authorization->)
+        if (!$eventOffer->isValid()) {
+            $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
+        } else {
+            //accept
+            $eventOffer->accept($this->getUser());
+
+            if (!$eventOffer->canExecute()) {
+                $this->displaySuccess($translator->trans('accept.success.trade_accepted', [], 'trade'));
+            } else {
+                //execute trade
+                $manager = $this->getDoctrine()->getManager();
+                foreach ($eventOffer->getSenderOwnedEvents() as $senderOwnedEvent) {
+                    $senderOwnedEvent->setClinic($eventOffer->getReceiverClinic());
+                    $senderOwnedEvent->setDoctor($eventOffer->getReceiver());
+
+                    //save history
+                    $eventPast = EventPast::create($senderOwnedEvent, EventChangeType::TRADED_TO_NEW_CLINIC, $eventOffer->getReceiver());
+                    $manager->persist($eventPast);
+                }
+                foreach ($eventOffer->getReceiverOwnedEvents() as $receiverOwnedEvent) {
+                    $receiverOwnedEvent->setClinic($eventOffer->getSenderClinic());
+                    $receiverOwnedEvent->setDoctor($eventOffer->getSender());
+
+                    //save history
+                    $eventPast = EventPast::create($receiverOwnedEvent, EventChangeType::TRADED_TO_NEW_CLINIC, $eventOffer->getSender());
+                    $manager->persist($eventPast);
+                }
+                $eventOffer->setIsResolved(true);
+                $manager->flush();
+
+                $this->displaySuccess($translator->trans('accept.success.trade_executed', [], 'trade'));
+            }
         }
+
+        return $this->redirectToRoute('index_index');
     }
 }

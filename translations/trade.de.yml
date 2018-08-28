@@ -6,15 +6,13 @@ index:
   danger:
     trade_offer_invalid: 'Die Tauschanfrage konnte nicht erstellt werden. Versuchen Sie es noch einmal, oder kontaktieren Sie den Administrator.'
 
-messages:
-  offer_accepted_successful: 'Der Tausch ist abgeschlossen!'
-  offer_rejected_successful: 'Tausch abgelehnt'
-  offer_close_successful: 'Tauschanfrage zurückgezogen'
-  offer_remove_successful: 'Tauschanfrage entfernt'
-  has_invalid_entries: 'Einer oder mehr der Termine dieser Tauschanfrage können nicht (mehr) getauscht werden. Bitte korrigieren Sie die Tauschanfrage'
-  has_invalid_entries_rejected: 'Einer oder mehr der Termine dieser Tauschanfrage können nicht (mehr) getauscht werden. Die Tauschanfrage wurde automatisch zurückgezogen'
-  offer_open: 'Die Tauschanfrage wurde erfolgreich erstellt. Der Empfänger wurde benachrichtigt.'
-  no_access_anymore: 'Sie haben keinen Zugriff (mehr) auf diese Tauschanfrage. Die Tauschanfrage wurde entwedert zurückgezogen oder entfernt.'
+accept:
+  success:
+    trade_executed: 'Der Tausch wurde ausgeführt.'
+    trade_accepted: 'Sie haben den Tausch erfolgreich akzeptiert. Sobald alle Parteien Ihre Zustimmung gegeben haben, wird der Tausch ausgeführt.'
+  danger:
+    invalid: "Die Tauschanfrage ist nicht mehr gültig. Darin enthaltene Termine haben bereits den Eigentümer gewechselt."
+
 
 emails:
   offer_accepted:
@@ -29,3 +27,4 @@ emails:
     subject: 'Neue Tauschanfrage'
     message: 'Sie haben eine neue Tauschanfrage auf nodika erhalten.'
     action_text: "Jetzt beantworten"
+

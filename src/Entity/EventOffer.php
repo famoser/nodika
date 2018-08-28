@@ -15,7 +15,6 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use App\Enum\AuthorizationStatus;
-use App\Enum\OfferStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,32 +37,47 @@ class EventOffer extends BaseEntity
     private $message;
 
     /**
-     * @var int
+     * @var bool
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
-    private $status = OfferStatus::OPEN;
+    private $isResolved = false;
 
     /**
-     * @var EventOfferEntry[]|ArrayCollection
+     * @var Event[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventOfferEntry", mappedBy="eventOffer", cascade={"all"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Event")
+     * @ORM\JoinTable(name="event_offer_events")
      */
-    private $entries;
+    private $eventsWhichChangeOwner;
 
     /**
      * @var Doctor
      *
      * @ORM\ManyToOne(targetEntity="Doctor")
      */
-    private $receiverSignature;
+    private $receiver;
+
+    /**
+     * @var Clinic
+     *
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     */
+    private $receiverClinic;
 
     /**
      * @var Doctor
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Doctor")
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
-    private $senderSignature;
+    private $sender;
+
+    /**
+     * @var Clinic
+     *
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     */
+    private $senderClinic;
 
     /**
      * @var int
@@ -77,116 +91,270 @@ class EventOffer extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $senderAuthorizationStatus = AuthorizationStatus::SIGNED;
+    private $senderAuthorizationStatus = AuthorizationStatus::PENDING;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->entries = new ArrayCollection();
+        $this->eventsWhichChangeOwner = new ArrayCollection();
     }
 
     /**
-     * Get status.
-     *
-     * @return int
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * Set status.
-     *
-     * @param int $status
-     *
-     * @return EventOffer
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get description.
-     *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
-     * Set description.
-     *
      * @param string $message
-     *
-     * @return EventOffer
      */
-    public function setMessage($message)
+    public function setMessage(string $message): void
     {
         $this->message = $message;
-
-        return $this;
     }
 
     /**
-     * Get eventOfferEntries.
-     *
-     * @return ArrayCollection|EventOfferEntry[]
+     * @return int
      */
-    public function getEntries()
+    public function getIsResolved(): bool
     {
-        return $this->entries;
+        return $this->isResolved;
     }
 
+    /**
+     * @param bool $isResolved
+     */
+    public function setIsResolved(bool $isResolved): void
+    {
+        $this->isResolved = $isResolved;
+    }
+
+    /**
+     * @return Event[]|ArrayCollection
+     */
+    public function getEventsWhichChangeOwner()
+    {
+        return $this->eventsWhichChangeOwner;
+    }
+
+    /**
+     * @return Doctor
+     */
+    public function getReceiver(): Doctor
+    {
+        return $this->receiver;
+    }
+
+    /**
+     * @param Doctor $receiver
+     */
+    public function setReceiver(Doctor $receiver): void
+    {
+        $this->receiver = $receiver;
+    }
+
+    /**
+     * @return Doctor
+     */
+    public function getSender(): Doctor
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @param Doctor $sender
+     */
+    public function setSender(Doctor $sender): void
+    {
+        $this->sender = $sender;
+    }
+
+    /**
+     * @return Clinic
+     */
+    public function getReceiverClinic(): Clinic
+    {
+        return $this->receiverClinic;
+    }
+
+    /**
+     * @param Clinic $receiverClinic
+     */
+    public function setReceiverClinic(Clinic $receiverClinic): void
+    {
+        $this->receiverClinic = $receiverClinic;
+    }
+
+    /**
+     * @return Clinic
+     */
+    public function getSenderClinic(): Clinic
+    {
+        return $this->senderClinic;
+    }
+
+    /**
+     * @param Clinic $senderClinic
+     */
+    public function setSenderClinic(Clinic $senderClinic): void
+    {
+        $this->senderClinic = $senderClinic;
+    }
+
+    /**
+     * @param Doctor $doctor
+     *
+     * @return bool
+     */
+    public function accept(Doctor $doctor)
+    {
+        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::DECLINED, AuthorizationStatus::WITHDRAWN], AuthorizationStatus::ACCEPTED);
+    }
+
+    /**
+     * @param Doctor $doctor
+     *
+     * @return bool
+     */
+    public function decline(Doctor $doctor)
+    {
+        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING], AuthorizationStatus::DECLINED);
+    }
+
+    /**
+     * @param Doctor $doctor
+     *
+     * @return bool
+     */
+    public function withdraw(Doctor $doctor)
+    {
+        return $this->changeStatus($doctor, [AuthorizationStatus::ACCEPTED], AuthorizationStatus::WITHDRAWN);
+    }
+
+    /**
+     * @param Doctor $doctor
+     *
+     * @return bool
+     */
+    public function acknowledge(Doctor $doctor)
+    {
+        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED], AuthorizationStatus::ACKNOWLEDGED);
+    }
+
+    /**
+     * @param Doctor $doctor
+     * @param int[]  $sourceStates
+     * @param int    $targetState
+     *
+     * @return bool
+     */
+    private function changeStatus(Doctor $doctor, $sourceStates, $targetState)
+    {
+        if ($this->isResolved) {
+            return false;
+        }
+
+        $sourceStates = array_combine($sourceStates, [$targetState]);
+        if ($doctor === $this->getReceiver() && $doctor->getClinics()->contains($this->getReceiverClinic()) && \in_array($this->receiverAuthorizationStatus, $sourceStates, true)) {
+            $this->receiverAuthorizationStatus = $targetState;
+
+            return true;
+        } elseif ($doctor === $this->getSender() && $doctor->getClinics()->contains($this->getSenderClinic()) && \in_array($this->senderAuthorizationStatus, $sourceStates, true)) {
+            $this->senderAuthorizationStatus = $targetState;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private $cacheSenderOwned = null;
+    private $cacheReceiverOwned = null;
+    private $cacheIsValid = null;
+
+    /**
+     * orders the events & checks if trade is valid.
+     */
+    private function refreshCache()
+    {
+        if (null === $this->cacheIsValid) {
+            $this->cacheReceiverOwned = [];
+            $this->cacheSenderOwned = [];
+            $this->cacheIsValid = true;
+
+            //check events have correct owner
+            foreach ($this->getEventsWhichChangeOwner() as $item) {
+                if ($this->getReceiverClinic() === $item->getClinic() &&
+                    (null === $item->getDoctor() || $item->getDoctor() === $this->getReceiver())) {
+                    $this->cacheReceiverOwned[] = $item;
+                } elseif ($this->getSenderClinic() === $item->getClinic() &&
+                    (null === $item->getDoctor() || $item->getDoctor() === $this->getSender())) {
+                    $this->cacheSenderOwned[] = $item;
+                } else {
+                    $this->cacheIsValid = false;
+                }
+
+                if ($item->getClinic()->isDeleted()) {
+                    $this->cacheIsValid = false;
+                }
+            }
+
+            //check doctors not removed
+            if ($this->getReceiver()->isDeleted() || $this->getSender()->isDeleted()) {
+                $this->cacheIsValid = false;
+            }
+
+            //check clinics not removed
+            if ($this->getReceiverClinic()->isDeleted() || $this->getSenderClinic()->isDeleted()) {
+                $this->cacheIsValid = false;
+            }
+
+            //check doctors still in clinic
+            if (!$this->getReceiver()->getClinics()->contains($this->getReceiverClinic()) || !$this->getSender()->getClinics()->contains($this->getSenderClinic())) {
+                $this->cacheIsValid = false;
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
     public function isValid()
-    {//TODO refactor
-        //check all events are still valid authorized
-        $authorizations = [];
-        foreach ($this->getEntries() as $entry) {
-            if (null === $entry->getEventOfferAuthorization()) {
-                return false;
-            }
+    {
+        $this->refreshCache();
 
-            //check target still valid
-            $targetDoc = $entry->getTargetDoctor();
-            $targetClinic = $entry->getTargetClinic();
-            if (null === $targetDoc || null === $targetClinic ||
-                $targetDoc->isDeleted() || $targetClinic->isDeleted() ||
-                !$targetDoc->getClinics()->contains($targetClinic)) {
-                return false;
-            }
+        return $this->cacheIsValid;
+    }
 
-            //save authorization to check sender afterwards
-            $authorizations[$entry->getEventOfferAuthorization()->getId()] = $entry->getEventOfferAuthorization();
-        }
+    /**
+     * @return bool
+     */
+    public function canExecute()
+    {
+        return AuthorizationStatus::ACCEPTED === $this->receiverAuthorizationStatus && AuthorizationStatus::ACCEPTED === $this->senderAuthorizationStatus;
+    }
 
-        foreach ($authorizations as $authorization) {
-            $doctor = $authorization->getReceiverSignature();
-            if ($doctor->isDeleted()) {
-                return false;
-            }
+    /**
+     * @return Event[]
+     */
+    public function getSenderOwnedEvents()
+    {
+        $this->refreshCache();
 
-            //find clinic
+        return $this->cacheSenderOwned;
+    }
 
-            //check both are alive & connected
-        }
+    /**
+     * @return Event[]
+     */
+    public function getReceiverOwnedEvents()
+    {
+        $this->refreshCache();
 
-        //check events belong to user
-        foreach ($myEvents as $myEvent) {
-            if ($myEvent->getClinic() !== $sourceClinic) {
-                return false;
-            }
-
-            if (null !== $myEvent->getDoctor() && $myEvent->getDoctor() !== $sourceUser) {
-                return false;
-            }
-        }
+        return $this->cacheSenderOwned;
     }
 }
