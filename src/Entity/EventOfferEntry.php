@@ -54,13 +54,6 @@ class EventOfferEntry extends BaseEntity
     private $targetClinic;
 
     /**
-     * @var EventOfferAuthorization
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\EventOfferAuthorization", inversedBy="authorizes")
-     */
-    private $eventOfferAuthorization;
-
-    /**
      * @return EventOffer
      */
     public function getEventOffer(): EventOffer
@@ -122,21 +115,5 @@ class EventOfferEntry extends BaseEntity
     public function setTargetClinic(Clinic $targetClinic): void
     {
         $this->targetClinic = $targetClinic;
-    }
-
-    /**
-     * @return EventOfferAuthorization
-     */
-    public function getEventOfferAuthorization(): EventOfferAuthorization
-    {
-        return $this->eventOfferAuthorization;
-    }
-
-    /**
-     * @param EventOfferAuthorization $eventOfferAuthorization
-     */
-    public function setEventOfferAuthorization(EventOfferAuthorization $eventOfferAuthorization): void
-    {
-        $this->eventOfferAuthorization = $eventOfferAuthorization;
     }
 }

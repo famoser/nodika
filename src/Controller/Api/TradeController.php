@@ -18,8 +18,8 @@ use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Entity\EventOfferAuthorization;
 use App\Entity\EventOfferEntry;
+use App\Enum\AuthorizationStatus;
 use App\Enum\OfferStatus;
-use App\Enum\SignatureStatus;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -160,14 +160,14 @@ class TradeController extends BaseApiController
             return false;
         }
 
-        //events must be from same clinic, and at least one user must be able to authorize the trade
+        //events must be from same clinic, and at most one user must be able to authorize the trade
         foreach ($theirEvents as $event) {
             //ensure clinic matches
             if ($targetClinic !== $event->getClinic()) {
                 return false;
             }
 
-            //ensure only single frontend user part of trade
+            //if event has doctor assigned it must be the same
             if (null !== $event->getDoctor() && $event->getDoctor() !== $targetDoctor) {
                 return false;
             }
@@ -183,22 +183,6 @@ class TradeController extends BaseApiController
         $sourceClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['sender_clinic_id']);
         $sourceUser = $this->getUser();
 
-        //check both are alive & connected
-        if (!$this->getUser()->getClinics()->contains($sourceClinic) || $sourceClinic->isDeleted() || $sourceUser->isDeleted()) {
-            return false;
-        }
-
-        //check events belong to user
-        foreach ($myEvents as $myEvent) {
-            if ($myEvent->getClinic() !== $sourceClinic) {
-                return false;
-            }
-
-            if (null !== $myEvent->getDoctor() && $myEvent->getDoctor() !== $sourceUser) {
-                return false;
-            }
-        }
-
         //construct the offer
         $eventOffer = new EventOffer();
         $eventOffer->setStatus(OfferStatus::OPEN);
@@ -207,8 +191,10 @@ class TradeController extends BaseApiController
         //my events which are new the events of the the receiver of the trade offer
         $eventOfferAuthorization = new EventOfferAuthorization();
         $eventOfferAuthorization->setEventOffer($eventOffer);
-        $eventOfferAuthorization->setSignatureStatus(SignatureStatus::PENDING);
-        $eventOfferAuthorization->setSignedBy($targetDoctor);
+        $eventOfferAuthorization->setReceiverAuthorizationStatus(AuthorizationStatus::PENDING);
+        $eventOfferAuthorization->setReceiverSignature($targetDoctor);
+        $eventOfferAuthorization->setSenderSignature($sourceUser);
+        $eventOfferAuthorization->setSenderAuthorizationStatus(AuthorizationStatus::SIGNED);
         $eventOfferAuthorization->setEventOffer($eventOffer);
         $eventOffer->getAuthorizations()->add($eventOfferAuthorization);
 
@@ -227,8 +213,8 @@ class TradeController extends BaseApiController
         //their events which are new the events of the creator of the trade offer
         $eventOfferAuthorization = new EventOfferAuthorization();
         $eventOfferAuthorization->setEventOffer($eventOffer);
-        $eventOfferAuthorization->setSignatureStatus(SignatureStatus::SIGNED);
-        $eventOfferAuthorization->setSignedBy($this->getUser());
+        $eventOfferAuthorization->setReceiverAuthorizationStatus(AuthorizationStatus::SIGNED);
+        $eventOfferAuthorization->setReceiverSignature($this->getUser());
         $eventOffer->getAuthorizations()->add($eventOfferAuthorization);
 
         //add concrete events
@@ -243,9 +229,14 @@ class TradeController extends BaseApiController
             $eventOfferAuthorization->getAuthorizes()->add($eventOfferEntry);
         }
 
-        $this->fastSave($eventOffer);
+        //save if offer is valid
+        if ($eventOffer->isValid()) {
+            $this->fastSave($eventOffer);
 
-        return $eventOffer;
+            return $eventOffer;
+        }
+
+        return false;
     }
 
     /**
@@ -273,9 +264,9 @@ class TradeController extends BaseApiController
 
         //send out all authorization request emails
         foreach ($eventOffer->getAuthorizations() as $authorization) {
-            if (SignatureStatus::PENDING === $authorization->getSignatureStatus()) {
+            if (AuthorizationStatus::PENDING === $authorization->getReceiverAuthorizationStatus()) {
                 $emailService->sendActionEmail(
-                    $authorization->getSignedBy()->getEmail(),
+                    $authorization->getReceiverSignature()->getEmail(),
                     $translator->trans('emails.new_offer.subject', [], 'trade'),
                     $translator->trans('emails.new_offer.message', [], 'trade'),
                     $translator->trans('emails.new_offer.action_text', [], 'trade'),

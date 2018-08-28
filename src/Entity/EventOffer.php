@@ -14,6 +14,7 @@ namespace App\Entity;
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
+use App\Enum\AuthorizationStatus;
 use App\Enum\OfferStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,7 +42,7 @@ class EventOffer extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $status = OfferStatus::CREATING;
+    private $status = OfferStatus::OPEN;
 
     /**
      * @var EventOfferEntry[]|ArrayCollection
@@ -51,11 +52,32 @@ class EventOffer extends BaseEntity
     private $entries;
 
     /**
-     * @var EventOfferAuthorization[]|ArrayCollection
+     * @var Doctor
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventOfferAuthorization", mappedBy="eventOffer", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
-    private $authorizations;
+    private $receiverSignature;
+
+    /**
+     * @var Doctor
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Doctor")
+     */
+    private $senderSignature;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $receiverAuthorizationStatus = AuthorizationStatus::PENDING;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $senderAuthorizationStatus = AuthorizationStatus::SIGNED;
 
     /**
      * Constructor.
@@ -63,7 +85,6 @@ class EventOffer extends BaseEntity
     public function __construct()
     {
         $this->entries = new ArrayCollection();
-        $this->authorizations = new ArrayCollection();
     }
 
     /**
@@ -124,11 +145,48 @@ class EventOffer extends BaseEntity
         return $this->entries;
     }
 
-    /**
-     * @return EventOfferAuthorization[]|ArrayCollection
-     */
-    public function getAuthorizations()
-    {
-        return $this->authorizations;
+    public function isValid()
+    {//TODO refactor
+        //check all events are still valid authorized
+        $authorizations = [];
+        foreach ($this->getEntries() as $entry) {
+            if (null === $entry->getEventOfferAuthorization()) {
+                return false;
+            }
+
+            //check target still valid
+            $targetDoc = $entry->getTargetDoctor();
+            $targetClinic = $entry->getTargetClinic();
+            if (null === $targetDoc || null === $targetClinic ||
+                $targetDoc->isDeleted() || $targetClinic->isDeleted() ||
+                !$targetDoc->getClinics()->contains($targetClinic)) {
+                return false;
+            }
+
+            //save authorization to check sender afterwards
+            $authorizations[$entry->getEventOfferAuthorization()->getId()] = $entry->getEventOfferAuthorization();
+        }
+
+        foreach ($authorizations as $authorization) {
+            $doctor = $authorization->getReceiverSignature();
+            if ($doctor->isDeleted()) {
+                return false;
+            }
+
+            //find clinic
+
+            //check both are alive & connected
+        }
+
+        //check events belong to user
+        foreach ($myEvents as $myEvent) {
+            if ($myEvent->getClinic() !== $sourceClinic) {
+                return false;
+            }
+
+            if (null !== $myEvent->getDoctor() && $myEvent->getDoctor() !== $sourceUser) {
+                return false;
+            }
+        }
     }
 }

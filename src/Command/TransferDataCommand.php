@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TransferDataCommand extends Command
 {
-    const NEW = 1;
+    const CURRENT = 1;
     const OLD = 2;
 
     const DB_PATH = '../../var/data_before_migration.sqlite';
@@ -98,7 +98,7 @@ class TransferDataCommand extends Command
         ];
 
         foreach ($tableNames as $tableName) {
-            $this->executeQuery(self::NEW, 'DELETE * FROM '.$tableName);
+            $this->executeQuery(self::CURRENT, 'DELETE * FROM '.$tableName);
         }
     }
 
@@ -109,7 +109,7 @@ class TransferDataCommand extends Command
      */
     private function executeQuery($target, $sql, $values = [])
     {
-        if (self::NEW === $target) {
+        if (self::CURRENT === $target) {
             $pdo = $this->doctrine->getConnection();
         } else {
             $pdo = new PDO('sqlite:'.self::DB_PATH);
