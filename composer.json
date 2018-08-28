@@ -5,6 +5,7 @@
   "require": {
     "php": "^7.1",
     "ext-iconv": "*",
+    "ext-pdo": "*",
     "ext-pdo_sqlite": "*",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
     "dragonmantank/cron-expression": "^2.0",
