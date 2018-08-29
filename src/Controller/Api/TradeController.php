@@ -16,7 +16,6 @@ use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventOffer;
-use App\Enum\AuthorizationStatus;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -199,16 +198,12 @@ class TradeController extends BaseApiController
         }
 
         //send out all authorization request emails
-        foreach ($eventOffer->getAuthorizations() as $authorization) {
-            if (AuthorizationStatus::PENDING === $authorization->getReceiverAuthorizationStatus()) {
-                $emailService->sendActionEmail(
-                    $authorization->getReceiverSignature()->getEmail(),
-                    $translator->trans('emails.new_offer.subject', [], 'trade'),
-                    $translator->trans('emails.new_offer.message', [], 'trade'),
-                    $translator->trans('emails.new_offer.action_text', [], 'trade'),
-                    $this->generateUrl('index_index'));
-            }
-        }
+        $emailService->sendActionEmail(
+            $eventOffer->getReceiver()->getEmail(),
+            $translator->trans('emails.new_offer.subject', [], 'trade'),
+            $translator->trans('emails.new_offer.message', [], 'trade'),
+            $translator->trans('emails.new_offer.action_text', [], 'trade'),
+            $this->generateUrl('index_index'));
 
         $this->displaySuccess($translator->trans('index.success.created_trade_offer', [], 'trade'));
 

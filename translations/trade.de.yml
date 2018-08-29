@@ -21,9 +21,9 @@ decline:
     trade_decline: 'Der Tausch wurde abgelehnt.'
 
 acknowledge:
-  title: "zur Kenntniss nehmen"
+  title: "zur Kenntnis nehmen"
   success:
-    trade_acknowledged: 'Kenntnissnahme gespeichert.'
+    trade_acknowledged: 'Kenntnisnahme gespeichert.'
 
 withdraw:
   title: "zurückziehen"
@@ -31,17 +31,17 @@ withdraw:
     trade_withdrawn: 'Der Tausch wurde zurückgezogen.'
 
 display:
-    you_get: 'Sie erhalten neu '
-    they_get: 'Ihr Tauschpartner erhält neu '
+  title: "Tauschanfragen"
+  new_owner: 'Neuer Verantwortlicher'
 
 emails:
   offer_accepted:
     subject: 'Tauschanfrage angenommen'
-    message: 'Ihre Tauschanfrage auf nodika wurde angenommen'
+    message: 'Ihre Tauschanfrage auf nodika wurde angenommen.'
     action_text: "Ansehen"
-  offer_rejected:
+  offer_declined:
     subject: 'Tauschanfrage abgelehnt'
-    message: 'Ihre Tauschanfrage auf nodika wurde abgelehnt'
+    message: 'Ihre Tauschanfrage auf nodika wurde abgelehnt.'
     action_text: "Ansehen"
   new_offer:
     subject: 'Neue Tauschanfrage'

@@ -1,7 +1,7 @@
 <template>
     <div id="confirm-app">
         <div v-if="events.length > 0" class="container">
-            <div class="row d-block mb-5 mt-5 border-top border-primary pt-5 border-bottom pb-5">
+            <div class="row d-block mb-4 p-4 bg-light">
                 <p class="lead">{{ $t("actions.confirm_events") }}</p>
                 <EventGrid
                         :events="events"
@@ -38,6 +38,9 @@
                             return e.id !== event.id
                         });
                         this.loadingEvents.splice(this.loadingEvents.indexOf(event), 1);
+                        if (this.events.length === 0) {
+                            window.location.reload();
+                        }
                     });
             }
         },

@@ -15,6 +15,7 @@ use App\Controller\Base\BaseFormController;
 use App\Entity\EventOffer;
 use App\Entity\EventPast;
 use App\Enum\EventChangeType;
+use App\Service\EmailService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -38,10 +39,13 @@ class TradeController extends BaseFormController
      *
      * @param EventOffer          $eventOffer
      * @param TranslatorInterface $translator
+     * @param EmailService        $emailService
+     *
+     * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function acceptAction(EventOffer $eventOffer, TranslatorInterface $translator)
+    public function acceptAction(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
     {
         if (!$eventOffer->isValid()) {
             $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
@@ -73,6 +77,14 @@ class TradeController extends BaseFormController
                     }
                     $manager->flush();
 
+                    //inform sender
+                    $emailService->sendActionEmail(
+                        $eventOffer->getReceiver()->getEmail(),
+                        $translator->trans('emails.offer_accepted.subject', [], 'trade'),
+                        $translator->trans('emails.offer_accepted.message', [], 'trade'),
+                        $translator->trans('emails.offer_accepted.action_text', [], 'trade'),
+                        $this->generateUrl('index_index'));
+
                     $this->displaySuccess($translator->trans('accept.success.trade_executed', [], 'trade'));
                 }
             }
@@ -86,10 +98,13 @@ class TradeController extends BaseFormController
      *
      * @param EventOffer          $eventOffer
      * @param TranslatorInterface $translator
+     * @param EmailService        $emailService
+     *
+     * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function declineAction(EventOffer $eventOffer, TranslatorInterface $translator)
+    public function declineAction(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
     {
         if (!$eventOffer->isValid()) {
             $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
@@ -97,6 +112,15 @@ class TradeController extends BaseFormController
             if ($eventOffer->decline($this->getUser())) {
                 $this->displaySuccess($translator->trans('decline.success.trade_decline', [], 'trade'));
                 $eventOffer->tryMarkAsResolved();
+
+                //inform sender
+                $emailService->sendActionEmail(
+                    $eventOffer->getReceiver()->getEmail(),
+                    $translator->trans('emails.offer_declined.subject', [], 'trade'),
+                    $translator->trans('emails.offer_declined.message', [], 'trade'),
+                    $translator->trans('emails.offer_declined.action_text', [], 'trade'),
+                    $this->generateUrl('index_index'));
+
                 $this->fastSave($eventOffer);
             } else {
                 $this->displayError($translator->trans('accept.danger.action_invalid', [], 'trade'));
@@ -116,16 +140,12 @@ class TradeController extends BaseFormController
      */
     public function acknowledgeAction(EventOffer $eventOffer, TranslatorInterface $translator)
     {
-        if (!$eventOffer->isValid()) {
-            $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
+        if ($eventOffer->acknowledge($this->getUser())) {
+            $this->displaySuccess($translator->trans('acknowledge.success.trade_acknowledged', [], 'trade'));
+            $eventOffer->tryMarkAsResolved();
+            $this->fastSave($eventOffer);
         } else {
-            if ($eventOffer->acknowledge($this->getUser())) {
-                $this->displaySuccess($translator->trans('acknowledge.success.trade_acknowledged', [], 'trade'));
-                $eventOffer->tryMarkAsResolved();
-                $this->fastSave($eventOffer);
-            } else {
-                $this->displayError($translator->trans('accept.danger.action_invalid', [], 'trade'));
-            }
+            $this->displayError($translator->trans('accept.danger.action_invalid', [], 'trade'));
         }
 
         return $this->redirectToRoute('index_index');

@@ -234,7 +234,7 @@ class EventOffer extends BaseEntity
      */
     public function acknowledge(Doctor $doctor)
     {
-        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED], AuthorizationStatus::ACKNOWLEDGED);
+        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED, AuthorizationStatus::DECLINED, AuthorizationStatus::WITHDRAWN], AuthorizationStatus::ACKNOWLEDGED);
     }
 
     const ACCEPT_DECLINE = 1;
@@ -242,11 +242,12 @@ class EventOffer extends BaseEntity
     const ACK_DECLINED = 3;
     const WITHDRAW = 4;
     const ACK_WITHDRAWN = 5;
-    const NONE = 6;
+    const ACK_INVALID = 6;
+    const NONE = 7;
 
     public function getPendingAction(Doctor $doctor)
     {
-        if ($this->getIsResolved()) {
+        if ($this->getIsResolved() || $this->getEventsWhichChangeOwner()->isEmpty()) {
             return self::NONE;
         }
 
@@ -254,20 +255,40 @@ class EventOffer extends BaseEntity
         $receiverStatus = $this->receiverAuthorizationStatus;
 
         if ($doctor === $this->receiver) {
-            //no response yet
-            if (AuthorizationStatus::ACCEPTED === $senderStatus && AuthorizationStatus::PENDING === $receiverStatus) {
-                return self::ACCEPT_DECLINE;
-            } elseif (AuthorizationStatus::WITHDRAWN === $senderStatus && AuthorizationStatus::ACKNOWLEDGED !== $receiverStatus) {
-                return self::ACK_WITHDRAWN;
+            if (!$this->isValid()) {
+                if (AuthorizationStatus::ACKNOWLEDGED !== $this->receiverAuthorizationStatus) {
+                    return self::ACK_INVALID;
+                }
+
+                return self::NONE;
             }
-        } elseif ($doctor === $this->sender) {
+
             //no response yet
             if (AuthorizationStatus::PENDING === $receiverStatus) {
-                return self::WITHDRAW;
-            } elseif (AuthorizationStatus::ACKNOWLEDGED !== $senderStatus && AuthorizationStatus::ACCEPTED === $receiverStatus) {
-                return self::ACK_ACCEPTED;
-            } elseif (AuthorizationStatus::ACKNOWLEDGED !== $senderStatus && AuthorizationStatus::DECLINED === $receiverStatus) {
-                return self::ACK_DECLINED;
+                if (AuthorizationStatus::ACCEPTED === $senderStatus) {
+                    return self::ACCEPT_DECLINE;
+                } elseif (AuthorizationStatus::WITHDRAWN === $senderStatus) {
+                    return self::ACK_WITHDRAWN;
+                }
+            }
+        } elseif ($doctor === $this->sender) {
+            if (!$this->isValid()) {
+                if (AuthorizationStatus::ACKNOWLEDGED !== $this->senderAuthorizationStatus) {
+                    return self::ACK_INVALID;
+                }
+
+                return self::NONE;
+            }
+
+            //withdraw/ack
+            if (AuthorizationStatus::ACCEPTED === $senderStatus) {
+                if (AuthorizationStatus::PENDING === $receiverStatus) {
+                    return self::WITHDRAW;
+                } elseif (AuthorizationStatus::ACCEPTED === $receiverStatus) {
+                    return self::ACK_ACCEPTED;
+                } elseif (AuthorizationStatus::DECLINED === $receiverStatus) {
+                    return self::ACK_DECLINED;
+                }
             }
         }
 
@@ -297,7 +318,7 @@ class EventOffer extends BaseEntity
             return false;
         }
 
-        $sourceStates = array_combine($sourceStates, [$targetState]);
+        $sourceStates = array_merge($sourceStates, [$targetState]);
         if ($doctor === $this->getReceiver() && $doctor->getClinics()->contains($this->getReceiverClinic()) && \in_array($this->receiverAuthorizationStatus, $sourceStates, true)) {
             $this->receiverAuthorizationStatus = $targetState;
 
@@ -396,6 +417,6 @@ class EventOffer extends BaseEntity
     {
         $this->refreshCache();
 
-        return $this->cacheSenderOwned;
+        return $this->cacheReceiverOwned;
     }
 }
