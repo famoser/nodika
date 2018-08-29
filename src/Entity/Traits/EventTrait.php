@@ -15,7 +15,6 @@ use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\EventGeneration;
 use App\Enum\EventType;
-use App\Enum\TradeTag;
 use Doctrine\ORM\Mapping as ORM;
 
 trait EventTrait
@@ -34,7 +33,7 @@ trait EventTrait
      *
      * @ORM\ManyToOne(targetEntity="Doctor")
      */
-    private $confirmedBy = null;
+    private $confirmedByDoctor = null;
 
     /**
      * @var \DateTime|null
@@ -42,13 +41,6 @@ trait EventTrait
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastRemainderEmailSent = null;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $tradeTag = TradeTag::MAYBE_TRADE;
 
     /**
      * @var int
@@ -104,9 +96,9 @@ trait EventTrait
     /**
      * @return Doctor|null
      */
-    public function getConfirmedBy(): ?Doctor
+    public function getConfirmedByDoctor(): ?Doctor
     {
-        return $this->confirmedBy;
+        return $this->confirmedByDoctor;
     }
 
     /**
@@ -123,22 +115,6 @@ trait EventTrait
     public function setLastRemainderEmailSent(?\DateTime $lastRemainderEmailSent): void
     {
         $this->lastRemainderEmailSent = $lastRemainderEmailSent;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTradeTag(): int
-    {
-        return $this->tradeTag;
-    }
-
-    /**
-     * @param int $tradeTag
-     */
-    public function setTradeTag(int $tradeTag): void
-    {
-        $this->tradeTag = $tradeTag;
     }
 
     /**
@@ -198,19 +174,19 @@ trait EventTrait
             null !== $this->getConfirmDateTime() &&
             (
                 null === $this->getDoctor() ||
-                (null !== $this->getConfirmedBy() && $this->getConfirmedBy()->getId() === $this->getDoctor()->getId())
+                (null !== $this->getConfirmedByDoctor() && $this->getConfirmedByDoctor()->getId() === $this->getDoctor()->getId())
             );
     }
 
     public function confirm(Doctor $user)
     {
         $this->confirmDateTime = new \DateTime();
-        $this->confirmedBy = $user;
+        $this->confirmedByDoctor = $user;
     }
 
     public function undoConfirm()
     {
-        $this->confirmedBy = null;
+        $this->confirmedByDoctor = null;
         $this->confirmDateTime = null;
     }
 
@@ -222,7 +198,7 @@ trait EventTrait
         $this->setStartDateTime($eventTrait->getStartDateTime());
         $this->setEndDateTime($eventTrait->getEndDateTime());
         $this->confirmDateTime = $eventTrait->getConfirmDateTime();
-        $this->confirmedBy = $eventTrait->getConfirmedBy();
+        $this->confirmedByDoctor = $eventTrait->getConfirmedByDoctor();
         $this->lastRemainderEmailSent = $eventTrait->getLastRemainderEmailSent();
         $this->eventType = $this->getEventType();
         $this->tradeTag = $eventTrait->getTradeTag();

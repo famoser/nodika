@@ -30,6 +30,7 @@ class TransferDataCommand extends Command
     const OLD = 2;
 
     const DB_PATH = 'var/data_before_migration.sqlite';
+    const DB_PATH2 = 'var/data_before_migration.sqlite2';
 
     /**
      * @var RegistryInterface
@@ -63,6 +64,11 @@ class TransferDataCommand extends Command
             return;
         }
 
+        copy(self::DB_PATH, self::DB_PATH2);
+
+        $output->writeln('cleaning old db');
+        $this->cleanOldDb();
+
         $output->writeln('clearing new db');
         $this->clearNewDb();
 
@@ -71,6 +77,9 @@ class TransferDataCommand extends Command
 
         $output->writeln('importing doctors & clinics');
         $this->importClinicAndDoctors();
+
+        $output->writeln('importing events & event past');
+        $this->importEventsAndEventPast();
     }
 
     /**
@@ -112,6 +121,12 @@ class TransferDataCommand extends Command
         foreach ($tableNames as $tableName) {
             $this->executeQuery(self::CURRENT, 'DELETE FROM '.$tableName);
         }
+    }
+
+    private function cleanOldDb()
+    {
+        $this->executeQuery(self::OLD, 'DELETE FROM event WHERE id IN (SELECT e.id FROM event e INNER JOIN event_line el ON e.event_line_id = el.id WHERE el.deleted_at IS NOT NULL)');
+        $this->executeQuery(self::OLD, 'DELETE FROM event_past WHERE event_id IN (SELECT e.id FROM event e INNER JOIN event_line el ON e.event_line_id = el.id WHERE el.deleted_at IS NOT NULL)');
     }
 
     private function importEmails()
@@ -173,6 +188,25 @@ INNER JOIN person p ON f.person_id = p.id');
         $this->insertFields(
             $clinics,
             'doctor_clinics'
+        );
+    }
+
+    private function importEventsAndEventPast()
+    {
+        $events = $this->executeQuery(
+            self::OLD,
+            'SELECT id, member_id as clinic_id, person_id as doctor_id, is_confirmed_date_time as confirm_date_time, NULL as confirmed_by_doctor_id, last_remainder_email_sent, 0 as event_type, start_date_time, end_date_time, deleted_at FROM event');
+
+        //correct different confirmed by treatment
+        foreach ($events as $event) {
+            if ($event['confirm_date_time'] && null !== $event['doctor_id']) {
+                $event['confirmed_by_doctor_id'] = $event['doctor_id'];
+            }
+        }
+
+        $this->insertFields(
+            $events,
+            'event'
         );
     }
 
@@ -316,7 +350,7 @@ INNER JOIN person p ON f.person_id = p.id');
         if (self::CURRENT === $target) {
             $pdo = $this->doctrine->getConnection();
         } else {
-            $pdo = new PDO('sqlite:'.realpath(self::DB_PATH));
+            $pdo = new PDO('sqlite:'.realpath(self::DB_PATH2));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         /** @var \PDO $pdo */
