@@ -11,6 +11,7 @@
 
 namespace App\Command;
 
+use App\Entity\Traits\IdTrait;
 use PDO;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -28,7 +29,7 @@ class TransferDataCommand extends Command
     const CURRENT = 1;
     const OLD = 2;
 
-    const DB_PATH = '../../var/data_before_migration.sqlite';
+    const DB_PATH = 'var/data_before_migration.sqlite';
 
     /**
      * @var RegistryInterface
@@ -56,8 +57,20 @@ class TransferDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!file_exists(self::DB_PATH)) {
+            $output->writeln('old db not found at '.self::DB_PATH);
+
+            return;
+        }
+
         $output->writeln('clearing new db');
         $this->clearNewDb();
+
+        $output->writeln('importing emails');
+        $this->importEmails();
+
+        $output->writeln('importing doctors');
+        $this->importDoctors();
     }
 
     /**
@@ -79,9 +92,8 @@ class TransferDataCommand extends Command
             'event_tag',
 
             //remove offers
-            'event_offer_authorization',
-            'event_offer_entry',
             'event_offer',
+            'event_offer_events',
 
             //remove events
             'event_past',
@@ -98,24 +110,201 @@ class TransferDataCommand extends Command
         ];
 
         foreach ($tableNames as $tableName) {
-            $this->executeQuery(self::CURRENT, 'DELETE * FROM '.$tableName);
+            $this->executeQuery(self::CURRENT, 'DELETE FROM '.$tableName);
         }
+    }
+
+    private function importEmails()
+    {
+        $emails = $this->executeQuery(self::OLD, 'SELECT id, receiver, identifier, subject, body, action_text, carbon_copy, email_type, sent_date_time, visited_date_time FROM email');
+        $this->insertFields(
+            $emails,
+            'email'
+        );
+    }
+
+    private function importDoctors()
+    {
+        $doctors = $this->executeQuery(
+            self::OLD,
+            'SELECT 
+	p.id as id, 
+	0 as is_administrator, 
+	p.email as email, 
+	password_hash as password_hash, 
+	reset_hash as reset_hash,
+	is_active as is_enabled,
+	invitation_hash as invitation_identifier,
+	job_title as job_title,
+	given_name as given_name,
+	family_name as family_name,
+	street as street,
+	street_nr as street_nr,
+	address_line as address_line,
+	postal_code as postal_code,
+	city as city,
+	country as country,
+	phone as phone,
+	p.deleted_at as deleted_at,
+	registration_date as registration_date,
+	NULL as last_login_date,
+	invitation_date_time as last_invitation
+FROM frontend_user f 
+INNER JOIN person p ON f.person_id = p.id');
+
+        $this->insertFields(
+            $doctors,
+            'doctor'
+        );
+    }
+
+    /**
+     * @param IdTrait[] $objects
+     */
+    private function persistAll(array $objects)
+    {
+        $manager = $this->doctrine->getManager();
+        foreach ($objects as $object) {
+            $manager->persist($object);
+        }
+        $manager->flush();
+    }
+
+    /**
+     * @param array  $content
+     * @param array  $fieldSpezification
+     * @param string $table
+     */
+    private function insertFields(array $content, string $table)
+    {
+        if (!$this->normalizeFieldSpezification($content, null, $fieldNames, $methodNames, $conversions)) {
+            return;
+        }
+
+        //create insert sql
+        $entries = [];
+        $parameters = [];
+        for ($i = 0; $i < \count($content); ++$i) {
+            $entry = [];
+            foreach ($fieldNames as $fieldName) {
+                $currentKey = ':'.$fieldName.'_'.$i;
+                $entry[] = $currentKey;
+                $parameters[$currentKey] = $content[$i][$fieldName];
+            }
+            $entries[] = implode(', ', $entry);
+        }
+
+        //abort if none
+        if (0 === \count($entries)) {
+            return;
+        }
+
+        //preapre & execute sql
+        $sql = 'INSERT INTO '.$table.' ('.implode(',', $fieldNames).') VALUES ';
+        $sql .= '('.implode('),(', $entries).')';
+        $this->executeQuery(self::CURRENT, $sql, $parameters);
+    }
+
+    /**
+     * @param array $fieldSpezification
+     * @param $fieldNames
+     * @param $methodNames
+     * @param $conversions
+     *
+     * @return bool
+     */
+    private function normalizeFieldSpezification($content, $fieldSpezification, &$fieldNames, &$methodNames, &$conversions)
+    {
+        if (0 === \count($content)) {
+            return false;
+        }
+
+        //get fields from data set
+        if (null === $fieldSpezification) {
+            $fieldSpezification = [];
+            foreach ($content[0] as $key => $value) {
+                if (!is_numeric($key)) {
+                    $fieldSpezification[] = $key;
+                }
+            }
+        }
+
+        //normalize mapping
+        $fieldNames = [];
+        $methodNames = [];
+        $conversions = [];
+        foreach ($fieldSpezification as $key => $value) {
+            if (\is_string($key)) {
+                $field = $key;
+                $conversion = $value;
+            } else {
+                $field = $value;
+                $conversion = 0;
+            }
+            $fieldNames[] = $field;
+            $methodNames[] = 'set'.ucwords(str_replace('_', ' ', $field));
+            $conversions[] = $conversion;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array    $content
+     * @param array    $fieldSpezification
+     * @param callable $newObject
+     *
+     * @return array
+     */
+    private function writeFields(array $content, array $fieldSpezification, callable $newObject)
+    {
+        if (!$this->normalizeFieldSpezification($content, $fieldSpezification, $fieldNames, $methodNames, $conversions)) {
+            return [];
+        }
+
+        //create objects
+        $res = [];
+        foreach ($content as $entry) {
+            $object = $newObject();
+            for ($i = 0; $i < \count($fieldNames); ++$i) {
+                //get & optionally convert value
+                $value = $entry[$fieldNames[$i]];
+                $conversion = $conversions[$i];
+                if (1 === $conversion) {
+                    $value = (int) $value;
+                } elseif (2 === $conversion && null !== $value) {
+                    $value = new \DateTime($value);
+                }
+
+                //set to object
+                $methodName = $methodNames[$i];
+                $object->$methodName($value);
+            }
+            $res[] = $object;
+        }
+
+        return $res;
     }
 
     /**
      * @param $target
      * @param $sql
-     * @param array $values
+     * @param array $parameters
+     *
+     * @return array
      */
-    private function executeQuery($target, $sql, $values = [])
+    private function executeQuery($target, $sql, $parameters = [])
     {
         if (self::CURRENT === $target) {
             $pdo = $this->doctrine->getConnection();
         } else {
-            $pdo = new PDO('sqlite:'.self::DB_PATH);
+            $pdo = new PDO('sqlite:'.realpath(self::DB_PATH));
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         /** @var \PDO $pdo */
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($values);
+        $stmt->execute($parameters);
+
+        return $stmt->fetchAll();
     }
 }

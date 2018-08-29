@@ -61,13 +61,6 @@ trait UserTrait
     private $lastLoginDate;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
-    private $agbAccepted = false;
-
-    /**
      * @var string
      */
     private $plainPassword;
@@ -127,22 +120,6 @@ trait UserTrait
     public function getResetHash()
     {
         return $this->resetHash;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAgbAccepted()
-    {
-        return $this->agbAccepted;
-    }
-
-    /**
-     * @param bool $agbAccepted
-     */
-    public function setAgbAccepted($agbAccepted)
-    {
-        $this->agbAccepted = $agbAccepted;
     }
 
     /**
