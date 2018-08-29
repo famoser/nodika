@@ -69,8 +69,8 @@ class TransferDataCommand extends Command
         $output->writeln('importing emails');
         $this->importEmails();
 
-        $output->writeln('importing doctors');
-        $this->importDoctors();
+        $output->writeln('importing doctors & clinics');
+        $this->importClinicAndDoctors();
     }
 
     /**
@@ -123,7 +123,7 @@ class TransferDataCommand extends Command
         );
     }
 
-    private function importDoctors()
+    private function importClinicAndDoctors()
     {
         $doctors = $this->executeQuery(
             self::OLD,
@@ -155,6 +155,24 @@ INNER JOIN person p ON f.person_id = p.id');
         $this->insertFields(
             $doctors,
             'doctor'
+        );
+
+        $clinics = $this->executeQuery(
+            self::OLD,
+            'SELECT id, name, description, street, street_nr, address_line, postal_code, city, country, phone, email, deleted_at, invitation_date_time as last_invitation, invitation_hash as invitation_identifier  FROM member');
+
+        $this->insertFields(
+            $clinics,
+            'clinic'
+        );
+
+        $clinics = $this->executeQuery(
+            self::OLD,
+            'SELECT person_id as doctor_id, member_id as clinic_id FROM person_members');
+
+        $this->insertFields(
+            $clinics,
+            'doctor_clinics'
         );
     }
 
