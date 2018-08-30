@@ -31,8 +31,8 @@ class TransferDataCommand extends Command
     const CURRENT = 1;
     const OLD = 2;
 
-    const DB_PATH = 'var/data_before_migration.sqlite';
-    const DB_PATH2 = 'var/data_before_migration.sqlite2';
+    private $dbPath;
+    private $dbPath2;
 
     /**
      * @var RegistryInterface
@@ -48,6 +48,8 @@ class TransferDataCommand extends Command
     {
         parent::__construct();
         $this->doctrine = $registry;
+        $this->dbPath = \dirname(\dirname(__DIR__)).'/var/data_before_migration.sqlite';
+        $this->dbPath2 = $this->dbPath.'2';
     }
 
     protected function configure()
@@ -55,19 +57,19 @@ class TransferDataCommand extends Command
         $this
             ->setName('app:transfer-data')
             ->setDescription('Transfers the data from an old version of the database.')
-            ->setHelp('This will clear the new database, and then transfer the data from an old version of the db to the new one. The old database should be located at '.self::DB_PATH.
+            ->setHelp('This will clear the new database, and then transfer the data from an old version of the db to the new one. The old database should be located at '.$this->dbPath.
                 "\n\nThis does not fully transfer all data, only the one used by the current installation. For example, event offers are not transferred, nor are old generations.");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!file_exists(self::DB_PATH)) {
-            $output->writeln('old db not found at '.self::DB_PATH);
+        if (!file_exists($this->dbPath)) {
+            $output->writeln('old db not found at '.$this->dbPath);
 
             return;
         }
 
-        copy(self::DB_PATH, self::DB_PATH2);
+        copy($this->dbPath, $this->dbPath2);
 
         $output->writeln('cleaning old db');
         $this->cleanOldDb();
@@ -459,7 +461,7 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
         if (self::CURRENT === $target) {
             $pdo = $this->doctrine->getConnection();
         } else {
-            $pdo = new PDO('sqlite:'.realpath(self::DB_PATH2));
+            $pdo = new PDO('sqlite:'.realpath($this->dbPath2));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         /** @var \PDO $pdo */
