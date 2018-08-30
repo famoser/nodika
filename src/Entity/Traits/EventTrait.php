@@ -201,7 +201,6 @@ trait EventTrait
         $this->confirmedByDoctor = $eventTrait->getConfirmedByDoctor();
         $this->lastRemainderEmailSent = $eventTrait->getLastRemainderEmailSent();
         $this->eventType = $this->getEventType();
-        $this->tradeTag = $eventTrait->getTradeTag();
         $this->clinic = $eventTrait->getClinic();
         $this->doctor = $eventTrait->getDoctor();
         $this->generatedBy = $eventTrait->getGeneratedBy();

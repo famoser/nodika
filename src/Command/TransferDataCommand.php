@@ -54,7 +54,8 @@ class TransferDataCommand extends Command
         $this
             ->setName('app:transfer-data')
             ->setDescription('Transfers the data from an old version of the database.')
-            ->setHelp('This will clear the new database, and then transfer the data from an old version of the db to the new one. The old database should be located at '.self::DB_PATH);
+            ->setHelp('This will clear the new database, and then transfer the data from an old version of the db to the new one. The old database should be located at '.self::DB_PATH.
+            "\n\nThis does not fully transfer all data, only the one used by the current installation. For example, event offers are not transferred, nor are old generations.");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -77,10 +78,10 @@ class TransferDataCommand extends Command
         $this->importEmails();
 
         $output->writeln('importing doctors & clinics');
-        $this->importClinicAndDoctors();
+        $this->importClinics();
 
         $output->writeln('importing events & event past');
-        $this->importEventsAndEventPast();
+        $this->importEvents();
     }
 
     /**
@@ -97,13 +98,13 @@ class TransferDataCommand extends Command
             'event_generation_target_doctor',
             'event_generation',
 
-            //remove tags
-            'event_event_tags',
-            'event_tag',
-
             //remove offers
             'event_offer',
             'event_offer_events',
+
+            //remove tags
+            'event_event_tags',
+            'event_tag',
 
             //remove events
             'event_past',
@@ -140,7 +141,7 @@ class TransferDataCommand extends Command
         );
     }
 
-    private function importClinicAndDoctors()
+    private function importClinics()
     {
         $doctors = $this->executeQuery(
             self::OLD,
@@ -193,7 +194,7 @@ INNER JOIN person p ON f.person_id = p.id');
         );
     }
 
-    private function importEventsAndEventPast()
+    private function importEvents()
     {
         $eventLines = $this->executeQuery(
             self::OLD,

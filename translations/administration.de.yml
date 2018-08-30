@@ -3,17 +3,16 @@ index:
   description: 'Verwalten Sie die Benutzer und Termine'
 
 doctors:
-  title: 'Benutzerverwaltung'
-  description: 'Benutzer erstellen und bearbeiten, Passwörter zusenden und zurücksetzen, ...'
-  some_not_logged_in: 'Einige der Ärzte haben sich noch nie eingeloggt'
+  title: 'Tierarztverwaltung'
+  description: 'Tierärzte erstellen und bearbeiten, Passwörter zusenden und zurücksetzen, ...'
+  some_not_logged_in: 'Einige der Tierärzte haben sich noch nie eingeloggt'
   invite_all: 'Alle einladen'
   not_invited_yet: 'Noch nicht eingeladen'
   show: 'anzeigen'
 
-
 clinics:
-  title: 'Mitgliederverwaltung'
-  description: 'Mitglieder erstellen und bearbeiten, Benutzer zuweisen, ...'
+  title: 'Praxisverwaltung'
+  description: 'Praxen erstellen und bearbeiten, Tierärzte zuweisen, ...'
 
 events:
   title: 'Terminverwaltung'
@@ -22,7 +21,3 @@ events:
 settings:
   title: 'Einstellungen'
   description: 'Emailversand ändern, Limiten festlegen, ...'
-
-event_lines:
-  title: 'Termingruppenverwaltung'
-  description: 'Terminegruppen erstellen und bearbeiten'

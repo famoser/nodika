@@ -140,7 +140,7 @@
         </div>
     {% endif %}
 
-    {% if breadcrumbs|length > 0 %}
+    {% if breadcrumbs is defined and breadcrumbs|length > 0 %}
         <div class="container">
             <div class="row">
                 <nav aria-label="breadcrumb">

@@ -1,9 +1,10 @@
 {% extends 'bundles/TwigBundle/Exception/error.html.twig' %}
 
-{% trans_default_domain "bundles_TwigBundle_exception" %}
+{% trans_default_domain "error" %}
 
 {% block additional_error_info %}
-    <p class="text-secondary">{{ "index.500"|trans }}</p>
+    <p class="text-secondary">
+        {{ "error.500"|trans }}
+        <a href="{{ "error.500_email"|trans }}">{{ "error.500_email"|trans }}</a>
+    </p>
 {% endblock %}
-
-{% block image_class %}image-500-error{% endblock %}

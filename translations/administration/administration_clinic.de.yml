@@ -1,11 +1,11 @@
 new:
-  title: 'Neues Mitglied'
-  description: 'Fügen Sie ein neue Mitglied hinzu'
+  title: 'Neue Praxis'
+  description: 'Fügen Sie eine neue Praxis hinzu'
 
 edit:
-  title: 'Mitglied bearbeiten'
-  description: 'Editieren Sie das Mitglied '
+  title: 'Praxis bearbeiten'
+  description: 'Praxis ändern'
 
 remove:
-  title: 'Mitglied entfernen'
-  description: 'Löschen Sie das Mitglied'
+  title: 'Praxis entfernen'
+  description: 'Löschen Sie die Praxis'

@@ -1,16 +1,16 @@
 new:
-  title: 'Neuer Benutzer'
-  description: 'Neuer Benutzer erstellen'
+  title: 'Neuer Tierarzt'
+  description: 'Neuer Tierarzt erstellen'
   danger:
     email_not_unique: 'Diese E-Mail ist bereits vergeben'
 
 edit:
-  title: 'Benutzer bearbeiten'
-  description: 'Ändern Sie Adresse, Email & Namen des Benutzers'
+  title: 'Tierarzt bearbeiten'
+  description: 'Ändern Sie Adresse, Email & Namen des Tierarztes'
 
 remove:
-  title: 'Benutzer entfernen'
-  description: 'Löschen Sie den Benutzer und alle damit verbundenen Daten'
+  title: 'Tierarzt entfernen'
+  description: 'Löschen Sie den Tierarzt und alle damit verbundenen Daten'
 
 toggle_login_enabled:
   title: 'Login erlauben ändern'

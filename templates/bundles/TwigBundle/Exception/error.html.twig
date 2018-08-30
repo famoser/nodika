@@ -1,23 +1,15 @@
-{% extends 'center_content.html.twig' %}
+{% extends 'single_content_base.html.twig' %}
 
-{% block title %}{{ "index.title"|trans({"%status_code%" : status_code}) }}{% endblock %}
-{% block description %}{{ "index.description"|trans }}{% endblock %}
+{% block title %}{{ "error.title"|trans({"%status_code%" : status_code}) }}{% endblock %}
+{% block description %}{{ "error.description"|trans }}{% endblock %}
 
-{% trans_default_domain "bundles_TwigBundle_exception" %}
-{% block primary_content %}
+{% trans_default_domain "error" %}
+
+{% block single_content %}
     {% block additional_error_info %}
-        <p class="text-secondary">{{ "index.description"|trans }}</p>
+        <p class="text-secondary">{{ "error.description"|trans }}</p>
     {% endblock %}
     <p>
-        <a href="{{ path("index") }}">{{ "index.back"|trans }}</a>
+        <a href="{{ path("index_index") }}">{{ "error.back_to_homepage"|trans }}</a>
     </p>
-
-    <div class="error-image {% block image_class %}image-unknown-error{% endblock %}"></div>
-{% endblock %}
-
-
-{% block secondary_content %}
-    <p class="small text-secondary">
-    {{ "index.contact_support"|trans }}
-    <a href="{{ path("support") }}">{{ "support.title"|trans({},"support") }}</a>
 {% endblock %}

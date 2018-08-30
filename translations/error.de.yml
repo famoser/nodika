@@ -1,12 +1,3 @@
-introduction:
-  header: 'Überblick'
-  header_description: 'Das webbasierte Tool übernimmt die Administration und Organisation von Notfalldiensten'
-  paragraph_1: >
-    Nodika übernimmt den Grossteil der Verwaltungsaufgaben eines Notfalldienstverbandes.
-  paragraph_2: >
-    Verteilen Sie Termine fair auf Ihre Mitglieder.
-    Diese können die Termine bestätigen, durchsuchen, und untereinander abtauschen.
-
 error:
   title: 'Fehler'
   description: 'Diese Seite existiert nicht oder kann nicht angezeigt werden'
