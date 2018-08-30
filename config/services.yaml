@@ -37,7 +37,7 @@ services:
         arguments: ["@doctrine","@translator","@session"]
 
     App\Service\EmailService:
-        arguments: ["@mailer", "@doctrine", "@logger","@twig","%env(CONTACT_EMAIL)%"]
+        arguments: ["@mailer", "@doctrine", "@logger","@twig","%env(MAILER_EMAIL)%"]
 
     App\Normalizer\EntityNormalizer:
         public: false
