@@ -1,7 +1,7 @@
 edit:
   title: 'Einstellungen'
   description: 'Konfigurieren Sie die Anwendung nach Ihren Bedürfnissen'
-    administrators: 'Administratoren'
-    administrators_help: 'Ein Administrator kann Praxen, Tierärzte, Termine und die Einstellungen bearbeiten'
-    email_receivers: 'E-Mail Empfänger'
-    email_receivers_help: 'Hier aufgeführte Administratoren empfangen die automatisch versandten E-Mails & Kontaktanfragen der Webapplikation.'
+  administrators: 'Administratoren'
+  administrators_help: 'Ein Administrator kann Praxen, Tierärzte, Termine und die Einstellungen bearbeiten'
+  email_receivers: 'E-Mail Empfänger'
+  email_receivers_help: 'Hier aufgeführte Administratoren empfangen die automatisch versandten E-Mails & Kontaktanfragen der Webapplikation.'

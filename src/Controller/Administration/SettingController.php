@@ -73,8 +73,8 @@ class SettingController extends BaseController
     {
         $adminForm = $factory->createNamedBuilder($name)
             ->setMapped(false)
-            ->add('doctors', EntityType::class, ['multiple' => true, 'class' => Doctor::class, 'data' => $data])
-            ->add('submit', SubmitType::class)
+            ->add('doctors', EntityType::class, ['multiple' => true, 'class' => Doctor::class, 'data' => $data, 'translation_domain' => 'entity_doctor', 'label' => 'entity.plural'])
+            ->add('submit', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.update'])
             ->getForm();
         $adminForm->handleRequest($request);
 
