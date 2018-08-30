@@ -60,7 +60,7 @@ class CronJobController extends BaseDoctrineController
         $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
         $remainderEmailInterval = $setting->getSendRemainderDaysInterval();
         if (0 === date('z') % $remainderEmailInterval) {
-            //get all events which might be a problem
+            //get all events which might be a problemsupportMail
             $eventRepo = $this->getDoctrine()->getRepository(Event::class);
             $eventSearchModel = new SearchModel(SearchModel::NONE);
             $eventSearchModel->setEndDateTime(new \DateTime('now + '.$setting->getCanConfirmDaysAdvance() - $setting->getSendRemainderDaysInterval().' days'));

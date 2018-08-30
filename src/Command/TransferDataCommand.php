@@ -55,7 +55,7 @@ class TransferDataCommand extends Command
             ->setName('app:transfer-data')
             ->setDescription('Transfers the data from an old version of the database.')
             ->setHelp('This will clear the new database, and then transfer the data from an old version of the db to the new one. The old database should be located at '.self::DB_PATH.
-            "\n\nThis does not fully transfer all data, only the one used by the current installation. For example, event offers are not transferred, nor are old generations.");
+                "\n\nThis does not fully transfer all data, only the one used by the current installation. For example, event offers are not transferred, nor are old generations.");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -148,6 +148,7 @@ class TransferDataCommand extends Command
             'SELECT 
 	p.id as id, 
 	0 as is_administrator, 
+	0 as receives_administrator_mail, 
 	p.email as email, 
 	password_hash as password_hash, 
 	reset_hash as reset_hash,
@@ -177,7 +178,7 @@ INNER JOIN person p ON f.person_id = p.id');
 
         $clinics = $this->executeQuery(
             self::OLD,
-            'SELECT id, name, description, street, street_nr, address_line, postal_code, city, country, phone, email, deleted_at, invitation_date_time as last_invitation, invitation_hash as invitation_identifier  FROM member');
+            'SELECT id, name, description, street, street_nr, address_line, postal_code, city, country, phone, email, deleted_at, invitation_date_time as last_invitation, invitation_hash as invitation_identifier FROM member');
 
         $this->insertFields(
             $clinics,

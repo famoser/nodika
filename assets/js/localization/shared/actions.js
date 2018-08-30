@@ -5,6 +5,7 @@ export default {
         remove: "entfernen",
         remove_all: "alle entfernen",
         abort: 'abbrechen',
-        print: 'drucken'
+        print: 'drucken',
+        filter_by_clinic_or_doctor: 'Nach Tierarzt / Praxis filtern...'
     }
 }

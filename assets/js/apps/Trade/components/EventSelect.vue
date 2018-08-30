@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row">
+        <div class="row pb-4">
             <div class="col-md-12">
                 <a href="#" class="card"
                    v-on:click.prevent="owner.noneSelected = !owner.noneSelected"

@@ -83,7 +83,7 @@ class TradeController extends BaseFormController
                         $translator->trans('emails.offer_accepted.subject', [], 'trade'),
                         $translator->trans('emails.offer_accepted.message', [], 'trade'),
                         $translator->trans('emails.offer_accepted.action_text', [], 'trade'),
-                        $this->generateUrl('index_index'));
+                        $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL));
 
                     $this->displaySuccess($translator->trans('accept.success.trade_executed', [], 'trade'));
                 }
@@ -119,7 +119,7 @@ class TradeController extends BaseFormController
                     $translator->trans('emails.offer_declined.subject', [], 'trade'),
                     $translator->trans('emails.offer_declined.message', [], 'trade'),
                     $translator->trans('emails.offer_declined.action_text', [], 'trade'),
-                    $this->generateUrl('index_index'));
+                    $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL));
 
                 $this->fastSave($eventOffer);
             } else {

@@ -26,73 +26,39 @@ class Setting extends BaseEntity
     use ChangeAwareTrait;
 
     /**
-     * the mail where enquiries submitted over the webpage are sent.
+     * @var bool
      *
-     * @var string
-     *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="boolean")
      */
-    private $supportMail;
+    private $doctorsCanEditSelf = true;
 
     /**
-     * @var string
+     * @var bool
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="boolean")
      */
-    private $organisationName;
+    private $doctorsCanEditClinics = false;
 
     /**
      * @var int
      *
      * @ORM\Column(type="integer")
      */
-    private $canConfirmDaysAdvance;
+    private $canConfirmDaysAdvance = 90;
 
     /**
      * @var int
      *
      * @ORM\Column(type="integer")
      */
-    private $mustConfirmDaysAdvance;
+    private $mustConfirmDaysAdvance = 10;
 
     /**
      * @var int
      *
      * @ORM\Column(type="integer")
      */
-    private $sendRemainderDaysInterval;
-
-    /**
-     * @return string
-     */
-    public function getOrganisationName(): string
-    {
-        return $this->organisationName;
-    }
-
-    /**
-     * @param string $organisationName
-     */
-    public function setOrganisationName(string $organisationName): void
-    {
-        $this->organisationName = $organisationName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSupportMail(): string
-    {
-        return $this->supportMail;
-    }
-
-    /**
-     * @param string $supportMail
-     */
-    public function setSupportMail(string $supportMail): void
-    {
-        $this->supportMail = $supportMail;
-    }
+    private $sendRemainderDaysInterval = 7;
 
     /**
      * @return int

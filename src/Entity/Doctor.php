@@ -66,6 +66,13 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     private $isAdministrator = false;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $receivesAdministratorMail = false;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -143,5 +150,21 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     public function __toString()
     {
         return $this->getFullName();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReceivesAdministratorMail(): bool
+    {
+        return $this->receivesAdministratorMail;
+    }
+
+    /**
+     * @param bool $receivesAdministratorMail
+     */
+    public function setReceivesAdministratorMail(bool $receivesAdministratorMail): void
+    {
+        $this->receivesAdministratorMail = $receivesAdministratorMail;
     }
 }

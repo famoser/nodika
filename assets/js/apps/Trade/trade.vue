@@ -58,13 +58,6 @@
                     </div>
 
                     <p>{{$t("messages.receiver")}}</p>
-                    <select class="form-control form-control-sm" v-if="possibleReceiverClinics.length > 1"
-                            v-model="receiver.selectedClinic">
-                        <option v-for="option in possibleReceiverClinics" v-bind:value="option">
-                            {{ option.name }}
-                        </option>
-                    </select>
-                    <span v-else class="text-secondary">{{ receiver.selectedClinic.name }}</span>
 
                     <select class="form-control form-control-sm"
                             v-if="possibleReceiverDoctors.length > 1"
@@ -73,7 +66,15 @@
                             {{ option.fullName }}
                         </option>
                     </select>
-                    <span v-else class="text-secondary">{{ receiver.selectedDoctor.fullName }}</span>
+                    <span v-else-if="receiver.selectedDoctor !== null">{{ receiver.selectedDoctor.fullName }}</span> <br/>
+
+                    <select class="form-control form-control-sm" v-if="possibleReceiverClinics.length > 1"
+                            v-model="receiver.selectedClinic">
+                        <option v-for="option in possibleReceiverClinics" v-bind:value="option">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                    <span v-else class="text-secondary">{{ receiver.selectedClinic.name }}</span>
 
                     <div class="form-group">
                         <label for="description" class="col-form-label">{{ $t("offer.description")}}</label>

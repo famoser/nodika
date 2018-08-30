@@ -13,7 +13,6 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\Doctor;
-use App\Entity\Setting;
 use App\Form\Model\ContactRequest\ContactRequestType;
 use App\Model\ContactRequest;
 use App\Service\EmailService;
@@ -62,22 +61,25 @@ class ContactController extends BaseFormController
             $createForm($contactRequest),
             $request,
             function () use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm) {
-                $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
-                /* @var FormInterface $form */
-                $emailService->sendTextEmail(
-                    $setting->getSupportMail(),
-                    $translator->trans('contact_email.subject', [], 'contact'),
-                    $translator->trans(
-                        'contact_email.description',
-                        [
-                            '%url%' => $request->getHost(),
-                            '%email%' => $contactRequest->getEmail(),
-                            '%name%' => $contactRequest->getName(),
-                            '%message%' => $contactRequest->getMessage(),
-                        ],
-                        'contact'
-                    )
-                );
+                $userRepo = $this->getDoctrine()->getRepository('Doctor');
+                $admins = $userRepo->findBy(['isAdministrator' => true]);
+                foreach ($admins as $admin) {
+                    /* @var FormInterface $form */
+                    $emailService->sendTextEmail(
+                        $admin->getEmail(),
+                        $translator->trans('contact_email.subject', [], 'contact'),
+                        $translator->trans(
+                            'contact_email.description',
+                            [
+                                '%url%' => $request->getHost(),
+                                '%email%' => $contactRequest->getEmail(),
+                                '%name%' => $contactRequest->getName(),
+                                '%message%' => $contactRequest->getMessage(),
+                            ],
+                            'contact'
+                        )
+                    );
+                }
 
                 $this->displaySuccess($translator->trans('index.success.email_sent', [], 'contact'));
 
