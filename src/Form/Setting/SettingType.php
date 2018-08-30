@@ -20,8 +20,8 @@ namespace App\Form\Setting;
 
 use App\Entity\Setting;
 use App\Form\Base\BaseAbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,11 +29,11 @@ class SettingType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('organisationName', TextType::class);
-        $builder->add('supportMail', TextType::class);
         $builder->add('canConfirmDaysAdvance', NumberType::class);
         $builder->add('mustConfirmDaysAdvance', NumberType::class);
         $builder->add('sendRemainderDaysInterval', NumberType::class);
+        $builder->add('doctorsCanEditSelf', CheckboxType::class, ['required' => false]);
+        $builder->add('doctorsCanEditClinics', CheckboxType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
