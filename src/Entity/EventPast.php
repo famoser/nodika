@@ -12,7 +12,7 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
-use App\Entity\Traits\ChangeAwareTrait;
+use App\Entity\Traits\CreationAwareTrait;
 use App\Entity\Traits\EventTrait;
 use App\Entity\Traits\IdTrait;
 use App\Enum\EventChangeType;
@@ -27,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 class EventPast extends BaseEntity
 {
     use IdTrait;
-    use ChangeAwareTrait;
+    use CreationAwareTrait;
     use EventTrait;
 
     /**
@@ -45,7 +45,7 @@ class EventPast extends BaseEntity
         $eventPast->writeValues($event);
         $eventPast->event = $event;
         $eventPast->eventChangeType = $eventChangeType;
-        $eventPast->registerChangeBy($user);
+        $eventPast->setCreatedBy($user);
 
         return $eventPast;
     }

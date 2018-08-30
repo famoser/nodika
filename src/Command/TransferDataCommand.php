@@ -12,6 +12,7 @@
 namespace App\Command;
 
 use App\Entity\Traits\IdTrait;
+use App\Enum\EventTagColor;
 use PDO;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -127,6 +128,7 @@ class TransferDataCommand extends Command
     {
         $this->executeQuery(self::OLD, 'DELETE FROM event WHERE id IN (SELECT e.id FROM event e INNER JOIN event_line el ON e.event_line_id = el.id WHERE el.deleted_at IS NOT NULL)');
         $this->executeQuery(self::OLD, 'DELETE FROM event_past WHERE event_id IN (SELECT e.id FROM event e INNER JOIN event_line el ON e.event_line_id = el.id WHERE el.deleted_at IS NOT NULL)');
+        $this->executeQuery(self::OLD, 'DELETE FROM event_line WHERE deleted_at IS NOT NULL');
     }
 
     private function importEmails()
@@ -193,20 +195,79 @@ INNER JOIN person p ON f.person_id = p.id');
 
     private function importEventsAndEventPast()
     {
-        $events = $this->executeQuery(
+        $eventLines = $this->executeQuery(
             self::OLD,
-            'SELECT id, member_id as clinic_id, person_id as doctor_id, is_confirmed_date_time as confirm_date_time, NULL as confirmed_by_doctor_id, last_remainder_email_sent, 0 as event_type, start_date_time, end_date_time, deleted_at FROM event');
+            'SELECT id, name, description FROM event_line');
 
         //correct different confirmed by treatment
-        foreach ($events as $event) {
+        $colors = [EventTagColor::RED, EventTagColor::BLUE, EventTagColor::YELLOW, EventTagColor::GREEN];
+        $counter = 0;
+        foreach ($eventLines as &$eventLine) {
+            $eventLine['color'] = $colors[$counter++ % \count($colors)];
+        }
+
+        $this->insertFields(
+            $eventLines,
+            'event_tag'
+        );
+
+        $events = $this->executeQuery(
+            self::OLD,
+            'SELECT id, event_line_id, member_id as clinic_id, person_id as doctor_id, is_confirmed_date_time as confirm_date_time, NULL as confirmed_by_doctor_id, last_remainder_email_sent, 0 as event_type, start_date_time, end_date_time, deleted_at FROM event');
+
+        $eventTags = [];
+        //correct different confirmed by treatment
+        foreach ($events as &$event) {
             if ($event['confirm_date_time'] && null !== $event['doctor_id']) {
                 $event['confirmed_by_doctor_id'] = $event['doctor_id'];
             }
+            $eventTags[] = ['event_id' => $event['id'], 'event_tag_id' => $event['event_line_id']];
+            unset($event['event_line_id']);
         }
 
         $this->insertFields(
             $events,
             'event'
+        );
+
+        $this->insertFields(
+            $eventTags,
+            'event_event_tags'
+        );
+
+        $eventPasts = $this->executeQuery(
+            self::OLD,
+            'SELECT id, changed_by_person_id as created_by_id, changed_at_date_time as created_at, event_change_type, after_event_json as payload FROM event_past'
+        );
+
+        foreach ($eventPasts as &$eventPast) {
+            $payload = $eventPast['payload'];
+            unset($eventPast['payload']);
+            unset($eventPast['deleted_at']);
+
+            $oldEvent = json_decode($payload);
+            $eventPast['start_date_time'] = $oldEvent->startDateTime->date;
+            $eventPast['end_date_time'] = $oldEvent->endDateTime->date;
+            $eventPast['clinic_id'] = $oldEvent->memberId;
+            $eventPast['doctor_id'] = $oldEvent->personId;
+            $eventPast['event_type'] = 0;
+            if (property_exists($oldEvent, 'isConfirmedDateTime')) {
+                $eventPast['confirm_date_time'] = $oldEvent->isConfirmedDateTime;
+                $eventPast['confirmed_by_doctor_id'] = $eventPast['doctor_id'];
+            } else {
+                $eventPast['confirm_date_time'] = null;
+                $eventPast['confirmed_by_doctor_id'] = null;
+            }
+            if (property_exists($oldEvent, 'lastRemainderEmailSent')) {
+                $eventPast['last_remainder_email_sent'] = $eventPast->lastRemainderEmailSent;
+            } else {
+                $eventPast['last_remainder_email_sent'] = null;
+            }
+        }
+
+        $this->insertFields(
+            $eventPasts,
+            'event_past'
         );
     }
 
