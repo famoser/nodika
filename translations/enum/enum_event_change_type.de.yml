@@ -1,14 +1,10 @@
 enum:
   name: 'Änderungsart'
 
-created_by_admin: 'vom Administrator erstellt'
-generated_by_admin: 'vom Administrator erstellt'
-changed_by_admin: 'vom Administrator modifiziert'
-removed_by_admin: 'vom Administrator entfernt'
-doctor_assigned_by_admin: 'Mitarbeiter vom Administrator zugeordnet'
-clinic_assigned_by_admin: 'Praxis vom Administrator zugeordnet'
-traded_to_new_clinic: 'Neuer Praxis zugeteilt durch einen Tauschvorgang'
-doctor_assigned_by_clinic: 'Mitarbeiter von Praxis zugeordnet'
-confirmed_by_clinic: 'Durch Praxis bestätigt'
-confirmed_by_doctor: 'Durch Mitarbeiter bestätigt'
-
+created: 'vom Administrator erstellt'
+generated: 'vom Administrator erstellt'
+changed: 'vom Administrator modifiziert'
+removed: 'vom Administrator entfernt'
+traded_to_new_owner: 'Neuer Praxis / neuem Tierarzt zugeteilt durch einen Tauschvorgang'
+doctor_assigned: 'Tierarzt von Praxis zugeordnet'
+confirmed: 'bestätigt'

@@ -532,7 +532,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $events = $this->generate($eventGeneration);
         foreach ($events as $event) {
             //add past
-            $eventPast = EventPast::create($event, EventChangeType::GENERATED_BY_ADMIN, $creator);
+            $eventPast = EventPast::create($event, EventChangeType::GENERATED, $creator);
             $event->getEventPast()->add($eventPast);
 
             //add tagw

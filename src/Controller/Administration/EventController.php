@@ -45,7 +45,7 @@ class EventController extends BaseController
             $event,
             function ($manager) use ($event) {
                 /* @var ObjectManager $manager */
-                $eventPast = EventPast::create($event, EventChangeType::CREATED_BY_ADMIN, $this->getUser());
+                $eventPast = EventPast::create($event, EventChangeType::CREATED, $this->getUser());
                 $manager->persist($eventPast);
 
                 return true;
@@ -76,7 +76,7 @@ class EventController extends BaseController
             $event,
             function ($manager) use ($event) {
                 /* @var ObjectManager $manager */
-                $eventPast = EventPast::create($event, EventChangeType::CHANGED_BY_ADMIN, $this->getUser());
+                $eventPast = EventPast::create($event, EventChangeType::CHANGED, $this->getUser());
                 $manager->persist($eventPast);
 
                 return true;
@@ -109,7 +109,7 @@ class EventController extends BaseController
             function () use ($event, $translator) {
                 /* @var FormInterface $form */
                 $event->delete();
-                $eventPast = EventPast::create($event, EventChangeType::REMOVED_BY_ADMIN, $this->getUser());
+                $eventPast = EventPast::create($event, EventChangeType::REMOVED, $this->getUser());
 
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($eventPast);
@@ -159,7 +159,7 @@ class EventController extends BaseController
             $event->confirm($this->getUser());
         }
 
-        $eventPast = EventPast::create($event, EventChangeType::CHANGED_BY_ADMIN, $this->getUser());
+        $eventPast = EventPast::create($event, EventChangeType::CHANGED, $this->getUser());
         $this->fastSave($event, $eventPast);
 
         return $this->redirectToRoute('administration_events');

@@ -70,7 +70,7 @@ class ConfirmController extends BaseApiController
         if (null !== $event->getDoctor() && $event->getDoctor()->getId() === $this->getUser()->getId() ||
             $this->getUser()->getClinics()->contains($event->getClinic())) {
             $event->confirm($this->getUser());
-            $eventPast = EventPast::create($event, EventChangeType::CONFIRMED_BY_PERSON, $this->getUser());
+            $eventPast = EventPast::create($event, EventChangeType::CONFIRMED, $this->getUser());
             $this->fastSave($event, $eventPast);
 
             return new Response('ACK');

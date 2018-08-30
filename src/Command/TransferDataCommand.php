@@ -12,6 +12,7 @@
 namespace App\Command;
 
 use App\Entity\Traits\IdTrait;
+use App\Enum\EventChangeType;
 use App\Enum\EventTagColor;
 use PDO;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -255,6 +256,7 @@ INNER JOIN person p ON f.person_id = p.id');
             $eventPast['clinic_id'] = $oldEvent->memberId;
             $eventPast['doctor_id'] = $oldEvent->personId;
             $eventPast['event_type'] = 0;
+            $eventPast['event_change_type'] = $this->convertEventChangeType($eventPast['event_change_type']);
             if (property_exists($oldEvent, 'isConfirmedDateTime')) {
                 $eventPast['confirm_date_time'] = $oldEvent->isConfirmedDateTime;
                 $eventPast['confirmed_by_doctor_id'] = $eventPast['doctor_id'];
@@ -273,6 +275,44 @@ INNER JOIN person p ON f.person_id = p.id');
             $eventPasts,
             'event_past'
         );
+    }
+
+    private function convertEventChangeType($oldValue)
+    {
+        switch ($oldValue) {
+            case 1:
+                //MANUALLY_CREATED_BY_ADMIN
+                return EventChangeType::CREATED;
+            case 2:
+                //GENERATED_BY_ADMIN
+                return EventChangeType::GENERATED;
+            case 3:
+                //MANUALLY_CHANGED_BY_ADMIN
+                return EventChangeType::CHANGED;
+            case 4:
+                //MANUALLY_REMOVED_BY_ADMIN
+                return EventChangeType::REMOVED;
+            case 5:
+                //PERSON_ASSIGNED_BY_ADMIN
+                return EventChangeType::CHANGED;
+            case 6:
+                //MEMBER_ASSIGNED_BY_ADMIN
+                return EventChangeType::CHANGED;
+            case 7:
+                //TRADED_TO_NEW_MEMBER
+                return EventChangeType::TRADED_TO_NEW_OWNER;
+            case 8:
+                //PERSON_ASSIGNED_BY_MEMBER
+                return EventChangeType::DOCTOR_ASSIGNED;
+            case 9:
+                //CONFIRMED_BY_MEMBER
+                return EventChangeType::CONFIRMED;
+            case 10:
+                //CONFIRMED_BY_PERSON
+                return EventChangeType::CONFIRMED;
+        }
+
+        return EventChangeType::CHANGED;
     }
 
     /**

@@ -27,10 +27,10 @@
                 <td>{{ past.createdBy }}</td>
                 <td>{{ past.startDateTime|dateTimeFormat }}</td>
                 <td>{{ past.endDateTime|dateTimeFormat }}</td>
-                <td>{{ past.clinic|default("") }}</td>
+                <td>{{ past.clinic }}</td>
                 <td>{{ past.doctor|default("") }}</td>
                 <td>{{ past.confirmDateTime|dateTimeFormat }}</td>
-                <td>{{ past.confirmedBy }}</td>
+                <td>{{ past.confirmedByDoctor }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -15,12 +15,11 @@ use App\Enum\Base\BaseEnum;
 
 class EventChangeType extends BaseEnum
 {
-    const CREATED_BY_ADMIN = 1;
-    const GENERATED_BY_ADMIN = 2;
-    const CHANGED_BY_ADMIN = 3;
-    const REMOVED_BY_ADMIN = 4;
-    const TRADED_TO_NEW_CLINIC = 7;
-    const PERSON_ASSIGNED_BY_CLINIC = 8;
-    const CONFIRMED_BY_CLINIC = 9;
-    const CONFIRMED_BY_PERSON = 10;
+    const CREATED = 1;
+    const GENERATED = 2;
+    const CHANGED = 3;
+    const REMOVED = 4;
+    const TRADED_TO_NEW_OWNER = 7;
+    const DOCTOR_ASSIGNED = 8;
+    const CONFIRMED = 9;
 }

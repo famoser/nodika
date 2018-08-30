@@ -55,7 +55,7 @@ class EventPast extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $eventChangeType = EventChangeType::CREATED_BY_ADMIN;
+    private $eventChangeType = EventChangeType::CREATED;
 
     /**
      * @var Event

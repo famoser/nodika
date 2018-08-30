@@ -95,7 +95,7 @@ class AssignController extends BaseApiController
     public function assignAction(Event $event, Doctor $doctor)
     {
         $event->setDoctor($doctor);
-        $eventPast = EventPast::create($event, EventChangeType::PERSON_ASSIGNED_BY_CLINIC, $this->getUser());
+        $eventPast = EventPast::create($event, EventChangeType::DOCTOR_ASSIGNED, $this->getUser());
         $this->fastSave($event, $eventPast);
 
         return $this->returnEvents($event);
