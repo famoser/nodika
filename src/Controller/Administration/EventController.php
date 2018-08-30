@@ -37,13 +37,17 @@ class EventController extends BaseController
      *
      * @return Response
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, TranslatorInterface $translator)
     {
         $event = new Event();
         $myForm = $this->handleCreateForm(
             $request,
             $event,
-            function ($manager) use ($event) {
+            function ($manager) use ($event, $translator) {
+                if (!$this->ensureValidDoctorClinicPair($event, $translator)) {
+                    return false;
+                }
+
                 /* @var ObjectManager $manager */
                 $eventPast = EventPast::create($event, EventChangeType::CREATED, $this->getUser());
                 $manager->persist($eventPast);
@@ -69,12 +73,16 @@ class EventController extends BaseController
      *
      * @return Response
      */
-    public function editAction(Request $request, Event $event)
+    public function editAction(Request $request, Event $event, TranslatorInterface $translator)
     {
         $myForm = $this->handleUpdateForm(
             $request,
             $event,
-            function ($manager) use ($event) {
+            function ($manager) use ($event, $translator) {
+                if (!$this->ensureValidDoctorClinicPair($event, $translator)) {
+                    return false;
+                }
+
                 /* @var ObjectManager $manager */
                 $eventPast = EventPast::create($event, EventChangeType::CHANGED, $this->getUser());
                 $manager->persist($eventPast);
@@ -90,6 +98,14 @@ class EventController extends BaseController
         $arr['form'] = $myForm->createView();
 
         return $this->render('administration/event/edit.html.twig', $arr);
+    }
+
+    private function ensureValidDoctorClinicPair(Event $event, TranslatorInterface $translator)
+    {
+        if (null === $event->getDoctor() || $event->getDoctor()->getClinics()->contains($event->getClinic())) {
+            return true;
+        }
+        $this->displayError($translator->trans('edit.error.doctor_not_part_of_clinic', [], 'administration_event'));
     }
 
     /**

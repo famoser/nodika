@@ -7,6 +7,8 @@ new:
 edit:
   title: 'Termin bearbeiten'
   description: 'Editieren Sie den Termin'
+  error:
+    doctor_not_part_of_clinic: "Der ausgewählte Tierarzt ist nicht Teil der Praxis."
 
 remove:
   title: 'Termin entfernen'
