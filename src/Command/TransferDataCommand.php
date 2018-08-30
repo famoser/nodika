@@ -350,7 +350,7 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
             }
             $entries[] = implode(', ', $entry);
 
-            if (\count($entries) > 100) {
+            if (\count($entries) > 20) {
                 $insertBatch($entries, $parameters);
                 $entries = [];
                 $parameters = [];
