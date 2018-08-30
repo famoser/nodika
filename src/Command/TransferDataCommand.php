@@ -172,8 +172,12 @@ class TransferDataCommand extends Command
 	NULL as last_login_date,
 	invitation_date_time as last_invitation
 FROM frontend_user f 
-INNER JOIN person p ON f.person_id = p.id');
+INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
 
+        if (\count($doctors) > 0) {
+            $doctors[0]['is_administrator'] = 1;
+            $doctors[0]['receives_administrator_mail'] = 1;
+        }
         $this->insertFields(
             $doctors,
             'doctor'
@@ -242,7 +246,7 @@ INNER JOIN person p ON f.person_id = p.id');
 
         $eventPasts = $this->executeQuery(
             self::OLD,
-            'SELECT id, changed_by_person_id as created_by_id, changed_at_date_time as created_at, event_change_type, after_event_json as payload FROM event_past'
+            'SELECT id, event_id, changed_by_person_id as created_by_id, changed_at_date_time as created_at, event_change_type, after_event_json as payload FROM event_past'
         );
 
         foreach ($eventPasts as &$eventPast) {
