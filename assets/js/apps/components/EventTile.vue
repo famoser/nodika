@@ -19,7 +19,8 @@
 
 
 <script>
-    import format from 'date-fns/format'
+    import moment from "moment";
+    moment.locale('de');
 
     export default {
         props: {
@@ -45,7 +46,7 @@
         },
         methods: {
             formatDateTime: function (date) {
-                return format(date, ["DD.MM.YYYY HH:mm"])
+                return moment(date).subtract(2, "hours").format("DD.MM.YYYY HH:mm");
             },
             displayDoctor: function (user) {
                 if (user == null) {
