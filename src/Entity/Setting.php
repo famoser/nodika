@@ -107,4 +107,36 @@ class Setting extends BaseEntity
     {
         $this->sendRemainderDaysInterval = $sendRemainderDaysInterval;
     }
+
+    /**
+     * @return bool
+     */
+    public function getDoctorsCanEditSelf(): bool
+    {
+        return $this->doctorsCanEditSelf;
+    }
+
+    /**
+     * @param bool $doctorsCanEditSelf
+     */
+    public function setDoctorsCanEditSelf(bool $doctorsCanEditSelf): void
+    {
+        $this->doctorsCanEditSelf = $doctorsCanEditSelf;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getDoctorsCanEditClinics(): bool
+    {
+        return $this->doctorsCanEditClinics;
+    }
+
+    /**
+     * @param bool $doctorsCanEditClinics
+     */
+    public function setDoctorsCanEditClinics(bool $doctorsCanEditClinics): void
+    {
+        $this->doctorsCanEditClinics = $doctorsCanEditClinics;
+    }
 }

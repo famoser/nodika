@@ -37,10 +37,12 @@
             <h3>{{ "index.change_password"|trans }}</h3>
             {{ form(change_password_form) }}
         </div>
-        <div class="col-md-4">
-            <h3>{{ "index.update"|trans }}</h3>
-            {{ form(update_form) }}
-        </div>
+        {% if update_form is defined %}
+            <div class="col-md-4">
+                <h3>{{ "index.update"|trans }}</h3>
+                {{ form(update_form) }}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 
