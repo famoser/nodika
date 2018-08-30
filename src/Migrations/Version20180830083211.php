@@ -23,6 +23,10 @@ final class Version20180830083211 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
+        //if this migration fails, you've probably already have nodika installed, and are trying to update
+        //direct migration is not possible; the versions before this migration must be imported with the transfer data command
+        //additional manual steps are required
+
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf('sqlite' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'sqlite\'.');
 
