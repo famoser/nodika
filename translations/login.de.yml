@@ -1,0 +1,49 @@
+login:
+  title: 'Login'
+  description: 'Willkommen zurück!'
+  problems_with_login: 'Probleme beim Einloggen?'
+  do_login: "einloggen"
+  danger:
+    login_failed: 'Login fehlgeschlagen'
+    email_not_found: 'Diese E-Mail wurde nicht gefunden.'
+    login_disabled: 'Ihr Account wurde vom Administrator deaktiviert.'
+
+recover:
+  title: 'Passwort zurücksetzen'
+  description: 'Setzen Sie Ihr Passwort mit Ihrer E-Mail zurück'
+  send_email: 'E-Mail zusenden'
+  use_login_email: 'Geben Sie die E-Mail ein, die Sie beim Login verwenden. Wir senden Ihnen dann einen Link zu, mit dem Sie das Passwort neu setzen können.'
+  success:
+    email_sent: 'Sofern diese E-Mail in unserem System gefunden wurde, haben wir Ihnen soeben eine E-Mail versandt'
+  email:
+    reset_password:
+      subject: 'Passwort zurücksetzen'
+      message: 'Sie können mit dem Knopf unten Ihr Passwort zurücksetzen. Haben Sie dieses E-Mail nicht angefordert, können Sie es ignorieren.'
+      action_text: 'Jetzt Passwort zurücksetzen'
+
+reset:
+  title: 'Passwort setzen'
+  description: 'Setzen Sie Ihr neues Passwort'
+  set_password: 'Passwort setzen'
+  success:
+    password_set: 'Neues Passwort erfolgreich gesetzt'
+  danger:
+    passwords_do_not_match: 'Die Passwörter stimmen nicht überein'
+    invalid_hash: "Dieser Link ist nicht mehr gültig. Beachten Sie, das jeder Link nur einmal benutzt werden kann."
+
+request:
+  title: "Zugriff anfordern"
+  description: "Lassen Sie sich eine verpasste Einladung neu zustellen"
+  request_invite: "Einladung anfordern"
+  help: "Geben Sie hier Ihre E-Mail ein. Wurde an diese E-Mail eine Einladung versandt, versenden wir sie erneut."
+  email_not_received_help:
+    header: "Keine E-Mail erhalten?"
+    look_in_spam: 'Schauen Sie im Spam Ordner nach'
+    mailbox_full: 'Stellen Sie sicher, das ihr Postfach nicht voll ist'
+    contact_administrator: 'Kontaktieren Sie den Administrator'
+  success:
+    email_sent: "E-Mail erfolgreich versandt. Vergessen Sie nicht, Ihren Spam Ordner zu überprüfen."
+  error:
+    already_successfully_logged_in: "Ihr Account ist bereits aktiviert, und Sie haben sich bereits einmal erfolgreich eingeloggt. Setzen Sie das Passwort zurück, sollten Sie es vergessen haben."
+    no_invitation_sent_yet: "An Sie wurde noch keine Einladung versandt. Bitte Sie Ihren Administrator dies zu tun."
+    email_not_found: "Diese E-Mail wurde nicht gefunden. Kontaktieren Sie Ihren Administrator."

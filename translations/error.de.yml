@@ -1,0 +1,8 @@
+error:
+  title: 'Fehler'
+  description: 'Diese Seite existiert nicht oder kann nicht angezeigt werden'
+  404: 'Diese Seite wurde nicht gefunden'
+  fallback: 'Ein Problem hat verhindert dass diese Anfrage ausgeführt werden konnte'
+  500: 'Ein kritischer Fehler ist bei der Ausführung Ihrer Anfrage aufgetreten. Probieren sie es am Besten einfach noch einmal. Besteht das Problem weiterhin, schreiben Sie uns eine E-Mail an'
+  500_email: 'info@nodika.ch'
+  back_to_homepage: 'Hier geht''s zurück zur Startseite'

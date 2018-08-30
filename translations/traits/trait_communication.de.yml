@@ -1,8 +1,5 @@
-#name
 trait:
-  name: Kontaktinformationen
+  name: 'Kontaktinformationen'
 
-#properties
-phone: Telefonnummer (freiwillig)
-email: Email
-webpage: Webseite (freiwillig)
+phone: 'Telefonnummer'
+email: 'Email'

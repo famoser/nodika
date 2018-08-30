@@ -16,36 +16,7 @@ use App\Helper\NamingHelper;
 abstract class TranslatableObject
 {
     /**
-     * get the prefix of the translation domain of this object.
-     *
-     * @return mixed
-     */
-    abstract protected function getTranslationDomainPrefix();
-
-    /**
-     * get the translation domain of the current object.
-     *
-     * @return string
-     */
-    public function getTranslationDomain()
-    {
-        $class = get_class($this);
-
-        return $this->getTranslationDomainPrefix().'_'.NamingHelper::classToTranslationDomain($class);
-    }
-
-    /**
-     * the array for the builder including the translation_domain member.
-     *
-     * @return string[]
-     */
-    protected function getTranslationDomainForBuilder()
-    {
-        return ['translation_domain' => static::getTranslationDomain()];
-    }
-
-    /**
-     * the array for the builder including the translation_domain member.
+     * the array for the builder including the translation_domain clinic.
      *
      * @return string[]
      */
@@ -57,7 +28,36 @@ abstract class TranslatableObject
     }
 
     /**
-     * the array for the builder including the translation_domain member.
+     * the array for the builder including the translation_domain clinic.
+     *
+     * @return string[]
+     */
+    protected function getTranslationDomainForBuilder()
+    {
+        return ['translation_domain' => $this->getTranslationDomain()];
+    }
+
+    /**
+     * get the translation domain of the current object.
+     *
+     * @return string
+     */
+    public function getTranslationDomain()
+    {
+        $class = \get_class($this);
+
+        return $this->getTranslationDomainPrefix().'_'.NamingHelper::classToTranslationDomain($class);
+    }
+
+    /**
+     * get the prefix of the translation domain of this object.
+     *
+     * @return mixed
+     */
+    abstract protected function getTranslationDomainPrefix();
+
+    /**
+     * the array for the builder including the translation_domain clinic.
      *
      * @return string
      */

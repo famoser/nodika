@@ -1,0 +1,50 @@
+index:
+  title: 'Termine tauschen'
+  description: 'Tauschen Sie Termine mit einem Tauschpartner ab.'
+  success:
+    created_trade_offer: "Die Tauschanfrage wurde erstellt, und der Empfänger hat eine E-Mail erhalten."
+  danger:
+    trade_offer_invalid: 'Die Tauschanfrage konnte nicht erstellt werden. Versuchen Sie es noch einmal, oder kontaktieren Sie den Administrator.'
+
+accept:
+  title: "akzeptieren"
+  success:
+    trade_executed: 'Der Tausch wurde ausgeführt.'
+    trade_accepted: 'Sie haben den Tausch erfolgreich akzeptiert. Sobald alle Parteien Ihre Zustimmung gegeben haben, wird der Tausch ausgeführt.'
+  danger:
+    invalid: "Die Tauschanfrage ist nicht mehr gültig. Darin enthaltene Termine haben bereits den Eigentümer gewechselt."
+    action_invalid: 'Diese Aktion konnte nicht ausgeführt werden. Vermutlich hat sich der Tausch in der Zwischenzeit geändert.'
+
+decline:
+  title: "ablehnen"
+  success:
+    trade_decline: 'Der Tausch wurde abgelehnt.'
+
+acknowledge:
+  title: "zur Kenntnis nehmen"
+  success:
+    trade_acknowledged: 'Kenntnisnahme gespeichert.'
+
+withdraw:
+  title: "zurückziehen"
+  success:
+    trade_withdrawn: 'Der Tausch wurde zurückgezogen.'
+
+display:
+  title: "Tauschanfragen"
+  new_owner: 'Neuer Verantwortlicher'
+
+emails:
+  offer_accepted:
+    subject: 'Tauschanfrage angenommen'
+    message: 'Ihre Tauschanfrage auf nodika wurde angenommen.'
+    action_text: "Ansehen"
+  offer_declined:
+    subject: 'Tauschanfrage abgelehnt'
+    message: 'Ihre Tauschanfrage auf nodika wurde abgelehnt.'
+    action_text: "Ansehen"
+  new_offer:
+    subject: 'Neue Tauschanfrage'
+    message: 'Sie haben eine neue Tauschanfrage auf nodika erhalten.'
+    action_text: "Jetzt beantworten"
+

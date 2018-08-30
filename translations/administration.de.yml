@@ -1,0 +1,23 @@
+index:
+  title: 'Administration'
+  description: 'Verwalten Sie die Benutzer und Termine'
+
+doctors:
+  title: 'Tierarztverwaltung'
+  description: 'Tierärzte erstellen und bearbeiten, Passwörter zusenden und zurücksetzen, ...'
+  some_not_logged_in: 'Einige der Tierärzte haben sich noch nie eingeloggt'
+  invite_all: 'Alle einladen'
+  not_invited_yet: 'Noch nicht eingeladen'
+  show: 'anzeigen'
+
+clinics:
+  title: 'Praxisverwaltung'
+  description: 'Praxen erstellen und bearbeiten, Tierärzte zuweisen, ...'
+
+events:
+  title: 'Terminverwaltung'
+  description: 'Termine  erstellen und bearbeiten, bestätigen, neu zuweisen, ändern, generieren, exportieren, ...'
+
+settings:
+  title: 'Einstellungen'
+  description: 'Emailversand ändern, Limiten festlegen, ...'

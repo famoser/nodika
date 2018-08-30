@@ -1,23 +1,26 @@
+/* override defaults of libraries below */
+// use open sans
+$font-family-sans-serif: 'Open Sans' -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+// set max width of large container to 1600
+$container-max-widths: (sm: 540px, md: 720px, lg: 960px, xl: 1600px)
+
 /* libraries */
-$border-radius: 0px
-$primary: #555F76
 @import '~bootstrap/scss/bootstrap'
-@import '~ionicons/dist/scss/ionicons'
+@import "~@fortawesome/fontawesome-pro/css/light.css"
+@import "~@fortawesome/fontawesome-pro/css/solid.css"
 
-/* fonts */
-@import 'nodika-icons/style'
-
-/* colors & helper functions */
-@import 'variables'
+/* mixins */
 @import 'mixins'
 
-/* layout & typography */
+/* additional elements to bootstrap */
+@import "boot"
+@import 'card'
 @import 'fonts'
-@import 'layout'
-@import 'typography'
+@import 'forms'
+@import 'tables'
+@import 'type'
 @import 'print'
 
 /* elements, pages & general purpose */
-@import 'elements/_all'
-@import 'pages/_all'
-@import 'general_purpose'
+@import 'components/switch'
+@import 'components/badge'

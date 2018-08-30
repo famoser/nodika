@@ -1,0 +1,20 @@
+{% extends "form_content_base.html.twig" %}
+
+{% block title %}{{ "request.title"|trans }}{% endblock %}
+{% block description %}{{ "request.description"|trans }}{% endblock %}
+
+{% trans_default_domain "login" %}
+{% block form_content %}
+    <p>{{ "request.help"|trans }}</p>
+    {{ form(form) }}
+{% endblock %}
+{% block form_description %}
+    <p>{{ "request.email_not_received_help.header"|trans }}</p>
+    <ul>
+        <li>{{ "request.email_not_received_help.look_in_spam"|trans }}</li>
+        <li>{{ "request.email_not_received_help.mailbox_full"|trans }}</li>
+        <li>
+            <a href="{{ path("contact_index") }}">{{ "request.email_not_received_help.contact_administrator"|trans }}</a>
+        </li>
+    </ul>
+{% endblock %}

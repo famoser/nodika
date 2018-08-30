@@ -1,0 +1,177 @@
+{% macro menu_entry(name, link) %}
+    {% if app.request.requestUri == link %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ link }}">
+                {{ name }}
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+                {{ name }}</a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro dropdown_entry(name, link) %}
+    {% if app.request.requestUri == link %}
+        <a class="dropdown-item active" href="{{ link }}">
+            {{ name }}
+            <span class="sr-only">(current)</span>
+        </a>
+    {% else %}
+        <a class="dropdown-item" href="{{ link }}">
+            {{ name }}
+        </a>
+    {% endif %}
+{% endmacro %}
+
+{% macro menu_icon_entry(icon, link) %}
+    {% if app.request.requestUri == link %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ link }}">
+                <i class="{{ icon }}"></i>
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ link }}">
+                <i class="{{ icon }}"></i>
+            </a>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% import _self as own_macros %}
+
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- fav icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="mask-icon" href="{{ asset('safari-pinned-tab.svg') }}" color="#496a6a">
+    <meta name="theme-color" content="#496a6a">
+
+    {% set title = block('title')|raw %}
+    {% set description = block('description')|raw %}
+
+    <title>{{ title }}</title>
+    {% block stylesheets %}
+
+    {% endblock %}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/app.css') }}"/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    <meta name="description" content="{{ description }}">
+    <base href="/" target="_self">
+</head>
+<body>
+
+{% if is_granted('ROLE_USER') %}
+<header class="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ path("index_index") }}">{{ "base.brand"|trans({}, "layout") }}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    {{ own_macros.menu_entry("index.title"|trans({}, "index"), path("index_index")) }}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            {{ "base.events_menu.title"|trans({}, "layout") }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            {{ own_macros.dropdown_entry("base.events_menu.assign"|trans({}, "layout"), path("assign_index")) }}
+                            {{ own_macros.dropdown_entry("base.events_menu.trade"|trans({}, "layout"), path("trade_index")) }}
+                            <div class="dropdown-divider"></div>
+                            {{ own_macros.dropdown_entry("base.events_menu.search"|trans({}, "layout"), path("search_index")) }}
+                        </div>
+                    </li>
+                    {% if app.user is defined and app.user.administrator and not (app.request.requestUri starts with "/administration") %}
+                        <div class="form-inline">
+                            <a class="btn btn-sm btn-outline-secondary" type="button"
+                               href="{{ path("administration_index") }}">{{ "index.title"|trans({}, "administration") }}</a>
+                        </div>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav ml-auto">
+                    {{ own_macros.menu_icon_entry("fas fa-user", path("account_index")) }}
+                    {{ own_macros.menu_icon_entry("fas fa-sign-out", path("login_logout")) }}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+{% endif %}
+
+{% if is_granted('ROLE_ADMIN') %}
+    {# display admin menu in dark theme if inside admin area#}
+{% endif %}
+
+<div class="content-wrapper">
+    {% if app.session.flashbag.keys|length > 0 %}
+        <div class="container">
+            <div class="row">
+                {% for type, messages in app.session.flashbag.all %}
+                    {% for message in messages %}
+                        <div class="col-md-12 alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                            {{ message|raw }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if breadcrumbs is defined and breadcrumbs|length > 0 %}
+        <div class="container">
+            <div class="row">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        {% for breadcrumb in breadcrumbs %}
+                            {% if breadcrumb.path != app.request.pathinfo %}
+                                <li class="breadcrumb-item">
+                                    <a href="{{ breadcrumb.path }}">
+                                        {{ breadcrumb.name }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="breadcrumb-item active" aria-current="page">
+                            {{ title }}
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    {% endif %}
+
+    {% block content %}
+
+    {% endblock %}
+</div>
+
+<script src="{{ asset('dist/app.js') }}"></script>
+{% block javascript %}
+
+{% endblock %}
+</body>
+</html>

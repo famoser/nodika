@@ -1,0 +1,11 @@
+{% macro render(eventTags) %}
+    {% import _self as own_macros %}
+
+    {% for eventTag in eventTags %}
+        {{ own_macros.render_single(eventTag) }}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_single(eventTag) %}
+    <span class="badge badge-{{ eventTag.colorText }}">{{ eventTag.name }}</span>
+{% endmacro %}

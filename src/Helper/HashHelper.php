@@ -26,13 +26,13 @@ class HashHelper
         for ($i = 0; $i < 20; ++$i) {
             $rand = mt_rand(20, 160);
             $allowed = false;
-            for ($j = 0; $j < count($allowedRanges); ++$j) {
+            for ($j = 0; $j < \count($allowedRanges); ++$j) {
                 if ($allowedRanges[$j][0] <= $rand && $allowedRanges[$j][1] >= $rand) {
                     $allowed = true;
                 }
             }
             if ($allowed) {
-                $newHash .= chr($rand);
+                $newHash .= \chr($rand);
             } else {
                 --$i;
             }

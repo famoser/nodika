@@ -1,0 +1,11 @@
+new:
+  title: 'Neue Praxis'
+  description: 'Fügen Sie eine neue Praxis hinzu'
+
+edit:
+  title: 'Praxis bearbeiten'
+  description: 'Praxis ändern'
+
+remove:
+  title: 'Praxis entfernen'
+  description: 'Löschen Sie die Praxis'

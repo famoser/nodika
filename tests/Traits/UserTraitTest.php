@@ -11,7 +11,7 @@
 
 namespace Tests\AppBundle\Traits;
 
-use App\Entity\FrontendUser;
+use App\Entity\Doctor;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -24,15 +24,10 @@ class UserTraitTest extends WebTestCase
 {
     public function testPasswordHash()
     {
-        $user = new FrontendUser();
+        $user = new Doctor();
         $user->setPlainPassword('asdf1234');
-        $this->assertTrue($user->isValidPlainPassword());
-
-        $user->persistNewPassword();
+        $user->setPassword();
         $this->assertEmpty($user->getPlainPassword());
-        $this->assertNotEmpty('' !== $user->getPasswordHash());
-
-        $user->setPlainPassword('asdf1234');
-        $this->assertTrue($user->tryLoginWithPlainPassword());
+        $this->assertNotEmpty('' !== $user->getPassword());
     }
 }

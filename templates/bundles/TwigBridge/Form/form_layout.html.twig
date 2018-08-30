@@ -1,0 +1,41 @@
+{% use 'bootstrap_4_layout.html.twig' %}
+
+{% block checkbox_radio_label -%}
+    {%- if label is not same as(false) and label is empty -%}
+        {%- if label_format is empty -%}
+            {%- set label = name|camelCaseToUnderscore -%}
+        {%- endif -%}
+    {%- endif -%}
+    {{- parent() -}}
+{%- endblock checkbox_radio_label %}
+
+{%- block button_widget -%}
+    {%- if label is not same as(false) and label is empty -%}
+        {%- if label_format is empty -%}
+            {% set label = name|camelCaseToUnderscore %}
+        {%- endif -%}
+    {%- endif -%}
+    {{- parent() -}}
+{%- endblock button_widget -%}
+
+{%- block form_label -%}
+    {% if label is not same as(false) -%}
+        {% if label is empty -%}
+            {%- if label_format is empty -%}
+                {% set label = name|camelCaseToUnderscore %}
+            {%- endif -%}
+        {%- endif -%}
+    {%- endif -%}
+    {{- parent() -}}
+{%- endblock form_label -%}
+
+
+{#
+{%- if label is not empty -%}
+    {%- if required -%}
+        {%- set label = label ~ "*" -%}
+    {%- else -%}
+        {%- set label = label ~ " (freiwllig)" -%}
+    {%- endif -%}
+{%- endif -%}
+#}

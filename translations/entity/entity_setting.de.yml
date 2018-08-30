@@ -1,3 +1,9 @@
 entity:
   name: 'Einstellung'
   description: 'Eine Einstellung konfiguriert die Webapplikation'
+
+doctors_can_edit_self: "Tierärzte können Ihre Daten (Name, E-Mail & Adresse) ändern."
+doctors_can_edit_clinics: "Tierärzte können die Daten ihrer zugehörigen Klinik ändern (Name, E-Mail, Adresse & zugehörige Tierärzte)."
+can_confirm_days_advance: "Terminbestätigung möglich (Tage im Voraus)"
+must_confirm_days_advance: "Terminbestätigung muss erfolgen bis (Tage im Voraus)"
+send_remainder_days_interval: "Erinnerungmail mit ausstehenden Terminbestätigungen versenden (Interval in Tagen)"

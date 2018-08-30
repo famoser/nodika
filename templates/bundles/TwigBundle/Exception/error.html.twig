@@ -1,21 +1,15 @@
 {% extends 'single_content_base.html.twig' %}
 
-{% block title %}{{ "error.title"|trans }}{% endblock %}
+{% block title %}{{ "error.title"|trans({"%status_code%" : status_code}) }}{% endblock %}
 {% block description %}{{ "error.description"|trans }}{% endblock %}
 
-{% trans_default_domain "static" %}
-
-{% set show_login = false %}
-{% set show_help = false %}
-{% set show_dashboard = false %}
-{% set theme_color = globals_theme_color_error %}
+{% trans_default_domain "error" %}
 
 {% block single_content %}
-    {% if block('additional_error_info') is defined %}
-        {% set _block = block('additional_error_info') %}
-        {{ _block|raw }}
-    {% else %}
-        <p>{{ "error.fallback"|trans }}</p>
-    {% endif %}
-    <p><a href="{{ path("homepage") }}">{{ "error.back_to_homepage"|trans }}</a></p>
+    {% block additional_error_info %}
+        <p class="text-secondary">{{ "error.description"|trans }}</p>
+    {% endblock %}
+    <p>
+        <a href="{{ path("index_index") }}">{{ "error.back_to_homepage"|trans }}</a>
+    </p>
 {% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'layout_base.html.twig' %}
+{% import _self as local_macro %}
+{% import 'macros/event_tag.html.twig' as event_tag_macros %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "index" %}
+
+{% macro quick_link(name, description, link) %}
+    <div class="card" href="{{ link }}">
+        <div class="card-body">
+            <p>
+                {{ description }}
+            </p>
+            <a class="btn btn-outline-primary" href="{{ link }}">
+                {{ name }}
+            </a>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro trade_event_row(event, new_doctor, new_clinic) %}
+    {% import 'macros/event_tag.html.twig' as event_tag_macros %}
+    <tr>
+        <td>
+            {{ event.startDateTime|dateTimeFormat }}
+        </td>
+        <td>
+            {{ event.endDateTime|dateTimeFormat }}
+        </td>
+        <td>
+            {{ event_tag_macros.render(event.eventTags) }}
+        </td>
+        <td>
+            {{ new_doctor.fullName }}<br/>
+            <span class="text-secondary">{{ new_clinic.name }}</span>
+        </td>
+    </tr>
+{% endmacro %}
+
+
+{% block content %}
+    <div id="confirm"></div>
+    {% if offers|length > 0 %}
+
+        <div class="container">
+            <div class="row d-block mb-4 p-4 bg-light">
+                <p class="lead">{{ "display.title"|trans({}, "trade") }}</p>
+                {% for offer in offers %}
+                    <div class="card w-100">
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>
+                                        {{ offer.sender.fullName }} <br/>
+                                        <span class="text-secondary">{{ offer.senderClinic.name }}</span>
+                                    </p>
+                                    {% if offer.message|trim|length > 0 %}
+                                        <p>
+                                            {{ offer.message }}
+                                        </p>
+                                    {% endif %}
+                                    <hr/>
+                                    {% if offer.pendingAction(app.user) == 1 %}
+                                        <p>{{ "next_action.accept_decline"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_accept", {"eventOffer" : offer.id}) }}">
+                                            {{ "accept.title"|trans({}, "trade") }}
+                                        </a>
+                                        <a class="btn btn-secondary"
+                                           href="{{ path("trade_decline", {"eventOffer" : offer.id}) }}">
+                                            {{ "decline.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 2 %}
+                                        <p>{{ "next_action.ack_accepted"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_acknowledge", {"eventOffer" : offer.id}) }}">
+                                            {{ "acknowledge.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 3 %}
+                                        <p>{{ "next_action.ack_declined"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_acknowledge", {"eventOffer" : offer.id}) }}">
+                                            {{ "acknowledge.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 4 %}
+                                        <p>{{ "next_action.withdraw"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_withdraw", {"eventOffer" : offer.id}) }}">
+                                            {{ "withdraw.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 5 %}
+                                        <p>{{ "next_action.ack_withdrawn"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_acknowledge", {"eventOffer" : offer.id}) }}">
+                                            {{ "acknowledge.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% elseif offer.pendingAction(app.user) == 6 %}
+                                        <p>{{ "next_action.ack_invalid"|trans({}, "entity_event_offer") }}</p>
+                                        <a class="btn btn-primary"
+                                           href="{{ path("trade_acknowledge", {"eventOffer" : offer.id}) }}">
+                                            {{ "acknowledge.title"|trans({}, "trade") }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-8">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>{{ "start_date_time"|trans({}, "trait_start_end") }}</th>
+                                            <th>{{ "end_date_time"|trans({}, "trait_start_end") }}</th>
+                                            <th class="minimal-width"></th>
+                                            <th>{{ "display.new_owner"|trans({}, "trade") }}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for event in offer.senderOwnedEvents %}
+                                            {{ local_macro.trade_event_row(event, offer.receiver, offer.receiverClinic) }}
+                                        {% endfor %}
+                                        {% for event in offer.receiverOwnedEvents %}
+                                            {{ local_macro.trade_event_row(event, offer.sender, offer.senderClinic) }}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="d-flex">
+                {{ local_macro.quick_link("index.title"|trans({}, "assign"), "index.description"|trans({}, "assign"), path("assign_index")) }}
+                {{ local_macro.quick_link("index.title"|trans({}, "trade"), "index.description"|trans({}, "trade"), path("trade_index")) }}
+                {{ local_macro.quick_link("index.title"|trans({}, "search"), "index.description"|trans({}, "search"), path("search_index")) }}
+            </div>
+            <div class="card w-100">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>{{ "start_date_time"|trans({}, "trait_start_end") }}</th>
+                                <th>{{ "end_date_time"|trans({}, "trait_start_end") }}</th>
+                                <th>{{ "entity.name"|trans({}, "entity_clinic") }}</th>
+                                <th>{{ "entity.name"|trans({}, "entity_doctor") }}</th>
+                                <th>{{ "is_confirmed"|trans({}, "trait_event") }}</th>
+                                <th class="minimal-width"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for event in events %}
+                                <tr class="{% if event.active %}table-light{% endif %} {% if event.clinic in app.user.clinics %}bold{% endif %}">
+                                    <td>
+                                        {{ event.startDateTime|dateTimeFormat }}
+                                    </td>
+                                    <td>
+                                        {{ event.endDateTime|dateTimeFormat }}
+                                    </td>
+                                    <td>
+                                        {{ event.clinic }}
+                                    </td>
+                                    <td>
+                                        {{ event.doctor }}
+                                    </td>
+                                    <td>
+                                        {% if event.isConfirmed %}
+                                            <i class="fas fa-check"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ event_tag_macros.render(event.eventTags) }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        <a href="{{ path("search_index") }}">{{ "index.show_all_events"|trans }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#
+    <section class="content {{ theme_color }}-background">
+
+        <div class="container">
+            <div class="row">
+                <a class="tile tile-2 default-color" href="{{ path('offer_index') }}">
+                    <h3>{{ "index.trade_events"|trans }}</h3>
+                    <p>
+                        {{ "index.trade_events_description"|trans }}
+                    </p>
+                </a>
+                <a class="tile tile-2 default-color" href="{{ path('event_confirm') }}">
+                    <h3>{{ "index.confirm_events"|trans }}</h3>
+                    <p>
+                        {{ "index.confirm_events_description"|trans }}
+                    </p>
+                </a>
+                <a class="tile tile-2 default-color" href="{{ path('event_search') }}">
+                    <h3>{{ "index.search_events"|trans }}</h3>
+                    <p>
+                        {{ "index.search_events_description"|trans }}
+                    </p>
+                </a>
+
+                <a class="tile tile-4 default-color" href="{{ path('administration_index') }}">
+                    <h3>{{ "index.title"|trans({}, "administration") }}</h3>
+                    <p>
+                        {{ "index.search_events_description"|trans }}
+                    </p>
+                </a>
+
+                {% endif %}
+            </div>
+        </div>
+
+    </section>
+    #}
+{% endblock %}
+

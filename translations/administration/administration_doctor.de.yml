@@ -1,0 +1,27 @@
+new:
+  title: 'Neuer Tierarzt'
+  description: 'Neuer Tierarzt erstellen'
+  danger:
+    email_not_unique: 'Diese E-Mail ist bereits vergeben'
+
+edit:
+  title: 'Tierarzt bearbeiten'
+  description: 'Ändern Sie Adresse, Email & Namen des Tierarztes'
+
+remove:
+  title: 'Tierarzt entfernen'
+  description: 'Löschen Sie den Tierarzt und alle damit verbundenen Daten'
+
+toggle_login_enabled:
+  title: 'Login erlauben ändern'
+  change: 'ändern'
+
+invite:
+  email:
+    subject: 'Zugriffsbestätigung für nodika'
+    message: 'Willkommen! Sie haben auf nodika, der Notfalldienstverwaltung für Tierärzte, mit der E-Mail %email% Zugriff auf Ihre Praxis %clinics% erhalten.'
+    action_text: 'Zugang einrichten'
+  success:
+    email_sent: 'Das E-Mail wurde versandt'
+  danger:
+    email_not_sent: 'Das E-Mail konnte nicht versandt werden'

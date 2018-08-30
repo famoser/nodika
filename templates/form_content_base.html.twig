@@ -1,0 +1,28 @@
+{% extends 'layout_base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="card w-100">
+                <div class="card-body">
+                    <h1 class="display-4">{{ block("title") }}</h1>
+                    <p class="lead">{% block description %}{% endblock %}</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <hr/>
+                            {% block form_content %}
+                                {{ form(form) }}
+                            {% endblock %}
+                        </div>
+                        <div class="col-md-8">
+                            <hr/>
+                            {% block form_description %}
+
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

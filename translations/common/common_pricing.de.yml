@@ -1,7 +1,0 @@
-access:
-  trial_period: 'Probephase'
-  trial_period_description: 'Nach der Einrichtung der Organisation können Sie alle Funktionen der Anwendung für 30 Tage gratis und ohne Verpflichtungen testen.'
-
-organisation:
-  trial_period: 'Probephase'
-  trial_period_description: 'Mit der Erstellung der Organisation stimmen Sie den AGB''s zu. Sie können alle Funktionen der Anwendung dann für 30 Tage gratis und ohne Verpflichtungen testen.'

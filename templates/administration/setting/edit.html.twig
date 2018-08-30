@@ -1,0 +1,30 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "edit.title"|trans }}{% endblock %}
+{% block description %}{{ "edit.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_setting" %}
+
+
+{% block single_content %}
+    <div class="row">
+        <div class="col-md-4">
+            {{ form(settings) }}
+        </div>
+        <div class="col-md-4">
+            <p>
+                {{ "edit.administrators"|trans }}<br/>
+                <span class="text-secondary">{{ "edit.administrators_help"|trans }}</span>
+            </p>
+            {{ form(admins) }}
+            <hr/>
+            <p>
+                {{ "edit.email_receivers"|trans }}<br/>
+                <span class="text-secondary">{{ "edit.email_receivers_help"|trans }}</span>
+            </p>
+            <p>{{ "edit.email_receivers"|trans }}</p>
+            {{ form(emails) }}
+        </div>
+    </div>
+{% endblock %}
+

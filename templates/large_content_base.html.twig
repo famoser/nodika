@@ -1,0 +1,17 @@
+{% extends 'layout_base.html.twig' %}
+
+{% block content %}
+    <section class="content">
+        <div class="container jumbotron">
+            <h1 class="display-3">{{ block("title") }}</h1>
+            <p class="lead">{% block description %}{% endblock %}</p>
+        </div>
+
+        <div class="container-fluid card">
+            <div class="card-body">
+                {% block large_content %}
+                {% endblock %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

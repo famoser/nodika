@@ -1,0 +1,8 @@
+trait:
+  name: 'Termin'
+
+is_confirmed: 'bestätigt'
+confirm_date_time: 'Bestätigt um'
+confirmed_by: 'Bestätigt von'
+last_remainder_email_sent: 'Letztes Erinnerungsemail versandt'
+

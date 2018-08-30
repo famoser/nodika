@@ -161,9 +161,9 @@ AddDefaultCharset utf-8
 # attacks.
 <IfModule mod_headers.c>
 
-    Header set Content-Security-Policy "default-src 'none'; base-uri 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; frame-ancestors 'none'"
-    Header set X-Content-Security-Policy "default-src 'none'; base-uri 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; frame-ancestors 'none'"
-    Header set X-WebKit-CSP "default-src 'none'; base-uri 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; frame-ancestors 'none'"
+    Header set Content-Security-Policy "default-src 'none'; base-uri 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
+    Header set X-Content-Security-Policy "default-src 'none'; base-uri 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
+    Header set X-WebKit-CSP "default-src 'none'; base-uri 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
 
     # `mod_headers` cannot match based on the content-type, however,
     # the `Content-Security-Policy` response header should be send
@@ -188,7 +188,8 @@ AddDefaultCharset utf-8
 # ServerSignature Off
 
 # Prevent Apache from publishing exact server version
-# deactivated because crashes hostpoint web server
+# disabled because hostpoint deploy does not allow it
+# consider activing when switching providers
 # ServerTokens Prod
 
 # Compress HTML, CSS, JavaScript, Text, XML and fonts

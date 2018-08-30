@@ -3,9 +3,6 @@
 parameters:
     locale: 'de'
 
-imports:
-    - { resource: legacy_aliases.yml }
-
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -37,11 +34,14 @@ services:
         arguments: ["@doctrine"]
 
     App\Service\EventGenerationService:
-        arguments: ["@doctrine","@translator","@session", "@app.event_past_evaluation_service"]
+        arguments: ["@doctrine","@translator","@session"]
 
     App\Service\EmailService:
         arguments: ["@mailer", "@doctrine", "@logger","@twig","%env(CONTACT_EMAIL)%"]
 
-    App\Listener\DoctrinePreFlushListener:
+    App\Normalizer\EntityNormalizer:
+        public: false
+        autowire: true
+        autoconfigure: true
         tags:
-            - { name: doctrine.event_listener, event: preFlush }
+          - { name: serializer.normalizer }

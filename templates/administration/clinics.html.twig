@@ -1,0 +1,50 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "clinics.title"|trans }}{% endblock %}
+{% block description %}{{ "clinics.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration" %}
+
+{% block single_content %}
+    <p>
+        <a class="btn btn-secondary" href="{{ path("administration_clinic_new") }}">
+            {{ "new.title"|trans({}, "administration_clinic") }}
+        </a>
+    </p>
+    <table class="table table-striped table-hover table-responsive-xl">
+        <thead>
+        <tr>
+            <th>{{ "name"|trans({}, "trait_thing") }}</th>
+            <th>{{ "description"|trans({}, "trait_thing") }}</th>
+            <th>{{ "email"|trans({}, "trait_communication") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_doctor") }}</th>
+            <th class="minimal-width"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for clinic in clinics %}
+            <tr>
+                <td>{{ clinic.name }}</td>
+                <td>{{ clinic.description }}</td>
+                <td>{{ clinic.email }}</td>
+                <td>{{ clinic.doctors|join(", ") }}</td>
+                <td>
+                    <a class="btn btn-secondary"
+                       href="{{ path("administration_clinic_edit", {"clinic" : clinic.id}) }}">
+                        <i class="fal fa-pencil"></i>
+                    </a>
+                </td>
+                {#
+                <td>
+                    <a class="btn btn-secondary"
+                       href="{{ path("administration_clinic_remove", {"clinic" : clinic.id}) }}">
+                        <i class="fal fa-trash"></i>
+                    </a>
+                </td>
+                #}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

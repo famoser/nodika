@@ -1,0 +1,48 @@
+{% extends 'single_content_base.html.twig' %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "account" %}
+
+{% block single_content %}
+    <div class="row">
+        <div class="col-md-4">
+            <h3>
+                {{ "index.hi"|trans({"%name%": user.fullName}) }}
+            </h3>
+
+            <p>
+                {% if user.clinics|length == 1 %}
+                    {{ "index.member_of_clinic"|trans({"%clinic%": user.clinics|join("")}) }}
+                {% elseif user.clinics|length > 1 %}
+                    {{ "index.member_of_clinics"|trans({"%clinics%": user.clinics|join(", ")}) }}
+                {% else %}
+                    {{ "index.no_clinics"|trans }}
+                {% endif %}
+            </p>
+
+            <p>
+                <b>{{ "trait.name"|trans({}, "trait_communication") }}</b>:<br/>
+                {{ user.email }}<br/>
+                {{ user.phone }}
+            </p>
+
+            <p>
+                <b>{{ "trait.name"|trans({}, "trait_address") }}</b>:<br/>
+                {{ user.addressLines|join("\n")|nl2br }}
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h3>{{ "index.change_password"|trans }}</h3>
+            {{ form(change_password_form) }}
+        </div>
+        {% if update_form is defined %}
+            <div class="col-md-4">
+                <h3>{{ "index.update"|trans }}</h3>
+                {{ form(update_form) }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+

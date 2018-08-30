@@ -1,0 +1,25 @@
+invite_invalid:
+  title: 'Einladung nicht mehr gültig'
+  description: 'Dieser Link ist nicht (mehr) gültig.'
+
+doctor:
+  title: 'Willkomen auf nodika!'
+  description: 'Setzen Sie Ihr Passwort um den Zugang freizuschalten.'
+  success:
+    access_created: 'Ihr Zugang wurde freigeschaltet! Willkommen auf nodika :)'
+  danger:
+    invitation_already_accepted: 'Sie haben diese Einladung schon angenommen.'
+    already_login_occurred: 'Sie haben sich bereits einmal eingeloggt, und können diese Einladung daher nicht mehr annehmen.'
+
+clinic:
+  title: 'Willkommen auf nodika!'
+  description: 'Erstellen Sie einen Zugang für die Praxis %name%.'
+  already_logged_in:
+    info: 'Sie sind bereits eingeloggt (als %name%, %email%). Möchten Sie diesen Account verwenden für Zugriff zu dieser Praxis, oder einen neuen Account erstellen?'
+    create_new_account: 'Neuer Zugang mit neuer E-Mail erstellen.'
+    use_same_account: 'Gleicher Zugang verwenden.'
+  warning:
+    email_already_in_use: 'Die E-Mail %email% ist bereits in unserem System. Loggen Sie sich ein und kehren Sie hierhin zurück, oder benutzen Sie eine andere E-Mail.'
+  success:
+    account_created: 'Ihr Zugang wurde erfolgreich erstellt, Willkommen auf nodika :)'
+    access_granted: 'Sie haben nun Zugriff auf die Praxis %name%.'

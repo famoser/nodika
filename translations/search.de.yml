@@ -1,0 +1,7 @@
+index:
+  title: 'Termine durchsuchen'
+  description: 'Durchsuchen Sie das Terminverzeichnis'
+  no_event_lines: 'Keine Termine gefunden'
+  filter: 'Filtern'
+  do_filter: 'Suchen'
+  export: 'Exportieren'

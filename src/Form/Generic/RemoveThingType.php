@@ -11,9 +11,7 @@
 
 namespace App\Form\Generic;
 
-use App\Form\BaseAbstractType;
-use App\Helper\NamingHelper;
-use App\Helper\StaticMessageHelper;
+use App\Form\Base\BaseAbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,13 +20,11 @@ abstract class RemoveThingType extends BaseAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builderArray = ['translation_domain' => 'remove'];
         $builder->add(
             'confirmConsequences',
             CheckboxType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('confirmConsequences') + ['mapped' => false]
+            ['mapped' => false, 'label' => 'fields.confirm_consequences']
         );
-        $this->addSubmit($builder, $options[StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
     }
 
     /**
@@ -36,6 +32,8 @@ abstract class RemoveThingType extends BaseAbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired([StaticMessageHelper::FORM_SUBMIT_BUTTON_TYPE_OPTION]);
+        $resolver->setDefaults([
+            'translation_domain' => 'common_form',
+        ]);
     }
 }

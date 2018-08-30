@@ -1,0 +1,40 @@
+{% extends "large_content_base.html.twig" %}
+
+{% block title %}{{ "history.title"|trans }}{% endblock %}
+{% block description %}{{ "history.description"|trans }}{% endblock %}
+
+{% block large_content %}
+    <table class="table table-striped table-hover table-responsive-xl">
+        <thead>
+        <tr>
+            <th>{{ "enum.name"|trans({}, "enum_event_change_type") }}</th>
+            <th>{{ "last_changed_at"|trans({}, "trait_change_aware") }}</th>
+            <th>{{ "last_changed_by"|trans({}, "trait_change_aware") }}</th>
+            <th>{{ "start_date_time"|trans({}, "trait_start_end") }}</th>
+            <th>{{ "end_date_time"|trans({}, "trait_start_end") }}</th>
+            <th>{{ "entity.name"|trans({}, "entity_clinic") }}</th>
+            <th>{{ "entity.name"|trans({}, "entity_doctor") }}</th>
+            <th>{{ "confirm_date_time"|trans({}, "trait_event") }}</th>
+            <th>{{ "confirmed_by"|trans({}, "trait_event") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for past in event.eventPast %}
+            <tr>
+                <td>{{ past.eventChangeTypeText|trans({}, "enum_event_change_type") }}</td>
+                <td>{{ past.createdAt|dateTimeFormat }}</td>
+                <td>{{ past.createdBy }}</td>
+                <td>{{ past.startDateTime|dateTimeFormat }}</td>
+                <td>{{ past.endDateTime|dateTimeFormat }}</td>
+                <td>{{ past.clinic }}</td>
+                <td>{{ past.doctor|default("") }}</td>
+                <td>{{ past.confirmDateTime|dateTimeFormat }}</td>
+                <td>{{ past.confirmedByDoctor }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% trans_default_domain "administration_event" %}

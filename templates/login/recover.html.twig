@@ -1,0 +1,12 @@
+{% extends "form_content_base.html.twig" %}
+
+{% block title %}{{ "recover.title"|trans }}{% endblock %}
+{% block description %}{{ "recover.description"|trans }}{% endblock %}
+
+{% trans_default_domain "login" %}
+
+
+{% block form_content %}
+    <p class="text-secondary">{{ "recover.use_login_email"|trans }}</p>
+    {{ form((form)) }}
+{% endblock %}

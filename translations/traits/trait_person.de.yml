@@ -1,11 +1,7 @@
-#name
 trait:
-  name: zu Ihrer Person
+  name: 'Name'
 
-#properties
-job_title: Titel (freiwillig)
-given_name: Vorname
-family_name: Nachname
+given_name: 'Vorname'
+family_name: 'Nachname'
 
-#methods
-full_name: Name
+full_name: 'Name'

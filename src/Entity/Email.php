@@ -19,8 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * An Email is a sent email to the specified receivers.
  *
- * @ORM\Table
- * @ORM\Entity(repositoryClass="App\Repository\EmailRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
 class Email extends BaseEntity
@@ -98,38 +97,6 @@ class Email extends BaseEntity
     private $visitedDateTime;
 
     /**
-     * @return mixed
-     */
-    public function getReceiver()
-    {
-        return $this->receiver;
-    }
-
-    /**
-     * @param mixed $receiver
-     */
-    public function setReceiver($receiver)
-    {
-        $this->receiver = $receiver;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * @param string $subject
-     */
-    public function setSubject(string $subject)
-    {
-        $this->subject = $subject;
-    }
-
-    /**
      * @return string
      */
     public function getBody()
@@ -194,6 +161,26 @@ class Email extends BaseEntity
     }
 
     /**
+     * @return string[]
+     */
+    public function getCarbonCopyArray()
+    {
+        if (mb_strlen($this->carbonCopy) > 0) {
+            return explode(',', $this->carbonCopy);
+        }
+
+        return [];
+    }
+
+    /**
+     * @param string[] $carbonCopy
+     */
+    public function setCarbonCopyArray($carbonCopy)
+    {
+        $this->carbonCopy = implode(',', $carbonCopy);
+    }
+
+    /**
      * @return \DateTime
      */
     public function getSentDateTime()
@@ -233,6 +220,38 @@ class Email extends BaseEntity
     public function getFullIdentifier()
     {
         return $this->getReceiver().' '.$this->getSubject();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceiver()
+    {
+        return $this->receiver;
+    }
+
+    /**
+     * @param mixed $receiver
+     */
+    public function setReceiver($receiver)
+    {
+        $this->receiver = $receiver;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param string $subject
+     */
+    public function setSubject(string $subject)
+    {
+        $this->subject = $subject;
     }
 
     /**

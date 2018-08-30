@@ -1,8 +1,8 @@
-#name
 trait:
- name: Benutzer
+ name: 'Benutzer'
 
-#properties
-plain_password: Passwort
-repeat_plain_password: Passwort wiederholen
-email: Email
+password: 'Passwort'
+plain_password: 'Passwort'
+repeat_plain_password: 'Passwort wiederholen'
+email: 'Email'
+can_login: 'Login erlaubt'

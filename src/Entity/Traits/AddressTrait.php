@@ -11,11 +11,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Helper\NamingHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /*
@@ -25,35 +21,57 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait AddressTrait
 {
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $street;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $streetNr;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $addressLine;
 
     /**
+     * @var int
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $postalCode;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $city;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      * @Assert\Country()
      */
     private $country = 'CH';
+
+    /**
+     * Get street.
+     *
+     * @return string
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
 
     /**
      * Set street.
@@ -70,37 +88,13 @@ trait AddressTrait
     }
 
     /**
-     * Get street.
+     * Get streetNr.
      *
      * @return string
      */
-    public function getStreet()
+    public function getStreetNr()
     {
-        return $this->street;
-    }
-
-    /**
-     * Set addressLine.
-     *
-     * @param string $addressLine
-     *
-     * @return static
-     */
-    public function setAddressLine($addressLine)
-    {
-        $this->addressLine = $addressLine;
-
-        return $this;
-    }
-
-    /**
-     * Get addressLine.
-     *
-     * @return string
-     */
-    public function getAddressLine()
-    {
-        return $this->addressLine;
+        return $this->streetNr;
     }
 
     /**
@@ -118,19 +112,43 @@ trait AddressTrait
     }
 
     /**
-     * Get streetNr.
+     * Get addressLine.
      *
      * @return string
      */
-    public function getStreetNr()
+    public function getAddressLine()
     {
-        return $this->streetNr;
+        return $this->addressLine;
+    }
+
+    /**
+     * Set addressLine.
+     *
+     * @param string $addressLine
+     *
+     * @return static
+     */
+    public function setAddressLine($addressLine)
+    {
+        $this->addressLine = $addressLine;
+
+        return $this;
+    }
+
+    /**
+     * Get postalCode.
+     *
+     * @return int
+     */
+    public function getPostalCode()
+    {
+        return $this->postalCode;
     }
 
     /**
      * Set postalCode.
      *
-     * @param string $postalCode
+     * @param int $postalCode
      *
      * @return static
      */
@@ -142,13 +160,13 @@ trait AddressTrait
     }
 
     /**
-     * Get postalCode.
+     * Get addressRegion.
      *
      * @return string
      */
-    public function getPostalCode()
+    public function getCity()
     {
-        return $this->postalCode;
+        return $this->city;
     }
 
     /**
@@ -163,16 +181,6 @@ trait AddressTrait
         $this->city = $city;
 
         return $this;
-    }
-
-    /**
-     * Get addressRegion.
-     *
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->city;
     }
 
     /**
@@ -225,71 +233,5 @@ trait AddressTrait
         }
 
         return $res;
-    }
-
-    /**
-     * gets the street identifier.
-     *
-     * @return string
-     */
-    protected function getAddressIdentifier()
-    {
-        return implode(', ', $this->getAddressLines());
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param $defaultArray
-     *
-     * @return FormBuilderInterface
-     */
-    public static function getAddressBuilder(FormBuilderInterface $builder, $defaultArray = [])
-    {
-        $builderArray = ['translation_domain' => NamingHelper::traitToTranslationDomain(AddressTrait::class)] + $defaultArray;
-        $builder->add(
-            'street',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('street')
-        );
-        $builder->add(
-            'streetNr',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('streetNr')
-        );
-        $builder->add(
-            'addressLine',
-            TextType::class,
-            ['required' => false] + $builderArray + NamingHelper::propertyToTranslationForBuilder('addressLine')
-        );
-        $builder->add(
-            'postalCode',
-            NumberType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('postalCode')
-        );
-        $builder->add(
-            'city',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('city')
-        );
-        $builder->add(
-            'country',
-            TextType::class,
-            $builderArray + NamingHelper::propertyToTranslationForBuilder('country')
-        );
-
-        return $builder;
-    }
-
-    /**
-     * @param AddressTrait $source
-     */
-    public function setAddressFieldsFrom($source)
-    {
-        $this->setStreet($source->getStreet());
-        $this->setStreetNr($source->getStreetNr());
-        $this->setAddressLine($source->getAddressLine());
-        $this->setPostalCode($source->getPostalCode());
-        $this->setCity($source->getCity());
-        $this->setCountry($source->getCountry());
     }
 }

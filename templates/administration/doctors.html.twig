@@ -1,0 +1,103 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "doctors.title"|trans }}{% endblock %}
+{% block description %}{{ "doctors.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration" %}
+
+{% block single_content %}
+    <p>
+        <a class="btn btn-secondary" href="{{ path("administration_doctor_new") }}">
+            {{ "new.title"|trans({}, "administration_doctor") }}
+        </a>
+    </p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ "full_name"|trans({}, "trait_person") }}</th>
+            <th>{{ "email"|trans({}, "trait_user") }}</th>
+            <th>{{ "entity.plural"|trans({}, "entity_clinic") }}</th>
+            <th>{{ "can_login"|trans({}, "trait_user") }}</th>
+            <th class="minimal-width"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor.fullName }}</td>
+                <td>{{ doctor.email }}</td>
+                <td>{{ doctor.clinics|join(", ") }}</td>
+                <td>
+                    {{ doctor.canLogin|booleanFormat }}
+                    <br/>
+                    <a href="{{ path("administration_doctor_toggle_login_enabled", {"doctor" : doctor.id}) }}">
+                        {{ "toggle_login_enabled.change"|trans({}, "administration_doctor") }}
+                    </a>
+                </td>
+                <td>
+                    <a class="btn btn-secondary"
+                       href="{{ path("administration_doctor_edit", {"doctor" : doctor.id}) }}">
+                        <i class="fal fa-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% if invitable_doctors|length > 0 %}
+    {% block pre_content %}
+        <p>
+            {{ "doctors.some_not_logged_in"|trans }}
+            <a class="btn btn-link" href="#not-logged-in-doctors" data-toggle="collapse" data-target="#not-logged-in-doctors"
+               aria-expanded="false" aria-controls="not-logged-in-doctors">
+                {{ "doctors.show"|trans }}
+            </a>
+        </p>
+
+
+        <div class="collapse" id="not-logged-in-doctors">
+            <p>
+                <a class="btn btn-outline-secondary" href="{{ path("administration_doctor_invite_all") }}">
+                    {{ "doctors.invite_all"|trans }}
+                </a>
+            </p>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{{ "full_name"|trans({}, "trait_person") }}</th>
+                    <th>{{ "email"|trans({}, "trait_user") }}</th>
+                    <th>{{ "entity.plural"|trans({}, "entity_clinic") }}</th>
+                    <th>{{ "last_invitation"|trans({}, "trait_invitation") }}</th>
+                    <th class="minimal-width"></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.fullName }}</td>
+                        <td>{{ doctor.email }}</td>
+                        <td>{{ doctor.clinics|join(", ") }}</td>
+                        <td>
+                            {% if doctor.lastInvitation is null %}
+                                {{ "doctors.not_invited_yet"|trans }}
+                            {% else %}
+                                {{ doctor.lastInvitation|dateTimeFormat }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-secondary"
+                               href="{{ path("administration_doctor_invite", {"doctor" : doctor.id}) }}">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock pre_content %}
+{% endif %}

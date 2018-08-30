@@ -3,12 +3,27 @@
     "@symfony/webpack-encore": "^0.17",
     "jquery": "^3.2",
     "node-sass": "^4",
-    "sass-loader": "^6"
+    "sass-loader": "^6",
+    "vue-loader": "^14.2.2",
+    "vue-template-compiler": "^2.5.16"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-pro": "^5",
+    "@fortawesome/fontawesome-svg-core": "^1",
+    "@fortawesome/pro-light-svg-icons": "^5",
+    "@fortawesome/pro-regular-svg-icons": "^5",
+    "@fortawesome/pro-solid-svg-icons": "^5",
+    "@fortawesome/vue-fontawesome": "^0.1",
+    "axios": "^0.18.0",
     "bootstrap": "^4",
-    "font-awesome": "^4",
-    "ionicons": "^3",
-    "open-sans-fontface": "^1.4.0"
+    "bootstrap-multiselect": "^0.9",
+    "date-fns": "^1.29.0",
+    "deepmerge": "^2.1.1",
+    "epic-spinners": "^1",
+    "moment": "^2.22.2",
+    "open-sans-fontface": "^1.4",
+    "popper.js": "^1.12",
+    "vue": "^2.5",
+    "vue-i18n": "^7"
   }
 }

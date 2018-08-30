@@ -2,8 +2,21 @@ error:
   form_validation_failed: 'Die Verarbeitung konnte nicht abgeschlossen werden. Sind alle benötigten Felder richtig ausgefüllt?'
 
 successful:
-  add: 'Erfolgreich hinzugefügt'
-  save: 'Erfolgreich gespeichert'
-  remove: 'Erfolgreich entfernt'
+  create: 'Erfolgreich hinzugefügt'
+  update: 'Erfolgreich gespeichert'
+  delete: 'Erfolgreich entfernt'
 
-remove:
+submit:
+  create: 'erstellen'
+  update: 'speichern'
+  delete: 'entfernen'
+  login: 'login'
+  register: 'registrieren'
+  confirm: 'bestätigen'
+  apply: 'anwenden'
+
+fields:
+  confirm_consequences: 'Ich verstehe, das ich dies nicht rückgängig machen kann'
+
+not_required: '(freiwillig)'
+required: '*'

@@ -1,0 +1,10 @@
+{% extends 'single_content_base.html.twig' %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "trade" %}
+
+{% block single_content %}
+    <div id="trade"></div>
+{% endblock %}

@@ -11,51 +11,24 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseFrontendController;
-use App\Entity\Organisation;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\Controller\Base\BaseController;
+use App\Entity\Clinic;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/organisation")
- * @Security("has_role('ROLE_USER')")
  */
-class OrganisationController extends BaseFrontendController
+class OrganisationController extends BaseController
 {
     /**
-     * @Route("/", name="organisation_view")
+     * @Route("/", name="organisation_index")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
-        $member = $this->getMember();
-        if (null === $member) {
-            return $this->redirectToRoute('dashboard_index');
-        }
+        $arr['clinics'] = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
 
-        $arr['organisation'] = $member->getOrganisation();
-
-        return $this->renderWithBackUrl('organisation/index.html.twig', $arr, $this->generateUrl('dashboard_index'));
-    }
-
-    /**
-     * @Route("/change_to/{organisation}", name="organisation_change_to")
-     *
-     * @param Organisation $organisation
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function changeToAction(Organisation $organisation)
-    {
-        //check if part of organisation
-        $person = $this->getPerson();
-        foreach ($person->getMembers() as $member) {
-            if ($member->getOrganisation()->getId() === $organisation->getId()) {
-                $this->setMember($member);
-            }
-        }
-
-        return $this->redirectToRoute('dashboard_index');
+        return $this->render('organisation/index.html.twig', $arr);
     }
 }

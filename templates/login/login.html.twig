@@ -1,0 +1,22 @@
+{% extends "form_content_base.html.twig" %}
+
+{% block title %}{{ "login.title"|trans }}{% endblock %}
+{% block description %}{{ "login.description"|trans }}{% endblock %}
+
+{% trans_default_domain "login" %}
+
+{% block form_content %}
+    {{ form_start(form, {"action" : path("login_check")}) }}
+    {{ form_errors(form) }}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block form_description %}
+    <p>
+        {{ "login.problems_with_login"|trans }}<br/>
+        <a href="{{ path("login_recover") }}">{{ "recover.title"|trans }}</a><br/>
+        <a href="{{ path("login_request") }}">{{ "request.title"|trans({}, "login") }}</a><br/>
+        <a href="{{ path("contact_index") }}">{{ "index.title"|trans({}, "contact") }}</a><br/>
+    </p>
+{% endblock %}

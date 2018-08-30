@@ -1,0 +1,6 @@
+started: 'gestartet'
+successful: 'erfolgreich'
+no_matching_clinic: 'Keine konfliktfreie Zuordnung gefunden'
+no_allowed_clinic_for_event: 'Keine konfliktfreie Zuordnung gefunden'
+timeout: 'timeout - Generierung hat zu lange gedauert'
+unknown_error: 'Unbekannter Fehler'

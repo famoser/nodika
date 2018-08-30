@@ -1,0 +1,7 @@
+entity:
+  name: 'Kontaktanfrage'
+  description: 'Nehmen Sie Kontakt mit uns auf'
+
+name: 'Name'
+email: 'Email'
+message: 'Nachricht'

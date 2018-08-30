@@ -11,6 +11,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Clinic;
+use App\Entity\Doctor;
+use App\Entity\Event;
+use App\Model\Event\SearchModel;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -21,4 +25,63 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventRepository extends EntityRepository
 {
+    /**
+     * @param SearchModel $searchModel
+     *
+     * @return Event[]
+     */
+    public function search(SearchModel $searchModel)
+    {
+        //construct query for each event line
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('e')
+            ->from('App:Event', 'e')
+            ->leftJoin('e.eventTags', 'et')
+            ->leftJoin('e.eventPast', 'ep')
+            ->leftJoin('e.clinic', 'm')
+            ->leftJoin('e.doctor', 'f');
+
+        if ($searchModel->getStartDateTime() instanceof \DateTime) {
+            $qb->andWhere('e.startDateTime > :startDateTime')
+                ->setParameter('startDateTime', $searchModel->getStartDateTime());
+        }
+
+        if ($searchModel->getEndDateTime() instanceof \DateTime) {
+            $qb->andWhere('e.endDateTime < :endDateTime')
+                ->setParameter('endDateTime', $searchModel->getEndDateTime());
+        }
+
+        if ($searchModel->getClinic() instanceof Clinic) {
+            $qb->andWhere('m = :clinic')
+                ->setParameter('clinic', $searchModel->getClinic());
+        }
+
+        if (null !== $searchModel->getClinics()) {
+            $qb->andWhere('m in (:clinics)')
+                ->setParameter('clinics', $searchModel->getClinics());
+        }
+
+        if (null !== $searchModel->getEventTags()) {
+            $qb->andWhere('et in (:eventTags)')
+                ->setParameter('eventTags', $searchModel->getEventTags());
+        }
+
+        if ($searchModel->getDoctor() instanceof Doctor) {
+            $qb->andWhere('f = :doctor')
+                ->setParameter('doctor', $searchModel->getDoctor());
+        }
+
+        if (null !== $searchModel->getIsConfirmed()) {
+            if ($searchModel->getIsConfirmed()) {
+                $qb->andWhere('e.confirmDateTime IS NOT NULL AND (e.doctor = e.confirmedByDoctor OR e.doctor IS NULL)');
+            } else {
+                $qb->andWhere('e.confirmDateTime IS NULL OR e.doctor != e.confirmedByDoctor');
+            }
+        }
+
+        $qb->orderBy('e.startDateTime', $searchModel->isInvertOrder() ? 'DESC' : 'ASC');
+        $qb->setMaxResults($searchModel->getMaxResults());
+
+        return $qb->getQuery()->getResult();
+    }
 }

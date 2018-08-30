@@ -1,0 +1,47 @@
+{% block address_widget %}
+    <div class="form-row">
+        <div class="form-group col-md-9">
+            {{ form_label(form.street) }}
+            {{ form_widget(form.street) }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ form_label(form.streetNr) }}
+            {{ form_widget(form.streetNr) }}
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(form.addressLine) }}
+        {{ form_widget(form.addressLine) }}
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            {{ form_label(form.postalCode) }}
+            {{ form_widget(form.postalCode) }}
+        </div>
+        <div class="form-group col-md-6">
+            {{ form_label(form.city) }}
+            {{ form_widget(form.city) }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ form_label(form.country) }}
+            {{ form_widget(form.country) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block start_end_widget %}
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label class="form-control-label required">
+                {{ "start_date_time"|trans({}, "trait_start_end") }}
+            </label>
+            {{ form_widget(form.startDateTime) }}
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-control-label required">
+                {{ "end_date_time"|trans({}, "trait_start_end") }}
+            </label>
+            {{ form_widget(form.endDateTime) }}
+        </div>
+    </div>
+{% endblock %}

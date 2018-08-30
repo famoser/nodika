@@ -1,0 +1,9 @@
+base:
+  brand: 'nodika.ch'
+
+  events_menu:
+    title: "Termine"
+    assign: "zuweisen"
+    trade: "tauschen"
+    confirm: "bestätigen"
+    search: "suchen"

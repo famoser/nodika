@@ -1,6 +1,0 @@
-entity:
-  name: 'Organisation'
-  description: 'Eine Organisation ist ein Zusammenschluss verschiedener Praxen, die zusammen den Notfalldienst in einer bestimmten Region organisieren'
-
-active_end: Ende der Aktivierungsperiode
-is_active: Freigeschaltet

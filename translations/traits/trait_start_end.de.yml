@@ -1,0 +1,5 @@
+trait:
+  name: 'Anfangs- und Endzeiten'
+
+start_date_time: 'Anfang'
+end_date_time: 'Ende'

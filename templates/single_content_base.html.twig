@@ -1,26 +1,26 @@
-{% extends 'layout/base.html.twig' %}
+{% extends 'layout_base.html.twig' %}
 
 {% block content %}
-    <section class="content
-        {% if theme_color == "blue" %}
-        blue-background
-        {% elseif theme_color == "brown" %}
-        brown-background
-        {% elseif theme_color == "green" %}
-        green-background
-        {% elseif theme_color == "green2" %}
-        green2-background
-        {% elseif theme_color == "red" %}
-        red-background
-        {% endif %}">
-        {% include "layout/parts/menu.html.twig" %}
-        {% include "layout/parts/flashbag.html.twig" %}
-        <div class="container index-container default-color">
-            <div class="row">
-                <div class="col-md-12">
-                    {% block single_content %}
-                    {% endblock single_content %}
+    <section class="content">
+        <div class="container jumbotron">
+            <h1 class="display-3">{{ block("title") }}</h1>
+            <p class="lead">{% block description %}{% endblock %}</p>
+        </div>
+
+        {% set _pre_content = block('pre_content') %}
+        {% if _pre_content|trim is not empty %}
+            <div class="container card">
+                <div class="card-body">
+                    {% block pre_content %}
+                    {% endblock pre_content %}
                 </div>
+            </div>
+        {% endif %}
+
+        <div class="container card">
+            <div class="card-body">
+                {% block single_content %}
+                {% endblock single_content %}
             </div>
         </div>
     </section>

@@ -1,15 +1,12 @@
-#name
 trait:
-  name: Addresse
+  name: 'Adresse'
 
-#properties
-address: Adresse
-street: Strasse
-street_nr: Hausnummer
-address_line: Adresszeile 2 (freiwillig)
-postal_code: Postleitzahl
-city: Stadt
-country: Land
+address: 'Adresse'
+street: 'Strasse'
+street_nr: 'Hausnummer'
+address_line: 'Adresszeile 2'
+postal_code: 'Postleitzahl'
+city: 'Stadt'
+country: 'Land'
 
-#methods
-address_lines: Adresse
+address_lines: 'Adresse'

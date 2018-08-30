@@ -11,82 +11,17 @@
 
 namespace App\Enum\Base;
 
-use App\Framework\TranslatableObject;
-use App\Helper\NamingHelper;
 use ReflectionClass;
+use Symfony\Component\Translation\TranslatorInterface;
 
-abstract class BaseEnum extends TranslatableObject
+abstract class BaseEnum
 {
-    /**
-     * generates an array to be used in form fields.
-     *
-     * @return array
-     */
-    protected function getChoicesForBuilderInternal()
-    {
-        $reflection = new ReflectionClass(get_class($this));
-        $choices = $reflection->getConstants();
-
-        $res = [];
-        foreach ($choices as $name => $value) {
-            $res[NamingHelper::constantToTranslation($name)] = $value;
-        }
-
-        return ['choices' => $res, 'choice_translation_domain' => $this->getTranslationDomain()];
-    }
-
-    /**
-     * translate enum value.
-     *
-     * @param $enumValue
-     *
-     * @return bool|string
-     */
-    protected function getTranslationInternal($enumValue)
-    {
-        $reflection = new ReflectionClass(get_class($this));
-        $choices = $reflection->getConstants();
-
-        foreach ($choices as $name => $value) {
-            if ($value === $enumValue) {
-                return NamingHelper::constantToTranslation($name);
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * translate enum value.
-     *
-     * @param $enumValue
-     *
-     * @return array
-     */
-    protected function getTranslationForBuilderInternal($enumValue)
-    {
-        $trans = $this->getTranslationInternal($enumValue);
-        if (false === $trans) {
-            return ['translation_domain' => 'common_error', 'label' => 'enum.invalid_constant'];
-        }
-
-        return ['translation_domain' => $this->getTranslationDomain(), 'label' => $trans];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTranslationDomainPrefix()
-    {
-        return 'enum';
-    }
-
     /**
      * returns an array fit to be used by the ChoiceType.
      *
      * @return array
      */
-    public static function getChoicesForBuilder()
+    public static function getBuilderArguments()
     {
         $elem = new static();
 
@@ -94,30 +29,115 @@ abstract class BaseEnum extends TranslatableObject
     }
 
     /**
-     * translate enum value.
+     * returns a translation string for the passed enum value.
      *
      * @param $enumValue
+     * @param TranslatorInterface $translator
      *
-     * @return array
+     * @return string
      */
-    public static function getTranslationForBuilder($enumValue)
+    public static function getTranslation($enumValue, TranslatorInterface $translator)
     {
         $elem = new static();
 
-        return $elem->getTranslationForBuilderInternal($enumValue);
+        return $elem->getTranslationInternal($enumValue, $translator);
     }
 
     /**
-     * translate enum value.
+     * returns a translation string for the passed enum value.
      *
      * @param $enumValue
      *
      * @return string
      */
-    public static function getTranslation($enumValue)
+    public static function getText($enumValue)
     {
         $elem = new static();
 
-        return $elem->getTranslationInternal($enumValue);
+        return $elem->getTextInternal($enumValue);
+    }
+
+    /**
+     * makes from camelCase => camel_case.
+     *
+     * @param $camelCase
+     *
+     * @return string
+     */
+    private static function camelCaseToTranslation($camelCase)
+    {
+        return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $camelCase));
+    }
+
+    /**
+     * generates an array to be used in form fields.
+     *
+     * @return array
+     */
+    private function getChoicesForBuilderInternal()
+    {
+        try {
+            $res = [];
+            $reflection = new ReflectionClass(\get_class($this));
+            $choices = $reflection->getConstants();
+
+            foreach ($choices as $name => $value) {
+                $res[mb_strtolower($name)] = $value;
+            }
+            $transDomain = 'enum_'.$this->camelCaseToTranslation($reflection->getShortName());
+
+            return ['translation_domain' => $transDomain, 'label' => 'enum.name', 'choices' => $res, 'choice_translation_domain' => $transDomain];
+        } catch (\ReflectionException $e) {
+        }
+
+        return [];
+    }
+
+    /**
+     * returns a translation string for the passed enum value.
+     *
+     * @param $enumValue
+     * @param TranslatorInterface $translator
+     *
+     * @return bool|string
+     */
+    private function getTranslationInternal($enumValue, TranslatorInterface $translator)
+    {
+        try {
+            $reflection = new ReflectionClass(\get_class($this));
+
+            return $translator->trans($this->getTextInternal($enumValue, $reflection), [], 'enum_'.$this->camelCaseToTranslation($reflection->getShortName()));
+        } catch (\ReflectionException $e) {
+        }
+
+        return '';
+    }
+
+    /**
+     * returns a translation string for the passed enum value.
+     *
+     * @param $enumValue
+     * @param ReflectionClass $reflection
+     *
+     * @return bool|string
+     */
+    private function getTextInternal($enumValue, $reflection = null)
+    {
+        try {
+            if (null === $reflection) {
+                $reflection = new ReflectionClass(\get_class($this));
+            }
+
+            $choices = $reflection->getConstants();
+
+            foreach ($choices as $name => $value) {
+                if ($value === $enumValue) {
+                    return mb_strtolower($name);
+                }
+            }
+        } catch (\ReflectionException $e) {
+        }
+
+        return '';
     }
 }

@@ -12,349 +12,411 @@
 namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
+use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
-use App\Enum\OfferStatus;
+use App\Enum\AuthorizationStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An EventOffer can be accepted or declined, and allows one Person to propose one or more Events to change.
  *
- * @ORM\Table
- * @ORM\Entity(repositoryClass="App\Repository\EventOfferRepository")
+ * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
 class EventOffer extends BaseEntity
 {
     use IdTrait;
+    use ChangeAwareTrait;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private $message;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
      */
-    private $createDateTime;
+    private $isResolved = false;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var Event[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Event")
+     * @ORM\JoinTable(name="event_offer_events")
      */
-    private $openDateTime;
+    private $eventsWhichChangeOwner;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var Doctor
+     *
+     * @ORM\ManyToOne(targetEntity="Doctor")
      */
-    private $closeDateTime;
+    private $receiver;
 
     /**
+     * @var Clinic
+     *
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     */
+    private $receiverClinic;
+
+    /**
+     * @var Doctor
+     *
+     * @ORM\ManyToOne(targetEntity="Doctor")
+     */
+    private $sender;
+
+    /**
+     * @var Clinic
+     *
+     * @ORM\ManyToOne(targetEntity="Clinic")
+     */
+    private $senderClinic;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(type="integer")
      */
-    private $status = OfferStatus::CREATING;
+    private $receiverAuthorizationStatus = AuthorizationStatus::PENDING;
 
     /**
-     * @var Member
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\Column(type="integer")
      */
-    private $offeredByMember;
-
-    /**
-     * @var Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person")
-     */
-    private $offeredByPerson;
-
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     */
-    private $offeredToMember;
-
-    /**
-     * @var Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person")
-     */
-    private $offeredToPerson;
-
-    /**
-     * @var EventOfferEntry[]
-     *
-     * @ORM\OneToMany(targetEntity="EventOfferEntry", mappedBy="eventOffer")
-     */
-    private $eventOfferEntries;
+    private $senderAuthorizationStatus = AuthorizationStatus::ACCEPTED;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->eventOfferEntries = new ArrayCollection();
+        $this->eventsWhichChangeOwner = new ArrayCollection();
     }
 
     /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return EventOffer
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description.
-     *
      * @return string
      */
-    public function getDescription()
+    public function getMessage(): string
     {
-        return $this->description;
+        return $this->message;
     }
 
     /**
-     * Set openDateTime.
-     *
-     * @param \DateTime $createDateTime
-     *
-     * @return EventOffer
+     * @param string $message
      */
-    public function setCreateDateTime($createDateTime)
+    public function setMessage(string $message): void
     {
-        $this->createDateTime = $createDateTime;
-
-        return $this;
+        $this->message = $message;
     }
 
     /**
-     * Get openDateTime.
-     *
-     * @return \DateTime
-     */
-    public function getCreateDateTime()
-    {
-        return $this->createDateTime;
-    }
-
-    /**
-     * Set closeDateTime.
-     *
-     * @param \DateTime $openDateTime
-     *
-     * @return EventOffer
-     */
-    public function setOpenDateTime($openDateTime)
-    {
-        $this->openDateTime = $openDateTime;
-
-        return $this;
-    }
-
-    /**
-     * Get closeDateTime.
-     *
-     * @return \DateTime
-     */
-    public function getOpenDateTime()
-    {
-        return $this->openDateTime;
-    }
-
-    /**
-     * Set status.
-     *
-     * @param int $status
-     *
-     * @return EventOffer
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get status.
-     *
      * @return int
      */
-    public function getStatus()
+    public function getIsResolved(): bool
     {
-        return $this->status;
+        return $this->isResolved;
     }
 
     /**
-     * Get status.
-     *
-     * @return int
+     * @return Event[]|ArrayCollection
      */
-    public function getStatusText()
+    public function getEventsWhichChangeOwner()
     {
-        return OfferStatus::getTranslation($this->status);
+        return $this->eventsWhichChangeOwner;
     }
 
     /**
-     * Set offeredByMember.
-     *
-     * @param Member $offeredByMember
-     *
-     * @return EventOffer
+     * @return Doctor
      */
-    public function setOfferedByMember(Member $offeredByMember = null)
+    public function getReceiver(): Doctor
     {
-        $this->offeredByMember = $offeredByMember;
-
-        return $this;
+        return $this->receiver;
     }
 
     /**
-     * Get offeredByMember.
-     *
-     * @return Member
+     * @param Doctor $receiver
      */
-    public function getOfferedByMember()
+    public function setReceiver(Doctor $receiver): void
     {
-        return $this->offeredByMember;
+        $this->receiver = $receiver;
     }
 
     /**
-     * Set offeredByPerson.
-     *
-     * @param Person $offeredByPerson
-     *
-     * @return EventOffer
+     * @return Doctor
      */
-    public function setOfferedByPerson(Person $offeredByPerson = null)
+    public function getSender(): Doctor
     {
-        $this->offeredByPerson = $offeredByPerson;
-
-        return $this;
+        return $this->sender;
     }
 
     /**
-     * Get offeredByPerson.
-     *
-     * @return Person
+     * @param Doctor $sender
      */
-    public function getOfferedByPerson()
+    public function setSender(Doctor $sender): void
     {
-        return $this->offeredByPerson;
+        $this->sender = $sender;
     }
 
     /**
-     * Set offeredToMember.
-     *
-     * @param Member $offeredToMember
-     *
-     * @return EventOffer
+     * @return Clinic
      */
-    public function setOfferedToMember(Member $offeredToMember = null)
+    public function getReceiverClinic(): Clinic
     {
-        $this->offeredToMember = $offeredToMember;
-
-        return $this;
+        return $this->receiverClinic;
     }
 
     /**
-     * Get offeredToMember.
-     *
-     * @return Member
+     * @param Clinic $receiverClinic
      */
-    public function getOfferedToMember()
+    public function setReceiverClinic(Clinic $receiverClinic): void
     {
-        return $this->offeredToMember;
+        $this->receiverClinic = $receiverClinic;
     }
 
     /**
-     * Set offeredToPerson.
-     *
-     * @param Person $offeredToPerson
-     *
-     * @return EventOffer
+     * @return Clinic
      */
-    public function setOfferedToPerson(Person $offeredToPerson = null)
+    public function getSenderClinic(): Clinic
     {
-        $this->offeredToPerson = $offeredToPerson;
-
-        return $this;
+        return $this->senderClinic;
     }
 
     /**
-     * Get offeredToPerson.
-     *
-     * @return Person
+     * @param Clinic $senderClinic
      */
-    public function getOfferedToPerson()
+    public function setSenderClinic(Clinic $senderClinic): void
     {
-        return $this->offeredToPerson;
+        $this->senderClinic = $senderClinic;
     }
 
     /**
-     * Add eventOfferEntry.
+     * @param Doctor $doctor
      *
-     * @param EventOfferEntry $eventOfferEntry
-     *
-     * @return EventOffer
+     * @return bool
      */
-    public function addEventOfferEntry(EventOfferEntry $eventOfferEntry)
+    public function accept(Doctor $doctor)
     {
-        $this->eventOfferEntries[] = $eventOfferEntry;
-
-        return $this;
+        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::DECLINED, AuthorizationStatus::WITHDRAWN], AuthorizationStatus::ACCEPTED);
     }
 
     /**
-     * Remove eventOfferEntry.
+     * @param Doctor $doctor
      *
-     * @param EventOfferEntry $eventOfferEntry
+     * @return bool
      */
-    public function removeEventOfferEntry(EventOfferEntry $eventOfferEntry)
+    public function decline(Doctor $doctor)
     {
-        $this->eventOfferEntries->removeElement($eventOfferEntry);
+        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING], AuthorizationStatus::DECLINED);
     }
 
     /**
-     * Get eventOfferEntries.
+     * @param Doctor $doctor
      *
-     * @return \Doctrine\Common\Collections\Collection|EventOfferEntry[]
+     * @return bool
      */
-    public function getEventOfferEntries()
+    public function withdraw(Doctor $doctor)
     {
-        return $this->eventOfferEntries;
+        return $this->changeStatus($doctor, [AuthorizationStatus::ACCEPTED], AuthorizationStatus::WITHDRAWN);
     }
 
     /**
-     * returns a string representation of this entity.
+     * @param Doctor $doctor
      *
-     * @return string
+     * @return bool
      */
-    public function getFullIdentifier()
+    public function acknowledge(Doctor $doctor)
     {
-        return $this->getDescription();
+        return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED, AuthorizationStatus::DECLINED, AuthorizationStatus::WITHDRAWN], AuthorizationStatus::ACKNOWLEDGED);
+    }
+
+    const ACCEPT_DECLINE = 1;
+    const ACK_ACCEPTED = 2;
+    const ACK_DECLINED = 3;
+    const WITHDRAW = 4;
+    const ACK_WITHDRAWN = 5;
+    const ACK_INVALID = 6;
+    const NONE = 7;
+
+    public function getPendingAction(Doctor $doctor)
+    {
+        if ($this->getIsResolved() || $this->getEventsWhichChangeOwner()->isEmpty()) {
+            return self::NONE;
+        }
+
+        $senderStatus = $this->senderAuthorizationStatus;
+        $receiverStatus = $this->receiverAuthorizationStatus;
+
+        if ($doctor === $this->receiver) {
+            if (!$this->isValid()) {
+                if (AuthorizationStatus::ACKNOWLEDGED !== $this->receiverAuthorizationStatus) {
+                    return self::ACK_INVALID;
+                }
+
+                return self::NONE;
+            }
+
+            //no response yet
+            if (AuthorizationStatus::PENDING === $receiverStatus) {
+                if (AuthorizationStatus::ACCEPTED === $senderStatus) {
+                    return self::ACCEPT_DECLINE;
+                } elseif (AuthorizationStatus::WITHDRAWN === $senderStatus) {
+                    return self::ACK_WITHDRAWN;
+                }
+            }
+        } elseif ($doctor === $this->sender) {
+            if (!$this->isValid()) {
+                if (AuthorizationStatus::ACKNOWLEDGED !== $this->senderAuthorizationStatus) {
+                    return self::ACK_INVALID;
+                }
+
+                return self::NONE;
+            }
+
+            //withdraw/ack
+            if (AuthorizationStatus::ACCEPTED === $senderStatus) {
+                if (AuthorizationStatus::PENDING === $receiverStatus) {
+                    return self::WITHDRAW;
+                } elseif (AuthorizationStatus::ACCEPTED === $receiverStatus) {
+                    return self::ACK_ACCEPTED;
+                } elseif (AuthorizationStatus::DECLINED === $receiverStatus) {
+                    return self::ACK_DECLINED;
+                }
+            }
+        }
+
+        return self::NONE;
+    }
+
+    public function tryMarkAsResolved()
+    {
+        if (self::NONE === $this->getPendingAction($this->receiver) &&
+            self::NONE === $this->getPendingAction($this->sender)) {
+            $this->isResolved = true;
+        }
+
+        return $this->isResolved;
     }
 
     /**
-     * @return \DateTime
+     * @param Doctor $doctor
+     * @param int[]  $sourceStates
+     * @param int    $targetState
+     *
+     * @return bool
      */
-    public function getCloseDateTime()
+    private function changeStatus(Doctor $doctor, $sourceStates, $targetState)
     {
-        return $this->closeDateTime;
+        if ($this->isResolved) {
+            return false;
+        }
+
+        $sourceStates = array_merge($sourceStates, [$targetState]);
+        if ($doctor === $this->getReceiver() && $doctor->getClinics()->contains($this->getReceiverClinic()) && \in_array($this->receiverAuthorizationStatus, $sourceStates, true)) {
+            $this->receiverAuthorizationStatus = $targetState;
+
+            return true;
+        } elseif ($doctor === $this->getSender() && $doctor->getClinics()->contains($this->getSenderClinic()) && \in_array($this->senderAuthorizationStatus, $sourceStates, true)) {
+            $this->senderAuthorizationStatus = $targetState;
+
+            return true;
+        }
+
+        //close if
+
+        return false;
+    }
+
+    private $cacheSenderOwned = null;
+    private $cacheReceiverOwned = null;
+    private $cacheIsValid = null;
+
+    /**
+     * orders the events & checks if trade is valid.
+     */
+    private function refreshCache()
+    {
+        if (null === $this->cacheIsValid) {
+            $this->cacheReceiverOwned = [];
+            $this->cacheSenderOwned = [];
+            $this->cacheIsValid = true;
+
+            //check events have correct owner
+            foreach ($this->getEventsWhichChangeOwner() as $item) {
+                if ($this->getReceiverClinic() === $item->getClinic() &&
+                    (null === $item->getDoctor() || $item->getDoctor() === $this->getReceiver())) {
+                    $this->cacheReceiverOwned[] = $item;
+                } elseif ($this->getSenderClinic() === $item->getClinic() &&
+                    (null === $item->getDoctor() || $item->getDoctor() === $this->getSender())) {
+                    $this->cacheSenderOwned[] = $item;
+                } else {
+                    $this->cacheIsValid = false;
+                }
+
+                if ($item->getClinic()->isDeleted()) {
+                    $this->cacheIsValid = false;
+                }
+            }
+
+            //check doctors not removed
+            if ($this->getReceiver()->isDeleted() || $this->getSender()->isDeleted()) {
+                $this->cacheIsValid = false;
+            }
+
+            //check clinics not removed
+            if ($this->getReceiverClinic()->isDeleted() || $this->getSenderClinic()->isDeleted()) {
+                $this->cacheIsValid = false;
+            }
+
+            //check doctors still in clinic
+            if (!$this->getReceiver()->getClinics()->contains($this->getReceiverClinic()) || !$this->getSender()->getClinics()->contains($this->getSenderClinic())) {
+                $this->cacheIsValid = false;
+            }
+        }
     }
 
     /**
-     * @param \DateTime $closeDateTime
+     * @return bool
      */
-    public function setCloseDateTime($closeDateTime)
+    public function isValid()
     {
-        $this->closeDateTime = $closeDateTime;
+        $this->refreshCache();
+
+        return $this->cacheIsValid;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canExecute()
+    {
+        return AuthorizationStatus::ACCEPTED === $this->receiverAuthorizationStatus && AuthorizationStatus::ACCEPTED === $this->senderAuthorizationStatus;
+    }
+
+    /**
+     * @return Event[]
+     */
+    public function getSenderOwnedEvents()
+    {
+        $this->refreshCache();
+
+        return $this->cacheSenderOwned;
+    }
+
+    /**
+     * @return Event[]
+     */
+    public function getReceiverOwnedEvents()
+    {
+        $this->refreshCache();
+
+        return $this->cacheReceiverOwned;
     }
 }

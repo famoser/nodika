@@ -1,0 +1,12 @@
+index:
+  title: 'Profil'
+  description: 'Profil & Passwort'
+  change_password: 'Passwort ändern'
+  do_change_password: 'Neues Passwort setzen'
+  update: 'Daten ändern'
+  hi: 'Hallo %name%'
+  member_of_clinic: 'Sie sind Teil der Praxis %clinic%.'
+  member_of_clinics: 'Sie sind Teil folgender Praxen: %clinics%.'
+  no_clinics: 'Sie sind nicht Teil einer Praxis.'
+  success:
+    password_changed: 'Ihr Passwort wurde erfolgreich geändert.'

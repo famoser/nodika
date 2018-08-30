@@ -1,0 +1,21 @@
+new:
+  title: 'Neuer Termin'
+  description: 'Fügen Sie einen neuen Termin hinzu'
+  help: 'Generierung / Import Funktionen'
+  help_description: 'Benützen Sie die umfangreichen Import- und Generierungsoptionen um Zeit zu sparen'
+
+edit:
+  title: 'Termin bearbeiten'
+  description: 'Editieren Sie den Termin'
+
+remove:
+  title: 'Termin entfernen'
+  description: 'Löschen Sie den Termin und alle damit verbundenen Daten'
+
+history:
+  title: 'Änderungen'
+  description: 'Änderungen an diesem Termin ansehen'
+
+toggle_confirmed:
+  title: 'Bestätigt ändern'
+  change: 'ändern'
