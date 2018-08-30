@@ -82,6 +82,8 @@ class TransferDataCommand extends Command
 
         $output->writeln('importing events & event past');
         $this->importEvents();
+
+        $output->writeln('db migration done. Directly in the db, set the administrators & the ones who receive admin mail.');
     }
 
     /**

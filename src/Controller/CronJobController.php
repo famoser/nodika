@@ -12,6 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\Setting;
 use App\Model\Event\SearchModel;
@@ -101,8 +102,8 @@ class CronJobController extends BaseDoctrineController
         $events = $eventRepo->search($eventSearchModel);
 
         //get admin emails
-        $userRepo = $this->getDoctrine()->getRepository('Doctor');
-        $admins = $userRepo->findBy(['isAdministrator' => true]);
+        $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
+        $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
         $adminEmails = [];
         foreach ($admins as $admin) {
             $adminEmails[] = $admin->getEmail();

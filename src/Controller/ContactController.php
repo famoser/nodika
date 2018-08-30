@@ -62,7 +62,7 @@ class ContactController extends BaseFormController
             $request,
             function () use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm) {
                 $userRepo = $this->getDoctrine()->getRepository('Doctor');
-                $admins = $userRepo->findBy(['isAdministrator' => true]);
+                $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
                 foreach ($admins as $admin) {
                     /* @var FormInterface $form */
                     $emailService->sendTextEmail(

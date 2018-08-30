@@ -37,6 +37,7 @@ class LoadDoctor extends BaseFixture
         $admin->setPlainPassword('asdf');
         $admin->setPassword();
         $admin->setIsAdministrator(true);
+        $admin->setReceivesAdministratorMail(true);
         $manager->persist($admin);
 
         //create doctor which is invited
