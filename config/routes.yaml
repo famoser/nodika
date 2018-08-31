@@ -1,13 +1,13 @@
 app:
-    resource: "../src/Controller/"
-    type:     annotation
+  resource: "../src/Controller/"
+  type:     annotation
 
 app_administration:
-    resource: "../src/Controller/Administration/"
-    type:     annotation
-    prefix:   /administration
+  resource: "../src/Controller/Administration/"
+  type:     annotation
+  prefix:   /administration
 
 app_api:
-    resource: "../src/Controller/Api/"
-    type:     annotation
-    prefix:   /api
+  resource: "../src/Controller/Api/"
+  type:     annotation
+  prefix:   /api
