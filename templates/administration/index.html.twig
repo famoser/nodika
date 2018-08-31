@@ -7,7 +7,7 @@
 {% block description %}{{ "index.description"|trans }}{% endblock %}
 
 {% macro quick_link(name, description, link) %}
-    <div class="card w-25" href="{{ path('assign_index') }}">
+    <div class="card w-25" href="{{ link }}">
         <div class="card-body">
             <p>
                 {{ description }}
