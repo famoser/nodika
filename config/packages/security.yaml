@@ -22,7 +22,6 @@ security:
         # main firewall for logged in users
         main:
             pattern:   ^/
-            anonymous: ~
             provider: doctor_provider
             form_login:
                 login_path: login
@@ -46,7 +45,6 @@ security:
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/invite, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #allow cron jobs / debugging routes
         - { path: ^/cron, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -58,4 +56,5 @@ security:
         - { path: ^/email, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         #level1: user
+        - { path: ^/administration, role: ROLE_ADMIN }
         - { path: ^/, role: ROLE_USER }

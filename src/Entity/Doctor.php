@@ -104,6 +104,10 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
      */
     public function getRoles()
     {
+        if ($this->isAdministrator()) {
+            return ['ROLE_ADMIN'];
+        }
+
         return ['ROLE_USER'];
     }
 
