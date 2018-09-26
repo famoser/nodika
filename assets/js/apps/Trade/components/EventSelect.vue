@@ -1,21 +1,8 @@
 <template>
     <div>
-        <div class="row pb-4">
-            <div class="col-md-12">
-                <a href="#" class="card"
-                   v-on:click.prevent="owner.noneSelected = !owner.noneSelected"
-                   v-bind:class="{ 'border-primary' : owner.noneSelected }">
-                    <div class="card-body">
-                        <p>{{ $t('actions.select_no_events') }} </p>
-                    </div>
-                </a>
-            </div>
-        </div>
-
         <EventGrid :events="owner.events"
                    :selected-events="owner.selectedEvents"
-                   @event-selected="toggleMembership(owner.selectedEvents, arguments[0])"
-                   v-if="!owner.noneSelected"/>
+                   @event-selected="toggleMembership(owner.selectedEvents, arguments[0])"/>
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 index:
   title: 'Termine tauschen'
-  description: 'Tauschen Sie Termine mit einem Tauschpartner ab.'
+  description: 'Tauschen Sie Termine ab.'
   success:
     created_trade_offer: "Die Tauschanfrage wurde erstellt, und der Empfänger hat eine E-Mail erhalten."
   danger:

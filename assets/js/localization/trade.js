@@ -1,9 +1,9 @@
 export default {
     de: {
         actions: {
-            choose_sender_events: "Meine Termine auswählen",
+            choose_sender_events: "Aus den eigenen Terminen auswählen",
             choose_sender_clinic: "Welcher Praxis sollen die Tauschtermine zugeordnet werden?",
-            choose_receiver_events: "Tauschtermine auswählen",
+            choose_receiver_events: "Aus den Terminen der anderen Praxen auswählen",
             create_offer: "Tauschanfrage stellen",
             select_no_events: "Keine Termine auswählen",
         },
@@ -12,7 +12,7 @@ export default {
             receiver_events: "Sie erhalten die folgenden Termine:",
             receiver: "Sie tauschen mit:",
             info: {
-                not_fully_defined: "Treffen Sie eine Terminauswahl"
+                no_evens_selected: "Wählen Sie mindestens ein Termin aus"
             },
             danger: {
                 no_single_receiver_responsible: "Die gewählten Tauschtermine können nicht einem einzigen Verantwortlichen zugeordnet werden.",
