@@ -128,21 +128,21 @@ class EventGeneration extends BaseEntity
     /**
      * @var EventGenerationDateException[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationDateException", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationDateException", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
      */
     private $dateExceptions;
 
     /**
      * @var EventGenerationTargetDoctor[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventGenerationTargetDoctor", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="EventGenerationTargetDoctor", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
      */
     private $doctors;
 
     /**
      * @var EventGenerationTargetClinic[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventGenerationTargetClinic", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="EventGenerationTargetClinic", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
      */
     private $clinics;
 

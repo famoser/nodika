@@ -11,15 +11,21 @@
 
 namespace App\Controller\Administration;
 
-use App\Controller\Administration\Base\BaseController;
+use App\Controller\Administration\Base\BaseApiController;
+use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
+use App\Entity\EventGenerationDateException;
+use App\Entity\EventGenerationTargetClinic;
+use App\Entity\EventGenerationTargetDoctor;
 use App\Entity\EventPast;
 use App\Entity\EventTag;
 use App\Enum\EventChangeType;
 use App\Enum\EventTagType;
 use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
+use App\Service\Interfaces\EventGenerationServiceInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -31,7 +37,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * @Route("/events")
  */
-class EventController extends BaseController
+class EventController extends BaseApiController
 {
     /**
      * @Route("/new", name="administration_event_new")
@@ -268,6 +274,167 @@ class EventController extends BaseController
     public function generationAction(EventGeneration $generation)
     {
         return $this->render('administration/event/generation.html.twig', ['generation' => $generation]);
+    }
+
+    /**
+     * @Route("/generation/{generation}/get", name="administration_event_generation_get")
+     *
+     * @param EventGeneration $generation
+     *
+     * @return Response
+     */
+    public function generationGetAction(EventGeneration $generation)
+    {
+        return $this->returnGeneration($generation);
+    }
+
+    /**
+     * @Route("/generation/{generation}/update", name="administration_event_generation_update")
+     *
+     * @param Request         $request
+     * @param EventGeneration $generation
+     *
+     * @return Response
+     */
+    public function generationUpdateAction(Request $request, EventGeneration $generation)
+    {
+        $content = json_decode($request->getContent(), true);
+        $manager = $this->getDoctrine()->getManager();
+
+        //simple props first
+        $allowedProps = [
+            'name' => 1, 'startCronExpression' => 1, 'endCronExpression' => 1,
+            'startDateTime' => 2, 'endDateTime' => 2,
+            'differentiateByEventType' => 3, 'mindPreviousEvents' => 3,
+            'weekdayWeight' => 4, 'saturdayWeight' => 4, 'sundayWeight' => 4, 'holydayWeight' => 4,
+        ];
+        foreach ($allowedProps as $prop => $valueType) {
+            if (array_key_exists($prop, $content)) {
+                //convert type
+                $value = $content[$prop];
+                switch ($valueType) {
+                    case 2:
+                        $value = new \DateTime($value);
+                        break;
+                    case 3:
+                        $value = true === $value || 'true' === $value;
+                        break;
+                    case 4:
+                        $value = (int) $value;
+                        break;
+                    default:
+                        break;
+                }
+                $setterName = 'set'.mb_strtoupper(mb_substr($prop, 0, 1)).mb_substr($prop, 1);
+                $generation->$setterName($value);
+            }
+        }
+
+        //refresh dependencies
+        if (array_key_exists('conflictEventTagIds', $content)) {
+            $eventTagIds = $content['conflictEventTagIds'];
+            $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
+            $generation->getConflictEventTags()->clear();
+            foreach ($eventTags as $eventTag) {
+                $generation->getConflictEventTags()->add($eventTag);
+            }
+        }
+        if (array_key_exists('assignEventTagIds', $content)) {
+            $eventTagIds = $content['assignEventTagIds'];
+            $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
+            $generation->getAssignEventTags()->clear();
+            foreach ($eventTags as $eventTag) {
+                $generation->getAssignEventTags()->add($eventTag);
+            }
+        }
+        if (array_key_exists('dateExceptions', $content)) {
+            $dateExceptions = $content['dateExceptions'];
+            $generation->getDateExceptions()->clear();
+            foreach ($dateExceptions as $dateException) {
+                $exception = new EventGenerationDateException();
+                $exception->setStartDateTime(new  \DateTime($dateException['startDateTime']));
+                $exception->setEndDateTime(new  \DateTime($dateException['endDateTime']));
+                $exception->setEventGeneration($generation);
+                $exception->setEventType($dateException['eventType']);
+                $generation->getDateExceptions()->add($exception);
+                $manager->persist($exception);
+            }
+        }
+        if (array_key_exists('targetClinics', $content)) {
+            //get key/value of clinics
+            $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
+            $clinicById = [];
+            foreach ($clinics as $clinic) {
+                $clinicById[$clinic->getId()] = $clinic;
+            }
+
+            //create target clinics
+            $targetClinics = $content['targetClinics'];
+            $generation->getClinics()->clear();
+            foreach ($targetClinics as $targetClinicArr) {
+                $targetClinic = new EventGenerationTargetClinic();
+                $targetClinic->setClinic($clinicById[$targetClinicArr['id']]);
+                $targetClinic->setDefaultOrder($targetClinicArr['defaultOrder']);
+                $targetClinic->setWeight($targetClinicArr['weight']);
+                $targetClinic->setEventGeneration($generation);
+                $generation->getClinics()->add($targetClinic);
+                $manager->persist($targetClinic);
+            }
+        }
+        if (array_key_exists('targetDoctors', $content)) {
+            //get key/value of doctors
+            $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
+            $doctorById = [];
+            foreach ($doctors as $doctor) {
+                $doctorById[$doctor->getId()] = $doctor;
+            }
+
+            //create target doctors
+            $targetDoctors = $content['targetDoctors'];
+            $generation->getDoctors()->clear();
+            foreach ($targetDoctors as $targetDoctorArr) {
+                $targetDoctor = new EventGenerationTargetDoctor();
+                $targetDoctor->setDoctor($doctorById[$targetDoctorArr['id']]);
+                $targetDoctor->setDefaultOrder($targetDoctorArr['defaultOrder']);
+                $targetDoctor->setWeight($targetDoctorArr['weight']);
+                $targetDoctor->setEventGeneration($generation);
+                $generation->getDoctors()->add($targetDoctor);
+                $manager->persist($targetDoctor);
+            }
+        }
+
+        $manager->persist($generation);
+        $manager->flush();
+
+        return $this->returnOk();
+    }
+
+    /**
+     * @Route("/generation/{generation}/events", name="administration_event_generation_events")
+     *
+     * @param EventGeneration                 $generation
+     * @param EventGenerationServiceInterface $eventGenerationService
+     *
+     * @return Response
+     */
+    public function generateEvents(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
+    {
+        return $this->returnEvents($eventGenerationService->generate($generation));
+    }
+
+    /**
+     * @Route("/generation/{generation}/apply", name="administration_event_generation_apply")
+     *
+     * @param EventGeneration                 $generation
+     * @param EventGenerationServiceInterface $eventGenerationService
+     *
+     * @return Response
+     */
+    public function generateApply(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
+    {
+        $eventGenerationService->persistEvents($generation, $this->getUser());
+
+        return $this->returnOk();
     }
 
     /**
