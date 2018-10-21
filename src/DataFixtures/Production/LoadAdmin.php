@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Production;
 
 use App\DataFixtures\Base\BaseFixture;
-use App\Entity\Setting;
+use App\DataFixtures\LoadDoctor;
+use App\Entity\Doctor;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadSetting extends BaseFixture
+class LoadAdmin extends LoadDoctor
 {
     const ORDER = 1;
 
@@ -23,20 +24,24 @@ class LoadSetting extends BaseFixture
      * Load data fixtures with the passed EntityManager.
      *
      * @param ObjectManager $manager
+     *
+     * @throws \Exception
      */
     public function load(ObjectManager $manager)
     {
-        $setting = new Setting();
-        $setting->setCanConfirmDaysAdvance(30);
-        $setting->setMustConfirmDaysAdvance(3);
-        $setting->setSendRemainderDaysInterval(1);
-        $manager->persist($setting);
+        //create admin
+        $admin = $this->getRandomInstance();
+        $admin->setEmail('info@nodika.ch');
+        $admin->setPlainPassword('asdf');
+        $admin->setPassword();
+        $admin->setIsAdministrator(true);
+        $admin->setReceivesAdministratorMail(true);
+        $manager->persist($admin);
+
         $manager->flush();
     }
 
     /**
-     * Get the order of this fixture.
-     *
      * @return int
      */
     public function getOrder()

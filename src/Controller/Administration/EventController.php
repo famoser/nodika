@@ -13,8 +13,11 @@ namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Event;
+use App\Entity\EventGeneration;
 use App\Entity\EventPast;
+use App\Entity\EventTag;
 use App\Enum\EventChangeType;
+use App\Enum\EventTagType;
 use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -69,7 +72,7 @@ class EventController extends BaseController
      * @Route("/{event}/edit", name="administration_event_edit")
      *
      * @param Request $request
-     * @param Event   $event
+     * @param Event $event
      *
      * @return Response
      */
@@ -100,19 +103,25 @@ class EventController extends BaseController
         return $this->render('administration/event/edit.html.twig', $arr);
     }
 
+    /**
+     * @param Event $event
+     * @param TranslatorInterface $translator
+     * @return bool
+     */
     private function ensureValidDoctorClinicPair(Event $event, TranslatorInterface $translator)
     {
         if (null === $event->getDoctor() || $event->getDoctor()->getClinics()->contains($event->getClinic())) {
             return true;
         }
         $this->displayError($translator->trans('edit.error.doctor_not_part_of_clinic', [], 'administration_event'));
+        return false;
     }
 
     /**
      * @Route("/{event}/remove", name="administration_event_remove")
      *
      * @param Request $request
-     * @param Event   $event
+     * @param Event $event
      *
      * @return Response
      */
@@ -158,6 +167,78 @@ class EventController extends BaseController
         $arr['event'] = $event;
 
         return $this->render('administration/event/history.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/generations", name="administration_event_generations")
+     *
+     * @return Response
+     */
+    public function generateAction()
+    {
+        $generations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
+        $arr['generations'] = $generations;
+
+        return $this->render(':administration/event:generations.html.twig', $arr);
+    }
+
+    /**
+     * @Route("/generation/new/{tag}", name="administration_event_generation_new")
+     *
+     * @param EventTag $tag
+     * @return Response
+     * @throws \Exception
+     */
+    public function generateNewAction(EventTag $tag, TranslatorInterface $translator)
+    {
+        $generation = new EventGeneration();
+        //set "sensible" default name
+        $generation->setName(
+            $translator->trans("entity.name", [], "entity_event_generation") . " " .
+            EventTagType::getTranslation($tag->getTagType(), $translator) . " "
+        );
+
+        //set settings depending on chosen template
+        if ($tag->getTagType() == EventTagType::ACTIVE_SERVICE) {
+            $generation->setDifferentiateByEventType(true);
+        } else if ($tag->getTagType() === EventTagType::BACKUP_SERVICE) {
+            $generation->setDifferentiateByEventType(false);
+        }
+
+        //set other defaults
+        $generation->setStartDateTime(new \DateTime());
+        $generation->setEndDateTime((new \DateTime())->add(new \DateInterval("P1Y")));
+
+        //get last generation of that type & "smartly" transfer properties
+        $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy(["assignEventTags" => [$tag]], ["lastChangedAt" => "DESC"], 1);
+        if (count($lastGenerations) > 0) {
+            $lastGeneration = $lastGenerations[0];
+
+            $generation->setStartDateTime($lastGeneration->getEndDateTime());
+            $generation->setEndDateTime($lastGeneration->getStartDateTime()->add($lastGeneration->getEndDateTime()->diff($lastGeneration->getStartDateTime())));
+            $generation->setStartCronExpression($lastGeneration->getStartCronExpression());
+            $generation->setEndCronExpression($lastGeneration->getEndCronExpression());
+
+            $generation->setWeekdayWeight($lastGeneration->getWeekdayWeight());
+            $generation->setSaturdayWeight($lastGeneration->getSaturdayWeight());
+            $generation->setSundayWeight($lastGeneration->getSundayWeight());
+            $generation->setHolidayWeight($lastGeneration->getHolidayWeight());
+        }
+
+        // save & start edit
+        $this->fastSave($generation);
+        return $this->redirectToRoute("administration_event_generation", ["generation" => $generation->getId()]);
+    }
+
+    /**
+     * @Route("/generation/{generation}", name="administration_event_generation")
+     *
+     * @param EventGeneration $generation
+     * @return Response
+     */
+    public function generationAction(EventGeneration $generation)
+    {
+        return $this->render('administration/event/generation.html.twig', ["generation" => $generation]);
     }
 
     /**

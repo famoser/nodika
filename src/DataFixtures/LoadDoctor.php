@@ -31,15 +31,6 @@ class LoadDoctor extends BaseFixture
         //load some doctors
         $this->loadSomeRandoms($manager, 30);
 
-        //create admin
-        $admin = $this->getRandomInstance();
-        $admin->setEmail('info@nodika.ch');
-        $admin->setPlainPassword('asdf');
-        $admin->setPassword();
-        $admin->setIsAdministrator(true);
-        $admin->setReceivesAdministratorMail(true);
-        $manager->persist($admin);
-
         //create doctor which is invited
         $invitedUser = $this->getRandomInstance();
         $invitedUser->invite();

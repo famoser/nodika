@@ -12,8 +12,10 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
+use App\DataFixtures\Production\LoadEventTag;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
+use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
 use App\Entity\EventGenerationTargetClinic;
@@ -91,8 +93,9 @@ class LoadGeneration extends BaseFixture
 
         //generate & persist all events
         $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
-        $events = $this->getEventGenerationService()->persist($generation, $admin);
+        $this->getEventGenerationService()->persistEvents($generation, $admin);
 
+        $events = $manager->getRepository(Event::class)->findAll();
         //confirm first 10 events
         for ($i = 0; $i < 10; ++$i) {
             $event = $events[$i];

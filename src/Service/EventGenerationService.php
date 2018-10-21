@@ -521,10 +521,8 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * @param EventGeneration $eventGeneration
      * @param Doctor          $creator
-     *
-     * @return Event[]
      */
-    public function persist(EventGeneration $eventGeneration, Doctor $creator)
+    public function persistEvents(EventGeneration $eventGeneration, Doctor $creator)
     {
         $manager = $this->doctrine->getManager();
 
@@ -544,14 +542,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $manager->persist($event);
         }
 
-        //register change
-        $eventGeneration->setStep(GenerationStep::PERSISTED);
-        $eventGeneration->registerChangeBy($creator);
-        $manager->persist($eventGeneration);
-
         //commit
         $manager->flush();
-
-        return $events;
     }
 }

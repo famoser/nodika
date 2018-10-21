@@ -21,3 +21,10 @@ history:
 toggle_confirmed:
   title: 'Bestätigt ändern'
   change: 'ändern'
+
+generate:
+  title: 'Termine generieren'
+  description: 'Fügen Sie neue Termine hinzu'
+
+generate_new:
+  title: 'Neue Termingenerierung'

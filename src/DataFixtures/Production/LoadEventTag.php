@@ -9,11 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Production;
 
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventTag;
 use App\Enum\EventTagColor;
+use App\Enum\EventTagType;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadEventTag extends BaseFixture
@@ -28,8 +29,8 @@ class LoadEventTag extends BaseFixture
     public function load(ObjectManager $manager)
     {
         $realExamples = [
-            ['Notfalldienst', 'Sie kümmern sich um die Notfälle und nehmen die Anrufe der Notfalldienstnummer entgegen', EventTagColor::BLUE],
-            ['Wochentelefon', 'Sie kümmern sich um das Wochentelefon', EventTagColor::YELLOW],
+            ['Notfalldienst', 'Sie kümmern sich um die Notfälle und nehmen die Anrufe der Notfalldienstnummer entgegen', EventTagColor::BLUE, EventTagType::ACTIVE_SERVICE],
+            ['Wochentelefon', 'Sie kümmern sich um das Wochentelefon', EventTagColor::YELLOW, EventTagType::BACKUP_SERVICE],
         ];
 
         foreach ($realExamples as $realExample) {

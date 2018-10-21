@@ -34,16 +34,6 @@ class EventGeneration extends BaseEntity
     use ChangeAwareTrait;
 
     /**
-     * in average event lengths
-     * so add all event lengths, divide through event count, multiply with $minimalGapBetweenEvents to get the minimal gap between a participant.
-     *
-     * @var float
-     *
-     * @ORM\Column(type="decimal")
-     */
-    private $minimalGapBetweenEvents = 1;
-
-    /**
      * this cron expression specifies when a new event starts
      * https://crontab.guru/.
      *
@@ -68,7 +58,7 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="boolean")
      */
-    private $differentiateByEventType;
+    private $differentiateByEventType = false;
 
     /**
      * @var float
@@ -82,21 +72,21 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="decimal")
      */
-    private $saturdayWeight = 1;
+    private $saturdayWeight = 1.2;
 
     /**
      * @var float
      *
      * @ORM\Column(type="decimal")
      */
-    private $sundayWeight = 1;
+    private $sundayWeight = 1.5;
 
     /**
      * @var float
      *
      * @ORM\Column(type="decimal")
      */
-    private $holidayWeight = 1;
+    private $holidayWeight = 2;
 
     /**
      * @var bool
@@ -110,7 +100,7 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $step = GenerationStep::CHOOSE_TARGETS;
+    private $step = GenerationStep::SET_START_END;
 
     /**
      * @var EventTag[]|ArrayCollection
@@ -173,22 +163,6 @@ class EventGeneration extends BaseEntity
     public function getGeneratedEvents()
     {
         return $this->generatedEvents;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMinimalGapBetweenEvents(): float
-    {
-        return $this->minimalGapBetweenEvents;
-    }
-
-    /**
-     * @param float $minimalGapBetweenEvents
-     */
-    public function setMinimalGapBetweenEvents(float $minimalGapBetweenEvents): void
-    {
-        $this->minimalGapBetweenEvents = $minimalGapBetweenEvents;
     }
 
     /**

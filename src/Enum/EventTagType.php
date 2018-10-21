@@ -13,10 +13,9 @@ namespace App\Enum;
 
 use App\Enum\Base\BaseEnum;
 
-class GenerationStep extends BaseEnum
+class EventTagType extends BaseEnum
 {
-    const SET_START_END = 0;
-    const CHOOSE_TARGETS = 1;
-    const SETTINGS = 2;
-    const CONFIRM = 3;
+    const CUSTOM = 0;
+    const BACKUP_SERVICE = 1;
+    const ACTIVE_SERVICE = 2;
 }

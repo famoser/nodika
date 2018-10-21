@@ -11,6 +11,7 @@
 
 namespace App\Service\Interfaces;
 
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
 
@@ -25,4 +26,10 @@ interface EventGenerationServiceInterface
      * @return Event[]
      */
     public function generate(EventGeneration $eventGeneration);
+
+    /**
+     * @param EventGeneration $eventGeneration
+     * @param Doctor          $creator
+     */
+    public function persistEvents(EventGeneration $eventGeneration, Doctor $creator);
 }
