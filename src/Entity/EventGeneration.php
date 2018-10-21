@@ -96,6 +96,13 @@ class EventGeneration extends BaseEntity
     private $mindPreviousEvents = true;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $applied = false;
+
+    /**
      * @var int
      *
      * @ORM\Column(type="integer")
@@ -371,5 +378,21 @@ class EventGeneration extends BaseEntity
     public function getAssignEventTags()
     {
         return $this->assignEventTags;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsApplied(): bool
+    {
+        return $this->applied;
+    }
+
+    /**
+     * @param bool $applied
+     */
+    public function setIsApplied(bool $applied): void
+    {
+        $this->applied = $applied;
     }
 }

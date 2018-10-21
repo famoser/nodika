@@ -72,7 +72,7 @@ class EventController extends BaseController
      * @Route("/{event}/edit", name="administration_event_edit")
      *
      * @param Request $request
-     * @param Event $event
+     * @param Event   $event
      *
      * @return Response
      */
@@ -104,8 +104,9 @@ class EventController extends BaseController
     }
 
     /**
-     * @param Event $event
+     * @param Event               $event
      * @param TranslatorInterface $translator
+     *
      * @return bool
      */
     private function ensureValidDoctorClinicPair(Event $event, TranslatorInterface $translator)
@@ -114,6 +115,7 @@ class EventController extends BaseController
             return true;
         }
         $this->displayError($translator->trans('edit.error.doctor_not_part_of_clinic', [], 'administration_event'));
+
         return false;
     }
 
@@ -121,7 +123,7 @@ class EventController extends BaseController
      * @Route("/{event}/remove", name="administration_event_remove")
      *
      * @param Request $request
-     * @param Event $event
+     * @param Event   $event
      *
      * @return Response
      */
@@ -179,41 +181,66 @@ class EventController extends BaseController
         $generations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
         $arr['generations'] = $generations;
 
-        return $this->render(':administration/event:generations.html.twig', $arr);
+        return $this->render('administration/event/generations.html.twig', $arr);
     }
 
     /**
-     * @Route("/generation/new/{tag}", name="administration_event_generation_new")
+     * @Route("/generation/new/{tagType}", name="administration_event_generation_new")
      *
-     * @param EventTag $tag
-     * @return Response
+     * @param int                 $tagType
+     * @param TranslatorInterface $translator
+     *
      * @throws \Exception
+     *
+     * @return Response
      */
-    public function generateNewAction(EventTag $tag, TranslatorInterface $translator)
+    public function generateNewAction(int $tagType, TranslatorInterface $translator)
     {
+        //get to be assigned tag
+        $tag = $this->getDoctrine()->getRepository(EventTag::class)->findOneBy(['tagType' => $tagType]);
+        if (!($tag instanceof EventTag)) {
+            dump($tagType);
+
+            return $this->redirectToRoute('administration_event_generations');
+        }
+
         $generation = new EventGeneration();
+        $generation->getAssignEventTags()->add($tag);
+        $generation->registerChangeBy($this->getUser());
+
         //set "sensible" default name
         $generation->setName(
-            $translator->trans("entity.name", [], "entity_event_generation") . " " .
-            EventTagType::getTranslation($tag->getTagType(), $translator) . " "
+            $translator->trans('entity.name', [], 'entity_event_generation').' '.
+            EventTagType::getTranslation($tag->getTagType(), $translator).' '
         );
 
         //set settings depending on chosen template
-        if ($tag->getTagType() == EventTagType::ACTIVE_SERVICE) {
+        if (EventTagType::ACTIVE_SERVICE === $tag->getTagType()) {
             $generation->setDifferentiateByEventType(true);
-        } else if ($tag->getTagType() === EventTagType::BACKUP_SERVICE) {
+        } elseif (EventTagType::BACKUP_SERVICE === $tag->getTagType()) {
             $generation->setDifferentiateByEventType(false);
         }
 
         //set other defaults
         $generation->setStartDateTime(new \DateTime());
-        $generation->setEndDateTime((new \DateTime())->add(new \DateInterval("P1Y")));
+        $generation->setEndDateTime((new \DateTime())->add(new \DateInterval('P1Y')));
+
+        //set conflict tags as all
+        $tags = $this->getDoctrine()->getRepository(EventTag::class)->findAll();
+        foreach ($tags as $tag) {
+            $generation->getConflictEventTags()->add($tag);
+        }
 
         //get last generation of that type & "smartly" transfer properties
-        $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy(["assignEventTags" => [$tag]], ["lastChangedAt" => "DESC"], 1);
-        if (count($lastGenerations) > 0) {
-            $lastGeneration = $lastGenerations[0];
-
+        $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy([], ['lastChangedAt' => 'DESC']);
+        $lastGeneration = null;
+        foreach ($lastGenerations as $lastGenerationLoop) {
+            if ($lastGenerationLoop->getAssignEventTags()->contains($tag)) {
+                $lastGeneration = $lastGenerationLoop;
+                break;
+            }
+        }
+        if (null !== $lastGeneration) {
             $generation->setStartDateTime($lastGeneration->getEndDateTime());
             $generation->setEndDateTime($lastGeneration->getStartDateTime()->add($lastGeneration->getEndDateTime()->diff($lastGeneration->getStartDateTime())));
             $generation->setStartCronExpression($lastGeneration->getStartCronExpression());
@@ -227,18 +254,20 @@ class EventController extends BaseController
 
         // save & start edit
         $this->fastSave($generation);
-        return $this->redirectToRoute("administration_event_generation", ["generation" => $generation->getId()]);
+
+        return $this->redirectToRoute('administration_event_generation', ['generation' => $generation->getId()]);
     }
 
     /**
      * @Route("/generation/{generation}", name="administration_event_generation")
      *
      * @param EventGeneration $generation
+     *
      * @return Response
      */
     public function generationAction(EventGeneration $generation)
     {
-        return $this->render('administration/event/generation.html.twig', ["generation" => $generation]);
+        return $this->render('administration/event/generation.html.twig', ['generation' => $generation]);
     }
 
     /**

@@ -38,6 +38,7 @@ class LoadEventTag extends BaseFixture
             $eventLine->setName($realExample[0]);
             $eventLine->setDescription($realExample[1]);
             $eventLine->setColor($realExample[2]);
+            $eventLine->setTagType($realExample[3]);
             $manager->persist($eventLine);
         }
 

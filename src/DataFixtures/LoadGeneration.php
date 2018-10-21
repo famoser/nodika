@@ -41,19 +41,23 @@ class LoadGeneration extends BaseFixture
         $expressionIndex = 0;
 
         $tags = $manager->getRepository(EventTag::class)->findAll();
+        $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
         foreach ($tags as $tag) {
-            $this->generateForTag($tag, $manager, $cronExpressions[$expressionIndex++ % 2]);
+            $this->generateForTag($tag, $admin, $manager, $cronExpressions[$expressionIndex++ % 2]);
         }
     }
 
     /**
      * @param EventTag      $tag
+     * @param Doctor        $admin
      * @param ObjectManager $manager
+     * @param $cronExpression
      */
-    private function generateForTag(EventTag $tag, ObjectManager $manager, $cronExpression)
+    private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, $cronExpression)
     {
         //prepare a generation
         $generation = $this->getRandomInstance();
+        $generation->registerChangeBy($admin);
         $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT));
         $generation->setDifferentiateByEventType(false);
         $generation->setStartDateTime(new \DateTime());
@@ -126,6 +130,7 @@ class LoadGeneration extends BaseFixture
     {
         $eventGeneration = new EventGeneration();
         $this->fillThing($eventGeneration);
+        $this->fillStartEnd($eventGeneration);
 
         return $eventGeneration;
     }

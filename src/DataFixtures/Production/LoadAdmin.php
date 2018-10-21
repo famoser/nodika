@@ -11,9 +11,7 @@
 
 namespace App\DataFixtures\Production;
 
-use App\DataFixtures\Base\BaseFixture;
 use App\DataFixtures\LoadDoctor;
-use App\Entity\Doctor;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadAdmin extends LoadDoctor

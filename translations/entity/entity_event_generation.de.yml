@@ -1,3 +1,5 @@
 entity:
   name: 'Termingenerierung'
   description: 'Dieses Objekt speichert eine Termingenerierung'
+
+is_applied: "Durchgeführt"

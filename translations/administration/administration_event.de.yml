@@ -26,5 +26,10 @@ generate:
   title: 'Termine generieren'
   description: 'Fügen Sie neue Termine hinzu'
 
+generations:
+  title: 'Termingenerierungen'
+  description: 'Bereiten Sie die nächsten Generierungen vor'
+
 generate_new:
   title: 'Neue Termingenerierung'
+  new: 'Neuer %name%'

@@ -17,7 +17,6 @@ use App\Entity\Traits\PersonTrait;
 use App\Entity\Traits\StartEndTrait;
 use App\Entity\Traits\ThingTrait;
 use App\Entity\Traits\UserTrait;
-use App\Service\EventGenerationService;
 use App\Service\Interfaces\EventGenerationServiceInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;

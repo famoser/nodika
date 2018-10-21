@@ -18,7 +18,6 @@ use App\Entity\EventPast;
 use App\Enum\EventChangeType;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
-use App\Enum\GenerationStep;
 use App\EventGeneration\EventTarget;
 use App\EventGeneration\QueueGenerator;
 use App\Exception\GenerationException;
@@ -541,6 +540,9 @@ class EventGenerationService implements EventGenerationServiceInterface
             //add to db
             $manager->persist($event);
         }
+
+        $eventGeneration->setIsApplied(true);
+        $manager->persist($eventGeneration);
 
         //commit
         $manager->flush();
