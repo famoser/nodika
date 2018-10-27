@@ -21,12 +21,12 @@ class QueueEntry
     /**
      * @var int
      */
-    private $issuedWeight = 0;
+    private $score = 0;
 
     /**
      * @var int
      */
-    private $score = 0;
+    private $issuedWeight = 0;
 
     /**
      * @var int
@@ -93,5 +93,17 @@ class QueueEntry
     public function setScore(int $score): void
     {
         $this->score = $score;
+    }
+
+    /**
+     * @return QueueEntry
+     */
+    public function exactClone()
+    {
+        $entry = new self($this->payload, $this->issuedWeight, $this->incrementWeight);
+        $entry->issued = $this->issued;
+        $entry->score = $this->score;
+
+        return $entry;
     }
 }

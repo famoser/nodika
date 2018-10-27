@@ -101,4 +101,37 @@ class EventTarget
         }
         return null;
     }
+
+    /** @var int[] */
+    private $eventTypeResponsibilities = [];
+
+    /** @var int[] */
+    private $eventTypeResponsibilitiesTaken = [];
+
+    /**
+     * @param $eventType
+     * @param int $count
+     */
+    public function assignEventTypeResponsibility($eventType, int $count)
+    {
+        $this->eventTypeResponsibilities[$eventType] = $count;
+        $this->eventTypeResponsibilitiesTaken[$eventType] = 0;
+    }
+
+    /**
+     * @param $eventType
+     * @return bool
+     */
+    public function canAssumeResponsibility($eventType)
+    {
+        return $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
+    }
+
+    /**
+     * @param $eventType
+     */
+    public function assumeResponsibility($eventType)
+    {
+        $this->eventTypeResponsibilitiesTaken[$eventType]++;
+    }
 }

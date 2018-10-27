@@ -24,8 +24,6 @@ class QueueGenerator
     private $totalScore;
 
     /**
-     * IdealQueueHelper constructor.
-     *
      * @param array $clinicRelativeSize the clinics of the queue (clinicId => relativeSize) (int => double)
      */
     public function __construct($clinicRelativeSize)
@@ -101,7 +99,7 @@ class QueueGenerator
         }
     }
 
-    /**x
+    /**
      * @return int
      */
     public function getNext()
@@ -121,5 +119,27 @@ class QueueGenerator
         $minElement->issue();
 
         return $minElement->getPayload();
+    }
+
+    /** @var QueueEntry[] */
+    private $queueEntriesBackup = [];
+
+    /**
+     * preserves the state.
+     */
+    public function snapshot()
+    {
+        $this->queueEntriesBackup = [];
+        foreach ($this->queueEntries as $key => $value) {
+            $this->queueEntriesBackup[$key] = clone $value;
+        }
+    }
+
+    /**
+     * resets the state to when the last time recoverSnapshot was called.
+     */
+    public function recoverSnapshot()
+    {
+        $this->queueEntries = $this->queueEntriesBackup;
     }
 }
