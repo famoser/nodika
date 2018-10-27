@@ -41,34 +41,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * creates a lucky score.
-     *
-     * @param $totalPoints
-     * @param $reachedPoints
-     *
-     * @return float
-     */
-    private function convertToLuckyScore($totalPoints, $reachedPoints)
-    {
-        return ($reachedPoints / $totalPoints) * 100.0;
-    }
-
-    /**
-     * creates a lucky score.
-     *
-     * @param float $totalPoints
-     * @param float $luckyScore
-     *
-     * @return int
-     */
-    private function convertFromLuckyScore($totalPoints, $luckyScore)
-    {
-        $realScore = $luckyScore / 100.0;
-
-        return $totalPoints * $realScore;
-    }
-
-    /**
      * distribute a fixed amount of elements to weighted targets.
      *
      * the buckets algorithm puts the targets into equal size buckets
@@ -533,16 +505,39 @@ class EventGenerationService implements EventGenerationServiceInterface
             //assign how many events of a certain type a specific target has to be assigned
             //start with the most rare event type, distribute & calculate score of the parties
             //adapt the weighting for the next most rare event type, and repeat
-            $currentWeightedTargets = $weightedTargets;
-            foreach ($sortedEventTypes as $sortedEventType) {
-                $eventType = $sortedEventType[0];
-                $count = $sortedEventType[1];
+            $weights = [
+                EventType::UNSPECIFIED => 1,
+                EventType::WEEKDAY => $eventGeneration->getWeekdayWeight(),
+                EventType::SATURDAY => $eventGeneration->getSaturdayWeight(),
+                EventType::SUNDAY => $eventGeneration->getSundayWeight(),
+                EventType::HOLIDAY => $eventGeneration->getHolidayWeight(),
+            ];
+            $weightedDifference = [];
+            for ($i = 0; $i < \count($sortedEventTypes); ++$i) {
+                $eventType = $sortedEventTypes[$i][0];
+                $count = $sortedEventTypes[$i][1];
+                $currentWeightedTargets = $weightedTargets;
+
+                //prepare for mismatch
+                $expectedAssignmentPerWeight = $count * 1.0 / array_sum($currentWeightedTargets);
+
+                //adapt weighting
+                if ($i > 0) {
+                    $expectedAssignmentPerWeightWeight = $expectedAssignmentPerWeight * $weights[$eventType];
+                    foreach ($weightedDifference as $targetId => $difference) {
+                        $currentWeightedTargets[$targetId] += $difference / $expectedAssignmentPerWeightWeight;
+                    }
+                }
+
+                //assign
                 $assignment = $this->distributeToTargets($currentWeightedTargets, $count);
                 foreach ($assignment as $targetId => $targetCount) {
                     $targetLookup[$targetId]->assignEventTypeResponsibility($eventType, $targetCount);
-                }
 
-                //adapt weighting
+                    //calculate difference between expected / real count
+                    $absoluteDifference = ($expectedAssignmentPerWeight * $currentWeightedTargets[$targetId] - $targetCount);
+                    $weightedDifference[$targetId] = $absoluteDifference * $weights[$eventType];
+                }
             }
 
             //process predetermined events
