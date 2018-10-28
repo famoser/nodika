@@ -11,3 +11,4 @@ require("./font_awesome_solid");
 require('./apps/Assign/bootstrap');
 require('./apps/Confirm/bootstrap');
 require('./apps/Trade/bootstrap');
+require('./apps/Generate/bootstrap');

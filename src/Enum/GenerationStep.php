@@ -17,6 +17,5 @@ class GenerationStep extends BaseEnum
 {
     const SET_START_END = 0;
     const CHOOSE_TARGETS = 1;
-    const SETTINGS = 2;
-    const CONFIRM = 3;
+    const PREVIEW = 2;
 }

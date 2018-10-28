@@ -205,14 +205,18 @@ class EventController extends BaseApiController
         //get to be assigned tag
         $tag = $this->getDoctrine()->getRepository(EventTag::class)->findOneBy(['tagType' => $tagType]);
         if (!($tag instanceof EventTag)) {
-            dump($tagType);
-
             return $this->redirectToRoute('administration_event_generations');
         }
 
         $generation = new EventGeneration();
         $generation->getAssignEventTags()->add($tag);
         $generation->registerChangeBy($this->getUser());
+
+        //set other tags to prevent conflict with
+        $otherTags = $this->getDoctrine()->getRepository(EventTag::class)->findAll();
+        foreach ($otherTags as $otherTag) {
+            $generation->getConflictEventTags()->add($otherTag);
+        }
 
         //set "sensible" default name
         $generation->setName(
@@ -307,6 +311,7 @@ class EventController extends BaseApiController
             'startDateTime' => 2, 'endDateTime' => 2,
             'differentiateByEventType' => 3, 'mindPreviousEvents' => 3,
             'weekdayWeight' => 4, 'saturdayWeight' => 4, 'sundayWeight' => 4, 'holydayWeight' => 4,
+            'step' => 5,
         ];
         foreach ($allowedProps as $prop => $valueType) {
             if (array_key_exists($prop, $content)) {
@@ -320,6 +325,9 @@ class EventController extends BaseApiController
                         $value = true === $value || 'true' === $value;
                         break;
                     case 4:
+                        $value = (float) $value;
+                        break;
+                    case 5:
                         $value = (int) $value;
                         break;
                     default:
@@ -352,8 +360,8 @@ class EventController extends BaseApiController
             $generation->getDateExceptions()->clear();
             foreach ($dateExceptions as $dateException) {
                 $exception = new EventGenerationDateException();
-                $exception->setStartDateTime(new  \DateTime($dateException['startDateTime']));
-                $exception->setEndDateTime(new  \DateTime($dateException['endDateTime']));
+                $exception->setStartDateTime(new \DateTime($dateException['startDateTime']));
+                $exception->setEndDateTime(new \DateTime($dateException['endDateTime']));
                 $exception->setEventGeneration($generation);
                 $exception->setEventType($dateException['eventType']);
                 $generation->getDateExceptions()->add($exception);
