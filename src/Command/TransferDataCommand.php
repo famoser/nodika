@@ -214,6 +214,12 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
         $counter = 0;
         foreach ($eventLines as &$eventLine) {
             $eventLine['color'] = $colors[$counter++ % \count($colors)];
+            $eventLine['tagType'] = 0;
+            if ('Notfalldienst' === $eventLine['name']) {
+                $eventLine['tagType'] = 2;
+            } elseif ('Wochendienst' === $eventLine['name']) {
+                $eventLine['tagType'] = 1;
+            }
         }
 
         $this->insertFields(
