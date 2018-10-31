@@ -30,12 +30,14 @@
         </div>
         <div class="col-md-5">
             <div v-if="generation">
-                <Span :generation="generation" v-if="generation.step === 0"/>
+                <Span :generation="generation" v-if="generation.step === 0" @saved="stepSaved(arguments[0])"/>
                 <Span :generation="generation" v-if="generation.step === 1"/>
                 <Span :generation="generation" v-if="generation.step === 2"/>
                 <Span :generation="generation" v-if="generation.step === 3"/>
             </div>
-
+        </div>
+        <div class="col-md-5" v-if="events != null">
+            <EventPreview :events="events"/>
         </div>
     </div>
 </template>
@@ -43,18 +45,26 @@
 <script>
     import axios from "axios"
     import Span from "./components/Span";
+    import EventPreview from "./components/EventPreview";
     import moment from "moment";
 
     moment.locale('de');
 
     export default {
-        components: {Span},
+        components: {Span, EventPreview},
         data() {
             return {
-                generation: null
+                generation: null,
+                events: null
             }
         },
         methods: {
+            stepSaved(generation) {
+                this.generation = generation;
+                this.saveProps();
+                this.reloadEvents();
+
+            },
             saveProps: function () {
                 var payload = {};
                 var props = [
@@ -64,7 +74,7 @@
                     'weekdayWeight', 'saturdayWeight', 'sundayWeight', 'holydayWeight',
                     'step'];
                 props.forEach(p => {
-                    payload[p] = tis.generation[p]
+                    payload[p] = this.generation[p]
                 });
                 axios.post(window.location + "/update", payload);
             },
@@ -77,6 +87,17 @@
                             weight: c.weight
                         }
                     })
+                });
+            },
+            reloadEvents: function () {
+                axios.get(window.location + "/events").then(response => {
+                    var counter = 0;
+                    response.data.forEach(e => {
+                        if (e.id == null) {
+                            e.id = counter++;
+                        }
+                    });
+                    this.events = response.data;
                 });
             },
             saveHolidays: function (holidays) {
@@ -101,6 +122,8 @@
                 .then((response) => {
                     console.log(response.data);
                     this.generation = response.data;
+
+                    this.reloadEvents();
                 });
         },
     }

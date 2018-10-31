@@ -4,6 +4,8 @@ Vue.config.productionTip = false;
 
 // components
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import datePicker from 'vue-bootstrap-datetimepicker';
+import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 // app
 import Generate from './generate'
@@ -16,6 +18,21 @@ import mergeMessages from '../../localization/shared/_all'
 if (document.getElementById("generate") != null) {
     // register plugins
     Vue.use(VueI18n);
+    Vue.use(datePicker);
+
+    $.extend(true, $.fn.datetimepicker.defaults, {
+        icons: {
+            time: 'far fa-clock',
+            date: 'far fa-calendar',
+            up: 'fas fa-arrow-up',
+            down: 'fas fa-arrow-down',
+            previous: 'fas fa-chevron-left',
+            next: 'fas fa-chevron-right',
+            today: 'fas fa-calendar-check',
+            clear: 'far fa-trash-alt',
+            close: 'far fa-times-circle'
+        }
+    });
 
     // register components
     Vue.component('font-awesome-icon', FontAwesomeIcon);

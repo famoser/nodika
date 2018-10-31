@@ -60,8 +60,8 @@ class LoadGeneration extends BaseFixture
         $generation->registerChangeBy($admin);
         $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT));
         $generation->setDifferentiateByEventType(false);
-        $generation->setStartDateTime(new \DateTime());
-        $generation->setEndDateTime(new \DateTime('now + 1 year'));
+        $generation->setStartDateTime(new \DateTime('today + 8 hours'));
+        $generation->setEndDateTime(new \DateTime('today + 8 hours + 1 year'));
         $generation->setStartCronExpression($cronExpression);
         $generation->setEndCronExpression($cronExpression);
         $generation->getAssignEventTags()->add($tag);

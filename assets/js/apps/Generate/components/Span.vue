@@ -5,12 +5,12 @@
             <input type="text" class="form-control" id="name" v-model="name"/>
         </div>
         <div class="form-group">
-            <label for="start" class="col-form-label">{{ $t("generation.start")}}</label>
-            <input type="datetime-local" class="form-control" id="start" v-model="start"/>
+            <label class="col-form-label">{{ $t("generation.start")}}</label>
+            <date-picker v-model="start"></date-picker>
         </div>
         <div class="form-group">
-            <label for="end" class="col-form-label">{{ $t("generation.end")}}</label>
-            <input type="datetime-local" class="form-control" id="end" v-model="end"/>
+            <label class="col-form-label">{{ $t("generation.end")}}</label>
+            <date-picker id="end" v-model="end"></date-picker>
         </div>
         <div class="form-group">
             {{$t("generation.length_of_event")}}
@@ -25,11 +25,20 @@
                 <label class="custom-control-label" for="customRadio2">{{$t("span.one_week")}}</label>
             </div>
         </div>
+        <div class="d-flex d-justify-content-right">
+            <button class="btn btn-primary" @click="save()">
+                {{$t("actions.save_and_continue")}}
+            </button>
+        </div>
     </div>
 </template>
 
 
 <script>
+    import moment from "moment";
+
+    moment.locale('de');
+
     export default {
         props: {
             generation: {
@@ -40,37 +49,47 @@
         data() {
             return {
                 name: this.generation.name,
-                start: this.generation.startDateTime.slice(0, -6),
-                end: this.generation.endDateTime.slice(0, -6),
-                mode: this.getModeName(this.generation.startCronExpression, this.generation.endCronExpression),
-                modeConfig: {
-                    day: {startCronExpression: '* 8 * * *', endCronExpression: '* 8 * * *'}
-                }
+                start: new Date(this.generation.startDateTime),
+                end: new Date(this.generation.endDateTime),
+                mode: null,
+                modeConfig: [
+                    {name: "day", startCronExpression: '* * *', endCronExpression: '* * *'},
+                    {name: "week", startCronExpression: '*/7 * *', endCronExpression: '*/7 * *'}
+                ]
             }
         },
         methods: {
             save() {
-                this.generation.name = this.name;
-                this.generation.startDateTime = moment(this.startDateTime).toISOString();
-                this.generation.endDateTime = moment(this.endDateTime).toISOString();
-                this.generation.startCronExpression = this.startCronExpression;
-                this.generation.endCronExpression = this.name;
-            },
-            getModeName(startCronExpression, endCronExpression) {
-                var match = null;
-                for (var prop in this.modeConfig) {
-                    if (this.modeConfig.hasOwnProperty(prop)) {
-                        if (this.modeConfig[prop].startCronExpression === startCronExpression &&
-                            this.modeConfig[prop].endCronExpression === endCronExpression) {
-                            match = prop;
-                        }
+                let copy = Object.assign({}, this.generation);
+                copy.name = this.name;
+                copy.startDateTime = new Date(this.start);
+                copy.endDateTime = new Date(this.end);
+
+                for (let entry of this.modeConfig) {
+                    if (entry.name === this.mode) {
+                        let time = copy.startDateTime.getMinutes() + " " + copy.startDateTime.getHours() + " ";
+                        copy.startCronExpression = time + entry.startCronExpression;
+                        copy.endCronExpression = time + entry.endCronExpression;
                     }
                 }
-                return match;
+
+                //datetime to string
+                copy.startDateTime = copy.startDateTime.toISOString();
+                copy.endDateTime = copy.endDateTime.toISOString();
+                this.$emit("saved", copy);
+            },
+            getModeName(startCronExpression, endCronExpression) {
+                for (let entry of this.modeConfig) {
+                    if (entry.startCronExpression === startCronExpression.substr(4) &&
+                        entry.endCronExpression === endCronExpression.substr(4)) {
+                        return entry.name;
+                    }
+                }
+                return null;
             }
         },
         mounted() {
-            console.log(this.generation.startDateTime.slice(0, -6));
+            this.mode = this.getModeName(this.generation.startCronExpression, this.generation.endCronExpression);
         }
     }
 </script>

@@ -235,14 +235,8 @@ class EventController extends BaseApiController
         $generation->setStartDateTime(new \DateTime());
         $generation->setEndDateTime((new \DateTime())->add(new \DateInterval('P1Y')));
 
-        //set conflict tags as all
-        $tags = $this->getDoctrine()->getRepository(EventTag::class)->findAll();
-        foreach ($tags as $tag) {
-            $generation->getConflictEventTags()->add($tag);
-        }
-
         //get last generation of that type & "smartly" transfer properties
-        $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy([], ['lastChangedAt' => 'DESC']);
+        $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy(['applied' => true], ['lastChangedAt' => 'DESC']);
         $lastGeneration = null;
         foreach ($lastGenerations as $lastGenerationLoop) {
             if ($lastGenerationLoop->getAssignEventTags()->contains($tag)) {
@@ -251,8 +245,8 @@ class EventController extends BaseApiController
             }
         }
         if (null !== $lastGeneration) {
-            $generation->setStartDateTime($lastGeneration->getEndDateTime());
-            $generation->setEndDateTime($lastGeneration->getStartDateTime()->add($lastGeneration->getEndDateTime()->diff($lastGeneration->getStartDateTime())));
+            $generation->setStartDateTime(clone $lastGeneration->getEndDateTime());
+            $generation->setEndDateTime(clone ($lastGeneration->getEndDateTime())->add($lastGeneration->getStartDateTime()->diff($lastGeneration->getEndDateTime())));
             $generation->setStartCronExpression($lastGeneration->getStartCronExpression());
             $generation->setEndCronExpression($lastGeneration->getEndCronExpression());
 

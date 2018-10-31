@@ -21,3 +21,11 @@ import {faEnvelope} from '@fortawesome/pro-solid-svg-icons/faEnvelope'
 
 // add icons
 library.add(faSortUp, faSortDown, faStar, faUser, faSignOut, faCheck, faEnvelope);
+
+//for datetimepicker
+import {faArrowUp} from '@fortawesome/pro-solid-svg-icons/faArrowUp'
+import {faArrowDown} from '@fortawesome/pro-solid-svg-icons/faArrowDown'
+import {faChevronLeft} from '@fortawesome/pro-solid-svg-icons/faChevronLeft'
+import {faChevronRight} from '@fortawesome/pro-solid-svg-icons/faChevronRight'
+import {faCalendarCheck} from '@fortawesome/pro-solid-svg-icons/faCalendarCheck'
+library.add(faArrowUp, faArrowDown, faChevronLeft, faChevronRight, faCalendarCheck);

@@ -26,6 +26,7 @@
     "popper.js": "^1.12",
     "promise-polyfill": "^8.1.0",
     "vue": "^2.5",
+    "vue-bootstrap-datetimepicker": "^5.0.1",
     "vue-i18n": "^7"
   }
 }

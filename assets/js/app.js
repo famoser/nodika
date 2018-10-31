@@ -5,6 +5,7 @@ require("../sass/app.sass");
 require("./legacy");
 require("./bootstrap_vanilla");
 require("./font_awesome_light");
+require("./font_awesome_regular");
 require("./font_awesome_solid");
 
 // apps

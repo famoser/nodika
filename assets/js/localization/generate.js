@@ -16,6 +16,9 @@ export default {
         },
         preview: {
             title: "Vorschau"
+        },
+        events: {
+            skipping_events: "{count} Termine verborgen in dieser Vorschau ..."
         }
     }
 }
