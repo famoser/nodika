@@ -60,7 +60,7 @@
                 return this.events.filter((_, index) => index >= minIndex);
             },
             ownerAssigned: function () {
-                return this.events.lenght > 0 && (this.events[0].clinic || this.events[0].doctor);
+                return this.events.length > 0 && (this.events[0].clinic || this.events[0].doctor);
             }
         }
     }

@@ -11,6 +11,9 @@
 
 namespace App\Controller\Administration\Base;
 
+use App\Api\Dto\GenerationTargetsDto;
+use App\Entity\Clinic;
+use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventGeneration;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,7 +57,7 @@ class BaseApiController extends BaseController
                 ['attributes' => ['name', 'startDateTime', 'endDateTime', 'startCronExpression', 'endCronExpression', 'differentiateByEventType',
                     'weekdayWeight', 'saturdayWeight', 'sundayWeight', 'holydayWeight', 'mindPreviousEvents', 'applied', 'step',
                     'conflictEventTags' => ['id', 'name'], 'assignEventTags' => ['id', 'name'], 'dateExceptions' => ['id', 'startDateTime', 'endDateTime', 'eventType'],
-                    'doctors' => ['id', 'fullName'], 'clinics' => ['id', 'name'], ]]
+                    'doctors' => ['weight', 'generationScore', 'doctor' => ['id', 'fullName']], 'clinics' => ['weight', 'generationScore', 'clinic' => ['id', 'name']], ]]
             ),
             200,
             [],
@@ -74,6 +77,28 @@ class BaseApiController extends BaseController
                 $events,
                 'json',
                 ['attributes' => ['startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]
+            ),
+            200,
+            [],
+            true
+        );
+    }
+
+    /**     *
+     * @param Doctor[] $doctors
+     * @param Clinic[] $clinics
+     *
+     * @return JsonResponse
+     */
+    protected function returnTargets($doctors, $clinics)
+    {
+        $obj = new GenerationTargetsDto($doctors, $clinics);
+
+        return new JsonResponse(
+            $this->getSerializer()->serialize(
+                $obj,
+                'json',
+                ['attributes' => ['doctors' => ['id', 'fullName'], 'clinics' => ['id', 'name']]]
             ),
             200,
             [],

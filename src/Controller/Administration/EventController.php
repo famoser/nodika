@@ -408,7 +408,7 @@ class EventController extends BaseApiController
         $manager->persist($generation);
         $manager->flush();
 
-        return $this->returnOk();
+        return $this->returnGeneration($generation);
     }
 
     /**
@@ -425,16 +425,60 @@ class EventController extends BaseApiController
     }
 
     /**
+     * @Route("/generation/{generation}/targets", name="administration_event_generation_targets")
+     *
+     * @return Response
+     */
+    public function generationTargets()
+    {
+        $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null]);
+        $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
+
+        return $this->returnTargets($doctors, $clinics);
+    }
+
+    /**
      * @Route("/generation/{generation}/apply", name="administration_event_generation_apply")
      *
+     * @param Request                         $request
      * @param EventGeneration                 $generation
      * @param EventGenerationServiceInterface $eventGenerationService
      *
      * @return Response
      */
-    public function generateApply(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
+    public function generateApply(Request $request, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
     {
-        $eventGenerationService->persistEvents($generation, $this->getUser());
+        //build up lookups
+        $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null]);
+        $doctorLookup = [];
+        foreach ($doctors as $doctor) {
+            $doctorLookup[$doctor->getId()] = $doctor;
+        }
+        $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
+        $clinicLookup = [];
+        foreach ($clinics as $clinic) {
+            $clinicLookup[$clinic->getId()] = $clinic;
+        }
+
+        //process submitted events
+        $rawEvents = json_decode($request->getContent(), true);
+        $events = [];
+        foreach ($rawEvents as $rawEvent) {
+            $event = new Event();
+            $event->setStartDateTime(new \DateTime($rawEvent['startDateTime']));
+            $event->setEndDateTime(new \DateTime($rawEvent['endDateTime']));
+            $event->setEventType((int) $rawEvent['eventType']);
+
+            $clinicId = $rawEvent['clinicId'];
+            $event->setDoctor(array_key_exists($clinicId, $clinicLookup) ? $clinicLookup[$clinicId] : null);
+
+            $doctorId = $rawEvent['doctorId'];
+            $event->setDoctor(array_key_exists($doctorId, $doctorLookup) ? $doctorLookup[$doctorId] : null);
+            $event->setGeneratedBy($generation);
+            $events[] = $event;
+        }
+
+        $eventGenerationService->persist($generation, $events, $this->getUser());
 
         return $this->returnOk();
     }

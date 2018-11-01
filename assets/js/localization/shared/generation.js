@@ -3,6 +3,8 @@ export default {
         name: "Name",
         start: "Start",
         end: "Ende",
-        length_of_event: "Länge eines Termines"
+        length_of_event: "Länge eines Termines",
+        weight: "Gewichtung",
+        receives_events: "Erhält Termine"
     }
 }

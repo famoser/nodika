@@ -24,7 +24,7 @@
                 return moment(this.event.startDateTime).format("DD.MM.YYYY HH:mm");
             },
             end: function () {
-                return moment(this.event.startDateTime).format("dd.mm.YYYY HH:mm");
+                return moment(this.event.endDateTime).format("DD.MM.YYYY HH:mm");
             },
             owner: function () {
                 var name ="";
@@ -35,7 +35,7 @@
                     if (name !== "") {
                         name += " ";
                     }
-                    name = this.event.doctor.fullName;
+                    name += this.event.doctor.fullName;
                 }
                 return name;
             }

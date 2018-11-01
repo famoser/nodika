@@ -25,10 +25,18 @@
                 <label class="custom-control-label" for="customRadio2">{{$t("span.one_week")}}</label>
             </div>
         </div>
-        <div class="d-flex d-justify-content-right">
-            <button class="btn btn-primary" @click="save()">
-                {{$t("actions.save_and_continue")}}
-            </button>
+        <hr/>
+        <div class="d-flex justify-content-between">
+            <div>
+                <button class="btn btn-outline-primary" @click="save(false)">
+                    {{$t("actions.save")}}
+                </button>
+            </div>
+            <div>
+                <button class="btn btn-primary" @click="save(true)">
+                    {{$t("actions.save_and_continue")}}
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -48,9 +56,9 @@
         },
         data() {
             return {
-                name: this.generation.name,
-                start: new Date(this.generation.startDateTime),
-                end: new Date(this.generation.endDateTime),
+                name: null,
+                start: null,
+                end: null,
                 mode: null,
                 modeConfig: [
                     {name: "day", startCronExpression: '* * *', endCronExpression: '* * *'},
@@ -59,37 +67,56 @@
             }
         },
         methods: {
-            save() {
+            save(proceed) {
+                let start = moment(this.start);
+                let end = moment(this.end);
+
                 let copy = Object.assign({}, this.generation);
                 copy.name = this.name;
-                copy.startDateTime = new Date(this.start);
-                copy.endDateTime = new Date(this.end);
 
                 for (let entry of this.modeConfig) {
                     if (entry.name === this.mode) {
-                        let time = copy.startDateTime.getMinutes() + " " + copy.startDateTime.getHours() + " ";
+                        let time = start.format("m H ");
                         copy.startCronExpression = time + entry.startCronExpression;
                         copy.endCronExpression = time + entry.endCronExpression;
                     }
                 }
 
                 //datetime to string
-                copy.startDateTime = copy.startDateTime.toISOString();
-                copy.endDateTime = copy.endDateTime.toISOString();
-                this.$emit("saved", copy);
+                copy.startDateTime = start.format();
+                copy.endDateTime = end.format();
+                this.$emit("save", copy);
+                if (proceed) {
+                    this.$emit("proceed", copy);
+                }
+            },
+            shortCron(fullCron) {
+                return fullCron.substr(fullCron.indexOf("*"));
             },
             getModeName(startCronExpression, endCronExpression) {
+                let startCron = this.shortCron(startCronExpression);
+                let endCron = this.shortCron(endCronExpression);
                 for (let entry of this.modeConfig) {
-                    if (entry.startCronExpression === startCronExpression.substr(4) &&
-                        entry.endCronExpression === endCronExpression.substr(4)) {
+                    if (entry.startCronExpression === startCron && entry.endCronExpression === endCron) {
                         return entry.name;
                     }
                 }
                 return null;
+            },
+            initialize: function () {
+                this.mode = this.getModeName(this.generation.startCronExpression, this.generation.endCronExpression);
+                this.name = this.generation.name;
+                this.start = new Date(this.generation.startDateTime);
+                this.end = new Date(this.generation.endDateTime);
+            }
+        },
+        watch: {
+            clinics: function () {
+                this.initialize();
             }
         },
         mounted() {
-            this.mode = this.getModeName(this.generation.startCronExpression, this.generation.endCronExpression);
+            this.initialize();
         }
     }
 </script>

@@ -29,9 +29,13 @@
             </ul>
         </div>
         <div class="col-md-5">
-            <div v-if="generation">
-                <Span :generation="generation" v-if="generation.step === 0" @saved="stepSaved(arguments[0])"/>
-                <Span :generation="generation" v-if="generation.step === 1"/>
+            <div v-if="generation && clinics">
+                <Span :generation="generation"
+                      v-if="generation.step === 0"
+                      @save="savedProperties(arguments[0])" @proceed="proceed"/>
+                <Receiver :clinics="clinics" :selected-clinics="selectedClinics"
+                          v-if="generation.step === 1"
+                          @save="savedClinics(arguments[0])" @proceed="proceed"/>
                 <Span :generation="generation" v-if="generation.step === 2"/>
                 <Span :generation="generation" v-if="generation.step === 3"/>
             </div>
@@ -47,23 +51,31 @@
     import Span from "./components/Span";
     import EventPreview from "./components/EventPreview";
     import moment from "moment";
+    import Receiver from "./components/Receiver";
 
     moment.locale('de');
 
     export default {
-        components: {Span, EventPreview},
+        components: {Receiver, Span, EventPreview},
         data() {
             return {
                 generation: null,
-                events: null
+                events: null,
+                clinics: null
             }
         },
         methods: {
-            stepSaved(generation) {
+            savedProperties(generation) {
                 this.generation = generation;
                 this.saveProps();
-                this.reloadEvents();
 
+            },
+            savedClinics(clinics) {
+                this.saveClinics();
+            },
+            proceed() {
+                this.generation.step += 1;
+                this.saveProps();
             },
             saveProps: function () {
                 var payload = {};
@@ -76,7 +88,12 @@
                 props.forEach(p => {
                     payload[p] = this.generation[p]
                 });
-                axios.post(window.location + "/update", payload);
+                console.log(payload["startDateTime"]);
+                axios.post(window.location + "/update", payload).then(response => {
+                    this.generation = response.data;
+                    console.log(this.generation.startDateTime);
+                    this.reloadEvents();
+                });
             },
             saveClinics: function (selectedClinics) {
                 axios.post(window.location + "/update", {
@@ -87,11 +104,13 @@
                             weight: c.weight
                         }
                     })
-                });
+                }).then(response => {
+                    this.reloadEvents();
+                })
             },
             reloadEvents: function () {
                 axios.get(window.location + "/events").then(response => {
-                    var counter = 0;
+                    let counter = 0;
                     response.data.forEach(e => {
                         if (e.id == null) {
                             e.id = counter++;
@@ -114,17 +133,29 @@
                             endDateTime: c.add(1, 'days').toISOString()
                         }
                     })
+                }).then(() => this.reloadEvents());
+            }
+        },
+        computed: {
+            selectedClinics: function () {
+                return this.generation.clinics.map(clinic => {
+                    return {
+                        id: clinic.clinic.id,
+                        weight: clinic.weight,
+                    }
                 });
             }
         },
         mounted() {
             axios.get(window.location + "/get")
                 .then((response) => {
-                    console.log(response.data);
                     this.generation = response.data;
-
-                    this.reloadEvents();
                 });
+            axios.get(window.location + "/targets")
+                .then((response) => {
+                    this.clinics = response.data.clinics;
+                });
+            this.reloadEvents();
         },
     }
 

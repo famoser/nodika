@@ -1,6 +1,7 @@
 export default {
     de: {
         actions: {
+            save: 'Speichern',
             save_and_continue: 'Speichern und fortfahren'
         },
         span: {
@@ -18,7 +19,7 @@ export default {
             title: "Vorschau"
         },
         events: {
-            skipping_events: "{count} Termine verborgen in dieser Vorschau ..."
+            skipping_events: "({count} Termine verborgen in dieser Vorschau)"
         }
     }
 }

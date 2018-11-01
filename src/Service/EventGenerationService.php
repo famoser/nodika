@@ -365,13 +365,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         $searchModel->setMaxResults($limit);
         $searchModel->setEventTags($eventGeneration->getConflictEventTags());
 
-        $eventLines = $this->doctrine->getRepository(Event::class)->search($searchModel);
-        $events = [];
-        foreach ($eventLines as $eventLine) {
-            foreach ($eventLine->events as $event) {
-                $events[] = $event;
-            }
-        }
+        $events = $this->doctrine->getRepository(Event::class)->search($searchModel);
 
         return $events;
     }
@@ -390,7 +384,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             if (null !== $eventTarget) {
                 $result[] = $eventTarget->getIdentifier();
             } else {
-                $result[] = $eventTarget::NONE_IDENTIFIER;
+                $result[] = EventTarget::NONE_IDENTIFIER;
             }
         }
 
@@ -590,16 +584,14 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * @param EventGeneration $eventGeneration
+     * @param Event[]         $events
      * @param Doctor          $creator
-     *
-     * @throws GenerationException
      */
-    public function persistEvents(EventGeneration $eventGeneration, Doctor $creator)
+    public function persist(EventGeneration $eventGeneration, array $events, Doctor $creator)
     {
         $manager = $this->doctrine->getManager();
 
-        //generate events & add to db
-        $events = $this->generate($eventGeneration);
+        //add to db
         foreach ($events as $event) {
             //add past
             $eventPast = EventPast::create($event, EventChangeType::GENERATED, $creator);

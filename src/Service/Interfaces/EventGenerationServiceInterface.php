@@ -29,7 +29,10 @@ interface EventGenerationServiceInterface
 
     /**
      * @param EventGeneration $eventGeneration
+     * @param Event[]         $events
      * @param Doctor          $creator
+     *
+     * @return
      */
-    public function persistEvents(EventGeneration $eventGeneration, Doctor $creator);
+    public function persist(EventGeneration $eventGeneration, array $events, Doctor $creator);
 }

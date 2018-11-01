@@ -97,7 +97,7 @@ class LoadGeneration extends BaseFixture
 
         //generate & persist all events
         $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
-        $this->getEventGenerationService()->persistEvents($generation, $admin);
+        $this->getEventGenerationService()->persist($generation, $admin);
 
         $events = $manager->getRepository(Event::class)->findAll();
         //confirm first 10 events
