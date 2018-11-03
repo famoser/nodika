@@ -208,34 +208,12 @@ class EventController extends BaseApiController
             return $this->redirectToRoute('administration_event_generations');
         }
 
+        //create our new generation
         $generation = new EventGeneration();
         $generation->getAssignEventTags()->add($tag);
         $generation->registerChangeBy($this->getUser());
 
-        //set other tags to prevent conflict with
-        $otherTags = $this->getDoctrine()->getRepository(EventTag::class)->findAll();
-        foreach ($otherTags as $otherTag) {
-            $generation->getConflictEventTags()->add($otherTag);
-        }
-
-        //set "sensible" default name
-        $generation->setName(
-            $translator->trans('entity.name', [], 'entity_event_generation').' '.
-            EventTagType::getTranslation($tag->getTagType(), $translator).' '
-        );
-
-        //set settings depending on chosen template
-        if (EventTagType::ACTIVE_SERVICE === $tag->getTagType()) {
-            $generation->setDifferentiateByEventType(true);
-        } elseif (EventTagType::BACKUP_SERVICE === $tag->getTagType()) {
-            $generation->setDifferentiateByEventType(false);
-        }
-
-        //set other defaults
-        $generation->setStartDateTime(new \DateTime());
-        $generation->setEndDateTime((new \DateTime())->add(new \DateInterval('P1Y')));
-
-        //get last generation of that type & "smartly" transfer properties
+        //try to retrieve last generation of that type
         $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy(['applied' => true], ['lastChangedAt' => 'DESC']);
         $lastGeneration = null;
         foreach ($lastGenerations as $lastGenerationLoop) {
@@ -244,16 +222,78 @@ class EventController extends BaseApiController
                 break;
             }
         }
+
+        //transfer props if previous generation exists
         if (null !== $lastGeneration) {
+            //set name
+            $generation->setName('Re: '.$lastGeneration->getName());
+
+            //copy start/end
             $generation->setStartDateTime(clone $lastGeneration->getEndDateTime());
             $generation->setEndDateTime(clone ($lastGeneration->getEndDateTime())->add($lastGeneration->getStartDateTime()->diff($lastGeneration->getEndDateTime())));
             $generation->setStartCronExpression($lastGeneration->getStartCronExpression());
             $generation->setEndCronExpression($lastGeneration->getEndCronExpression());
 
+            //copy participants
+            foreach ($lastGeneration->getClinics() as $clinicTarget) {
+                if (null === $clinicTarget->getClinic()->getDeletedAt()) {
+                    $newClinic = new EventGenerationTargetClinic();
+                    $newClinic->setClinic($clinicTarget->getClinic());
+                    $newClinic->setDefaultOrder($clinicTarget->getDefaultOrder());
+                    $newClinic->setWeight($clinicTarget->getWeight());
+                    $newClinic->setEventGeneration($generation);
+                    $generation->getClinics()->add($newClinic);
+                }
+            }
+            foreach ($lastGeneration->getDoctors() as $doctorTarget) {
+                if (null === $doctorTarget->getDoctor()->getDeletedAt()) {
+                    $newDoctor = new EventGenerationTargetDoctor();
+                    $newDoctor->setDoctor($doctorTarget->getDoctor());
+                    $newDoctor->setDefaultOrder($doctorTarget->getDefaultOrder());
+                    $newDoctor->setWeight($doctorTarget->getWeight());
+                    $newDoctor->setEventGeneration($generation);
+                    $generation->getDoctors()->add($newDoctor);
+                }
+            }
+
+            //copy settings
+            $generation->setDifferentiateByEventType($lastGeneration->getDifferentiateByEventType());
             $generation->setWeekdayWeight($lastGeneration->getWeekdayWeight());
             $generation->setSaturdayWeight($lastGeneration->getSaturdayWeight());
             $generation->setSundayWeight($lastGeneration->getSundayWeight());
             $generation->setHolidayWeight($lastGeneration->getHolidayWeight());
+            foreach ($lastGeneration->getConflictEventTags() as $conflictEventTag) {
+                $generation->getConflictEventTags()->add($conflictEventTag);
+            }
+        } else {
+            //set default name
+            $generation->setName(
+                $translator->trans('entity.name', [], 'entity_event_generation').' '.
+                EventTagType::getTranslation($tag->getTagType(), $translator).' '
+            );
+
+            //set start/end
+            $generation->setStartDateTime(new \DateTime());
+            $generation->setEndDateTime((new \DateTime())->add(new \DateInterval('P1Y')));
+
+            //set participants
+            $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
+            foreach ($clinics as $clinic) {
+                $targetClinic = new EventGenerationTargetClinic();
+                $targetClinic->setEventGeneration($generation);
+                $targetClinic->setClinic($clinic);
+                $generation->getClinics()->add($targetClinic);
+            }
+
+            //set other sensible defaults
+            if (EventTagType::ACTIVE_SERVICE === $tag->getTagType()) {
+                $generation->setDifferentiateByEventType(true);
+            } elseif (EventTagType::BACKUP_SERVICE === $tag->getTagType()) {
+                $generation->setDifferentiateByEventType(false);
+            }
+            foreach ($this->getDoctrine()->getRepository(EventTag::class)->findAll() as $otherTag) {
+                $generation->getConflictEventTags()->add($otherTag);
+            }
         }
 
         // save & start edit
