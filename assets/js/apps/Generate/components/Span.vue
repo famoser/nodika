@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h4>{{$t("span.title")}}</h4>
         <div class="form-group">
             <label for="name" class="col-form-label">{{ $t("generation.name")}}</label>
             <input type="text" class="form-control" id="name" v-model="name"/>
@@ -85,10 +86,10 @@
                 //datetime to string
                 copy.startDateTime = start.format();
                 copy.endDateTime = end.format();
-                this.$emit("save", copy);
                 if (proceed) {
-                    this.$emit("proceed", copy);
+                    copy.step += 1;
                 }
+                this.$emit("save", copy);
             },
             shortCron(fullCron) {
                 return fullCron.substr(fullCron.indexOf("*"));

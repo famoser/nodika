@@ -597,7 +597,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             $eventPast = EventPast::create($event, EventChangeType::GENERATED, $creator);
             $event->getEventPast()->add($eventPast);
 
-            //add tagw
+            //add tags
             foreach ($eventGeneration->getAssignEventTags() as $assignEventTag) {
                 $event->getEventTags()->add($assignEventTag);
             }

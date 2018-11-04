@@ -3,6 +3,7 @@
         <td v-if="owner">{{owner}}</td>
         <td>{{start}}</td>
         <td>{{end}}</td>
+        <td v-if="showEventType">{{eventType}}</td>
     </tr>
 </template>
 
@@ -17,6 +18,10 @@
             event: {
                 type: Object,
                 required: true
+            },
+            showEventType: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
@@ -38,6 +43,19 @@
                     name += this.event.doctor.fullName;
                 }
                 return name;
+            },
+            eventType: function () {
+                switch (this.event.eventType) {
+                    case 1:
+                        return this.$t("event_type.weekday");
+                    case 2:
+                        return this.$t("event_type.saturday");
+                    case 3:
+                        return this.$t("event_type.sunday");
+                    case 4:
+                        return this.$t("event_type.holiday");
+                }
+                return "";
             }
         }
     }

@@ -23,6 +23,7 @@ use App\Entity\EventPast;
 use App\Entity\EventTag;
 use App\Enum\EventChangeType;
 use App\Enum\EventTagType;
+use App\Enum\EventType;
 use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EventGenerationServiceInterface;
@@ -225,12 +226,16 @@ class EventController extends BaseApiController
 
         //transfer props if previous generation exists
         if (null !== $lastGeneration) {
+            //precalculate some time diffs; round up when looking at years
+            $lastLength = $lastGeneration->getStartDateTime()->diff($lastGeneration->getEndDateTime());
+            $yearDifference = new \DateInterval('P'.($lastLength->y + ($lastLength->d > 240 ? 1 : 0)).'Y');
+
             //set name
             $generation->setName('Re: '.$lastGeneration->getName());
 
             //copy start/end
             $generation->setStartDateTime(clone $lastGeneration->getEndDateTime());
-            $generation->setEndDateTime(clone ($lastGeneration->getEndDateTime())->add($lastGeneration->getStartDateTime()->diff($lastGeneration->getEndDateTime())));
+            $generation->setEndDateTime(clone ($lastGeneration->getEndDateTime())->add($lastLength));
             $generation->setStartCronExpression($lastGeneration->getStartCronExpression());
             $generation->setEndCronExpression($lastGeneration->getEndCronExpression());
 
@@ -263,7 +268,17 @@ class EventController extends BaseApiController
             $generation->setSundayWeight($lastGeneration->getSundayWeight());
             $generation->setHolidayWeight($lastGeneration->getHolidayWeight());
             foreach ($lastGeneration->getConflictEventTags() as $conflictEventTag) {
-                $generation->getConflictEventTags()->add($conflictEventTag);
+                if (null === $conflictEventTag->getDeletedAt()) {
+                    $generation->getConflictEventTags()->add($conflictEventTag);
+                }
+            }
+            foreach ($lastGeneration->getDateExceptions() as $dateException) {
+                $newException = new EventGenerationDateException();
+                $newException->setEventType($dateException->getEventType());
+                $newException->setEventGeneration($generation);
+                $newException->setStartDateTime((clone $dateException->getStartDateTime())->add($yearDifference));
+                $newException->setEndDateTime((clone $dateException->getEndDateTime())->add($yearDifference));
+                $generation->getDateExceptions()->add($newException);
             }
         } else {
             //set default name
@@ -291,8 +306,38 @@ class EventController extends BaseApiController
             } elseif (EventTagType::BACKUP_SERVICE === $tag->getTagType()) {
                 $generation->setDifferentiateByEventType(false);
             }
-            foreach ($this->getDoctrine()->getRepository(EventTag::class)->findAll() as $otherTag) {
+            foreach ($this->getDoctrine()->getRepository(EventTag::class)->findBy(['deletedAt' => null]) as $otherTag) {
                 $generation->getConflictEventTags()->add($otherTag);
+            }
+            //add yearly holidays
+            $yearlyHolidays = ['01-01', '01-02.', '08-01.', '12-31'];
+            $currentIndex = 0;
+            $currentYear = $generation->getStartDateTime()->format('Y');
+            while (true) {
+                $exceptionDateString = $currentYear.'-'.$yearlyHolidays[$currentIndex];
+                $exceptionDate = new \DateTime($exceptionDateString);
+
+                //break if can not be inside generation anymore
+                if ($exceptionDate > $generation->getEndDateTime()) {
+                    break;
+                }
+
+                //add if inside generation
+                if ($exceptionDate > $generation->getStartDateTime()) {
+                    $newException = new EventGenerationDateException();
+                    $newException->setEventType(EventType::HOLIDAY);
+                    $newException->setEventGeneration($generation);
+                    $newException->setStartDateTime($exceptionDate);
+                    $newException->setEndDateTime(new \DateTime($exceptionDateString.' 23:59'));
+                    $generation->getDateExceptions()->add($newException);
+                }
+
+                //update index/current year
+                ++$currentIndex;
+                if ($currentIndex === \count($yearlyHolidays)) {
+                    $currentIndex = 0;
+                    ++$currentYear;
+                }
             }
         }
 
@@ -501,16 +546,16 @@ class EventController extends BaseApiController
         }
 
         //process submitted events
-        $rawEvents = json_decode($request->getContent(), true);
+        $eventRequest = json_decode($request->getContent(), true);
         $events = [];
-        foreach ($rawEvents as $rawEvent) {
+        foreach ($eventRequest['events'] as $rawEvent) {
             $event = new Event();
             $event->setStartDateTime(new \DateTime($rawEvent['startDateTime']));
             $event->setEndDateTime(new \DateTime($rawEvent['endDateTime']));
             $event->setEventType((int) $rawEvent['eventType']);
 
             $clinicId = $rawEvent['clinicId'];
-            $event->setDoctor(array_key_exists($clinicId, $clinicLookup) ? $clinicLookup[$clinicId] : null);
+            $event->setClinic(array_key_exists($clinicId, $clinicLookup) ? $clinicLookup[$clinicId] : null);
 
             $doctorId = $rawEvent['doctorId'];
             $event->setDoctor(array_key_exists($doctorId, $doctorLookup) ? $doctorLookup[$doctorId] : null);

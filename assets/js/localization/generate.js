@@ -2,18 +2,21 @@ export default {
     de: {
         actions: {
             save: 'Speichern',
-            save_and_continue: 'Speichern und fortfahren'
+            save_and_continue: 'Speichern und fortfahren',
+            reload: 'Termine neu generieren',
+            save_and_finish: 'Speichern und abschliessen'
         },
         span: {
             title: "Datum & Zeit",
             one_day: "Ein Tag (24h)",
             one_week: "Eine Woche (24h * 7)"
         },
-        recipient: {
+        receiver: {
             title: "Empfänger"
         },
         settings: {
-            title: "Einstellungen"
+            title: "Einstellungen",
+            holidays: "Feiertage"
         },
         preview: {
             title: "Vorschau"

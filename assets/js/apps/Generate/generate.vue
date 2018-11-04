@@ -11,7 +11,7 @@
                 <li class="nav-item">
                     <a class="nav-link" :class="{'disabled': generation.step < 1, 'active': generation.step === 1}"
                        @click.prevent="generation.step = 1" href="#">
-                        {{ $t("recipient.title") }}
+                        {{ $t("receiver.title") }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -28,20 +28,23 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-5">
-            <div v-if="generation && clinics">
-                <Span :generation="generation"
-                      v-if="generation.step === 0"
-                      @save="savedProperties(arguments[0])" @proceed="proceed"/>
-                <Receiver :clinics="clinics" :selected-clinics="selectedClinics"
-                          v-if="generation.step === 1"
-                          @save="savedClinics(arguments[0])" @proceed="proceed"/>
-                <Span :generation="generation" v-if="generation.step === 2"/>
-                <Span :generation="generation" v-if="generation.step === 3"/>
-            </div>
+        <div class="col-md-5" v-if="generation && clinics && events && generation.step < 3">
+            <Span :generation="generation"
+                  v-if="generation.step === 0"
+                  @save="savedProperties(arguments[0])" @proceed="proceed"/>
+            <Receiver :clinics="clinics" :selected-clinics="selectedClinics"
+                      v-if="generation.step === 1"
+                      @save="saveClinics(arguments[0])" @proceed="proceed"/>
+            <Settings :generation="generation"
+                      v-if="generation.step === 2"
+                      @save="saveHolidays(arguments[0])" @proceed="proceed"/>
         </div>
-        <div class="col-md-5" v-if="events != null">
+        <div class="col-md-5" v-if="events != null && generation && generation.step < 3">
             <EventPreview :events="events"/>
+        </div>
+        <div class="col-md-10" v-if="generation && generation.step === 3 && events">
+            <Preview :generation="generation" :events="events"
+                     @submit="saveEvents" @reload="reloadEvents"/>
         </div>
     </div>
 </template>
@@ -52,11 +55,13 @@
     import EventPreview from "./components/EventPreview";
     import moment from "moment";
     import Receiver from "./components/Receiver";
+    import Settings from "./components/Settings";
+    import Preview from "./components/Preview";
 
     moment.locale('de');
 
     export default {
-        components: {Receiver, Span, EventPreview},
+        components: {Preview, Settings, Receiver, Span, EventPreview},
         data() {
             return {
                 generation: null,
@@ -70,12 +75,24 @@
                 this.saveProps();
 
             },
-            savedClinics(clinics) {
-                this.saveClinics();
-            },
             proceed() {
                 this.generation.step += 1;
                 this.saveProps();
+            },
+            saveEvents: function () {
+                axios.post(window.location + "/apply", {
+                    events: this.events.map(e => {
+                        return {
+                            startDateTime: e.startDateTime,
+                            endDateTime: e.endDateTime,
+                            clinicId: e.clinic ? e.clinic.id : null,
+                            doctorId: e.doctor ? e.doctor.id : null,
+                            eventType: e.eventType
+                        }
+                    })
+                }).then(() => {
+                    window.location = "/administration/events";
+                })
             },
             saveProps: function () {
                 var payload = {};
@@ -88,10 +105,8 @@
                 props.forEach(p => {
                     payload[p] = this.generation[p]
                 });
-                console.log(payload["startDateTime"]);
                 axios.post(window.location + "/update", payload).then(response => {
                     this.generation = response.data;
-                    console.log(this.generation.startDateTime);
                     this.reloadEvents();
                 });
             },
@@ -104,7 +119,7 @@
                             weight: c.weight
                         }
                     })
-                }).then(response => {
+                }).then(() => {
                     this.reloadEvents();
                 })
             },
@@ -120,20 +135,20 @@
                 });
             },
             saveHolidays: function (holidays) {
-                //parse
-                var dateTimes = holidays.select(holiday => {
-                    return moment(holiday, "dd.mm.YYYY")
-                });
-
                 axios.post(window.location + "/update", {
-                    dateExceptions: dateTimes.map(c => {
+                    dateExceptions: holidays.map(c => {
                         return {
                             eventType: 4,
-                            startDateTime: c.toISOString(),
-                            endDateTime: c.add(1, 'days').toISOString()
+                            startDateTime: moment(c).format(),
+                            endDateTime: moment(this.addDay(c)).format()
                         }
                     })
                 }).then(() => this.reloadEvents());
+            },
+            addDay: function (input) {
+                var result = new Date(input.valueOf());
+                result.setDate(result.getDate() + 1);
+                return result;
             }
         },
         computed: {

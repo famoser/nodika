@@ -76,7 +76,7 @@ class BaseApiController extends BaseController
             $this->getSerializer()->serialize(
                 $events,
                 'json',
-                ['attributes' => ['startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]
+                ['attributes' => ['startDateTime', 'endDateTime', 'eventType', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]
             ),
             200,
             [],

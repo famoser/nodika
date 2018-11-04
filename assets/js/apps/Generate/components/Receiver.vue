@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h4>{{$t("receiver.title")}}</h4>
         <table class="table table-hover">
             <thead>
             <tr>
@@ -17,9 +18,14 @@
             </tbody>
         </table>
         <hr/>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-between">
             <div>
-                <button class="btn btn-primary" @click="save()">
+                <button class="btn btn-outline-primary" @click="save(false)">
+                    {{$t("actions.save")}}
+                </button>
+            </div>
+            <div>
+                <button class="btn btn-primary" @click="save(true)">
                     {{$t("actions.save_and_continue")}}
                 </button>
             </div>
@@ -72,10 +78,13 @@
             }
         },
         methods: {
-            save: function () {
-                this.$emit("saved", this.clinicContainers.filter(c => c.selected).map(c => {
+            save: function (proceed) {
+                this.$emit("save", this.clinicContainers.filter(c => c.selected).map(c => {
                     return {id: c.clinic.id, weight: c.weight}
                 }));
+                if (proceed) {
+                    this.$emit("proceed");
+                }
             },
             initialize: function () {
                 this.clinicContainers = [];
@@ -86,7 +95,11 @@
                         weight: match ? match.weight : 1,
                         clinic: c
                     });
-                })
+                });
+
+                this.clinicContainers.sort(function(cc1, cc2) {
+                    return cc1.clinic.name.localeCompare(cc2.clinic.name);
+                });
             }
         },
         watch: {
