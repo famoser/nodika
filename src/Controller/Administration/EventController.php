@@ -195,14 +195,15 @@ class EventController extends BaseApiController
     /**
      * @Route("/generation/new/{tagType}", name="administration_event_generation_new")
      *
-     * @param int                 $tagType
-     * @param TranslatorInterface $translator
+     * @param int                             $tagType
+     * @param EventGenerationServiceInterface $eventGenerationService
+     * @param TranslatorInterface             $translator
      *
      * @throws \Exception
      *
      * @return Response
      */
-    public function generateNewAction(int $tagType, TranslatorInterface $translator)
+    public function generateNewAction(int $tagType, EventGenerationServiceInterface $eventGenerationService, TranslatorInterface $translator)
     {
         //get to be assigned tag
         $tag = $this->getDoctrine()->getRepository(EventTag::class)->findOneBy(['tagType' => $tagType]);
@@ -225,6 +226,8 @@ class EventController extends BaseApiController
             }
         }
 
+        dump($lastGeneration);
+        throw new \Exception();
         //transfer props if previous generation exists
         if (null !== $lastGeneration) {
             //precalculate some time diffs; round up when looking at years
@@ -342,7 +345,8 @@ class EventController extends BaseApiController
             }
         }
 
-        // save & start edit
+        //save
+        $eventGenerationService->generate($generation);
         $this->fastSave($generation);
 
         return $this->redirectToRoute('administration_event_generation', ['generation' => $generation->getId()]);
@@ -388,113 +392,115 @@ class EventController extends BaseApiController
             throw new AccessDeniedHttpException();
         }
 
-        //prepare content & request
-        $content = json_decode($request->getContent(), true);
         $manager = $this->getDoctrine()->getManager();
 
-        //write simple props first
-        $allowedProps = [
-            'name' => 1, 'startCronExpression' => 1, 'endCronExpression' => 1,
-            'startDateTime' => 2, 'endDateTime' => 2,
-            'differentiateByEventType' => 3, 'mindPreviousEvents' => 3,
-            'weekdayWeight' => 4, 'saturdayWeight' => 4, 'sundayWeight' => 4, 'holydayWeight' => 4,
-            'step' => 5,
-        ];
-        foreach ($allowedProps as $prop => $valueType) {
-            if (array_key_exists($prop, $content)) {
-                //convert type
-                $value = $content[$prop];
-                switch ($valueType) {
-                    case 2:
-                        $value = new \DateTime($value);
-                        break;
-                    case 3:
-                        $value = true === $value || 'true' === $value;
-                        break;
-                    case 4:
-                        $value = (float) $value;
-                        break;
-                    case 5:
-                        $value = (int) $value;
-                        break;
-                    default:
-                        break;
+        //prepare content & request
+        $content = json_decode($request->getContent(), true);
+        if (\is_array($content)) {
+            //write simple props first
+            $allowedProps = [
+                'name' => 1, 'startCronExpression' => 1, 'endCronExpression' => 1,
+                'startDateTime' => 2, 'endDateTime' => 2,
+                'differentiateByEventType' => 3, 'mindPreviousEvents' => 3,
+                'weekdayWeight' => 4, 'saturdayWeight' => 4, 'sundayWeight' => 4, 'holydayWeight' => 4,
+                'step' => 5,
+            ];
+            foreach ($allowedProps as $prop => $valueType) {
+                if (array_key_exists($prop, $content)) {
+                    //convert type
+                    $value = $content[$prop];
+                    switch ($valueType) {
+                        case 2:
+                            $value = new \DateTime($value);
+                            break;
+                        case 3:
+                            $value = true === $value || 'true' === $value;
+                            break;
+                        case 4:
+                            $value = (float) $value;
+                            break;
+                        case 5:
+                            $value = (int) $value;
+                            break;
+                        default:
+                            break;
+                    }
+                    $setterName = 'set'.mb_strtoupper(mb_substr($prop, 0, 1)).mb_substr($prop, 1);
+                    $generation->$setterName($value);
                 }
-                $setterName = 'set'.mb_strtoupper(mb_substr($prop, 0, 1)).mb_substr($prop, 1);
-                $generation->$setterName($value);
-            }
-        }
-
-        //refresh dependencies
-        if (array_key_exists('conflictEventTagIds', $content)) {
-            $eventTagIds = $content['conflictEventTagIds'];
-            $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
-            $generation->getConflictEventTags()->clear();
-            foreach ($eventTags as $eventTag) {
-                $generation->getConflictEventTags()->add($eventTag);
-            }
-        }
-        if (array_key_exists('assignEventTagIds', $content)) {
-            $eventTagIds = $content['assignEventTagIds'];
-            $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
-            $generation->getAssignEventTags()->clear();
-            foreach ($eventTags as $eventTag) {
-                $generation->getAssignEventTags()->add($eventTag);
-            }
-        }
-        if (array_key_exists('dateExceptions', $content)) {
-            $dateExceptions = $content['dateExceptions'];
-            $generation->getDateExceptions()->clear();
-            foreach ($dateExceptions as $dateException) {
-                $exception = new EventGenerationDateException();
-                $exception->setStartDateTime(new \DateTime($dateException['startDateTime']));
-                $exception->setEndDateTime(new \DateTime($dateException['endDateTime']));
-                $exception->setEventGeneration($generation);
-                $exception->setEventType($dateException['eventType']);
-                $generation->getDateExceptions()->add($exception);
-                $manager->persist($exception);
-            }
-        }
-        if (array_key_exists('targetClinics', $content)) {
-            //get key/value of clinics
-            $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
-            $clinicById = [];
-            foreach ($clinics as $clinic) {
-                $clinicById[$clinic->getId()] = $clinic;
             }
 
-            //create target clinics
-            $targetClinics = $content['targetClinics'];
-            $generation->getClinics()->clear();
-            foreach ($targetClinics as $targetClinicArr) {
-                $targetClinic = new EventGenerationTargetClinic();
-                $targetClinic->setClinic($clinicById[$targetClinicArr['id']]);
-                $targetClinic->setDefaultOrder($targetClinicArr['defaultOrder']);
-                $targetClinic->setWeight($targetClinicArr['weight']);
-                $targetClinic->setEventGeneration($generation);
-                $generation->getClinics()->add($targetClinic);
-                $manager->persist($targetClinic);
+            //refresh dependencies
+            if (array_key_exists('conflictEventTagIds', $content)) {
+                $eventTagIds = $content['conflictEventTagIds'];
+                $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
+                $generation->getConflictEventTags()->clear();
+                foreach ($eventTags as $eventTag) {
+                    $generation->getConflictEventTags()->add($eventTag);
+                }
             }
-        }
-        if (array_key_exists('targetDoctors', $content)) {
-            //get key/value of doctors
-            $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
-            $doctorById = [];
-            foreach ($doctors as $doctor) {
-                $doctorById[$doctor->getId()] = $doctor;
+            if (array_key_exists('assignEventTagIds', $content)) {
+                $eventTagIds = $content['assignEventTagIds'];
+                $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
+                $generation->getAssignEventTags()->clear();
+                foreach ($eventTags as $eventTag) {
+                    $generation->getAssignEventTags()->add($eventTag);
+                }
             }
+            if (array_key_exists('dateExceptions', $content)) {
+                $dateExceptions = $content['dateExceptions'];
+                $generation->getDateExceptions()->clear();
+                foreach ($dateExceptions as $dateException) {
+                    $exception = new EventGenerationDateException();
+                    $exception->setStartDateTime(new \DateTime($dateException['startDateTime']));
+                    $exception->setEndDateTime(new \DateTime($dateException['endDateTime']));
+                    $exception->setEventGeneration($generation);
+                    $exception->setEventType($dateException['eventType']);
+                    $generation->getDateExceptions()->add($exception);
+                    $manager->persist($exception);
+                }
+            }
+            if (array_key_exists('targetClinics', $content)) {
+                //get key/value of clinics
+                $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
+                $clinicById = [];
+                foreach ($clinics as $clinic) {
+                    $clinicById[$clinic->getId()] = $clinic;
+                }
 
-            //create target doctors
-            $targetDoctors = $content['targetDoctors'];
-            $generation->getDoctors()->clear();
-            foreach ($targetDoctors as $targetDoctorArr) {
-                $targetDoctor = new EventGenerationTargetDoctor();
-                $targetDoctor->setDoctor($doctorById[$targetDoctorArr['id']]);
-                $targetDoctor->setDefaultOrder($targetDoctorArr['defaultOrder']);
-                $targetDoctor->setWeight($targetDoctorArr['weight']);
-                $targetDoctor->setEventGeneration($generation);
-                $generation->getDoctors()->add($targetDoctor);
-                $manager->persist($targetDoctor);
+                //create target clinics
+                $targetClinics = $content['targetClinics'];
+                $generation->getClinics()->clear();
+                foreach ($targetClinics as $targetClinicArr) {
+                    $targetClinic = new EventGenerationTargetClinic();
+                    $targetClinic->setClinic($clinicById[$targetClinicArr['id']]);
+                    $targetClinic->setDefaultOrder($targetClinicArr['defaultOrder']);
+                    $targetClinic->setWeight($targetClinicArr['weight']);
+                    $targetClinic->setEventGeneration($generation);
+                    $generation->getClinics()->add($targetClinic);
+                    $manager->persist($targetClinic);
+                }
+            }
+            if (array_key_exists('targetDoctors', $content)) {
+                //get key/value of doctors
+                $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
+                $doctorById = [];
+                foreach ($doctors as $doctor) {
+                    $doctorById[$doctor->getId()] = $doctor;
+                }
+
+                //create target doctors
+                $targetDoctors = $content['targetDoctors'];
+                $generation->getDoctors()->clear();
+                foreach ($targetDoctors as $targetDoctorArr) {
+                    $targetDoctor = new EventGenerationTargetDoctor();
+                    $targetDoctor->setDoctor($doctorById[$targetDoctorArr['id']]);
+                    $targetDoctor->setDefaultOrder($targetDoctorArr['defaultOrder']);
+                    $targetDoctor->setWeight($targetDoctorArr['weight']);
+                    $targetDoctor->setEventGeneration($generation);
+                    $generation->getDoctors()->add($targetDoctor);
+                    $manager->persist($targetDoctor);
+                }
             }
         }
 

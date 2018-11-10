@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex justify-content-between mb-5">
             <div>
                 <button class="btn btn-outline-primary" @click="$emit('reload')">
                     {{$t("actions.reload")}}
@@ -12,6 +12,26 @@
                 </button>
             </div>
         </div>
+        <h3>{{$t('event_target.entity.plural')}}</h3>
+        <table class="table table-hover mb-5">
+            <thead>
+            <tr>
+                <th> {{$t('event_target.name')}}</th>
+                <th> {{$t('event_target.weight')}}</th>
+                <th> {{$t('event_target.absolute_score')}}</th>
+                <th> {{$t('event_target.relative_score')}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="clinic in generation.clinics">
+                <td>{{clinic.clinic.name}}</td>
+                <td>{{clinic.weight}}</td>
+                <td>{{clinic.generationScore}}</td>
+                <td>{{clinic.generationScore / clinic.weight}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>{{$t('event.entity.plural')}}</h3>
         <table class="table table-hover">
             <thead>
             <tr>
@@ -22,7 +42,7 @@
             </tr>
             </thead>
             <tbody>
-            <EventRow :showEventType="generation.differentiateByEventType" v-for="event in events" :event="event" :key="event.id"/>
+            <EventRow :showEventType="generation.differentiateByEventType" v-for="event in generation.previewEvents" :event="event" :key="event.id"/>
             </tbody>
         </table>
     </div>
@@ -38,14 +58,12 @@
     export default {
         components: {EventRow},
         props: {
-            events: {
-                type: Array,
-                required: true
-            },
             generation: {
                 type: Object,
                 required: true
             }
+        }, mounted() {
+            console.log(this.generation);
         }
     }
 </script>

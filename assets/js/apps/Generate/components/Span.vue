@@ -86,10 +86,7 @@
                 //datetime to string
                 copy.startDateTime = start.format();
                 copy.endDateTime = end.format();
-                if (proceed) {
-                    copy.step += 1;
-                }
-                this.$emit("save", copy);
+                this.$emit("save", copy, proceed);
             },
             shortCron(fullCron) {
                 return fullCron.substr(fullCron.indexOf("*"));

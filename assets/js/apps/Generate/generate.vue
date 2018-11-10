@@ -28,22 +28,22 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-5" v-if="generation && clinics && events && generation.step < 3">
+        <div class="col-md-5" v-if="generation && clinics && generation.step < 3">
             <Span :generation="generation"
                   v-if="generation.step === 0"
-                  @save="savedProperties(arguments[0])" @proceed="proceed"/>
+                  @save="savedProperties(...arguments)" />
             <Receiver :clinics="clinics" :selected-clinics="selectedClinics"
                       v-if="generation.step === 1"
-                      @save="saveClinics(arguments[0])" @proceed="proceed"/>
+                      @save="saveClinics(...arguments)" />
             <Settings :generation="generation"
                       v-if="generation.step === 2"
-                      @save="saveHolidays(arguments[0])" @proceed="proceed"/>
+                      @save="saveHolidays(...arguments)" />
         </div>
-        <div class="col-md-5" v-if="events != null && generation && generation.step < 3">
-            <EventPreview :events="events"/>
+        <div class="col-md-5" v-if="generation && generation.step < 3">
+            <EventPreview :events="generation.previewEvents"/>
         </div>
-        <div class="col-md-10" v-if="generation && generation.step === 3 && events">
-            <Preview :generation="generation" :events="events"
+        <div class="col-md-10" v-if="generation && generation.step === 3">
+            <Preview :generation="generation"
                      @submit="saveEvents" @reload="reloadEvents"/>
         </div>
     </div>
@@ -65,36 +65,24 @@
         data() {
             return {
                 generation: null,
-                events: null,
                 clinics: null
             }
         },
         methods: {
-            savedProperties(generation) {
+            savedProperties(generation, proceed) {
                 this.generation = generation;
-                this.saveProps();
-
-            },
-            proceed() {
-                this.generation.step += 1;
-                this.saveProps();
+                this.saveProps(proceed);
             },
             saveEvents: function () {
-                axios.post(window.location + "/apply", {
-                    events: this.events.map(e => {
-                        return {
-                            startDateTime: e.startDateTime,
-                            endDateTime: e.endDateTime,
-                            clinicId: e.clinic ? e.clinic.id : null,
-                            doctorId: e.doctor ? e.doctor.id : null,
-                            eventType: e.eventType
-                        }
-                    })
-                }).then(() => {
+                axios.get(window.location + "/apply").then(() => {
                     window.location = "/administration/events";
                 })
             },
-            saveProps: function () {
+            saveProps: function (proceed) {
+                if (proceed) {
+                    this.generation.step = 1;
+                }
+
                 var payload = {};
                 var props = [
                     'name', 'startCronExpression', 'endCronExpression',
@@ -107,11 +95,15 @@
                 });
                 axios.post(window.location + "/update", payload).then(response => {
                     this.generation = response.data;
-                    this.reloadEvents();
                 });
             },
-            saveClinics: function (selectedClinics) {
+            saveClinics: function (selectedClinics, proceed) {
+                if (proceed) {
+                    this.generation.step = 2;
+                }
+
                 axios.post(window.location + "/update", {
+                    step: this.generation.step,
                     targetClinics: selectedClinics.map(c => {
                         return {
                             id: c.id,
@@ -119,23 +111,17 @@
                             weight: c.weight
                         }
                     })
-                }).then(() => {
-                    this.reloadEvents();
+                }).then(response => {
+                    this.generation = response.data;
                 })
             },
-            reloadEvents: function () {
-                axios.get(window.location + "/events").then(response => {
-                    let counter = 0;
-                    response.data.forEach(e => {
-                        if (e.id == null) {
-                            e.id = counter++;
-                        }
-                    });
-                    this.events = response.data;
-                });
-            },
-            saveHolidays: function (holidays) {
+            saveHolidays: function (holidays, proceed) {
+                if (proceed) {
+                    this.generation.step = 3;
+                }
+
                 axios.post(window.location + "/update", {
+                    step: this.generation.step,
                     dateExceptions: holidays.map(c => {
                         return {
                             eventType: 4,
@@ -143,7 +129,14 @@
                             endDateTime: moment(this.addDay(c)).format()
                         }
                     })
-                }).then(() => this.reloadEvents());
+                }).then(response => {
+                    this.generation = response.data;
+                })
+            },
+            reloadEvents: function() {
+                axios.get(window.location + "/update").then((response) => {
+                    this.generation = response.data;
+                })
             },
             addDay: function (input) {
                 var result = new Date(input.valueOf());
@@ -170,7 +163,6 @@
                 .then((response) => {
                     this.clinics = response.data.clinics;
                 });
-            this.reloadEvents();
         },
     }
 

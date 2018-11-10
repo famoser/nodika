@@ -5,13 +5,14 @@ import merge from 'deepmerge'
 import actions from './actions'
 import clinic from './clinic'
 import event from './event'
+import eventTarget from './event_target'
 import generation from './generation'
 import messages from './messages'
 import offer from './offer'
 import view from './view'
 
 // merge in single object; mapping to the correct property
-const translations = {actions, clinic, event, generation, messages, offer, view};
+const translations = {actions, clinic, event, "event_target": eventTarget, generation, messages, offer, view};
 let sharedTranslations = {};
 Object.keys(translations).forEach(property => {
     const translation = translations[property];

@@ -26,4 +26,27 @@ class EventGenerationPreviewEvent extends BaseEntity
 {
     use IdTrait;
     use EventTrait;
+
+    /**
+     * @var EventGeneration|null
+     *
+     * @ORM\ManyToOne(targetEntity="EventGeneration", inversedBy="previewEvents")
+     */
+    private $generatedBy;
+
+    /**
+     * @return EventGeneration|null
+     */
+    public function getGeneratedBy(): ?EventGeneration
+    {
+        return $this->generatedBy;
+    }
+
+    /**
+     * @param EventGeneration|null $generatedBy
+     */
+    public function setGeneratedBy(?EventGeneration $generatedBy): void
+    {
+        $this->generatedBy = $generatedBy;
+    }
 }

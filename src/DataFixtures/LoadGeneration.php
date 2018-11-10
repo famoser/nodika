@@ -43,7 +43,7 @@ class LoadGeneration extends BaseFixture
         $tags = $manager->getRepository(EventTag::class)->findAll();
         $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
         foreach ($tags as $tag) {
-            $this->generateForTag($tag, $admin, $manager, $cronExpressions[$expressionIndex++ % 2]);
+            $this->generateForTag($tag, $admin, $manager, $cronExpressions[$expressionIndex++ % 2], 1 === $expressionIndex % 2);
         }
     }
 
@@ -52,14 +52,15 @@ class LoadGeneration extends BaseFixture
      * @param Doctor        $admin
      * @param ObjectManager $manager
      * @param $cronExpression
+     * @param $differentiate
      */
-    private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, $cronExpression)
+    private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, $cronExpression, $differentiate)
     {
         //prepare a generation
         $generation = $this->getRandomInstance();
         $generation->registerChangeBy($admin);
-        $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT));
-        $generation->setDifferentiateByEventType(false);
+        $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT).' '.$differentiate);
+        $generation->setDifferentiateByEventType($differentiate);
         $generation->setStartDateTime(new \DateTime('today + 8 hours'));
         $generation->setEndDateTime(new \DateTime('today + 8 hours + 1 year'));
         $generation->setStartCronExpression($cronExpression);
@@ -80,15 +81,18 @@ class LoadGeneration extends BaseFixture
         //add most clinics as generation target
         $clinics = $manager->getRepository(Clinic::class)->findAll();
         $skipPossibility = \count($clinics) / 3 * 2;
+        $counter = 0;
         foreach ($clinics as $clinic) {
-            if (0 !== rand(0, $skipPossibility)) {
+            if (0 !== $counter % $skipPossibility) {
                 $target = new EventGenerationTargetClinic();
+                $target->setWeight($counter % $skipPossibility + 2);
                 $target->setClinic($clinic);
                 $target->setEventGeneration($generation);
                 $manager->persist($target);
 
                 $generation->getClinics()->add($target);
             }
+            ++$counter;
         }
 
         //save generation

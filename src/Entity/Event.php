@@ -48,6 +48,13 @@ class Event extends BaseEntity
     private $eventTags;
 
     /**
+     * @var EventGeneration|null
+     *
+     * @ORM\ManyToOne(targetEntity="EventGeneration", inversedBy="appliedEvents")
+     */
+    private $generatedBy;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -96,5 +103,21 @@ class Event extends BaseEntity
         $event->writeValues($preview);
 
         return $event;
+    }
+
+    /**
+     * @return EventGeneration|null
+     */
+    public function getGeneratedBy(): ?EventGeneration
+    {
+        return $this->generatedBy;
+    }
+
+    /**
+     * @param EventGeneration|null $generatedBy
+     */
+    public function setGeneratedBy(?EventGeneration $generatedBy): void
+    {
+        $this->generatedBy = $generatedBy;
     }
 }

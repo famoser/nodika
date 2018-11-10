@@ -56,8 +56,8 @@ class BaseApiController extends BaseController
                 ['attributes' => ['name', 'startDateTime', 'endDateTime', 'startCronExpression', 'endCronExpression', 'differentiateByEventType',
                     'weekdayWeight', 'saturdayWeight', 'sundayWeight', 'holydayWeight', 'mindPreviousEvents', 'applied', 'step',
                     'conflictEventTags' => ['id', 'name'], 'assignEventTags' => ['id', 'name'], 'dateExceptions' => ['id', 'startDateTime', 'endDateTime', 'eventType'],
-                    'doctors' => ['weight', 'generationScore', 'doctor' => ['id', 'fullName']], 'clinics' => ['weight', 'generationScore', 'clinic' => ['id', 'name']], ],
-                    'previewEvents' => ['startDateTime', 'endDateTime', 'eventType', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']], ]
+                    'doctors' => ['weight', 'generationScore', 'doctor' => ['id', 'fullName']], 'clinics' => ['weight', 'generationScore', 'clinic' => ['id', 'name']],
+                    'previewEvents' => ['startDateTime', 'endDateTime', 'eventType', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']], ]]
             ),
             200,
             [],

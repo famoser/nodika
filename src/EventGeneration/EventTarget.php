@@ -129,7 +129,10 @@ class EventTarget
      */
     public function canAssumeResponsibility($eventType)
     {
-        return !isset($this->restrictResponsibilityForEventType[$eventType]) || !$this->restrictResponsibilityForEventType[$eventType] || $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
+        return
+            !isset($this->restrictResponsibilityForEventType[$eventType]) ||
+            !$this->restrictResponsibilityForEventType[$eventType] || 
+            $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
     }
 
     /**

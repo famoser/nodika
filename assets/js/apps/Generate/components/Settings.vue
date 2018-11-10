@@ -76,10 +76,7 @@
                 return moment(holiday).format("DD.MM.YYYY");
             },
             save: function (proceed) {
-                this.$emit("save", this.holidays);
-                if (proceed) {
-                    this.$emit("proceed");
-                }
+                this.$emit("save", this.holidays, proceed);
             },
             orderHolidays: function () {
                 this.holidays.sort(function(a, b) {

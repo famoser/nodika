@@ -24,18 +24,18 @@ class QueueGenerator
     private $totalScore;
 
     /**
-     * @param array $clinicRelativeSize the clinics of the queue (clinicId => relativeSize) (int => double)
+     * @param array $weightedTargets the targets the queue should distribute evenly (targetId => relativeSize) (int => double)
      */
-    public function __construct($clinicRelativeSize)
+    public function __construct($weightedTargets)
     {
         $totalSum = 0;
-        foreach ($clinicRelativeSize as $size) {
+        foreach ($weightedTargets as $size) {
             $totalSum += $size;
         }
         $this->totalScore = $totalSum;
 
         //construct queue
-        foreach ($clinicRelativeSize as $clinic => $size) {
+        foreach ($weightedTargets as $clinic => $size) {
             $queueEntry = new QueueEntry($clinic, $size, $totalSum);
             $this->queueEntries[$queueEntry->getPayload()] = $queueEntry;
         }

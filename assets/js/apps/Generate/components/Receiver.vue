@@ -81,10 +81,7 @@
             save: function (proceed) {
                 this.$emit("save", this.clinicContainers.filter(c => c.selected).map(c => {
                     return {id: c.clinic.id, weight: c.weight}
-                }));
-                if (proceed) {
-                    this.$emit("proceed");
-                }
+                }), proceed);
             },
             initialize: function () {
                 this.clinicContainers = [];

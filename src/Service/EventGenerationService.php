@@ -45,145 +45,25 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * distribute a fixed amount of elements to weighted targets.
      *
-     * the buckets algorithm puts the targets into equal size buckets
-     * according to the share of one target it secures that bucket with that probability
-     * the targets are distributed to the buckets to be in as few buckets as possible.
-     *
      * @param array $weightedTargets is an array of the form (targetId => relativeSize) (int => int)
      * @param int   $bucketsCount    the number of buckets to distribute
-     *
-     * @throws GenerationException
      *
      * @return array is an array of the form (targetId => bucketsAssigned) (int => int)
      */
     private function distributeToTargets($weightedTargets, $bucketsCount)
     {
-        //result
-        $targetBucketAssignments = [];
-
-        //prepare parties
-        $assignmentSizes = [];
-        $totalSize = 0;
-        foreach ($weightedTargets as $partyId => $targetSize) {
-            //array indexes must be int; to avoid rounding errors multiply by 10000 first
-            $assignmentSizes[(int) ($targetSize * 10000)][] = $partyId;
-            $totalSize += $targetSize;
-        }
-
-        //calculate bucket size
-        $bucketSize = (float) $totalSize / $bucketsCount;
-
-        //## go once over all parties and distribute "full" buckets, so get rid of guaranteed assignments
-
-        $distributedBuckets = 0;
-        $missingAssignments = [];
-        foreach ($assignmentSizes as $targetSize => $targetsOfThisSize) {
-            //calculate how many full buckets
-            $times = (int) $targetSize / $bucketSize;
-            $newPartySize = (int) ($targetSize - $bucketSize * $times);
-
-            //assign full buckets, and put rest in missingAssignments
-            foreach ($targetsOfThisSize as $currentTargetId) {
-                $missingAssignments[$newPartySize][] = $currentTargetId;
-                $targetBucketAssignments[$currentTargetId] = $times;
-                $distributedBuckets += $times;
+        $queueGenerator = new QueueGenerator($weightedTargets);
+        $res = [];
+        for ($i = 0; $i < $bucketsCount; ++$i) {
+            $targetId = $queueGenerator->getNext();
+            if (!isset($res[$targetId])) {
+                $res[$targetId] = 1;
+            } else {
+                ++$res[$targetId];
             }
         }
 
-        //## distribute part buckets, ensure the parties are in as few buckets as possible
-
-        //sort by size so big parties are in one bucket for sure
-        krsort($assignmentSizes);
-
-        //create buckets
-        $buckets = [];
-        $bucketsNeeded = $bucketsCount - $distributedBuckets;
-        for ($i = 0; $i < $bucketsNeeded; ++$i) {
-            $buckets[$i] = $bucketSize;
-        }
-
-        //distribute parties to buckets
-        $bucketTargets = [];
-        foreach ($assignmentSizes as $targetSize => $targetsOfThisSize) {
-            foreach ($targetsOfThisSize as $currentTargetId) {
-                $currentPartSize = $targetSize;
-
-                $maxIterations = 50000;
-                while ($currentPartSize > 0) {
-                    if ($maxIterations-- <= 0) {
-                        //wops, no way! terminate I guess?
-                        throw new GenerationException(GenerationStatus::TIMEOUT);
-                    }
-
-                    //find biggest remaining bucket
-                    $biggestRemaining = 0;
-                    $biggestRemainingIndex = 0;
-                    for ($i = 0; $i < $bucketsCount; ++$i) {
-                        if ($biggestRemaining < $buckets[$i]) {
-                            $biggestRemaining = $buckets[$i];
-                            $biggestRemainingIndex = $i;
-                            if ($biggestRemaining === $bucketSize) {
-                                break;
-                            }
-                        }
-                    }
-
-                    //check if party can be placed in bucket fully
-                    //0.0001 is the accuracy threshold
-                    if ($biggestRemaining + 0.0001 > $currentPartSize) {
-                        $bucketTargets[$biggestRemainingIndex][$currentTargetId] = $currentPartSize;
-
-                        //adapt bucket sizes
-                        $buckets[$biggestRemainingIndex] -= $currentPartSize;
-
-                        break;
-                    }
-                    //party does not fit fully into bucket, therefore we have to continue
-                    $currentPartSize -= $biggestRemaining;
-
-                    $bucketTargets[$biggestRemainingIndex][$currentTargetId] = $biggestRemaining;
-
-                    //adapt bucket sizes
-                    $buckets[$biggestRemainingIndex] = 0;
-                }
-            }
-        }
-
-        //## randomly assign a bucket to a containing target
-
-        //shuffle array
-        $bucketIds = array_keys($bucketTargets);
-        shuffle($buckets);
-        $step = $bucketSize / \count($buckets);
-        $currentStep = 0;
-        foreach ($bucketIds as $bucketId) {
-            $targets = $bucketTargets[$bucketId];
-
-            //sort by value size, so big parties are more likely to get assigned
-            arsort($targets);
-            $targetIds = array_keys($targets);
-
-            //chose target inside threshold range
-            $currentSize = 0;
-            $chosenTarget = $targetIds[0];
-            foreach ($targetIds as $targetId) {
-                if ($currentSize > $currentStep) {
-                    //take target from last iteration
-                    break;
-                }
-
-                $chosenTarget = $targetId;
-                $currentSize += $targets[$targetId];
-            }
-
-            //preserve result
-            ++$targetBucketAssignments[$chosenTarget];
-
-            //increase threshold
-            $currentStep += $step;
-        }
-
-        return $targetBucketAssignments;
+        return $res;
     }
 
     /**
@@ -260,7 +140,7 @@ class EventGenerationService implements EventGenerationServiceInterface
     private function assignNaiveEventType(array $events)
     {
         foreach ($events as $event) {
-            $dayOfWeek = $event->getStartDateTime()->format('N');
+            $dayOfWeek = (int) $event->getStartDateTime()->format('N');
             if (7 === $dayOfWeek) {
                 $event->setEventType(EventType::SUNDAY);
             } elseif (6 === $dayOfWeek) {
@@ -530,10 +410,15 @@ class EventGenerationService implements EventGenerationServiceInterface
             //start with the most rare event type, distribute & calculate score of the parties
             //adapt the weighting for the next most rare event type, and repeat
             $weightedDifference = [];
+            $currentWeightedTargets = $weightedTargets;
             for ($i = 0; $i < \count($sortedEventTypes); ++$i) {
                 $eventType = $sortedEventTypes[$i][0];
                 $count = $sortedEventTypes[$i][1];
-                $currentWeightedTargets = $weightedTargets;
+
+                //skip if no events to distribute
+                if (0 === $count) {
+                    continue;
+                }
 
                 //prepare for mismatch
                 $expectedAssignmentPerWeight = $count * 1.0 / array_sum($currentWeightedTargets);
@@ -618,10 +503,10 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
 
         //replace generated events
-        $manager = $this->doctrine->getManager();
         foreach ($eventGeneration->getPreviewEvents() as $previewEvent) {
-            $manager->remove($previewEvent);
+            $previewEvent->setGeneratedBy(null);
         }
+        $eventGeneration->getPreviewEvents()->clear();
         foreach ($events as $event) {
             $eventGeneration->getPreviewEvents()->add($event);
             $event->setGeneratedBy($eventGeneration);
@@ -653,10 +538,9 @@ class EventGenerationService implements EventGenerationServiceInterface
             $manager->persist($event);
         }
 
+        //apply & flush all
         $eventGeneration->setIsApplied(true);
         $manager->persist($eventGeneration);
-
-        //commit
         $manager->flush();
     }
 }
