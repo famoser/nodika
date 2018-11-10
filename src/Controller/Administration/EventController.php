@@ -226,8 +226,6 @@ class EventController extends BaseApiController
             }
         }
 
-        dump($lastGeneration);
-        throw new \Exception();
         //transfer props if previous generation exists
         if (null !== $lastGeneration) {
             //precalculate some time diffs; round up when looking at years
