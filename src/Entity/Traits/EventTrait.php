@@ -195,8 +195,8 @@ trait EventTrait
      */
     protected function writeValues($eventTrait)
     {
-        $this->setStartDateTime($eventTrait->getStartDateTime());
-        $this->setEndDateTime($eventTrait->getEndDateTime());
+        $this->setStartDateTime(clone $eventTrait->getStartDateTime());
+        $this->setEndDateTime(clone $eventTrait->getEndDateTime());
         $this->confirmDateTime = $eventTrait->getConfirmDateTime();
         $this->confirmedByDoctor = $eventTrait->getConfirmedByDoctor();
         $this->lastRemainderEmailSent = $eventTrait->getLastRemainderEmailSent();

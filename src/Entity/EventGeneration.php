@@ -110,6 +110,13 @@ class EventGeneration extends BaseEntity
     private $step = GenerationStep::SET_START_END;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $conflictBufferInEventMultiples = 1;
+
+    /**
      * @var EventTag[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
@@ -152,24 +159,33 @@ class EventGeneration extends BaseEntity
      * @ORM\OneToMany(targetEntity="Event", mappedBy="generatedBy")
      * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
-    private $generatedEvents;
+    private $appliedEvents;
+
+    /**
+     * @var EventGenerationPreviewEvent[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EventGenerationPreviewEvent", mappedBy="generatedBy", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OrderBy({"startDateTime" = "ASC"})
+     */
+    private $previewEvents;
 
     public function __construct()
     {
         $this->dateExceptions = new ArrayCollection();
         $this->doctors = new ArrayCollection();
         $this->clinics = new ArrayCollection();
-        $this->generatedEvents = new ArrayCollection();
+        $this->appliedEvents = new ArrayCollection();
         $this->conflictEventTags = new ArrayCollection();
         $this->assignEventTags = new ArrayCollection();
+        $this->previewEvents = new ArrayCollection();
     }
 
     /**
      * @return Event[]
      */
-    public function getGeneratedEvents()
+    public function getAppliedEvents()
     {
-        return $this->generatedEvents;
+        return $this->appliedEvents;
     }
 
     /**
@@ -394,5 +410,29 @@ class EventGeneration extends BaseEntity
     public function setIsApplied(bool $applied): void
     {
         $this->applied = $applied;
+    }
+
+    /**
+     * @return int
+     */
+    public function getConflictBufferInEventMultiples(): int
+    {
+        return $this->conflictBufferInEventMultiples;
+    }
+
+    /**
+     * @param int $conflictBufferInEventMultiples
+     */
+    public function setConflictBufferInEventMultiples(int $conflictBufferInEventMultiples): void
+    {
+        $this->conflictBufferInEventMultiples = $conflictBufferInEventMultiples;
+    }
+
+    /**
+     * @return EventGenerationPreviewEvent[]|ArrayCollection
+     */
+    public function getPreviewEvents()
+    {
+        return $this->previewEvents;
     }
 }

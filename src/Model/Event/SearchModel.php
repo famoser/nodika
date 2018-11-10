@@ -14,7 +14,6 @@ namespace App\Model\Event;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\EventTag;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class SearchModel
 {
@@ -53,12 +52,12 @@ class SearchModel
     private $maxResults = 3000;
 
     /**
-     * @var Clinic[]|ArrayCollection
+     * @var Clinic[]
      */
     private $clinics;
 
     /**
-     * @var EventTag[]|ArrayCollection
+     * @var EventTag[]
      */
     private $eventTags;
 
@@ -193,7 +192,7 @@ class SearchModel
     }
 
     /**
-     * @return Clinic[]|ArrayCollection
+     * @return Clinic[]
      */
     public function getClinics()
     {
@@ -201,7 +200,7 @@ class SearchModel
     }
 
     /**
-     * @param Clinic[]|ArrayCollection $clinics
+     * @param Clinic[] $clinics
      */
     public function setClinics($clinics): void
     {
@@ -209,7 +208,7 @@ class SearchModel
     }
 
     /**
-     * @return EventTag[]|ArrayCollection
+     * @return EventTag[]
      */
     public function getEventTags()
     {
@@ -217,7 +216,7 @@ class SearchModel
     }
 
     /**
-     * @param EventTag[]|ArrayCollection $eventTags
+     * @param EventTag[] $eventTags
      */
     public function setEventTags($eventTags): void
     {

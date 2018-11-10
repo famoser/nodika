@@ -84,4 +84,17 @@ class Event extends BaseEntity
     {
         return $this->eventTags;
     }
+
+    /**
+     * @param EventGenerationPreviewEvent $preview
+     *
+     * @return Event
+     */
+    public static function create(EventGenerationPreviewEvent $preview)
+    {
+        $event = new static();
+        $event->writeValues($preview);
+
+        return $event;
+    }
 }

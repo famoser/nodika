@@ -14,7 +14,6 @@ namespace App\Controller\Administration\Base;
 use App\Api\Dto\GenerationTargetsDto;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
-use App\Entity\Event;
 use App\Entity\EventGeneration;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,26 +56,8 @@ class BaseApiController extends BaseController
                 ['attributes' => ['name', 'startDateTime', 'endDateTime', 'startCronExpression', 'endCronExpression', 'differentiateByEventType',
                     'weekdayWeight', 'saturdayWeight', 'sundayWeight', 'holydayWeight', 'mindPreviousEvents', 'applied', 'step',
                     'conflictEventTags' => ['id', 'name'], 'assignEventTags' => ['id', 'name'], 'dateExceptions' => ['id', 'startDateTime', 'endDateTime', 'eventType'],
-                    'doctors' => ['weight', 'generationScore', 'doctor' => ['id', 'fullName']], 'clinics' => ['weight', 'generationScore', 'clinic' => ['id', 'name']], ]]
-            ),
-            200,
-            [],
-            true
-        );
-    }
-
-    /**
-     * @param Event[]|Event $events
-     *
-     * @return JsonResponse
-     */
-    protected function returnEvents($events)
-    {
-        return new JsonResponse(
-            $this->getSerializer()->serialize(
-                $events,
-                'json',
-                ['attributes' => ['startDateTime', 'endDateTime', 'eventType', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']]]
+                    'doctors' => ['weight', 'generationScore', 'doctor' => ['id', 'fullName']], 'clinics' => ['weight', 'generationScore', 'clinic' => ['id', 'name']], ],
+                    'previewEvents' => ['startDateTime', 'endDateTime', 'eventType', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']], ]
             ),
             200,
             [],

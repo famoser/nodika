@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -374,17 +375,24 @@ class EventController extends BaseApiController
     /**
      * @Route("/generation/{generation}/update", name="administration_event_generation_update")
      *
-     * @param Request         $request
-     * @param EventGeneration $generation
+     * @param Request                         $request
+     * @param EventGeneration                 $generation
+     * @param EventGenerationServiceInterface $eventGenerationService
      *
      * @return Response
      */
-    public function generationUpdateAction(Request $request, EventGeneration $generation)
+    public function generationUpdateAction(Request $request, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
     {
+        //only update if not applied yet
+        if ($generation->getIsApplied()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        //prepare content & request
         $content = json_decode($request->getContent(), true);
         $manager = $this->getDoctrine()->getManager();
 
-        //simple props first
+        //write simple props first
         $allowedProps = [
             'name' => 1, 'startCronExpression' => 1, 'endCronExpression' => 1,
             'startDateTime' => 2, 'endDateTime' => 2,
@@ -490,23 +498,14 @@ class EventController extends BaseApiController
             }
         }
 
+        //regenerate events
+        $eventGenerationService->generate($generation);
+
+        //save changes
         $manager->persist($generation);
         $manager->flush();
 
         return $this->returnGeneration($generation);
-    }
-
-    /**
-     * @Route("/generation/{generation}/events", name="administration_event_generation_events")
-     *
-     * @param EventGeneration                 $generation
-     * @param EventGenerationServiceInterface $eventGenerationService
-     *
-     * @return Response
-     */
-    public function generateEvents(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
-    {
-        return $this->returnEvents($eventGenerationService->generate($generation));
     }
 
     /**
@@ -525,45 +524,14 @@ class EventController extends BaseApiController
     /**
      * @Route("/generation/{generation}/apply", name="administration_event_generation_apply")
      *
-     * @param Request                         $request
      * @param EventGeneration                 $generation
      * @param EventGenerationServiceInterface $eventGenerationService
      *
      * @return Response
      */
-    public function generateApply(Request $request, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
+    public function generateApply(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
     {
-        //build up lookups
-        $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null]);
-        $doctorLookup = [];
-        foreach ($doctors as $doctor) {
-            $doctorLookup[$doctor->getId()] = $doctor;
-        }
-        $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
-        $clinicLookup = [];
-        foreach ($clinics as $clinic) {
-            $clinicLookup[$clinic->getId()] = $clinic;
-        }
-
-        //process submitted events
-        $eventRequest = json_decode($request->getContent(), true);
-        $events = [];
-        foreach ($eventRequest['events'] as $rawEvent) {
-            $event = new Event();
-            $event->setStartDateTime(new \DateTime($rawEvent['startDateTime']));
-            $event->setEndDateTime(new \DateTime($rawEvent['endDateTime']));
-            $event->setEventType((int) $rawEvent['eventType']);
-
-            $clinicId = $rawEvent['clinicId'];
-            $event->setClinic(array_key_exists($clinicId, $clinicLookup) ? $clinicLookup[$clinicId] : null);
-
-            $doctorId = $rawEvent['doctorId'];
-            $event->setDoctor(array_key_exists($doctorId, $doctorLookup) ? $doctorLookup[$doctorId] : null);
-            $event->setGeneratedBy($generation);
-            $events[] = $event;
-        }
-
-        $eventGenerationService->persist($generation, $events, $this->getUser());
+        $eventGenerationService->persist($generation, $this->getUser());
 
         return $this->returnOk();
     }

@@ -13,6 +13,7 @@ use App\Entity\Doctor;
 use App\Entity\EventGenerationTargetClinic;
 use App\Entity\EventGenerationTargetDoctor;
 use App\Entity\Traits\EventGenerationTarget;
+use App\Enum\EventType;
 
 class EventTarget
 {
@@ -102,6 +103,9 @@ class EventTarget
         return null;
     }
 
+    /** @var bool */
+    private $restrictResponsibilityForEventType = [];
+
     /** @var int[] */
     private $eventTypeResponsibilities = [];
 
@@ -112,8 +116,9 @@ class EventTarget
      * @param $eventType
      * @param int $count
      */
-    public function assignEventTypeResponsibility($eventType, int $count)
+    public function restrictEventTypeResponsibility($eventType, int $count = 0)
     {
+        $this->restrictResponsibilityForEventType[$eventType] = true;
         $this->eventTypeResponsibilities[$eventType] = $count;
         $this->eventTypeResponsibilitiesTaken[$eventType] = 0;
     }
@@ -124,7 +129,7 @@ class EventTarget
      */
     public function canAssumeResponsibility($eventType)
     {
-        return $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
+        return !isset($this->restrictResponsibilityForEventType[$eventType]) || !$this->restrictResponsibilityForEventType[$eventType] || $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
     }
 
     /**
@@ -132,6 +137,25 @@ class EventTarget
      */
     public function assumeResponsibility($eventType)
     {
-        $this->eventTypeResponsibilitiesTaken[$eventType]++;
+        if (!isset($this->eventTypeResponsibilitiesTaken[$eventType])) {
+            $this->eventTypeResponsibilitiesTaken[$eventType] = 1;
+        } else {
+            $this->eventTypeResponsibilitiesTaken[$eventType]++;
+        }
+    }
+
+    /**
+     * @param $weights
+     * @return float|int
+     */
+    public function calculateResponsibility($weights)
+    {
+        $res = 0;
+        foreach ($weights as $eventType => $weight) {
+            if (isset($this->eventTypeResponsibilitiesTaken[$eventType])) {
+                $res += $this->eventTypeResponsibilitiesTaken[$eventType] * $weight;
+            }
+        }
+        return $res;
     }
 }
