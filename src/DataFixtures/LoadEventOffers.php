@@ -35,16 +35,20 @@ class LoadEventOffers extends BaseFixture
         foreach ($doctors as $doctor) {
             $receiverClinic = $doctor->getClinics()->first();
             $senderClinic = $lastDoctor->getClinics()->first();
-            $offer = new EventOffer();
-            $offer->setReceiver($doctor);
-            $offer->setReceiverClinic($receiverClinic);
-            $offer->setSender($lastDoctor);
-            $offer->setSenderClinic($senderClinic);
-            $offer->setMessage('please accept this offer, thank you!');
-            $offer->getEventsWhichChangeOwner()->add($senderClinic->getEvents()[0]);
-            $offer->getEventsWhichChangeOwner()->add($senderClinic->getEvents()[1]);
-            $offer->getEventsWhichChangeOwner()->add($receiverClinic->getEvents()[4]);
-            $manager->persist($offer);
+
+            if (\count($senderClinic->getEvents()) > 0 && \count($receiverClinic->getEvents()) > 4) {
+                $offer = new EventOffer();
+                $offer->setReceiver($doctor);
+                $offer->setReceiverClinic($receiverClinic);
+                $offer->setSender($lastDoctor);
+                $offer->setSenderClinic($senderClinic);
+                $offer->setMessage('please accept this offer, thank you!');
+                $offer->getEventsWhichChangeOwner()->add($senderClinic->getEvents()[0]);
+                $offer->getEventsWhichChangeOwner()->add($senderClinic->getEvents()[1]);
+                $offer->getEventsWhichChangeOwner()->add($receiverClinic->getEvents()[4]);
+                $manager->persist($offer);
+            }
+
             $lastDoctor = $doctor;
         }
         $manager->flush();
