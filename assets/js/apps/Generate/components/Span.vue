@@ -82,54 +82,55 @@
                 mode: null,
                 startCronExpression: null,
                 endCronExpression: null,
-                modeConfig: [
-                    {name: "day", startCronExpression: '* * *', endCronExpression: '* * *'},
-                    {name: "week", startCronExpression: '*/7 * *', endCronExpression: '*/7 * *'}
-                ]
+                modes: ["day", "week", "other"]
             }
         },
         methods: {
-            save(proceed) {
-                let start = moment(this.start);
-                let end = moment(this.end);
-
-                let copy = Object.assign({}, this.generation);
-                copy.name = this.name;
-
-                if (this.mode === "other") {
-                    copy.startCronExpression = this.startCronExpression;
-                    copy.endCronExpression = this.endCronExpression;
-                }
-                else {
-                    for (let entry of this.modeConfig) {
-                        if (entry.name === this.mode) {
-                            let time = start.format("m H ");
-                            time = "0 8 ";
-                            copy.startCronExpression = time + entry.startCronExpression;
-                            copy.endCronExpression = time + entry.endCronExpression;
+            calculateCronExpression(generation, mode) {
+                if (mode === "day" || mode === "week") {
+                    let start = moment(generation.startDateTime);
+                    let time = start.format("m H ");
+                    if (mode === "day") {
+                        return {
+                            startCronExpression: time + "* * *",
+                            endCronExpression: time + "* * *"
+                        }
+                    } else {
+                        return {
+                            startCronExpression: time + "* * " + start.day(),
+                            endCronExpression: time + "* * " + start.day()
                         }
                     }
+                } else {
+                    return {
+                        startCronExpression: generation.startCronExpression,
+                        endCronExpression: generation.endCronExpression
+                    }
                 }
+            },
+            save(proceed) {
+                //write properties
+                let copy = Object.assign({}, this.generation, this.calculateCronExpression(this.mode));
+                copy.name = this.name;
+
                 //datetime to string
+                let start = moment(this.start);
+                let end = moment(this.end);
                 copy.startDateTime = start.format();
                 copy.endDateTime = end.format();
                 this.$emit("save", copy, proceed);
             },
-            shortCron(fullCron) {
-                return fullCron.substr(fullCron.indexOf("*"));
-            },
-            getModeName(startCronExpression, endCronExpression) {
-                let startCron = this.shortCron(startCronExpression);
-                let endCron = this.shortCron(endCronExpression);
-                for (let entry of this.modeConfig) {
-                    if (entry.startCronExpression === startCron && entry.endCronExpression === endCron) {
-                        return entry.name;
+            getModeName(generation) {
+                for (let mode of this.modes) {
+                    const expected = this.calculateCronExpression(generation, mode);
+                    if (expected.startCronExpression === generation.startCronExpression && expected.endCronExpression === generation.endCronExpression) {
+                        return mode;
                     }
                 }
                 return "other";
             },
             initialize: function () {
-                this.mode = this.getModeName(this.generation.startCronExpression, this.generation.endCronExpression);
+                this.mode = this.getModeName(this.generation);
                 this.name = this.generation.name;
                 this.start = new Date(this.generation.startDateTime);
                 this.end = new Date(this.generation.endDateTime);
