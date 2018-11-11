@@ -7,7 +7,7 @@
             <tbody>
             <tr>
                 <td>
-                    <date-picker id="end" v-model="newHoliday" :config="onlyDateOptions"></date-picker>
+                    <input type="text" v-model="newHoliday" class="form-control" @keyup.enter="addHoliday">
                 </td>
                 <td class="minimal-width">
                     <button class="btn btn-sm btn-outline-primary" @click="addHoliday">
@@ -58,7 +58,7 @@
             return {
                 newHoliday: "",
                 holidays: [],
-                onlyDateOptions: { format: 'DD.MM.YYYY' },
+                onlyDateOptions: {format: 'DD.MM.YYYY'},
 
             }
         },
@@ -79,7 +79,7 @@
                 this.$emit("save", this.holidays, proceed);
             },
             orderHolidays: function () {
-                this.holidays.sort(function(a, b) {
+                this.holidays.sort(function (a, b) {
                     return (a > b) - (a < b);
                 });
             },

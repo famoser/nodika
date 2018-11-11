@@ -16,6 +16,7 @@ use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationPreviewEvent;
 use App\Entity\EventPast;
+use App\Entity\Traits\EventTrait;
 use App\Enum\EventChangeType;
 use App\Enum\EventType;
 use App\Enum\GenerationStatus;
@@ -116,7 +117,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         //get end of buffer
         $bufferSize = $bufferStartDate->diff($eventGeneration->getStartDateTime());
-        $bufferEndDate = $eventGeneration->getEndDateTime();
+        $bufferEndDate = clone $eventGeneration->getEndDateTime();
         for ($i = 0; $i < $eventGeneration->getConflictBufferInEventMultiples(); ++$i) {
             $bufferEndDate->add($bufferSize);
         }
@@ -286,8 +287,8 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * @param EventGenerationPreviewEvent[] $events
-     * @param EventTarget[]                 $eventTargets
+     * @param EventTrait[]  $events
+     * @param EventTarget[] $eventTargets
      *
      * @return array
      */
@@ -312,12 +313,12 @@ class EventGenerationService implements EventGenerationServiceInterface
     private $eventTargetClinicLookup = null;
 
     /**
-     * @param EventGenerationPreviewEvent $event
-     * @param EventTarget[]               $eventTargets
+     * @param EventTrait    $event
+     * @param EventTarget[] $eventTargets
      *
      * @return EventTarget|null
      */
-    private function getPredeterminedEventTargetOfEvent(EventGenerationPreviewEvent $event, array $eventTargets)
+    private function getPredeterminedEventTargetOfEvent($event, array $eventTargets)
     {
         if (null === $this->eventTargetDoctorLookup) {
             $this->eventTargetDoctorLookup = [];

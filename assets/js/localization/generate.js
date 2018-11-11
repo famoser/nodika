@@ -9,7 +9,8 @@ export default {
         span: {
             title: "Datum & Zeit",
             one_day: "Ein Tag (24h)",
-            one_week: "Eine Woche (24h * 7)"
+            one_week: "Eine Woche (24h * 7)",
+            other: "Benutzerdefiniert"
         },
         receiver: {
             title: "Empfänger"

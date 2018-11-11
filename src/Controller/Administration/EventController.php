@@ -305,8 +305,12 @@ class EventController extends BaseApiController
             //set other sensible defaults
             if (EventTagType::ACTIVE_SERVICE === $tag->getTagType()) {
                 $generation->setDifferentiateByEventType(true);
+                $generation->setStartCronExpression('0 8 * * *');
+                $generation->setEndCronExpression('0 8 * * *');
             } elseif (EventTagType::BACKUP_SERVICE === $tag->getTagType()) {
                 $generation->setDifferentiateByEventType(false);
+                $generation->setStartCronExpression('0 8 */7 * *');
+                $generation->setEndCronExpression('0 8 */7 * *');
             }
             foreach ($this->getDoctrine()->getRepository(EventTag::class)->findBy(['deletedAt' => null]) as $otherTag) {
                 $generation->getConflictEventTags()->add($otherTag);

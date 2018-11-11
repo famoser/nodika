@@ -41,7 +41,7 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="text")
      */
-    private $startCronExpression = '* 8 * * *';
+    private $startCronExpression = '0 8 * * *';
 
     /**
      * this cron expression specifies when a new event ends
@@ -51,7 +51,7 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="text")
      */
-    private $endCronExpression = '* 8 * * *';
+    private $endCronExpression = '0 8 * * *';
 
     /**
      * @var bool
