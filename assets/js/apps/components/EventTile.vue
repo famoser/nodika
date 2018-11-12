@@ -46,7 +46,7 @@
         },
         methods: {
             formatDateTime: function (date) {
-                return moment(date).subtract(2, "hours").format("DD.MM.YYYY HH:mm");
+                return moment(date).format("DD.MM.YYYY HH:mm");
             },
             displayDoctor: function (user) {
                 if (user == null) {
