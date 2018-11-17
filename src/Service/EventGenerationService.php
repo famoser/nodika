@@ -411,7 +411,6 @@ class EventGenerationService implements EventGenerationServiceInterface
             //start with the most rare event type, distribute & calculate score of the parties
             //adapt the weighting for the next most rare event type, and repeat
             $weightedDifference = [];
-            $currentWeightedTargets = $weightedTargets;
             for ($i = 0; $i < \count($sortedEventTypes); ++$i) {
                 $eventType = $sortedEventTypes[$i][0];
                 $count = $sortedEventTypes[$i][1];
@@ -423,14 +422,14 @@ class EventGenerationService implements EventGenerationServiceInterface
 
                 //adapt weighting
                 $currentWeightedTargets = $weightedTargets;
+                $expectedAssignmentPerWeight = $count * 1.0 / array_sum($currentWeightedTargets);
                 if ($i > 0) {
                     foreach ($weightedDifference as $targetId => $difference) {
-                        $currentWeightedTargets[$targetId] += $difference * $weights[$eventType] / $count;
+                        $currentWeightedTargets[$targetId] += $difference * $weights[$eventType] / $expectedAssignmentPerWeight;
                     }
                 }
 
                 //assign
-                $expectedAssignmentPerWeight = $count * 1.0 / array_sum($currentWeightedTargets);
                 $assignment = $this->distributeToTargets($currentWeightedTargets, $count);
                 foreach ($assignment as $targetId => $targetCount) {
                     $targetLookup[$targetId]->restrictEventTypeResponsibility($eventType, $targetCount);
