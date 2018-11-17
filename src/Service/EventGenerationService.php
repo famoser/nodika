@@ -421,18 +421,16 @@ class EventGenerationService implements EventGenerationServiceInterface
                     continue;
                 }
 
-                //prepare for mismatch
-                $expectedAssignmentPerWeight = $count * 1.0 / array_sum($currentWeightedTargets);
-
                 //adapt weighting
+                $currentWeightedTargets = $weightedTargets;
                 if ($i > 0) {
-                    $expectedAssignmentPerWeightWeight = $expectedAssignmentPerWeight * $weights[$eventType];
                     foreach ($weightedDifference as $targetId => $difference) {
-                        $currentWeightedTargets[$targetId] += $difference / $expectedAssignmentPerWeightWeight;
+                        $currentWeightedTargets[$targetId] += $difference * $weights[$eventType] / $count;
                     }
                 }
 
                 //assign
+                $expectedAssignmentPerWeight = $count * 1.0 / array_sum($currentWeightedTargets);
                 $assignment = $this->distributeToTargets($currentWeightedTargets, $count);
                 foreach ($assignment as $targetId => $targetCount) {
                     $targetLookup[$targetId]->restrictEventTypeResponsibility($eventType, $targetCount);
