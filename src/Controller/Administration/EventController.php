@@ -307,10 +307,12 @@ class EventController extends BaseApiController
                 $generation->setDifferentiateByEventType(true);
                 $generation->setStartCronExpression('0 8 * * *');
                 $generation->setEndCronExpression('0 8 * * *');
+                $generation->setConflictBufferInEventMultiples(1.0);
             } elseif (EventTagType::BACKUP_SERVICE === $tag->getTagType()) {
                 $generation->setDifferentiateByEventType(false);
                 $generation->setStartCronExpression('0 8 */7 * *');
                 $generation->setEndCronExpression('0 8 */7 * *');
+                $generation->setConflictBufferInEventMultiples(1.0 / 7);
             }
             foreach ($this->getDoctrine()->getRepository(EventTag::class)->findBy(['deletedAt' => null]) as $otherTag) {
                 $generation->getConflictEventTags()->add($otherTag);

@@ -110,9 +110,9 @@ class EventGeneration extends BaseEntity
     private $step = GenerationStep::SET_START_END;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      */
     private $conflictBufferInEventMultiples = 1;
 
@@ -413,17 +413,17 @@ class EventGeneration extends BaseEntity
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getConflictBufferInEventMultiples(): int
+    public function getConflictBufferInEventMultiples(): float
     {
         return $this->conflictBufferInEventMultiples;
     }
 
     /**
-     * @param int $conflictBufferInEventMultiples
+     * @param float $conflictBufferInEventMultiples
      */
-    public function setConflictBufferInEventMultiples(int $conflictBufferInEventMultiples): void
+    public function setConflictBufferInEventMultiples(float $conflictBufferInEventMultiples): void
     {
         $this->conflictBufferInEventMultiples = $conflictBufferInEventMultiples;
     }

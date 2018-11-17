@@ -105,6 +105,8 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @param EventGeneration $eventGeneration
      *
+     * @throws \Exception
+     *
      * @return ConflictLookup
      */
     private function createConflictLookup(EventGeneration $eventGeneration)
@@ -113,7 +115,26 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         //get start of buffer
         $startExpression = CronExpression::factory($eventGeneration->getStartCronExpression());
-        $bufferStartDate = $startExpression->getPreviousRunDate($eventGeneration->getStartDateTime(), $eventGeneration->getConflictBufferInEventMultiples(), true, $now->getTimezone()->getName());
+        $roundedBuffer = (int) $eventGeneration->getConflictBufferInEventMultiples();
+
+        //determine buffer start date in multiple of event lengths (rounded)
+        if ($roundedBuffer > 0) {
+            $bufferStartDate = $startExpression->getPreviousRunDate($eventGeneration->getStartDateTime(), $roundedBuffer, true, $now->getTimezone()->getName());
+        } else {
+            $bufferStartDate = clone $eventGeneration->getStartDateTime();
+        }
+
+        //finalizing buffer start by applying the propotionate event length if needed
+        $difference = $eventGeneration->getConflictBufferInEventMultiples() - $roundedBuffer;
+        if ($difference > 0) {
+            //calculate proportionate event length
+            $previousEvent = $startExpression->getPreviousRunDate($eventGeneration->getStartDateTime(), 1, true, $now->getTimezone()->getName());
+            $eventLength = $eventGeneration->getStartDateTime()->getTimestamp() - $previousEvent->getTimestamp();
+            $proportion = (int) ($eventLength * $difference);
+
+            //add to buffer start (respectively remove because want buffer start to get smaller)
+            $bufferStartDate->sub(new \DateInterval('PT'.$proportion.'S'));
+        }
 
         //get end of buffer
         $bufferSize = $bufferStartDate->diff($eventGeneration->getStartDateTime());
@@ -356,6 +377,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param EventGeneration $eventGeneration
      *
      * @throws GenerationException
+     * @throws \Exception
      */
     public function generate(EventGeneration $eventGeneration)
     {

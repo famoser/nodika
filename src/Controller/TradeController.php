@@ -17,6 +17,7 @@ use App\Entity\EventPast;
 use App\Enum\EventChangeType;
 use App\Service\EmailService;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
