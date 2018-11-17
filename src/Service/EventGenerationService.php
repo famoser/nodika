@@ -402,9 +402,10 @@ class EventGenerationService implements EventGenerationServiceInterface
             foreach ($counter as $eventType => $count) {
                 $sortedEventTypes[] = [$eventType, $count];
             }
+
             //sort descending by count
             usort($sortedEventTypes, function ($a, $b) {
-                return $a[1] === $b[1] ? 0 : $a[1] < $b[1] ? 1 : -1;
+                return $a[1] === $b[1] ? 0 : $a[1] < $b[1] ? -1 : 1;
             });
 
             //assign how many events of a certain type a specific target has to be assigned
@@ -425,7 +426,9 @@ class EventGenerationService implements EventGenerationServiceInterface
                 $expectedAssignmentPerWeight = $count * 1.0 / array_sum($currentWeightedTargets);
                 if ($i > 0) {
                     foreach ($weightedDifference as $targetId => $difference) {
-                        $currentWeightedTargets[$targetId] += $difference * $weights[$eventType] / $expectedAssignmentPerWeight;
+                        $targetAdditionalEventCount = $difference / $weights[$eventType];
+                        $expectedEventCount = $expectedAssignmentPerWeight * $currentWeightedTargets[$targetId];
+                        $currentWeightedTargets[$targetId] += ($targetAdditionalEventCount * 1.0 / $expectedEventCount);
                     }
                 }
 

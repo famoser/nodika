@@ -99,7 +99,7 @@ class QueueEntry
      */
     public function exactClone()
     {
-        $entry = new self($this->payload, $this->weight, $this->incrementWeight);
+        $entry = new self($this->payload, $this->weight, $this->size);
         $entry->issued = $this->issued;
         $entry->score = $this->score;
 
