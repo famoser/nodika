@@ -89,8 +89,6 @@
                 type: Object,
                 required: true
             }
-        }, mounted() {
-            console.log(this.generation);
         }
     }
 </script>

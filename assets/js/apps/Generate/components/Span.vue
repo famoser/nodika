@@ -118,7 +118,6 @@
                 let end = moment(this.end, "DD.MM.YYYY HH:mm");
                 copy.startDateTime = start.format();
                 copy.endDateTime = end.format();
-                console.log(copy.startDateTime);
                 this.$emit("save", copy, proceed);
             },
             getModeName(generation) {
