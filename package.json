@@ -22,7 +22,9 @@
     "epic-spinners": "^1",
     "moment": "^2.22.2",
     "open-sans-fontface": "^1.4",
+    "outdated-browser": "^1.0.2",
     "popper.js": "^1.12",
+    "promise-polyfill": "^8.1.0",
     "vue": "^2.5",
     "vue-i18n": "^7"
   }

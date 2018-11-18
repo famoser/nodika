@@ -22,8 +22,9 @@ login with `info@mangel.io`, `asdf`
 test error templates inside TwigBundle/views by accessing `/_error/404` and `/_error/500`
 
 ##### deploy
-server must fulfil requirements of `composer.json` & include ghostscript (`gs`)  
-if you deploy the fist time, while `deploy:composer` is running, set the `.env` file in `/shared/.env`  
+server must fulfil requirements of `composer.json`    
+if you deploy the first time, while `deploy:composer` is running, set the `.env` file in `/shared/.env`  
+do not forget to setup cronjobs as specified in the `CronJobController`  
  
 ##### ssh
 `ssh-copy-id -i ~/.ssh/id_rsa.pub username@domain` to add ssh key  

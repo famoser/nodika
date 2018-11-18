@@ -1,0 +1,50 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "generate.title"|trans }}{% endblock %}
+{% block description %}{{ "generate.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_event" %}
+
+{% block single_content %}
+    <div class="btn-group mb-2">
+        <a class="btn btn-outline-secondary" href="{{ path("administration_event_generation_new", {"tagType": 2}) }}">
+            {{ "generate_new.new"|trans({"%name%": "active_service"|trans({}, "enum_event_tag_type")}, "administration_event") }}
+        </a>
+        <a class="btn btn-outline-secondary" href="{{ path("administration_event_generation_new", {"tagType": 1}) }}">
+            {{ "generate_new.new"|trans({"%name%": "backup_service"|trans({}, "enum_event_tag_type")}, "administration_event") }}
+        </a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ "name"|trans({}, "trait_thing") }}</th>
+            <th>{{ "last_changed_by"|trans({}, "trait_change_aware") }}</th>
+            <th>{{ "last_changed_at"|trans({}, "trait_change_aware") }}</th>
+            <th>{{ "is_applied"|trans({}, "entity_event_generation") }}</th>
+            <th class="minimal-width"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for generation in generations %}
+            <tr>
+                <td>{{ generation.name }}</td>
+                <td>{{ generation.createdBy.fullName }}</td>
+                <td>{{ generation.createdAt|dateFormat }}</td>
+                {% if generation.isApplied %}
+                    <td>{{ "yes"|trans({}, "enum_boolean_type") }}</td>
+                    <td></td>
+                {% else %}
+                    <td>{{ "no"|trans({}, "enum_boolean_type") }}</td>
+                    <td>
+                        <a class="btn btn-secondary"
+                           href="{{ path("administration_event_generation", {"generation" : generation.id}) }}">
+                            <i class="fal fa-pencil"></i>
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

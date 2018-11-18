@@ -1,0 +1,10 @@
+{% extends 'single_content_base.html.twig' %}
+
+{% block title %}{{ "generate.title"|trans }}{% endblock %}
+{% block description %}{{ "generate.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_event" %}
+
+{% block single_content %}
+    <div id="generate"></div>
+{% endblock %}

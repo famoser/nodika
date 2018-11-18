@@ -58,6 +58,18 @@ abstract class BaseEnum
     }
 
     /**
+     * returns a translation string for the passed enum value.
+     *
+     * @return array
+     */
+    public static function getPossibleValues()
+    {
+        $elem = new static();
+
+        return $elem->getPossibleValuesInternal();
+    }
+
+    /**
      * makes from camelCase => camel_case.
      *
      * @param $camelCase
@@ -67,6 +79,23 @@ abstract class BaseEnum
     private static function camelCaseToTranslation($camelCase)
     {
         return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $camelCase));
+    }
+
+    /**
+     * generates an array of all possible enum values.
+     *
+     * @return array
+     */
+    private function getPossibleValuesInternal()
+    {
+        try {
+            $reflection = new ReflectionClass(\get_class($this));
+
+            return array_values($reflection->getConstants());
+        } catch (\ReflectionException $e) {
+        }
+
+        return [];
     }
 
     /**

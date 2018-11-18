@@ -34,16 +34,6 @@ class EventGeneration extends BaseEntity
     use ChangeAwareTrait;
 
     /**
-     * in average event lengths
-     * so add all event lengths, divide through event count, multiply with $minimalGapBetweenEvents to get the minimal gap between a participant.
-     *
-     * @var float
-     *
-     * @ORM\Column(type="decimal")
-     */
-    private $minimalGapBetweenEvents = 1;
-
-    /**
      * this cron expression specifies when a new event starts
      * https://crontab.guru/.
      *
@@ -51,7 +41,7 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="text")
      */
-    private $startCronExpression = '* 8 * * *';
+    private $startCronExpression = '0 8 * * *';
 
     /**
      * this cron expression specifies when a new event ends
@@ -61,14 +51,14 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="text")
      */
-    private $endCronExpression = '* 8 * * *';
+    private $endCronExpression = '0 8 * * *';
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean")
      */
-    private $differentiateByEventType;
+    private $differentiateByEventType = false;
 
     /**
      * @var float
@@ -82,21 +72,21 @@ class EventGeneration extends BaseEntity
      *
      * @ORM\Column(type="decimal")
      */
-    private $saturdayWeight = 1;
+    private $saturdayWeight = 1.2;
 
     /**
      * @var float
      *
      * @ORM\Column(type="decimal")
      */
-    private $sundayWeight = 1;
+    private $sundayWeight = 1.5;
 
     /**
      * @var float
      *
      * @ORM\Column(type="decimal")
      */
-    private $holidayWeight = 1;
+    private $holidayWeight = 2;
 
     /**
      * @var bool
@@ -106,11 +96,25 @@ class EventGeneration extends BaseEntity
     private $mindPreviousEvents = true;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $applied = false;
+
+    /**
      * @var int
      *
      * @ORM\Column(type="integer")
      */
-    private $step = GenerationStep::CHOOSE_TARGETS;
+    private $step = GenerationStep::SET_START_END;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float")
+     */
+    private $conflictBufferInEventMultiples = 1;
 
     /**
      * @var EventTag[]|ArrayCollection
@@ -131,21 +135,21 @@ class EventGeneration extends BaseEntity
     /**
      * @var EventGenerationDateException[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationDateException", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationDateException", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
      */
     private $dateExceptions;
 
     /**
      * @var EventGenerationTargetDoctor[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventGenerationTargetDoctor", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="EventGenerationTargetDoctor", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
      */
     private $doctors;
 
     /**
      * @var EventGenerationTargetClinic[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventGenerationTargetClinic", mappedBy="eventGeneration")
+     * @ORM\OneToMany(targetEntity="EventGenerationTargetClinic", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
      */
     private $clinics;
 
@@ -155,40 +159,33 @@ class EventGeneration extends BaseEntity
      * @ORM\OneToMany(targetEntity="Event", mappedBy="generatedBy")
      * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
-    private $generatedEvents;
+    private $appliedEvents;
+
+    /**
+     * @var EventGenerationPreviewEvent[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EventGenerationPreviewEvent", mappedBy="generatedBy", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OrderBy({"startDateTime" = "ASC"})
+     */
+    private $previewEvents;
 
     public function __construct()
     {
         $this->dateExceptions = new ArrayCollection();
         $this->doctors = new ArrayCollection();
         $this->clinics = new ArrayCollection();
-        $this->generatedEvents = new ArrayCollection();
+        $this->appliedEvents = new ArrayCollection();
         $this->conflictEventTags = new ArrayCollection();
         $this->assignEventTags = new ArrayCollection();
+        $this->previewEvents = new ArrayCollection();
     }
 
     /**
      * @return Event[]
      */
-    public function getGeneratedEvents()
+    public function getAppliedEvents()
     {
-        return $this->generatedEvents;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMinimalGapBetweenEvents(): float
-    {
-        return $this->minimalGapBetweenEvents;
-    }
-
-    /**
-     * @param float $minimalGapBetweenEvents
-     */
-    public function setMinimalGapBetweenEvents(float $minimalGapBetweenEvents): void
-    {
-        $this->minimalGapBetweenEvents = $minimalGapBetweenEvents;
+        return $this->appliedEvents;
     }
 
     /**
@@ -397,5 +394,45 @@ class EventGeneration extends BaseEntity
     public function getAssignEventTags()
     {
         return $this->assignEventTags;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsApplied(): bool
+    {
+        return $this->applied;
+    }
+
+    /**
+     * @param bool $applied
+     */
+    public function setIsApplied(bool $applied): void
+    {
+        $this->applied = $applied;
+    }
+
+    /**
+     * @return float
+     */
+    public function getConflictBufferInEventMultiples(): float
+    {
+        return $this->conflictBufferInEventMultiples;
+    }
+
+    /**
+     * @param float $conflictBufferInEventMultiples
+     */
+    public function setConflictBufferInEventMultiples(float $conflictBufferInEventMultiples): void
+    {
+        $this->conflictBufferInEventMultiples = $conflictBufferInEventMultiples;
+    }
+
+    /**
+     * @return EventGenerationPreviewEvent[]|ArrayCollection
+     */
+    public function getPreviewEvents()
+    {
+        return $this->previewEvents;
     }
 }

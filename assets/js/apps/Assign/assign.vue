@@ -2,7 +2,7 @@
     <div id="assign-app">
         <div class="row">
             <div class="col-md-4">
-                <p class="lead">{{ $t("actions.choose_doctor") }}</p>
+                <p class="alert alert-info">{{ $t("actions.choose_doctor") }}</p>
                 <AtomSpinner
                         v-if="doctorsLoading"
                         :animation-duration="1000"
@@ -18,14 +18,11 @@
             </div>
             <div class="col-md-8">
                 <div v-if="selectedDoctor != null">
-                    <div class="d-flex justify-content-between">
-                        <p class="lead">{{ $t("actions.assign_events") }}</p>
-                        <div>
-                            <a href="#" v-on:click.prevent="assignAll" class="btn btn-sm btn-secondary" :class="{'disabled': loadingEvents.length > 0 || eventsLoading}">
-                                {{ $t("actions.assign_all_events") }}
-                            </a>
-                        </div>
-                    </div>
+                    <p class="alert alert-info">{{ $t("actions.select_event") }}
+                        <a href="#" v-on:click.prevent="assignAll" :class="{'disabled': loadingEvents.length > 0 || eventsLoading}">
+                            {{ $t("actions.assign_all_events") }}
+                        </a>
+                    </p>
                     <AtomSpinner
                             v-if="eventsLoading"
                             :animation-duration="1000"
@@ -115,6 +112,9 @@
                 .then((response) => {
                     this.doctorsLoading = false;
                     this.doctors = response.data;
+                    if (this.doctors.length > 0) {
+                        this.doctorSelected(this.doctors[0]);
+                    }
                 });
         },
     }

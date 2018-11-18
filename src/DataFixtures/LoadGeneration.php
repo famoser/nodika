@@ -12,8 +12,10 @@
 namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
+use App\DataFixtures\Production\LoadEventTag;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
+use App\Entity\Event;
 use App\Entity\EventGeneration;
 use App\Entity\EventGenerationDateException;
 use App\Entity\EventGenerationTargetClinic;
@@ -39,23 +41,28 @@ class LoadGeneration extends BaseFixture
         $expressionIndex = 0;
 
         $tags = $manager->getRepository(EventTag::class)->findAll();
+        $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
         foreach ($tags as $tag) {
-            $this->generateForTag($tag, $manager, $cronExpressions[$expressionIndex++ % 2]);
+            $this->generateForTag($tag, $admin, $manager, $cronExpressions[$expressionIndex++ % 2], 1 === $expressionIndex % 2);
         }
     }
 
     /**
      * @param EventTag      $tag
+     * @param Doctor        $admin
      * @param ObjectManager $manager
+     * @param $cronExpression
+     * @param $differentiate
      */
-    private function generateForTag(EventTag $tag, ObjectManager $manager, $cronExpression)
+    private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, $cronExpression, $differentiate)
     {
         //prepare a generation
         $generation = $this->getRandomInstance();
-        $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT));
-        $generation->setDifferentiateByEventType(false);
-        $generation->setStartDateTime(new \DateTime());
-        $generation->setEndDateTime(new \DateTime('now + 1 year'));
+        $generation->registerChangeBy($admin);
+        $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT).' '.$differentiate);
+        $generation->setDifferentiateByEventType($differentiate);
+        $generation->setStartDateTime(new \DateTime('today + 8 hours'));
+        $generation->setEndDateTime(new \DateTime('today + 8 hours + 1 year'));
         $generation->setStartCronExpression($cronExpression);
         $generation->setEndCronExpression($cronExpression);
         $generation->getAssignEventTags()->add($tag);
@@ -74,15 +81,18 @@ class LoadGeneration extends BaseFixture
         //add most clinics as generation target
         $clinics = $manager->getRepository(Clinic::class)->findAll();
         $skipPossibility = \count($clinics) / 3 * 2;
+        $counter = 0;
         foreach ($clinics as $clinic) {
-            if (0 !== rand(0, $skipPossibility)) {
+            if (0 !== $counter % $skipPossibility) {
                 $target = new EventGenerationTargetClinic();
+                $target->setWeight($counter % $skipPossibility + 2);
                 $target->setClinic($clinic);
                 $target->setEventGeneration($generation);
                 $manager->persist($target);
 
                 $generation->getClinics()->add($target);
             }
+            ++$counter;
         }
 
         //save generation
@@ -91,8 +101,10 @@ class LoadGeneration extends BaseFixture
 
         //generate & persist all events
         $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
-        $events = $this->getEventGenerationService()->persist($generation, $admin);
+        $this->getEventGenerationService()->generate($generation);
+        $this->getEventGenerationService()->persist($generation, $admin);
 
+        $events = $manager->getRepository(Event::class)->findAll();
         //confirm first 10 events
         for ($i = 0; $i < 10; ++$i) {
             $event = $events[$i];
@@ -123,6 +135,7 @@ class LoadGeneration extends BaseFixture
     {
         $eventGeneration = new EventGeneration();
         $this->fillThing($eventGeneration);
+        $this->fillStartEnd($eventGeneration);
 
         return $eventGeneration;
     }

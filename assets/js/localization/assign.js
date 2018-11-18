@@ -1,7 +1,8 @@
 export default {
     de: {
         actions: {
-            choose_doctor: 'Mitarbeiter auswählen, dem Termine zugewiesen werden sollen',
+            choose_doctor: 'Mitarbeiter*in auswählen',
+            select_event: 'Auf Termin klicken, um diesen zuzuweisen, oder ',
             assign_events: 'Termine zuweisen',
             assign_all_events: "alle zuweisen",
         },

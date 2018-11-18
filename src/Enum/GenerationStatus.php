@@ -17,8 +17,10 @@ class GenerationStatus extends BaseEnum
 {
     const STARTED = 0;
     const SUCCESSFUL = 1;
-    const NO_MATCHING_CLINIC = 2;
-    const NO_ALLOWED_CLINIC_FOR_EVENT = 3;
+    const NO_MATCHING_TARGET = 2;
+    const NO_ALLOWED_TARGET_FOR_EVENT = 3;
     const TIMEOUT = 4;
+    const PREDETERMINED_EVENT_CANT_BE_ASSIGNED = 5;
+    const NO_TARGET_CAN_ASSUME_RESPONSIBILITY = 6;
     const UNKNOWN_ERROR = 10;
 }

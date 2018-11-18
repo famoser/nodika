@@ -15,20 +15,19 @@ use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Helper\DateTimeFormatter;
+use App\Service\CsvService;
 use Symfony\Component\Translation\TranslatorInterface;
 
 trait EventControllerTrait
 {
     /**
-     * @param Event[]             $events
-     * @param TranslatorInterface $translator
+     * @param Event[] $events
      *
      * @return string[][]
      */
-    private function toDataTable($events, TranslatorInterface $translator)
+    private function toDataTable($events)
     {
         $data = [];
-        $data[] = $this->getEventsHeader($translator);
         foreach ($events as $event) {
             $row = [];
             $row[] = $event->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
@@ -39,8 +38,49 @@ trait EventControllerTrait
             foreach ($event->getEventTags() as $eventTag) {
                 $tags[] = $eventTag->getName();
             }
-            $row[] = implode(',', $tags);
+            $row[] = implode(CsvService::DELIMITER, $tags);
             $data[] = $row;
+        }
+        $data[] = [];
+
+        return $data;
+    }
+
+    /**
+     * @param Event[] $events
+     *
+     * @return string[][]
+     */
+    private function toSummaryTable($events)
+    {
+        if (0 === \count($events)) {
+            return [];
+        }
+
+        $data = [];
+
+        //set start / end datetime
+        $startDateTime = $events[0]->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        $endDateTime = $events[\count($events) - 1]->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
+        $data[] = [$startDateTime, $endDateTime];
+
+        //count events per clinic
+        $count = [];
+        /** @var Clinic[] $clinicLookup */
+        $clinicLookup = [];
+        foreach ($events as $event) {
+            $clinicId = $event->getClinic()->getId();
+            if (!isset($count[$clinicId])) {
+                $count[$clinicId] = 1;
+                $clinicLookup[$clinicId] = $event->getClinic();
+            } else {
+                ++$count[$clinicId];
+            }
+        }
+
+        //export
+        foreach ($clinicLookup as $id => $clinic) {
+            $data[] = [$clinic->getName(), $count[$id]];
         }
         $data[] = [];
 
@@ -54,8 +94,8 @@ trait EventControllerTrait
      */
     private function getEventsHeader(TranslatorInterface $translator)
     {
-        $start = $translator->trans('start_date_time', [], 'entity_event');
-        $end = $translator->trans('end_date_time', [], 'entity_event');
+        $start = $translator->trans('start_date_time', [], 'trait_start_end');
+        $end = $translator->trans('end_date_time', [], 'trait_start_end');
         $clinic = $translator->trans('entity.name', [], 'entity_clinic');
         $person = $translator->trans('entity.plural', [], 'entity_event_tag');
 

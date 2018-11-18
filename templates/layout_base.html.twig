@@ -75,6 +75,11 @@
     <base href="/" target="_self">
 </head>
 <body>
+<div id="outdated">
+    <h6>{{ "base.outdated.your_browser_is_outdated"|trans({}, "layout") }}</h6>
+    <p>{{ "base.outdated.update_to_view_correctly"|trans({}, "layout") }} <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">{{ "base.outdated.update_now"|trans({}, "layout") }}</a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
 
 {% if is_granted('ROLE_USER') %}
 <header class="header">

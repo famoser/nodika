@@ -11,7 +11,6 @@
 
 namespace App\Command;
 
-use App\Entity\Traits\IdTrait;
 use App\Enum\EventChangeType;
 use App\Enum\EventTagColor;
 use PDO;
@@ -31,8 +30,8 @@ class TransferDataCommand extends Command
     const CURRENT = 1;
     const OLD = 2;
 
-    const DB_PATH = 'var/data_before_migration.sqlite';
-    const DB_PATH2 = 'var/data_before_migration.sqlite2';
+    private $dbPath;
+    private $dbPath2;
 
     /**
      * @var RegistryInterface
@@ -48,6 +47,8 @@ class TransferDataCommand extends Command
     {
         parent::__construct();
         $this->doctrine = $registry;
+        $this->dbPath = \dirname(\dirname(__DIR__)).'/var/data_before_migration.sqlite';
+        $this->dbPath2 = $this->dbPath.'2';
     }
 
     protected function configure()
@@ -55,19 +56,19 @@ class TransferDataCommand extends Command
         $this
             ->setName('app:transfer-data')
             ->setDescription('Transfers the data from an old version of the database.')
-            ->setHelp('This will clear the new database, and then transfer the data from an old version of the db to the new one. The old database should be located at '.self::DB_PATH.
+            ->setHelp('This will clear the new database, and then transfer the data from an old version of the db to the new one. The old database should be located at '.$this->dbPath.
                 "\n\nThis does not fully transfer all data, only the one used by the current installation. For example, event offers are not transferred, nor are old generations.");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!file_exists(self::DB_PATH)) {
-            $output->writeln('old db not found at '.self::DB_PATH);
+        if (!file_exists($this->dbPath)) {
+            $output->writeln('old db not found at '.$this->dbPath);
 
             return;
         }
 
-        copy(self::DB_PATH, self::DB_PATH2);
+        copy($this->dbPath, $this->dbPath2);
 
         $output->writeln('cleaning old db');
         $this->cleanOldDb();
@@ -213,6 +214,12 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
         $counter = 0;
         foreach ($eventLines as &$eventLine) {
             $eventLine['color'] = $colors[$counter++ % \count($colors)];
+            $eventLine['tagType'] = 0;
+            if ('Notfalldienst' === $eventLine['name']) {
+                $eventLine['tagType'] = 2;
+            } elseif ('Wochendienst' === $eventLine['name']) {
+                $eventLine['tagType'] = 1;
+            }
         }
 
         $this->insertFields(
@@ -320,18 +327,6 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
     }
 
     /**
-     * @param IdTrait[] $objects
-     */
-    private function persistAll(array $objects)
-    {
-        $manager = $this->doctrine->getManager();
-        foreach ($objects as $object) {
-            $manager->persist($object);
-        }
-        $manager->flush();
-    }
-
-    /**
      * @param array  $content
      * @param array  $fieldSpezification
      * @param string $table
@@ -341,6 +336,13 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
         if (!$this->normalizeFieldSpezification($content, null, $fieldNames, $methodNames, $conversions)) {
             return;
         }
+
+        $insertBatch = function ($entries, $parameters) use ($table, $fieldNames) {
+            //prepare & execute sql
+            $sql = 'INSERT INTO '.$table.' ('.implode(',', $fieldNames).') VALUES ';
+            $sql .= '('.implode('),(', $entries).')';
+            $this->executeQuery(self::CURRENT, $sql, $parameters);
+        };
 
         //create insert sql
         $entries = [];
@@ -353,17 +355,18 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
                 $parameters[$currentKey] = $content[$i][$fieldName];
             }
             $entries[] = implode(', ', $entry);
+
+            if (\count($entries) > 20) {
+                $insertBatch($entries, $parameters);
+                $entries = [];
+                $parameters = [];
+            }
         }
 
         //abort if none
-        if (0 === \count($entries)) {
-            return;
+        if (\count($entries) > 0) {
+            $insertBatch($entries, $parameters);
         }
-
-        //preapre & execute sql
-        $sql = 'INSERT INTO '.$table.' ('.implode(',', $fieldNames).') VALUES ';
-        $sql .= '('.implode('),(', $entries).')';
-        $this->executeQuery(self::CURRENT, $sql, $parameters);
     }
 
     /**
@@ -411,43 +414,6 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
     }
 
     /**
-     * @param array    $content
-     * @param array    $fieldSpezification
-     * @param callable $newObject
-     *
-     * @return array
-     */
-    private function writeFields(array $content, array $fieldSpezification, callable $newObject)
-    {
-        if (!$this->normalizeFieldSpezification($content, $fieldSpezification, $fieldNames, $methodNames, $conversions)) {
-            return [];
-        }
-
-        //create objects
-        $res = [];
-        foreach ($content as $entry) {
-            $object = $newObject();
-            for ($i = 0; $i < \count($fieldNames); ++$i) {
-                //get & optionally convert value
-                $value = $entry[$fieldNames[$i]];
-                $conversion = $conversions[$i];
-                if (1 === $conversion) {
-                    $value = (int) $value;
-                } elseif (2 === $conversion && null !== $value) {
-                    $value = new \DateTime($value);
-                }
-
-                //set to object
-                $methodName = $methodNames[$i];
-                $object->$methodName($value);
-            }
-            $res[] = $object;
-        }
-
-        return $res;
-    }
-
-    /**
      * @param $target
      * @param $sql
      * @param array $parameters
@@ -459,7 +425,7 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
         if (self::CURRENT === $target) {
             $pdo = $this->doctrine->getConnection();
         } else {
-            $pdo = new PDO('sqlite:'.realpath(self::DB_PATH2));
+            $pdo = new PDO('sqlite:'.realpath($this->dbPath2));
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         /** @var \PDO $pdo */

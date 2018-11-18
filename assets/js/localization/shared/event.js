@@ -1,5 +1,12 @@
 export default {
     de: {
-        no_user_assigned: "Keinem Mitarbeiter zugewiesen"
+        entity: {
+            name: "Termin",
+            plural: "Termine"
+        },
+        no_user_assigned: "Keinem Mitarbeiter zugewiesen",
+        start: "Anfang",
+        end: "Ende",
+        owner: "Zugewiesen"
     }
 }

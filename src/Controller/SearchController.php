@@ -61,7 +61,7 @@ class SearchController extends BaseFormController
         $events = $eventRepo->search($searchModel);
 
         if ($export) {
-            return $csvService->renderCsv('export.csv', $this->toDataTable($events, $translator), $this->getEventsHeader($translator));
+            return $csvService->renderCsv('export.csv', $this->toSummaryTable($events));
         }
 
         $arr['events'] = $events;

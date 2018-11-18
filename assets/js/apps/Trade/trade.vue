@@ -2,55 +2,45 @@
     <div id="trade-app">
         <div class="row">
             <div class="col-md-4">
-                <p class="lead">{{ $t("actions.choose_sender_events") }}</p>
+                <p class="alert alert-info">{{ $t("actions.choose_sender_events") }}</p>
 
                 <EventSelect :owner="sender"/>
             </div>
             <div class="col-md-4">
-                <p class="lead">{{ $t("actions.choose_receiver_events") }}</p>
+                <p class="alert alert-info">{{ $t("actions.choose_receiver_events") }}</p>
 
                 <EventSelect :owner="receiver"/>
             </div>
             <div class="col-md-4">
                 <p class="lead">{{ $t("offer.name") }}</p>
-                <div v-if="fullyDefinedOffer">
+                <div v-if="sender.selectedEvents.length === 0 && receiver.selectedEvents.length === 0">
                     <p class="warning">
-                        {{ $t("messages.info.not_fully_defined")}}
-                    </p>
-                </div>
-                <div v-else-if="possibleSenderClinics.length === 0">
-                    <p class="warning">
-                        {{ $t("messages.danger.no_single_sender_responsible")}}
-                    </p>
-                </div>
-                <div v-else-if="possibleReceiverClinics.length === 0">
-                    <p class="warning">
-                        {{ $t("messages.danger.no_single_receiver_responsible")}}
-                    </p>
-                </div>
-                <div v-else-if="sender.noneSelected && receiver.noneSelected">
-                    <p class="warning">
-                        {{$t("messages.warning.no_events_selected")}}
+                        {{ $t("messages.info.no_evens_selected")}}
                     </p>
                 </div>
                 <div v-else>
-                    <div v-if="!sender.noneSelected" class="mb-4">
+                    <div v-if="sender.selectedEvents.length > 0" class="mb-4">
                         <p>{{$t("messages.sender_events")}}</p>
                         <EventGrid v-if="sender.selectedEvents.length > 0"
                                    :events="sender.selectedEvents"
                                    :disabled-events="sender.selectedEvents"/>
                     </div>
-                    <div v-if="possibleSenderClinics.length > 1" class="mb-4">
-                        <p>{{$t("actions.choose_sender_clinic")}}</p>
-                        <select class="form-control form-control-sm"
-                                v-model="sender.selectedClinic">
-                            <option v-for="option in possibleSenderClinics" v-bind:value="option">
-                                {{ option.name }}
-                            </option>
-                        </select>
+                    <div>
+                        <p v-if="possibleSenderClinics.length === 0" class="alert alert-danger">
+                            {{ $t("messages.danger.no_single_sender_responsible")}}
+                        </p>
+                        <div v-else-if="possibleSenderClinics.length > 1" class="mb-4">
+                            <p>{{$t("actions.choose_sender_clinic")}}</p>
+                            <select class="form-control form-control-sm"
+                                    v-model="sender.selectedClinic">
+                                <option v-for="option in possibleSenderClinics" v-bind:value="option">
+                                    {{ option.name }}
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div v-if="!receiver.noneSelected" class="mb-4">
+                    <div v-if="receiver.selectedEvents.length > 0" class="mb-4">
                         <p>{{$t("messages.receiver_events")}}</p>
                         <EventGrid v-if="receiver.selectedEvents.length > 0"
                                    :events="receiver.selectedEvents"
@@ -59,30 +49,44 @@
 
                     <p>{{$t("messages.receiver")}}</p>
 
-                    <select class="form-control form-control-sm"
-                            v-if="possibleReceiverDoctors.length > 1"
-                            v-model="receiver.selectedDoctor">
-                        <option v-for="option in possibleReceiverDoctors" v-bind:value="option">
-                            {{ option.fullName }}
-                        </option>
-                    </select>
-                    <span v-else-if="receiver.selectedDoctor !== null">{{ receiver.selectedDoctor.fullName }}</span> <br/>
+                    <div>
+                        <div v-if="possibleReceiverClinics.length > 0" class="mb-4">
+                            <div>
+                                <select class="form-control form-control-sm"
+                                        v-if="possibleReceiverClinics.length > 1"
+                                        v-model="receiver.selectedClinic">
+                                    <option v-for="option in possibleReceiverClinics" v-bind:value="option">
+                                        {{ option.name }}
+                                    </option>
+                                </select>
+                                <span v-else class="text-secondary">{{ receiver.selectedClinic.name }}</span>
+                            </div>
 
-                    <select class="form-control form-control-sm" v-if="possibleReceiverClinics.length > 1"
-                            v-model="receiver.selectedClinic">
-                        <option v-for="option in possibleReceiverClinics" v-bind:value="option">
-                            {{ option.name }}
-                        </option>
-                    </select>
-                    <span v-else class="text-secondary">{{ receiver.selectedClinic.name }}</span>
-
-                    <div class="form-group">
-                        <label for="description" class="col-form-label">{{ $t("offer.description")}}</label>
-                        <textarea class="form-control" id="description" v-model="description"></textarea>
+                            <div>
+                                <select class="form-control form-control-sm"
+                                        v-if="possibleReceiverDoctors.length > 1"
+                                        v-model="receiver.selectedDoctor">
+                                    <option v-for="option in possibleReceiverDoctors" v-bind:value="option">
+                                        {{ option.fullName }}
+                                    </option>
+                                </select>
+                                <span v-else-if="receiver.selectedDoctor !== null">{{ receiver.selectedDoctor.fullName }}</span>
+                            </div>
+                        </div>
+                        <p v-else class="alert alert-danger">
+                            {{ $t("messages.danger.no_single_receiver_responsible")}}
+                        </p>
                     </div>
-                    <button class="btn btn-primary" @click="createOffer">
-                        {{ $t("actions.create_offer")}}
-                    </button>
+
+                    <div v-if="possibleSenderClinics.length > 0 && possibleReceiverClinics.length > 0">
+                        <div class="form-group">
+                            <label for="description" class="col-form-label">{{ $t("offer.description")}}</label>
+                            <textarea class="form-control" id="description" v-model="description"></textarea>
+                        </div>
+                        <button class="btn btn-primary" @click="createOffer">
+                            {{ $t("actions.create_offer")}}
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -103,7 +107,6 @@
                 sender: {
                     events: [],
                     selectedEvents: [],
-                    noneSelected: false,
                     loading: false,
                     selectedClinic: null,
                     doctor: null
@@ -111,7 +114,6 @@
                 receiver: {
                     events: [],
                     selectedEvents: [],
-                    noneSelected: false,
                     loading: false,
                     selectedClinic: null,
                     selectedDoctor: null
@@ -138,7 +140,7 @@
                 return this.clinics.filter(c => doctorClinicIds.includes(c.id));
             },
             possibleSenderClinics: function () {
-                let clinics = this.sender.noneSelected ? this.allSenderClinics : this.possibleClinics(this.allSenderClinics, this.sender.selectedEvents);
+                let clinics = this.possibleClinics(this.allSenderClinics, this.sender.selectedEvents);
                 this.sender.selectedClinic = this.defaultClinic(clinics, this.sender.selectedClinic);
                 return clinics;
             },
@@ -177,14 +179,14 @@
                 return this.receiver.selectedClinic.doctors;
             },
             fullyDefinedOffer: function () {
-                return (this.sender.selectedEvents.length === 0 && !this.sender.noneSelected) || (this.receiver.selectedEvents.length === 0 && !this.receiver.noneSelected);
+                return (this.sender.selectedEvents.length === 0) || (this.receiver.selectedEvents.length === 0);
             }
         },
         methods: {
             createOffer: function () {
                 this.creatingOffer = true;
-                const senderEvents = this.sender.noneSelected ? [] : this.sender.selectedEvents.map(e => e.id);
-                const receiverEvents = this.receiver.noneSelected ? [] : this.receiver.selectedEvents.map(e => e.id);
+                const senderEvents = this.sender.selectedEvents.map(e => e.id);
+                const receiverEvents = this.receiver.selectedEvents.map(e => e.id);
                 axios.post("/api/trade/create", {
                     "sender_event_ids": senderEvents,
                     "receiver_event_ids": receiverEvents,

@@ -2,11 +2,14 @@
 require("../sass/app.sass");
 
 // other parts of the application
+require("./legacy");
 require("./bootstrap_vanilla");
 require("./font_awesome_light");
+require("./font_awesome_regular");
 require("./font_awesome_solid");
 
 // apps
 require('./apps/Assign/bootstrap');
 require('./apps/Confirm/bootstrap');
 require('./apps/Trade/bootstrap');
+require('./apps/Generate/bootstrap');

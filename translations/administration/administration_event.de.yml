@@ -7,6 +7,8 @@ new:
 edit:
   title: 'Termin bearbeiten'
   description: 'Editieren Sie den Termin'
+  error:
+    doctor_not_part_of_clinic: "Der ausgewählte Tierarzt ist nicht Teil der Praxis."
 
 remove:
   title: 'Termin entfernen'
@@ -19,3 +21,15 @@ history:
 toggle_confirmed:
   title: 'Bestätigt ändern'
   change: 'ändern'
+
+generate:
+  title: 'Termine generieren'
+  description: 'Fügen Sie neue Termine hinzu'
+
+generations:
+  title: 'Termingenerierungen'
+  description: 'Bereiten Sie die nächsten Generierungen vor'
+
+generate_new:
+  title: 'Neue Termingenerierung'
+  new: 'Neuer %name%'

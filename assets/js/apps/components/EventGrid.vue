@@ -3,8 +3,8 @@
         <div class="row" v-if="events.length > 8">
             <div :class="'col-md-' + size">
                 <div class="form-group">
-                    <input class="form-control" :title="$t('actions.filter_by_clinic_or_doctor')" type="text" v-model="filter"
-                           :placeholder="$t('actions.filter_by_clinic_or_doctor')"/>
+                    <input class="form-control" :title="$t('actions.filter_by_clinic_or_doctor_or_period')" type="text" v-model="filter"
+                           :placeholder="$t('actions.filter_by_clinic_or_doctor_or_period')"/>
                 </div>
             </div>
         </div>
@@ -30,6 +30,9 @@
 
 <script>
     import EventTile from "./EventTile"
+    import moment from "moment";
+    moment.locale('de');
+
 
     export default {
         components: {
@@ -72,6 +75,11 @@
                 required: false
             }
         },
+        methods: {
+            formatDateTime: function (date) {
+                return moment(date).format("DD.MM.YYYY HH:mm");
+            }
+        },
         computed: {
             eventIndex: function () {
                 let index = [];
@@ -80,6 +88,8 @@
                     if (event.doctor !== null) {
                         currentIndex += event.doctor.fullName.toLowerCase();
                     }
+                    currentIndex += this.formatDateTime(event.startDateTime);
+                    currentIndex += this.formatDateTime(event.endDateTime);
                     index.push({
                         index: currentIndex,
                         event: event

@@ -1,22 +1,22 @@
 framework:
-    secret: '%env(APP_SECRET)%'
-    default_locale: de
-    csrf_protection: ~
-    http_method_override: true
+  secret: '%env(APP_SECRET)%'
+  default_locale: de
+  csrf_protection: ~
+  http_method_override: true
 
-    # enable sessions
-    session:
-      # use PHP native session handling
-      handler_id: ~
+  # enable sessions
+  session:
+    # use PHP native session handling
+    handler_id: ~
 
-    #esi: ~
-    #fragments: ~
-    php_errors:
-      log: true
-    validation:
-      enable_annotations: true
-    property_info:
-      enabled: true
+  #esi: ~
+  #fragments: ~
+  php_errors:
+    log: true
+  validation:
+    enable_annotations: true
+  property_info:
+    enabled: true
 
-    assets:
-      json_manifest_path: '%kernel.project_dir%/public/dist/manifest.json'
+  assets:
+    json_manifest_path: '%kernel.project_dir%/public/dist/manifest.json'

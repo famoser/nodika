@@ -48,6 +48,13 @@ class Event extends BaseEntity
     private $eventTags;
 
     /**
+     * @var EventGeneration|null
+     *
+     * @ORM\ManyToOne(targetEntity="EventGeneration", inversedBy="appliedEvents")
+     */
+    private $generatedBy;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -83,5 +90,48 @@ class Event extends BaseEntity
     public function getEventTags()
     {
         return $this->eventTags;
+    }
+
+    /**
+     * @param EventGenerationPreviewEvent $preview
+     *
+     * @return Event
+     */
+    public static function create(EventGenerationPreviewEvent $preview)
+    {
+        $event = new static();
+        $event->writeValues($preview);
+
+        return $event;
+    }
+
+    /**
+     * @return EventGeneration|null
+     */
+    public function getGeneratedBy(): ?EventGeneration
+    {
+        return $this->generatedBy;
+    }
+
+    /**
+     * @param EventGeneration|null $generatedBy
+     */
+    public function setGeneratedBy(?EventGeneration $generatedBy): void
+    {
+        $this->generatedBy = $generatedBy;
+    }
+
+    /**
+     * @param Doctor $doctor
+     *
+     * @return bool
+     */
+    public function ownedBy(Doctor $doctor)
+    {
+        if ($this->getDoctor() === $doctor) {
+            return true;
+        }
+
+        return $doctor->getClinics()->contains($this->getClinic());
     }
 }

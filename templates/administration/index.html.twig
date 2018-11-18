@@ -7,7 +7,7 @@
 {% block description %}{{ "index.description"|trans }}{% endblock %}
 
 {% macro quick_link(name, description, link) %}
-    <div class="card w-25" href="{{ path('assign_index') }}">
+    <div class="card w-25" href="{{ link }}">
         <div class="card-body">
             <p>
                 {{ description }}
@@ -27,8 +27,6 @@
             {{ local_macro.quick_link("clinics.title"|trans, "clinics.description"|trans, path("administration_clinics")) }}
             {{ local_macro.quick_link("events.title"|trans, "events.description"|trans, path("administration_events")) }}
             {{ local_macro.quick_link("settings.title"|trans, "settings.description"|trans, path("administration_setting_edit")) }}
-
-            {# todo: show events which are late or banner that all is fine #}
 
         </div>
     </div>

@@ -7,3 +7,8 @@ base:
     trade: "tauschen"
     confirm: "bestätigen"
     search: "suchen"
+
+  outdated:
+    your_browser_is_outdated: "Your browser is out-of-date!"
+    update_to_view_correctly: "Update your browser to view this website correctly."
+    update_now: "Update my browser now "

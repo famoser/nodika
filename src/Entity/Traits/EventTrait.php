@@ -13,7 +13,6 @@ namespace App\Entity\Traits;
 
 use App\Entity\Clinic;
 use App\Entity\Doctor;
-use App\Entity\EventGeneration;
 use App\Enum\EventType;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -61,13 +60,6 @@ trait EventTrait
      * @ORM\ManyToOne(targetEntity="Doctor", inversedBy="events")
      */
     private $doctor;
-
-    /**
-     * @var EventGeneration|null
-     *
-     * @ORM\ManyToOne(targetEntity="EventGeneration", inversedBy="generatedEvents")
-     */
-    private $generatedBy;
 
     /**
      * @return int
@@ -150,22 +142,6 @@ trait EventTrait
     }
 
     /**
-     * @return EventGeneration|null
-     */
-    public function getGeneratedBy(): ?EventGeneration
-    {
-        return $this->generatedBy;
-    }
-
-    /**
-     * @param EventGeneration|null $generatedBy
-     */
-    public function setGeneratedBy(?EventGeneration $generatedBy): void
-    {
-        $this->generatedBy = $generatedBy;
-    }
-
-    /**
      * @return bool
      */
     public function isConfirmed()
@@ -195,15 +171,14 @@ trait EventTrait
      */
     protected function writeValues($eventTrait)
     {
-        $this->setStartDateTime($eventTrait->getStartDateTime());
-        $this->setEndDateTime($eventTrait->getEndDateTime());
+        $this->setStartDateTime(clone $eventTrait->getStartDateTime());
+        $this->setEndDateTime(clone $eventTrait->getEndDateTime());
         $this->confirmDateTime = $eventTrait->getConfirmDateTime();
         $this->confirmedByDoctor = $eventTrait->getConfirmedByDoctor();
         $this->lastRemainderEmailSent = $eventTrait->getLastRemainderEmailSent();
         $this->eventType = $this->getEventType();
         $this->clinic = $eventTrait->getClinic();
         $this->doctor = $eventTrait->getDoctor();
-        $this->generatedBy = $eventTrait->getGeneratedBy();
     }
 
     public function isActive()

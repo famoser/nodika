@@ -17,7 +17,7 @@ use App\Entity\Traits\PersonTrait;
 use App\Entity\Traits\StartEndTrait;
 use App\Entity\Traits\ThingTrait;
 use App\Entity\Traits\UserTrait;
-use App\Service\EventGenerationService;
+use App\Service\Interfaces\EventGenerationServiceInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -27,12 +27,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
-    /** @var EventGenerationService */
+    /** @var EventGenerationServiceInterface */
     private $eventGenerationService;
     /* @var ContainerInterface $container */
     private $container;
 
-    public function __construct(EventGenerationService $eventGenerationService)
+    public function __construct(EventGenerationServiceInterface $eventGenerationService)
     {
         $this->eventGenerationService = $eventGenerationService;
     }
@@ -43,7 +43,7 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
     }
 
     /**
-     * @return \App\Service\EventGenerationService
+     * @return EventGenerationServiceInterface
      */
     protected function getEventGenerationService()
     {
