@@ -23,7 +23,7 @@
                 <tbody>
 
                 {% for event in events %}
-                    <tr>
+                    <tr {% if event.ownedBy(app.user) %}class="table-info"{% endif %}>
                         <td>{{ event.startDateTime|dateTimeFormat }}</td>
                         <td>{{ event.endDateTime|dateTimeFormat }}</td>
                         <td>{{ event.clinic|default("") }}</td>

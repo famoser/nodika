@@ -120,4 +120,18 @@ class Event extends BaseEntity
     {
         $this->generatedBy = $generatedBy;
     }
+
+    /**
+     * @param Doctor $doctor
+     *
+     * @return bool
+     */
+    public function ownedBy(Doctor $doctor)
+    {
+        if ($this->getDoctor() === $doctor) {
+            return true;
+        }
+
+        return $doctor->getClinics()->contains($this->getClinic());
+    }
 }

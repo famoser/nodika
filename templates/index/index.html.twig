@@ -156,7 +156,7 @@
                             </thead>
                             <tbody>
                             {% for event in events %}
-                                <tr class="{% if event.active %}table-light{% endif %} {% if event.clinic in app.user.clinics %}bold{% endif %}">
+                                <tr class="{% if event.active %}table-light{% endif %} {% if event.ownedBy(app.user) %}table-info{% endif %}">
                                     <td>
                                         {{ event.startDateTime|dateTimeFormat }}
                                     </td>
