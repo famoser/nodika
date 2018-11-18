@@ -1,4 +1,5 @@
 {% extends "single_content_base.html.twig" %}
+{% import 'macros/event_tag.html.twig' as event_tag_macros %}
 
 {% block title %}{{ "events.title"|trans }}{% endblock %}
 {% block description %}{{ "events.description"|trans }}{% endblock %}
@@ -8,11 +9,11 @@
 {% block single_content %}
     <div class="row">
         <div class="col">
-    <p>
-        <a class="btn btn-secondary" href="{{ path("administration_event_new") }}">
-            {{ "new.title"|trans({}, "administration_event") }}
-        </a>
-    </p>
+            <p>
+                <a class="btn btn-secondary" href="{{ path("administration_event_new") }}">
+                    {{ "new.title"|trans({}, "administration_event") }}
+                </a>
+            </p>
         </div>
         <div class="col-md-auto">
             <p>
@@ -33,7 +34,6 @@
             <th>{{ "is_confirmed"|trans({}, "trait_event") }}</th>
             <th>{{ "history.title"|trans({}, "administration_event") }}</th>
             <th class="minimal-width"></th>
-            <th class="minimal-width"></th>
         </tr>
         </thead>
         <tbody>
@@ -44,7 +44,9 @@
                 <td>{{ event.endDateTime|dateTimeFormat }}</td>
                 <td>{{ event.clinic|default("") }}</td>
                 <td>{{ event.doctor|default("") }}</td>
-                <td>{{ event.eventTags|join(", ") }}</td>
+                <td>
+                    {{ event_tag_macros.render(event.eventTags) }}
+                </td>
                 <td>
                     {% if event.confirmed %}
                         <i class="fas fa-check"></i>
@@ -60,16 +62,16 @@
                     </a>
                 </td>
                 <td>
-                    <a class="btn btn-secondary"
-                       href="{{ path("administration_event_edit", {"event" : event.id}) }}">
-                        <i class="fal fa-pencil"></i>
-                    </a>
-                </td>
-                <td>
-                    <a class="btn btn-secondary"
-                       href="{{ path("administration_event_remove", {"event" : event.id}) }}">
-                        <i class="fal fa-trash"></i>
-                    </a>
+                    <div class="btn-group">
+                        <a class="btn btn-secondary"
+                           href="{{ path("administration_event_edit", {"event" : event.id}) }}">
+                            <i class="fal fa-pencil"></i>
+                        </a>
+                        <a class="btn btn-danger"
+                           href="{{ path("administration_event_remove", {"event" : event.id}) }}">
+                            <i class="fal fa-trash"></i>
+                        </a>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
