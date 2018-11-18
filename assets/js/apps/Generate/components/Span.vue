@@ -7,11 +7,11 @@
         </div>
         <div class="form-group">
             <label class="col-form-label">{{ $t("generation.start")}}</label>
-            <date-picker v-model="start"></date-picker>
+            <input type="text" v-model="start" class="form-control">
         </div>
         <div class="form-group">
             <label class="col-form-label">{{ $t("generation.end")}}</label>
-            <date-picker id="end" v-model="end"></date-picker>
+            <input type="text" v-model="end" class="form-control">
         </div>
         <div class="form-group">
             {{$t("generation.length_of_event")}}
@@ -88,7 +88,7 @@
         methods: {
             calculateCronExpression(generation, mode) {
                 if (mode === "day" || mode === "week") {
-                    let start = moment(generation.startDateTime);
+                    let start = moment(this.start, "DD.MM.YYYY HH:mm");
                     let time = start.format("m H ");
                     if (mode === "day") {
                         return {
@@ -103,21 +103,22 @@
                     }
                 } else {
                     return {
-                        startCronExpression: generation.startCronExpression,
-                        endCronExpression: generation.endCronExpression
+                        startCronExpression: this.startCronExpression,
+                        endCronExpression: this.endCronExpression
                     }
                 }
             },
             save(proceed) {
                 //write properties
-                let copy = Object.assign({}, this.generation, this.calculateCronExpression(this.mode));
+                let copy = Object.assign({}, this.generation, this.calculateCronExpression(this.generation, this.mode));
                 copy.name = this.name;
 
                 //datetime to string
-                let start = moment(this.start);
-                let end = moment(this.end);
+                let start = moment(this.start, "DD.MM.YYYY HH:mm");
+                let end = moment(this.end, "DD.MM.YYYY HH:mm");
                 copy.startDateTime = start.format();
                 copy.endDateTime = end.format();
+                console.log(copy.startDateTime);
                 this.$emit("save", copy, proceed);
             },
             getModeName(generation) {
@@ -130,12 +131,12 @@
                 return "other";
             },
             initialize: function () {
-                this.mode = this.getModeName(this.generation);
                 this.name = this.generation.name;
-                this.start = new Date(this.generation.startDateTime);
-                this.end = new Date(this.generation.endDateTime);
+                this.start = moment(this.generation.startDateTime).format("DD.MM.YYYY HH:mm");
+                this.end = moment(this.generation.endDateTime).format("DD.MM.YYYY HH:mm");
                 this.startCronExpression = this.generation.startCronExpression;
                 this.endCronExpression = this.generation.endCronExpression;
+                this.mode = this.getModeName(this.generation);
             }
         },
         watch: {
