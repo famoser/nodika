@@ -4,7 +4,6 @@ Vue.config.productionTip = false;
 
 // components
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
-import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 // app
 import Generate from './generate'

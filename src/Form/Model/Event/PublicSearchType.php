@@ -23,6 +23,7 @@ use App\Entity\Doctor;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\StartEnd\StartEndType;
 use App\Model\Event\SearchModel;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,8 +33,14 @@ class PublicSearchType extends BaseAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('startEnd', StartEndType::class, ['inherit_data' => true]);
-        $builder->add('clinic', EntityType::class, ['class' => Clinic::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_clinic']);
-        $builder->add('doctor', EntityType::class, ['class' => Doctor::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_doctor']);
+        $builder->add('clinic', EntityType::class, ['class' => Clinic::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_clinic', 'query_builder' => function (EntityRepository $er) {
+            return $er->createQueryBuilder('c')
+                ->where('c.deletedAt IS NULL');
+        }]);
+        $builder->add('doctor', EntityType::class, ['class' => Doctor::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_doctor', 'query_builder' => function (EntityRepository $er) {
+            return $er->createQueryBuilder('c')
+                ->where('c.deletedAt IS NULL');
+        }]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
