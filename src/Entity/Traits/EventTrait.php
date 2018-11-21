@@ -146,12 +146,7 @@ trait EventTrait
      */
     public function isConfirmed()
     {
-        return
-            null !== $this->getConfirmDateTime() &&
-            (
-                null === $this->getDoctor() ||
-                (null !== $this->getConfirmedByDoctor() && $this->getConfirmedByDoctor()->getId() === $this->getDoctor()->getId())
-            );
+        return null !== $this->getConfirmDateTime();
     }
 
     public function confirm(Doctor $user)
