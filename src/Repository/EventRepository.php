@@ -73,9 +73,9 @@ class EventRepository extends EntityRepository
 
         if (null !== $searchModel->getIsConfirmed()) {
             if ($searchModel->getIsConfirmed()) {
-                $qb->andWhere('e.confirmDateTime IS NOT NULL AND (e.doctor = e.confirmedByDoctor OR e.doctor IS NULL)');
+                $qb->andWhere('e.confirmDateTime IS NOT NULL)');
             } else {
-                $qb->andWhere('e.confirmDateTime IS NULL OR e.doctor != e.confirmedByDoctor');
+                $qb->andWhere('e.confirmDateTime IS NULL');
             }
         }
 
