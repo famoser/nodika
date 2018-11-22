@@ -17,6 +17,7 @@ clinics:
 events:
   title: 'Terminverwaltung'
   description: 'Termine  erstellen und bearbeiten, bestätigen, neu zuweisen, ändern, generieren, exportieren, ...'
+  filter: 'Filter'
 
 settings:
   title: 'Einstellungen'

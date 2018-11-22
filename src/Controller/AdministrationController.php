@@ -16,7 +16,7 @@ use App\Controller\Traits\EventControllerTrait;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\Event;
-use App\Form\Model\Event\AdvancedSearchType;
+use App\Form\Model\Event\PublicSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
@@ -67,9 +67,9 @@ class AdministrationController extends BaseFormController
 
         $export = false;
         $form = $this->handleForm(
-            $this->createForm(AdvancedSearchType::class, $searchModel)
-                ->add('search', SubmitType::class)
-                ->add('export', SubmitType::class),
+            $this->createForm(PublicSearchType::class, $searchModel)
+                ->add('search', SubmitType::class, ['label' => 'form.filter'])
+                ->add('export', SubmitType::class, ['label' => 'form.export']),
             $request,
             function ($form) use (&$export) {
                 /* @var Form $form */
@@ -83,11 +83,11 @@ class AdministrationController extends BaseFormController
         $events = $eventRepo->search($searchModel);
 
         if ($export) {
-            return $csvService->renderCsv('export.csv', $this->toDataTable($events, $translator), $this->getEventsHeader($translator));
+            return $csvService->renderCsv('export.csv', $this->toDataTable($events), $this->getEventsHeader($translator));
         }
 
         $arr['events'] = $events;
-        $arr['search_form'] = $form;
+        $arr['form'] = $form->createView();
 
         return $this->render('administration/events.html.twig', $arr);
     }

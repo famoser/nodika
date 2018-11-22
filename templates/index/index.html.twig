@@ -189,43 +189,5 @@
             </div>
         </div>
     </div>
-
-    {#
-    <section class="content {{ theme_color }}-background">
-
-        <div class="container">
-            <div class="row">
-                <a class="tile tile-2 default-color" href="{{ path('offer_index') }}">
-                    <h3>{{ "index.trade_events"|trans }}</h3>
-                    <p>
-                        {{ "index.trade_events_description"|trans }}
-                    </p>
-                </a>
-                <a class="tile tile-2 default-color" href="{{ path('event_confirm') }}">
-                    <h3>{{ "index.confirm_events"|trans }}</h3>
-                    <p>
-                        {{ "index.confirm_events_description"|trans }}
-                    </p>
-                </a>
-                <a class="tile tile-2 default-color" href="{{ path('event_search') }}">
-                    <h3>{{ "index.search_events"|trans }}</h3>
-                    <p>
-                        {{ "index.search_events_description"|trans }}
-                    </p>
-                </a>
-
-                <a class="tile tile-4 default-color" href="{{ path('administration_index') }}">
-                    <h3>{{ "index.title"|trans({}, "administration") }}</h3>
-                    <p>
-                        {{ "index.search_events_description"|trans }}
-                    </p>
-                </a>
-
-                {% endif %}
-            </div>
-        </div>
-
-    </section>
-    #}
 {% endblock %}
 
