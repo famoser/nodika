@@ -14,6 +14,7 @@ namespace App\Form\Model\ContactRequest;
 use App\Form\Base\BaseAbstractType;
 use App\Model\ContactRequest;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,6 +31,7 @@ class ContactRequestType extends BaseAbstractType
         $builder->add('name', TextType::class);
         $builder->add('email', EmailType::class);
         $builder->add('message', TextareaType::class);
+        $builder->add('check', HiddenType::class, ['required' => false, 'mapped' => false]);
     }
 
     /**
