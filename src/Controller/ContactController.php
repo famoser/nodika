@@ -60,25 +60,29 @@ class ContactController extends BaseFormController
         $form = $this->handleForm(
             $createForm($contactRequest),
             $request,
-            function () use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm) {
-                $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
-                $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
-                foreach ($admins as $admin) {
-                    /* @var FormInterface $form */
-                    $emailService->sendTextEmail(
-                        $admin->getEmail(),
-                        $translator->trans('contact_email.subject', [], 'contact'),
-                        $translator->trans(
-                            'contact_email.description',
-                            [
-                                '%url%' => $request->getHost(),
-                                '%email%' => $contactRequest->getEmail(),
-                                '%name%' => $contactRequest->getName(),
-                                '%message%' => $contactRequest->getMessage(),
-                            ],
-                            'contact'
-                        )
-                    );
+            function ($form) use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm) {
+                /** @var FormInterface $form */
+                // "check" is a hidden field; if it is filled out then we should prevent the bot from sending emails
+                if (null === $form->get('check')->getData()) {
+                    $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
+                    $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
+                    foreach ($admins as $admin) {
+                        /* @var FormInterface $form */
+                        $emailService->sendTextEmail(
+                            $admin->getEmail(),
+                            $translator->trans('contact_email.subject', [], 'contact'),
+                            $translator->trans(
+                                'contact_email.description',
+                                [
+                                    '%url%' => $request->getHost(),
+                                    '%email%' => $contactRequest->getEmail(),
+                                    '%name%' => $contactRequest->getName(),
+                                    '%message%' => $contactRequest->getMessage(),
+                                ],
+                                'contact'
+                            )
+                        );
+                    }
                 }
 
                 $this->displaySuccess($translator->trans('index.success.email_sent', [], 'contact'));
