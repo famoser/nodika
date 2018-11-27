@@ -14,9 +14,9 @@
                     v-for="event in filteredEvents"
                     :key="event.id"
                     :event="event"
-                    :is-loading="loadingEvents.includes(event)"
-                    :is-disabled="disabledEvents.includes(event)"
-                    :is-selected="selectedEvents.includes(event)"
+                    :is-loading="loadingEvents.indexOf(event) >= 0"
+                    :is-disabled="disabledEvents.indexOf(event) >= 0"
+                    :is-selected="selectedEvents.indexOf(event) >= 0"
                     @select="$emit('event-selected', event)"
             >
             </EventTile>

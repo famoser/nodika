@@ -17,6 +17,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4",
     "bootstrap-multiselect": "^0.9",
+    "core-js": "^2.5.7",
     "date-fns": "^1.29.0",
     "deepmerge": "^2.1.1",
     "epic-spinners": "^1",
