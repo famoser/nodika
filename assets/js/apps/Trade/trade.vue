@@ -137,7 +137,7 @@
 
                 //get clinics of doctor
                 let doctorClinicIds = this.sender.doctor.clinics.map(c => c.id);
-                return this.clinics.filter(c => doctorClinicIds.includes(c.id));
+                return this.clinics.filter(c => doctorClinicIds.indexOf(c.id) >= 0);
             },
             possibleSenderClinics: function () {
                 let clinics = this.possibleClinics(this.allSenderClinics, this.sender.selectedEvents);
@@ -222,7 +222,7 @@
                 return [clinic];
             },
             defaultClinic: function (clinics, currentClinic) {
-                if (clinics.includes(currentClinic)) {
+                if (clinics.indexOf(currentClinic) >= 0) {
                     return currentClinic;
                 }
 
@@ -232,7 +232,7 @@
         watch: {
             possibleReceiverDoctors: function () {
                 if (this.possibleReceiverDoctors.length > 0) {
-                    if (this.receiver.selectedDoctor === null || !this.possibleReceiverDoctors.includes(this.receiver.selectedDoctor)) {
+                    if (this.receiver.selectedDoctor === null || !this.possibleReceiverDoctors.indexOf(this.receiver.selectedDoctor) >= 0) {
                         this.receiver.selectedDoctor = this.possibleReceiverDoctors[0];
                     }
                 }
