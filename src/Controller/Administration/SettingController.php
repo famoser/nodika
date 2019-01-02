@@ -86,7 +86,6 @@ class SettingController extends BaseController
                 $manager->persist($doctor);
             }
             foreach ($adminForm->get("doctors")->getData() as $doctor) {
-                dump($doctor);
                 $setProperty($doctor, true);
             }
             $manager->flush();
