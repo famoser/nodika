@@ -88,7 +88,7 @@ class LoginController extends BaseFormController
 
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
-        if (\mb_strlen($lastUsername) > 0) {
+        if (mb_strlen($lastUsername) > 0) {
             $lastUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $lastUsername]);
             if (null === $lastUser) {
                 $this->displayError($this->getTranslator()->trans('login.danger.email_not_found', [], 'login'));

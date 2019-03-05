@@ -32,7 +32,7 @@ class CsvService implements CsvServiceInterface
     {
         $response = new StreamedResponse();
         $response->setCallback(function () use ($header, $data) {
-            $handle = fopen('php://output', 'w+b');
+            $handle = fopen('php://output', 'w+');
 
             //UTF-8 BOM
             fwrite($handle, "\xEF\xBB\xBF");

@@ -1,9 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: famoser
- * Date: 08/04/2018
- * Time: 20:09
+
+/*
+ * This file is part of the nodika project.
+ *
+ * (c) Florian Moser <git@famoser.ch>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\EventGeneration;
@@ -42,23 +45,27 @@ class EventTarget
 
     /**
      * @param EventGenerationTargetDoctor $doctor
+     *
      * @return static
      */
     public static function fromDoctor(EventGenerationTargetDoctor $doctor)
     {
         $new = new static();
         $new->doctor = $doctor;
+
         return $new;
     }
 
     /**
      * @param EventGenerationTargetClinic $clinic
+     *
      * @return static
      */
     public static function fromClinic(EventGenerationTargetClinic $clinic)
     {
         $new = new static();
         $new->clinic = $clinic;
+
         return $new;
     }
 
@@ -75,9 +82,10 @@ class EventTarget
      */
     public function getTarget()
     {
-        if ($this->doctor == null) {
+        if (null === $this->doctor) {
             return $this->clinic;
         }
+
         return $this->doctor;
     }
 
@@ -86,9 +94,10 @@ class EventTarget
      */
     public function getDoctor(): ?Doctor
     {
-        if ($this->doctor != null) {
+        if (null !== $this->doctor) {
             return $this->doctor->getDoctor();
         }
+
         return null;
     }
 
@@ -97,9 +106,10 @@ class EventTarget
      */
     public function getClinic(): ?Clinic
     {
-        if ($this->clinic != null) {
+        if (null !== $this->clinic) {
             return $this->clinic->getClinic();
         }
+
         return null;
     }
 
@@ -125,13 +135,14 @@ class EventTarget
 
     /**
      * @param $eventType
+     *
      * @return bool
      */
     public function canAssumeResponsibility($eventType)
     {
         return
             !isset($this->restrictResponsibilityForEventType[$eventType]) ||
-            !$this->restrictResponsibilityForEventType[$eventType] || 
+            !$this->restrictResponsibilityForEventType[$eventType] ||
             $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
     }
 
@@ -143,12 +154,13 @@ class EventTarget
         if (!isset($this->eventTypeResponsibilitiesTaken[$eventType])) {
             $this->eventTypeResponsibilitiesTaken[$eventType] = 1;
         } else {
-            $this->eventTypeResponsibilitiesTaken[$eventType]++;
+            ++$this->eventTypeResponsibilitiesTaken[$eventType];
         }
     }
 
     /**
      * @param $weights
+     *
      * @return float|int
      */
     public function calculateResponsibility($weights)
@@ -159,6 +171,7 @@ class EventTarget
                 $res += $this->eventTypeResponsibilitiesTaken[$eventType] * $weight;
             }
         }
+
         return $res;
     }
 }
