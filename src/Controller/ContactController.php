@@ -63,7 +63,9 @@ class ContactController extends BaseFormController
             function ($form) use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm) {
                 /** @var FormInterface $form */
                 // "check" is a hidden field; if it is filled out then we should prevent the bot from sending emails
-                if (null === $form->get('check')->getData()) {
+                if (ContactRequestType::CHECK_DATA === $form->get('check')->getData() &&
+                    ContactRequestType::CHECK2_DATA === $form->get('check2')->getData() &&
+                    false === mb_strpos($contactRequest->getMessage(), 'bit.ly')) {
                     $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
                     $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
                     foreach ($admins as $admin) {

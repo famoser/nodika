@@ -22,6 +22,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContactRequestType extends BaseAbstractType
 {
+    const CHECK_DATA = null;
+    const CHECK2_DATA = 'some string';
+
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
@@ -32,6 +35,7 @@ class ContactRequestType extends BaseAbstractType
         $builder->add('email', EmailType::class);
         $builder->add('message', TextareaType::class);
         $builder->add('check', HiddenType::class, ['required' => false, 'mapped' => false]);
+        $builder->add('check2', HiddenType::class, ['mapped' => false, 'data' => self::CHECK2_DATA]);
     }
 
     /**

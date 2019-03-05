@@ -80,13 +80,15 @@ class SettingController extends BaseController
 
         if ($adminForm->isSubmitted() && $adminForm->isValid()) {
             $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
+            $manager = $this->getDoctrine()->getManager();
             foreach ($doctors as $doctor) {
                 $setProperty($doctor, false);
+                $manager->persist($doctor);
             }
-            foreach ($adminForm->getData() as $doctor) {
+            foreach ($adminForm->get('doctors')->getData() as $doctor) {
                 $setProperty($doctor, true);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $manager->flush();
         }
 
         return $adminForm;
