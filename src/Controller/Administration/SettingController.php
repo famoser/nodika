@@ -61,11 +61,11 @@ class SettingController extends BaseController
     }
 
     /**
-     * @param Request $request
+     * @param Request              $request
      * @param FormFactoryInterface $factory
-     * @param Doctor[] $data
-     * @param string $name
-     * @param callable $setProperty
+     * @param Doctor[]             $data
+     * @param string               $name
+     * @param callable             $setProperty
      *
      * @return \Symfony\Component\Form\FormInterface
      */
@@ -85,7 +85,7 @@ class SettingController extends BaseController
                 $setProperty($doctor, false);
                 $manager->persist($doctor);
             }
-            foreach ($adminForm->get("doctors")->getData() as $doctor) {
+            foreach ($adminForm->get('doctors')->getData() as $doctor) {
                 $setProperty($doctor, true);
             }
             $manager->flush();

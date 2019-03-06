@@ -23,11 +23,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ContactRequestType extends BaseAbstractType
 {
     const CHECK_DATA = null;
-    const CHECK2_DATA = "some string";
+    const CHECK2_DATA = 'some string';
 
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

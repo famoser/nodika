@@ -30,9 +30,9 @@ class ContactController extends BaseFormController
     /**
      * @Route("/", name="contact_index")
      *
-     * @param Request $request
+     * @param Request             $request
      * @param TranslatorInterface $translator
-     * @param EmailService $emailService
+     * @param EmailService        $emailService
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -65,7 +65,7 @@ class ContactController extends BaseFormController
                 // "check" is a hidden field; if it is filled out then we should prevent the bot from sending emails
                 if (ContactRequestType::CHECK_DATA === $form->get('check')->getData() &&
                     ContactRequestType::CHECK2_DATA === $form->get('check2')->getData() &&
-                    strpos($contactRequest->getMessage(), "bit.ly") === false) {
+                    false === mb_strpos($contactRequest->getMessage(), 'bit.ly')) {
                     $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
                     $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
                     foreach ($admins as $admin) {

@@ -410,7 +410,7 @@ class EventController extends BaseApiController
                 'step' => 5,
             ];
             foreach ($allowedProps as $prop => $valueType) {
-                if (array_key_exists($prop, $content)) {
+                if (\array_key_exists($prop, $content)) {
                     //convert type
                     $value = $content[$prop];
                     switch ($valueType) {
@@ -435,7 +435,7 @@ class EventController extends BaseApiController
             }
 
             //refresh dependencies
-            if (array_key_exists('conflictEventTagIds', $content)) {
+            if (\array_key_exists('conflictEventTagIds', $content)) {
                 $eventTagIds = $content['conflictEventTagIds'];
                 $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
                 $generation->getConflictEventTags()->clear();
@@ -443,7 +443,7 @@ class EventController extends BaseApiController
                     $generation->getConflictEventTags()->add($eventTag);
                 }
             }
-            if (array_key_exists('assignEventTagIds', $content)) {
+            if (\array_key_exists('assignEventTagIds', $content)) {
                 $eventTagIds = $content['assignEventTagIds'];
                 $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
                 $generation->getAssignEventTags()->clear();
@@ -451,7 +451,7 @@ class EventController extends BaseApiController
                     $generation->getAssignEventTags()->add($eventTag);
                 }
             }
-            if (array_key_exists('dateExceptions', $content)) {
+            if (\array_key_exists('dateExceptions', $content)) {
                 $dateExceptions = $content['dateExceptions'];
                 $generation->getDateExceptions()->clear();
                 foreach ($dateExceptions as $dateException) {
@@ -464,7 +464,7 @@ class EventController extends BaseApiController
                     $manager->persist($exception);
                 }
             }
-            if (array_key_exists('targetClinics', $content)) {
+            if (\array_key_exists('targetClinics', $content)) {
                 //get key/value of clinics
                 $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
                 $clinicById = [];
@@ -485,7 +485,7 @@ class EventController extends BaseApiController
                     $manager->persist($targetClinic);
                 }
             }
-            if (array_key_exists('targetDoctors', $content)) {
+            if (\array_key_exists('targetDoctors', $content)) {
                 //get key/value of doctors
                 $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
                 $doctorById = [];
