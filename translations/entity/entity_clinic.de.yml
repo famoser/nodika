@@ -1,6 +1,6 @@
 entity:
   name: 'Praxis'
-  description: 'Den Praxen Ihrer Organisation können Termine und Benutzer zugeteilt werden'
+  description: 'Den Praxen können Termine und Tierärzte zugeteilt werden'
   plural: 'Praxen'
 
 has_been_invited: 'Einladung wurde versandt.'
