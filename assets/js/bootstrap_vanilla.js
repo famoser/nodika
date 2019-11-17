@@ -4,7 +4,7 @@ window.$ = $;
 
 // bootstrap & plugins
 require("bootstrap");
-require("bootstrap-multiselect/dist/js/bootstrap-multiselect.js");
+require("bootstrap-select/dist/js/bootstrap-select");
 
 // include fontawesome
 import { dom, library } from '@fortawesome/fontawesome-svg-core'
@@ -23,17 +23,7 @@ $(document).ready(function () {
     });
 
     //initialize multiselect
-    $('select[multiple]').multiselect({
-        buttonClass: 'btn btn-secondary',
-        templates: {
-            ul: ' <ul class="multiselect-container dropdown-menu p-1 m-0"></ul>',
-            li: '<li><a tabindex="0" class="dropdown-item"><label></label></a></li>'
-        },
-        buttonContainer: '<div class="dropdown" />',
-        nonSelectedText: 'Nichts ausgewählt',
-        nSelectedText: 'ausgewählt',
-        allSelectedText: 'Alle ausgewählt'
-    });
+    $('select[multiple]').selectpicker();
 
     //force reload on user browser button navigation
     $(window).on('popstate', function () {
