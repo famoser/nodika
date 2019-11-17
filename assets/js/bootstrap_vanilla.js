@@ -23,7 +23,7 @@ $(document).ready(function () {
     });
 
     //initialize multiselect
-    $('select[multiple]').selectpicker();
+    $('select').selectpicker();
 
     //force reload on user browser button navigation
     $(window).on('popstate', function () {
