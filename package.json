@@ -1,7 +1,6 @@
 {
   "devDependencies": {
-    "@symfony/webpack-encore": "^0.17",
-    "jquery": "^3.2",
+    "@symfony/webpack-encore": "^0.28",
     "node-sass": "^4",
     "sass-loader": "^6",
     "vue-loader": "^14.2.2",
@@ -21,6 +20,7 @@
     "date-fns": "^1.29.0",
     "deepmerge": "^2.1.1",
     "epic-spinners": "^1",
+    "jquery": "^3.2",
     "moment": "^2.22.2",
     "open-sans-fontface": "^1.4",
     "outdated-browser": "^1.0.2",
