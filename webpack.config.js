@@ -19,6 +19,8 @@ Encore
     // enable vue.js loader
     .enableVueLoader()
 
+    .disableSingleRuntimeChunk()
+
     // allow debugging of minified assets
     .enableSourceMaps(!Encore.isProduction())
 

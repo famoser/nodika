@@ -1,3 +1,4 @@
 entity:
   name: 'Tierarzt'
   plural: 'Tierärzte'
+  description: 'Tierärzte erhalten ein Login und können Praxen zugeteilt werden'
