@@ -109,6 +109,13 @@ class LoginController extends BaseFormController
             return $lastUsername;
         }
 
+        $user = $this->getUser();
+        if ($user !== null && !$user->canLogin()) {
+            $this->displayError($this->getTranslator()->trans('login.danger.login_disabled', [], 'login'));
+
+            $this->get('security.token_storage')->setToken(null);
+        }
+
         return '';
     }
 
