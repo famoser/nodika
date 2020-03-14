@@ -13,6 +13,7 @@ namespace App\Security;
 
 use App\Entity\Doctor;
 use App\Security\Base\BaseUserProvider;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -22,11 +23,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class DoctorProvider extends BaseUserProvider
 {
     /**
-     * @var RegistryInterface
+     * @var ManagerRegistry
      */
     private $registry;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         $this->registry = $registry;
     }

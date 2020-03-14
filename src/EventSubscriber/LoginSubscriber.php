@@ -12,7 +12,7 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Doctor;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
@@ -24,11 +24,11 @@ use Symfony\Component\Security\Http\SecurityEvents;
 class LoginSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var RegistryInterface
+     * @var ManagerRegistry
      */
     private $doctrine;
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         $this->doctrine = $registry;
     }
