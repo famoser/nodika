@@ -40,6 +40,7 @@
     "symfony/yaml": "^4.0"
   },
   "require-dev": {
+    "brainmaestro/composer-git-hooks": "^2.6",
     "deployer/deployer": "^6.1",
     "friendsofphp/php-cs-fixer": "^2.7",
     "symfony/browser-kit": "^4.0",
@@ -51,7 +52,7 @@
   },
   "config": {
     "platform": {
-      "php": "^7.2"
+      "php": "7.2"
     },
     "preferred-install": {
       "*": "dist"
@@ -100,6 +101,14 @@
     "symfony": {
       "id": "01C1WTEKAQ8E4EGPA14JTQ2WHZ",
       "allow-contrib": false
+    },
+    "hooks": {
+      "pre-commit": [
+        "echo committing as $(git config user.name)",
+        "./vendor/bin/php-cs-fixer fix  --config=.php_cs",
+        "git update-index --again"
+      ],
+      "post-merge": "composer install"
     }
   }
 }

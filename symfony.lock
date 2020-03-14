@@ -1,6 +1,9 @@
 {
+    "brainmaestro/composer-git-hooks": {
+        "version": "v2.8.3"
+    },
     "php": {
-        "version": "7.1.3"
+        "version": "7.2"
     },
     "symfony/error-handler": {
         "version": "v4.4.5"
