@@ -81,17 +81,11 @@ trait ChangeAwareTrait
         return $this->lastChangedAt;
     }
 
-    /**
-     * @return Doctor
-     */
     public function getCreatedBy(): Doctor
     {
         return $this->createdBy;
     }
 
-    /**
-     * @return Doctor
-     */
     public function getLastChangedBy(): Doctor
     {
         return $this->lastChangedBy;
@@ -99,8 +93,6 @@ trait ChangeAwareTrait
 
     /**
      * register who has changed the entity.
-     *
-     * @param Doctor $doctor
      */
     public function registerChangeBy(Doctor $doctor)
     {

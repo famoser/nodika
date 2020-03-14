@@ -25,8 +25,6 @@ class EventTagController extends BaseController
     /**
      * @Route("/new", name="administration_event_tag_new")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function newAction(Request $request)
@@ -45,9 +43,6 @@ class EventTagController extends BaseController
     /**
      * @Route("/{eventTag}/edit", name="administration_event_tag_edit")
      *
-     * @param Request  $request
-     * @param EventTag $eventTag
-     *
      * @return Response
      */
     public function editAction(Request $request, EventTag $eventTag)
@@ -65,9 +60,6 @@ class EventTagController extends BaseController
 
     /**
      * @Route("/{eventTag}/remove", name="administration_event_tag_remove")
-     *
-     * @param Request  $request
-     * @param EventTag $eventTag
      *
      * @return Response
      */

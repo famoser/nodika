@@ -45,9 +45,6 @@ class QueueEntry
         $this->size = $size;
     }
 
-    /**
-     * @return int
-     */
     public function getIssued(): int
     {
         return $this->issued;
@@ -78,17 +75,11 @@ class QueueEntry
         return $this->payload;
     }
 
-    /**
-     * @return int
-     */
     public function getScore(): int
     {
         return $this->score;
     }
 
-    /**
-     * @param int $score
-     */
     public function setScore(int $score): void
     {
         $this->score = $score;

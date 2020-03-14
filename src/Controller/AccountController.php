@@ -28,9 +28,6 @@ class AccountController extends BaseFormController
     /**
      * @Route("/", name="account_index")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request, TranslatorInterface $translator)

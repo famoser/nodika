@@ -15,7 +15,6 @@ use App\Enum\EventChangeType;
 use App\Enum\EventTagColor;
 use Doctrine\Persistence\ManagerRegistry;
 use PDO;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,8 +40,6 @@ class TransferDataCommand extends Command
 
     /**
      * TransferDataCommand constructor.
-     *
-     * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
     {
@@ -328,9 +325,7 @@ INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
     }
 
     /**
-     * @param array  $content
-     * @param array  $fieldSpezification
-     * @param string $table
+     * @param array $fieldSpezification
      */
     private function insertFields(array $content, string $table)
     {

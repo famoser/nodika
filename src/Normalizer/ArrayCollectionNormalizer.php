@@ -65,8 +65,6 @@ class ArrayCollectionNormalizer implements NormalizerInterface, NormalizerAwareI
 
     /**
      * Sets the owning Normalizer object.
-     *
-     * @param NormalizerInterface $normalizer
      */
     public function setNormalizer(NormalizerInterface $normalizer)
     {

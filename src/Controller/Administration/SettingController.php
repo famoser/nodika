@@ -29,8 +29,6 @@ class SettingController extends BaseController
     /**
      * @Route("/edit", name="administration_setting_edit")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function editAction(Request $request, FormFactoryInterface $factory)
@@ -61,11 +59,9 @@ class SettingController extends BaseController
     }
 
     /**
-     * @param Request              $request
-     * @param FormFactoryInterface $factory
-     * @param Doctor[]             $data
-     * @param string               $name
-     * @param callable             $setProperty
+     * @param Doctor[] $data
+     * @param string   $name
+     * @param callable $setProperty
      *
      * @return \Symfony\Component\Form\FormInterface
      */

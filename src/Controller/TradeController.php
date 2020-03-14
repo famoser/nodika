@@ -38,10 +38,6 @@ class TradeController extends BaseFormController
     /**
      * @Route("/accept/{eventOffer}", name="trade_accept")
      *
-     * @param EventOffer          $eventOffer
-     * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
-     *
      * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -99,10 +95,6 @@ class TradeController extends BaseFormController
     /**
      * @Route("/decline/{eventOffer}", name="trade_decline")
      *
-     * @param EventOffer          $eventOffer
-     * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
-     *
      * @throws \Exception
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -136,9 +128,6 @@ class TradeController extends BaseFormController
     /**
      * @Route("/acknowledge/{eventOffer}", name="trade_acknowledge")
      *
-     * @param EventOffer          $eventOffer
-     * @param TranslatorInterface $translator
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function acknowledgeAction(EventOffer $eventOffer, TranslatorInterface $translator)
@@ -156,9 +145,6 @@ class TradeController extends BaseFormController
 
     /**
      * @Route("/withdraw/{eventOffer}", name="trade_withdraw")
-     *
-     * @param EventOffer          $eventOffer
-     * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */

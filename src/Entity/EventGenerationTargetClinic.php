@@ -41,33 +41,21 @@ class EventGenerationTargetClinic extends BaseEntity
      */
     private $eventGeneration;
 
-    /**
-     * @return Clinic
-     */
     public function getClinic(): Clinic
     {
         return $this->clinic;
     }
 
-    /**
-     * @param Clinic $clinic
-     */
     public function setClinic(Clinic $clinic): void
     {
         $this->clinic = $clinic;
     }
 
-    /**
-     * @return EventGeneration
-     */
     public function getEventGeneration(): EventGeneration
     {
         return $this->eventGeneration;
     }
 
-    /**
-     * @param EventGeneration $eventGeneration
-     */
     public function setEventGeneration(EventGeneration $eventGeneration): void
     {
         $this->eventGeneration = $eventGeneration;

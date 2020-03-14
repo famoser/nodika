@@ -36,49 +36,31 @@ trait EventGenerationTarget
      */
     private $defaultOrder = 1;
 
-    /**
-     * @return float
-     */
     public function getWeight(): float
     {
         return $this->weight;
     }
 
-    /**
-     * @param float $weight
-     */
     public function setWeight(float $weight): void
     {
         $this->weight = $weight;
     }
 
-    /**
-     * @return float|null
-     */
     public function getGenerationScore(): ?float
     {
         return $this->generationScore;
     }
 
-    /**
-     * @param float|null $generationScore
-     */
     public function setGenerationScore(?float $generationScore): void
     {
         $this->generationScore = $generationScore;
     }
 
-    /**
-     * @return int
-     */
     public function getDefaultOrder(): int
     {
         return $this->defaultOrder;
     }
 
-    /**
-     * @param int $defaultOrder
-     */
     public function setDefaultOrder(int $defaultOrder): void
     {
         $this->defaultOrder = $defaultOrder;

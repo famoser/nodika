@@ -27,9 +27,7 @@ class InviteController extends LoginController
     /**
      * @Route("/doctor/{guid}", name="invite_doctor")
      *
-     * @param Request $request
      * @param $guid
-     * @param TranslatorInterface $translator
      *
      * @return Response
      */

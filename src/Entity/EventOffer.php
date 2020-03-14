@@ -101,17 +101,11 @@ class EventOffer extends BaseEntity
         $this->eventsWhichChangeOwner = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * @param string $message
-     */
     public function setMessage(string $message): void
     {
         $this->message = $message;
@@ -133,73 +127,47 @@ class EventOffer extends BaseEntity
         return $this->eventsWhichChangeOwner;
     }
 
-    /**
-     * @return Doctor
-     */
     public function getReceiver(): Doctor
     {
         return $this->receiver;
     }
 
-    /**
-     * @param Doctor $receiver
-     */
     public function setReceiver(Doctor $receiver): void
     {
         $this->receiver = $receiver;
     }
 
-    /**
-     * @return Doctor
-     */
     public function getSender(): Doctor
     {
         return $this->sender;
     }
 
-    /**
-     * @param Doctor $sender
-     */
     public function setSender(Doctor $sender): void
     {
         $this->sender = $sender;
     }
 
-    /**
-     * @return Clinic
-     */
     public function getReceiverClinic(): Clinic
     {
         return $this->receiverClinic;
     }
 
-    /**
-     * @param Clinic $receiverClinic
-     */
     public function setReceiverClinic(Clinic $receiverClinic): void
     {
         $this->receiverClinic = $receiverClinic;
     }
 
-    /**
-     * @return Clinic
-     */
     public function getSenderClinic(): Clinic
     {
         return $this->senderClinic;
     }
 
-    /**
-     * @param Clinic $senderClinic
-     */
     public function setSenderClinic(Clinic $senderClinic): void
     {
         $this->senderClinic = $senderClinic;
     }
 
     /**
-     * @param Doctor $doctor
-     *
      * @return bool
      */
     public function accept(Doctor $doctor)
@@ -208,8 +176,6 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * @param Doctor $doctor
-     *
      * @return bool
      */
     public function decline(Doctor $doctor)
@@ -218,8 +184,6 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * @param Doctor $doctor
-     *
      * @return bool
      */
     public function withdraw(Doctor $doctor)
@@ -228,8 +192,6 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * @param Doctor $doctor
-     *
      * @return bool
      */
     public function acknowledge(Doctor $doctor)
@@ -306,9 +268,8 @@ class EventOffer extends BaseEntity
     }
 
     /**
-     * @param Doctor $doctor
-     * @param int[]  $sourceStates
-     * @param int    $targetState
+     * @param int[] $sourceStates
+     * @param int   $targetState
      *
      * @return bool
      */

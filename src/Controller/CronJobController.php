@@ -43,8 +43,6 @@ class CronJobController extends BaseDoctrineController
      * @Route("/daily/{secret}", name="cron_daily")
      *
      * @param $secret
-     * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
      *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime

@@ -26,8 +26,6 @@ use Doctrine\ORM\EntityRepository;
 class EventRepository extends EntityRepository
 {
     /**
-     * @param SearchModel $searchModel
-     *
      * @return Event[]
      */
     public function search(SearchModel $searchModel)

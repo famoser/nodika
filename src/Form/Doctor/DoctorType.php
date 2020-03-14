@@ -23,10 +23,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DoctorType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('clinics', EntityType::class, ['class' => Clinic::class, 'multiple' => true, 'translation_domain' => 'entity_clinic', 'label' => 'entity.plural']);
@@ -35,9 +31,6 @@ class DoctorType extends BaseAbstractType
         $builder->add('address', AddressType::class, ['inherit_data' => true]);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

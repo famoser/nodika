@@ -40,9 +40,6 @@ trait SoftDeleteTrait
         $this->deletedAt = new \DateTime();
     }
 
-    /**
-     * @return \DateTime|null
-     */
     public function getDeletedAt(): ?\DateTime
     {
         return $this->deletedAt;

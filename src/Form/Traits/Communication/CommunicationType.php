@@ -19,19 +19,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CommunicationType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('phone', TextType::class, ['required' => false]);
         $builder->add('email', EmailType::class);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

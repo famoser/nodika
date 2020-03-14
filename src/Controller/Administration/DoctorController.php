@@ -29,9 +29,6 @@ class DoctorController extends BaseController
     /**
      * checks if the email is already used, and shows an error to the user if so.
      *
-     * @param Doctor              $user
-     * @param TranslatorInterface $translator
-     *
      * @return bool
      */
     private function emailNotUsed(Doctor $user, TranslatorInterface $translator)
@@ -48,9 +45,6 @@ class DoctorController extends BaseController
 
     /**
      * @Route("/new", name="administration_doctor_new")
-     *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
      *
      * @return Response
      */
@@ -80,10 +74,6 @@ class DoctorController extends BaseController
     /**
      * @Route("/{doctor}/edit", name="administration_doctor_edit")
      *
-     * @param Request             $request
-     * @param Doctor              $doctor
-     * @param TranslatorInterface $translator
-     *
      * @return Response
      */
     public function editAction(Request $request, Doctor $doctor, TranslatorInterface $translator)
@@ -110,9 +100,6 @@ class DoctorController extends BaseController
      * deactivated because not safe.
      *
      * @*Route("/{doctor}/remove", name="administration_doctor_remove")
-     *
-     * @param Request $request
-     * @param Doctor  $doctor
      *
      * @return Response
      */
@@ -145,10 +132,6 @@ class DoctorController extends BaseController
     /**
      * @Route("/{doctor}/invite", name="administration_doctor_invite")
      *
-     * @param Doctor              $doctor
-     * @param TranslatorInterface $translator
-     * @param InviteEmailService  $emailService
-     *
      * @throws \Exception
      *
      * @return Response
@@ -168,9 +151,6 @@ class DoctorController extends BaseController
     /**
      * @Route("/invite_all", name="administration_doctor_invite_all")
      *
-     * @param TranslatorInterface $translator
-     * @param InviteEmailService  $emailService
-     *
      * @throws \Exception
      *
      * @return Response
@@ -188,8 +168,6 @@ class DoctorController extends BaseController
 
     /**
      * @Route("/{doctor}/toggle_login_enabled", name="administration_doctor_toggle_login_enabled")
-     *
-     * @param Doctor $doctor
      *
      * @return Response
      */

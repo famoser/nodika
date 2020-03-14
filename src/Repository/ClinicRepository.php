@@ -24,10 +24,8 @@ class ClinicRepository extends EntityRepository
     /**
      * adds a default ordering.
      *
-     * @param array      $criteria
-     * @param array|null $orderBy
-     * @param null       $limit
-     * @param null       $offset
+     * @param null $limit
+     * @param null $offset
      *
      * @return array
      */

@@ -40,8 +40,6 @@ abstract class BaseUserProvider implements UserProviderInterface
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @param UserInterface $user
-     *
      * @throws UnsupportedUserException if the account is not supported
      *
      * @return UserInterface

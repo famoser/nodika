@@ -60,81 +60,51 @@ class Setting extends BaseEntity
      */
     private $sendRemainderDaysInterval = 7;
 
-    /**
-     * @return int
-     */
     public function getCanConfirmDaysAdvance(): int
     {
         return $this->canConfirmDaysAdvance;
     }
 
-    /**
-     * @param int $canConfirmDaysAdvance
-     */
     public function setCanConfirmDaysAdvance(int $canConfirmDaysAdvance): void
     {
         $this->canConfirmDaysAdvance = $canConfirmDaysAdvance;
     }
 
-    /**
-     * @return int
-     */
     public function getMustConfirmDaysAdvance(): int
     {
         return $this->mustConfirmDaysAdvance;
     }
 
-    /**
-     * @param int $mustConfirmDaysAdvance
-     */
     public function setMustConfirmDaysAdvance(int $mustConfirmDaysAdvance): void
     {
         $this->mustConfirmDaysAdvance = $mustConfirmDaysAdvance;
     }
 
-    /**
-     * @return int
-     */
     public function getSendRemainderDaysInterval(): int
     {
         return $this->sendRemainderDaysInterval;
     }
 
-    /**
-     * @param int $sendRemainderDaysInterval
-     */
     public function setSendRemainderDaysInterval(int $sendRemainderDaysInterval): void
     {
         $this->sendRemainderDaysInterval = $sendRemainderDaysInterval;
     }
 
-    /**
-     * @return bool
-     */
     public function getDoctorsCanEditSelf(): bool
     {
         return $this->doctorsCanEditSelf;
     }
 
-    /**
-     * @param bool $doctorsCanEditSelf
-     */
     public function setDoctorsCanEditSelf(bool $doctorsCanEditSelf): void
     {
         $this->doctorsCanEditSelf = $doctorsCanEditSelf;
     }
 
-    /**
-     * @return bool
-     */
     public function getDoctorsCanEditClinics(): bool
     {
         return $this->doctorsCanEditClinics;
     }
 
-    /**
-     * @param bool $doctorsCanEditClinics
-     */
     public function setDoctorsCanEditClinics(bool $doctorsCanEditClinics): void
     {
         $this->doctorsCanEditClinics = $doctorsCanEditClinics;

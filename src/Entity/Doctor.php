@@ -114,8 +114,6 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     /**
      * check if this is the same user.
      *
-     * @param UserInterface $user
-     *
      * @return bool
      */
     public function isEqualTo(UserInterface $user)
@@ -127,17 +125,11 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
         return $this->isEqualToUser($user);
     }
 
-    /**
-     * @return bool
-     */
     public function isAdministrator(): bool
     {
         return $this->isAdministrator;
     }
 
-    /**
-     * @param bool $isAdministrator
-     */
     public function setIsAdministrator(bool $isAdministrator): void
     {
         $this->isAdministrator = $isAdministrator;
@@ -156,17 +148,11 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
         return $this->getFullName();
     }
 
-    /**
-     * @return bool
-     */
     public function isReceivesAdministratorMail(): bool
     {
         return $this->receivesAdministratorMail;
     }
 
-    /**
-     * @param bool $receivesAdministratorMail
-     */
     public function setReceivesAdministratorMail(bool $receivesAdministratorMail): void
     {
         $this->receivesAdministratorMail = $receivesAdministratorMail;

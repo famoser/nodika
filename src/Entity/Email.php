@@ -104,9 +104,6 @@ class Email extends BaseEntity
         return $this->body;
     }
 
-    /**
-     * @param string $body
-     */
     public function setBody(string $body)
     {
         $this->body = $body;
@@ -120,9 +117,6 @@ class Email extends BaseEntity
         return $this->actionText;
     }
 
-    /**
-     * @param string $actionText
-     */
     public function setActionText(string $actionText)
     {
         $this->actionText = $actionText;
@@ -136,9 +130,6 @@ class Email extends BaseEntity
         return $this->actionLink;
     }
 
-    /**
-     * @param string $actionLink
-     */
     public function setActionLink(string $actionLink)
     {
         $this->actionLink = $actionLink;
@@ -188,9 +179,6 @@ class Email extends BaseEntity
         return $this->sentDateTime;
     }
 
-    /**
-     * @param \DateTime $sentDateTime
-     */
     public function setSentDateTime(\DateTime $sentDateTime)
     {
         $this->sentDateTime = $sentDateTime;
@@ -204,9 +192,6 @@ class Email extends BaseEntity
         return $this->visitedDateTime;
     }
 
-    /**
-     * @param \DateTime $visitedDateTime
-     */
     public function setVisitedDateTime(\DateTime $visitedDateTime)
     {
         $this->visitedDateTime = $visitedDateTime;
@@ -246,9 +231,6 @@ class Email extends BaseEntity
         return $this->subject;
     }
 
-    /**
-     * @param string $subject
-     */
     public function setSubject(string $subject)
     {
         $this->subject = $subject;
@@ -262,9 +244,6 @@ class Email extends BaseEntity
         return $this->emailType;
     }
 
-    /**
-     * @param int $emailType
-     */
     public function setEmailType(int $emailType)
     {
         $this->emailType = $emailType;
@@ -278,9 +257,6 @@ class Email extends BaseEntity
         return $this->identifier;
     }
 
-    /**
-     * @param string $identifier
-     */
     public function setIdentifier(string $identifier)
     {
         $this->identifier = $identifier;

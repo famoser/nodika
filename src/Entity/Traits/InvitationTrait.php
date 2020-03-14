@@ -57,17 +57,11 @@ trait InvitationTrait
         return $this->invitationIdentifier;
     }
 
-    /**
-     * @return \DateTime|null
-     */
     public function getLastInvitation(): ?\DateTime
     {
         return $this->lastInvitation;
     }
 
-    /**
-     * @param \DateTime $lastInvitation
-     */
     public function setLastInvitation(\DateTime $lastInvitation): void
     {
         $this->lastInvitation = $lastInvitation;

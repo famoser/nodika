@@ -61,81 +61,51 @@ trait EventTrait
      */
     private $doctor;
 
-    /**
-     * @return int
-     */
     public function getEventType(): int
     {
         return $this->eventType;
     }
 
-    /**
-     * @param int $eventType
-     */
     public function setEventType(int $eventType): void
     {
         $this->eventType = $eventType;
     }
 
-    /**
-     * @return \DateTime|null
-     */
     public function getConfirmDateTime(): ?\DateTime
     {
         return $this->confirmDateTime;
     }
 
-    /**
-     * @return Doctor|null
-     */
     public function getConfirmedByDoctor(): ?Doctor
     {
         return $this->confirmedByDoctor;
     }
 
-    /**
-     * @return \DateTime|null
-     */
     public function getLastRemainderEmailSent(): ?\DateTime
     {
         return $this->lastRemainderEmailSent;
     }
 
-    /**
-     * @param \DateTime|null $lastRemainderEmailSent
-     */
     public function setLastRemainderEmailSent(?\DateTime $lastRemainderEmailSent): void
     {
         $this->lastRemainderEmailSent = $lastRemainderEmailSent;
     }
 
-    /**
-     * @return Clinic|null
-     */
     public function getClinic(): ?Clinic
     {
         return $this->clinic;
     }
 
-    /**
-     * @param Clinic|null $clinic
-     */
     public function setClinic(?Clinic $clinic): void
     {
         $this->clinic = $clinic;
     }
 
-    /**
-     * @return Doctor|null
-     */
     public function getDoctor(): ?Doctor
     {
         return $this->doctor;
     }
 
-    /**
-     * @param Doctor|null $doctor
-     */
     public function setDoctor(?Doctor $doctor): void
     {
         $this->doctor = $doctor;

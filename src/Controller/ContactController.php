@@ -30,10 +30,6 @@ class ContactController extends BaseFormController
     /**
      * @Route("/", name="contact_index")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param EmailService        $emailService
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)

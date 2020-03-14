@@ -44,8 +44,6 @@ class EventController extends BaseApiController
     /**
      * @Route("/new", name="administration_event_new")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function newAction(Request $request, TranslatorInterface $translator)
@@ -79,9 +77,6 @@ class EventController extends BaseApiController
     /**
      * @Route("/{event}/edit", name="administration_event_edit")
      *
-     * @param Request $request
-     * @param Event   $event
-     *
      * @return Response
      */
     public function editAction(Request $request, Event $event, TranslatorInterface $translator)
@@ -112,9 +107,6 @@ class EventController extends BaseApiController
     }
 
     /**
-     * @param Event               $event
-     * @param TranslatorInterface $translator
-     *
      * @return bool
      */
     private function ensureValidDoctorClinicPair(Event $event, TranslatorInterface $translator)
@@ -129,9 +121,6 @@ class EventController extends BaseApiController
 
     /**
      * @Route("/{event}/remove", name="administration_event_remove")
-     *
-     * @param Request $request
-     * @param Event   $event
      *
      * @return Response
      */
@@ -168,8 +157,6 @@ class EventController extends BaseApiController
     /**
      * @Route("/{event}/history", name="administration_event_history")
      *
-     * @param Event $event
-     *
      * @return Response
      */
     public function historyAction(Event $event)
@@ -194,10 +181,6 @@ class EventController extends BaseApiController
 
     /**
      * @Route("/generation/new/{tagType}", name="administration_event_generation_new")
-     *
-     * @param int                             $tagType
-     * @param EventGenerationServiceInterface $eventGenerationService
-     * @param TranslatorInterface             $translator
      *
      * @throws \Exception
      *
@@ -359,8 +342,6 @@ class EventController extends BaseApiController
     /**
      * @Route("/generation/{generation}", name="administration_event_generation")
      *
-     * @param EventGeneration $generation
-     *
      * @return Response
      */
     public function generationAction(EventGeneration $generation)
@@ -371,8 +352,6 @@ class EventController extends BaseApiController
     /**
      * @Route("/generation/{generation}/get", name="administration_event_generation_get")
      *
-     * @param EventGeneration $generation
-     *
      * @return Response
      */
     public function generationGetAction(EventGeneration $generation)
@@ -382,10 +361,6 @@ class EventController extends BaseApiController
 
     /**
      * @Route("/generation/{generation}/update", name="administration_event_generation_update")
-     *
-     * @param Request                         $request
-     * @param EventGeneration                 $generation
-     * @param EventGenerationServiceInterface $eventGenerationService
      *
      * @return Response
      */
@@ -534,9 +509,6 @@ class EventController extends BaseApiController
     /**
      * @Route("/generation/{generation}/apply", name="administration_event_generation_apply")
      *
-     * @param EventGeneration                 $generation
-     * @param EventGenerationServiceInterface $eventGenerationService
-     *
      * @return Response
      */
     public function generateApply(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
@@ -548,8 +520,6 @@ class EventController extends BaseApiController
 
     /**
      * @Route("/{event}/toggle_confirm", name="administration_event_toggle_confirm")
-     *
-     * @param Event $event
      *
      * @return Response
      */

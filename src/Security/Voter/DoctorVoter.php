@@ -32,9 +32,8 @@ class DoctorVoter extends BaseVoter
      * Perform a single access check operation on a given attribute, subject and token.
      * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
      *
-     * @param string         $attribute
-     * @param Doctor         $subject
-     * @param TokenInterface $token
+     * @param string $attribute
+     * @param Doctor $subject
      *
      * @return bool
      */

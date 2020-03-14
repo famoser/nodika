@@ -44,9 +44,6 @@ trait PersonTrait
         return $this->jobTitle;
     }
 
-    /**
-     * @param string $jobTitle
-     */
     public function setJobTitle(string $jobTitle)
     {
         $this->jobTitle = $jobTitle;

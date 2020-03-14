@@ -55,10 +55,6 @@ class AdministrationController extends BaseFormController
     /**
      * @Route("/events", name="administration_events")
      *
-     * @param Request             $request
-     * @param CsvServiceInterface $csvService
-     * @param TranslatorInterface $translator
-     *
      * @return Response
      */
     public function eventsAction(Request $request, CsvServiceInterface $csvService, TranslatorInterface $translator)

@@ -19,19 +19,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LoginType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', TextType::class);
         $builder->add('password', PasswordType::class);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

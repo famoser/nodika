@@ -14,7 +14,6 @@ namespace App\Security;
 use App\Entity\Doctor;
 use App\Security\Base\BaseUserProvider;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -40,8 +39,6 @@ class DoctorProvider extends BaseUserProvider
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @param UserInterface $user
-     *
      * @throws UnsupportedUserException if the account is not supported
      *
      * @return UserInterface
@@ -49,9 +46,7 @@ class DoctorProvider extends BaseUserProvider
     public function refreshUser(UserInterface $user)
     {
         if (!$user instanceof Doctor) {
-            throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', \get_class($user))
-            );
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
         if (!$user->isEnabled()) {
@@ -80,9 +75,7 @@ class DoctorProvider extends BaseUserProvider
             return $user;
         }
 
-        throw new UsernameNotFoundException(
-            sprintf('Username "%s" does not exist in UserProvider.', $username)
-        );
+        throw new UsernameNotFoundException(sprintf('Username "%s" does not exist in UserProvider.', $username));
     }
 
     /**

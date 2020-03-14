@@ -34,17 +34,11 @@ class EventGenerationPreviewEvent extends BaseEntity
      */
     private $generatedBy;
 
-    /**
-     * @return EventGeneration|null
-     */
     public function getGeneratedBy(): ?EventGeneration
     {
         return $this->generatedBy;
     }
 
-    /**
-     * @param EventGeneration|null $generatedBy
-     */
     public function setGeneratedBy(?EventGeneration $generatedBy): void
     {
         $this->generatedBy = $generatedBy;

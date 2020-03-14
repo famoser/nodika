@@ -88,8 +88,6 @@ trait EventControllerTrait
     }
 
     /**
-     * @param TranslatorInterface $translator
-     *
      * @return string[]
      */
     private function getEventsHeader(TranslatorInterface $translator)

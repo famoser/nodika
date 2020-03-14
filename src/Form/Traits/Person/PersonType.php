@@ -18,19 +18,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PersonType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('givenName', TextType::class);
         $builder->add('familyName', TextType::class);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

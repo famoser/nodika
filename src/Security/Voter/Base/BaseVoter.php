@@ -21,9 +21,8 @@ abstract class BaseVoter extends Voter
     const VIEW = 2;
 
     /**
-     * @param string         $attribute
-     * @param object         $subject
-     * @param TokenInterface $token
+     * @param string $attribute
+     * @param object $subject
      *
      * @return bool
      */

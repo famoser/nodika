@@ -18,19 +18,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ChangePasswordType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('plainPassword', PasswordType::class);
         $builder->add('repeatPlainPassword', PasswordType::class);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

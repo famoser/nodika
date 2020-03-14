@@ -139,12 +139,7 @@ class BaseController extends AbstractController
     /**
      * Renders a view.
      *
-     * @param string        $view
-     * @param array         $parameters
-     * @param Response|null $response
-     * @param Breadcrumb[]  $breadcrumbs
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Breadcrumb[] $breadcrumbs
      */
     protected function render(string $view, array $parameters = [], Response $response = null, array $breadcrumbs = []): Response
     {

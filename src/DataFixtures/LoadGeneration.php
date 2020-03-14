@@ -31,8 +31,6 @@ class LoadGeneration extends BaseFixture
     /**
      * Load data fixtures with the passed EntityManager.
      *
-     * @param ObjectManager $manager
-     *
      * @throws \Exception
      */
     public function load(ObjectManager $manager)
@@ -48,9 +46,6 @@ class LoadGeneration extends BaseFixture
     }
 
     /**
-     * @param EventTag      $tag
-     * @param Doctor        $admin
-     * @param ObjectManager $manager
      * @param $cronExpression
      * @param $differentiate
      */

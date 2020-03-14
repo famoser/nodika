@@ -50,9 +50,6 @@ trait CreationAwareTrait
         return $this->createdAt;
     }
 
-    /**
-     * @return Doctor
-     */
     public function getCreatedBy(): Doctor
     {
         return $this->createdBy;
@@ -60,8 +57,6 @@ trait CreationAwareTrait
 
     /**
      * register who has changed the entity.
-     *
-     * @param Doctor $doctor
      */
     public function setCreatedBy(Doctor $doctor)
     {
