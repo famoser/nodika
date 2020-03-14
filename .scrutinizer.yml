@@ -1,3 +1,14 @@
+build:
+  nodes:
+    analysis:
+      environment:
+        node: v10.13
+      project_setup:
+        override: true
+      tests:
+        override:
+          - php-scrutinizer-run --enable-security-analysis
+
 checks:
   php:
     code_rating: true

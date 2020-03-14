@@ -34,10 +34,6 @@ public/build
 .php_cs.cache
 ###< friendsofphp/php-cs-fixer ###
 
-###> symfony/webpack-encore-pack ###
-/node_modules/
-/public/build/
-###< symfony/webpack-encore-pack ###
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
