@@ -13,6 +13,7 @@ namespace App\Command;
 
 use App\Enum\EventChangeType;
 use App\Enum\EventTagColor;
+use Doctrine\Persistence\ManagerRegistry;
 use PDO;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -34,16 +35,16 @@ class TransferDataCommand extends Command
     private $dbPath2;
 
     /**
-     * @var RegistryInterface
+     * @var ManagerRegistry
      */
     private $doctrine;
 
     /**
      * TransferDataCommand constructor.
      *
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct();
         $this->doctrine = $registry;

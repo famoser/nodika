@@ -15,8 +15,8 @@ use App\Entity\Email;
 use App\Enum\EmailType;
 use App\Helper\HashHelper;
 use App\Service\Interfaces\EmailServiceInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
@@ -31,7 +31,7 @@ class EmailService implements EmailServiceInterface
     private $contactEmail;
 
     /**
-     * @var RegistryInterface
+     * @var ManagerRegistry
      */
     private $doctrine;
 
@@ -49,12 +49,12 @@ class EmailService implements EmailServiceInterface
      * EmailService constructor.
      *
      * @param \Swift_Mailer     $mailer
-     * @param RegistryInterface $registry
+     * @param ManagerRegistry $registry
      * @param LoggerInterface   $logger
      * @param Environment       $twig
      * @param string            $contactEmail
      */
-    public function __construct(\Swift_Mailer $mailer, RegistryInterface $registry, LoggerInterface $logger, Environment $twig, string $contactEmail)
+    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $registry, LoggerInterface $logger, Environment $twig, string $contactEmail)
     {
         $this->mailer = $mailer;
         $this->doctrine = $registry;
