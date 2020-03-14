@@ -33,9 +33,6 @@ class LoginSubscriber implements EventSubscriberInterface
         $this->doctrine = $registry;
     }
 
-    /**
-     * @param InteractiveLoginEvent $event
-     */
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         /** @var Doctor $doctor */

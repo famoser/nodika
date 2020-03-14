@@ -33,17 +33,11 @@ class EventGenerationDateException extends BaseEntity
      */
     private $eventType = null;
 
-    /**
-     * @return int|null
-     */
     public function getEventType(): ?int
     {
         return $this->eventType;
     }
 
-    /**
-     * @param int|null $eventType
-     */
     public function setEventType(?int $eventType): void
     {
         $this->eventType = $eventType;
@@ -56,17 +50,11 @@ class EventGenerationDateException extends BaseEntity
      */
     private $eventGeneration;
 
-    /**
-     * @return EventGeneration
-     */
     public function getEventGeneration(): EventGeneration
     {
         return $this->eventGeneration;
     }
 
-    /**
-     * @param EventGeneration $eventGeneration
-     */
     public function setEventGeneration(EventGeneration $eventGeneration): void
     {
         $this->eventGeneration = $eventGeneration;

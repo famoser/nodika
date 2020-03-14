@@ -60,8 +60,6 @@ class ConfirmController extends BaseApiController
     /**
      * @Route("/event/{event}", name="api_confirm_event")
      *
-     * @param Event $event
-     *
      * @return Response
      */
     public function apiConfirmAction(Event $event)

@@ -35,9 +35,6 @@ trait StartEndTrait
         return $this->startDateTime;
     }
 
-    /**
-     * @param \DateTime $startDateTime
-     */
     public function setStartDateTime(\DateTime $startDateTime): void
     {
         $this->startDateTime = $startDateTime;
@@ -51,9 +48,6 @@ trait StartEndTrait
         return $this->endDateTime;
     }
 
-    /**
-     * @param \DateTime $endDateTime
-     */
     public function setEndDateTime(\DateTime $endDateTime): void
     {
         $this->endDateTime = $endDateTime;

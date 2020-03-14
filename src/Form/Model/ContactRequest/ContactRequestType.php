@@ -25,10 +25,6 @@ class ContactRequestType extends BaseAbstractType
     const CHECK_DATA = null;
     const CHECK2_DATA = 'some string';
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', TextType::class);
@@ -38,9 +34,6 @@ class ContactRequestType extends BaseAbstractType
         $builder->add('check2', HiddenType::class, ['mapped' => false, 'data' => self::CHECK2_DATA]);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

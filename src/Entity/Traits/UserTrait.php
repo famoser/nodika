@@ -180,9 +180,6 @@ trait UserTrait
         return $this->lastLoginDate;
     }
 
-    /**
-     * @param \DateTime $lastLoginDate
-     */
     public function setLastLoginDate(\DateTime $lastLoginDate): void
     {
         $this->lastLoginDate = $lastLoginDate;

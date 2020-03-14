@@ -23,8 +23,6 @@ class LoadClinic extends BaseFixture
     /**
      * Load data fixtures with the passed EntityManager.
      *
-     * @param ObjectManager $manager
-     *
      * @throws \Exception
      */
     public function load(ObjectManager $manager)

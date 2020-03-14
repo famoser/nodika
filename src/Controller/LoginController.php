@@ -51,10 +51,6 @@ class LoginController extends BaseFormController
             ];
     }
 
-    /**
-     * @param Request       $request
-     * @param UserInterface $user
-     */
     protected function loginUser(Request $request, UserInterface $user)
     {
         //login programmatically
@@ -66,8 +62,6 @@ class LoginController extends BaseFormController
     }
 
     /**
-     * @param Request $request
-     *
      * @return string
      */
     private function getLastUsername(Request $request)
@@ -110,7 +104,7 @@ class LoginController extends BaseFormController
         }
 
         $user = $this->getUser();
-        if ($user !== null && !$user->canLogin()) {
+        if (null !== $user && !$user->canLogin()) {
             $this->displayError($this->getTranslator()->trans('login.danger.login_disabled', [], 'login'));
 
             $this->get('security.token_storage')->setToken(null);
@@ -121,8 +115,6 @@ class LoginController extends BaseFormController
 
     /**
      * @Route("", name="login")
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -141,10 +133,6 @@ class LoginController extends BaseFormController
 
     /**
      * @Route("/recover", name="login_recover")
-     *
-     * @param Request               $request
-     * @param EmailServiceInterface $emailService
-     * @param TranslatorInterface   $translator
      *
      * @return Response
      */
@@ -200,9 +188,7 @@ class LoginController extends BaseFormController
     /**
      * @Route("/reset/{resetHash}", name="login_reset")
      *
-     * @param Request $request
      * @param $resetHash
-     * @param TranslatorInterface $translator
      *
      * @return Response
      */
@@ -260,10 +246,6 @@ class LoginController extends BaseFormController
 
     /**
      * @Route("/request", name="login_request")
-     *
-     * @param Request             $request
-     * @param InviteEmailService  $emailService
-     * @param TranslatorInterface $translator
      *
      * @return Response
      */

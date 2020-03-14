@@ -41,33 +41,21 @@ class EventGenerationTargetDoctor extends BaseEntity
      */
     private $eventGeneration;
 
-    /**
-     * @return Doctor
-     */
     public function getDoctor(): Doctor
     {
         return $this->doctor;
     }
 
-    /**
-     * @param Doctor $doctor
-     */
     public function setDoctor(Doctor $doctor): void
     {
         $this->doctor = $doctor;
     }
 
-    /**
-     * @return EventGeneration
-     */
     public function getEventGeneration(): EventGeneration
     {
         return $this->eventGeneration;
     }
 
-    /**
-     * @param EventGeneration $eventGeneration
-     */
     public function setEventGeneration(EventGeneration $eventGeneration): void
     {
         $this->eventGeneration = $eventGeneration;

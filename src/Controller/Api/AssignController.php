@@ -29,8 +29,6 @@ class AssignController extends BaseApiController
     /**
      * @Route("/doctors", name="assign_doctors")
      *
-     * @param SerializerInterface $serializer
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function doctorsAction(SerializerInterface $serializer)
@@ -51,8 +49,6 @@ class AssignController extends BaseApiController
 
     /**
      * @Route("/events/{doctor}", name="assign_events")
-     *
-     * @param Doctor $doctor
      *
      * @throws \Exception
      *
@@ -86,9 +82,6 @@ class AssignController extends BaseApiController
 
     /**
      * @Route("/assign/{event}/{doctor}", name="assign_assign")
-     *
-     * @param Event  $event
-     * @param Doctor $doctor
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

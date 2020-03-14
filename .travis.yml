@@ -47,8 +47,8 @@ before_script:
 script:
   # this executes the phpunit tests
   - ./vendor/bin/simple-phpunit
-  # this checks that the source code follows the Symfony Code Syntax rules (DEACTIVATED)
-  # - '[[ "$TRAVIS_PHP_VERSION" == "nightly" ]] || ./vendor/bin/php-cs-fixer fix --diff --dry-run -v'
+  # this checks that the source code follows the Symfony Code Syntax rules
+  - '[[ "$TRAVIS_PHP_VERSION" == "nightly" ]] || ./vendor/bin/php-cs-fixer fix --diff --dry-run -v'
   # this checks that the YAML config files contain no syntax errors
   - ./bin/console lint:yaml config
   # this checks that the Twig template files contain no syntax errors
@@ -66,9 +66,5 @@ script:
 
 
 after_script:
-  # scrutinizer reporting
   - if [[ $COVERAGE == true ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
-  # codacy reporting
-  - if [[ $COVERAGE == true ]]; then php ./vendor/bin/codacycoverage clover ./build/logs/clover.xml fi
-  # coveralls reporting
-  - if [[ $COVERAGE == true ]]; then php ./vendor/bin/coveralls -v; fi
+  - if [[ $COVERAGE == true ]]; then bash <(curl -s https://codecov.io/bash); fi

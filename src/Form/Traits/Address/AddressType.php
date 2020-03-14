@@ -20,10 +20,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddressType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('street', TextType::class, ['required' => false]);
@@ -34,9 +30,6 @@ class AddressType extends BaseAbstractType
         $builder->add('country', CountryType::class, ['required' => false]);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

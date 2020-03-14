@@ -17,18 +17,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EmailType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', \Symfony\Component\Form\Extension\Core\Type\EmailType::class);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

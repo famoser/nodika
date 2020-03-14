@@ -21,10 +21,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('clinic', EntityType::class, ['class' => Clinic::class, 'translation_domain' => 'entity_clinic', 'label' => 'entity.name', 'required' => false]);
@@ -32,9 +28,6 @@ class EventType extends BaseAbstractType
         $builder->add('eventType', ChoiceType::class, \App\Enum\EventType::getBuilderArguments());
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

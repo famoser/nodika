@@ -178,10 +178,6 @@ class TradeController extends BaseApiController
     /**
      * @Route("/create", name="api_trade_create")
      *
-     * @param Request             $request
-     * @param EmailService        $emailService
-     * @param TranslatorInterface $translator
-     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax

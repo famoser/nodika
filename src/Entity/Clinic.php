@@ -81,18 +81,12 @@ class Clinic extends BaseEntity
         return $this->events;
     }
 
-    /**
-     * @param Doctor $doctor
-     */
     public function addDoctor(Doctor $doctor)
     {
         $this->getDoctors()->add($doctor);
         $doctor->getClinics()->add($this);
     }
 
-    /**
-     * @param Doctor $doctor
-     */
     public function removeDoctor(Doctor $doctor)
     {
         $this->getDoctors()->removeElement($doctor);

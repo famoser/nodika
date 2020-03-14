@@ -19,10 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegisterType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('email', TextType::class);
@@ -30,9 +26,6 @@ class RegisterType extends BaseAbstractType
         $builder->add('repeatPlainPassword', PasswordType::class);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

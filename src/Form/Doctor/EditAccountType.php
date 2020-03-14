@@ -21,10 +21,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditAccountType extends BaseAbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('person', PersonType::class, ['inherit_data' => true]);
@@ -32,9 +28,6 @@ class EditAccountType extends BaseAbstractType
         $builder->add('address', AddressType::class, ['inherit_data' => true]);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

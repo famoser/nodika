@@ -35,17 +35,11 @@ class Breadcrumb
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getPath(): string
     {
         return $this->path;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

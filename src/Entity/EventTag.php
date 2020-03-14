@@ -50,9 +50,6 @@ class EventTag extends BaseEntity
         return $this->getName();
     }
 
-    /**
-     * @return int
-     */
     public function getColor(): int
     {
         return $this->color;
@@ -63,25 +60,16 @@ class EventTag extends BaseEntity
         return EventTagColor::getText($this->color);
     }
 
-    /**
-     * @param int $color
-     */
     public function setColor(int $color): void
     {
         $this->color = $color;
     }
 
-    /**
-     * @return int
-     */
     public function getTagType(): int
     {
         return $this->tagType;
     }
 
-    /**
-     * @param int $tagType
-     */
     public function setTagType(int $tagType): void
     {
         $this->tagType = $tagType;

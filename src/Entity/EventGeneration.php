@@ -188,97 +188,61 @@ class EventGeneration extends BaseEntity
         return $this->appliedEvents;
     }
 
-    /**
-     * @return string
-     */
     public function getStartCronExpression(): string
     {
         return $this->startCronExpression;
     }
 
-    /**
-     * @param string $startCronExpression
-     */
     public function setStartCronExpression(string $startCronExpression): void
     {
         $this->startCronExpression = $startCronExpression;
     }
 
-    /**
-     * @return string
-     */
     public function getEndCronExpression(): string
     {
         return $this->endCronExpression;
     }
 
-    /**
-     * @param string $endCronExpression
-     */
     public function setEndCronExpression(string $endCronExpression): void
     {
         $this->endCronExpression = $endCronExpression;
     }
 
-    /**
-     * @return float
-     */
     public function getWeekdayWeight(): float
     {
         return $this->weekdayWeight;
     }
 
-    /**
-     * @param float $weekdayWeight
-     */
     public function setWeekdayWeight(float $weekdayWeight): void
     {
         $this->weekdayWeight = $weekdayWeight;
     }
 
-    /**
-     * @return float
-     */
     public function getSaturdayWeight(): float
     {
         return $this->saturdayWeight;
     }
 
-    /**
-     * @param float $saturdayWeight
-     */
     public function setSaturdayWeight(float $saturdayWeight): void
     {
         $this->saturdayWeight = $saturdayWeight;
     }
 
-    /**
-     * @return float
-     */
     public function getSundayWeight(): float
     {
         return $this->sundayWeight;
     }
 
-    /**
-     * @param float $sundayWeight
-     */
     public function setSundayWeight(float $sundayWeight): void
     {
         $this->sundayWeight = $sundayWeight;
     }
 
-    /**
-     * @return float
-     */
     public function getHolidayWeight(): float
     {
         return $this->holidayWeight;
     }
 
-    /**
-     * @param float $holidayWeight
-     */
     public function setHolidayWeight(float $holidayWeight): void
     {
         $this->holidayWeight = $holidayWeight;
@@ -332,49 +296,31 @@ class EventGeneration extends BaseEntity
         $this->clinics = $clinics;
     }
 
-    /**
-     * @return bool
-     */
     public function getMindPreviousEvents(): bool
     {
         return $this->mindPreviousEvents;
     }
 
-    /**
-     * @param bool $mindPreviousEvents
-     */
     public function setMindPreviousEvents(bool $mindPreviousEvents): void
     {
         $this->mindPreviousEvents = $mindPreviousEvents;
     }
 
-    /**
-     * @return bool
-     */
     public function getDifferentiateByEventType(): bool
     {
         return $this->differentiateByEventType;
     }
 
-    /**
-     * @param bool $differentiateByEventType
-     */
     public function setDifferentiateByEventType(bool $differentiateByEventType): void
     {
         $this->differentiateByEventType = $differentiateByEventType;
     }
 
-    /**
-     * @return int
-     */
     public function getStep(): int
     {
         return $this->step;
     }
 
-    /**
-     * @param int $step
-     */
     public function setStep(int $step): void
     {
         $this->step = $step;
@@ -396,33 +342,21 @@ class EventGeneration extends BaseEntity
         return $this->assignEventTags;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsApplied(): bool
     {
         return $this->applied;
     }
 
-    /**
-     * @param bool $applied
-     */
     public function setIsApplied(bool $applied): void
     {
         $this->applied = $applied;
     }
 
-    /**
-     * @return float
-     */
     public function getConflictBufferInEventMultiples(): float
     {
         return $this->conflictBufferInEventMultiples;
     }
 
-    /**
-     * @param float $conflictBufferInEventMultiples
-     */
     public function setConflictBufferInEventMultiples(float $conflictBufferInEventMultiples): void
     {
         $this->conflictBufferInEventMultiples = $conflictBufferInEventMultiples;

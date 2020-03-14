@@ -87,105 +87,66 @@ class SearchModel
         return $this->startDateTime;
     }
 
-    /**
-     * @param \DateTime $startDateTime
-     */
     public function setStartDateTime(\DateTime $startDateTime): void
     {
         $this->startDateTime = $startDateTime;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getEndDateTime(): \DateTime
     {
         return $this->endDateTime;
     }
 
-    /**
-     * @param \DateTime $endDateTime
-     */
     public function setEndDateTime(\DateTime $endDateTime): void
     {
         $this->endDateTime = $endDateTime;
     }
 
-    /**
-     * @return Clinic|null
-     */
     public function getClinic(): ?Clinic
     {
         return $this->clinic;
     }
 
-    /**
-     * @param Clinic|null $clinic
-     */
     public function setClinic(?Clinic $clinic): void
     {
         $this->clinic = $clinic;
     }
 
-    /**
-     * @return Doctor|null
-     */
     public function getDoctor(): ?Doctor
     {
         return $this->doctor;
     }
 
-    /**
-     * @param Doctor|null $doctor
-     */
     public function setDoctor(?Doctor $doctor): void
     {
         $this->doctor = $doctor;
     }
 
-    /**
-     * @return bool|null
-     */
     public function getIsConfirmed(): ?bool
     {
         return $this->isConfirmed;
     }
 
-    /**
-     * @param bool|null $isConfirmed
-     */
     public function setIsConfirmed(?bool $isConfirmed): void
     {
         $this->isConfirmed = $isConfirmed;
     }
 
-    /**
-     * @return int
-     */
     public function getMaxResults(): int
     {
         return $this->maxResults;
     }
 
-    /**
-     * @param int $maxResults
-     */
     public function setMaxResults(int $maxResults): void
     {
         $this->maxResults = $maxResults;
     }
 
-    /**
-     * @return bool
-     */
     public function isInvertOrder(): bool
     {
         return $this->invertOrder;
     }
 
-    /**
-     * @param bool $invertOrder
-     */
     public function setInvertOrder(bool $invertOrder): void
     {
         $this->invertOrder = $invertOrder;

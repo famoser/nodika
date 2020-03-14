@@ -47,12 +47,6 @@ class EmailService implements EmailServiceInterface
 
     /**
      * EmailService constructor.
-     *
-     * @param \Swift_Mailer     $mailer
-     * @param ManagerRegistry $registry
-     * @param LoggerInterface   $logger
-     * @param Environment       $twig
-     * @param string            $contactEmail
      */
     public function __construct(\Swift_Mailer $mailer, ManagerRegistry $registry, LoggerInterface $logger, Environment $twig, string $contactEmail)
     {
@@ -64,8 +58,6 @@ class EmailService implements EmailServiceInterface
     }
 
     /**
-     * @param Email $email
-     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax

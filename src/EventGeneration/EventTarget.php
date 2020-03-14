@@ -44,8 +44,6 @@ class EventTarget
     }
 
     /**
-     * @param EventGenerationTargetDoctor $doctor
-     *
      * @return static
      */
     public static function fromDoctor(EventGenerationTargetDoctor $doctor)
@@ -57,8 +55,6 @@ class EventTarget
     }
 
     /**
-     * @param EventGenerationTargetClinic $clinic
-     *
      * @return static
      */
     public static function fromClinic(EventGenerationTargetClinic $clinic)
@@ -69,9 +65,6 @@ class EventTarget
         return $new;
     }
 
-    /**
-     * @return int
-     */
     public function getIdentifier(): int
     {
         return $this->identifier;
@@ -89,9 +82,6 @@ class EventTarget
         return $this->doctor;
     }
 
-    /**
-     * @return Doctor|null
-     */
     public function getDoctor(): ?Doctor
     {
         if (null !== $this->doctor) {
@@ -101,9 +91,6 @@ class EventTarget
         return null;
     }
 
-    /**
-     * @return Clinic|null
-     */
     public function getClinic(): ?Clinic
     {
         if (null !== $this->clinic) {
@@ -124,7 +111,6 @@ class EventTarget
 
     /**
      * @param $eventType
-     * @param int $count
      */
     public function restrictEventTypeResponsibility($eventType, int $count = 0)
     {

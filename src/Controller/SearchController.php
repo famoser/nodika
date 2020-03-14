@@ -33,10 +33,6 @@ class SearchController extends BaseFormController
     /**
      * @Route("/", name="search_index")
      *
-     * @param Request             $request
-     * @param TranslatorInterface $translator
-     * @param CsvServiceInterface $csvService
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)

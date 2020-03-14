@@ -24,8 +24,7 @@ class ConflictLookup
     /**
      * ConflictLookup constructor.
      *
-     * @param EventTrait[]  $events
-     * @param \DateInterval $bufferSize
+     * @param EventTrait[] $events
      */
     public function __construct(array $events, \DateInterval $bufferSize)
     {
@@ -39,8 +38,7 @@ class ConflictLookup
     }
 
     /**
-     * @param EventTrait[]  $events
-     * @param \DateInterval $bufferSize
+     * @param EventTrait[] $events
      */
     public function addEvents(array $events, \DateInterval $bufferSize)
     {
@@ -89,8 +87,7 @@ class ConflictLookup
     }
 
     /**
-     * @param EventTarget $eventTarget
-     * @param EventTrait  $event
+     * @param EventTrait $event
      *
      * @return bool
      */

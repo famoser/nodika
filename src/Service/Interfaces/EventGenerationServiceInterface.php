@@ -19,14 +19,8 @@ interface EventGenerationServiceInterface
     /**
      * tries to generate the events
      * returns true if successful.
-     *
-     * @param EventGeneration $eventGeneration
      */
     public function generate(EventGeneration $eventGeneration);
 
-    /**
-     * @param EventGeneration $eventGeneration
-     * @param Doctor          $creator
-     */
     public function persist(EventGeneration $eventGeneration, Doctor $creator);
 }

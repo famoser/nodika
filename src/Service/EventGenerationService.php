@@ -70,8 +70,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * creates the events to be assigned according to the cron values.
      *
-     * @param EventGeneration $eventGeneration
-     *
      * @return EventGenerationPreviewEvent[]|array
      */
     private function constructEvents(EventGeneration $eventGeneration)
@@ -102,8 +100,6 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * creates the events to be assigned according to the cron values.
-     *
-     * @param EventGeneration $eventGeneration
      *
      * @throws \Exception
      *
@@ -176,7 +172,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * applies specified exceptions to algorithm.
      *
-     * @param EventGeneration               $eventGeneration
      * @param EventGenerationPreviewEvent[] $events
      */
     private function processEventTypeExceptions(EventGeneration $eventGeneration, array $events)
@@ -220,8 +215,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * @param EventGeneration $eventGeneration
-     *
      * @return EventTarget[]
      */
     private function getEventTargets(EventGeneration $eventGeneration)
@@ -282,7 +275,6 @@ class EventGenerationService implements EventGenerationServiceInterface
     }
 
     /**
-     * @param EventGeneration $eventGeneration
      * @param $newEventCount
      * @param $newTargetCount
      *
@@ -373,8 +365,6 @@ class EventGenerationService implements EventGenerationServiceInterface
 
     /**
      * generates the events as specified in the generation.
-     *
-     * @param EventGeneration $eventGeneration
      *
      * @throws GenerationException
      * @throws \Exception
@@ -536,10 +526,6 @@ class EventGenerationService implements EventGenerationServiceInterface
         }
     }
 
-    /**
-     * @param EventGeneration $eventGeneration
-     * @param Doctor          $creator
-     */
     public function persist(EventGeneration $eventGeneration, Doctor $creator)
     {
         $manager = $this->doctrine->getManager();

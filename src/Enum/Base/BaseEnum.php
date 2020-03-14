@@ -32,7 +32,6 @@ abstract class BaseEnum
      * returns a translation string for the passed enum value.
      *
      * @param $enumValue
-     * @param TranslatorInterface $translator
      *
      * @return string
      */
@@ -126,7 +125,6 @@ abstract class BaseEnum
      * returns a translation string for the passed enum value.
      *
      * @param $enumValue
-     * @param TranslatorInterface $translator
      *
      * @return bool|string
      */

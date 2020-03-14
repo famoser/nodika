@@ -93,8 +93,6 @@ class Event extends BaseEntity
     }
 
     /**
-     * @param EventGenerationPreviewEvent $preview
-     *
      * @return Event
      */
     public static function create(EventGenerationPreviewEvent $preview)
@@ -105,25 +103,17 @@ class Event extends BaseEntity
         return $event;
     }
 
-    /**
-     * @return EventGeneration|null
-     */
     public function getGeneratedBy(): ?EventGeneration
     {
         return $this->generatedBy;
     }
 
-    /**
-     * @param EventGeneration|null $generatedBy
-     */
     public function setGeneratedBy(?EventGeneration $generatedBy): void
     {
         $this->generatedBy = $generatedBy;
     }
 
     /**
-     * @param Doctor $doctor
-     *
      * @return bool
      */
     public function ownedBy(Doctor $doctor)

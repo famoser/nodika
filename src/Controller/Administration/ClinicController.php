@@ -28,8 +28,6 @@ class ClinicController extends BaseController
     /**
      * @Route("/new", name="administration_clinic_new")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function newAction(Request $request)
@@ -47,9 +45,6 @@ class ClinicController extends BaseController
 
     /**
      * @Route("/{clinic}/edit", name="administration_clinic_edit")
-     *
-     * @param Request $request
-     * @param Clinic  $clinic
      *
      * @return Response
      */
@@ -69,9 +64,6 @@ class ClinicController extends BaseController
     /**
      * deactivated because not safe
      * Route("/{clinic}/remove", name="administration_clinic_remove").
-     *
-     * @param Request $request
-     * @param Clinic  $clinic
      *
      * @return Response
      */

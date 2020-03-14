@@ -49,8 +49,6 @@ class InviteEmailService
     }
 
     /**
-     * @param Doctor $doctor
-     *
      * @throws \Exception
      */
     public function inviteDoctor(Doctor $doctor)
