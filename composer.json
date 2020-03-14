@@ -3,7 +3,7 @@
   "description": "emergency service (or any kind of consecutive events) distribution",
   "license": "MIT",
   "require": {
-    "php": "^7.1",
+    "php": "^7.2",
     "ext-iconv": "*",
     "ext-json": "*",
     "ext-pdo": "*",
@@ -47,8 +47,7 @@
     "symfony/debug-bundle": "^4.0",
     "symfony/phpunit-bridge": "^4.0",
     "symfony/profiler-pack": "^1.0",
-    "symfony/web-server-bundle": "^4.0",
-    "symfony/webpack-encore-pack": "^1"
+    "symfony/web-server-bundle": "^4.0"
   },
   "config": {
     "platform": {

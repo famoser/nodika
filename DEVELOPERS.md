@@ -30,22 +30,3 @@ do not forget to setup cronjobs as specified in the `CronJobController`
 `ssh-copy-id -i ~/.ssh/id_rsa.pub username@domain` to add ssh key  
 `cat ~/.ssh/id_rsa.pub` to query the active ssh key  
 `ssh-keygen -t rsa -b 4096 -C "username@domain" && eval $(ssh-agent -s) && ssh-add ~/.ssh/id_rsa` generate a new key & add it to ssh  
-
-## git hooks
-##### pre-commit
-```
-#!/bin/sh
-./vendor/bin/php-cs-fixer fix --dry-run -v > /dev/null 2>&1
-status=$?
-
-if [ "$status" = 0 ] ; then
-    exit 0
-else
-    ./vendor/bin/php-cs-fixer fix > /dev/null 2>&1
-    git add *
-    echo 1>&2 "Found not properly formatted files. php-cs-fixer
-was run."
-    exit 0
-fi
-
-```
