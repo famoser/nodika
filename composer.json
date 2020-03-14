@@ -74,17 +74,11 @@
     "symfony/polyfill-php56": "*"
   },
   "scripts": {
-    "auto-scripts": {
-      "cache:clear": "symfony-cmd",
-      "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd",
-      "security:check": "symfony-cmd",
-      "doctrine:migrations:migrate -q": "symfony-cmd",
-      "requirements-checker": "script",
-      "assets:install %PUBLIC_DIR%": "symfony-cmd",
-      "security-checker security:check": "script"
-    },
-    "post-install-cmd": [
-      "@auto-scripts"
+    "configure-environment": [
+      "cp -n .env .env.local",
+      "cp -n .php_cs.dist .php_cs",
+      "cp -n phpunit.xml.dist phpunit.xml",
+      "cp -n servers.yml.dist servers.yml"
     ],
     "prepare-environment": [
       "vendor/bin/cghooks update",
