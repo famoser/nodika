@@ -48,9 +48,26 @@ task('frontend:build', function () {
 task('deploy:refresh_symlink', function () {
     run('killall -9 php-cgi'); //kill all php processes so symlink is refreshed
 })->desc('Refreshing symlink');
-//frontend stuff
+
+//automatic till vendors comand
+desc('Deploy project');
+task('deploy', [
+    'deploy:info',
+    'deploy:prepare',
+    'deploy:lock',
+    'deploy:release',
+    'deploy:update_code',
+    'deploy:shared',
+    'deploy:writable',
+    'deploy:vendors',
+]);
+
+//add the other tasks
 after('deploy:vendors', 'frontend:build');
-// migrations
-after('deploy:vendors', 'database:migrate');
-// refresh symlink
+after('frontend:build', 'database:migrate');
+after('database:migrate', 'deploy:cache:clear');
+after('deploy:cache:clear', 'deploy:cache:warmup');
+after('deploy:cache:warmup', 'deploy:symlink');
 after('deploy:symlink', 'deploy:refresh_symlink');
+after('deploy:refresh_symlink', 'deploy:unlock');
+after('deploy:unlock', 'cleanup');
