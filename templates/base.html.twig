@@ -77,7 +77,9 @@
 <body>
 <div id="outdated">
     <h6>{{ "base.outdated.your_browser_is_outdated"|trans({}, "layout") }}</h6>
-    <p>{{ "base.outdated.update_to_view_correctly"|trans({}, "layout") }} <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">{{ "base.outdated.update_now"|trans({}, "layout") }}</a></p>
+    <p>{{ "base.outdated.update_to_view_correctly"|trans({}, "layout") }} <a id="btnUpdateBrowser"
+                                                                             href="http://outdatedbrowser.com/">{{ "base.outdated.update_now"|trans({}, "layout") }}</a>
+    </p>
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
 
@@ -94,7 +96,8 @@
                     <ul class="navbar-nav">
                         {{ own_macros.menu_entry("index.title"|trans({}, "index"), path("index_index")) }}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                               data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false">
                                 {{ "base.events_menu.title"|trans({}, "layout") }}
                             </a>
@@ -172,6 +175,15 @@
     {% block content %}
 
     {% endblock %}
+</div>
+
+<div class="footer pb-3">
+    <div class="container">
+        <p class="text-right text-secondary mt-4">
+            {{ "base.created_by"|trans({}, "layout") }} <a href="https://famoser.ch" target="_blank">famoser.ch</a><br/>
+            {{ "base.source_code_on"|trans({}, "layout") }} <a href="https://github.com/famoser/nodika" target="_blank">github</a>
+        </p>
+    </div>
 </div>
 
 <script src="{{ asset('dist/runtime.js') }}"></script>

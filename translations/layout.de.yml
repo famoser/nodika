@@ -1,6 +1,9 @@
 base:
   brand: 'nodika.ch'
 
+  created_by: 'created with ♥ by'
+  source_code_on: 'source code on'
+
   events_menu:
     title: "Termine"
     assign: "zuweisen"
