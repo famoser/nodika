@@ -90,7 +90,13 @@
     "pre-install-cmd": "@configure-environment",
     "post-install-cmd": "@prepare-environment",
     "pre-update-cmd": "@configure-environment",
-    "post-update-cmd": "@prepare-environment"
+    "post-update-cmd": "@prepare-environment",
+    "auto-scripts": {
+      "cache:clear": "symfony-cmd",
+      "assets:install %PUBLIC_DIR%": "symfony-cmd",
+      "security-checker security:check": "script",
+      "requirements-checker": "script"
+    }
   },
   "conflict": {
     "symfony/symfony": "*"
