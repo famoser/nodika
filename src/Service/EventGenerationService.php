@@ -320,9 +320,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         return $result;
     }
 
-    /** @var EventTarget[] $eventTargetDoctorLookup */
+    /** @var EventTarget[] */
     private $eventTargetDoctorLookup = null;
-    /** @var EventTarget[] $eventTargetClinicLookup */
+    /** @var EventTarget[] */
     private $eventTargetClinicLookup = null;
 
     /**
