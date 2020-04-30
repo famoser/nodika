@@ -44,7 +44,7 @@ abstract class TranslatableObject
      */
     public function getTranslationDomain()
     {
-        $class = \get_class($this);
+        $class = static::class;
 
         return $this->getTranslationDomainPrefix().'_'.NamingHelper::classToTranslationDomain($class);
     }

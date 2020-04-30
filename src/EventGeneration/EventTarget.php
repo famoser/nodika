@@ -16,7 +16,6 @@ use App\Entity\Doctor;
 use App\Entity\EventGenerationTargetClinic;
 use App\Entity\EventGenerationTargetDoctor;
 use App\Entity\Traits\EventGenerationTarget;
-use App\Enum\EventType;
 
 class EventTarget
 {
