@@ -5,9 +5,8 @@ cache:
   directories:
     - $HOME/.composer/cache/files
     - $HOME/symfony-bridge/.phpunit
-    - $HOME/.sonar/cache
-    - vendors
     - node_modules
+    - vendor
 
 env:
   global:
@@ -19,7 +18,6 @@ matrix:
     - php: 7.2
       env:
         - COVERAGE=true
-    - php: 7.4
     - php: nightly
   allow_failures:
     - php: nightly
@@ -28,35 +26,27 @@ matrix:
 before_install:
   - if [[ $COVERAGE == false ]]; then phpenv config-rm xdebug.ini; fi
 
-  # install git, yarn, nodejs
-  - curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
-  - sudo apt-get install -y gnupg git nodejs
-  - npm install -g yarn
+  # active node 12
+  - nvm install v12
 
-  # install phpunit
-  - sudo curl --location --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit.phar
-  - sudo chmod +x /usr/local/bin/phpunit
+  # print versions just in case
+  - php --version
+  - node --version
 
-# prepare programming environement
+# prepare programming environment
 install:
   # copy config files
-  - cp .env.travis .env
-  - cp .env.travis .env.test
+  - cp .env.test.travis .env.test
   - cp phpunit.xml.dist phpunit.xml
 
   # configure fontawesome
   - npm config set "@fortawesome:registry" https://npm.fontawesome.com/
   - npm config set "//npm.fontawesome.com/:_authToken" $FONTAWESOME_AUTH_TOKEN
-
+  
   # install dependencies
-  - composer install --no-plugins --no-scripts
+  - composer install --no-scripts
   - yarn install
   - chmod +x ./bin/console
-
-  # print versions just in case
-  - php --version
-  - php ./bin/console --version
-  - phpunit --version
 
   # check if travis fulfills symfony requirements
   - php ./vendor/bin/requirements-checker
@@ -75,24 +65,24 @@ before_script:
 
 # execute tests
 script:
-  # this checks that the source code follows the Symfony Code Syntax rules (DEACTIVATED)
+  # frontend vulnerability check
+  - yarn audit
+
+    # backend lint
   - '[[ "$TRAVIS_PHP_VERSION" == "nightly" ]] || ./vendor/bin/php-cs-fixer fix --diff --dry-run -v'
-  # this checks that the YAML config files contain no syntax errors
   - ./bin/console lint:yaml config
-  # this checks that the Twig template files contain no syntax errors
+  - ./bin/console lint:yaml translations
   - ./bin/console lint:twig templates
-  # this checks that the application doesn't use dependencies with known security vulnerabilities
+  - composer validate --strict
+
+  # backend vulnerability check
   - ./bin/console security:check
-  # this checks that the composer.json and composer.lock files are valid
-  - composer validate --no-check-publish
-  # this checks that Doctrine's mapping configurations are valid
+
+  # backend tests
   - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
-  # this executes the phpunit tests
-  - export SYMFONY_DEPRECATIONS_HELPER=disabled && phpunit
+  - ./vendor/bin/phpunit
 
 # report code coverage
 after_script:
   # scrutinizer reporting
   - if [[ $COVERAGE == true ]]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml; fi
-# coverage (deactivated)
-# - if [[ $COVERAGE == true ]]; then bash <(curl -s https://codecov.io/bash); fi
