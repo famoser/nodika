@@ -3,7 +3,7 @@
     "@symfony/webpack-encore": "^0.30",
     "jquery": "^3.2",
     "node-sass": "^4.13.1",
-    "sass-loader": "^7",
+    "sass-loader": "^8",
     "vue-loader": "^15",
     "vue-template-compiler": "^2.5.16"
   },
@@ -29,5 +29,11 @@
     "promise-polyfill": "^8.1.0",
     "vue": "^2.5",
     "vue-i18n": "^7"
+  },
+  "scripts": {
+    "dev-server": "encore dev-server --pfx=$HOME/.symfony/certs/default.p12 --https --port 8080 --disable-host-check",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
   }
 }
