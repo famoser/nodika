@@ -66,7 +66,7 @@ before_script:
 # execute tests
 script:
   # frontend vulnerability check
-  - yarn audit
+  - yarn audit --groups dependencies
 
     # backend lint
   - '[[ "$TRAVIS_PHP_VERSION" == "nightly" ]] || ./vendor/bin/php-cs-fixer fix --diff --dry-run -v'
