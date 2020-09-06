@@ -15,7 +15,7 @@ use App\DataFixtures\Base\BaseFixture;
 use App\Entity\Doctor;
 use App\Entity\EventGeneration;
 use App\Entity\EventOffer;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class LoadEventOffers extends BaseFixture
 {

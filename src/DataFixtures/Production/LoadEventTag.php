@@ -15,7 +15,7 @@ use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventTag;
 use App\Enum\EventTagColor;
 use App\Enum\EventTagType;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class LoadEventTag extends BaseFixture
 {

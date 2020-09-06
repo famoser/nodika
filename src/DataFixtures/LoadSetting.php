@@ -13,7 +13,7 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Base\BaseFixture;
 use App\Entity\Setting;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class LoadSetting extends BaseFixture
 {

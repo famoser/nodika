@@ -22,7 +22,7 @@ use App\Entity\EventGenerationTargetClinic;
 use App\Entity\EventTag;
 use App\Enum\EventType;
 use App\Helper\DateTimeFormatter;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class LoadGeneration extends BaseFixture
 {
