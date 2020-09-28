@@ -12,7 +12,7 @@
 namespace App\DataFixtures\Production;
 
 use App\DataFixtures\LoadDoctor;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class LoadAdmin extends LoadDoctor
 {

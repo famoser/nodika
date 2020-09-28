@@ -27,7 +27,7 @@ use App\Enum\EventType;
 use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EventGenerationServiceInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
