@@ -34,7 +34,7 @@
 
         <template v-if="generation.differentiateByEventType">
             <h3>{{$t('event_type.entity.name')}}</h3>
-            <table class="table table-hover mb-5">
+            <table class="table table-hover table-striped mb-5">
                 <thead>
                 <tr>
                     <th> {{$t('event_target.name')}}</th>
