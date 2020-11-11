@@ -36,11 +36,11 @@ class QueueEntry
     /**
      * @var int
      */
-    private $payload;
+    private $id;
 
-    public function __construct($payload, $weight, $size)
+    public function __construct(int $id, int $weight, int $size)
     {
-        $this->payload = $payload;
+        $this->id = $id;
         $this->weight = $weight;
         $this->size = $size;
     }
@@ -50,18 +50,12 @@ class QueueEntry
         return $this->issued;
     }
 
-    /**
-     * issues the queue entry.
-     */
     public function issue(): void
     {
         ++$this->issued;
         $this->score -= $this->size;
     }
 
-    /**
-     * issues the queue entry.
-     */
     public function increment(): void
     {
         $this->score += $this->weight;
@@ -70,9 +64,9 @@ class QueueEntry
     /**
      * @return int
      */
-    public function getPayload()
+    public function getId()
     {
-        return $this->payload;
+        return $this->id;
     }
 
     public function getScore(): int
@@ -83,17 +77,5 @@ class QueueEntry
     public function setScore(int $score): void
     {
         $this->score = $score;
-    }
-
-    /**
-     * @return QueueEntry
-     */
-    public function exactClone()
-    {
-        $entry = new self($this->payload, $this->weight, $this->size);
-        $entry->issued = $this->issued;
-        $entry->score = $this->score;
-
-        return $entry;
     }
 }

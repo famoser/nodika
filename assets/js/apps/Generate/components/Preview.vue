@@ -7,13 +7,13 @@
                 </button>
             </div>
             <div>
-                <button class="btn btn-primary" @click="$emit('submit')">
-                    {{$t("actions.save_and_finish")}}
+                <button class="btn btn-warning" @click="$emit('submit')">
+                    {{$t("actions.publish_events")}}
                 </button>
             </div>
         </div>
         <h3>{{$t('event_target.entity.plural')}}</h3>
-        <table class="table table-hover mb-5">
+        <table class="table table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th> {{$t('event_target.name')}}</th>
@@ -34,7 +34,7 @@
 
         <template v-if="generation.differentiateByEventType">
             <h3>{{$t('event_type.entity.name')}}</h3>
-            <table class="table table-hover mb-5">
+            <table class="table table-hover table-striped mb-5">
                 <thead>
                 <tr>
                     <th> {{$t('event_target.name')}}</th>
@@ -59,7 +59,7 @@
         </template>
 
         <h3>{{$t('event.entity.plural')}}</h3>
-        <table class="table table-hover">
+        <table class="table table-hover table-striped">
             <thead>
             <tr>
                 <th> {{$t('event.owner')}}</th>

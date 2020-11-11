@@ -67,8 +67,15 @@
                 this.holidays.splice(this.holidays.indexOf(holiday), 1);
             },
             addHoliday: function () {
-                let formatted = moment(this.newHoliday, "DD.MM.YYYY").toDate();
-                this.holidays.push(formatted);
+                let newHolidays = this.newHoliday.split(",")
+                console.log(newHolidays);
+                newHolidays.forEach((holiday) => {
+                    let newHoliday = holiday.trim();
+                    if (newHoliday.length === 10) {
+                      let formatted = moment(newHoliday, "DD.MM.YYYY").toDate();
+                      this.holidays.push(formatted);
+                    }
+                })
                 this.orderHolidays();
                 this.newHoliday = "";
             },

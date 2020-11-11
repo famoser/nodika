@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table class="table table-hover">
+        <table class="table table-hover table-striped">
             <thead>
             <tr>
                 <th v-if="ownerAssigned"> {{$t('event.owner')}}</th>

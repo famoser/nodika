@@ -31,8 +31,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class EventGenerationService implements EventGenerationServiceInterface
 {
-    const RANDOM_ACCURACY = 1000;
-
     /**
      * @var ManagerRegistry
      */
@@ -54,6 +52,12 @@ class EventGenerationService implements EventGenerationServiceInterface
     private function distributeToTargets($weightedTargets, $bucketsCount)
     {
         $queueGenerator = new QueueGenerator($weightedTargets);
+
+        $skips = rand(0, log($bucketsCount));
+        while ($skips-- > 0) {
+            $queueGenerator->getNext();
+        }
+
         $res = [];
         for ($i = 0; $i < $bucketsCount; ++$i) {
             $targetId = $queueGenerator->getNext();
@@ -278,23 +282,26 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param $newEventCount
      * @param $newTargetCount
      *
-     * @return array
+     * @return Event[]
      */
     private function getPreviousEvents(EventGeneration $eventGeneration, $newEventCount, $newTargetCount)
     {
         //the limit specifies how many events will have an influence to the generation
         //keep the number between 1000 & 10'000, ideally relative to the generation
-        $limit = min($newEventCount * 2, $newTargetCount * 5, 10000);
+        $limit = min($newEventCount * 2, $newTargetCount * 5);
         $limit = min(1000, $limit);
 
         $end = $eventGeneration->getStartDateTime();
         $searchModel = new SearchModel(SearchModel::NONE);
+        $searchModel->setInvertOrder(true);
         $searchModel->setStartDateTime(((new \DateTime())->setTimestamp(0)));
         $searchModel->setEndDateTime($end);
         $searchModel->setMaxResults($limit);
-        $searchModel->setEventTags($eventGeneration->getConflictEventTags());
+        $searchModel->setEventTags($eventGeneration->getAssignEventTags());
 
         $events = $this->doctrine->getRepository(Event::class)->search($searchModel);
+
+        $events = array_reverse($events);
 
         return $events;
     }
@@ -389,8 +396,18 @@ class EventGenerationService implements EventGenerationServiceInterface
         $queueGenerator = new QueueGenerator($weightedTargets);
         if ($eventGeneration->getMindPreviousEvents()) {
             $previousEvents = $this->getPreviousEvents($eventGeneration, \count($events), \count($targets));
+            $warm = [];
+            foreach ($previousEvents as $previousEvent) {
+                $warm[] = $previousEvent->getStartDateTime()->format('c').' - '.$previousEvent->getClinic()->getName();
+            }
+            dump($warm);
             $warmUpEvents = $this->eventsToWarmupArray($previousEvents, $targetLookup);
             $queueGenerator->warmUp($warmUpEvents);
+
+            $warmupCount = rand(0, \count($targetLookup));
+            while ($warmupCount-- > 0) {
+                $queueGenerator->getNext();
+            }
         }
 
         //prepare event type to weight mapping

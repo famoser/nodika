@@ -3,14 +3,9 @@
   user: USER
   http_user: USER
   branch: master
-  deploy_path: ~/www/deploy/nodika.ch/{{stage}}
+  deploy_path: ~/www/knbu.nodika.ch/{{stage}}
   sshOptions:
     StrictHostKeyChecking: no
-
-dev:
-  <<: *base
-  stage: dev
-  branch: develop
 
 production:
   <<: *base
