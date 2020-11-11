@@ -7,8 +7,8 @@
                 </button>
             </div>
             <div>
-                <button class="btn btn-primary" @click="$emit('submit')">
-                    {{$t("actions.save_and_finish")}}
+                <button class="btn btn-warning" @click="$emit('submit')">
+                    {{$t("actions.publish_events")}}
                 </button>
             </div>
         </div>

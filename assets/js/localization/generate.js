@@ -4,7 +4,7 @@ export default {
             save: 'Speichern',
             save_and_continue: 'Speichern und fortfahren',
             reload: 'Termine neu generieren',
-            save_and_finish: 'Speichern und abschliessen'
+            publish_events: 'Termine veröffentlichen'
         },
         span: {
             title: "Datum & Zeit",
