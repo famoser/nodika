@@ -31,8 +31,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 
 class EventGenerationService implements EventGenerationServiceInterface
 {
-    const RANDOM_ACCURACY = 1000;
-
     /**
      * @var ManagerRegistry
      */
@@ -405,6 +403,11 @@ class EventGenerationService implements EventGenerationServiceInterface
             dump($warm);
             $warmUpEvents = $this->eventsToWarmupArray($previousEvents, $targetLookup);
             $queueGenerator->warmUp($warmUpEvents);
+
+            $warmupCount = rand(0, \count($targetLookup));
+            while ($warmupCount-- > 0) {
+                $queueGenerator->getNext();
+            }
         }
 
         //prepare event type to weight mapping
