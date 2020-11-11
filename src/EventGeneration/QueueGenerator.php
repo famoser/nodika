@@ -26,7 +26,7 @@ class QueueGenerator
     /**
      * @param array $weightedTargets the targets the queue should distribute evenly (targetId => relativeSize) (int => double)
      */
-    public function __construct($weightedTargets)
+    public function __construct(array $weightedTargets)
     {
         $totalSum = 0;
         foreach ($weightedTargets as $size) {
@@ -37,14 +37,14 @@ class QueueGenerator
         //construct queue
         foreach ($weightedTargets as $clinic => $size) {
             $queueEntry = new QueueEntry($clinic, $size, $totalSum);
-            $this->queueEntries[$queueEntry->getPayload()] = $queueEntry;
+            $this->queueEntries[$queueEntry->getId()] = $queueEntry;
         }
     }
 
     /**
      * @param array $entries if you want to specify what happened before
      */
-    public function warmUp($entries)
+    public function warmUp(array $entries)
     {
         //preserve original scores
         $originalScores = [];
@@ -87,10 +87,7 @@ class QueueGenerator
         }
     }
 
-    /**
-     * @param int $clinic
-     */
-    public function forceNext($clinic)
+    public function forceNext(int $clinic)
     {
         $this->incrementAll();
 
@@ -118,7 +115,7 @@ class QueueGenerator
 
         $minElement->issue();
 
-        return $minElement->getPayload();
+        return $minElement->getId();
     }
 
     /** @var QueueEntry[] */
