@@ -65,11 +65,11 @@
     {% set description = block('description')|raw %}
 
     <title>{{ title }}</title>
-    {% block stylesheets %}
 
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('dist/app.css') }}"/>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     <meta name="description" content="{{ description }}">
     <base href="/" target="_self">
@@ -186,10 +186,8 @@
     </div>
 </div>
 
-<script src="{{ asset('dist/runtime.js') }}"></script>
-<script src="{{ asset('dist/app.js') }}"></script>
-{% block javascript %}
-
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}
 </body>
 </html>

@@ -396,11 +396,6 @@ class EventGenerationService implements EventGenerationServiceInterface
         $queueGenerator = new QueueGenerator($weightedTargets);
         if ($eventGeneration->getMindPreviousEvents()) {
             $previousEvents = $this->getPreviousEvents($eventGeneration, \count($events), \count($targets));
-            $warm = [];
-            foreach ($previousEvents as $previousEvent) {
-                $warm[] = $previousEvent->getStartDateTime()->format('c').' - '.$previousEvent->getClinic()->getName();
-            }
-            dump($warm);
             $warmUpEvents = $this->eventsToWarmupArray($previousEvents, $targetLookup);
             $queueGenerator->warmUp($warmUpEvents);
 
