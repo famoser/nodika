@@ -20,6 +20,7 @@ namespace App\Form\Model\Event;
 
 use App\Entity\Clinic;
 use App\Entity\Doctor;
+use App\Entity\EventTag;
 use App\Form\Base\BaseAbstractType;
 use App\Form\Traits\StartEnd\StartEndType;
 use App\Model\Event\SearchModel;
@@ -38,6 +39,10 @@ class PublicSearchType extends BaseAbstractType
                 ->where('c.deletedAt IS NULL');
         }]);
         $builder->add('doctor', EntityType::class, ['class' => Doctor::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_doctor', 'query_builder' => function (EntityRepository $er) {
+            return $er->createQueryBuilder('c')
+                ->where('c.deletedAt IS NULL');
+        }]);
+        $builder->add('eventTags', EntityType::class, ['class' => EventTag::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_event_tag', 'query_builder' => function (EntityRepository $er) {
             return $er->createQueryBuilder('c')
                 ->where('c.deletedAt IS NULL');
         }]);
