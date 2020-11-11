@@ -54,6 +54,12 @@ class EventGenerationService implements EventGenerationServiceInterface
     private function distributeToTargets($weightedTargets, $bucketsCount)
     {
         $queueGenerator = new QueueGenerator($weightedTargets);
+
+        $skips = rand(0, log($bucketsCount));
+        while ($skips-- > 0) {
+            $queueGenerator->getNext();
+        }
+
         $res = [];
         for ($i = 0; $i < $bucketsCount; ++$i) {
             $targetId = $queueGenerator->getNext();
