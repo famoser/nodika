@@ -278,23 +278,26 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @param $newEventCount
      * @param $newTargetCount
      *
-     * @return array
+     * @return Event[]
      */
     private function getPreviousEvents(EventGeneration $eventGeneration, $newEventCount, $newTargetCount)
     {
         //the limit specifies how many events will have an influence to the generation
         //keep the number between 1000 & 10'000, ideally relative to the generation
-        $limit = min($newEventCount * 2, $newTargetCount * 5, 10000);
+        $limit = min($newEventCount * 2, $newTargetCount * 5);
         $limit = min(1000, $limit);
 
         $end = $eventGeneration->getStartDateTime();
         $searchModel = new SearchModel(SearchModel::NONE);
+        $searchModel->setInvertOrder(true);
         $searchModel->setStartDateTime(((new \DateTime())->setTimestamp(0)));
         $searchModel->setEndDateTime($end);
         $searchModel->setMaxResults($limit);
-        $searchModel->setEventTags($eventGeneration->getConflictEventTags());
+        $searchModel->setEventTags($eventGeneration->getAssignEventTags());
 
         $events = $this->doctrine->getRepository(Event::class)->search($searchModel);
+
+        $events = array_reverse($events);
 
         return $events;
     }
@@ -389,6 +392,11 @@ class EventGenerationService implements EventGenerationServiceInterface
         $queueGenerator = new QueueGenerator($weightedTargets);
         if ($eventGeneration->getMindPreviousEvents()) {
             $previousEvents = $this->getPreviousEvents($eventGeneration, \count($events), \count($targets));
+            $warm = [];
+            foreach ($previousEvents as $previousEvent) {
+                $warm[] = $previousEvent->getStartDateTime()->format('c').' - '.$previousEvent->getClinic()->getName();
+            }
+            dump($warm);
             $warmUpEvents = $this->eventsToWarmupArray($previousEvents, $targetLookup);
             $queueGenerator->warmUp($warmUpEvents);
         }
