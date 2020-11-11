@@ -68,7 +68,6 @@
             },
             addHoliday: function () {
                 let newHolidays = this.newHoliday.split(",")
-                console.log(newHolidays);
                 newHolidays.forEach((holiday) => {
                     let newHoliday = holiday.trim();
                     if (newHoliday.length === 10) {
