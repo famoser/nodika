@@ -26,9 +26,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventPast extends BaseEntity
 {
-    use IdTrait;
     use CreationAwareTrait;
     use EventTrait;
+    use IdTrait;
 
     /**
      * EventPast constructor.

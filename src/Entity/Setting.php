@@ -22,8 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Setting extends BaseEntity
 {
-    use IdTrait;
     use ChangeAwareTrait;
+    use IdTrait;
 
     /**
      * @var bool

@@ -45,7 +45,7 @@ class TransferDataCommand extends Command
     {
         parent::__construct();
         $this->doctrine = $registry;
-        $this->dbPath = \dirname(\dirname(__DIR__)).'/var/data_before_migration.sqlite';
+        $this->dbPath = \dirname(__DIR__, 2).'/var/data_before_migration.sqlite';
         $this->dbPath2 = $this->dbPath.'2';
     }
 
@@ -147,12 +147,12 @@ class TransferDataCommand extends Command
     {
         $doctors = $this->executeQuery(
             self::OLD,
-            'SELECT 
-	p.id as id, 
-	0 as is_administrator, 
-	0 as receives_administrator_mail, 
-	p.email as email, 
-	password_hash as password_hash, 
+            'SELECT
+	p.id as id,
+	0 as is_administrator,
+	0 as receives_administrator_mail,
+	p.email as email,
+	password_hash as password_hash,
 	reset_hash as reset_hash,
 	is_active as is_enabled,
 	invitation_hash as invitation_identifier,
@@ -170,7 +170,7 @@ class TransferDataCommand extends Command
 	registration_date as registration_date,
 	NULL as last_login_date,
 	invitation_date_time as last_invitation
-FROM frontend_user f 
+FROM frontend_user f
 INNER JOIN person p ON f.person_id = p.id ORDER BY p.id');
 
         if (\count($doctors) > 0) {

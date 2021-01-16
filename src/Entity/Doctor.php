@@ -30,16 +30,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Doctor extends BaseEntity implements UserInterface, EquatableInterface
 {
-    use IdTrait;
-    use UserTrait;
-    use InvitationTrait;
-    use PersonTrait;
     use AddressTrait;
     use CommunicationTrait {
         UserTrait::getEmail insteadof CommunicationTrait;
         UserTrait::setEmail insteadof CommunicationTrait;
     }
+    use IdTrait;
+    use InvitationTrait;
+    use PersonTrait;
     use SoftDeleteTrait;
+    use UserTrait;
 
     /**
      * @var Clinic[]|ArrayCollection
