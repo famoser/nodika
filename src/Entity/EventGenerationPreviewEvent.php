@@ -24,8 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventGenerationPreviewEvent extends BaseEntity
 {
-    use IdTrait;
     use EventTrait;
+    use IdTrait;
 
     /**
      * @var EventGeneration|null

@@ -24,8 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventGenerationTargetClinic extends BaseEntity
 {
-    use IdTrait;
     use EventGenerationTarget;
+    use IdTrait;
 
     /**
      * @var Clinic

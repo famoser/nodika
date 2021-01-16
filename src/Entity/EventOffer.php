@@ -26,8 +26,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventOffer extends BaseEntity
 {
-    use IdTrait;
     use ChangeAwareTrait;
+    use IdTrait;
 
     /**
      * @var string

@@ -29,12 +29,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Clinic extends BaseEntity
 {
-    use IdTrait;
-    use ThingTrait;
     use AddressTrait;
     use CommunicationTrait;
+    use IdTrait;
     use InvitationTrait;
     use SoftDeleteTrait;
+    use ThingTrait;
 
     /**
      * @var Doctor[]|ArrayCollection

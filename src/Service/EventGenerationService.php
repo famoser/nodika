@@ -429,7 +429,7 @@ class EventGenerationService implements EventGenerationServiceInterface
 
             //sort descending by count
             usort($sortedEventTypes, function ($a, $b) {
-                return $a[1] === $b[1] ? 0 : $a[1] < $b[1] ? -1 : 1;
+                return $a[1] === $b[1] ? 0 : ($a[1] < $b[1] ? -1 : 1);
             });
 
             //assign how many events of a certain type a specific target has to be assigned

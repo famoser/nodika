@@ -62,7 +62,7 @@ class CronJobController extends BaseDoctrineController
             //get all events which might be a problemsupportMail
             $eventRepo = $this->getDoctrine()->getRepository(Event::class);
             $eventSearchModel = new SearchModel(SearchModel::NONE);
-            $eventSearchModel->setEndDateTime(new \DateTime('now + '.$setting->getCanConfirmDaysAdvance() - $setting->getSendRemainderDaysInterval().' days'));
+            $eventSearchModel->setEndDateTime(new \DateTime('now + '.($setting->getCanConfirmDaysAdvance() - $setting->getSendRemainderDaysInterval()).' days'));
             $eventSearchModel->setIsConfirmed(false);
             $events = $eventRepo->search($eventSearchModel);
 

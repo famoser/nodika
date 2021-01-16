@@ -28,8 +28,8 @@ use Doctrine\ORM\Mapping as ORM;
 class EventTag extends BaseEntity
 {
     use IdTrait;
-    use ThingTrait;
     use SoftDeleteTrait;
+    use ThingTrait;
 
     /**
      * @var int

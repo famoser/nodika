@@ -27,8 +27,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event extends BaseEntity
 {
-    use IdTrait;
     use EventTrait;
+    use IdTrait;
     use SoftDeleteTrait;
 
     /**

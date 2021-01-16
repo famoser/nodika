@@ -28,10 +28,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventGeneration extends BaseEntity
 {
-    use IdTrait;
-    use ThingTrait;
-    use StartEndTrait;
     use ChangeAwareTrait;
+    use IdTrait;
+    use StartEndTrait;
+    use ThingTrait;
 
     /**
      * this cron expression specifies when a new event starts

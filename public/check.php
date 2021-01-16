@@ -31,7 +31,7 @@ if (file_exists($autoloader = __DIR__.'/../../../autoload.php')) {
     throw new \RuntimeException('Unable to find the Composer autoloader.');
 }
 
-$symfonyRequirements = new SymfonyRequirements(dirname(dirname(realpath($autoloader))));
+$symfonyRequirements = new SymfonyRequirements(dirname(realpath($autoloader), 2));
 
 $majorProblems = $symfonyRequirements->getFailedRequirements();
 $minorProblems = $symfonyRequirements->getFailedRecommendations();
@@ -374,51 +374,51 @@ $hasMinorProblems = (bool) count($minorProblems);
                             ready to run Symfony applications.
                         </p>
 
-                        <?php if ($hasMajorProblems): ?>
+                        <?php if ($hasMajorProblems) { ?>
                             <h2 class="ko">Major problems</h2>
                             <p>Major problems have been detected and <strong>must</strong> be fixed before continuing:</p>
                             <ol>
-                                <?php foreach ($majorProblems as $problem): ?>
+                                <?php foreach ($majorProblems as $problem) { ?>
                                     <li><?php echo $problem->getTestMessage(); ?>
                                         <p class="help"><em><?php echo $problem->getHelpHtml(); ?></em></p>
                                     </li>
-                                <?php endforeach; ?>
+                                <?php } ?>
                             </ol>
-                        <?php endif; ?>
+                        <?php } ?>
 
-                        <?php if ($hasMinorProblems): ?>
+                        <?php if ($hasMinorProblems) { ?>
                             <h2>Recommendations</h2>
                             <p>
-                                <?php if ($hasMajorProblems): ?>Additionally, to<?php else: ?>To<?php endif; ?> enhance your Symfony experience,
+                                <?php if ($hasMajorProblems) { ?>Additionally, to<?php } else { ?>To<?php } ?> enhance your Symfony experience,
                                 it’s recommended that you fix the following:
                             </p>
                             <ol>
-                                <?php foreach ($minorProblems as $problem): ?>
+                                <?php foreach ($minorProblems as $problem) { ?>
                                     <li><?php echo $problem->getTestMessage(); ?>
                                         <p class="help"><em><?php echo $problem->getHelpHtml(); ?></em></p>
                                     </li>
-                                <?php endforeach; ?>
+                                <?php } ?>
                             </ol>
-                        <?php endif; ?>
+                        <?php } ?>
 
-                        <?php if ($symfonyRequirements->hasPhpConfigIssue()): ?>
+                        <?php if ($symfonyRequirements->hasPhpConfigIssue()) { ?>
                             <p id="phpini">*
-                                <?php if ($symfonyRequirements->getPhpIniPath()): ?>
+                                <?php if ($symfonyRequirements->getPhpIniPath()) { ?>
                                     Changes to the <strong>php.ini</strong> file must be done in "<strong><?php echo $symfonyRequirements->getPhpIniPath(); ?></strong>".
-                                <?php else: ?>
+                                <?php } else { ?>
                                     To change settings, create a "<strong>php.ini</strong>".
-                                <?php endif; ?>
+                                <?php } ?>
                             </p>
-                        <?php endif; ?>
+                        <?php } ?>
 
-                        <?php if (!$hasMajorProblems && !$hasMinorProblems): ?>
+                        <?php if (!$hasMajorProblems && !$hasMinorProblems) { ?>
                             <p class="ok">All checks passed successfully. Your system is ready to run Symfony applications.</p>
-                        <?php endif; ?>
+                        <?php } ?>
 
                         <ul class="symfony-install-continue">
-                            <?php if ($hasMajorProblems || $hasMinorProblems): ?>
+                            <?php if ($hasMajorProblems || $hasMinorProblems) { ?>
                                 <li><a href="check.php">Re-check configuration</a></li>
-                            <?php endif; ?>
+                            <?php } ?>
                         </ul>
                     </div>
                 </div>
