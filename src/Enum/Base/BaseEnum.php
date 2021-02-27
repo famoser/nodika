@@ -87,14 +87,9 @@ abstract class BaseEnum
      */
     private function getPossibleValuesInternal()
     {
-        try {
-            $reflection = new ReflectionClass(static::class);
+        $reflection = new ReflectionClass(static::class);
 
-            return array_values($reflection->getConstants());
-        } catch (\ReflectionException $e) {
-        }
-
-        return [];
+        return array_values($reflection->getConstants());
     }
 
     /**
@@ -104,21 +99,16 @@ abstract class BaseEnum
      */
     private function getChoicesForBuilderInternal()
     {
-        try {
-            $res = [];
-            $reflection = new ReflectionClass(static::class);
-            $choices = $reflection->getConstants();
+        $res = [];
+        $reflection = new ReflectionClass(static::class);
+        $choices = $reflection->getConstants();
 
-            foreach ($choices as $name => $value) {
-                $res[mb_strtolower($name)] = $value;
-            }
-            $transDomain = 'enum_'.$this->camelCaseToTranslation($reflection->getShortName());
-
-            return ['translation_domain' => $transDomain, 'label' => 'enum.name', 'choices' => $res, 'choice_translation_domain' => $transDomain];
-        } catch (\ReflectionException $e) {
+        foreach ($choices as $name => $value) {
+            $res[mb_strtolower($name)] = $value;
         }
+        $transDomain = 'enum_'.$this->camelCaseToTranslation($reflection->getShortName());
 
-        return [];
+        return ['translation_domain' => $transDomain, 'label' => 'enum.name', 'choices' => $res, 'choice_translation_domain' => $transDomain];
     }
 
     /**
@@ -130,14 +120,9 @@ abstract class BaseEnum
      */
     private function getTranslationInternal($enumValue, TranslatorInterface $translator)
     {
-        try {
-            $reflection = new ReflectionClass(static::class);
+        $reflection = new ReflectionClass(static::class);
 
-            return $translator->trans($this->getTextInternal($enumValue, $reflection), [], 'enum_'.$this->camelCaseToTranslation($reflection->getShortName()));
-        } catch (\ReflectionException $e) {
-        }
-
-        return '';
+        return $translator->trans($this->getTextInternal($enumValue, $reflection), [], 'enum_'.$this->camelCaseToTranslation($reflection->getShortName()));
     }
 
     /**
@@ -150,19 +135,16 @@ abstract class BaseEnum
      */
     private function getTextInternal($enumValue, $reflection = null)
     {
-        try {
-            if (null === $reflection) {
-                $reflection = new ReflectionClass(static::class);
-            }
+        if (null === $reflection) {
+            $reflection = new ReflectionClass(static::class);
+        }
 
-            $choices = $reflection->getConstants();
+        $choices = $reflection->getConstants();
 
-            foreach ($choices as $name => $value) {
-                if ($value === $enumValue) {
-                    return mb_strtolower($name);
-                }
+        foreach ($choices as $name => $value) {
+            if ($value === $enumValue) {
+                return mb_strtolower($name);
             }
-        } catch (\ReflectionException $e) {
         }
 
         return '';

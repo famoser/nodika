@@ -57,11 +57,6 @@ class EmailService implements EmailServiceInterface
         $this->contactEmail = $contactEmail;
     }
 
-    /**
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
     private function processEmail(Email $email)
     {
         $email->setSentDateTime(new \DateTime());
@@ -103,12 +98,6 @@ class EmailService implements EmailServiceInterface
      * @param string   $subject
      * @param string   $body
      * @param string[] $carbonCopy
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     *
-     * @return bool
      */
     public function sendTextEmail($receiver, $subject, $body, $carbonCopy = [])
     {
@@ -119,7 +108,7 @@ class EmailService implements EmailServiceInterface
         $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::TEXT_EMAIL);
 
-        return $this->processEmail($email);
+        $this->processEmail($email);
     }
 
     /**
@@ -129,12 +118,6 @@ class EmailService implements EmailServiceInterface
      * @param $actionText
      * @param string   $actionLink
      * @param string[] $carbonCopy
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     *
-     * @return bool
      */
     public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = [])
     {
@@ -147,7 +130,7 @@ class EmailService implements EmailServiceInterface
         $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::ACTION_EMAIL);
 
-        return $this->processEmail($email);
+        $this->processEmail($email);
     }
 
     /**
@@ -155,12 +138,6 @@ class EmailService implements EmailServiceInterface
      * @param string   $subject
      * @param string   $body
      * @param string[] $carbonCopy
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     *
-     * @return bool
      */
     public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = [])
     {
@@ -171,6 +148,6 @@ class EmailService implements EmailServiceInterface
         $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::PLAIN_EMAIL);
 
-        return $this->processEmail($email);
+        $this->processEmail($email);
     }
 }
