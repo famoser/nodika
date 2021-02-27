@@ -15,7 +15,7 @@ env:
 matrix:
   fast_finish: true
   include:
-    - php: 7.2
+    - php: 7.4
       env:
         - COVERAGE=true
     - php: nightly
@@ -42,7 +42,7 @@ install:
   # configure fontawesome
   - npm config set "@fortawesome:registry" https://npm.fontawesome.com/
   - npm config set "//npm.fontawesome.com/:_authToken" $FONTAWESOME_AUTH_TOKEN
-  
+
   # install dependencies
   - composer install --no-scripts
   - yarn install
