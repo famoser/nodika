@@ -328,7 +328,7 @@ trait UserTrait
      */
     public function setPassword()
     {
-        $this->passwordHash = password_hash($this->getPlainPassword(), PASSWORD_BCRYPT);
+        $this->passwordHash = password_hash($this->getPlainPassword(), \PASSWORD_BCRYPT);
         $this->setPlainPassword(null);
         $this->setRepeatPlainPassword(null);
 

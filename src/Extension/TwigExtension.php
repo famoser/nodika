@@ -15,10 +15,10 @@ use App\Enum\BooleanType;
 use App\Helper\DateTimeFormatter;
 use DateTime;
 use Symfony\Component\Translation\TranslatorInterface;
-use Twig_Extension;
-use Twig_SimpleFilter;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
-class TwigExtension extends Twig_Extension
+class TwigExtension extends AbstractExtension
 {
     private $translator;
 
@@ -35,10 +35,10 @@ class TwigExtension extends Twig_Extension
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('dateFormat', [$this, 'dateFormatFilter']),
-            new Twig_SimpleFilter('dateTimeFormat', [$this, 'dateTimeFilter']),
-            new Twig_SimpleFilter('booleanFormat', [$this, 'booleanFilter']),
-            new Twig_SimpleFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
+            new TwigFilter('dateFormat', [$this, 'dateFormatFilter']),
+            new TwigFilter('dateTimeFormat', [$this, 'dateTimeFilter']),
+            new TwigFilter('booleanFormat', [$this, 'booleanFilter']),
+            new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
         ];
     }
 

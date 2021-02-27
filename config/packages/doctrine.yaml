@@ -18,7 +18,7 @@ doctrine:
     entity_managers:
       # A collection of different named entity managers (e.g. some_em, another_em)
       default:
-        naming_strategy: doctrine.orm.naming_strategy.underscore
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         mappings:
           App:
             is_bundle: false

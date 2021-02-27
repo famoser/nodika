@@ -104,7 +104,7 @@ class QueueGenerator
         $this->incrementAll();
 
         $minElement = null;
-        $maxScore = PHP_INT_MIN;
+        $maxScore = \PHP_INT_MIN;
 
         foreach ($this->queueEntries as $index => $entry) {
             if ($entry->getScore() > $maxScore) {

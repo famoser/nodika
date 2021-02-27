@@ -47,11 +47,12 @@
     </table>
 {% endblock %}
 
-{% if invitable_doctors|length > 0 %}
-    {% block pre_content %}
+{% block pre_content %}
+    {% if invitable_doctors|length > 0 %}
         <p>
             {{ "doctors.some_not_logged_in"|trans }}
-            <a class="btn btn-link" href="#not-logged-in-doctors" data-toggle="collapse" data-target="#not-logged-in-doctors"
+            <a class="btn btn-link" href="#not-logged-in-doctors" data-toggle="collapse"
+               data-target="#not-logged-in-doctors"
                aria-expanded="false" aria-controls="not-logged-in-doctors">
                 {{ "doctors.show"|trans }}
             </a>
@@ -99,5 +100,5 @@
                 </tbody>
             </table>
         </div>
-    {% endblock pre_content %}
-{% endif %}
+    {% endif %}
+{% endblock pre_content %}

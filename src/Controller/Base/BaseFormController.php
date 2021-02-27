@@ -167,14 +167,12 @@ class BaseFormController extends BaseDoctrineController
             return $form;
         };
 
-        $myForm = $this->handleForm(
+        return $this->handleForm(
             $this->createForm($formType, $entity)
                 ->add('submit', SubmitType::class, ['label' => $buttonLabel, 'translation_domain' => false]),
             $request,
             $myOnSuccessCallable
         );
-
-        return $myForm;
     }
 
     /**

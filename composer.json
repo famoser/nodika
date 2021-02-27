@@ -3,7 +3,7 @@
   "description": "emergency service (or any kind of consecutive events) distribution",
   "license": "MIT",
   "require": {
-    "php": "^7.2",
+    "php": ">=7.4",
     "ext-iconv": "*",
     "ext-json": "*",
     "ext-pdo": "*",
@@ -37,7 +37,6 @@
   },
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.6",
-    "sensiolabs/security-checker": "^5.0",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
     "symfony/requirements-checker": "^1.0",
     "deployer/deployer": "^6.1",
@@ -51,11 +50,11 @@
     "symfony/web-server-bundle": "^4.0"
   },
   "config": {
-    "platform": {
-      "php": "7.2"
-    },
     "preferred-install": {
       "*": "dist"
+    },
+    "platform": {
+      "php": "7.4"
     },
     "sort-packages": true
   },
@@ -84,7 +83,6 @@
     "prepare-environment": [
       "vendor/bin/cghooks update",
       "vendor/bin/requirements-checker",
-      "php bin/console security:check",
       "php bin/console doctrine:migrations:migrate -q",
       "php bin/console doctrine:fixtures:load -q"
     ],

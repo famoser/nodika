@@ -72,7 +72,7 @@ class BaseController extends AbstractController
      */
     protected function displayError($message, $link = null)
     {
-        return $this->displayFlash('danger', $message, $link);
+        $this->displayFlash('danger', $message, $link);
     }
 
     /**
@@ -81,7 +81,7 @@ class BaseController extends AbstractController
      */
     protected function displaySuccess($message, $link = null)
     {
-        return $this->displayFlash('success', $message, $link);
+        $this->displayFlash('success', $message, $link);
     }
 
     /**
@@ -90,7 +90,7 @@ class BaseController extends AbstractController
      */
     protected function displayDanger($message, $link = null)
     {
-        return $this->displayFlash('danger', $message, $link);
+        $this->displayFlash('danger', $message, $link);
     }
 
     /**
@@ -99,7 +99,7 @@ class BaseController extends AbstractController
      */
     protected function displayInfo($message, $link = null)
     {
-        return $this->displayFlash('info', $message, $link);
+        $this->displayFlash('info', $message, $link);
     }
 
     /**
