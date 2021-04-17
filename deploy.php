@@ -30,10 +30,10 @@ set('default_stage', 'dev');
 //only keep two releases
 set('keep_releases', 2);
 
-//use php 7.2
+//use php 7.4
 set(
     'bin/php',
-    '/usr/local/php72/bin/php'
+    '/usr/local/php74/bin/php'
 );
 
 //build yarn stuff & upload
