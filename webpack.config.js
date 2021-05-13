@@ -1,4 +1,5 @@
 var Encore = require("@symfony/webpack-encore");
+const path = require('path');
 
 Encore
 // the project directory where all compiled assets will be stored
@@ -32,8 +33,25 @@ Encore
     // show OS notifications when builds finish/fail
     // .enableBuildNotifications()
 
+    // enables @babel/preset-env polyfills
+    .configureBabel(() => {}, {
+        useBuiltIns: 'usage',
+        corejs: 3,
+        includeNodeModules: ['moment']
+    })
+
     // create hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+
+    .configureDevServerOptions(options => {
+        options.firewall = false
+        options.https = {
+            pfx: path.join(process.env.HOME, '.symfony/certs/default.p12'),
+        }
+        options.devMiddleware = {
+            writeToDisk: true
+        }
+    })
 ;
 
 // export the final configuration
