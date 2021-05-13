@@ -27,7 +27,7 @@ class LoadAdmin extends LoadDoctor
     {
         //create admin
         $admin = $this->getRandomInstance();
-        $admin->setEmail('info@nodika.ch');
+        $admin->setEmail('f@nodika.ch');
         $admin->setPlainPassword('asdf');
         $admin->setPassword();
         $admin->setIsAdministrator(true);
