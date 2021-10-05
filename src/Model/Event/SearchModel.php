@@ -17,9 +17,9 @@ use App\Entity\EventTag;
 
 class SearchModel
 {
-    const NONE = 0;
-    const MONTH = 1;
-    const YEAR = 2;
+    public const NONE = 0;
+    public const MONTH = 1;
+    public const YEAR = 2;
 
     /**
      * @var \DateTime

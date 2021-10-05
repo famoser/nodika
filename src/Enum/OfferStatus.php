@@ -15,6 +15,6 @@ use App\Enum\Base\BaseEnum;
 
 class OfferStatus extends BaseEnum
 {
-    const OPEN = 1;
-    const CLOSED = 4;
+    public const OPEN = 1;
+    public const CLOSED = 4;
 }

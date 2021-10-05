@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvService implements CsvServiceInterface
 {
-    const DELIMITER = ',';
+    public const DELIMITER = ',';
 
     /**
      * creates a response containing the data rendered as a csv.

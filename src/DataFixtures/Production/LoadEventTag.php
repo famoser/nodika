@@ -19,7 +19,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class LoadEventTag extends BaseFixture
 {
-    const ORDER = 1;
+    public const ORDER = 1;
 
     /**
      * Load data fixtures with the passed EntityManager.

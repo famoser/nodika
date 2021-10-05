@@ -15,8 +15,8 @@ use App\Enum\Base\BaseEnum;
 
 class TradeTag extends BaseEnum
 {
-    const NO_TRADE = 1;
-    const MAYBE_TRADE = 2;
-    const WANT_TRADE = 3;
-    const MUST_TRADE = 4;
+    public const NO_TRADE = 1;
+    public const MAYBE_TRADE = 2;
+    public const WANT_TRADE = 3;
+    public const MUST_TRADE = 4;
 }

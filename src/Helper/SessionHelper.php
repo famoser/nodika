@@ -13,5 +13,5 @@ namespace App\Helper;
 
 class SessionHelper
 {
-    const ACTIVE_CLINIC_ID = 'active_clinic_id';
+    public const ACTIVE_CLINIC_ID = 'active_clinic_id';
 }

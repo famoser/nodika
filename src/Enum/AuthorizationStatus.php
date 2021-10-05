@@ -15,9 +15,9 @@ use App\Enum\Base\BaseEnum;
 
 class AuthorizationStatus extends BaseEnum
 {
-    const PENDING = 0;
-    const ACCEPTED = 1;
-    const DECLINED = 2;
-    const ACKNOWLEDGED = 3;
-    const WITHDRAWN = 4;
+    public const PENDING = 0;
+    public const ACCEPTED = 1;
+    public const DECLINED = 2;
+    public const ACKNOWLEDGED = 3;
+    public const WITHDRAWN = 4;
 }

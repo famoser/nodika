@@ -15,7 +15,7 @@ use App\Enum\Base\BaseEnum;
 
 class EventTagType extends BaseEnum
 {
-    const CUSTOM = 0;
-    const BACKUP_SERVICE = 1;
-    const ACTIVE_SERVICE = 2;
+    public const CUSTOM = 0;
+    public const BACKUP_SERVICE = 1;
+    public const ACTIVE_SERVICE = 2;
 }

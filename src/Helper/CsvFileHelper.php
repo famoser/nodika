@@ -13,5 +13,5 @@ namespace App\Helper;
 
 class CsvFileHelper
 {
-    const DELIMITER = ',';
+    public const DELIMITER = ',';
 }

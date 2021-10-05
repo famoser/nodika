@@ -19,7 +19,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class LoadEventOffers extends BaseFixture
 {
-    const ORDER = LoadClinic::ORDER + LoadDoctor::ORDER + LoadGeneration::ORDER + 1;
+    public const ORDER = LoadClinic::ORDER + LoadDoctor::ORDER + LoadGeneration::ORDER + 1;
 
     /**
      * Load data fixtures with the passed EntityManager.

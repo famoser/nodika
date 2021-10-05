@@ -26,7 +26,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class LoadGeneration extends BaseFixture
 {
-    const ORDER = LoadSetting::ORDER + LoadClinic::ORDER + LoadDoctor::ORDER + LoadEventTag::ORDER + 1;
+    public const ORDER = LoadSetting::ORDER + LoadClinic::ORDER + LoadDoctor::ORDER + LoadEventTag::ORDER + 1;
 
     /**
      * Load data fixtures with the passed EntityManager.

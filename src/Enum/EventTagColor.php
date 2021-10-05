@@ -15,8 +15,8 @@ use App\Enum\Base\BaseEnum;
 
 class EventTagColor extends BaseEnum
 {
-    const RED = 1;
-    const YELLOW = 2;
-    const BLUE = 3;
-    const GREEN = 4;
+    public const RED = 1;
+    public const YELLOW = 2;
+    public const BLUE = 3;
+    public const GREEN = 4;
 }
