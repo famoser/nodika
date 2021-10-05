@@ -199,13 +199,13 @@ class EventOffer extends BaseEntity
         return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED, AuthorizationStatus::DECLINED, AuthorizationStatus::WITHDRAWN], AuthorizationStatus::ACKNOWLEDGED);
     }
 
-    const ACCEPT_DECLINE = 1;
-    const ACK_ACCEPTED = 2;
-    const ACK_DECLINED = 3;
-    const WITHDRAW = 4;
-    const ACK_WITHDRAWN = 5;
-    const ACK_INVALID = 6;
-    const NONE = 7;
+    public const ACCEPT_DECLINE = 1;
+    public const ACK_ACCEPTED = 2;
+    public const ACK_DECLINED = 3;
+    public const WITHDRAW = 4;
+    public const ACK_WITHDRAWN = 5;
+    public const ACK_INVALID = 6;
+    public const NONE = 7;
 
     public function getPendingAction(Doctor $doctor)
     {

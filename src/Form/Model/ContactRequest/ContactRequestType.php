@@ -22,8 +22,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ContactRequestType extends BaseAbstractType
 {
-    const CHECK_DATA = null;
-    const CHECK2_DATA = 'some string';
+    public const CHECK_DATA = null;
+    public const CHECK2_DATA = 'some string';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

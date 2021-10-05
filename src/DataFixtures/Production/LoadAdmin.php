@@ -16,7 +16,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class LoadAdmin extends LoadDoctor
 {
-    const ORDER = 1;
+    public const ORDER = 1;
 
     /**
      * Load data fixtures with the passed EntityManager.

@@ -13,6 +13,6 @@ namespace App\Helper;
 
 class DateTimeFormatter
 {
-    const DATE_TIME_FORMAT = 'd.m.Y H:i';
-    const DATE_FORMAT = 'd.m.Y';
+    public const DATE_TIME_FORMAT = 'd.m.Y H:i';
+    public const DATE_FORMAT = 'd.m.Y';
 }

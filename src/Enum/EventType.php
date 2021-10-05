@@ -15,9 +15,9 @@ use App\Enum\Base\BaseEnum;
 
 class EventType extends BaseEnum
 {
-    const UNSPECIFIED = 0;
-    const WEEKDAY = 1;
-    const SATURDAY = 2;
-    const SUNDAY = 3;
-    const HOLIDAY = 4;
+    public const UNSPECIFIED = 0;
+    public const WEEKDAY = 1;
+    public const SATURDAY = 2;
+    public const SUNDAY = 3;
+    public const HOLIDAY = 4;
 }

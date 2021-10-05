@@ -13,10 +13,10 @@ namespace App\Helper;
 
 class StaticMessageHelper
 {
-    const FLASH_ERROR = 'error';
-    const FLASH_SUCCESS = 'success';
-    const FLASH_INFO = 'info';
-    const FLASH_DANGER = 'danger';
+    public const FLASH_ERROR = 'error';
+    public const FLASH_SUCCESS = 'success';
+    public const FLASH_INFO = 'info';
+    public const FLASH_DANGER = 'danger';
 
-    const FORM_SUBMIT_BUTTON_TYPE_OPTION = 'submit_button_type_option';
+    public const FORM_SUBMIT_BUTTON_TYPE_OPTION = 'submit_button_type_option';
 }

@@ -17,8 +17,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 abstract class BaseVoter extends Voter
 {
-    const MODIFY = 1;
-    const VIEW = 2;
+    public const MODIFY = 1;
+    public const VIEW = 2;
 
     /**
      * @param string $attribute

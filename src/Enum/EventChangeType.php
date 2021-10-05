@@ -15,11 +15,11 @@ use App\Enum\Base\BaseEnum;
 
 class EventChangeType extends BaseEnum
 {
-    const CREATED = 1;
-    const GENERATED = 2;
-    const CHANGED = 3;
-    const REMOVED = 4;
-    const TRADED_TO_NEW_OWNER = 7;
-    const DOCTOR_ASSIGNED = 8;
-    const CONFIRMED = 9;
+    public const CREATED = 1;
+    public const GENERATED = 2;
+    public const CHANGED = 3;
+    public const REMOVED = 4;
+    public const TRADED_TO_NEW_OWNER = 7;
+    public const DOCTOR_ASSIGNED = 8;
+    public const CONFIRMED = 9;
 }

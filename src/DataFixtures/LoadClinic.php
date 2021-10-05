@@ -18,7 +18,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class LoadClinic extends BaseFixture
 {
-    const ORDER = LoadDoctor::ORDER + 1;
+    public const ORDER = LoadDoctor::ORDER + 1;
 
     /**
      * Load data fixtures with the passed EntityManager.

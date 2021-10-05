@@ -27,8 +27,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class TransferDataCommand extends Command
 {
-    const CURRENT = 1;
-    const OLD = 2;
+    public const CURRENT = 1;
+    public const OLD = 2;
 
     private $dbPath;
     private $dbPath2;

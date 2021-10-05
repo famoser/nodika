@@ -19,7 +19,7 @@ use App\Entity\Traits\EventGenerationTarget;
 
 class EventTarget
 {
-    const NONE_IDENTIFIER = 0;
+    public const NONE_IDENTIFIER = 0;
     private static $nextIdentifier = 1;
 
     /**

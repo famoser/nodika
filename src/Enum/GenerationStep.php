@@ -15,7 +15,7 @@ use App\Enum\Base\BaseEnum;
 
 class GenerationStep extends BaseEnum
 {
-    const SET_START_END = 0;
-    const CHOOSE_TARGETS = 1;
-    const PREVIEW = 2;
+    public const SET_START_END = 0;
+    public const CHOOSE_TARGETS = 1;
+    public const PREVIEW = 2;
 }
