@@ -43,7 +43,7 @@
     "brainmaestro/composer-git-hooks": "^2.6",
     "deployer/deployer": "^6.1",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
-    "friendsofphp/php-cs-fixer": "^2.7",
+    "friendsofphp/php-cs-fixer": "^3",
     "phpunit/phpunit": "^8",
     "symfony/browser-kit": "^4.0",
     "symfony/css-selector": "^4.0",
@@ -80,9 +80,6 @@
   },
   "scripts": {
     "configure-environment": [
-      "cp -n .env .env.local",
-      "cp -n .php_cs.dist .php_cs",
-      "cp -n phpunit.xml.dist phpunit.xml",
       "cp -n servers.yml.dist servers.yml"
     ],
     "prepare-environment": [
