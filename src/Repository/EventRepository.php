@@ -34,6 +34,7 @@ class EventRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('e')
             ->from('App:Event', 'e')
+            ->where('e.deletedAt IS NULL')
             ->leftJoin('e.eventTags', 'et')
             ->leftJoin('e.eventPast', 'ep')
             ->leftJoin('e.clinic', 'm')

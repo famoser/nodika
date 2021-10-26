@@ -1,0 +1,45 @@
+agnes:
+  version: 4
+
+build:
+  path: .build
+
+github:
+  api_token: '%env(GITHUB_API_TOKEN)%'
+  repository: famoser/nodika
+
+config:
+  path: .config
+  repository:
+    url: git@gitlab.com:agnes-config/famoser-nodika
+
+data:
+  shared_folders:
+    - var/persistent
+
+  files:
+    - path: .env.local
+      required: true
+
+scripts:
+  build:
+    hook: build
+    script:
+      - composer install --verbose --prefer-dist --no-interaction --no-dev --optimize-autoloader --no-scripts
+      - yarn install
+      - yarn run encore production
+      - rm -rf node_modules
+
+  deploy:
+    hook: deploy
+    script:
+      - php bin/console cache:clear -n
+      - find var -type d -print0 | xargs -0 chmod 0755
+      - find var -type f -print0 | xargs -0 chmod 0644
+      - php bin/console doctrine:migrations:migrate -n
+
+  rollback:
+    hook: rollback
+    script:
+      - cd $PREVIOUS_RELEASE_PATH && export MIGRATE_TO=$(php bin/console doctrine:migrations:latest)
+      - php bin/console doctrine:migrations:migrate $MIGRATE_TO -n
