@@ -21,10 +21,6 @@
         <!-- define your env variables for the test env here -->
         <env name="CONTACT_EMAIL" value="git@famoser.ch"/>
         <env name="ADMIN_EMAIL" value="git@famoser.ch"/>
-        <env name="FREE_PERIOD_DAYS" value="31"/>
-        <env name="REGISTER_FEE" value="1500"/>
-        <env name="YEARLY_FEE" value="500"/>
-        <env name="TAWK_ID" value="FAKE_ID"/>
 
         <!-- ###+ symfony/framework-bundle ### -->
         <env name="APP_ENV" value="dev"/>
