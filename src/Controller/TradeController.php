@@ -47,8 +47,9 @@ class TradeController extends BaseFormController
         if (!$eventOffer->isValid()) {
             $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
         } else {
-            //accept
-            if (!$eventOffer->accept($this->getUser())) {
+            if ($eventOffer->canExecute()) {
+                $this->displaySuccess($translator->trans('accept.success.trade_already_accepted', [], 'trade'));
+            } elseif (!$eventOffer->accept($this->getUser())) {
                 $this->displayError($translator->trans('accept.danger.action_invalid', [], 'trade'));
             } else {
                 if (!$eventOffer->canExecute()) {
@@ -74,6 +75,7 @@ class TradeController extends BaseFormController
                         $eventPast = EventPast::create($receiverOwnedEvent, EventChangeType::TRADED_TO_NEW_OWNER, $eventOffer->getSender());
                         $manager->persist($eventPast);
                     }
+                    $manager->persist($eventOffer);
                     $manager->flush();
 
                     //inform sender

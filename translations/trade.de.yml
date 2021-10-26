@@ -11,6 +11,7 @@ accept:
   success:
     trade_executed: 'Der Tausch wurde ausgeführt.'
     trade_accepted: 'Sie haben den Tausch erfolgreich akzeptiert. Sobald alle Parteien Ihre Zustimmung gegeben haben, wird der Tausch ausgeführt.'
+    trade_already_accepted: 'Sie haben den Tausch bereits akzeptiert.'
   danger:
     invalid: "Die Tauschanfrage ist nicht mehr gültig. Darin enthaltene Termine haben bereits den Eigentümer gewechselt."
     action_invalid: 'Diese Aktion konnte nicht ausgeführt werden. Vermutlich hat sich der Tausch in der Zwischenzeit geändert.'
