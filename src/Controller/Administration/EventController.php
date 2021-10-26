@@ -138,6 +138,7 @@ class EventController extends BaseApiController
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($eventPast);
                 $manager->persist($event);
+                $manager->flush();
 
                 $this->displaySuccess($translator->trans('successful.delete', [], 'common_form'));
 
