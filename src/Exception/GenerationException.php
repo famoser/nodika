@@ -11,10 +11,12 @@
 
 namespace App\Exception;
 
+use App\Enum\GenerationStatus;
+
 class GenerationException extends \Exception
 {
     public function __construct($generationStatus)
     {
-        parent::__construct('', $generationStatus);
+        parent::__construct(GenerationStatus::getText($generationStatus));
     }
 }

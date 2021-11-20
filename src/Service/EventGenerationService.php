@@ -378,6 +378,53 @@ class EventGenerationService implements EventGenerationServiceInterface
      */
     public function generate(EventGeneration $eventGeneration)
     {
+        $tries = 100;
+        $lastException = null;
+        while ($tries-- > 0) {
+            try {
+                $this->doGenerate($eventGeneration);
+
+                return;
+            } catch (GenerationException $exception) {
+                $lastException = $exception;
+            }
+        }
+
+        throw $lastException;
+    }
+
+    public function persist(EventGeneration $eventGeneration, Doctor $creator)
+    {
+        $manager = $this->doctrine->getManager();
+
+        //create events
+        foreach ($eventGeneration->getPreviewEvents() as $previewEvent) {
+            $event = Event::create($previewEvent);
+
+            //add past
+            $eventPast = EventPast::create($event, EventChangeType::GENERATED, $creator);
+            $event->getEventPast()->add($eventPast);
+
+            //add tags
+            foreach ($eventGeneration->getAssignEventTags() as $assignEventTag) {
+                $event->getEventTags()->add($assignEventTag);
+            }
+
+            //add to db
+            $manager->persist($event);
+        }
+
+        //apply & flush all
+        $eventGeneration->setIsApplied(true);
+        $manager->persist($eventGeneration);
+        $manager->flush();
+    }
+
+    /**
+     * @throws GenerationException
+     */
+    private function doGenerate(EventGeneration $eventGeneration)
+    {
         //create events & fill out properties
         $events = $this->constructEvents($eventGeneration);
         if (0 === \count($events)) {
@@ -536,32 +583,5 @@ class EventGenerationService implements EventGenerationServiceInterface
             $eventGeneration->getPreviewEvents()->add($event);
             $event->setGeneratedBy($eventGeneration);
         }
-    }
-
-    public function persist(EventGeneration $eventGeneration, Doctor $creator)
-    {
-        $manager = $this->doctrine->getManager();
-
-        //create events
-        foreach ($eventGeneration->getPreviewEvents() as $previewEvent) {
-            $event = Event::create($previewEvent);
-
-            //add past
-            $eventPast = EventPast::create($event, EventChangeType::GENERATED, $creator);
-            $event->getEventPast()->add($eventPast);
-
-            //add tags
-            foreach ($eventGeneration->getAssignEventTags() as $assignEventTag) {
-                $event->getEventTags()->add($assignEventTag);
-            }
-
-            //add to db
-            $manager->persist($event);
-        }
-
-        //apply & flush all
-        $eventGeneration->setIsApplied(true);
-        $manager->persist($eventGeneration);
-        $manager->flush();
     }
 }
