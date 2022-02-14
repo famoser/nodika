@@ -52,7 +52,6 @@ security:
 
   #allow info pages
   - { path: ^/about, role: IS_AUTHENTICATED_ANONYMOUSLY }
-  - { path: ^/contact, role: IS_AUTHENTICATED_ANONYMOUSLY }
   - { path: ^/email, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
   #level1: user
