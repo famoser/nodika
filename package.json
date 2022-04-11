@@ -21,7 +21,7 @@
     "deepmerge": "^2.1.1",
     "epic-spinners": "^1",
     "jquery": "^3.2",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "open-sans-fontface": "^1.4",
     "outdated-browser": "^1.0.2",
     "popper.js": "^1.12",
