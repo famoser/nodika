@@ -82,35 +82,22 @@ class LoginController extends BaseFormController
 
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
+        if (!$error) {
+            return $lastUsername;
+        }
+
         if (mb_strlen($lastUsername) > 0) {
             $lastUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $lastUsername]);
             if (null === $lastUser) {
                 $this->displayError($this->getTranslator()->trans('login.danger.email_not_found', [], 'login'));
-
-                return $lastUsername;
-            }
-
-            if (!$lastUser->isEnabled()) {
+            } elseif (!$lastUser->isEnabled()) {
                 $this->displayError($this->getTranslator()->trans('login.danger.login_disabled', [], 'login'));
-
-                return $lastUsername;
+            } else {
+                $this->displayError($this->getTranslator()->trans('login.danger.login_failed', [], 'login'));
             }
         }
 
-        if (null !== $error) {
-            $this->displayError($this->getTranslator()->trans('login.danger.login_failed', [], 'login'));
-
-            return $lastUsername;
-        }
-
-        $user = $this->getUser();
-        if (null !== $user && !$user->canLogin()) {
-            $this->displayError($this->getTranslator()->trans('login.danger.login_disabled', [], 'login'));
-
-            $this->get('security.token_storage')->setToken(null);
-        }
-
-        return '';
+        return $lastUsername;
     }
 
     /**
