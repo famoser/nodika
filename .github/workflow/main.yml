@@ -1,0 +1,85 @@
+# php workflow famoser v1
+name: CI
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Triggers on sunday every week
+  schedule:
+    - cron: '0 0 * * 0'
+
+  # Allow to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup JavaScript
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        env:
+          FONTAWESOME_AUTH_TOKEN: ${{ secrets.FONTAWESOME_AUTH_TOKEN }}
+        run: |
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
+          npm config set "//npm.fontawesome.com/:_authToken" $FONTAWESOME_AUTH_TOKEN
+          yarn install
+
+      - name: Build
+        run: yarn encore production
+
+      - name: Lint
+        run: yarn run lint
+
+      - name: Check dependencies
+        run: yarn audit --groups dependencies
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2
+        with:
+          php-version: 8.2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-scripts
+
+      - name: Install PHP security checker
+        run: |
+          wget -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_amd64
+          chmod +x local-php-security-checker
+
+      - name: Create folders of frontend
+        run: mkdir --parents public/build/images
+
+      - name: Lint
+        run: |
+          ./vendor/bin/php-cs-fixer fix --diff --dry-run -v
+          php bin/console lint:yaml config
+          php bin/console lint:twig templates
+
+      - name: Test
+        run: |
+          php bin/console doctrine:database:create --no-interaction
+          php bin/console doctrine:migrations:migrate --no-interaction
+          php vendor/bin/phpunit
+
+      - name: Check dependencies
+        run: |
+          composer validate --no-check-publish
+          ./local-php-security-checker
+
+
