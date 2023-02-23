@@ -1,5 +1,4 @@
 var Encore = require("@symfony/webpack-encore");
-const path = require('path');
 
 Encore
 // the project directory where all compiled assets will be stored
