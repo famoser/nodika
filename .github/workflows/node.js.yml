@@ -1,0 +1,41 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      env:
+        FONTAWESOME_AUTH_TOKEN: ${{ secrets.FONTAWESOME_AUTH_TOKEN }}
+      run: |
+        npm config set "@fortawesome:registry" https://npm.fontawesome.com/
+        npm config set "//npm.fontawesome.com/:_authToken" $FONTAWESOME_AUTH_TOKEN
+        yarn install
+
+    - name: Build
+      run: yarn encore production
+
+    - name: Lint
+      run: yarn run lint
+
+    - name: Check dependencies
+      run: yarn audit --groups dependencies
