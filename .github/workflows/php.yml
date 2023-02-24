@@ -16,6 +16,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        # Fetch more than 1 commit so Scrutinizer can deduce where we are
+        fetch-depth: 2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        extensions: xdebug
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -49,3 +58,7 @@ jobs:
         wget -q -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64
         chmod +x local-php-security-checker
         ./local-php-security-checker
+
+    - name: Upload Scrutinizer coverage
+      run: |
+        wget -q -O ocular.phar https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml
