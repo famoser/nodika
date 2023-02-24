@@ -23,7 +23,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '7.4'
         extensions: xdebug
 
     - name: Validate composer.json and composer.lock
@@ -60,4 +60,5 @@ jobs:
         ./local-php-security-checker
 
     - name: Upload Scrutinizer coverage
-      uses: sudo-bot/action-scrutinizer@latest
+      run: |
+        wget -q -O ocular.phar https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml
