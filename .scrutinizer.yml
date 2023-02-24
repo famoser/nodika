@@ -2,7 +2,7 @@ build:
   nodes:
     analysis:
       environment:
-        node: v18.14.2
+        node: v16
         php: 7.4
       project_setup:
         override: true
