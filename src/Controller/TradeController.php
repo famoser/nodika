@@ -69,7 +69,7 @@ class TradeController extends BaseFormController
                     foreach ($eventOffer->getReceiverOwnedEvents() as $receiverOwnedEvent) {
                         $receiverOwnedEvent->setClinic($eventOffer->getSenderClinic());
                         $receiverOwnedEvent->setDoctor($eventOffer->getSender());
-                        $senderOwnedEvent->undoConfirm();
+                        $receiverOwnedEvent->undoConfirm();
 
                         //save history
                         $eventPast = EventPast::create($receiverOwnedEvent, EventChangeType::TRADED_TO_NEW_OWNER, $eventOffer->getSender());
