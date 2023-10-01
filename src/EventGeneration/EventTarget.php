@@ -39,7 +39,7 @@ class EventTarget
 
     public function __construct()
     {
-        $this->identifier = static::$nextIdentifier++;
+        $this->identifier = self::$nextIdentifier++;
     }
 
     /**
