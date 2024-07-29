@@ -15,16 +15,12 @@
     "dragonmantank/cron-expression": "^2.0",
     "erusev/parsedown": "^1.6",
     "ramsey/uuid": "^3",
-    "symfony/asset": "^4.0",
     "symfony/console": "^4.0",
-    "symfony/dependency-injection": "^4.0",
     "symfony/dotenv": "^4.0",
-    "symfony/expression-language": "^4.0",
     "symfony/flex": "^1.0",
     "symfony/form": "^4.0",
     "symfony/framework-bundle": "^4.0",
     "symfony/mailer": "^4.0",
-    "symfony/maker-bundle": "^1.4",
     "symfony/security-bundle": "^4.0",
     "symfony/serializer": "^4.0",
     "symfony/translation": "^4.0",
@@ -64,11 +60,6 @@
       "App\\Tests\\": "tests/"
     }
   },
-  "replace": {
-    "symfony/polyfill-iconv": "*",
-    "symfony/polyfill-php70": "*",
-    "symfony/polyfill-php56": "*"
-  },
   "scripts": {
     "prepare-environment": [
       "vendor/bin/cghooks update",
@@ -81,9 +72,6 @@
       "assets:install %PUBLIC_DIR%": "symfony-cmd",
       "security-checker security:check": "script"
     }
-  },
-  "conflict": {
-    "symfony/symfony": "*"
   },
   "extra": {
     "projectTitle": "nodika",

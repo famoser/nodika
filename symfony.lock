@@ -156,9 +156,6 @@
     "myclabs/deep-copy": {
         "version": "1.9.5"
     },
-    "nikic/php-parser": {
-        "version": "v4.3.0"
-    },
     "ocramius/package-versions": {
         "version": "1.4.2"
     },
@@ -345,9 +342,6 @@
     "symfony/event-dispatcher-contracts": {
         "version": "v1.1.7"
     },
-    "symfony/expression-language": {
-        "version": "v4.4.7"
-    },
     "symfony/filesystem": {
         "version": "v4.4.7"
     },
@@ -412,15 +406,6 @@
         "files": [
             "config/packages/mailer.yaml"
         ]
-    },
-    "symfony/maker-bundle": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
-        }
     },
     "symfony/mime": {
         "version": "v4.4.7"
