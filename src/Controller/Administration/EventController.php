@@ -28,12 +28,12 @@ use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EventGenerationServiceInterface;
 use Doctrine\Persistence\ObjectManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
