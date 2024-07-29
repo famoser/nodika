@@ -15,7 +15,6 @@
     "doctrine/orm": "^2",
     "dragonmantank/cron-expression": "^2.0",
     "erusev/parsedown": "^1.6",
-    "fzaninotto/faker": "^1.7",
     "ramsey/uuid": "^3",
     "sensio/framework-extra-bundle": "^5.1",
     "symfony/apache-pack": "^1.0",
@@ -41,7 +40,8 @@
   },
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.6",
-    "doctrine/doctrine-fixtures-bundle": "^3.0",
+    "doctrine/doctrine-fixtures-bundle": "^3.4",
+    "fakerphp/faker": "^1.9",
     "famoser/agnes": "^4",
     "friendsofphp/php-cs-fixer": "^3",
     "phpunit/phpunit": "^8",
