@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An Email is a sent email to the specified receivers.
  *
  * @ORM\Entity()
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class Email extends BaseEntity
@@ -207,17 +208,11 @@ class Email extends BaseEntity
         return $this->getReceiver().' '.$this->getSubject();
     }
 
-    /**
-     * @return mixed
-     */
     public function getReceiver()
     {
         return $this->receiver;
     }
 
-    /**
-     * @param mixed $receiver
-     */
     public function setReceiver($receiver)
     {
         $this->receiver = $receiver;

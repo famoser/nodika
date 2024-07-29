@@ -25,24 +25,25 @@ trait EventTrait
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $confirmDateTime = null;
+    private $confirmDateTime;
 
     /**
      * @var Doctor|null
      *
      * @ORM\ManyToOne(targetEntity="Doctor")
      */
-    private $confirmedByDoctor = null;
+    private $confirmedByDoctor;
 
     /**
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $lastRemainderEmailSent = null;
+    private $lastRemainderEmailSent;
 
     /**
      * @var int
+     *
      * @ORM\Column(type="integer")
      */
     private $eventType = EventType::UNSPECIFIED;

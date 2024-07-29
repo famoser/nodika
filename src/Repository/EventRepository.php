@@ -30,7 +30,7 @@ class EventRepository extends EntityRepository
      */
     public function search(SearchModel $searchModel)
     {
-        //construct query for each event line
+        // construct query for each event line
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('e')
             ->from('App:Event', 'e')

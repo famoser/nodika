@@ -1,22 +1,14 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
   secret: '%env(APP_SECRET)%'
   default_locale: de
-  csrf_protection: ~
-  http_method_override: true
-
-  # enable sessions
-  session:
-    # use PHP native session handling
-    handler_id: ~
-
-  #esi: ~
-  #fragments: ~
-  php_errors:
-    log: true
-  validation:
-    enable_annotations: true
-  property_info:
-    enabled: true
+  session: true
 
   assets:
     json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file

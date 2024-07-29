@@ -29,12 +29,12 @@ class IndexController extends BaseDoctrineController
      */
     public function indexAction()
     {
-        //get the events from the next month
+        // get the events from the next month
         $searchModel = new SearchModel(SearchModel::MONTH);
         $eventRepository = $this->getDoctrine()->getRepository(Event::class);
         $events = $eventRepository->search($searchModel);
 
-        //get open offers & determine which need actions
+        // get open offers & determine which need actions
         $offers = $this->getDoctrine()->getRepository(EventOffer::class)->findBy(['isResolved' => false]);
         /** @var EventOffer[] $actingOffers */
         $actingOffers = [];

@@ -18,7 +18,7 @@ use App\Form\Traits\User\ChangePasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/account")
@@ -37,15 +37,15 @@ class AccountController extends BaseFormController
         $user = $this->getUser();
         $arr['user'] = $user;
 
-        //change password form
+        // change password form
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user)
                 ->add('form.change_password', SubmitType::class, ['translation_domain' => 'account', 'label' => 'index.change_password']),
             $request,
             function ($form) use ($user, $translator) {
                 if (
-                    $user->getPlainPassword() !== $user->getRepeatPlainPassword() ||
-                    '' === $user->getPlainPassword()
+                    $user->getPlainPassword() !== $user->getRepeatPlainPassword()
+                    || '' === $user->getPlainPassword()
                 ) {
                     $this->displaySuccess($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
 
@@ -63,7 +63,7 @@ class AccountController extends BaseFormController
 
         $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
         if ($setting->getDoctorsCanEditSelf()) {
-            //edit account form
+            // edit account form
             $form = $this->handleForm(
                 $this->createForm(EditAccountType::class, $user)
                     ->add('form.save', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.update']),

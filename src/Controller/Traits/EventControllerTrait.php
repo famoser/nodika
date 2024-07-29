@@ -16,7 +16,7 @@ use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Helper\DateTimeFormatter;
 use App\Service\CsvService;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait EventControllerTrait
 {
@@ -59,12 +59,12 @@ trait EventControllerTrait
 
         $data = [];
 
-        //set start / end datetime
+        // set start / end datetime
         $startDateTime = $events[0]->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
         $endDateTime = $events[\count($events) - 1]->getEndDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT);
         $data[] = [$startDateTime, $endDateTime];
 
-        //count events per clinic
+        // count events per clinic
         $count = [];
         /** @var Clinic[] $clinicLookup */
         $clinicLookup = [];
@@ -78,7 +78,7 @@ trait EventControllerTrait
             }
         }
 
-        //export
+        // export
         foreach ($clinicLookup as $id => $clinic) {
             $data[] = [$clinic->getName(), $count[$id]];
         }

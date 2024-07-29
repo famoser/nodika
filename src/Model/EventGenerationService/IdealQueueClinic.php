@@ -56,9 +56,6 @@ class IdealQueueClinic
         $this->history[$pointInTime] = 3;
     }
 
-    /**
-     * @param $pointInTime
-     */
     public function removeAssignments($pointInTime)
     {
         $removeKeys = [];

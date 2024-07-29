@@ -21,7 +21,7 @@ trait InvitationTrait
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $invitationIdentifier = null;
+    private $invitationIdentifier;
 
     /**
      * @var \DateTime

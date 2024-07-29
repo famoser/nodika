@@ -40,7 +40,7 @@ class LoadClinic extends BaseFixture
 
         $doctors = $manager->getRepository(Doctor::class)->findAll();
 
-        //create all clinics
+        // create all clinics
         $clinics = [];
         foreach ($realExamples as $realExample) {
             $clinic = $this->getRandomInstance();
@@ -49,7 +49,7 @@ class LoadClinic extends BaseFixture
             $clinics[] = $clinic;
         }
 
-        //assign clinics to users randomly
+        // assign clinics to users randomly
         $userIndex = 0;
         $clinicIndex = 0;
         $allClinicsSeen = 0;
@@ -86,8 +86,6 @@ class LoadClinic extends BaseFixture
 
     /**
      * create an instance with all random values.
-     *
-     * @param bool $acceptInvitation
      *
      * @return Clinic
      */

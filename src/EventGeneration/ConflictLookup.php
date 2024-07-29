@@ -15,7 +15,6 @@ use App\Entity\Event;
 use App\Entity\EventGenerationTargetClinic;
 use App\Entity\EventGenerationTargetDoctor;
 use App\Entity\Traits\EventTrait;
-use PDO;
 
 class ConflictLookup
 {
@@ -28,8 +27,8 @@ class ConflictLookup
      */
     public function __construct(array $events, \DateInterval $bufferSize)
     {
-        //setup db
-        $pdo = new PDO('sqlite::memory:');
+        // setup db
+        $pdo = new \PDO('sqlite::memory:');
         $pdo->exec('DROP TABLE IF EXISTS conflicts');
         $pdo->exec('CREATE TABLE conflicts (start TEXT, end TEXT, doctor_id INTEGER, clinic_id INTEGER)');
         $this->lookup = $pdo;
@@ -42,7 +41,7 @@ class ConflictLookup
      */
     public function addEvents(array $events, \DateInterval $bufferSize)
     {
-        //convert events to insert array
+        // convert events to insert array
         $insertArray = [];
         foreach ($events as $event) {
             $entry = [];
@@ -53,13 +52,13 @@ class ConflictLookup
             $insertArray[] = $entry;
         }
 
-        //batch insert
+        // batch insert
         $insertSize = \count($insertArray);
         $batchSize = 100;
         for ($i = 0; $i < $insertSize; $i += $batchSize) {
             $currentBatchSize = min($insertSize, $i + $batchSize);
 
-            //build up SQL after VALUES & create parameters array
+            // build up SQL after VALUES & create parameters array
             $rowSqls = [];
             $parameters = [];
             $fields = ['start', 'end', 'doctor_id', 'clinic_id'];
@@ -74,14 +73,14 @@ class ConflictLookup
                 $rowSqls[] = '('.implode(',', $variableNames).')';
             }
 
-            //insert
+            // insert
             $sql = 'INSERT INTO conflicts (start, end, doctor_id, clinic_id) VALUES '.implode(',', $rowSqls);
-            //potential improvement: prepared could be reused over iterations
+            // potential improvement: prepared could be reused over iterations
             $prepared = $this->lookup->prepare($sql);
             $prepared->execute($parameters);
         }
 
-        //(re)create indexes for fast queries
+        // (re)create indexes for fast queries
         $this->lookup->exec('CREATE INDEX doctor_index ON conflicts(start, end, doctor_id)');
         $this->lookup->exec('CREATE INDEX clinic_index ON conflicts(start, end, clinic_id)');
     }
@@ -97,15 +96,15 @@ class ConflictLookup
         $sql = 'SELECT COUNT(*) FROM conflicts WHERE ';
         $constraints = [];
 
-        //detect conflicts
+        // detect conflicts
         $conflictCases = [
-            '(start < :start0 AND end > :end0)', //case conflict fully contained in event
-            '(start < :start1 AND end > :start2)', //case conflict overlaps left
-            '(start < :end1 AND start > :end2)', //case conflict overlaps right
+            '(start < :start0 AND end > :end0)', // case conflict fully contained in event
+            '(start < :start1 AND end > :start2)', // case conflict overlaps left
+            '(start < :end1 AND start > :end2)', // case conflict overlaps right
         ];
         $constraints[] = '('.implode(' OR ', $conflictCases).')';
 
-        //fill parameters
+        // fill parameters
         $startStr = $event->getStartDateTime()->format('c');
         $endStr = $event->getEndDateTime()->format('c');
         for ($i = 0; $i < 3; ++$i) {
@@ -113,7 +112,7 @@ class ConflictLookup
             $parameters['end'.$i] = $endStr;
         }
 
-        //filter by impacted query
+        // filter by impacted query
         if (null !== $eventTarget->getClinic()) {
             /* @var EventGenerationTargetClinic $eventTarget */
             $constraints[] = '(clinic_id = :clinic_id)';
@@ -126,7 +125,7 @@ class ConflictLookup
 
         $sql .= implode(' AND ', $constraints);
 
-        //execute
+        // execute
         $prepared = $this->lookup->prepare($sql);
         $prepared->execute($parameters);
 
