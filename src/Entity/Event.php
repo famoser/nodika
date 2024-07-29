@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An Event is a time unit which is assigned to a clinic or a person.
  *
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class Event extends BaseEntity
@@ -35,6 +36,7 @@ class Event extends BaseEntity
      * @var EventPast[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event", cascade={"all"})
+     *
      * @ORM\OrderBy({"createdAt": "DESC"})
      */
     private $eventPast;
@@ -43,6 +45,7 @@ class Event extends BaseEntity
      * @var EventTag[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
+     *
      * @ORM\JoinTable(name="event_event_tags")
      */
     private $eventTags;

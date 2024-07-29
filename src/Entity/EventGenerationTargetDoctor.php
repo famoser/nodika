@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An EventGenerationClinic specifies additional properties for a clinic.
  *
  * @ORM\Entity()
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class EventGenerationTargetDoctor extends BaseEntity

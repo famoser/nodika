@@ -49,7 +49,7 @@ class BaseFormController extends BaseDoctrineController
      */
     protected function handleCreateForm(Request $request, BaseEntity $defaultEntity, $beforeCreateCallable = null)
     {
-        //translate messages
+        // translate messages
         $translator = $this->getTranslator();
         $buttonLabel = $translator->trans('submit.create', [], 'common_form');
         $successfulText = $translator->trans('successful.create', [], 'common_form');
@@ -57,7 +57,7 @@ class BaseFormController extends BaseDoctrineController
         $formType = $this->classToFormType(\get_class($defaultEntity));
         $startEntity = clone $defaultEntity;
 
-        //create persist callable
+        // create persist callable
         $myOnSuccessCallable = function ($form) use ($defaultEntity, $beforeCreateCallable, $successfulText, $formType, $startEntity, $buttonLabel) {
             $manager = $this->getDoctrine()->getManager();
 
@@ -66,7 +66,7 @@ class BaseFormController extends BaseDoctrineController
                 $manager->flush();
                 $this->displaySuccess($successfulText);
 
-                //recreate form so values are not filled out already
+                // recreate form so values are not filled out already
                 return $this->createForm($formType, $startEntity)
                     ->add('submit', SubmitType::class, ['label' => $buttonLabel, 'translation_domain' => false]);
             }
@@ -74,7 +74,7 @@ class BaseFormController extends BaseDoctrineController
             return $form;
         };
 
-        //handle the form
+        // handle the form
         return $this->handleForm(
             $this->createForm($formType, $defaultEntity)
                 ->add('submit', SubmitType::class, ['label' => $buttonLabel, 'translation_domain' => false]),
@@ -92,12 +92,12 @@ class BaseFormController extends BaseDoctrineController
      */
     protected function handleUpdateForm(Request $request, BaseEntity $entity, $beforeUpdateCallable = null)
     {
-        //translate messages
+        // translate messages
         $translator = $this->getTranslator();
         $buttonLabel = $translator->trans('submit.update', [], 'common_form');
         $successfulText = $translator->trans('successful.update', [], 'common_form');
 
-        //create persist callable
+        // create persist callable
         $myOnSuccessCallable = function ($form) use ($entity, $beforeUpdateCallable, $successfulText) {
             $manager = $this->getDoctrine()->getManager();
 
@@ -110,7 +110,7 @@ class BaseFormController extends BaseDoctrineController
             return $form;
         };
 
-        //handle the form
+        // handle the form
         return $this->handleForm(
             $this->createForm($this->classToFormType(\get_class($entity)), $entity)
                 ->add('submit', SubmitType::class, ['label' => $buttonLabel, 'translation_domain' => false]),

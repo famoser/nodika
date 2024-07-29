@@ -25,6 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
  * A Clinic is part of the organisation, and is responsible for the events assigned to it.
  *
  * @ORM\Entity(repositoryClass="App\Repository\ClinicRepository")
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class Clinic extends BaseEntity
@@ -40,6 +41,7 @@ class Clinic extends BaseEntity
      * @var Doctor[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Doctor", mappedBy="clinics")
+     *
      * @ORM\OrderBy({"familyName" = "ASC", "givenName" = "ASC"})
      */
     private $doctors;
@@ -48,6 +50,7 @@ class Clinic extends BaseEntity
      * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="clinic")
+     *
      * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
     private $events;

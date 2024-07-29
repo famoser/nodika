@@ -34,7 +34,7 @@ class QueueGenerator
         }
         $this->totalScore = $totalSum;
 
-        //construct queue
+        // construct queue
         foreach ($weightedTargets as $clinic => $size) {
             $queueEntry = new QueueEntry($clinic, $size, $totalSum);
             $this->queueEntries[$queueEntry->getId()] = $queueEntry;
@@ -46,13 +46,13 @@ class QueueGenerator
      */
     public function warmUp(array $entries)
     {
-        //preserve original scores
+        // preserve original scores
         $originalScores = [];
         foreach ($this->queueEntries as $id => $queueEntry) {
             $originalScores[$id] = $queueEntry->getScore();
         }
 
-        //simulate queue for $entries
+        // simulate queue for $entries
         $accessed = [];
         foreach ($entries as $entry) {
             if (isset($this->queueEntries[$entry])) {
@@ -62,7 +62,7 @@ class QueueGenerator
             }
         }
 
-        //reset scores of those which did not occur in $entries
+        // reset scores of those which did not occur in $entries
         $totalScore = 0;
         foreach ($this->queueEntries as $id => $entry) {
             if (!isset($accessed[$id])) {
@@ -71,7 +71,7 @@ class QueueGenerator
             $totalScore += $entry->getScore();
         }
 
-        //normalize scores
+        // normalize scores
         if (0 !== $totalScore) {
             $diff = $this->totalScore / (float) $totalScore;
             foreach ($this->queueEntries as $queueEntry) {

@@ -39,9 +39,9 @@ class DoctorProvider extends BaseUserProvider
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @throws UnsupportedUserException if the account is not supported
-     *
      * @return UserInterface
+     *
+     * @throws UnsupportedUserException if the account is not supported
      */
     public function refreshUser(UserInterface $user)
     {
@@ -64,9 +64,9 @@ class DoctorProvider extends BaseUserProvider
      *
      * @param string $username The username
      *
-     * @throws UsernameNotFoundException if the user is not found
-     *
      * @return UserInterface
+     *
+     * @throws UsernameNotFoundException if the user is not found
      */
     public function loadUserByUsername($username)
     {

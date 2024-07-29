@@ -32,13 +32,13 @@ class ConfirmController extends BaseApiController
     /**
      * @Route("/events", name="api_confirm_events")
      *
-     * @throws \Exception
-     *
      * @return JsonResponse
+     *
+     * @throws \Exception
      */
     public function apiEventsAction()
     {
-        //get all assignable events
+        // get all assignable events
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
 
         $searchModel = new SearchModel(SearchModel::NONE);
@@ -64,9 +64,9 @@ class ConfirmController extends BaseApiController
      */
     public function apiConfirmAction(Event $event)
     {
-        //either assigned to this user or of a clinic the user is part of
-        if (null !== $event->getDoctor() && $event->getDoctor()->getId() === $this->getUser()->getId() ||
-            $this->getUser()->getClinics()->contains($event->getClinic())) {
+        // either assigned to this user or of a clinic the user is part of
+        if (null !== $event->getDoctor() && $event->getDoctor()->getId() === $this->getUser()->getId()
+            || $this->getUser()->getClinics()->contains($event->getClinic())) {
             $event->confirm($this->getUser());
             $eventPast = EventPast::create($event, EventChangeType::CONFIRMED, $this->getUser());
             $this->fastSave($event, $eventPast);

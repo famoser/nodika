@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An EventOffer can be accepted or declined, and allows one Person to propose one or more Events to change.
  *
  * @ORM\Entity()
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class EventOffer extends BaseEntity
@@ -47,6 +48,7 @@ class EventOffer extends BaseEntity
      * @var Event[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\Event")
+     *
      * @ORM\JoinTable(name="event_offer_events")
      */
     private $eventsWhichChangeOwner;
@@ -225,7 +227,7 @@ class EventOffer extends BaseEntity
                 return self::NONE;
             }
 
-            //no response yet
+            // no response yet
             if (AuthorizationStatus::PENDING === $receiverStatus) {
                 if (AuthorizationStatus::ACCEPTED === $senderStatus) {
                     return self::ACCEPT_DECLINE;
@@ -242,7 +244,7 @@ class EventOffer extends BaseEntity
                 return self::NONE;
             }
 
-            //withdraw/ack
+            // withdraw/ack
             if (AuthorizationStatus::ACCEPTED === $senderStatus) {
                 if (AuthorizationStatus::PENDING === $receiverStatus) {
                     return self::WITHDRAW;
@@ -259,8 +261,8 @@ class EventOffer extends BaseEntity
 
     public function tryMarkAsResolved()
     {
-        if (self::NONE === $this->getPendingAction($this->receiver) &&
-            self::NONE === $this->getPendingAction($this->sender)) {
+        if (self::NONE === $this->getPendingAction($this->receiver)
+            && self::NONE === $this->getPendingAction($this->sender)) {
             $this->isResolved = true;
         }
 
@@ -290,14 +292,14 @@ class EventOffer extends BaseEntity
             return true;
         }
 
-        //close if
+        // close if
 
         return false;
     }
 
-    private $cacheSenderOwned = null;
-    private $cacheReceiverOwned = null;
-    private $cacheIsValid = null;
+    private $cacheSenderOwned;
+    private $cacheReceiverOwned;
+    private $cacheIsValid;
 
     /**
      * orders the events & checks if trade is valid.
@@ -309,13 +311,13 @@ class EventOffer extends BaseEntity
             $this->cacheSenderOwned = [];
             $this->cacheIsValid = true;
 
-            //check events have correct owner
+            // check events have correct owner
             foreach ($this->getEventsWhichChangeOwner() as $item) {
-                if ($this->getReceiverClinic() === $item->getClinic() &&
-                    (null === $item->getDoctor() || $item->getDoctor() === $this->getReceiver())) {
+                if ($this->getReceiverClinic() === $item->getClinic()
+                    && (null === $item->getDoctor() || $item->getDoctor() === $this->getReceiver())) {
                     $this->cacheReceiverOwned[] = $item;
-                } elseif ($this->getSenderClinic() === $item->getClinic() &&
-                    (null === $item->getDoctor() || $item->getDoctor() === $this->getSender())) {
+                } elseif ($this->getSenderClinic() === $item->getClinic()
+                    && (null === $item->getDoctor() || $item->getDoctor() === $this->getSender())) {
                     $this->cacheSenderOwned[] = $item;
                 } else {
                     $this->cacheIsValid = false;
@@ -326,17 +328,17 @@ class EventOffer extends BaseEntity
                 }
             }
 
-            //check doctors not removed
+            // check doctors not removed
             if ($this->getReceiver()->isDeleted() || $this->getSender()->isDeleted()) {
                 $this->cacheIsValid = false;
             }
 
-            //check clinics not removed
+            // check clinics not removed
             if ($this->getReceiverClinic()->isDeleted() || $this->getSenderClinic()->isDeleted()) {
                 $this->cacheIsValid = false;
             }
 
-            //check doctors still in clinic
+            // check doctors still in clinic
             if (!$this->getReceiver()->getClinics()->contains($this->getReceiverClinic()) || !$this->getSender()->getClinics()->contains($this->getSenderClinic())) {
                 $this->cacheIsValid = false;
             }

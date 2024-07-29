@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SettingsRepository")
+ *
  * @ORM\HasLifecycleCallbacks()
  */
 class Setting extends BaseEntity

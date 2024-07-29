@@ -45,13 +45,9 @@ class LoadGeneration extends BaseFixture
         }
     }
 
-    /**
-     * @param $cronExpression
-     * @param $differentiate
-     */
     private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, $cronExpression, $differentiate)
     {
-        //prepare a generation
+        // prepare a generation
         $generation = $this->getRandomInstance();
         $generation->registerChangeBy($admin);
         $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT).' '.$differentiate);
@@ -62,7 +58,7 @@ class LoadGeneration extends BaseFixture
         $generation->setEndCronExpression($cronExpression);
         $generation->getAssignEventTags()->add($tag);
 
-        //date exceptions
+        // date exceptions
         $dateExceptions = [
             [EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY],
         ];
@@ -73,7 +69,7 @@ class LoadGeneration extends BaseFixture
             $exception->setEventGeneration($generation);
         }
 
-        //add most clinics as generation target
+        // add most clinics as generation target
         $clinics = $manager->getRepository(Clinic::class)->findAll();
         $skipPossibility = \count($clinics) / 3 * 2;
         $counter = 0;
@@ -90,17 +86,17 @@ class LoadGeneration extends BaseFixture
             ++$counter;
         }
 
-        //save generation
+        // save generation
         $manager->persist($generation);
         $manager->flush();
 
-        //generate & persist all events
+        // generate & persist all events
         $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
         $this->getEventGenerationService()->generate($generation);
         $this->getEventGenerationService()->persist($generation, $admin);
 
         $events = $manager->getRepository(Event::class)->findAll();
-        //confirm first 10 events
+        // confirm first 10 events
         for ($i = 0; $i < 10; ++$i) {
             $event = $events[$i];
             if ($event->getClinic()->getDoctors()->count() > 0) {

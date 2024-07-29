@@ -45,7 +45,7 @@ class DoctorVoter extends BaseVoter
             return false;
         }
 
-        //check if own clinic
+        // check if own clinic
         return $user->getId() === $subject->getId() || $user->isAdministrator();
     }
 }

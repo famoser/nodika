@@ -42,17 +42,11 @@ class EntityNormalizer extends ObjectNormalizer
         $this->em = $em;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsDenormalization($data, $type, $format = null)
     {
         return 0 === mb_strpos($type, 'App\\Entity\\') && (is_numeric($data) || \is_string($data));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         return $this->em->find($class, $data);

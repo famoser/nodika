@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An EventGeneration is the result of one of the generation algorithms.
  *
  * @ORM\Entity()
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class EventGenerationDateException extends BaseEntity
@@ -29,9 +30,10 @@ class EventGenerationDateException extends BaseEntity
 
     /**
      * @var int|null
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $eventType = null;
+    private $eventType;
 
     public function getEventType(): ?int
     {

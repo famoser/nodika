@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An EventTag allows to describe events.
  *
  * @ORM\Entity()
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class EventTag extends BaseEntity

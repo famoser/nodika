@@ -20,7 +20,9 @@ trait UserTrait
      * @var string
      *
      * @ORM\Column(type="text", unique=true)
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Email()
      */
     private $email;
@@ -106,9 +108,6 @@ trait UserTrait
         return $this->registrationDate;
     }
 
-    /**
-     * @param \DateTime $registrationDate
-     */
     public function setRegistrationDate(?\DateTime $registrationDate)
     {
         $this->registrationDate = $registrationDate;
@@ -172,9 +171,6 @@ trait UserTrait
         return $this->isEnabled;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getLastLoginDate(): ?\DateTime
     {
         return $this->lastLoginDate;
@@ -341,7 +337,7 @@ trait UserTrait
     public function setResetHash()
     {
         $newHash = '';
-        //0-9, A-Z, a-z
+        // 0-9, A-Z, a-z
         $allowedRanges = [[48, 57], [65, 90], [97, 122]];
         for ($i = 0; $i < 20; ++$i) {
             $rand = mt_rand(20, 160);

@@ -26,15 +26,15 @@ class LoadDoctor extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        //load some doctors
+        // load some doctors
         $this->loadSomeRandoms($manager, 30);
 
-        //create doctor which is invited
+        // create doctor which is invited
         $invitedUser = $this->getRandomInstance();
         $invitedUser->invite();
         $manager->persist($invitedUser);
 
-        //create doctor which is not invited yet
+        // create doctor which is not invited yet
         $notInvitedUser = $this->getRandomInstance();
         $manager->persist($notInvitedUser);
 
@@ -51,8 +51,6 @@ class LoadDoctor extends BaseFixture
 
     /**
      * create an instance with all random values.
-     *
-     * @param bool $acceptInvitation
      *
      * @return Doctor
      */

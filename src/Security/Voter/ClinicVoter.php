@@ -46,7 +46,7 @@ class ClinicVoter extends BaseVoter
             return false;
         }
 
-        //check if own clinic
+        // check if own clinic
         return $user->getClinics()->contains($subject) || $user->isAdministrator();
     }
 }

@@ -20,7 +20,7 @@ trait SoftDeleteTrait
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $deletedAt = null;
+    private $deletedAt;
 
     /**
      * returns if the person can be invited.

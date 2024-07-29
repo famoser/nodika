@@ -24,6 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
  * An EventGeneration is the result of one of the generation algorithms.
  *
  * @ORM\Entity()
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class EventGeneration extends BaseEntity
@@ -120,6 +121,7 @@ class EventGeneration extends BaseEntity
      * @var EventTag[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
+     *
      * @ORM\JoinTable(name="event_generation_conflicting_event_tags")
      */
     private $conflictEventTags;
@@ -128,6 +130,7 @@ class EventGeneration extends BaseEntity
      * @var EventTag[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
+     *
      * @ORM\JoinTable(name="event_generation_assign_event_tags")
      */
     private $assignEventTags;
@@ -157,6 +160,7 @@ class EventGeneration extends BaseEntity
      * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="generatedBy")
+     *
      * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
     private $appliedEvents;
@@ -165,6 +169,7 @@ class EventGeneration extends BaseEntity
      * @var EventGenerationPreviewEvent[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="EventGenerationPreviewEvent", mappedBy="generatedBy", cascade={"persist"}, orphanRemoval=true)
+     *
      * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
     private $previewEvents;

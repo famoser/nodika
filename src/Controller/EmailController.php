@@ -24,8 +24,6 @@ class EmailController extends BaseController
     /**
      * @Route("/{identifier}", name="email_view")
      *
-     * @param $identifier
-     *
      * @return Response
      */
     public function emailAction($identifier)

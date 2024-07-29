@@ -26,9 +26,9 @@ abstract class BaseUserProvider implements UserProviderInterface
      *
      * @param string $username The username
      *
-     * @throws UsernameNotFoundException if the user is not found
-     *
      * @return UserInterface
+     *
+     * @throws UsernameNotFoundException if the user is not found
      */
     abstract public function loadUserByUsername($username);
 
@@ -40,9 +40,9 @@ abstract class BaseUserProvider implements UserProviderInterface
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @throws UnsupportedUserException if the account is not supported
-     *
      * @return UserInterface
+     *
+     * @throws UnsupportedUserException if the account is not supported
      */
     abstract public function refreshUser(UserInterface $user);
 

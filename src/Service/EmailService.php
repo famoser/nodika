@@ -20,7 +20,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
 {
@@ -42,13 +41,8 @@ class EmailService implements EmailServiceInterface
 
     /**
      * EmailService constructor.
-     * @param MailerInterface $mailer
-     * @param ManagerRegistry $registry
-     * @param Environment $twig
-     * @param string $contactEmail
-     * @param LoggerInterface $logger
      */
-    public function __construct(MailerInterface $mailer, ManagerRegistry $registry, string $contactEmail, \Psr\Log\LoggerInterface $logger)
+    public function __construct(MailerInterface $mailer, ManagerRegistry $registry, string $contactEmail, LoggerInterface $logger)
     {
         $this->mailer = $mailer;
         $this->doctrine = $registry;
@@ -75,10 +69,9 @@ class EmailService implements EmailServiceInterface
     }
 
     /**
-     * @param string $receiver
-     * @param string $subject
-     * @param string $body
-     * @param $actionText
+     * @param string   $receiver
+     * @param string   $subject
+     * @param string   $body
      * @param string   $actionLink
      * @param string[] $carbonCopy
      */

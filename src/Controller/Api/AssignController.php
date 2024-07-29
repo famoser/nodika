@@ -35,7 +35,7 @@ class AssignController extends BaseApiController
     {
         $result = [];
 
-        //array of users
+        // array of users
         $user = $this->getUser();
         foreach ($user->getClinics() as $clinic) {
             foreach ($clinic->getDoctors() as $doctor) {
@@ -50,13 +50,13 @@ class AssignController extends BaseApiController
     /**
      * @Route("/events/{doctor}", name="assign_events")
      *
-     * @throws \Exception
-     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
      */
     public function eventsAction(Doctor $doctor)
     {
-        //get all common clinics of current user & selected one
+        // get all common clinics of current user & selected one
         $allowedFilter = [];
         foreach ($this->getUser()->getClinics() as $clinic) {
             $allowedFilter[] = $clinic->getId();
@@ -68,10 +68,10 @@ class AssignController extends BaseApiController
             }
         }
 
-        //get all assignable events
+        // get all assignable events
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
 
-        //get the events for the doctor
+        // get the events for the doctor
         $searchModel = new SearchModel(SearchModel::NONE);
         $searchModel->setClinics($clinics);
         $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval('P'.$settings->getCanConfirmDaysAdvance().'D')));

@@ -25,7 +25,7 @@ class LoadAdmin extends LoadDoctor
      */
     public function load(ObjectManager $manager)
     {
-        //create admin
+        // create admin
         $admin = $this->getRandomInstance();
         $admin->setEmail('f@nodika.ch');
         $admin->setPlainPassword('asdf');

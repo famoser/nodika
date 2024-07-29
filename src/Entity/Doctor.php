@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\HasLifecycleCallbacks()
  */
 class Doctor extends BaseEntity implements UserInterface, EquatableInterface
@@ -45,7 +46,9 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
      * @var Clinic[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Clinic", inversedBy="doctors")
+     *
      * @ORM\JoinTable(name="doctor_clinics")
+     *
      * @ORM\OrderBy({"name" = "ASC"})
      */
     private $clinics;
@@ -54,6 +57,7 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
      * @var Event[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="doctor")
+     *
      * @ORM\OrderBy({"startDateTime" = "ASC"})
      */
     private $events;

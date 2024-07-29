@@ -59,6 +59,7 @@ trait AddressTrait
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
+     *
      * @Assert\Country()
      */
     private $country = 'CH';

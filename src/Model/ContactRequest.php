@@ -17,19 +17,23 @@ class ContactRequest
 {
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     private $name;
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Email()
      */
     private $email;
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     private $message;

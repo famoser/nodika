@@ -34,9 +34,9 @@ class CsvService implements CsvServiceInterface
         $response->setCallback(function () use ($header, $data) {
             $handle = fopen('php://output', 'w+');
 
-            //UTF-8 BOM
+            // UTF-8 BOM
             fwrite($handle, "\xEF\xBB\xBF");
-            //set delimiter to specified
+            // set delimiter to specified
             fwrite($handle, 'sep='.static::DELIMITER."\n");
 
             if (\is_array($header)) {
@@ -44,7 +44,7 @@ class CsvService implements CsvServiceInterface
                 fputcsv($handle, $header, static::DELIMITER);
             }
 
-            //add the data
+            // add the data
             foreach ($data as $row) {
                 fputcsv(
                     $handle, // The file pointer

@@ -21,7 +21,7 @@ class HashHelper
     public static function createNewResetHash()
     {
         $newHash = '';
-        //0-9, A-Z, a-z
+        // 0-9, A-Z, a-z
         $allowedRanges = [[48, 57], [65, 90], [97, 122]];
         for ($i = 0; $i < 20; ++$i) {
             $rand = mt_rand(20, 160);
