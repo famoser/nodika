@@ -9,9 +9,8 @@
     "ext-pdo": "*",
     "ext-pdo_sqlite": "*",
     "composer/package-versions-deprecated": "^1.11",
-    "doctrine/common": "^2",
     "doctrine/doctrine-bundle": "^2",
-    "doctrine/doctrine-migrations-bundle": "^2",
+    "doctrine/doctrine-migrations-bundle": "^3",
     "doctrine/orm": "^2",
     "dragonmantank/cron-expression": "^2.0",
     "erusev/parsedown": "^1.6",
@@ -56,7 +55,7 @@
       "*": "dist"
     },
     "platform": {
-      "php": "7.4"
+      "php": "8.2"
     },
     "sort-packages": true,
     "allow-plugins": {
