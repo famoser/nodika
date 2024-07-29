@@ -320,9 +320,6 @@
             "config/packages/security_checker.yaml"
         ]
     },
-    "swiftmailer/swiftmailer": {
-        "version": "v6.2.3"
-    },
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {
@@ -464,6 +461,18 @@
     "symfony/intl": {
         "version": "v4.4.7"
     },
+    "symfony/mailer": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "4.3",
+            "ref": "df66ee1f226c46f01e85c29c2f7acce0596ba35a"
+        },
+        "files": [
+            "config/packages/mailer.yaml"
+        ]
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -550,15 +559,6 @@
     "symfony/property-info": {
         "version": "v4.4.7"
     },
-    "symfony/requirements-checker": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "93d0ec48679f5e240d265088305c1ad775723f93"
-        }
-    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -608,20 +608,6 @@
     },
     "symfony/string": {
         "version": "v5.2.6"
-    },
-    "symfony/swiftmailer-bundle": {
-        "version": "2.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.5",
-            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
-        },
-        "files": [
-            "config/packages/dev/swiftmailer.yaml",
-            "config/packages/swiftmailer.yaml",
-            "config/packages/test/swiftmailer.yaml"
-        ]
     },
     "symfony/translation": {
         "version": "3.3",

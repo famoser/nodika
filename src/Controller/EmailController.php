@@ -35,6 +35,6 @@ class EmailController extends BaseController
             throw new NotFoundHttpException();
         }
 
-        return $this->render('email/view.html.twig', ['email' => $email]);
+        return $this->render('email/view.html.twig', ['myemail' => $email]);
     }
 }

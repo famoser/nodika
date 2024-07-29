@@ -17,12 +17,15 @@ use App\Helper\HashHelper;
 use App\Service\Interfaces\EmailServiceInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
 {
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     private $mailer;
     /**
@@ -35,62 +38,22 @@ class EmailService implements EmailServiceInterface
      */
     private $doctrine;
 
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * EmailService constructor.
+     * @param MailerInterface $mailer
+     * @param ManagerRegistry $registry
+     * @param Environment $twig
+     * @param string $contactEmail
+     * @param LoggerInterface $logger
      */
-    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $registry, LoggerInterface $logger, Environment $twig, string $contactEmail)
+    public function __construct(MailerInterface $mailer, ManagerRegistry $registry, string $contactEmail, \Psr\Log\LoggerInterface $logger)
     {
         $this->mailer = $mailer;
         $this->doctrine = $registry;
-        $this->twig = $twig;
-        $this->logger = $logger;
         $this->contactEmail = $contactEmail;
-    }
-
-    private function processEmail(Email $email)
-    {
-        $email->setSentDateTime(new \DateTime());
-        $email->setIdentifier(HashHelper::createNewResetHash());
-
-        $manager = $this->doctrine->getManager();
-        $manager->persist($email);
-        $manager->flush();
-
-        $message = (new \Swift_Message())
-            ->setSubject($email->getSubject())
-            ->setFrom($this->contactEmail)
-            ->setTo($email->getReceiver());
-
-        $body = $email->getBody();
-        if (null !== $email->getActionLink()) {
-            $body .= "\n\n".$email->getActionText().': '.$email->getActionLink();
-        }
-        $message->setBody($body, 'text/plain');
-
-        if (EmailType::PLAIN_EMAIL !== $email->getEmailType()) {
-            $message->addPart(
-                $this->twig->render(
-                    'email/view.html.twig',
-                    ['email' => $email]
-                ),
-                'text/html'
-            );
-        }
-
-        foreach ($email->getCarbonCopyArray() as $item) {
-            $message->addCc($item);
-        }
-        $this->mailer->send($message);
+        $this->logger = $logger;
     }
 
     /**
@@ -108,7 +71,7 @@ class EmailService implements EmailServiceInterface
         $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::TEXT_EMAIL);
 
-        $this->processEmail($email);
+        $this->sendEmail($email);
     }
 
     /**
@@ -130,7 +93,7 @@ class EmailService implements EmailServiceInterface
         $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::ACTION_EMAIL);
 
-        $this->processEmail($email);
+        $this->sendEmail($email);
     }
 
     /**
@@ -148,6 +111,42 @@ class EmailService implements EmailServiceInterface
         $email->setCarbonCopyArray($carbonCopy);
         $email->setEmailType(EmailType::PLAIN_EMAIL);
 
-        $this->processEmail($email);
+        $this->sendEmail($email);
+    }
+
+    private function sendEmail(Email $email)
+    {
+        $email->setSentDateTime(new \DateTime());
+        $email->setIdentifier(HashHelper::createNewResetHash());
+
+        $message = (new TemplatedEmail())
+            ->subject($email->getSubject())
+            ->from($this->contactEmail)
+            ->to($email->getReceiver());
+
+        $body = $email->getBody();
+        if (null !== $email->getActionLink()) {
+            $body .= "\n\n".$email->getActionText().': '.$email->getActionLink();
+        }
+        $message = $message->context(['myemail' => $email])
+            ->text($body);
+
+        if (EmailType::PLAIN_EMAIL !== $email->getEmailType()) {
+            $message = $message->htmlTemplate('email/view.html.twig');
+        }
+
+        foreach ($email->getCarbonCopyArray() as $item) {
+            $message->addCc($item);
+        }
+
+        try {
+            $this->mailer->send($message);
+
+            $manager = $this->doctrine->getManager();
+            $manager->persist($email);
+            $manager->flush();
+        } catch (TransportExceptionInterface $exception) {
+            $this->logger->error('email send failed', ['exception' => $exception]);
+        }
     }
 }
