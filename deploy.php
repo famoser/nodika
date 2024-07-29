@@ -25,18 +25,18 @@ set('composer_options', '{{composer_action}} --verbose --prefer-dist --no-progre
 // import servers
 inventory('servers.yml');
 
-//stages: dev, testing, production
+// stages: dev, testing, production
 set('default_stage', 'dev');
-//only keep two releases
+// only keep two releases
 set('keep_releases', 2);
 
-//use php 7.4
+// use php 7.4
 set(
     'bin/php',
     '/usr/local/php74/bin/php'
 );
 
-//build yarn stuff & upload
+// build yarn stuff & upload
 task('frontend:build', function () {
     runLocally('yarn install');
     runLocally('yarn run encore production');
@@ -45,10 +45,10 @@ task('frontend:build', function () {
 
 // kill php processes to ensure symlinks are refreshed
 task('deploy:refresh_symlink', function () {
-    run('killall -9 php-cgi'); //kill all php processes so symlink is refreshed
+    run('killall -9 php-cgi'); // kill all php processes so symlink is refreshed
 })->desc('Refreshing symlink');
 
-//automatic till vendors comand
+// automatic till vendors comand
 desc('Deploy project');
 task('deploy', [
     'deploy:info',
@@ -61,7 +61,7 @@ task('deploy', [
     'deploy:vendors',
 ]);
 
-//add the other tasks
+// add the other tasks
 after('deploy:vendors', 'frontend:build');
 after('frontend:build', 'database:migrate');
 after('database:migrate', 'deploy:cache:clear');
