@@ -12,11 +12,10 @@
 namespace App\Service;
 
 use App\Entity\Doctor;
-use App\Entity\Email;
 use App\Service\Interfaces\EmailServiceInterface;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InviteEmailService
 {
@@ -53,13 +52,13 @@ class InviteEmailService
      */
     public function inviteDoctor(Doctor $doctor)
     {
-        //map clinics to clinic name array
+        // map clinics to clinic name array
         $clinics = [];
         foreach ($doctor->getClinics() as $clinic) {
             $clinics[] = $clinic->getName();
         }
 
-        //sent invite email
+        // sent invite email
         $this->emailService->sendActionEmail(
             $doctor->getEmail(),
             $this->translator->trans('invite.email.subject', [], 'administration_doctor'),
@@ -68,7 +67,7 @@ class InviteEmailService
             $this->urlGenerator->generate('invite_doctor', ['guid' => $doctor->invite()], UrlGeneratorInterface::ABSOLUTE_URL)
         );
 
-        //save changes
+        // save changes
         $manager = $this->doctrine->getManager();
         $manager->persist($doctor);
         $manager->flush();

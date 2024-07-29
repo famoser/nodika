@@ -19,7 +19,7 @@ use App\Service\InviteEmailService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/doctors")
@@ -132,9 +132,9 @@ class DoctorController extends BaseController
     /**
      * @Route("/{doctor}/invite", name="administration_doctor_invite")
      *
-     * @throws \Exception
-     *
      * @return Response
+     *
+     * @throws \Exception
      */
     public function inviteAction(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService)
     {
@@ -151,9 +151,9 @@ class DoctorController extends BaseController
     /**
      * @Route("/invite_all", name="administration_doctor_invite_all")
      *
-     * @throws \Exception
-     *
      * @return Response
+     *
+     * @throws \Exception
      */
     public function inviteAllAction(TranslatorInterface $translator, InviteEmailService $emailService)
     {

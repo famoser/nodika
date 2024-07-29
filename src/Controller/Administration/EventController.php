@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/events")
@@ -183,24 +183,24 @@ class EventController extends BaseApiController
     /**
      * @Route("/generation/new/{tagType}", name="administration_event_generation_new")
      *
-     * @throws \Exception
-     *
      * @return Response
+     *
+     * @throws \Exception
      */
     public function generateNewAction(int $tagType, EventGenerationServiceInterface $eventGenerationService, TranslatorInterface $translator)
     {
-        //get to be assigned tag
+        // get to be assigned tag
         $tag = $this->getDoctrine()->getRepository(EventTag::class)->findOneBy(['tagType' => $tagType]);
         if (!($tag instanceof EventTag)) {
             return $this->redirectToRoute('administration_event_generations');
         }
 
-        //create our new generation
+        // create our new generation
         $generation = new EventGeneration();
         $generation->getAssignEventTags()->add($tag);
         $generation->registerChangeBy($this->getUser());
 
-        //try to retrieve last generation of that type
+        // try to retrieve last generation of that type
         $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy(['applied' => true], ['lastChangedAt' => 'DESC']);
         $lastGeneration = null;
         foreach ($lastGenerations as $lastGenerationLoop) {
@@ -210,22 +210,22 @@ class EventController extends BaseApiController
             }
         }
 
-        //transfer props if previous generation exists
+        // transfer props if previous generation exists
         if (null !== $lastGeneration) {
-            //precalculate some time diffs; round up when looking at years
+            // precalculate some time diffs; round up when looking at years
             $lastLength = $lastGeneration->getStartDateTime()->diff($lastGeneration->getEndDateTime());
             $yearDifference = new \DateInterval('P'.($lastLength->y + ($lastLength->d > 240 ? 1 : 0)).'Y');
 
-            //set name
+            // set name
             $generation->setName('Re: '.$lastGeneration->getName());
 
-            //copy start/end
+            // copy start/end
             $generation->setStartDateTime(clone $lastGeneration->getEndDateTime());
             $generation->setEndDateTime(clone ($lastGeneration->getEndDateTime())->add($lastLength));
             $generation->setStartCronExpression($lastGeneration->getStartCronExpression());
             $generation->setEndCronExpression($lastGeneration->getEndCronExpression());
 
-            //copy participants
+            // copy participants
             foreach ($lastGeneration->getClinics() as $clinicTarget) {
                 if (null === $clinicTarget->getClinic()->getDeletedAt()) {
                     $newClinic = new EventGenerationTargetClinic();
@@ -247,7 +247,7 @@ class EventController extends BaseApiController
                 }
             }
 
-            //copy settings
+            // copy settings
             $generation->setDifferentiateByEventType($lastGeneration->getDifferentiateByEventType());
             $generation->setWeekdayWeight($lastGeneration->getWeekdayWeight());
             $generation->setSaturdayWeight($lastGeneration->getSaturdayWeight());
@@ -267,17 +267,17 @@ class EventController extends BaseApiController
                 $generation->getDateExceptions()->add($newException);
             }
         } else {
-            //set default name
+            // set default name
             $generation->setName(
                 $translator->trans('entity.name', [], 'entity_event_generation').' '.
                 EventTagType::getTranslation($tag->getTagType(), $translator).' '
             );
 
-            //set start/end
+            // set start/end
             $generation->setStartDateTime(new \DateTime());
             $generation->setEndDateTime((new \DateTime())->add(new \DateInterval('P1Y')));
 
-            //set participants
+            // set participants
             $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
             foreach ($clinics as $clinic) {
                 $targetClinic = new EventGenerationTargetClinic();
@@ -286,7 +286,7 @@ class EventController extends BaseApiController
                 $generation->getClinics()->add($targetClinic);
             }
 
-            //set other sensible defaults
+            // set other sensible defaults
             if (EventTagType::ACTIVE_SERVICE === $tag->getTagType()) {
                 $generation->setDifferentiateByEventType(true);
                 $generation->setStartCronExpression('0 8 * * *');
@@ -301,7 +301,7 @@ class EventController extends BaseApiController
             foreach ($this->getDoctrine()->getRepository(EventTag::class)->findBy(['deletedAt' => null]) as $otherTag) {
                 $generation->getConflictEventTags()->add($otherTag);
             }
-            //add yearly holidays
+            // add yearly holidays
             $yearlyHolidays = ['01-01', '01-02.', '08-01.', '12-31'];
             $currentIndex = 0;
             $currentYear = $generation->getStartDateTime()->format('Y');
@@ -309,12 +309,12 @@ class EventController extends BaseApiController
                 $exceptionDateString = $currentYear.'-'.$yearlyHolidays[$currentIndex];
                 $exceptionDate = new \DateTime($exceptionDateString);
 
-                //break if can not be inside generation anymore
+                // break if can not be inside generation anymore
                 if ($exceptionDate > $generation->getEndDateTime()) {
                     break;
                 }
 
-                //add if inside generation
+                // add if inside generation
                 if ($exceptionDate > $generation->getStartDateTime()) {
                     $newException = new EventGenerationDateException();
                     $newException->setEventType(EventType::HOLIDAY);
@@ -324,7 +324,7 @@ class EventController extends BaseApiController
                     $generation->getDateExceptions()->add($newException);
                 }
 
-                //update index/current year
+                // update index/current year
                 ++$currentIndex;
                 if ($currentIndex === \count($yearlyHolidays)) {
                     $currentIndex = 0;
@@ -333,7 +333,7 @@ class EventController extends BaseApiController
             }
         }
 
-        //save
+        // save
         $eventGenerationService->generate($generation);
         $this->fastSave($generation);
 
@@ -367,17 +367,17 @@ class EventController extends BaseApiController
      */
     public function generationUpdateAction(Request $request, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
     {
-        //only update if not applied yet
+        // only update if not applied yet
         if ($generation->getIsApplied()) {
             throw new AccessDeniedHttpException();
         }
 
         $manager = $this->getDoctrine()->getManager();
 
-        //prepare content & request
+        // prepare content & request
         $content = json_decode($request->getContent(), true);
         if (\is_array($content)) {
-            //write simple props first
+            // write simple props first
             $allowedProps = [
                 'name' => 1, 'startCronExpression' => 1, 'endCronExpression' => 1,
                 'startDateTime' => 2, 'endDateTime' => 2,
@@ -387,7 +387,7 @@ class EventController extends BaseApiController
             ];
             foreach ($allowedProps as $prop => $valueType) {
                 if (\array_key_exists($prop, $content)) {
-                    //convert type
+                    // convert type
                     $value = $content[$prop];
                     switch ($valueType) {
                         case 2:
@@ -410,7 +410,7 @@ class EventController extends BaseApiController
                 }
             }
 
-            //refresh dependencies
+            // refresh dependencies
             if (\array_key_exists('conflictEventTagIds', $content)) {
                 $eventTagIds = $content['conflictEventTagIds'];
                 $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
@@ -441,14 +441,14 @@ class EventController extends BaseApiController
                 }
             }
             if (\array_key_exists('targetClinics', $content)) {
-                //get key/value of clinics
+                // get key/value of clinics
                 $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
                 $clinicById = [];
                 foreach ($clinics as $clinic) {
                     $clinicById[$clinic->getId()] = $clinic;
                 }
 
-                //create target clinics
+                // create target clinics
                 $targetClinics = $content['targetClinics'];
                 $generation->getClinics()->clear();
                 foreach ($targetClinics as $targetClinicArr) {
@@ -462,14 +462,14 @@ class EventController extends BaseApiController
                 }
             }
             if (\array_key_exists('targetDoctors', $content)) {
-                //get key/value of doctors
+                // get key/value of doctors
                 $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
                 $doctorById = [];
                 foreach ($doctors as $doctor) {
                     $doctorById[$doctor->getId()] = $doctor;
                 }
 
-                //create target doctors
+                // create target doctors
                 $targetDoctors = $content['targetDoctors'];
                 $generation->getDoctors()->clear();
                 foreach ($targetDoctors as $targetDoctorArr) {
@@ -484,10 +484,10 @@ class EventController extends BaseApiController
             }
         }
 
-        //regenerate events
+        // regenerate events
         $eventGenerationService->generate($generation);
 
-        //save changes
+        // save changes
         $manager->persist($generation);
         $manager->flush();
 

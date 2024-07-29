@@ -34,7 +34,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/login")
@@ -53,7 +53,7 @@ class LoginController extends BaseFormController
 
     protected function loginUser(Request $request, UserInterface $user)
     {
-        //login programmatically
+        // login programmatically
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
         $this->get('security.token_storage')->setToken($token);
 
@@ -132,10 +132,10 @@ class LoginController extends BaseFormController
             function ($form) use ($emailService, $translator, $logger) {
                 /* @var FormInterface $form */
 
-                //display success
+                // display success
                 $this->displaySuccess($translator->trans('recover.success.email_sent', [], 'login'));
 
-                //check if user exists
+                // check if user exists
                 $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
                     $logger->warning('tried to reset passwort for non-exitant email '.$form->getData()['email']);
@@ -143,18 +143,18 @@ class LoginController extends BaseFormController
                     return $form;
                 }
 
-                //do not send password reset link if not enabled
+                // do not send password reset link if not enabled
                 if (!$exitingUser->isEnabled()) {
                     $logger->warning('tried to reset passwort for disabled account '.$form->getData()['email']);
 
                     return $form;
                 }
 
-                //create new reset hash
+                // create new reset hash
                 $exitingUser->setResetHash();
                 $this->fastSave($exitingUser);
 
-                //sent according email
+                // sent according email
                 $emailService->sendActionEmail(
                     $exitingUser->getEmail(),
                     $translator->trans('recover.email.reset_password.subject', [], 'login'),
@@ -175,8 +175,6 @@ class LoginController extends BaseFormController
     /**
      * @Route("/reset/{resetHash}", name="login_reset")
      *
-     * @param $resetHash
-     *
      * @return Response
      */
     public function resetAction(Request $request, $resetHash, TranslatorInterface $translator)
@@ -188,7 +186,7 @@ class LoginController extends BaseFormController
             return new RedirectResponse($this->generateUrl('login'));
         }
 
-        //ensure user can indeed login
+        // ensure user can indeed login
         if (!$user->isEnabled()) {
             $this->displayError($translator->trans('login.danger.login_disabled', [], 'login'));
 
@@ -200,22 +198,22 @@ class LoginController extends BaseFormController
                 ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
             $request,
             function ($form) use ($user, $translator, $request) {
-                //check for valid password
+                // check for valid password
                 if ($user->getPlainPassword() !== $user->getRepeatPlainPassword()) {
                     $this->displayError($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
 
                     return $form;
                 }
 
-                //display success
+                // display success
                 $this->displaySuccess($translator->trans('reset.success.password_set', [], 'login'));
 
-                //set new password & save
+                // set new password & save
                 $user->setPassword();
                 $user->setResetHash();
                 $this->fastSave($user);
 
-                //login user & redirect
+                // login user & redirect
                 $this->loginUser($request, $user);
 
                 return $this->redirectToRoute('index_index');
@@ -245,7 +243,7 @@ class LoginController extends BaseFormController
             function ($form) use ($emailService, $translator) {
                 /* @var FormInterface $form */
 
-                //check if user exists
+                // check if user exists
                 $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
                     $this->displayError($translator->trans('request.error.email_not_found', [], 'login'));
@@ -253,24 +251,24 @@ class LoginController extends BaseFormController
                     return $form;
                 }
 
-                //check that invitation was sent
+                // check that invitation was sent
                 if (null !== $exitingUser->getLastLoginDate()) {
                     $this->displayError($translator->trans('request.error.already_successfully_logged_in', [], 'login'));
 
                     return $this->redirectToRoute('login');
                 }
 
-                //check that invitation was sent
+                // check that invitation was sent
                 if (null === $exitingUser->getInvitationIdentifier()) {
                     $this->displayError($translator->trans('request.error.no_invitation_sent_yet', [], 'login'));
 
                     return $form;
                 }
 
-                //resend invite email
+                // resend invite email
                 $emailService->inviteDoctor($exitingUser);
 
-                //display success
+                // display success
                 $this->displaySuccess($translator->trans('request.success.email_sent', [], 'login'));
 
                 return $form;

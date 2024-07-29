@@ -13,8 +13,7 @@ namespace App\Extension;
 
 use App\Enum\BooleanType;
 use App\Helper\DateTimeFormatter;
-use DateTime;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -85,14 +84,12 @@ class TwigExtension extends AbstractExtension
      *
      * @return string
      */
-    private function prependDayName(DateTime $date)
+    private function prependDayName(\DateTime $date)
     {
         return $this->translator->trans('date_time.'.$date->format('D'), [], 'framework');
     }
 
     /**
-     * @param $value
-     *
      * @return string
      */
     public function booleanFilter($value)

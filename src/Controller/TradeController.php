@@ -18,7 +18,7 @@ use App\Enum\EventChangeType;
 use App\Service\EmailService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/trade")
@@ -38,9 +38,9 @@ class TradeController extends BaseFormController
     /**
      * @Route("/accept/{eventOffer}", name="trade_accept")
      *
-     * @throws \Exception
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \Exception
      */
     public function acceptAction(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
     {
@@ -55,14 +55,14 @@ class TradeController extends BaseFormController
                 if (!$eventOffer->canExecute()) {
                     $this->displaySuccess($translator->trans('accept.success.trade_accepted', [], 'trade'));
                 } else {
-                    //execute trade
+                    // execute trade
                     $manager = $this->getDoctrine()->getManager();
                     foreach ($eventOffer->getSenderOwnedEvents() as $senderOwnedEvent) {
                         $senderOwnedEvent->setClinic($eventOffer->getReceiverClinic());
                         $senderOwnedEvent->setDoctor($eventOffer->getReceiver());
                         $senderOwnedEvent->undoConfirm();
 
-                        //save history
+                        // save history
                         $eventPast = EventPast::create($senderOwnedEvent, EventChangeType::TRADED_TO_NEW_OWNER, $eventOffer->getReceiver());
                         $manager->persist($eventPast);
                     }
@@ -71,14 +71,14 @@ class TradeController extends BaseFormController
                         $receiverOwnedEvent->setDoctor($eventOffer->getSender());
                         $receiverOwnedEvent->undoConfirm();
 
-                        //save history
+                        // save history
                         $eventPast = EventPast::create($receiverOwnedEvent, EventChangeType::TRADED_TO_NEW_OWNER, $eventOffer->getSender());
                         $manager->persist($eventPast);
                     }
                     $manager->persist($eventOffer);
                     $manager->flush();
 
-                    //inform sender
+                    // inform sender
                     $emailService->sendActionEmail(
                         $eventOffer->getReceiver()->getEmail(),
                         $translator->trans('emails.offer_accepted.subject', [], 'trade'),
@@ -97,9 +97,9 @@ class TradeController extends BaseFormController
     /**
      * @Route("/decline/{eventOffer}", name="trade_decline")
      *
-     * @throws \Exception
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \Exception
      */
     public function declineAction(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService)
     {
@@ -110,7 +110,7 @@ class TradeController extends BaseFormController
                 $this->displaySuccess($translator->trans('decline.success.trade_decline', [], 'trade'));
                 $eventOffer->tryMarkAsResolved();
 
-                //inform sender
+                // inform sender
                 $emailService->sendActionEmail(
                     $eventOffer->getReceiver()->getEmail(),
                     $translator->trans('emails.offer_declined.subject', [], 'trade'),

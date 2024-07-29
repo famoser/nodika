@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/invite")
@@ -26,8 +26,6 @@ class InviteController extends LoginController
 {
     /**
      * @Route("/doctor/{guid}", name="invite_doctor")
-     *
-     * @param $guid
      *
      * @return Response
      */
@@ -40,14 +38,14 @@ class InviteController extends LoginController
             return $this->redirectToRoute('login');
         }
 
-        //ensure user can indeed login
+        // ensure user can indeed login
         if (!$user->isEnabled()) {
             $this->displayError($translator->trans('login.danger.login_disabled', [], 'login'));
 
             return $this->redirectToRoute('login');
         }
 
-        //check if login still valid
+        // check if login still valid
         if (null !== $user->getLastLoginDate()) {
             $this->displayError($translator->trans('doctor.danger.already_login_occurred', [], 'invite'));
             $user->invitationAccepted();
@@ -56,30 +54,30 @@ class InviteController extends LoginController
             return $this->redirectToRoute('login');
         }
 
-        //consider displaying error & logout programmatically if already logged in
+        // consider displaying error & logout programmatically if already logged in
 
-        //present set password form
+        // present set password form
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
                 ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
             $request,
             function ($form) use ($user, $translator, $request) {
-                //check for valid password
+                // check for valid password
                 if ($user->getPlainPassword() !== $user->getRepeatPlainPassword()) {
                     $this->displayError($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
 
                     return $form;
                 }
 
-                //display success
+                // display success
                 $this->displaySuccess($translator->trans('doctor.success.access_created', [], 'invite'));
 
-                //set new password & save
+                // set new password & save
                 $user->setPassword();
                 $user->setResetHash();
                 $this->fastSave($user);
 
-                //login user & redirect
+                // login user & redirect
                 $this->loginUser($request, $user);
 
                 return $this->redirectToRoute('index_index');

@@ -17,11 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BaseController extends AbstractController
 {
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() +
             [
@@ -103,8 +103,6 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @param $type
-     * @param $message
      * @param string $link
      */
     private function displayFlash($type, $message, $link = null)
@@ -141,7 +139,7 @@ class BaseController extends AbstractController
      *
      * @param Breadcrumb[] $breadcrumbs
      */
-    protected function render(string $view, array $parameters = [], Response $response = null, array $breadcrumbs = []): Response
+    protected function render(string $view, array $parameters = [], ?Response $response = null, array $breadcrumbs = []): Response
     {
         $parameters['breadcrumbs'] = array_merge($this->getIndexBreadcrumbs(), $breadcrumbs);
 
