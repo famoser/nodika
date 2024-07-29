@@ -1,13 +1,5 @@
-app:
-  resource: "../src/Controller/"
-  type:     annotation
-
-app_administration:
-  resource: "../src/Controller/Administration/"
-  type:     annotation
-  prefix:   /administration
-
-app_api:
-  resource: "../src/Controller/Api/"
-  type:     annotation
-  prefix:   /api
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
