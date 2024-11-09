@@ -15,10 +15,10 @@ use App\Controller\Administration\Base\BaseController;
 use App\Entity\Clinic;
 use App\Form\Clinic\RemoveType;
 use App\Model\Breadcrumb;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/clinics")

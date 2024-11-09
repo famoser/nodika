@@ -24,6 +24,7 @@ trait ThingTrait
      * @var string
      *
      * @ORM\Column(type="text")
+     *
      * @Assert\NotBlank()
      */
     private $name;

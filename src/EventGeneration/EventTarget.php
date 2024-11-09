@@ -108,9 +108,6 @@ class EventTarget
     /** @var int[] */
     private $eventTypeResponsibilitiesTaken = [];
 
-    /**
-     * @param $eventType
-     */
     public function restrictEventTypeResponsibility($eventType, int $count = 0)
     {
         $this->restrictResponsibilityForEventType[$eventType] = true;
@@ -119,21 +116,16 @@ class EventTarget
     }
 
     /**
-     * @param $eventType
-     *
      * @return bool
      */
     public function canAssumeResponsibility($eventType)
     {
         return
-            !isset($this->restrictResponsibilityForEventType[$eventType]) ||
-            !$this->restrictResponsibilityForEventType[$eventType] ||
-            $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
+            !isset($this->restrictResponsibilityForEventType[$eventType])
+            || !$this->restrictResponsibilityForEventType[$eventType]
+            || $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
     }
 
-    /**
-     * @param $eventType
-     */
     public function assumeResponsibility($eventType)
     {
         if (!isset($this->eventTypeResponsibilitiesTaken[$eventType])) {
@@ -144,8 +136,6 @@ class EventTarget
     }
 
     /**
-     * @param $weights
-     *
      * @return float|int
      */
     public function calculateResponsibility($weights)

@@ -11,8 +11,7 @@
 
 namespace App\Enum\Base;
 
-use ReflectionClass;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class BaseEnum
 {
@@ -31,8 +30,6 @@ abstract class BaseEnum
     /**
      * returns a translation string for the passed enum value.
      *
-     * @param $enumValue
-     *
      * @return string
      */
     public static function getTranslation($enumValue, TranslatorInterface $translator)
@@ -44,8 +41,6 @@ abstract class BaseEnum
 
     /**
      * returns a translation string for the passed enum value.
-     *
-     * @param $enumValue
      *
      * @return string
      */
@@ -71,8 +66,6 @@ abstract class BaseEnum
     /**
      * makes from camelCase => camel_case.
      *
-     * @param $camelCase
-     *
      * @return string
      */
     private static function camelCaseToTranslation($camelCase)
@@ -87,7 +80,7 @@ abstract class BaseEnum
      */
     private function getPossibleValuesInternal()
     {
-        $reflection = new ReflectionClass(static::class);
+        $reflection = new \ReflectionClass(static::class);
 
         return array_values($reflection->getConstants());
     }
@@ -100,7 +93,7 @@ abstract class BaseEnum
     private function getChoicesForBuilderInternal()
     {
         $res = [];
-        $reflection = new ReflectionClass(static::class);
+        $reflection = new \ReflectionClass(static::class);
         $choices = $reflection->getConstants();
 
         foreach ($choices as $name => $value) {
@@ -114,13 +107,11 @@ abstract class BaseEnum
     /**
      * returns a translation string for the passed enum value.
      *
-     * @param $enumValue
-     *
      * @return bool|string
      */
     private function getTranslationInternal($enumValue, TranslatorInterface $translator)
     {
-        $reflection = new ReflectionClass(static::class);
+        $reflection = new \ReflectionClass(static::class);
 
         return $translator->trans($this->getTextInternal($enumValue, $reflection), [], 'enum_'.$this->camelCaseToTranslation($reflection->getShortName()));
     }
@@ -128,15 +119,14 @@ abstract class BaseEnum
     /**
      * returns a translation string for the passed enum value.
      *
-     * @param $enumValue
-     * @param ReflectionClass $reflection
+     * @param \ReflectionClass $reflection
      *
      * @return bool|string
      */
     private function getTextInternal($enumValue, $reflection = null)
     {
         if (null === $reflection) {
-            $reflection = new ReflectionClass(static::class);
+            $reflection = new \ReflectionClass(static::class);
         }
 
         $choices = $reflection->getConstants();

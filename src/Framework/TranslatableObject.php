@@ -51,8 +51,6 @@ abstract class TranslatableObject
 
     /**
      * get the prefix of the translation domain of this object.
-     *
-     * @return mixed
      */
     abstract protected function getTranslationDomainPrefix();
 

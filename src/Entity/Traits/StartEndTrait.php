@@ -29,9 +29,6 @@ trait StartEndTrait
      */
     private $endDateTime;
 
-    /**
-     * @return \DateTime
-     */
     public function getStartDateTime(): ?\DateTime
     {
         return $this->startDateTime;
@@ -42,9 +39,6 @@ trait StartEndTrait
         $this->startDateTime = $startDateTime;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getEndDateTime(): ?\DateTime
     {
         return $this->endDateTime;

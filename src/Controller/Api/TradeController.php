@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/trade")
@@ -37,7 +37,7 @@ class TradeController extends BaseApiController
      */
     public function apiMyEventsAction()
     {
-        //get all tradeable events
+        // get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
         $searchModel->setClinics($this->getUser()->getClinics());
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
@@ -59,11 +59,11 @@ class TradeController extends BaseApiController
      */
     public function theirEventsAction()
     {
-        //get all tradeable events
+        // get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
         $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
 
-        //exclude own events
+        // exclude own events
         $apiEvents = [];
         foreach ($events as $event) {
             if (!$this->getUser()->getClinics()->contains($event->getClinic())) {
@@ -120,13 +120,11 @@ class TradeController extends BaseApiController
     /**
      * constructs the event offer, returns false if any values are wrong.
      *
-     * @param $values
-     *
      * @return EventOffer|bool
      */
     private function constructEventOffer($values)
     {
-        //check POST parameters
+        // check POST parameters
         $required = ['sender_event_ids', 'receiver_event_ids', 'sender_clinic_id', 'receiver_doctor_id', 'receiver_clinic_id', 'description'];
         foreach ($required as $item) {
             if (!isset($values[$item])) {
@@ -137,19 +135,19 @@ class TradeController extends BaseApiController
             return false;
         }
 
-        //get receiver stuff
+        // get receiver stuff
         $receiverEventIds = $this->getEventsFromIds($values['receiver_event_ids']);
         $receiverEvents = $this->getDoctrine()->getRepository(Event::class)->findBy(['id' => array_values($receiverEventIds)]);
         $receiverClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['receiver_clinic_id']);
         $receiverDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int) $values['receiver_doctor_id']);
 
-        //get sender stuff
+        // get sender stuff
         $senderEventIds = $this->getEventsFromIds($values['sender_event_ids']);
         $senderEvents = $this->getDoctrine()->getRepository(Event::class)->findBy(['id' => array_values($senderEventIds)]);
         $senderClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['sender_clinic_id']);
         $senderDoctor = $this->getUser();
 
-        //construct the offer
+        // construct the offer
         $eventOffer = new EventOffer();
         $eventOffer->setMessage($values['description']);
 
@@ -165,7 +163,7 @@ class TradeController extends BaseApiController
             $eventOffer->getEventsWhichChangeOwner()->add($receiverEvent);
         }
 
-        //save if offer is valid
+        // save if offer is valid
         if ($eventOffer->isValid()) {
             $this->fastSave($eventOffer);
 
@@ -178,15 +176,15 @@ class TradeController extends BaseApiController
     /**
      * @Route("/create", name="api_trade_create")
      *
+     * @return Response
+     *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     *
-     * @return Response
      */
     public function create(Request $request, EmailService $emailService, TranslatorInterface $translator)
     {
-        //try to construct offer from POST values
+        // try to construct offer from POST values
         $eventOffer = $this->constructEventOffer(json_decode($request->getContent(), true));
         if (!$eventOffer) {
             $this->displayError($translator->trans('index.danger.trade_offer_invalid', [], 'trade'));
@@ -194,7 +192,7 @@ class TradeController extends BaseApiController
             return new Response('NACK');
         }
 
-        //send out all authorization request emails
+        // send out all authorization request emails
         $emailService->sendActionEmail(
             $eventOffer->getReceiver()->getEmail(),
             $translator->trans('emails.new_offer.subject', [], 'trade'),

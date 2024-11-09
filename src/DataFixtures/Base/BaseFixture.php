@@ -37,7 +37,7 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
         $this->eventGenerationService = $eventGenerationService;
     }
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
     }
@@ -139,8 +139,6 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
 
     /**
      * create random instances.
-     *
-     * @param $count
      */
     protected function loadSomeRandoms(ObjectManager $manager, $count = 5)
     {
@@ -152,8 +150,6 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
 
     /**
      * create an instance with all random values.
-     *
-     * @return mixed
      */
     protected function getRandomInstance()
     {

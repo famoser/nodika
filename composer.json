@@ -9,61 +9,47 @@
     "ext-pdo": "*",
     "ext-pdo_sqlite": "*",
     "composer/package-versions-deprecated": "^1.11",
-    "doctrine/common": "^2",
     "doctrine/doctrine-bundle": "^2",
-    "doctrine/doctrine-migrations-bundle": "^2",
+    "doctrine/doctrine-migrations-bundle": "^3",
     "doctrine/orm": "^2",
-    "dragonmantank/cron-expression": "^2.0",
+    "dragonmantank/cron-expression": "^2",
     "erusev/parsedown": "^1.6",
-    "fzaninotto/faker": "^1.7",
     "ramsey/uuid": "^3",
-    "sensio/framework-extra-bundle": "^5.1",
-    "symfony/apache-pack": "^1.0",
-    "symfony/asset": "^4.0",
-    "symfony/console": "^4.0",
-    "symfony/dependency-injection": "^4.0",
-    "symfony/dotenv": "^4.0",
-    "symfony/expression-language": "^4.0",
-    "symfony/flex": "^1.0",
-    "symfony/form": "^4.0",
-    "symfony/framework-bundle": "^4.0",
-    "symfony/maker-bundle": "^1.4",
-    "symfony/monolog-bundle": "^3.1",
-    "symfony/property-info": "^4.0",
-    "symfony/security-bundle": "^4.0",
-    "symfony/serializer": "^4.0",
-    "symfony/swiftmailer-bundle": "^3.1",
-    "symfony/translation": "^4.0",
-    "symfony/twig-bundle": "^4.0",
-    "symfony/validator": "^4.0",
-    "symfony/webpack-encore-bundle": "^1.7",
-    "symfony/yaml": "^4.0"
+    "symfony/console": "^7",
+    "symfony/dotenv": "^7",
+    "symfony/flex": "^1",
+    "symfony/form": "^7",
+    "symfony/framework-bundle": "^7",
+    "symfony/mailer": "^7",
+    "symfony/runtime": "*",
+    "symfony/security-bundle": "^7",
+    "symfony/serializer": "^7",
+    "symfony/translation": "^7",
+    "symfony/twig-bundle": "^7",
+    "symfony/validator": "^7",
+    "symfony/webpack-encore-bundle": "^2",
+    "symfony/yaml": "^7"
   },
   "require-dev": {
-    "brainmaestro/composer-git-hooks": "^2.6",
-    "doctrine/doctrine-fixtures-bundle": "^3.0",
+    "brainmaestro/composer-git-hooks": "^3",
+    "doctrine/doctrine-fixtures-bundle": "^3",
+    "fakerphp/faker": "^1",
     "famoser/agnes": "^4",
     "friendsofphp/php-cs-fixer": "^3",
-    "phpunit/phpunit": "^8",
-    "symfony/browser-kit": "^4.0",
-    "symfony/css-selector": "^4.0",
-    "symfony/debug-bundle": "^4.0",
-    "symfony/phpunit-bridge": "^4.0",
-    "symfony/requirements-checker": "^1.0",
-    "symfony/stopwatch": "^5.3",
-    "symfony/web-profiler-bundle": "^5.0",
-    "symfony/web-server-bundle": "^4.0"
+    "phpunit/phpunit": "^11",
+    "symfony/phpunit-bridge": "^7"
   },
   "config": {
     "preferred-install": {
       "*": "dist"
     },
     "platform": {
-      "php": "7.4"
+      "php": "8.2"
     },
     "sort-packages": true,
     "allow-plugins": {
-      "symfony/flex": true
+      "symfony/flex": true,
+      "symfony/runtime": true
     }
   },
   "autoload": {
@@ -76,29 +62,18 @@
       "App\\Tests\\": "tests/"
     }
   },
-  "replace": {
-    "symfony/polyfill-iconv": "*",
-    "symfony/polyfill-php70": "*",
-    "symfony/polyfill-php56": "*"
-  },
   "scripts": {
     "prepare-environment": [
       "vendor/bin/cghooks update",
-      "vendor/bin/requirements-checker",
-      "php bin/console doctrine:migrations:migrate -q",
-      "php bin/console doctrine:fixtures:load -q"
+      "php bin/console doctrine:migrations:migrate -q"
     ],
     "post-install-cmd": "@prepare-environment",
     "post-update-cmd": "@prepare-environment",
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd",
-      "security-checker security:check": "script",
-      "requirements-checker": "script"
+      "security-checker security:check": "script"
     }
-  },
-  "conflict": {
-    "symfony/symfony": "*"
   },
   "extra": {
     "projectTitle": "nodika",

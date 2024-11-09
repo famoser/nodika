@@ -4,11 +4,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
-###> symfony/web-server-bundle ###
-.web-server-pid
-###< symfony/web-server-bundle ###
-
 # nodejs
 /node_modules/
 
@@ -24,11 +19,12 @@ public/dist/*
 
 public/build
 ###> symfony/phpunit-bridge ###
-.phpunit
+.phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
 ###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 

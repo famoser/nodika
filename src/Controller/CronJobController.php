@@ -20,7 +20,7 @@ use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/cron")
@@ -29,8 +29,6 @@ class CronJobController extends BaseDoctrineController
 {
     /**
      * @Route("/test/{secret}", name="cron_test")
-     *
-     * @param $secret
      *
      * @return Response
      */
@@ -42,13 +40,11 @@ class CronJobController extends BaseDoctrineController
     /**
      * @Route("/daily/{secret}", name="cron_daily")
      *
-     * @param $secret
+     * @return Response
      *
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
-     *
-     * @return Response
      */
     public function dailyAction($secret, TranslatorInterface $translator, EmailService $emailService)
     {
@@ -59,14 +55,14 @@ class CronJobController extends BaseDoctrineController
         $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
         $remainderEmailInterval = $setting->getSendRemainderDaysInterval();
         if (0 === date('z') % $remainderEmailInterval) {
-            //get all events which might be a problemsupportMail
+            // get all events which might be a problemsupportMail
             $eventRepo = $this->getDoctrine()->getRepository(Event::class);
             $eventSearchModel = new SearchModel(SearchModel::NONE);
             $eventSearchModel->setEndDateTime(new \DateTime('now + '.($setting->getCanConfirmDaysAdvance() - $setting->getSendRemainderDaysInterval()).' days'));
             $eventSearchModel->setIsConfirmed(false);
             $events = $eventRepo->search($eventSearchModel);
 
-            //count all events which need to be remainded
+            // count all events which need to be remainded
             $emailRemainder = [];
             foreach ($events as $event) {
                 if (null !== $event->getDoctor()) {
@@ -78,9 +74,9 @@ class CronJobController extends BaseDoctrineController
                 $this->fastSave($event);
             }
 
-            //send remainders
+            // send remainders
             foreach ($emailRemainder as $email => $eventCount) {
-                //send email to clinic
+                // send email to clinic
                 $subject = $translator->trans('remainder.subject', [], 'cron');
                 $body = $translator->trans('remainder.message', ['%count%' => $eventCount], 'cron');
                 $actionText = $translator->trans('remainder.action_text', [], 'cron');
@@ -89,17 +85,17 @@ class CronJobController extends BaseDoctrineController
             }
         }
 
-        //send the daily, annoying remainders
+        // send the daily, annoying remainders
         $mustConfirmBy = $setting->getMustConfirmDaysAdvance();
 
-        //get all events which might be a problem
+        // get all events which might be a problem
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $eventSearchModel = new SearchModel(SearchModel::NONE);
         $eventSearchModel->setEndDateTime(new \DateTime('now + '.$mustConfirmBy.' days'));
         $eventSearchModel->setIsConfirmed(false);
         $events = $eventRepo->search($eventSearchModel);
 
-        //get admin emails
+        // get admin emails
         $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
         $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
         $adminEmails = [];
@@ -107,7 +103,7 @@ class CronJobController extends BaseDoctrineController
             $adminEmails[] = $admin->getEmail();
         }
 
-        //send an extra email for each late event
+        // send an extra email for each late event
         foreach ($events as $event) {
             $targetEmail = null;
             $ownerName = null;
@@ -119,7 +115,7 @@ class CronJobController extends BaseDoctrineController
                 $ownerName = $event->getClinic()->getName();
             }
 
-            //send email to clinic
+            // send email to clinic
             $subject = $translator->trans('too_late_remainder.subject', [], 'cron');
             $body = $translator->trans(
                 'too_late_remainder.message',
