@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the nodika project.
  *
@@ -9,54 +11,49 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller;
+namespace App\Command;
 
-use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\Setting;
+use App\Helper\DoctrineHelper;
 use App\Model\Event\SearchModel;
-use App\Service\EmailService;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Interfaces\EmailServiceInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\LockableTrait;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/cron")
- */
-class CronJobController extends BaseDoctrineController
+class RunPeriodicTasks extends Command
 {
-    /**
-     * @Route("/test/{secret}", name="cron_test")
-     *
-     * @return Response
-     */
-    public function testAction($secret)
+    use LockableTrait;
+
+    public function __construct(private readonly ManagerRegistry $doctrine, private readonly TranslatorInterface $translator, private readonly RouterInterface $router, private readonly EmailServiceInterface $emailService, private readonly LoggerInterface $logger)
     {
-        return new Response($secret === $this->getParameter('APP_SECRET') ? 'successful' : 'access denied');
+        parent::__construct();
     }
 
-    /**
-     * @Route("/daily/{secret}", name="cron_daily")
-     *
-     * @return Response
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function dailyAction($secret, TranslatorInterface $translator, EmailService $emailService)
+    protected function configure(): void
     {
-        if ($secret !== $this->getParameter('APP_SECRET')) {
-            return new Response('access denied');
-        }
+        $this
+            // the name of the command (the part after "bin/console")
+            ->setName('app:run-periodic-tasks:daily')
+            // the short description shown while running "php bin/console list"
+            ->setDescription('Runs period daily tasks, e.g. dispatching reminder emails.');
+    }
 
-        $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $setting = $this->doctrine->getRepository(Setting::class)->findSingle();
         $remainderEmailInterval = $setting->getSendRemainderDaysInterval();
         if (0 === date('z') % $remainderEmailInterval) {
-            // get all events which might be a problemsupportMail
-            $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+            // get all events which might be a problem
+            $eventRepo = $this->doctrine->getRepository(Event::class);
             $eventSearchModel = new SearchModel(SearchModel::NONE);
             $eventSearchModel->setEndDateTime(new \DateTime('now + '.($setting->getCanConfirmDaysAdvance() - $setting->getSendRemainderDaysInterval()).' days'));
             $eventSearchModel->setIsConfirmed(false);
@@ -71,17 +68,17 @@ class CronJobController extends BaseDoctrineController
                     ++$emailRemainder[$event->getClinic()->getEmail()];
                 }
                 $event->setLastRemainderEmailSent(new \DateTime());
-                $this->fastSave($event);
+                DoctrineHelper::persistAndFlush($this->doctrine, $event);
             }
 
             // send remainders
             foreach ($emailRemainder as $email => $eventCount) {
                 // send email to clinic
-                $subject = $translator->trans('remainder.subject', [], 'cron');
-                $body = $translator->trans('remainder.message', ['%count%' => $eventCount], 'cron');
-                $actionText = $translator->trans('remainder.action_text', [], 'cron');
-                $actionLink = $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
-                $emailService->sendActionEmail($email, $subject, $body, $actionText, $actionLink);
+                $subject = $this->translator->trans('remainder.subject', [], 'cron');
+                $body = $this->translator->trans('remainder.message', ['%count%' => $eventCount], 'cron');
+                $actionText = $this->translator->trans('remainder.action_text', [], 'cron');
+                $actionLink = $this->router->generate('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+                $this->emailService->sendActionEmail($email, $subject, $body, $actionText, $actionLink);
             }
         }
 
@@ -89,14 +86,14 @@ class CronJobController extends BaseDoctrineController
         $mustConfirmBy = $setting->getMustConfirmDaysAdvance();
 
         // get all events which might be a problem
-        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $eventRepo = $this->doctrine->getRepository(Event::class);
         $eventSearchModel = new SearchModel(SearchModel::NONE);
         $eventSearchModel->setEndDateTime(new \DateTime('now + '.$mustConfirmBy.' days'));
         $eventSearchModel->setIsConfirmed(false);
         $events = $eventRepo->search($eventSearchModel);
 
         // get admin emails
-        $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
+        $userRepo = $this->doctrine->getRepository(Doctor::class);
         $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
         $adminEmails = [];
         foreach ($admins as $admin) {
@@ -116,8 +113,8 @@ class CronJobController extends BaseDoctrineController
             }
 
             // send email to clinic
-            $subject = $translator->trans('too_late_remainder.subject', [], 'cron');
-            $body = $translator->trans(
+            $subject = $this->translator->trans('too_late_remainder.subject', [], 'cron');
+            $body = $this->translator->trans(
                 'too_late_remainder.message',
                 [
                     '%event_short%' => $event->toShort(),
@@ -125,14 +122,18 @@ class CronJobController extends BaseDoctrineController
                 ],
                 'cron'
             );
-            $actionText = $translator->trans('too_late_remainder.action_text', [], 'cron');
-            $actionLink = $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
-            $emailService->sendActionEmail($targetEmail, $subject, $body, $actionText, $actionLink, $adminEmails);
+            $actionText = $this->translator->trans('too_late_remainder.action_text', [], 'cron');
+            $actionLink = $this->router->generate('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $this->emailService->sendActionEmail($targetEmail, $subject, $body, $actionText, $actionLink, $adminEmails);
 
             $event->setLastRemainderEmailSent(new \DateTime());
-            $this->fastSave($event);
+            DoctrineHelper::persistAndFlush($this->doctrine, $event);
         }
 
-        return new Response('finished');
+        $message = 'Reminders sent for '.count($events).' events.';
+        $this->logger->info($message);
+        $output->writeln($message);
+
+        return Command::SUCCESS;
     }
 }
