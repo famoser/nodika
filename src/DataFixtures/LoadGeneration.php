@@ -70,7 +70,7 @@ class LoadGeneration extends Fixture implements OrderedFixtureInterface
         ];
         foreach ($dateExceptions as $index => $dateException) {
             $exception = new EventGenerationDateException();
-            $exception->setStartDateTime(new \DateTime('yesterday - ' + ($index * 5 - 1) + ' day'));
+            $exception->setStartDateTime(new \DateTime('yesterday - ' + (-1) + ' day'));
             $exception->setEndDateTime(new \DateTime('yesterday - ' + ($index * 5) + ' day'));
             $exception->setEventType($dateException[0]);
             $exception->setEventGeneration($generation);

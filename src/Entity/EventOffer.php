@@ -247,8 +247,8 @@ class EventOffer extends BaseEntity
         return false;
     }
 
-    private $cacheSenderOwned;
-    private $cacheReceiverOwned;
+    private ?array $cacheSenderOwned = null;
+    private ?array $cacheReceiverOwned = null;
     private ?bool $cacheIsValid = null;
 
     /**
