@@ -16,23 +16,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait CommunicationTrait
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $phone;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $phone = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Email()
-     */
-    private $email;
+    #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private ?string $email = null;
 
     /**
      * @return string
@@ -79,7 +69,7 @@ trait CommunicationTrait
      *
      * @return string[]
      */
-    public function getCommunicationLines()
+    public function getCommunicationLines(): array
     {
         $res = [];
         if (mb_strlen($this->getPhone()) > 0) {

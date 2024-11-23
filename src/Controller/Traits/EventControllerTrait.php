@@ -25,7 +25,7 @@ trait EventControllerTrait
      *
      * @return string[][]
      */
-    private function toDataTable($events)
+    private function toDataTable($events): array
     {
         $data = [];
         foreach ($events as $event) {
@@ -51,9 +51,9 @@ trait EventControllerTrait
      *
      * @return string[][]
      */
-    private function toSummaryTable($events)
+    private function toSummaryTable(array $events): array
     {
-        if (0 === \count($events)) {
+        if ([] === $events) {
             return [];
         }
 
@@ -90,7 +90,7 @@ trait EventControllerTrait
     /**
      * @return string[]
      */
-    private function getEventsHeader(TranslatorInterface $translator)
+    private function getEventsHeader(TranslatorInterface $translator): array
     {
         $start = $translator->trans('start_date_time', [], 'trait_start_end');
         $end = $translator->trans('end_date_time', [], 'trait_start_end');

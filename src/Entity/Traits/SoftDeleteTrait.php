@@ -17,17 +17,14 @@ trait SoftDeleteTrait
 {
     /**
      * @var \DateTime|null
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $deletedAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $deletedAt = null;
 
     /**
      * returns if the person can be invited.
-     *
-     * @return bool
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return null !== $this->deletedAt;
     }
@@ -35,7 +32,7 @@ trait SoftDeleteTrait
     /**
      * soft deletes.
      */
-    public function delete()
+    public function delete(): void
     {
         $this->deletedAt = new \DateTime();
     }

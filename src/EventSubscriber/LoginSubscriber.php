@@ -23,17 +23,14 @@ use Symfony\Component\Security\Http\SecurityEvents;
  */
 class LoginSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     public function __construct(ManagerRegistry $registry)
     {
         $this->doctrine = $registry;
     }
 
-    public function onInteractiveLogin(InteractiveLoginEvent $event)
+    public function onInteractiveLogin(InteractiveLoginEvent $event): void
     {
         /** @var Doctor $doctor */
         $doctor = $event->getAuthenticationToken()->getUser();

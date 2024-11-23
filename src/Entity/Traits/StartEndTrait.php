@@ -15,19 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait StartEndTrait
 {
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $startDateTime;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $startDateTime = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $endDateTime;
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $endDateTime = null;
 
     public function getStartDateTime(): ?\DateTime
     {

@@ -22,45 +22,27 @@ trait EventTrait
 
     /**
      * @var \DateTime|null
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $confirmDateTime;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $confirmDateTime = null;
 
-    /**
-     * @var Doctor|null
-     *
-     * @ORM\ManyToOne(targetEntity="Doctor")
-     */
-    private $confirmedByDoctor;
+    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    private ?Doctor $confirmedByDoctor = null;
 
     /**
      * @var \DateTime|null
-     *
-     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $lastRemainderEmailSent;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastRemainderEmailSent = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $eventType = EventType::UNSPECIFIED;
+    #[ORM\Column(type: 'integer')]
+    private ?int $eventType = EventType::UNSPECIFIED;
 
-    /**
-     * @var Clinic
-     *
-     * @ORM\ManyToOne(targetEntity="Clinic", inversedBy="events")
-     */
-    private $clinic;
+    #[ORM\ManyToOne(targetEntity: \Clinic::class, inversedBy: 'events')]
+    private ?Clinic $clinic = null;
 
-    /**
-     * @var Doctor|null
-     *
-     * @ORM\ManyToOne(targetEntity="Doctor", inversedBy="events")
-     */
-    private $doctor;
+    #[ORM\ManyToOne(targetEntity: \Doctor::class, inversedBy: 'events')]
+    private ?Doctor $doctor = null;
 
     public function getEventType(): int
     {
@@ -112,21 +94,18 @@ trait EventTrait
         $this->doctor = $doctor;
     }
 
-    /**
-     * @return bool
-     */
-    public function isConfirmed()
+    public function isConfirmed(): bool
     {
         return null !== $this->getConfirmDateTime();
     }
 
-    public function confirm(Doctor $user)
+    public function confirm(Doctor $user): void
     {
         $this->confirmDateTime = new \DateTime();
         $this->confirmedByDoctor = $user;
     }
 
-    public function undoConfirm()
+    public function undoConfirm(): void
     {
         $this->confirmedByDoctor = null;
         $this->confirmDateTime = null;
@@ -147,7 +126,7 @@ trait EventTrait
         $this->doctor = $eventTrait->getDoctor();
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
         $now = new \DateTime();
 

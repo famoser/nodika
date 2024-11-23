@@ -15,26 +15,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait PersonTrait
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $jobTitle;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $jobTitle = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $givenName;
+    #[ORM\Column(type: 'text')]
+    private ?string $givenName = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $familyName;
+    #[ORM\Column(type: 'text')]
+    private ?string $familyName = null;
 
     /**
      * @return string
@@ -44,7 +32,7 @@ trait PersonTrait
         return $this->jobTitle;
     }
 
-    public function setJobTitle(string $jobTitle)
+    public function setJobTitle(string $jobTitle): void
     {
         $this->jobTitle = $jobTitle;
     }
@@ -97,10 +85,7 @@ trait PersonTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->getGivenName().' '.$this->getFamilyName();
     }

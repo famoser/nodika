@@ -20,49 +20,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait AddressTrait
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $street;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $street = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $streetNr;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $streetNr = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $addressLine;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $addressLine = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $postalCode;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $postalCode = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $city;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $city = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @Assert\Country()
-     */
-    private $country = 'CH';
+    #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Country]
+    private ?string $country = 'CH';
 
     /**
      * Get street.
@@ -209,7 +184,7 @@ trait AddressTrait
      *
      * @return string[]
      */
-    public function getAddressLines()
+    public function getAddressLines(): array
     {
         $res = [];
         $lineOne = $this->getStreet();

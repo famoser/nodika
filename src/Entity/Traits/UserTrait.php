@@ -16,51 +16,25 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait UserTrait
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", unique=true)
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Email()
-     */
-    private $email;
+    #[ORM\Column(type: 'text', unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private ?string $email = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $passwordHash;
+    #[ORM\Column(type: 'text')]
+    private ?string $passwordHash = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $resetHash;
+    #[ORM\Column(type: 'text')]
+    private ?string $resetHash = null;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $isEnabled = true;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isEnabled = true;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $registrationDate;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $registrationDate = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $lastLoginDate;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastLoginDate = null;
 
     /**
      * @var string
@@ -108,7 +82,7 @@ trait UserTrait
         return $this->registrationDate;
     }
 
-    public function setRegistrationDate(?\DateTime $registrationDate)
+    public function setRegistrationDate(?\DateTime $registrationDate): void
     {
         $this->registrationDate = $registrationDate;
     }
@@ -201,7 +175,7 @@ trait UserTrait
      *
      * @return string|null The salt
      */
-    public function getSalt()
+    public function getSalt(): null
     {
         return null;
     }
@@ -216,7 +190,7 @@ trait UserTrait
      *
      * @see AccountExpiredException
      */
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         return true;
     }
@@ -231,7 +205,7 @@ trait UserTrait
      *
      * @see LockedException
      */
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return true;
     }
@@ -246,7 +220,7 @@ trait UserTrait
      *
      * @see CredentialsExpiredException
      */
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired(): bool
     {
         return true;
     }
@@ -282,7 +256,7 @@ trait UserTrait
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         $this->setPlainPassword(null);
         $this->setRepeatPlainPassword(null);
@@ -302,11 +276,7 @@ trait UserTrait
             return false;
         }
 
-        if ($this->getPassword() !== $user->getPassword()) {
-            return false;
-        }
-
-        return true;
+        return $this->getPassword() === $user->getPassword();
     }
 
     /**
@@ -322,7 +292,7 @@ trait UserTrait
     /**
      * hashes the plainPassword and erases credentials.
      */
-    public function setPassword()
+    public function setPassword(): void
     {
         $this->passwordHash = password_hash($this->getPlainPassword(), \PASSWORD_BCRYPT);
         $this->setPlainPassword(null);
@@ -334,7 +304,7 @@ trait UserTrait
     /**
      * creates a new reset hash.
      */
-    public function setResetHash()
+    public function setResetHash(): void
     {
         $newHash = '';
         // 0-9, A-Z, a-z
@@ -342,7 +312,8 @@ trait UserTrait
         for ($i = 0; $i < 20; ++$i) {
             $rand = mt_rand(20, 160);
             $allowed = false;
-            for ($j = 0; $j < \count($allowedRanges); ++$j) {
+            $counter = \count($allowedRanges);
+            for ($j = 0; $j < $counter; ++$j) {
                 if ($allowedRanges[$j][0] <= $rand && $allowedRanges[$j][1] >= $rand) {
                     $allowed = true;
                 }

@@ -44,3 +44,7 @@ yarn-error.log
 
 .config
 .npmrc
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

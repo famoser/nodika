@@ -15,26 +15,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait EventGenerationTarget
 {
-    /**
-     * @var float
-     *
-     * @ORM\Column(type="decimal")
-     */
-    private $weight = 1;
+    #[ORM\Column(type: 'decimal')]
+    private ?string $weight = 1;
 
     /**
      * @var float|null
-     *
-     * @ORM\Column(type="decimal", nullable=true)
      */
-    private $generationScore;
+    #[ORM\Column(type: 'decimal', nullable: true)]
+    private ?string $generationScore = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $defaultOrder = 1;
+    #[ORM\Column(type: 'integer')]
+    private ?int $defaultOrder = 1;
 
     public function getWeight(): float
     {

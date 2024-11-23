@@ -20,47 +20,27 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait ChangeAwareTrait
 {
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $createdAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $lastChangedAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastChangedAt = null;
 
-    /**
-     * @var Doctor
-     *
-     * @ORM\ManyToOne(targetEntity="Doctor")
-     */
-    private $createdBy;
+    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    private ?Doctor $createdBy = null;
 
-    /**
-     * @var Doctor
-     *
-     * @ORM\ManyToOne(targetEntity="Doctor")
-     */
-    private $lastChangedBy;
+    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    private ?Doctor $lastChangedBy = null;
 
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersistTime()
+    #[ORM\PrePersist]
+    public function prePersistTime(): void
     {
         $this->createdAt = new \DateTime();
         $this->lastChangedAt = new \DateTime();
     }
 
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdateTime()
+    #[ORM\PreUpdate]
+    public function preUpdateTime(): void
     {
         $this->lastChangedAt = new \DateTime();
     }
@@ -94,7 +74,7 @@ trait ChangeAwareTrait
     /**
      * register who has changed the entity.
      */
-    public function registerChangeBy(Doctor $doctor)
+    public function registerChangeBy(Doctor $doctor): void
     {
         if (null === $this->createdBy) {
             $this->createdBy = $doctor;

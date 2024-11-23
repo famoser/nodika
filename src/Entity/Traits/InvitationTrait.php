@@ -16,19 +16,11 @@ use Ramsey\Uuid\Uuid;
 
 trait InvitationTrait
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $invitationIdentifier;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $invitationIdentifier = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $lastInvitation;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $lastInvitation = null;
 
     /**
      * @throws \Exception
@@ -41,7 +33,7 @@ trait InvitationTrait
         return $this->invitationIdentifier;
     }
 
-    public function invitationAccepted()
+    public function invitationAccepted(): void
     {
         $this->invitationIdentifier = null;
     }

@@ -20,24 +20,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait CreationAwareTrait
 {
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $createdAt;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
 
-    /**
-     * @var Doctor
-     *
-     * @ORM\ManyToOne(targetEntity="Doctor")
-     */
-    private $createdBy;
+    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    private ?Doctor $createdBy = null;
 
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersistTime()
+    #[ORM\PrePersist]
+    public function prePersistTime(): void
     {
         $this->createdAt = new \DateTime();
     }
@@ -58,7 +48,7 @@ trait CreationAwareTrait
     /**
      * register who has changed the entity.
      */
-    public function setCreatedBy(Doctor $doctor)
+    public function setCreatedBy(Doctor $doctor): void
     {
         $this->createdBy = $doctor;
     }
