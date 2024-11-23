@@ -14,6 +14,7 @@ namespace App\Entity\Traits;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Enum\EventType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait EventTrait
@@ -23,25 +24,25 @@ trait EventTrait
     /**
      * @var \DateTime|null
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $confirmDateTime = null;
 
-    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    #[ORM\ManyToOne(targetEntity: Doctor::class)]
     private ?Doctor $confirmedByDoctor = null;
 
     /**
      * @var \DateTime|null
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastRemainderEmailSent = null;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $eventType = EventType::UNSPECIFIED;
 
-    #[ORM\ManyToOne(targetEntity: \Clinic::class, inversedBy: 'events')]
+    #[ORM\ManyToOne(targetEntity: Clinic::class, inversedBy: 'events')]
     private ?Clinic $clinic = null;
 
-    #[ORM\ManyToOne(targetEntity: \Doctor::class, inversedBy: 'events')]
+    #[ORM\ManyToOne(targetEntity: Doctor::class, inversedBy: 'events')]
     private ?Doctor $doctor = null;
 
     public function getEventType(): int

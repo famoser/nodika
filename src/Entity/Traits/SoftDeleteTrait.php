@@ -11,6 +11,7 @@
 
 namespace App\Entity\Traits;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait SoftDeleteTrait
@@ -18,7 +19,7 @@ trait SoftDeleteTrait
     /**
      * @var \DateTime|null
      */
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $deletedAt = null;
 
     /**

@@ -12,6 +12,7 @@
 namespace App\Entity\Traits;
 
 use App\Entity\Doctor;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /*
@@ -20,16 +21,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait ChangeAwareTrait
 {
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastChangedAt = null;
 
-    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    #[ORM\ManyToOne(targetEntity: Doctor::class)]
     private ?Doctor $createdBy = null;
 
-    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    #[ORM\ManyToOne(targetEntity: Doctor::class)]
     private ?Doctor $lastChangedBy = null;
 
     #[ORM\PrePersist]

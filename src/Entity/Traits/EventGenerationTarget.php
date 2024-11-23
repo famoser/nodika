@@ -11,20 +11,18 @@
 
 namespace App\Entity\Traits;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 trait EventGenerationTarget
 {
-    #[ORM\Column(type: 'decimal')]
-    private ?string $weight = 1;
+    #[ORM\Column(type: Types::DECIMAL)]
+    private ?float $weight = 1;
 
-    /**
-     * @var float|null
-     */
-    #[ORM\Column(type: 'decimal', nullable: true)]
-    private ?string $generationScore = null;
+    #[ORM\Column(type: Types::DECIMAL, nullable: true)]
+    private ?float $generationScore = null;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $defaultOrder = 1;
 
     public function getWeight(): float
