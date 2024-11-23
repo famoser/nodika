@@ -21,10 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class DoctorProvider extends BaseUserProvider
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $registry;
+    private ManagerRegistry $registry;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -39,11 +36,9 @@ class DoctorProvider extends BaseUserProvider
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @return UserInterface
-     *
      * @throws UnsupportedUserException if the account is not supported
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof Doctor) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
@@ -82,10 +77,8 @@ class DoctorProvider extends BaseUserProvider
      * Whether this provider supports the given user class.
      *
      * @param string $class
-     *
-     * @return bool
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return Doctor::class === $class;
     }

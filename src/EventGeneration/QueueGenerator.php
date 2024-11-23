@@ -16,12 +16,12 @@ class QueueGenerator
     /**
      * @var QueueEntry[]
      */
-    private $queueEntries;
+    private ?array $queueEntries = null;
 
     /**
      * @var int|mixed
      */
-    private $totalScore;
+    private float|int $totalScore;
 
     /**
      * @param array $weightedTargets the targets the queue should distribute evenly (targetId => relativeSize) (int => double)
@@ -44,7 +44,7 @@ class QueueGenerator
     /**
      * @param array $entries if you want to specify what happened before
      */
-    public function warmUp(array $entries)
+    public function warmUp(array $entries): void
     {
         // preserve original scores
         $originalScores = [];
@@ -80,14 +80,14 @@ class QueueGenerator
         }
     }
 
-    private function incrementAll()
+    private function incrementAll(): void
     {
         foreach ($this->queueEntries as $queueEntry) {
             $queueEntry->increment();
         }
     }
 
-    public function forceNext(int $clinic)
+    public function forceNext(int $clinic): void
     {
         $this->incrementAll();
 
@@ -106,7 +106,7 @@ class QueueGenerator
         $minElement = null;
         $maxScore = \PHP_INT_MIN;
 
-        foreach ($this->queueEntries as $index => $entry) {
+        foreach ($this->queueEntries as $entry) {
             if ($entry->getScore() > $maxScore) {
                 $maxScore = $entry->getScore();
                 $minElement = $entry;
@@ -119,12 +119,12 @@ class QueueGenerator
     }
 
     /** @var QueueEntry[] */
-    private $queueEntriesBackup = [];
+    private array $queueEntriesBackup = [];
 
     /**
      * preserves the state.
      */
-    public function snapshot()
+    public function snapshot(): void
     {
         $this->queueEntriesBackup = [];
         foreach ($this->queueEntries as $key => $value) {
@@ -135,7 +135,7 @@ class QueueGenerator
     /**
      * resets the state to when the last time recoverSnapshot was called.
      */
-    public function recoverSnapshot()
+    public function recoverSnapshot(): void
     {
         $this->queueEntries = $this->queueEntriesBackup;
     }

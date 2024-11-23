@@ -24,7 +24,7 @@ class LoadEventTag extends BaseFixture
     /**
      * Load data fixtures with the passed EntityManager.
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $realExamples = [
             ['Notfalldienst', 'Sie kümmern sich um die Notfälle und nehmen die Anrufe der Notfalldienstnummer entgegen', EventTagColor::BLUE, EventTagType::ACTIVE_SERVICE],
@@ -45,10 +45,8 @@ class LoadEventTag extends BaseFixture
 
     /**
      * create an instance with all random values.
-     *
-     * @return EventTag
      */
-    protected function getRandomInstance()
+    protected function getRandomInstance(): EventTag
     {
         $eventLine = new EventTag();
         $this->fillThing($eventLine);

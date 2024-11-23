@@ -28,14 +28,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('startEnd', StartEndType::class, ['inherit_data' => true]);
         $builder->add('event', \App\Form\Traits\Event\EventType::class, ['inherit_data' => true]);
         $builder->add('eventTags', EntityType::class, ['class' => EventTag::class, 'multiple' => true, 'translation_domain' => 'entity_event_tag', 'label' => 'entity.plural', 'required' => false]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Event::class,

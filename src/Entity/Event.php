@@ -21,11 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An Event is a time unit which is assigned to a clinic or a person.
- *
- * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity(repositoryClass: \App\Repository\EventRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Event extends BaseEntity
 {
     use EventTrait;
@@ -33,29 +31,21 @@ class Event extends BaseEntity
     use SoftDeleteTrait;
 
     /**
-     * @var EventPast[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="EventPast", mappedBy="event", cascade={"all"})
-     *
-     * @ORM\OrderBy({"createdAt": "DESC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventPast>
      */
-    private $eventPast;
+    #[ORM\OneToMany(targetEntity: \EventPast::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
+    private \Doctrine\Common\Collections\Collection $eventPast;
 
     /**
-     * @var EventTag[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
-     *
-     * @ORM\JoinTable(name="event_event_tags")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventTag>
      */
-    private $eventTags;
+    #[ORM\JoinTable(name: 'event_event_tags')]
+    #[ORM\ManyToMany(targetEntity: EventTag::class)]
+    private \Doctrine\Common\Collections\Collection $eventTags;
 
-    /**
-     * @var EventGeneration|null
-     *
-     * @ORM\ManyToOne(targetEntity="EventGeneration", inversedBy="appliedEvents")
-     */
-    private $generatedBy;
+    #[ORM\ManyToOne(targetEntity: \EventGeneration::class, inversedBy: 'appliedEvents')]
+    private ?EventGeneration $generatedBy = null;
 
     /**
      * Constructor.
@@ -69,17 +59,15 @@ class Event extends BaseEntity
     /**
      * @return EventPast[]|ArrayCollection
      */
-    public function getEventPast()
+    public function getEventPast(): \Doctrine\Common\Collections\Collection
     {
         return $this->eventPast;
     }
 
     /**
      * returns a short representation of start/end datetime of the event.
-     *
-     * @return string
      */
-    public function toShort()
+    public function toShort(): string
     {
         return
             $this->getStartDateTime()->format(DateTimeFormatter::DATE_TIME_FORMAT).
@@ -90,7 +78,7 @@ class Event extends BaseEntity
     /**
      * @return EventTag[]|ArrayCollection
      */
-    public function getEventTags()
+    public function getEventTags(): \Doctrine\Common\Collections\Collection
     {
         return $this->eventTags;
     }
@@ -98,7 +86,7 @@ class Event extends BaseEntity
     /**
      * @return Event
      */
-    public static function create(EventGenerationPreviewEvent $preview)
+    public static function create(EventGenerationPreviewEvent $preview): static
     {
         $event = new static();
         $event->writeValues($preview);

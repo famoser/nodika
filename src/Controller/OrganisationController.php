@@ -13,19 +13,12 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseController;
 use App\Entity\Clinic;
-use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/organisation")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/organisation')]
 class OrganisationController extends BaseController
 {
-    /**
-     * @Route("/", name="organisation_index")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'organisation_index')]
+    public function index(): \Symfony\Component\HttpFoundation\Response
     {
         $arr['clinics'] = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
 

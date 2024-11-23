@@ -27,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SettingType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('canConfirmDaysAdvance', NumberType::class);
         $builder->add('mustConfirmDaysAdvance', NumberType::class);
@@ -36,7 +36,7 @@ class SettingType extends BaseAbstractType
         $builder->add('doctorsCanEditClinics', CheckboxType::class, ['required' => false]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Setting::class,

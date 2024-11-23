@@ -23,19 +23,10 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class EmailService implements EmailServiceInterface
 {
-    /**
-     * @var MailerInterface
-     */
-    private $mailer;
-    /**
-     * @var string
-     */
-    private $contactEmail;
+    private MailerInterface $mailer;
+    private string $contactEmail;
 
-    /**
-     * @var ManagerRegistry
-     */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     private LoggerInterface $logger;
 
@@ -56,7 +47,7 @@ class EmailService implements EmailServiceInterface
      * @param string   $body
      * @param string[] $carbonCopy
      */
-    public function sendTextEmail($receiver, $subject, $body, $carbonCopy = [])
+    public function sendTextEmail($receiver, $subject, $body, $carbonCopy = []): void
     {
         $email = new Email();
         $email->setReceiver($receiver);
@@ -75,7 +66,7 @@ class EmailService implements EmailServiceInterface
      * @param string   $actionLink
      * @param string[] $carbonCopy
      */
-    public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = [])
+    public function sendActionEmail($receiver, $subject, $body, $actionText, $actionLink, $carbonCopy = []): void
     {
         $email = new Email();
         $email->setReceiver($receiver);
@@ -95,7 +86,7 @@ class EmailService implements EmailServiceInterface
      * @param string   $body
      * @param string[] $carbonCopy
      */
-    public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = [])
+    public function sendPlainEmail($receiver, $subject, $body, $carbonCopy = []): void
     {
         $email = new Email();
         $email->setReceiver($receiver);
@@ -107,7 +98,7 @@ class EmailService implements EmailServiceInterface
         $this->sendEmail($email);
     }
 
-    private function sendEmail(Email $email)
+    private function sendEmail(Email $email): void
     {
         $email->setSentDateTime(new \DateTime());
         $email->setIdentifier(HashHelper::createNewResetHash());

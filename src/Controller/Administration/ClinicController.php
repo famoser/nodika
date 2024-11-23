@@ -20,17 +20,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/clinics")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/clinics')]
 class ClinicController extends BaseController
 {
     /**
-     * @Route("/new", name="administration_clinic_new")
-     *
      * @return Response
      */
-    public function newAction(Request $request)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_clinic_new')]
+    public function new(Request $request)
     {
         $myForm = $this->handleCreateForm($request, new Clinic());
 
@@ -44,11 +41,10 @@ class ClinicController extends BaseController
     }
 
     /**
-     * @Route("/{clinic}/edit", name="administration_clinic_edit")
-     *
      * @return Response
      */
-    public function editAction(Request $request, Clinic $clinic)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{clinic}/edit', name: 'administration_clinic_edit')]
+    public function edit(Request $request, Clinic $clinic)
     {
         $myForm = $this->handleUpdateForm($request, $clinic);
 
@@ -67,14 +63,14 @@ class ClinicController extends BaseController
      *
      * @return Response
      */
-    public function removeAction(Request $request, Clinic $clinic)
+    public function remove(Request $request, Clinic $clinic)
     {
         $canDelete = 0 === $clinic->getEvents()->count();
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $clinic)
                 ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
             $request,
-            function () use ($clinic, $canDelete) {
+            function () use ($clinic, $canDelete): \Symfony\Component\HttpFoundation\RedirectResponse {
                 $clinic->delete();
                 if ($canDelete) {
                     $this->fastRemove($clinic);
@@ -102,7 +98,7 @@ class ClinicController extends BaseController
      *
      * @return Breadcrumb[]
      */
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(

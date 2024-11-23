@@ -19,12 +19,12 @@ class GenerationTargetsDto
     /**
      * @var Doctor[]
      */
-    private $doctors;
+    private array $doctors;
 
     /**
      * @var Clinic[]
      */
-    private $clinics;
+    private array $clinics;
 
     /**
      * GenerationTargetsDto constructor.

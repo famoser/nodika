@@ -18,22 +18,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An EventGeneration is the result of one of the generation algorithms.
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class EventGenerationDateException extends BaseEntity
 {
     use IdTrait;
     use StartEndTrait;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $eventType;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]
+    private ?int $eventType = null;
 
     public function getEventType(): ?int
     {
@@ -45,12 +39,8 @@ class EventGenerationDateException extends BaseEntity
         $this->eventType = $eventType;
     }
 
-    /**
-     * @var EventGeneration
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\EventGeneration", inversedBy="dateExceptions")
-     */
-    private $eventGeneration;
+    #[ORM\ManyToOne(targetEntity: EventGeneration::class, inversedBy: 'dateExceptions')]
+    private EventGeneration $eventGeneration;
 
     public function getEventGeneration(): EventGeneration
     {

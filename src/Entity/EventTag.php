@@ -21,32 +21,22 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An EventTag allows to describe events.
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class EventTag extends BaseEntity
 {
     use IdTrait;
     use SoftDeleteTrait;
     use ThingTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $color = EventTagColor::BLUE;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $color = EventTagColor::BLUE;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $tagType = EventTagType::CUSTOM;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $tagType = EventTagType::CUSTOM;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }

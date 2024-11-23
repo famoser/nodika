@@ -24,9 +24,6 @@ class ClinicRepository extends EntityRepository
     /**
      * adds a default ordering.
      *
-     * @param null $limit
-     * @param null $offset
-     *
      * @return array
      */
     public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)

@@ -21,7 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class WeightsType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $numOptions = ['scale' => 3];
         $collOptions = ['allow_add' => true, 'allow_delete' => true];
@@ -33,7 +33,7 @@ class WeightsType extends BaseAbstractType
         $builder->add('dateExceptions', CollectionType::class, $collOptions + ['data_class' => EventGenerationDateExceptionType::class]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventGeneration::class,

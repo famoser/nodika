@@ -21,14 +21,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ChooseRecipientsType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $collOptions = ['allow_add' => true, 'allow_delete' => true];
         $builder->add('doctors', CollectionType::class, $collOptions + ['entry_type' => EventGenerationTargetDoctorType::class]);
         $builder->add('clinics', CollectionType::class, $collOptions + ['entry_type' => EventGenerationTargetClinicType::class]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventGeneration::class,

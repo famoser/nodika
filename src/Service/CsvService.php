@@ -28,10 +28,10 @@ class CsvService implements CsvServiceInterface
      *
      * @return Response
      */
-    public function renderCsv($filename, $data, $header = null)
+    public function renderCsv($filename, $data, $header = null): StreamedResponse
     {
         $response = new StreamedResponse();
-        $response->setCallback(function () use ($header, $data) {
+        $response->setCallback(function () use ($header, $data): void {
             $handle = fopen('php://output', 'w+');
 
             // UTF-8 BOM
@@ -56,7 +56,7 @@ class CsvService implements CsvServiceInterface
             fclose($handle);
         });
 
-        $response->setStatusCode(200);
+        $response->setStatusCode(Response::HTTP_OK);
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
         $response->headers->set('Content-Disposition', 'attachment; filename="'.$filename.'"');
 

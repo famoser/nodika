@@ -31,7 +31,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PublicSearchType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('startEnd', StartEndType::class, ['inherit_data' => true]);
         $builder->add('clinic', EntityType::class, ['class' => Clinic::class, 'required' => false, 'label' => 'entity.name', 'translation_domain' => 'entity_clinic', 'query_builder' => function (EntityRepository $er) {
@@ -48,7 +48,7 @@ class PublicSearchType extends BaseAbstractType
         }]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => SearchModel::class,

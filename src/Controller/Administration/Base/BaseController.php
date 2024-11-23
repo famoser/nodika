@@ -16,7 +16,7 @@ use App\Model\Breadcrumb;
 
 class BaseController extends BaseFormController
 {
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return [
             new Breadcrumb(

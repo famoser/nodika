@@ -23,7 +23,7 @@ class DoctorVoter extends BaseVoter
      *
      * @return bool True if the attribute and subject are supported, false otherwise
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return $subject instanceof Doctor;
     }
@@ -34,18 +34,19 @@ class DoctorVoter extends BaseVoter
      *
      * @param string $attribute
      * @param Doctor $subject
-     *
-     * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
         if (!$user instanceof Doctor) {
             return false;
         }
-
         // check if own clinic
-        return $user->getId() === $subject->getId() || $user->isAdministrator();
+        if ($user->getId() === $subject->getId()) {
+            return true;
+        }
+
+        return $user->isAdministrator();
     }
 }

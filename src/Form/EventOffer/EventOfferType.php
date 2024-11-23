@@ -21,14 +21,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventOfferType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('message', TextType::class, ['inherit_data' => true]);
         $builder->add('entries', CollectionType::class, ['allow_add' => true, 'allow_delete' => true, 'entry_type' => EventOfferEntryType::class]);
         $builder->add('authorizations', CollectionType::class, ['allow_add' => true, 'allow_delete' => true, 'entry_type' => EventOfferEntryType::class]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventOffer::class,

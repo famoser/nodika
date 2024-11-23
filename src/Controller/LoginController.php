@@ -27,7 +27,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -36,12 +35,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/login")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/login')]
 class LoginController extends BaseFormController
 {
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() +
             [
@@ -100,12 +97,8 @@ class LoginController extends BaseFormController
         return $lastUsername;
     }
 
-    /**
-     * @Route("", name="login")
-     *
-     * @return Response
-     */
-    public function indexAction(Request $request)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '', name: 'login')]
+    public function index(Request $request): Response
     {
         $user = new Doctor();
         $user->setEmail($this->getLastUsername($request));
@@ -118,12 +111,8 @@ class LoginController extends BaseFormController
         return $this->render('login/login.html.twig', $arr);
     }
 
-    /**
-     * @Route("/recover", name="login_recover")
-     *
-     * @return Response
-     */
-    public function recoverAction(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator, LoggerInterface $logger)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/recover', name: 'login_recover')]
+    public function recover(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator, LoggerInterface $logger): Response
     {
         $form = $this->handleForm(
             $this->createForm(RecoverType::class)
@@ -172,12 +161,8 @@ class LoginController extends BaseFormController
         return $this->render('login/recover.html.twig', $arr);
     }
 
-    /**
-     * @Route("/reset/{resetHash}", name="login_reset")
-     *
-     * @return Response
-     */
-    public function resetAction(Request $request, $resetHash, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/reset/{resetHash}', name: 'login_reset')]
+    public function reset(Request $request, $resetHash, TranslatorInterface $translator): RedirectResponse|Response
     {
         $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['resetHash' => $resetHash]);
         if (null === $user) {
@@ -230,11 +215,10 @@ class LoginController extends BaseFormController
     }
 
     /**
-     * @Route("/request", name="login_request")
-     *
      * @return Response
      */
-    public function requestAction(Request $request, InviteEmailService $emailService, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/request', name: 'login_request')]
+    public function request(Request $request, InviteEmailService $emailService, TranslatorInterface $translator)
     {
         $form = $this->handleForm(
             $this->createForm(RequestInviteType::class)
@@ -288,7 +272,7 @@ class LoginController extends BaseFormController
      *
      * @return Breadcrumb[]
      */
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return [
             new Breadcrumb(
@@ -298,18 +282,14 @@ class LoginController extends BaseFormController
         ];
     }
 
-    /**
-     * @Route("/login_check", name="login_check")
-     */
-    public function loginCheck()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/login_check', name: 'login_check')]
+    public function loginCheck(): never
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
 
-    /**
-     * @Route("/logout", name="login_logout")
-     */
-    public function logoutAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/logout', name: 'login_logout')]
+    public function logout(): never
     {
         throw new \RuntimeException('You must configure the logout path to be handled by the firewall using form_login.logout in your security firewall configuration.');
     }

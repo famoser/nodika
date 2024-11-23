@@ -19,25 +19,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InviteEmailService
 {
-    /**
-     * @var EmailServiceInterface
-     */
-    private $emailService;
+    private EmailServiceInterface $emailService;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private UrlGeneratorInterface $urlGenerator;
 
-    /**
-     * @var ManagerRegistry
-     */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     public function __construct(ManagerRegistry $doctrine, EmailServiceInterface $emailService, TranslatorInterface $translator, UrlGeneratorInterface $generator)
     {
@@ -50,7 +38,7 @@ class InviteEmailService
     /**
      * @throws \Exception
      */
-    public function inviteDoctor(Doctor $doctor)
+    public function inviteDoctor(Doctor $doctor): void
     {
         // map clinics to clinic name array
         $clinics = [];

@@ -26,7 +26,7 @@ class LoadEventOffers extends BaseFixture
      *
      * @throws \Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $doctors = $manager->getRepository(Doctor::class)->findAll();
         $lastDoctor = $doctors[\count($doctors) - 1];
@@ -64,10 +64,8 @@ class LoadEventOffers extends BaseFixture
 
     /**
      * create an instance with all random values.
-     *
-     * @return EventGeneration
      */
-    protected function getRandomInstance()
+    protected function getRandomInstance(): EventGeneration
     {
         $eventGeneration = new EventGeneration();
         $this->fillThing($eventGeneration);

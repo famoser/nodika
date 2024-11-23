@@ -15,10 +15,8 @@ class NamingHelper
 {
     /**
      * produces my_class_name from Famoser\Class\MyClassName.
-     *
-     * @return string
      */
-    public static function classToTranslationDomain($classWithNamespace)
+    public static function classToTranslationDomain($classWithNamespace): string
     {
         $className = mb_substr($classWithNamespace, mb_strrpos($classWithNamespace, '\\') + 1);
 
@@ -27,10 +25,8 @@ class NamingHelper
 
     /**
      * makes from camelCase => camel_case.
-     *
-     * @return string
      */
-    private static function camelCaseToTranslation($camelCase)
+    private static function camelCaseToTranslation($camelCase): string
     {
         return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $camelCase));
     }
@@ -41,10 +37,8 @@ class NamingHelper
      *
      * @param string $classWithNamespace
      * @param bool   $isRemoveType
-     *
-     * @return string
      */
-    public static function classToCrudFormType($classWithNamespace, $isRemoveType)
+    public static function classToCrudFormType($classWithNamespace, $isRemoveType): string
     {
         $prepend = $isRemoveType ? 'Remove' : '';
         $className = mb_substr($classWithNamespace, mb_strrpos($classWithNamespace, '\\') + 1);
@@ -54,30 +48,24 @@ class NamingHelper
 
     /**
      * produces my_constant from MY_CONSTANT.
-     *
-     * @return string
      */
-    public static function constantToTranslation($constant)
+    public static function constantToTranslation($constant): string
     {
         return mb_strtolower($constant);
     }
 
     /**
      * the property to be converted to a array for the builder including the label clinic.
-     *
-     * @return array
      */
-    public static function propertyToTranslationForBuilder($propertyName)
+    public static function propertyToTranslationForBuilder($propertyName): array
     {
         return ['label' => static::propertyToTranslation($propertyName)];
     }
 
     /**
      * the property to be converted to a label.
-     *
-     * @return string
      */
-    public static function propertyToTranslation($propertyName)
+    public static function propertyToTranslation($propertyName): string
     {
         return static::camelCaseToTranslation($propertyName);
     }
@@ -87,17 +75,15 @@ class NamingHelper
      *
      * @return string[]
      */
-    public static function traitNameToTranslationForBuilder($trait)
+    public static function traitNameToTranslationForBuilder($trait): array
     {
         return ['label' => 'trait.name', 'translation_domain' => static::traitToTranslationDomain($trait)];
     }
 
     /**
      * produces my_stuff from Famoser\Class\MyStuffTrait.
-     *
-     * @return string
      */
-    public static function traitToTranslationDomain($traitWithNamespace)
+    public static function traitToTranslationDomain($traitWithNamespace): string
     {
         $traitName = mb_substr($traitWithNamespace, mb_strrpos($traitWithNamespace, '\\') + 1);
 

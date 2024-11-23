@@ -20,11 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An EventPast saves the state of the event when action occurred.
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class EventPast extends BaseEntity
 {
     use CreationAwareTrait;
@@ -33,10 +31,8 @@ class EventPast extends BaseEntity
 
     /**
      * EventPast constructor.
-     *
-     * @return EventPast
      */
-    public static function create(Event $event, int $eventChangeType, Doctor $user)
+    public static function create(Event $event, int $eventChangeType, Doctor $user): static
     {
         $eventPast = new static();
         $eventPast->writeValues($event);
@@ -47,19 +43,11 @@ class EventPast extends BaseEntity
         return $eventPast;
     }
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $eventChangeType = EventChangeType::CREATED;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $eventChangeType = EventChangeType::CREATED;
 
-    /**
-     * @var Event
-     *
-     * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventPast")
-     */
-    private $event;
+    #[ORM\ManyToOne(targetEntity: \Event::class, inversedBy: 'eventPast')]
+    private Event $event;
 
     public function getEventChangeType(): int
     {

@@ -33,7 +33,7 @@ class LoadGeneration extends BaseFixture
      *
      * @throws \Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $cronExpressions = ['0 8 * * *', '0 8 */7 * *'];
         $expressionIndex = 0;
@@ -45,7 +45,7 @@ class LoadGeneration extends BaseFixture
         }
     }
 
-    private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, $cronExpression, $differentiate)
+    private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, string $cronExpression, bool $differentiate): void
     {
         // prepare a generation
         $generation = $this->getRandomInstance();
@@ -119,10 +119,8 @@ class LoadGeneration extends BaseFixture
 
     /**
      * create an instance with all random values.
-     *
-     * @return EventGeneration
      */
-    protected function getRandomInstance()
+    protected function getRandomInstance(): EventGeneration
     {
         $eventGeneration = new EventGeneration();
         $this->fillThing($eventGeneration);

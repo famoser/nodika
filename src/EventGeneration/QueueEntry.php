@@ -13,30 +13,15 @@ namespace App\EventGeneration;
 
 class QueueEntry
 {
-    /**
-     * @var int
-     */
-    private $issued = 0;
+    private int $issued = 0;
 
-    /**
-     * @var int
-     */
-    private $score = 0;
+    private int $score = 0;
 
-    /**
-     * @var int
-     */
-    private $weight = 0;
+    private int $weight;
 
-    /**
-     * @var int
-     */
-    private $size;
+    private int $size;
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
     public function __construct(int $id, int $weight, int $size)
     {
@@ -61,10 +46,7 @@ class QueueEntry
         $this->score += $this->weight;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }

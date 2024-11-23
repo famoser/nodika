@@ -23,11 +23,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A Clinic is part of the organisation, and is responsible for the events assigned to it.
- *
- * @ORM\Entity(repositoryClass="App\Repository\ClinicRepository")
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity(repositoryClass: \App\Repository\ClinicRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Clinic extends BaseEntity
 {
     use AddressTrait;
@@ -38,22 +36,18 @@ class Clinic extends BaseEntity
     use ThingTrait;
 
     /**
-     * @var Doctor[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Doctor", mappedBy="clinics")
-     *
-     * @ORM\OrderBy({"familyName" = "ASC", "givenName" = "ASC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Doctor>
      */
-    private $doctors;
+    #[ORM\ManyToMany(targetEntity: \Doctor::class, mappedBy: 'clinics')]
+    #[ORM\OrderBy(['familyName' => 'ASC', 'givenName' => 'ASC'])]
+    private \Doctrine\Common\Collections\Collection $doctors;
 
     /**
-     * @var Event[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="clinic")
-     *
-     * @ORM\OrderBy({"startDateTime" = "ASC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \Event>
      */
-    private $events;
+    #[ORM\OneToMany(targetEntity: \Event::class, mappedBy: 'clinic')]
+    #[ORM\OrderBy(['startDateTime' => 'ASC'])]
+    private \Doctrine\Common\Collections\Collection $events;
 
     /**
      * Constructor.
@@ -69,7 +63,7 @@ class Clinic extends BaseEntity
      *
      * @return \Doctrine\Common\Collections\Collection|Doctor[]
      */
-    public function getDoctors()
+    public function getDoctors(): \Doctrine\Common\Collections\Collection
     {
         return $this->doctors;
     }
@@ -79,24 +73,24 @@ class Clinic extends BaseEntity
      *
      * @return \Doctrine\Common\Collections\Collection|Event[]
      */
-    public function getEvents()
+    public function getEvents(): \Doctrine\Common\Collections\Collection
     {
         return $this->events;
     }
 
-    public function addDoctor(Doctor $doctor)
+    public function addDoctor(Doctor $doctor): void
     {
         $this->getDoctors()->add($doctor);
         $doctor->getClinics()->add($this);
     }
 
-    public function removeDoctor(Doctor $doctor)
+    public function removeDoctor(Doctor $doctor): void
     {
         $this->getDoctors()->removeElement($doctor);
         $doctor->getClinics()->removeElement($this);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }
@@ -104,7 +98,7 @@ class Clinic extends BaseEntity
     /**
      * @return Doctor[]
      */
-    public function getActiveDoctors()
+    public function getActiveDoctors(): array
     {
         $res = [];
         foreach ($this->getDoctors() as $doctor) {

@@ -15,19 +15,12 @@ use App\Controller\Base\BaseDoctrineController;
 use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Model\Event\SearchModel;
-use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/')]
 class IndexController extends BaseDoctrineController
 {
-    /**
-     * @Route("/", name="index_index")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'index_index')]
+    public function index(): \Symfony\Component\HttpFoundation\Response
     {
         // get the events from the next month
         $searchModel = new SearchModel(SearchModel::MONTH);
@@ -47,7 +40,7 @@ class IndexController extends BaseDoctrineController
         return $this->render('index/index.html.twig', ['events' => $events, 'offers' => $actingOffers]);
     }
 
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return [];
     }

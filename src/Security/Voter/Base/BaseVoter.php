@@ -23,10 +23,8 @@ abstract class BaseVoter extends Voter
     /**
      * @param string $attribute
      * @param object $subject
-     *
-     * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 

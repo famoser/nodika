@@ -15,33 +15,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ContactRequest
 {
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
-    private $name;
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Email()
-     */
-    private $email;
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private ?string $email = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
-    private $message;
+    #[Assert\NotBlank]
+    private ?string $message = null;
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -51,10 +35,7 @@ class ContactRequest
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -64,10 +45,7 @@ class ContactRequest
         $this->email = $email;
     }
 
-    /**
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): ?string
     {
         return $this->message;
     }

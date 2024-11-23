@@ -20,80 +20,44 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An EventOffer can be accepted or declined, and allows one Person to propose one or more Events to change.
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class EventOffer extends BaseEntity
 {
     use ChangeAwareTrait;
     use IdTrait;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $message;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private string $message;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $isResolved = false;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Event>
      */
-    private $isResolved = false;
+    #[ORM\JoinTable(name: 'event_offer_events')]
+    #[ORM\ManyToMany(targetEntity: Event::class)]
+    private \Doctrine\Common\Collections\Collection $eventsWhichChangeOwner;
 
-    /**
-     * @var Event[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Event")
-     *
-     * @ORM\JoinTable(name="event_offer_events")
-     */
-    private $eventsWhichChangeOwner;
+    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    private Doctor $receiver;
 
-    /**
-     * @var Doctor
-     *
-     * @ORM\ManyToOne(targetEntity="Doctor")
-     */
-    private $receiver;
+    #[ORM\ManyToOne(targetEntity: \Clinic::class)]
+    private Clinic $receiverClinic;
 
-    /**
-     * @var Clinic
-     *
-     * @ORM\ManyToOne(targetEntity="Clinic")
-     */
-    private $receiverClinic;
+    #[ORM\ManyToOne(targetEntity: \Doctor::class)]
+    private Doctor $sender;
 
-    /**
-     * @var Doctor
-     *
-     * @ORM\ManyToOne(targetEntity="Doctor")
-     */
-    private $sender;
+    #[ORM\ManyToOne(targetEntity: \Clinic::class)]
+    private Clinic $senderClinic;
 
-    /**
-     * @var Clinic
-     *
-     * @ORM\ManyToOne(targetEntity="Clinic")
-     */
-    private $senderClinic;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $receiverAuthorizationStatus = AuthorizationStatus::PENDING;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $receiverAuthorizationStatus = AuthorizationStatus::PENDING;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $senderAuthorizationStatus = AuthorizationStatus::ACCEPTED;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $senderAuthorizationStatus = AuthorizationStatus::ACCEPTED;
 
     /**
      * Constructor.
@@ -113,9 +77,6 @@ class EventOffer extends BaseEntity
         $this->message = $message;
     }
 
-    /**
-     * @return int
-     */
     public function getIsResolved(): bool
     {
         return $this->isResolved;
@@ -124,7 +85,7 @@ class EventOffer extends BaseEntity
     /**
      * @return Event[]|ArrayCollection
      */
-    public function getEventsWhichChangeOwner()
+    public function getEventsWhichChangeOwner(): \Doctrine\Common\Collections\Collection
     {
         return $this->eventsWhichChangeOwner;
     }
@@ -169,34 +130,22 @@ class EventOffer extends BaseEntity
         $this->senderClinic = $senderClinic;
     }
 
-    /**
-     * @return bool
-     */
-    public function accept(Doctor $doctor)
+    public function accept(Doctor $doctor): bool
     {
         return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::DECLINED, AuthorizationStatus::WITHDRAWN], AuthorizationStatus::ACCEPTED);
     }
 
-    /**
-     * @return bool
-     */
-    public function decline(Doctor $doctor)
+    public function decline(Doctor $doctor): bool
     {
         return $this->changeStatus($doctor, [AuthorizationStatus::PENDING], AuthorizationStatus::DECLINED);
     }
 
-    /**
-     * @return bool
-     */
-    public function withdraw(Doctor $doctor)
+    public function withdraw(Doctor $doctor): bool
     {
         return $this->changeStatus($doctor, [AuthorizationStatus::ACCEPTED], AuthorizationStatus::WITHDRAWN);
     }
 
-    /**
-     * @return bool
-     */
-    public function acknowledge(Doctor $doctor)
+    public function acknowledge(Doctor $doctor): bool
     {
         return $this->changeStatus($doctor, [AuthorizationStatus::PENDING, AuthorizationStatus::ACCEPTED, AuthorizationStatus::DECLINED, AuthorizationStatus::WITHDRAWN], AuthorizationStatus::ACKNOWLEDGED);
     }
@@ -209,7 +158,7 @@ class EventOffer extends BaseEntity
     public const ACK_INVALID = 6;
     public const NONE = 7;
 
-    public function getPendingAction(Doctor $doctor)
+    public function getPendingAction(Doctor $doctor): int
     {
         if ($this->getIsResolved() || $this->getEventsWhichChangeOwner()->isEmpty()) {
             return self::NONE;
@@ -231,7 +180,8 @@ class EventOffer extends BaseEntity
             if (AuthorizationStatus::PENDING === $receiverStatus) {
                 if (AuthorizationStatus::ACCEPTED === $senderStatus) {
                     return self::ACCEPT_DECLINE;
-                } elseif (AuthorizationStatus::WITHDRAWN === $senderStatus) {
+                }
+                if (AuthorizationStatus::WITHDRAWN === $senderStatus) {
                     return self::ACK_WITHDRAWN;
                 }
             }
@@ -248,9 +198,11 @@ class EventOffer extends BaseEntity
             if (AuthorizationStatus::ACCEPTED === $senderStatus) {
                 if (AuthorizationStatus::PENDING === $receiverStatus) {
                     return self::WITHDRAW;
-                } elseif (AuthorizationStatus::ACCEPTED === $receiverStatus) {
+                }
+                if (AuthorizationStatus::ACCEPTED === $receiverStatus) {
                     return self::ACK_ACCEPTED;
-                } elseif (AuthorizationStatus::DECLINED === $receiverStatus) {
+                }
+                if (AuthorizationStatus::DECLINED === $receiverStatus) {
                     return self::ACK_DECLINED;
                 }
             }
@@ -259,7 +211,7 @@ class EventOffer extends BaseEntity
         return self::NONE;
     }
 
-    public function tryMarkAsResolved()
+    public function tryMarkAsResolved(): ?bool
     {
         if (self::NONE === $this->getPendingAction($this->receiver)
             && self::NONE === $this->getPendingAction($this->sender)) {
@@ -271,11 +223,8 @@ class EventOffer extends BaseEntity
 
     /**
      * @param int[] $sourceStates
-     * @param int   $targetState
-     *
-     * @return bool
      */
-    private function changeStatus(Doctor $doctor, $sourceStates, $targetState)
+    private function changeStatus(Doctor $doctor, array $sourceStates, int $targetState): bool
     {
         if ($this->isResolved) {
             return false;
@@ -286,7 +235,8 @@ class EventOffer extends BaseEntity
             $this->receiverAuthorizationStatus = $targetState;
 
             return true;
-        } elseif ($doctor === $this->getSender() && $doctor->getClinics()->contains($this->getSenderClinic()) && \in_array($this->senderAuthorizationStatus, $sourceStates, true)) {
+        }
+        if ($doctor === $this->getSender() && $doctor->getClinics()->contains($this->getSenderClinic()) && \in_array($this->senderAuthorizationStatus, $sourceStates, true)) {
             $this->senderAuthorizationStatus = $targetState;
 
             return true;
@@ -299,12 +249,12 @@ class EventOffer extends BaseEntity
 
     private $cacheSenderOwned;
     private $cacheReceiverOwned;
-    private $cacheIsValid;
+    private ?bool $cacheIsValid = null;
 
     /**
      * orders the events & checks if trade is valid.
      */
-    private function refreshCache()
+    private function refreshCache(): void
     {
         if (null === $this->cacheIsValid) {
             $this->cacheReceiverOwned = [];
@@ -345,20 +295,14 @@ class EventOffer extends BaseEntity
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function isValid()
+    public function isValid(): ?bool
     {
         $this->refreshCache();
 
         return $this->cacheIsValid;
     }
 
-    /**
-     * @return bool
-     */
-    public function canExecute()
+    public function canExecute(): bool
     {
         return AuthorizationStatus::ACCEPTED === $this->receiverAuthorizationStatus && AuthorizationStatus::ACCEPTED === $this->senderAuthorizationStatus;
     }

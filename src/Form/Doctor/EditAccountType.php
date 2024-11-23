@@ -21,14 +21,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EditAccountType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('person', PersonType::class, ['inherit_data' => true]);
         $builder->add('communication', CommunicationType::class, ['inherit_data' => true]);
         $builder->add('address', AddressType::class, ['inherit_data' => true]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Doctor::class,

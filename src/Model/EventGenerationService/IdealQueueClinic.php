@@ -30,33 +30,33 @@ class IdealQueueClinic
     public $totalHolidayCount = 0;
     public $availableHolidayCount = 0;
 
-    private $history = [];
+    private array $history = [];
 
-    public function assignWeekday($pointInTime)
+    public function assignWeekday($pointInTime): void
     {
         --$this->availableWeekdayCount;
         $this->history[$pointInTime] = 0;
     }
 
-    public function assignSaturday($pointInTime)
+    public function assignSaturday($pointInTime): void
     {
         --$this->availableSaturdayCount;
         $this->history[$pointInTime] = 1;
     }
 
-    public function assignSunday($pointInTime)
+    public function assignSunday($pointInTime): void
     {
         --$this->availableSundayCount;
         $this->history[$pointInTime] = 2;
     }
 
-    public function assignHoliday($pointInTime)
+    public function assignHoliday($pointInTime): void
     {
         --$this->availableHolidayCount;
         $this->history[$pointInTime] = 3;
     }
 
-    public function removeAssignments($pointInTime)
+    public function removeAssignments($pointInTime): void
     {
         $removeKeys = [];
         foreach (array_keys($this->history) as $array_key) {
@@ -83,7 +83,7 @@ class IdealQueueClinic
     /**
      * calculates the part which is done.
      */
-    public function calculatePartDone()
+    public function calculatePartDone(): void
     {
         $this->partDone = (float) $this->doneEventCount / (float) $this->totalEventCount;
     }
@@ -91,7 +91,7 @@ class IdealQueueClinic
     /**
      * resets the available properties.
      */
-    public function setAllAvailable()
+    public function setAllAvailable(): void
     {
         $this->availableWeekdayCount = $this->totalWeekdayCount;
         $this->availableSaturdayCount = $this->totalSaturdayCount;
@@ -102,7 +102,7 @@ class IdealQueueClinic
     /**
      * calculates total events by summing all event types.
      */
-    public function calculateTotalEventCount()
+    public function calculateTotalEventCount(): void
     {
         $this->totalEventCount = 0;
         $this->totalEventCount += $this->totalWeekdayCount;

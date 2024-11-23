@@ -32,7 +32,7 @@ class DateTimeNormalizer implements NormalizerInterface
      *                                    reference handler can fix it
      * @throws LogicException             Occurs when the normalizer is not called in an expected context
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): string|int|float|bool|\ArrayObject|array|null
     {
         return $object->format('c');
     }
@@ -42,10 +42,8 @@ class DateTimeNormalizer implements NormalizerInterface
      *
      * @param mixed  $data   Data to normalize
      * @param string $format The format being (de-)serialized from or into
-     *
-     * @return bool
      */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof \DateTime;
     }

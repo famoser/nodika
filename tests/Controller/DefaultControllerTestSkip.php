@@ -30,10 +30,9 @@ class DefaultControllerTestSkip extends WebTestCase
      * PHPUnit's data providers allow to execute the same tests repeated times
      * using a different set of data each time.
      * See https://symfony.com/doc/current/cookbook/form/unit_testing.html#testing-against-different-sets-of-data.
-     *
-     * @dataProvider getPublicUrls
      */
-    public function testPublicUrls($url)
+    #[\PHPUnit\Framework\Attributes\DataProvider('getPublicUrls')]
+    public function testPublicUrls(string $url): void
     {
         $client = static::createClient();
         $client->request('GET', $url);
@@ -49,16 +48,15 @@ class DefaultControllerTestSkip extends WebTestCase
      * The application contains a lot of secure URLs which shouldn't be
      * publicly accessible. This tests ensures that whenever a user tries to
      * access one of those pages, a redirection to the login form is performed.
-     *
-     * @dataProvider getSecureUrls
      */
-    public function testSecureUrls($url)
+    #[\PHPUnit\Framework\Attributes\DataProvider('getSecureUrls')]
+    public function testSecureUrls(string $url): void
     {
         $client = static::createClient();
         $client->request('GET', $url);
 
         $response = $client->getResponse();
-        $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode(), $response->getContent());
         $this->assertSame(
             'http://localhost/login',
             $response->getTargetUrl(),
@@ -70,10 +68,9 @@ class DefaultControllerTestSkip extends WebTestCase
      * The application contains a lot of secure URLs which shouldn't be
      * publicly accessible. This tests ensures that whenever a user tries to
      * access one of those pages, a redirection to the login form is performed.
-     *
-     * @dataProvider get404Urls
      */
-    public function test404Urls($url)
+    #[\PHPUnit\Framework\Attributes\DataProvider('get404Urls')]
+    public function test404Urls(string $url): void
     {
         $client = static::createClient();
         $client->request('GET', $url);
@@ -86,19 +83,19 @@ class DefaultControllerTestSkip extends WebTestCase
         );
     }
 
-    public function getPublicUrls()
+    public static function getPublicUrls(): \Generator
     {
         yield ['/'];
         yield ['/register'];
         yield ['/login'];
     }
 
-    public function getSecureUrls()
+    public static function getSecureUrls(): \Generator
     {
         yield ['/dashboard'];
     }
 
-    public function get404Urls()
+    public static function get404Urls(): \Generator
     {
         yield ['/dashboard/'];
     }

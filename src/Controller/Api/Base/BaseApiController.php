@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class BaseApiController extends BaseDoctrineController
 {
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return parent::getSubscribedServices() +
             [
@@ -49,7 +49,7 @@ class BaseApiController extends BaseDoctrineController
                 'json',
                 ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName'], 'eventTags' => ['name', 'colorText']]]
             ),
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             [],
             true
         );
@@ -67,7 +67,7 @@ class BaseApiController extends BaseDoctrineController
                 $doctors,
                 'json', ['attributes' => ['id', 'fullName', 'clinics' => ['id', 'name']]]
             ),
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             [],
             true
         );
@@ -85,7 +85,7 @@ class BaseApiController extends BaseDoctrineController
                 $clinics,
                 'json', ['attributes' => ['id', 'name', 'doctors' => ['id', 'fullName']]]
             ),
-            200,
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
             [],
             true
         );

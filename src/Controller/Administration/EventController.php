@@ -34,27 +34,23 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/events")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/events')]
 class EventController extends BaseApiController
 {
     /**
-     * @Route("/new", name="administration_event_new")
-     *
      * @return Response
      */
-    public function newAction(Request $request, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_event_new')]
+    public function new(Request $request, TranslatorInterface $translator)
     {
         $event = new Event();
         $myForm = $this->handleCreateForm(
             $request,
             $event,
-            function ($manager) use ($event, $translator) {
+            function ($manager) use ($event, $translator): bool {
                 if (!$this->ensureValidDoctorClinicPair($event, $translator)) {
                     return false;
                 }
@@ -77,16 +73,15 @@ class EventController extends BaseApiController
     }
 
     /**
-     * @Route("/{event}/edit", name="administration_event_edit")
-     *
      * @return Response
      */
-    public function editAction(Request $request, Event $event, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/edit', name: 'administration_event_edit')]
+    public function edit(Request $request, Event $event, TranslatorInterface $translator)
     {
         $myForm = $this->handleUpdateForm(
             $request,
             $event,
-            function ($manager) use ($event, $translator) {
+            function ($manager) use ($event, $translator): bool {
                 if (!$this->ensureValidDoctorClinicPair($event, $translator)) {
                     return false;
                 }
@@ -108,10 +103,7 @@ class EventController extends BaseApiController
         return $this->render('administration/event/edit.html.twig', $arr);
     }
 
-    /**
-     * @return bool
-     */
-    private function ensureValidDoctorClinicPair(Event $event, TranslatorInterface $translator)
+    private function ensureValidDoctorClinicPair(Event $event, TranslatorInterface $translator): bool
     {
         if (null === $event->getDoctor() || $event->getDoctor()->getClinics()->contains($event->getClinic())) {
             return true;
@@ -122,17 +114,16 @@ class EventController extends BaseApiController
     }
 
     /**
-     * @Route("/{event}/remove", name="administration_event_remove")
-     *
      * @return Response
      */
-    public function removeAction(Request $request, Event $event, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/remove', name: 'administration_event_remove')]
+    public function remove(Request $request, Event $event, TranslatorInterface $translator)
     {
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $event)
                 ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
             $request,
-            function () use ($event, $translator) {
+            function () use ($event, $translator): \Symfony\Component\HttpFoundation\RedirectResponse {
                 /* @var FormInterface $form */
                 $event->delete();
                 $eventPast = EventPast::create($event, EventChangeType::REMOVED, $this->getUser());
@@ -157,24 +148,16 @@ class EventController extends BaseApiController
         return $this->render('administration/event/remove.html.twig', $arr);
     }
 
-    /**
-     * @Route("/{event}/history", name="administration_event_history")
-     *
-     * @return Response
-     */
-    public function historyAction(Event $event)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/history', name: 'administration_event_history')]
+    public function history(Event $event): Response
     {
         $arr['event'] = $event;
 
         return $this->render('administration/event/history.html.twig', $arr);
     }
 
-    /**
-     * @Route("/generations", name="administration_event_generations")
-     *
-     * @return Response
-     */
-    public function generateAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/generations', name: 'administration_event_generations')]
+    public function generate(): Response
     {
         $generations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
         $arr['generations'] = $generations;
@@ -183,13 +166,12 @@ class EventController extends BaseApiController
     }
 
     /**
-     * @Route("/generation/new/{tagType}", name="administration_event_generation_new")
-     *
      * @return Response
      *
      * @throws \Exception
      */
-    public function generateNewAction(int $tagType, EventGenerationServiceInterface $eventGenerationService, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/new/{tagType}', name: 'administration_event_generation_new')]
+    public function generateNew(int $tagType, EventGenerationServiceInterface $eventGenerationService, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         // get to be assigned tag
         $tag = $this->getDoctrine()->getRepository(EventTag::class)->findOneBy(['tagType' => $tagType]);
@@ -342,32 +324,26 @@ class EventController extends BaseApiController
         return $this->redirectToRoute('administration_event_generation', ['generation' => $generation->getId()]);
     }
 
-    /**
-     * @Route("/generation/{generation}", name="administration_event_generation")
-     *
-     * @return Response
-     */
-    public function generationAction(EventGeneration $generation)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}', name: 'administration_event_generation')]
+    public function generation(EventGeneration $generation): Response
     {
         return $this->render('administration/event/generation.html.twig', ['generation' => $generation]);
     }
 
     /**
-     * @Route("/generation/{generation}/get", name="administration_event_generation_get")
-     *
      * @return Response
      */
-    public function generationGetAction(SerializerInterface $serializer, EventGeneration $generation)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/get', name: 'administration_event_generation_get')]
+    public function generationGet(SerializerInterface $serializer, EventGeneration $generation)
     {
         return $this->returnGeneration($serializer, $generation);
     }
 
     /**
-     * @Route("/generation/{generation}/update", name="administration_event_generation_update")
-     *
      * @return Response
      */
-    public function generationUpdateAction(Request $request, SerializerInterface $serializer, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/update', name: 'administration_event_generation_update')]
+    public function generationUpdate(Request $request, SerializerInterface $serializer, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService): \Symfony\Component\HttpFoundation\JsonResponse
     {
         // only update if not applied yet
         if ($generation->getIsApplied()) {
@@ -497,10 +473,9 @@ class EventController extends BaseApiController
     }
 
     /**
-     * @Route("/generation/{generation}/targets", name="administration_event_generation_targets")
-     *
      * @return Response
      */
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/targets', name: 'administration_event_generation_targets')]
     public function generationTargets(SerializerInterface $serializer, ManagerRegistry $registry)
     {
         $doctors = $registry->getRepository(Doctor::class)->findBy(['deletedAt' => null]);
@@ -510,10 +485,9 @@ class EventController extends BaseApiController
     }
 
     /**
-     * @Route("/generation/{generation}/apply", name="administration_event_generation_apply")
-     *
      * @return Response
      */
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/apply', name: 'administration_event_generation_apply')]
     public function generateApply(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
     {
         $eventGenerationService->persist($generation, $this->getUser());
@@ -522,11 +496,10 @@ class EventController extends BaseApiController
     }
 
     /**
-     * @Route("/{event}/toggle_confirm", name="administration_event_toggle_confirm")
-     *
      * @return Response
      */
-    public function toggleConfirm(Event $event)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/toggle_confirm', name: 'administration_event_toggle_confirm')]
+    public function toggleConfirm(Event $event): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         if ($event->isConfirmed()) {
             $event->undoConfirm();
@@ -545,7 +518,7 @@ class EventController extends BaseApiController
      *
      * @return Breadcrumb[]
      */
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(

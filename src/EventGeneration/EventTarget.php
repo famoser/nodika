@@ -20,12 +20,9 @@ use App\Entity\Traits\EventGenerationTarget;
 class EventTarget
 {
     public const NONE_IDENTIFIER = 0;
-    private static $nextIdentifier = 1;
+    private static int $nextIdentifier = 1;
 
-    /**
-     * @var int
-     */
-    private $identifier;
+    private int $identifier;
 
     /**
      * @var EventGenerationTargetDoctor|null
@@ -42,10 +39,7 @@ class EventTarget
         $this->identifier = self::$nextIdentifier++;
     }
 
-    /**
-     * @return static
-     */
-    public static function fromDoctor(EventGenerationTargetDoctor $doctor)
+    public static function fromDoctor(EventGenerationTargetDoctor $doctor): static
     {
         $new = new static();
         $new->doctor = $doctor;
@@ -53,10 +47,7 @@ class EventTarget
         return $new;
     }
 
-    /**
-     * @return static
-     */
-    public static function fromClinic(EventGenerationTargetClinic $clinic)
+    public static function fromClinic(EventGenerationTargetClinic $clinic): static
     {
         $new = new static();
         $new->clinic = $clinic;
@@ -100,25 +91,22 @@ class EventTarget
     }
 
     /** @var bool */
-    private $restrictResponsibilityForEventType = [];
+    private array $restrictResponsibilityForEventType = [];
 
     /** @var int[] */
-    private $eventTypeResponsibilities = [];
+    private array $eventTypeResponsibilities = [];
 
     /** @var int[] */
-    private $eventTypeResponsibilitiesTaken = [];
+    private array $eventTypeResponsibilitiesTaken = [];
 
-    public function restrictEventTypeResponsibility($eventType, int $count = 0)
+    public function restrictEventTypeResponsibility($eventType, int $count = 0): void
     {
         $this->restrictResponsibilityForEventType[$eventType] = true;
         $this->eventTypeResponsibilities[$eventType] = $count;
         $this->eventTypeResponsibilitiesTaken[$eventType] = 0;
     }
 
-    /**
-     * @return bool
-     */
-    public function canAssumeResponsibility($eventType)
+    public function canAssumeResponsibility($eventType): bool
     {
         return
             !isset($this->restrictResponsibilityForEventType[$eventType])
@@ -126,7 +114,7 @@ class EventTarget
             || $this->eventTypeResponsibilities[$eventType] > $this->eventTypeResponsibilitiesTaken[$eventType];
     }
 
-    public function assumeResponsibility($eventType)
+    public function assumeResponsibility($eventType): void
     {
         if (!isset($this->eventTypeResponsibilitiesTaken[$eventType])) {
             $this->eventTypeResponsibilitiesTaken[$eventType] = 1;
@@ -135,10 +123,7 @@ class EventTarget
         }
     }
 
-    /**
-     * @return float|int
-     */
-    public function calculateResponsibility($weights)
+    public function calculateResponsibility($weights): int|float
     {
         $res = 0;
         foreach ($weights as $eventType => $weight) {

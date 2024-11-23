@@ -18,20 +18,16 @@ use App\Entity\EventPast;
 use App\Entity\Setting;
 use App\Enum\EventChangeType;
 use App\Model\Event\SearchModel;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * @Route("/assign")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/assign')]
 class AssignController extends BaseApiController
 {
     /**
-     * @Route("/doctors", name="assign_doctors")
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function doctorsAction(SerializerInterface $serializer)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/doctors', name: 'assign_doctors')]
+    public function doctors(SerializerInterface $serializer)
     {
         $result = [];
 
@@ -48,13 +44,12 @@ class AssignController extends BaseApiController
     }
 
     /**
-     * @Route("/events/{doctor}", name="assign_events")
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      */
-    public function eventsAction(Doctor $doctor)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/events/{doctor}', name: 'assign_events')]
+    public function events(Doctor $doctor): \Symfony\Component\HttpFoundation\JsonResponse
     {
         // get all common clinics of current user & selected one
         $allowedFilter = [];
@@ -81,11 +76,10 @@ class AssignController extends BaseApiController
     }
 
     /**
-     * @Route("/assign/{event}/{doctor}", name="assign_assign")
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function assignAction(Event $event, Doctor $doctor)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/assign/{event}/{doctor}', name: 'assign_assign')]
+    public function assign(Event $event, Doctor $doctor)
     {
         $event->setDoctor($doctor);
         $eventPast = EventPast::create($event, EventChangeType::DOCTOR_ASSIGNED, $this->getUser());

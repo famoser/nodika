@@ -23,7 +23,7 @@ class BaseApiController extends BaseController
 {
     protected function returnOk()
     {
-        return new Response('', 204);
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -41,7 +41,7 @@ class BaseApiController extends BaseController
                     'doctors' => ['weight', 'generationScore', 'doctor' => ['id', 'fullName']], 'clinics' => ['weight', 'generationScore', 'clinic' => ['id', 'name']],
                     'previewEvents' => ['startDateTime', 'endDateTime', 'eventType', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName']], ]]
             ),
-            200,
+            Response::HTTP_OK,
             [],
             true
         );
@@ -63,7 +63,7 @@ class BaseApiController extends BaseController
                 'json',
                 ['attributes' => ['doctors' => ['id', 'fullName'], 'clinics' => ['id', 'name']]]
             ),
-            200,
+            Response::HTTP_OK,
             [],
             true
         );

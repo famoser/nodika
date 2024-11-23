@@ -22,7 +22,7 @@ class LoadSetting extends BaseFixture
     /**
      * Load data fixtures with the passed EntityManager.
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $setting = new Setting();
         $setting->setCanConfirmDaysAdvance(30);

@@ -19,12 +19,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventGenerationType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('thing', ThingType::class, ['inherit_data' => true]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventGeneration::class,

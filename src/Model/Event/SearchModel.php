@@ -21,35 +21,17 @@ class SearchModel
     public const MONTH = 1;
     public const YEAR = 2;
 
-    /**
-     * @var \DateTime
-     */
-    private $startDateTime;
+    private \DateTime $startDateTime;
 
-    /**
-     * @var \DateTime
-     */
-    private $endDateTime;
+    private \DateTime $endDateTime;
 
-    /**
-     * @var Clinic|null
-     */
-    private $clinic;
+    private ?Clinic $clinic = null;
 
-    /**
-     * @var Doctor|null
-     */
-    private $doctor;
+    private ?Doctor $doctor = null;
 
-    /**
-     * @var bool|null
-     */
-    private $isConfirmed;
+    private ?bool $isConfirmed = null;
 
-    /**
-     * @var int
-     */
-    private $maxResults = 3000;
+    private int $maxResults = 3000;
 
     /**
      * @var Clinic[]
@@ -61,10 +43,7 @@ class SearchModel
      */
     private $eventTags;
 
-    /**
-     * @var bool
-     */
-    private $invertOrder = false;
+    private bool $invertOrder = false;
 
     public function __construct($size)
     {
@@ -79,10 +58,7 @@ class SearchModel
         }
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStartDateTime()
+    public function getStartDateTime(): \DateTime
     {
         return $this->startDateTime;
     }

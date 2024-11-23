@@ -18,7 +18,7 @@ use App\Entity\Traits\EventTrait;
 
 class ConflictLookup
 {
-    private $lookup;
+    private \PDO $lookup;
 
     /**
      * ConflictLookup constructor.
@@ -39,7 +39,7 @@ class ConflictLookup
     /**
      * @param EventTrait[] $events
      */
-    public function addEvents(array $events, \DateInterval $bufferSize)
+    public function addEvents(array $events, \DateInterval $bufferSize): void
     {
         // convert events to insert array
         $insertArray = [];
@@ -87,10 +87,8 @@ class ConflictLookup
 
     /**
      * @param EventTrait $event
-     *
-     * @return bool
      */
-    public function hasConflict(EventTarget $eventTarget, $event)
+    public function hasConflict(EventTarget $eventTarget, $event): bool
     {
         $parameters = [];
         $sql = 'SELECT COUNT(*) FROM conflicts WHERE ';

@@ -21,17 +21,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/doctors")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/doctors')]
 class DoctorController extends BaseController
 {
     /**
      * checks if the email is already used, and shows an error to the user if so.
-     *
-     * @return bool
      */
-    private function emailNotUsed(Doctor $user, TranslatorInterface $translator)
+    private function emailNotUsed(Doctor $user, TranslatorInterface $translator): bool
     {
         $existing = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['email' => $user->getEmail()]);
         if (\count($existing) > 0) {
@@ -44,11 +40,10 @@ class DoctorController extends BaseController
     }
 
     /**
-     * @Route("/new", name="administration_doctor_new")
-     *
      * @return Response
      */
-    public function newAction(Request $request, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_doctor_new')]
+    public function new(Request $request, TranslatorInterface $translator)
     {
         $user = new Doctor();
         $user->setPlainPassword(uniqid());
@@ -58,7 +53,7 @@ class DoctorController extends BaseController
         $myForm = $this->handleCreateForm(
             $request,
             $user,
-            function () use ($user, $translator) {
+            function () use ($user, $translator): bool {
                 return $this->emailNotUsed($user, $translator);
             }
         );
@@ -72,18 +67,21 @@ class DoctorController extends BaseController
     }
 
     /**
-     * @Route("/{doctor}/edit", name="administration_doctor_edit")
-     *
      * @return Response
      */
-    public function editAction(Request $request, Doctor $doctor, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/edit', name: 'administration_doctor_edit')]
+    public function edit(Request $request, Doctor $doctor, TranslatorInterface $translator)
     {
         $beforeEmail = $doctor->getEmail();
         $myForm = $this->handleUpdateForm(
             $request,
             $doctor,
-            function () use ($doctor, $translator, $beforeEmail) {
-                return $beforeEmail === $doctor->getEmail() || $this->emailNotUsed($doctor, $translator);
+            function () use ($doctor, $translator, $beforeEmail): bool {
+                if ($beforeEmail === $doctor->getEmail()) {
+                    return true;
+                }
+
+                return $this->emailNotUsed($doctor, $translator);
             }
         );
 
@@ -103,13 +101,13 @@ class DoctorController extends BaseController
      *
      * @return Response
      */
-    public function removeAction(Request $request, Doctor $doctor)
+    public function remove(Request $request, Doctor $doctor)
     {
         $canDelete = 0 === $doctor->getEvents()->count();
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $doctor),
             $request,
-            function () use ($doctor, $canDelete) {
+            function () use ($doctor, $canDelete): void {
                 if ($canDelete) {
                     $this->fastRemove($doctor);
                 } else {
@@ -130,13 +128,12 @@ class DoctorController extends BaseController
     }
 
     /**
-     * @Route("/{doctor}/invite", name="administration_doctor_invite")
-     *
      * @return Response
      *
      * @throws \Exception
      */
-    public function inviteAction(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/invite', name: 'administration_doctor_invite')]
+    public function invite(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         if (!$doctor->isEnabled() || null !== $doctor->getLastLoginDate()) {
             $this->displayError($translator->trans('invite.danger.email_not_sent', [], 'administration_doctor'));
@@ -149,13 +146,12 @@ class DoctorController extends BaseController
     }
 
     /**
-     * @Route("/invite_all", name="administration_doctor_invite_all")
-     *
      * @return Response
      *
      * @throws \Exception
      */
-    public function inviteAllAction(TranslatorInterface $translator, InviteEmailService $emailService)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/invite_all', name: 'administration_doctor_invite_all')]
+    public function inviteAll(TranslatorInterface $translator, InviteEmailService $emailService): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null, 'lastLoginDate' => null, 'isEnabled' => true]);
         foreach ($doctors as $doctor) {
@@ -167,11 +163,10 @@ class DoctorController extends BaseController
     }
 
     /**
-     * @Route("/{doctor}/toggle_login_enabled", name="administration_doctor_toggle_login_enabled")
-     *
      * @return Response
      */
-    public function toggleLoginEnabled(Doctor $doctor)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/toggle_login_enabled', name: 'administration_doctor_toggle_login_enabled')]
+    public function toggleLoginEnabled(Doctor $doctor): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         $doctor->setIsEnabled(!$doctor->isEnabled());
         $this->fastSave($doctor);
@@ -184,7 +179,7 @@ class DoctorController extends BaseController
      *
      * @return Breadcrumb[]
      */
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(

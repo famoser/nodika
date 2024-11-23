@@ -22,10 +22,8 @@ class EntityNormalizer extends ObjectNormalizer
 {
     /**
      * Entity manager.
-     *
-     * @var EntityManagerInterface
      */
-    protected $em;
+    protected EntityManagerInterface $em;
 
     /**
      * Entity normalizer.
@@ -42,12 +40,12 @@ class EntityNormalizer extends ObjectNormalizer
         $this->em = $em;
     }
 
-    public function supportsDenormalization($data, $type, $format = null)
+    public function supportsDenormalization($data, $type, $format = null): bool
     {
         return 0 === mb_strpos($type, 'App\\Entity\\') && (is_numeric($data) || \is_string($data));
     }
 
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $class, $format = null, array $context = []): mixed
     {
         return $this->em->find($class, $data);
     }

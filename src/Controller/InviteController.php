@@ -16,20 +16,13 @@ use App\Form\Traits\User\ChangePasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/invite")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/invite')]
 class InviteController extends LoginController
 {
-    /**
-     * @Route("/doctor/{guid}", name="invite_doctor")
-     *
-     * @return Response
-     */
-    public function doctorAction(Request $request, $guid, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/doctor/{guid}', name: 'invite_doctor')]
+    public function doctor(Request $request, $guid, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\RedirectResponse|Response
     {
         $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['invitationIdentifier' => $guid]);
         if (null === $user) {

@@ -20,22 +20,18 @@ use App\Service\Interfaces\CsvServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/search")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/search')]
 class SearchController extends BaseFormController
 {
     use EventControllerTrait;
 
     /**
-     * @Route("/", name="search_index")
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'search_index')]
+    public function index(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
     {
         $searchModel = new SearchModel(SearchModel::MONTH);
 

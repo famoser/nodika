@@ -78,7 +78,7 @@ class BaseController extends AbstractController
     /**
      * @param string $link
      */
-    private function displayFlash($type, $message, $link = null)
+    private function displayFlash(string $type, $message, $link = null): void
     {
         if (null !== $link) {
             $message = '<a href="'.$link.'">'.$message.'</a>';
@@ -97,7 +97,7 @@ class BaseController extends AbstractController
     /**
      * @return Breadcrumb[]|array
      */
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return [
             new Breadcrumb(

@@ -23,14 +23,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventGenerationDateExceptionType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('startDateTime', EntityType::class, ['class' => EventGeneration::class]);
         $builder->add('endDateTime', EntityType::class, ['class' => Clinic::class]);
         $builder->add('eventType', ChoiceType::class, EventType::getBuilderArguments());
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventGenerationDateException::class,

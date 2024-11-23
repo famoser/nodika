@@ -18,29 +18,19 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An EventGenerationClinic specifies additional properties for a clinic.
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class EventGenerationTargetClinic extends BaseEntity
 {
     use EventGenerationTarget;
     use IdTrait;
 
-    /**
-     * @var Clinic
-     *
-     * @ORM\ManyToOne(targetEntity="Clinic")
-     */
-    private $clinic;
+    #[ORM\ManyToOne(targetEntity: \Clinic::class)]
+    private Clinic $clinic;
 
-    /**
-     * @var EventGeneration
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\EventGeneration", inversedBy="clinics")
-     */
-    private $eventGeneration;
+    #[ORM\ManyToOne(targetEntity: EventGeneration::class, inversedBy: 'clinics')]
+    private EventGeneration $eventGeneration;
 
     public function getClinic(): Clinic
     {

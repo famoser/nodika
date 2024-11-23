@@ -25,7 +25,7 @@ class LoadClinic extends BaseFixture
      *
      * @throws \Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $realExamples = [
             ['kleintierpraxis-baselwest'],
@@ -55,7 +55,7 @@ class LoadClinic extends BaseFixture
         $allClinicsSeen = 0;
         $allUsersSeen = 0;
         $counter = 3;
-        $advanceWithProbability = function () use (&$counter) {
+        $advanceWithProbability = function () use (&$counter): int {
             return $counter * 2 % 7;
         };
         while (true) {
@@ -86,10 +86,8 @@ class LoadClinic extends BaseFixture
 
     /**
      * create an instance with all random values.
-     *
-     * @return Clinic
      */
-    protected function getRandomInstance()
+    protected function getRandomInstance(): Clinic
     {
         $clinic = new Clinic();
         $this->fillCommunication($clinic);

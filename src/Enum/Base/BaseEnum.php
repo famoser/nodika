@@ -65,20 +65,16 @@ abstract class BaseEnum
 
     /**
      * makes from camelCase => camel_case.
-     *
-     * @return string
      */
-    private static function camelCaseToTranslation($camelCase)
+    private function camelCaseToTranslation(string $camelCase): string
     {
         return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $camelCase));
     }
 
     /**
      * generates an array of all possible enum values.
-     *
-     * @return array
      */
-    private function getPossibleValuesInternal()
+    private function getPossibleValuesInternal(): array
     {
         $reflection = new \ReflectionClass(static::class);
 
@@ -87,10 +83,8 @@ abstract class BaseEnum
 
     /**
      * generates an array to be used in form fields.
-     *
-     * @return array
      */
-    private function getChoicesForBuilderInternal()
+    private function getChoicesForBuilderInternal(): array
     {
         $res = [];
         $reflection = new \ReflectionClass(static::class);
@@ -106,10 +100,8 @@ abstract class BaseEnum
 
     /**
      * returns a translation string for the passed enum value.
-     *
-     * @return bool|string
      */
-    private function getTranslationInternal($enumValue, TranslatorInterface $translator)
+    private function getTranslationInternal($enumValue, TranslatorInterface $translator): string
     {
         $reflection = new \ReflectionClass(static::class);
 
@@ -120,10 +112,8 @@ abstract class BaseEnum
      * returns a translation string for the passed enum value.
      *
      * @param \ReflectionClass $reflection
-     *
-     * @return bool|string
      */
-    private function getTextInternal($enumValue, $reflection = null)
+    private function getTextInternal($enumValue, $reflection = null): string
     {
         if (null === $reflection) {
             $reflection = new \ReflectionClass(static::class);

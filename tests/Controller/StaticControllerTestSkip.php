@@ -25,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class StaticControllerTestSkip extends WebTestCase
 {
-    public function testIndex()
+    public function testIndex(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/');

@@ -18,136 +18,79 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An Email is a sent email to the specified receivers.
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Email extends BaseEntity
 {
     use IdTrait;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $receiver;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    private ?string $receiver = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $identifier;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    private ?string $identifier = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $subject;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    private ?string $subject = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $body;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    private ?string $body = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $actionText;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $actionText = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $actionLink;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $actionLink = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $carbonCopy;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT, nullable: true)]
+    private ?string $carbonCopy = null;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $emailType = EmailType::TEXT_EMAIL;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $emailType = EmailType::TEXT_EMAIL;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime")
-     */
-    private $sentDateTime;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $sentDateTime = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $visitedDateTime;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $visitedDateTime = null;
 
-    /**
-     * @return string
-     */
-    public function getBody()
+    public function getBody(): ?string
     {
         return $this->body;
     }
 
-    public function setBody(string $body)
+    public function setBody(string $body): void
     {
         $this->body = $body;
     }
 
-    /**
-     * @return string
-     */
-    public function getActionText()
+    public function getActionText(): ?string
     {
         return $this->actionText;
     }
 
-    public function setActionText(string $actionText)
+    public function setActionText(string $actionText): void
     {
         $this->actionText = $actionText;
     }
 
-    /**
-     * @return string
-     */
-    public function getActionLink()
+    public function getActionLink(): ?string
     {
         return $this->actionLink;
     }
 
-    public function setActionLink(string $actionLink)
+    public function setActionLink(string $actionLink): void
     {
         $this->actionLink = $actionLink;
     }
 
-    /**
-     * @return string
-     */
-    public function getCarbonCopy()
+    public function getCarbonCopy(): ?string
     {
         return $this->carbonCopy;
     }
 
-    /**
-     * @param string $carbonCopy
-     */
-    public function setCarbonCopy($carbonCopy)
+    public function setCarbonCopy(?string $carbonCopy): void
     {
         $this->carbonCopy = $carbonCopy;
     }
@@ -155,7 +98,7 @@ class Email extends BaseEntity
     /**
      * @return string[]
      */
-    public function getCarbonCopyArray()
+    public function getCarbonCopyArray(): array
     {
         if (mb_strlen($this->carbonCopy) > 0) {
             return explode(',', $this->carbonCopy);
@@ -167,7 +110,7 @@ class Email extends BaseEntity
     /**
      * @param string[] $carbonCopy
      */
-    public function setCarbonCopyArray($carbonCopy)
+    public function setCarbonCopyArray($carbonCopy): void
     {
         $this->carbonCopy = implode(',', $carbonCopy);
     }
@@ -175,12 +118,12 @@ class Email extends BaseEntity
     /**
      * @return \DateTime
      */
-    public function getSentDateTime()
+    public function getSentDateTime(): ?\DateTimeInterface
     {
         return $this->sentDateTime;
     }
 
-    public function setSentDateTime(\DateTime $sentDateTime)
+    public function setSentDateTime(\DateTime $sentDateTime): void
     {
         $this->sentDateTime = $sentDateTime;
     }
@@ -188,71 +131,60 @@ class Email extends BaseEntity
     /**
      * @return \DateTime
      */
-    public function getVisitedDateTime()
+    public function getVisitedDateTime(): ?\DateTimeInterface
     {
         return $this->visitedDateTime;
     }
 
-    public function setVisitedDateTime(\DateTime $visitedDateTime)
+    public function setVisitedDateTime(\DateTime $visitedDateTime): void
     {
         $this->visitedDateTime = $visitedDateTime;
     }
 
     /**
      * returns a string representation of this entity.
-     *
-     * @return string
      */
-    public function getFullIdentifier()
+    public function getFullIdentifier(): string
     {
         return $this->getReceiver().' '.$this->getSubject();
     }
 
-    public function getReceiver()
+    public function getReceiver(): ?string
     {
         return $this->receiver;
     }
 
-    public function setReceiver($receiver)
+    public function setReceiver(?string $receiver): void
     {
         $this->receiver = $receiver;
     }
 
-    /**
-     * @return string
-     */
-    public function getSubject()
+    public function getSubject(): ?string
     {
         return $this->subject;
     }
 
-    public function setSubject(string $subject)
+    public function setSubject(string $subject): void
     {
         $this->subject = $subject;
     }
 
-    /**
-     * @return int
-     */
-    public function getEmailType()
+    public function getEmailType(): ?int
     {
         return $this->emailType;
     }
 
-    public function setEmailType(int $emailType)
+    public function setEmailType(int $emailType): void
     {
         $this->emailType = $emailType;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdentifier()
+    public function getIdentifier(): ?string
     {
         return $this->identifier;
     }
 
-    public function setIdentifier(string $identifier)
+    public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
     }

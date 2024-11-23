@@ -31,10 +31,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class EventGenerationService implements EventGenerationServiceInterface
 {
-    /**
-     * @var ManagerRegistry
-     */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
     {
@@ -49,7 +46,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @return array is an array of the form (targetId => bucketsAssigned) (int => int)
      */
-    private function distributeToTargets($weightedTargets, $bucketsCount)
+    private function distributeToTargets(array $weightedTargets, $bucketsCount): array
     {
         $queueGenerator = new QueueGenerator($weightedTargets);
 
@@ -76,7 +73,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @return EventGenerationPreviewEvent[]|array
      */
-    private function constructEvents(EventGeneration $eventGeneration)
+    private function constructEvents(EventGeneration $eventGeneration): array
     {
         $now = new \DateTime();
 
@@ -105,11 +102,9 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * creates the events to be assigned according to the cron values.
      *
-     * @return ConflictLookup
-     *
      * @throws \Exception
      */
-    private function createConflictLookup(EventGeneration $eventGeneration)
+    private function createConflictLookup(EventGeneration $eventGeneration): ConflictLookup
     {
         $now = new \DateTime();
 
@@ -159,7 +154,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @param EventGenerationPreviewEvent[] $events
      */
-    private function assignNaiveEventType(array $events)
+    private function assignNaiveEventType(array $events): void
     {
         foreach ($events as $event) {
             $dayOfWeek = (int) $event->getStartDateTime()->format('N');
@@ -178,20 +173,21 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @param EventGenerationPreviewEvent[] $events
      */
-    private function processEventTypeExceptions(EventGeneration $eventGeneration, array $events)
+    private function processEventTypeExceptions(EventGeneration $eventGeneration, array $events): void
     {
         foreach ($events as $event) {
             foreach ($eventGeneration->getDateExceptions() as $dateException) {
-                // if inside the specified range
-                if (
-                    $event->getStartDateTime() >= $dateException->getStartDateTime()
-                    && $event->getStartDateTime() <= $dateException->getEndDateTime()
-                ) {
-                    // apply the special stuff
-                    if (null !== $dateException->getEventType()) {
-                        $event->setEventType($dateException->getEventType());
-                    }
+                if ($event->getStartDateTime() < $dateException->getStartDateTime()) {
+                    continue;
                 }
+                if ($event->getStartDateTime() > $dateException->getEndDateTime()) {
+                    continue;
+                }
+                // apply the special stuff
+                if (null === $dateException->getEventType()) {
+                    continue;
+                }
+                $event->setEventType($dateException->getEventType());
             }
         }
     }
@@ -203,7 +199,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @return array an array of the form (eventType => int)
      */
-    private function countEventTypes(array $events)
+    private function countEventTypes(array $events): array
     {
         $values = EventType::getPossibleValues();
         $counter = [];
@@ -221,7 +217,7 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * @return EventTarget[]
      */
-    private function getEventTargets(EventGeneration $eventGeneration)
+    private function getEventTargets(EventGeneration $eventGeneration): array
     {
         $targets = [];
         $currentId = 1;
@@ -242,7 +238,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @return EventTarget[]
      */
-    private function getOrderedEventTargetLookup(array $eventTargets)
+    private function getOrderedEventTargetLookup(array $eventTargets): array
     {
         // put in orderable array
         /** @var EventTarget[][] $orderable */
@@ -268,7 +264,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      *
      * @return array (int => float)
      */
-    private function getWeigthedTargetArray(array $eventTargets)
+    private function getWeigthedTargetArray(array $eventTargets): array
     {
         $result = [];
         foreach ($eventTargets as $eventTarget) {
@@ -281,7 +277,7 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * @return Event[]
      */
-    private function getPreviousEvents(EventGeneration $eventGeneration, $newEventCount, $newTargetCount)
+    private function getPreviousEvents(EventGeneration $eventGeneration, int $newEventCount, int $newTargetCount): array
     {
         // the limit specifies how many events will have an influence to the generation
         // keep the number between 1000 & 10'000, ideally relative to the generation
@@ -298,27 +294,19 @@ class EventGenerationService implements EventGenerationServiceInterface
 
         $events = $this->doctrine->getRepository(Event::class)->search($searchModel);
 
-        $events = array_reverse($events);
-
-        return $events;
+        return array_reverse($events);
     }
 
     /**
      * @param EventTrait[]  $events
      * @param EventTarget[] $eventTargets
-     *
-     * @return array
      */
-    private function eventsToWarmupArray(array $events, array $eventTargets)
+    private function eventsToWarmupArray(array $events, array $eventTargets): array
     {
         $result = [];
         foreach ($events as $event) {
             $eventTarget = $this->getPredeterminedEventTargetOfEvent($event, $eventTargets);
-            if (null !== $eventTarget) {
-                $result[] = $eventTarget->getIdentifier();
-            } else {
-                $result[] = EventTarget::NONE_IDENTIFIER;
-            }
+            $result[] = null !== $eventTarget ? $eventTarget->getIdentifier() : EventTarget::NONE_IDENTIFIER;
         }
 
         return $result;
@@ -352,16 +340,12 @@ class EventGenerationService implements EventGenerationServiceInterface
         $clinics = $this->eventTargetClinicLookup;
         $doctors = $this->eventTargetDoctorLookup;
 
-        if (null !== $event->getDoctor()) {
-            if (isset($doctors[$event->getDoctor()->getId()])) {
-                return $doctors[$event->getDoctor()->getId()];
-            }
+        if (null !== $event->getDoctor() && isset($doctors[$event->getDoctor()->getId()])) {
+            return $doctors[$event->getDoctor()->getId()];
         }
 
-        if (null !== $event->getClinic()) {
-            if (isset($clinics[$event->getClinic()->getId()])) {
-                return $clinics[$event->getClinic()->getId()];
-            }
+        if (null !== $event->getClinic() && isset($clinics[$event->getClinic()->getId()])) {
+            return $clinics[$event->getClinic()->getId()];
         }
 
         return null;
@@ -373,7 +357,7 @@ class EventGenerationService implements EventGenerationServiceInterface
      * @throws GenerationException
      * @throws \Exception
      */
-    public function generate(EventGeneration $eventGeneration)
+    public function generate(EventGeneration $eventGeneration): void
     {
         $tries = 100;
         $lastException = null;
@@ -390,7 +374,7 @@ class EventGenerationService implements EventGenerationServiceInterface
         throw $lastException;
     }
 
-    public function persist(EventGeneration $eventGeneration, Doctor $creator)
+    public function persist(EventGeneration $eventGeneration, Doctor $creator): void
     {
         $manager = $this->doctrine->getManager();
 
@@ -420,18 +404,18 @@ class EventGenerationService implements EventGenerationServiceInterface
     /**
      * @throws GenerationException
      */
-    private function doGenerate(EventGeneration $eventGeneration)
+    private function doGenerate(EventGeneration $eventGeneration): void
     {
         // create events & fill out properties
         $events = $this->constructEvents($eventGeneration);
-        if (0 === \count($events)) {
+        if ([] === $events) {
             return;
         }
 
         // get event targets
         $targets = $this->getEventTargets($eventGeneration);
         $targetLookup = $this->getOrderedEventTargetLookup($targets);
-        if (0 === \count($targetLookup)) {
+        if ([] === $targetLookup) {
             return;
         }
 
@@ -472,7 +456,7 @@ class EventGenerationService implements EventGenerationServiceInterface
             }
 
             // sort descending by count
-            usort($sortedEventTypes, function ($a, $b) {
+            usort($sortedEventTypes, function (array $a, array $b): int {
                 return $a[1] === $b[1] ? 0 : ($a[1] < $b[1] ? -1 : 1);
             });
 
@@ -527,11 +511,9 @@ class EventGenerationService implements EventGenerationServiceInterface
         $targetCount = \count($targets);
         foreach ($events as $event) {
             $target = $this->getPredeterminedEventTargetOfEvent($event, $targetLookup);
-            if (null !== $target) {
-                // sanity check for predetermined event target
-                if (!$target->canAssumeResponsibility($event->getEventType()) || $conflictLookup->hasConflict($target, $event)) {
-                    throw new GenerationException(GenerationStatus::PREDETERMINED_EVENT_CANT_BE_ASSIGNED);
-                }
+            // sanity check for predetermined event target
+            if (null !== $target && (!$target->canAssumeResponsibility($event->getEventType()) || $conflictLookup->hasConflict($target, $event))) {
+                throw new GenerationException(GenerationStatus::PREDETERMINED_EVENT_CANT_BE_ASSIGNED);
             }
 
             // try to find target if not specified

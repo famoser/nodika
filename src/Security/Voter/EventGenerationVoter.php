@@ -22,7 +22,7 @@ class EventGenerationVoter extends BaseVoter
      *
      * @return bool True if the attribute and subject are supported, false otherwise
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return $subject instanceof EventGeneration;
     }

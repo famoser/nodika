@@ -24,7 +24,7 @@ class LoadDoctor extends BaseFixture
      *
      * @throws \Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // load some doctors
         $this->loadSomeRandoms($manager, 30);
@@ -51,10 +51,8 @@ class LoadDoctor extends BaseFixture
 
     /**
      * create an instance with all random values.
-     *
-     * @return Doctor
      */
-    protected function getRandomInstance()
+    protected function getRandomInstance(): Doctor
     {
         $doctor = new Doctor();
         $this->fillAddress($doctor);

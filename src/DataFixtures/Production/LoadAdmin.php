@@ -23,7 +23,7 @@ class LoadAdmin extends LoadDoctor
      *
      * @throws \Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // create admin
         $admin = $this->getRandomInstance();

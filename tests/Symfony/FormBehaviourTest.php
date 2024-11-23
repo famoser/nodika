@@ -16,7 +16,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class FormBehaviourTest extends TypeTestCase
 {
-    public function testObjectSet()
+    public function testObjectSet(): void
     {
         /*
         $object = new Member();

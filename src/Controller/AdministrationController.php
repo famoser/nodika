@@ -24,22 +24,15 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/administration")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/administration')]
 class AdministrationController extends BaseFormController
 {
     use EventControllerTrait;
 
-    /**
-     * @Route("/", name="administration_index")
-     *
-     * @return Response
-     */
-    public function indexAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'administration_index')]
+    public function index(): Response
     {
         $searchModel = new SearchModel(SearchModel::MONTH);
         $searchModel->setIsConfirmed(false);
@@ -53,11 +46,10 @@ class AdministrationController extends BaseFormController
     }
 
     /**
-     * @Route("/events", name="administration_events")
-     *
      * @return Response
      */
-    public function eventsAction(Request $request, CsvServiceInterface $csvService, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/events', name: 'administration_events')]
+    public function events(Request $request, CsvServiceInterface $csvService, TranslatorInterface $translator)
     {
         $searchModel = new SearchModel(SearchModel::YEAR);
 
@@ -88,12 +80,8 @@ class AdministrationController extends BaseFormController
         return $this->render('administration/events.html.twig', $arr);
     }
 
-    /**
-     * @Route("/doctors", name="administration_doctors")
-     *
-     * @return Response
-     */
-    public function doctorsAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/doctors', name: 'administration_doctors')]
+    public function doctors(): Response
     {
         $doctorRepo = $this->getDoctrine()->getRepository(Doctor::class);
 
@@ -107,12 +95,8 @@ class AdministrationController extends BaseFormController
         return $this->render('administration/doctors.html.twig', $arr);
     }
 
-    /**
-     * @Route("/clinics", name="administration_clinics")
-     *
-     * @return Response
-     */
-    public function clinicsAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/clinics', name: 'administration_clinics')]
+    public function clinics(): Response
     {
         $clinicRepo = $this->getDoctrine()->getRepository(Clinic::class);
 
@@ -126,7 +110,7 @@ class AdministrationController extends BaseFormController
      *
      * @return Breadcrumb[]
      */
-    protected function getIndexBreadcrumbs()
+    protected function getIndexBreadcrumbs(): array
     {
         return [
             new Breadcrumb(

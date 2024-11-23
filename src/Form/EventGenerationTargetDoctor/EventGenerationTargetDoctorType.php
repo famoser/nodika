@@ -22,14 +22,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventGenerationTargetDoctorType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('eventGeneration', EntityType::class, ['class' => EventGeneration::class]);
         $builder->add('doctor', EntityType::class, ['class' => Doctor::class]);
         $builder->add('weight', NumberType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EventGenerationTargetDoctor::class,

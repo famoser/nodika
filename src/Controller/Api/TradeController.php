@@ -21,21 +21,14 @@ use App\Service\EmailService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/trade")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/trade')]
 class TradeController extends BaseApiController
 {
-    /**
-     * @Route("/my_events", name="api_trade_my_events")
-     *
-     * @return JsonResponse
-     */
-    public function apiMyEventsAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/my_events', name: 'api_trade_my_events')]
+    public function apiMyEvents(): JsonResponse
     {
         // get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
@@ -52,12 +45,8 @@ class TradeController extends BaseApiController
         return $this->returnEvents($apiEvents);
     }
 
-    /**
-     * @Route("/their_events", name="ap_trade_their_events")
-     *
-     * @return JsonResponse
-     */
-    public function theirEventsAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/their_events', name: 'ap_trade_their_events')]
+    public function theirEvents(): JsonResponse
     {
         // get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
@@ -75,10 +64,9 @@ class TradeController extends BaseApiController
     }
 
     /**
-     * @Route("/clinics", name="api_trade_clinics")
-     *
      * @return JsonResponse
      */
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/clinics', name: 'api_trade_clinics')]
     public function apiClinics()
     {
         $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null], ['name' => 'ASC']);
@@ -87,10 +75,9 @@ class TradeController extends BaseApiController
     }
 
     /**
-     * @Route("/self", name="api_trade_self")
-     *
      * @return JsonResponse
      */
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/self', name: 'api_trade_self')]
     public function self()
     {
         return $this->returnDoctors($this->getUser());
@@ -101,7 +88,7 @@ class TradeController extends BaseApiController
      *
      * @return Event[]|bool
      */
-    private function getEventsFromIds($eventIds)
+    private function getEventsFromIds($eventIds): false|array
     {
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         /* @var \App\Entity\Event[] $events */
@@ -119,10 +106,8 @@ class TradeController extends BaseApiController
 
     /**
      * constructs the event offer, returns false if any values are wrong.
-     *
-     * @return EventOffer|bool
      */
-    private function constructEventOffer($values)
+    private function constructEventOffer($values): false|EventOffer
     {
         // check POST parameters
         $required = ['sender_event_ids', 'receiver_event_ids', 'sender_clinic_id', 'receiver_doctor_id', 'receiver_clinic_id', 'description'];
@@ -174,15 +159,12 @@ class TradeController extends BaseApiController
     }
 
     /**
-     * @Route("/create", name="api_trade_create")
-     *
-     * @return Response
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
-    public function create(Request $request, EmailService $emailService, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/create', name: 'api_trade_create')]
+    public function create(Request $request, EmailService $emailService, TranslatorInterface $translator): Response
     {
         // try to construct offer from POST values
         $eventOffer = $this->constructEventOffer(json_decode($request->getContent(), true));

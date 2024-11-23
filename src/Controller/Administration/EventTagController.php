@@ -15,19 +15,15 @@ use App\Controller\Administration\Base\BaseController;
 use App\Entity\EventTag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/event_tag")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/event_tag')]
 class EventTagController extends BaseController
 {
     /**
-     * @Route("/new", name="administration_event_tag_new")
-     *
      * @return Response
      */
-    public function newAction(Request $request)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_event_tag_new')]
+    public function new(Request $request)
     {
         $myForm = $this->handleCreateForm($request, new EventTag());
 
@@ -41,11 +37,10 @@ class EventTagController extends BaseController
     }
 
     /**
-     * @Route("/{eventTag}/edit", name="administration_event_tag_edit")
-     *
      * @return Response
      */
-    public function editAction(Request $request, EventTag $eventTag)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{eventTag}/edit', name: 'administration_event_tag_edit')]
+    public function edit(Request $request, EventTag $eventTag)
     {
         $myForm = $this->handleUpdateForm($request, $eventTag);
 
@@ -59,11 +54,10 @@ class EventTagController extends BaseController
     }
 
     /**
-     * @Route("/{eventTag}/remove", name="administration_event_tag_remove")
-     *
      * @return Response
      */
-    public function removeAction(Request $request, EventTag $eventTag)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/{eventTag}/remove', name: 'administration_event_tag_remove')]
+    public function remove(Request $request, EventTag $eventTag)
     {
         $myForm = $this->handleRemoveForm($request, $eventTag);
 

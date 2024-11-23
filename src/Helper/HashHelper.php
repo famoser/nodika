@@ -15,10 +15,8 @@ class HashHelper
 {
     /**
      * creates a hash fit to be used as reset hash.
-     *
-     * @return string
      */
-    public static function createNewResetHash()
+    public static function createNewResetHash(): string
     {
         $newHash = '';
         // 0-9, A-Z, a-z
@@ -26,7 +24,8 @@ class HashHelper
         for ($i = 0; $i < 20; ++$i) {
             $rand = mt_rand(20, 160);
             $allowed = false;
-            for ($j = 0; $j < \count($allowedRanges); ++$j) {
+            $counter = \count($allowedRanges);
+            for ($j = 0; $j < $counter; ++$j) {
                 if ($allowedRanges[$j][0] <= $rand && $allowedRanges[$j][1] >= $rand) {
                     $allowed = true;
                 }

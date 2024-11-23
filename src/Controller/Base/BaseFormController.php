@@ -137,7 +137,7 @@ class BaseFormController extends BaseDoctrineController
             $translator->trans('submit.delete', [], 'common_form'),
             $translator->trans('successful.delete', [], 'common_form'),
             $beforeRemoveCallable ??
-            function () {
+            function (): true {
                 return true;
             }
         );
@@ -153,7 +153,7 @@ class BaseFormController extends BaseDoctrineController
      *
      * @return FormInterface the constructed form
      */
-    private function handleRemoveFormInternal(Request $request, BaseEntity $entity, $formType, $buttonLabel, $successText, $beforeRemoveCallable)
+    private function handleRemoveFormInternal(Request $request, BaseEntity $entity, string $formType, $buttonLabel, $successText, $beforeRemoveCallable)
     {
         $myOnSuccessCallable = function ($form) use ($entity, $successText, $beforeRemoveCallable) {
             $manager = $this->getDoctrine()->getManager();
@@ -179,12 +179,9 @@ class BaseFormController extends BaseDoctrineController
      * produces App\Form\MyClassName\MyClassNameType from Famoser\Class\MyClassName
      * if $isRemoveType is true then the remove form is returned.
      *
-     * @param string $classWithNamespace
-     * @param string $prepend            is prepended to class name
-     *
-     * @return string
+     * @param string $prepend is prepended to class name
      */
-    private function classToFormType($classWithNamespace, $prepend = '')
+    private function classToFormType(string $classWithNamespace, string $prepend = ''): string
     {
         $className = mb_substr($classWithNamespace, mb_strrpos($classWithNamespace, '\\') + 1);
 

@@ -40,18 +40,14 @@ abstract class BaseUserProvider implements UserProviderInterface
      * object can just be merged into some internal array of users / identity
      * map.
      *
-     * @return UserInterface
-     *
      * @throws UnsupportedUserException if the account is not supported
      */
-    abstract public function refreshUser(UserInterface $user);
+    abstract public function refreshUser(UserInterface $user): UserInterface;
 
     /**
      * Whether this provider supports the given user class.
      *
      * @param string $class
-     *
-     * @return bool
      */
-    abstract public function supportsClass($class);
+    abstract public function supportsClass($class): bool;
 }

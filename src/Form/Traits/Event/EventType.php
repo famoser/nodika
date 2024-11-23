@@ -21,14 +21,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('clinic', EntityType::class, ['class' => Clinic::class, 'translation_domain' => 'entity_clinic', 'label' => 'entity.name', 'required' => false]);
         $builder->add('doctor', EntityType::class, ['class' => Doctor::class, 'translation_domain' => 'entity_doctor', 'label' => 'entity.name', 'required' => false]);
         $builder->add('eventType', ChoiceType::class, \App\Enum\EventType::getBuilderArguments());
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_event',

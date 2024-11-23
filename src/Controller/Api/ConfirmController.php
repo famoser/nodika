@@ -20,23 +20,17 @@ use App\Enum\EventChangeType;
 use App\Model\Event\SearchModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/confirm")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/confirm')]
 class ConfirmController extends BaseApiController
 {
     use EventControllerTrait;
 
     /**
-     * @Route("/events", name="api_confirm_events")
-     *
-     * @return JsonResponse
-     *
      * @throws \Exception
      */
-    public function apiEventsAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/events', name: 'api_confirm_events')]
+    public function apiEvents(): JsonResponse
     {
         // get all assignable events
         $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
@@ -57,12 +51,8 @@ class ConfirmController extends BaseApiController
         return $this->returnEvents($apiEvents);
     }
 
-    /**
-     * @Route("/event/{event}", name="api_confirm_event")
-     *
-     * @return Response
-     */
-    public function apiConfirmAction(Event $event)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/event/{event}', name: 'api_confirm_event')]
+    public function apiConfirm(Event $event): Response
     {
         // either assigned to this user or of a clinic the user is part of
         if (null !== $event->getDoctor() && $event->getDoctor()->getId() === $this->getUser()->getId()

@@ -16,50 +16,27 @@ use App\Entity\Traits\ChangeAwareTrait;
 use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\SettingsRepository")
- *
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: \App\Repository\SettingsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Setting extends BaseEntity
 {
     use ChangeAwareTrait;
     use IdTrait;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $doctorsCanEditSelf = true;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $doctorsCanEditSelf = true;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $doctorsCanEditClinics = false;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $doctorsCanEditClinics = false;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $canConfirmDaysAdvance = 90;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $canConfirmDaysAdvance = 90;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $mustConfirmDaysAdvance = 10;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $mustConfirmDaysAdvance = 10;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $sendRemainderDaysInterval = 7;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $sendRemainderDaysInterval = 7;
 
     public function getCanConfirmDaysAdvance(): int
     {

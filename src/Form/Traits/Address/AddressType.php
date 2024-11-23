@@ -20,7 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddressType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('street', TextType::class, ['required' => false]);
         $builder->add('streetNr', TextType::class, ['required' => false]);
@@ -30,7 +30,7 @@ class AddressType extends BaseAbstractType
         $builder->add('country', CountryType::class, ['required' => false]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_address',

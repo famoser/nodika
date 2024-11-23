@@ -24,11 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Doctor extends BaseEntity implements UserInterface, EquatableInterface
 {
     use AddressTrait;
@@ -43,38 +40,25 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     use UserTrait;
 
     /**
-     * @var Clinic[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Clinic", inversedBy="doctors")
-     *
-     * @ORM\JoinTable(name="doctor_clinics")
-     *
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Clinic>
      */
-    private $clinics;
+    #[ORM\JoinTable(name: 'doctor_clinics')]
+    #[ORM\ManyToMany(targetEntity: \Clinic::class, inversedBy: 'doctors')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
+    private \Doctrine\Common\Collections\Collection $clinics;
 
     /**
-     * @var Event[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="doctor")
-     *
-     * @ORM\OrderBy({"startDateTime" = "ASC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \Event>
      */
-    private $events;
+    #[ORM\OneToMany(targetEntity: \Event::class, mappedBy: 'doctor')]
+    #[ORM\OrderBy(['startDateTime' => 'ASC'])]
+    private \Doctrine\Common\Collections\Collection $events;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $isAdministrator = false;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $isAdministrator = false;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $receivesAdministratorMail = false;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $receivesAdministratorMail = false;
 
     /**
      * Constructor.
@@ -88,15 +72,12 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     /**     *
      * @return \Doctrine\Common\Collections\Collection|Clinic[]
      */
-    public function getClinics()
+    public function getClinics(): \Doctrine\Common\Collections\Collection
     {
         return $this->clinics;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEvents()
+    public function getEvents(): \Doctrine\Common\Collections\Collection
     {
         return $this->events;
     }
@@ -106,7 +87,7 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
      *
      * @return array (Role|string)[] The user roles
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         if ($this->isAdministrator()) {
             return ['ROLE_ADMIN'];
@@ -117,10 +98,8 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
 
     /**
      * check if this is the same user.
-     *
-     * @return bool
      */
-    public function isEqualTo(UserInterface $user)
+    public function isEqualTo(UserInterface $user): bool
     {
         if (!($user instanceof static)) {
             return false;
@@ -140,14 +119,14 @@ class Doctor extends BaseEntity implements UserInterface, EquatableInterface
     }
 
     /**
-     * @param Clinic[]|ArrayCollection $clinics
+     * @param \Doctrine\Common\Collections\Collection<int, \App\Entity\Clinic> $clinics
      */
-    public function setClinics($clinics): void
+    public function setClinics(\Doctrine\Common\Collections\Collection $clinics): void
     {
         $this->clinics = $clinics;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getFullName();
     }

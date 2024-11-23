@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StartEndType extends BaseAbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $dateArray = ['date_widget' => 'single_text', 'time_widget' => 'single_text'];
 
@@ -26,7 +26,7 @@ class StartEndType extends BaseAbstractType
         $builder->add('endDateTime', DateTimeType::class, $dateArray);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'trait_start_end',

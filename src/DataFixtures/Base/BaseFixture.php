@@ -22,15 +22,11 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, ContainerAwareInterface
+abstract class BaseFixture extends Fixture implements OrderedFixtureInterface
 {
-    /** @var EventGenerationServiceInterface */
-    private $eventGenerationService;
-    /* @var ContainerInterface $container */
-    private $container;
+    private EventGenerationServiceInterface $eventGenerationService;
 
     public function __construct(EventGenerationServiceInterface $eventGenerationService)
     {
@@ -39,7 +35,6 @@ abstract class BaseFixture extends Fixture implements OrderedFixtureInterface, C
 
     public function setContainer(?ContainerInterface $container = null)
     {
-        $this->container = $container;
     }
 
     /**

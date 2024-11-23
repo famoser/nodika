@@ -12,19 +12,12 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
-use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/assign")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/assign')]
 class AssignController extends BaseFormController
 {
-    /**
-     * @Route("/", name="assign_index")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function assignAction()
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'assign_index')]
+    public function assign(): \Symfony\Component\HttpFoundation\Response
     {
         return $this->render('assign/index.html.twig');
     }

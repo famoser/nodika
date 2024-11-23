@@ -19,19 +19,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/settings")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/settings')]
 class SettingController extends BaseController
 {
-    /**
-     * @Route("/edit", name="administration_setting_edit")
-     *
-     * @return Response
-     */
-    public function editAction(Request $request, FormFactoryInterface $factory)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/edit', name: 'administration_setting_edit')]
+    public function edit(Request $request, FormFactoryInterface $factory): Response
     {
         $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
         $settings = $this->handleUpdateForm(
@@ -41,7 +34,7 @@ class SettingController extends BaseController
 
         $admins = $this->processSelectDoctors($request, $factory, 'admins',
             $this->getDoctrine()->getRepository(Doctor::class)->findBy(['isAdministrator' => true]),
-            function ($doctor, $value) {
+            function ($doctor, $value): void {
                 /* @var Doctor $doctor */
                 $doctor->setIsAdministrator($value);
             }
@@ -49,7 +42,7 @@ class SettingController extends BaseController
 
         $emails = $this->processSelectDoctors($request, $factory, 'emails',
             $this->getDoctrine()->getRepository(Doctor::class)->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]),
-            function ($doctor, $value) {
+            function ($doctor, $value): void {
                 /* @var Doctor $doctor */
                 $doctor->setReceivesAdministratorMail($value);
             }
@@ -60,12 +53,11 @@ class SettingController extends BaseController
 
     /**
      * @param Doctor[] $data
-     * @param string   $name
      * @param callable $setProperty
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    private function processSelectDoctors(Request $request, FormFactoryInterface $factory, $name, $data, $setProperty)
+    private function processSelectDoctors(Request $request, FormFactoryInterface $factory, string $name, $data, \Closure $setProperty)
     {
         $adminForm = $factory->createNamedBuilder($name)
             ->setMapped(false)

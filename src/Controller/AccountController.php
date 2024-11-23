@@ -17,20 +17,13 @@ use App\Form\Doctor\EditAccountType;
 use App\Form\Traits\User\ChangePasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/account")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/account')]
 class AccountController extends BaseFormController
 {
-    /**
-     * @Route("/", name="account_index")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction(Request $request, TranslatorInterface $translator)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'account_index')]
+    public function index(Request $request, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\Response
     {
         $arr = [];
 

@@ -19,23 +19,16 @@ use App\Service\EmailService;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/contact")
- */
+#[\Symfony\Component\Routing\Attribute\Route(path: '/contact')]
 class ContactController extends BaseFormController
 {
-    /**
-     * @Route("/", name="contact_index")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function indexAction(Request $request, TranslatorInterface $translator, EmailService $emailService)
+    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'contact_index')]
+    public function index(Request $request, TranslatorInterface $translator, EmailService $emailService): \Symfony\Component\HttpFoundation\Response
     {
         // prefill contact request with user data
-        $createContactRequest = function () {
+        $createContactRequest = function (): ContactRequest {
             $contactRequest = new ContactRequest();
             if ($this->getUser() instanceof Doctor) {
                 $contactRequest->setName($this->getUser()->getFullName());
@@ -47,7 +40,7 @@ class ContactController extends BaseFormController
         $contactRequest = $createContactRequest();
 
         // reuse create form logic
-        $createForm = function ($contactRequest) {
+        $createForm = function ($contactRequest): FormInterface {
             return $this->createForm(ContactRequestType::class, $contactRequest)
                 ->add('form.send', SubmitType::class, ['translation_domain' => 'contact', 'label' => 'index.send_mail']);
         };
@@ -56,7 +49,7 @@ class ContactController extends BaseFormController
         $form = $this->handleForm(
             $createForm($contactRequest),
             $request,
-            function ($form) use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm) {
+            function ($form) use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm): \Symfony\Component\Form\FormInterface {
                 /** @var FormInterface $form */
                 // "check" is a hidden field; if it is filled out then we should prevent the bot from sending emails
                 if (ContactRequestType::CHECK_DATA === $form->get('check')->getData()

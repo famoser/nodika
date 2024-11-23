@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class UserTraitTest extends WebTestCase
 {
-    public function testPasswordHash()
+    public function testPasswordHash(): void
     {
         $user = new Doctor();
         $user->setPlainPassword('asdf1234');

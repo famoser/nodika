@@ -34,11 +34,11 @@ class ArrayCollectionNormalizer implements NormalizerInterface, NormalizerAwareI
      *                                    reference handler can fix it
      * @throws LogicException             Occurs when the normalizer is not called in an expected context
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): string|int|float|bool|\ArrayObject|array|null
     {
         $normalized = [];
 
-        foreach ($object as $key => $val) {
+        foreach ($object as $val) {
             $normalized[] = $this->normalizer->normalize($val, $format, $context);
         }
 
@@ -50,23 +50,18 @@ class ArrayCollectionNormalizer implements NormalizerInterface, NormalizerAwareI
      *
      * @param mixed  $data   Data to normalize
      * @param string $format The format being (de-)serialized from or into
-     *
-     * @return bool
      */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof ArrayCollection;
     }
 
-    /**
-     * @var NormalizerInterface
-     */
-    private $normalizer;
+    private ?NormalizerInterface $normalizer = null;
 
     /**
      * Sets the owning Normalizer object.
      */
-    public function setNormalizer(NormalizerInterface $normalizer)
+    public function setNormalizer(NormalizerInterface $normalizer): void
     {
         $this->normalizer = $normalizer;
     }

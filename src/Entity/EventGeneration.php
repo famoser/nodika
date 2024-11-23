@@ -22,11 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * An EventGeneration is the result of one of the generation algorithms.
- *
- * @ORM\Entity()
- *
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class EventGeneration extends BaseEntity
 {
     use ChangeAwareTrait;
@@ -37,142 +35,89 @@ class EventGeneration extends BaseEntity
     /**
      * this cron expression specifies when a new event starts
      * https://crontab.guru/.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text")
      */
-    private $startCronExpression = '0 8 * * *';
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    private string $startCronExpression = '0 8 * * *';
 
     /**
      * this cron expression specifies when a new event ends
      * https://crontab.guru/.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text")
      */
-    private $endCronExpression = '0 8 * * *';
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
+    private string $endCronExpression = '0 8 * * *';
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $differentiateByEventType = false;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DECIMAL)]
+    private ?string $weekdayWeight = 1;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DECIMAL)]
+    private ?string $saturdayWeight = 1.2;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DECIMAL)]
+    private ?string $sundayWeight = 1.5;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DECIMAL)]
+    private ?string $holidayWeight = 2;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $mindPreviousEvents = true;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $applied = false;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $step = GenerationStep::SET_START_END;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::FLOAT)]
+    private ?float $conflictBufferInEventMultiples = 1;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventTag>
      */
-    private $differentiateByEventType = false;
+    #[ORM\JoinTable(name: 'event_generation_conflicting_event_tags')]
+    #[ORM\ManyToMany(targetEntity: EventTag::class)]
+    private \Doctrine\Common\Collections\Collection $conflictEventTags;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(type="decimal")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventTag>
      */
-    private $weekdayWeight = 1;
+    #[ORM\JoinTable(name: 'event_generation_assign_event_tags')]
+    #[ORM\ManyToMany(targetEntity: EventTag::class)]
+    private \Doctrine\Common\Collections\Collection $assignEventTags;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(type="decimal")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventGenerationDateException>
      */
-    private $saturdayWeight = 1.2;
+    #[ORM\OneToMany(targetEntity: EventGenerationDateException::class, mappedBy: 'eventGeneration', cascade: ['persist'], orphanRemoval: true)]
+    private \Doctrine\Common\Collections\Collection $dateExceptions;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(type="decimal")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventGenerationTargetDoctor>
      */
-    private $sundayWeight = 1.5;
+    #[ORM\OneToMany(targetEntity: \EventGenerationTargetDoctor::class, mappedBy: 'eventGeneration', cascade: ['persist'], orphanRemoval: true)]
+    private \Doctrine\Common\Collections\Collection $doctors;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(type="decimal")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventGenerationTargetClinic>
      */
-    private $holidayWeight = 2;
+    #[ORM\OneToMany(targetEntity: \EventGenerationTargetClinic::class, mappedBy: 'eventGeneration', cascade: ['persist'], orphanRemoval: true)]
+    private \Doctrine\Common\Collections\Collection $clinics;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
+     * @var \Doctrine\Common\Collections\Collection<int, \Event>
      */
-    private $mindPreviousEvents = true;
+    #[ORM\OneToMany(targetEntity: \Event::class, mappedBy: 'generatedBy')]
+    #[ORM\OrderBy(['startDateTime' => 'ASC'])]
+    private \Doctrine\Common\Collections\Collection $appliedEvents;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\EventGenerationPreviewEvent>
      */
-    private $applied = false;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $step = GenerationStep::SET_START_END;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(type="float")
-     */
-    private $conflictBufferInEventMultiples = 1;
-
-    /**
-     * @var EventTag[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
-     *
-     * @ORM\JoinTable(name="event_generation_conflicting_event_tags")
-     */
-    private $conflictEventTags;
-
-    /**
-     * @var EventTag[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\EventTag")
-     *
-     * @ORM\JoinTable(name="event_generation_assign_event_tags")
-     */
-    private $assignEventTags;
-
-    /**
-     * @var EventGenerationDateException[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\EventGenerationDateException", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
-     */
-    private $dateExceptions;
-
-    /**
-     * @var EventGenerationTargetDoctor[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="EventGenerationTargetDoctor", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
-     */
-    private $doctors;
-
-    /**
-     * @var EventGenerationTargetClinic[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="EventGenerationTargetClinic", mappedBy="eventGeneration", cascade={"persist"}, orphanRemoval=true)
-     */
-    private $clinics;
-
-    /**
-     * @var Event[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="generatedBy")
-     *
-     * @ORM\OrderBy({"startDateTime" = "ASC"})
-     */
-    private $appliedEvents;
-
-    /**
-     * @var EventGenerationPreviewEvent[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="EventGenerationPreviewEvent", mappedBy="generatedBy", cascade={"persist"}, orphanRemoval=true)
-     *
-     * @ORM\OrderBy({"startDateTime" = "ASC"})
-     */
-    private $previewEvents;
+    #[ORM\OneToMany(targetEntity: \EventGenerationPreviewEvent::class, mappedBy: 'generatedBy', cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OrderBy(['startDateTime' => 'ASC'])]
+    private \Doctrine\Common\Collections\Collection $previewEvents;
 
     public function __construct()
     {
@@ -188,7 +133,7 @@ class EventGeneration extends BaseEntity
     /**
      * @return Event[]
      */
-    public function getAppliedEvents()
+    public function getAppliedEvents(): \Doctrine\Common\Collections\Collection
     {
         return $this->appliedEvents;
     }
@@ -256,15 +201,15 @@ class EventGeneration extends BaseEntity
     /**
      * @return EventGenerationDateException[]|ArrayCollection
      */
-    public function getDateExceptions()
+    public function getDateExceptions(): \Doctrine\Common\Collections\Collection
     {
         return $this->dateExceptions;
     }
 
     /**
-     * @param EventGenerationDateException[]|ArrayCollection $dateExceptions
+     * @param \Doctrine\Common\Collections\Collection<int, \App\Entity\EventGenerationDateException> $dateExceptions
      */
-    public function setDateExceptions($dateExceptions): void
+    public function setDateExceptions(\Doctrine\Common\Collections\Collection $dateExceptions): void
     {
         $this->dateExceptions = $dateExceptions;
     }
@@ -272,15 +217,15 @@ class EventGeneration extends BaseEntity
     /**
      * @return EventGenerationTargetDoctor[]|ArrayCollection
      */
-    public function getDoctors()
+    public function getDoctors(): \Doctrine\Common\Collections\Collection
     {
         return $this->doctors;
     }
 
     /**
-     * @param EventGenerationTargetDoctor[]|ArrayCollection $doctors
+     * @param \Doctrine\Common\Collections\Collection<int, \App\Entity\EventGenerationTargetDoctor> $doctors
      */
-    public function setDoctors($doctors): void
+    public function setDoctors(\Doctrine\Common\Collections\Collection $doctors): void
     {
         $this->doctors = $doctors;
     }
@@ -288,15 +233,15 @@ class EventGeneration extends BaseEntity
     /**
      * @return EventGenerationTargetClinic[]|ArrayCollection
      */
-    public function getClinics()
+    public function getClinics(): \Doctrine\Common\Collections\Collection
     {
         return $this->clinics;
     }
 
     /**
-     * @param EventGenerationTargetClinic[]|ArrayCollection $clinics
+     * @param \Doctrine\Common\Collections\Collection<int, \App\Entity\EventGenerationTargetClinic> $clinics
      */
-    public function setClinics($clinics): void
+    public function setClinics(\Doctrine\Common\Collections\Collection $clinics): void
     {
         $this->clinics = $clinics;
     }
@@ -334,7 +279,7 @@ class EventGeneration extends BaseEntity
     /**
      * @return EventTag[]|ArrayCollection
      */
-    public function getConflictEventTags()
+    public function getConflictEventTags(): \Doctrine\Common\Collections\Collection
     {
         return $this->conflictEventTags;
     }
@@ -342,7 +287,7 @@ class EventGeneration extends BaseEntity
     /**
      * @return EventTag[]|ArrayCollection
      */
-    public function getAssignEventTags()
+    public function getAssignEventTags(): \Doctrine\Common\Collections\Collection
     {
         return $this->assignEventTags;
     }
@@ -370,7 +315,7 @@ class EventGeneration extends BaseEntity
     /**
      * @return EventGenerationPreviewEvent[]|ArrayCollection
      */
-    public function getPreviewEvents()
+    public function getPreviewEvents(): \Doctrine\Common\Collections\Collection
     {
         return $this->previewEvents;
     }
