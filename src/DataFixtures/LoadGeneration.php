@@ -11,7 +11,6 @@
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Base\BaseFixture;
 use App\DataFixtures\Production\LoadEventTag;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
@@ -22,11 +21,18 @@ use App\Entity\EventGenerationTargetClinic;
 use App\Entity\EventTag;
 use App\Enum\EventType;
 use App\Helper\DateTimeFormatter;
+use App\Service\Interfaces\EventGenerationServiceInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LoadGeneration extends BaseFixture
+class LoadGeneration extends Fixture implements OrderedFixtureInterface
 {
     public const ORDER = LoadSetting::ORDER + LoadClinic::ORDER + LoadDoctor::ORDER + LoadEventTag::ORDER + 1;
+
+    public function __construct(private readonly EventGenerationServiceInterface $eventGenerationService)
+    {
+    }
 
     /**
      * Load data fixtures with the passed EntityManager.
@@ -48,7 +54,7 @@ class LoadGeneration extends BaseFixture
     private function generateForTag(EventTag $tag, Doctor $admin, ObjectManager $manager, string $cronExpression, bool $differentiate): void
     {
         // prepare a generation
-        $generation = $this->getRandomInstance();
+        $generation = new EventGeneration();
         $generation->registerChangeBy($admin);
         $generation->setName('example generation at '.(new \DateTime())->format(DateTimeFormatter::DATE_TIME_FORMAT).' '.$differentiate);
         $generation->setDifferentiateByEventType($differentiate);
@@ -62,9 +68,10 @@ class LoadGeneration extends BaseFixture
         $dateExceptions = [
             [EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY, EventType::HOLIDAY],
         ];
-        foreach ($dateExceptions as $dateException) {
+        foreach ($dateExceptions as $index => $dateException) {
             $exception = new EventGenerationDateException();
-            $this->fillStartEnd($exception);
+            $exception->setStartDateTime(new \DateTime('yesterday - ' + ($index * 5 - 1) + ' day'));
+            $exception->setEndDateTime(new \DateTime('yesterday - ' + ($index * 5) + ' day'));
             $exception->setEventType($dateException[0]);
             $exception->setEventGeneration($generation);
         }
@@ -92,8 +99,8 @@ class LoadGeneration extends BaseFixture
 
         // generate & persist all events
         $admin = $manager->getRepository(Doctor::class)->findOneBy(['isAdministrator' => true]);
-        $this->getEventGenerationService()->generate($generation);
-        $this->getEventGenerationService()->persist($generation, $admin);
+        $this->eventGenerationService->generate($generation);
+        $this->eventGenerationService->persist($generation, $admin);
 
         $events = $manager->getRepository(Event::class)->findAll();
         // confirm first 10 events
@@ -115,17 +122,5 @@ class LoadGeneration extends BaseFixture
     public function getOrder()
     {
         return static::ORDER;
-    }
-
-    /**
-     * create an instance with all random values.
-     */
-    protected function getRandomInstance(): EventGeneration
-    {
-        $eventGeneration = new EventGeneration();
-        $this->fillThing($eventGeneration);
-        $this->fillStartEnd($eventGeneration);
-
-        return $eventGeneration;
     }
 }

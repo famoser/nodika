@@ -11,13 +11,14 @@
 
 namespace App\DataFixtures\Production;
 
-use App\DataFixtures\Base\BaseFixture;
 use App\Entity\EventTag;
 use App\Enum\EventTagColor;
 use App\Enum\EventTagType;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LoadEventTag extends BaseFixture
+class LoadEventTag extends Fixture implements OrderedFixtureInterface
 {
     public const ORDER = 1;
 
@@ -32,7 +33,7 @@ class LoadEventTag extends BaseFixture
         ];
 
         foreach ($realExamples as $realExample) {
-            $eventLine = $this->getRandomInstance();
+            $eventLine = new EventTag();
             $eventLine->setName($realExample[0]);
             $eventLine->setDescription($realExample[1]);
             $eventLine->setColor($realExample[2]);
@@ -41,17 +42,6 @@ class LoadEventTag extends BaseFixture
         }
 
         $manager->flush();
-    }
-
-    /**
-     * create an instance with all random values.
-     */
-    protected function getRandomInstance(): EventTag
-    {
-        $eventLine = new EventTag();
-        $this->fillThing($eventLine);
-
-        return $eventLine;
     }
 
     /**

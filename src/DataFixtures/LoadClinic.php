@@ -11,12 +11,13 @@
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Base\BaseFixture;
-use App\Entity\Clinic;
+use App\DataFixtures\Factories\ClinicFactory;
 use App\Entity\Doctor;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LoadClinic extends BaseFixture
+class LoadClinic extends Fixture implements OrderedFixtureInterface
 {
     public const ORDER = LoadDoctor::ORDER + 1;
 
@@ -42,8 +43,9 @@ class LoadClinic extends BaseFixture
 
         // create all clinics
         $clinics = [];
+        $factory = new ClinicFactory();
         foreach ($realExamples as $realExample) {
-            $clinic = $this->getRandomInstance();
+            $clinic = $factory->create();
             $clinic->setName($realExample[0]);
             $manager->persist($clinic);
             $clinics[] = $clinic;
@@ -82,19 +84,6 @@ class LoadClinic extends BaseFixture
         }
 
         $manager->flush();
-    }
-
-    /**
-     * create an instance with all random values.
-     */
-    protected function getRandomInstance(): Clinic
-    {
-        $clinic = new Clinic();
-        $this->fillCommunication($clinic);
-        $this->fillAddress($clinic);
-        $this->fillThing($clinic);
-
-        return $clinic;
     }
 
     /**

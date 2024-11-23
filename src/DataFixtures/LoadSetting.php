@@ -11,11 +11,12 @@
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Base\BaseFixture;
 use App\Entity\Setting;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LoadSetting extends BaseFixture
+class LoadSetting extends Fixture implements OrderedFixtureInterface
 {
     public const ORDER = 1;
 

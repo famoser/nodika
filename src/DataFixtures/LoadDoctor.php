@@ -11,11 +11,12 @@
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Base\BaseFixture;
-use App\Entity\Doctor;
+use App\DataFixtures\Factories\DoctorFactory;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LoadDoctor extends BaseFixture
+class LoadDoctor extends Fixture implements OrderedFixtureInterface
 {
     public const ORDER = 1;
 
@@ -27,15 +28,16 @@ class LoadDoctor extends BaseFixture
     public function load(ObjectManager $manager): void
     {
         // load some doctors
-        $this->loadSomeRandoms($manager, 30);
+        $factory = new DoctorFactory();
+        $factory->many(30);
 
         // create doctor which is invited
-        $invitedUser = $this->getRandomInstance();
+        $invitedUser = $factory->create();
         $invitedUser->invite();
         $manager->persist($invitedUser);
 
         // create doctor which is not invited yet
-        $notInvitedUser = $this->getRandomInstance();
+        $notInvitedUser = $factory->create();
         $manager->persist($notInvitedUser);
 
         $manager->flush();
@@ -47,19 +49,5 @@ class LoadDoctor extends BaseFixture
     public function getOrder()
     {
         return static::ORDER;
-    }
-
-    /**
-     * create an instance with all random values.
-     */
-    protected function getRandomInstance(): Doctor
-    {
-        $doctor = new Doctor();
-        $this->fillAddress($doctor);
-        $this->fillCommunication($doctor);
-        $this->fillPerson($doctor);
-        $this->fillUser($doctor);
-
-        return $doctor;
     }
 }

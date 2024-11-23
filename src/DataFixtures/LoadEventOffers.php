@@ -11,13 +11,13 @@
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Base\BaseFixture;
 use App\Entity\Doctor;
-use App\Entity\EventGeneration;
 use App\Entity\EventOffer;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LoadEventOffers extends BaseFixture
+class LoadEventOffers extends Fixture implements OrderedFixtureInterface
 {
     public const ORDER = LoadClinic::ORDER + LoadDoctor::ORDER + LoadGeneration::ORDER + 1;
 
@@ -60,16 +60,5 @@ class LoadEventOffers extends BaseFixture
     public function getOrder()
     {
         return static::ORDER;
-    }
-
-    /**
-     * create an instance with all random values.
-     */
-    protected function getRandomInstance(): EventGeneration
-    {
-        $eventGeneration = new EventGeneration();
-        $this->fillThing($eventGeneration);
-
-        return $eventGeneration;
     }
 }
