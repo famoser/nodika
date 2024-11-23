@@ -3,7 +3,7 @@
   "description": "emergency service (or any kind of consecutive events) distribution",
   "license": "MIT",
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.2",
     "ext-iconv": "*",
     "ext-json": "*",
     "ext-pdo": "*",
@@ -33,11 +33,12 @@
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^3",
     "doctrine/doctrine-fixtures-bundle": "^3",
-    "fakerphp/faker": "^1",
     "famoser/agnes": "^4",
-    "friendsofphp/php-cs-fixer": "^3",
+    "friendsofphp/php-cs-fixer": "*",
     "phpunit/phpunit": "^11",
-    "symfony/phpunit-bridge": "^7"
+    "rector/rector": "*",
+    "symfony/phpunit-bridge": "^7",
+    "zenstruck/foundry": "*"
   },
   "config": {
     "preferred-install": {
