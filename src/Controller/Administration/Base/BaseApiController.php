@@ -21,36 +21,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class BaseApiController extends BaseController
 {
-    public static function getSubscribedServices()
-    {
-        return parent::getSubscribedServices() +
-            [
-                'serializer' => SerializerInterface::class,
-            ];
-    }
-
-    /**
-     * @return SerializerInterface
-     */
-    private function getSerializer()
-    {
-        return $this->get('serializer');
-    }
-
     protected function returnOk()
     {
         return new Response('', 204);
     }
 
     /**
-     * @param EventGeneration $generation
-     *
      * @return JsonResponse
      */
-    protected function returnGeneration($generation)
+    protected function returnGeneration(SerializerInterface $serializer, EventGeneration $generation)
     {
         return new JsonResponse(
-            $this->getSerializer()->serialize(
+            $serializer->serialize(
                 $generation,
                 'json',
                 ['attributes' => ['name', 'startDateTime', 'endDateTime', 'startCronExpression', 'endCronExpression', 'differentiateByEventType',
@@ -71,12 +53,12 @@ class BaseApiController extends BaseController
      *
      * @return JsonResponse
      */
-    protected function returnTargets($doctors, $clinics)
+    protected function returnTargets(SerializerInterface $serializer, $doctors, $clinics)
     {
         $obj = new GenerationTargetsDto($doctors, $clinics);
 
         return new JsonResponse(
-            $this->getSerializer()->serialize(
+            $serializer->serialize(
                 $obj,
                 'json',
                 ['attributes' => ['doctors' => ['id', 'fullName'], 'clinics' => ['id', 'name']]]

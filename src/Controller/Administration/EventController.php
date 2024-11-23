@@ -27,6 +27,7 @@ use App\Enum\EventType;
 use App\Form\Event\RemoveType;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EventGenerationServiceInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
@@ -34,6 +35,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -355,9 +357,9 @@ class EventController extends BaseApiController
      *
      * @return Response
      */
-    public function generationGetAction(EventGeneration $generation)
+    public function generationGetAction(SerializerInterface $serializer, EventGeneration $generation)
     {
-        return $this->returnGeneration($generation);
+        return $this->returnGeneration($serializer, $generation);
     }
 
     /**
@@ -365,7 +367,7 @@ class EventController extends BaseApiController
      *
      * @return Response
      */
-    public function generationUpdateAction(Request $request, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
+    public function generationUpdateAction(Request $request, SerializerInterface $serializer, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
     {
         // only update if not applied yet
         if ($generation->getIsApplied()) {
@@ -491,7 +493,7 @@ class EventController extends BaseApiController
         $manager->persist($generation);
         $manager->flush();
 
-        return $this->returnGeneration($generation);
+        return $this->returnGeneration($serializer, $generation);
     }
 
     /**
@@ -499,12 +501,12 @@ class EventController extends BaseApiController
      *
      * @return Response
      */
-    public function generationTargets()
+    public function generationTargets(SerializerInterface $serializer, ManagerRegistry $registry)
     {
-        $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null]);
-        $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
+        $doctors = $registry->getRepository(Doctor::class)->findBy(['deletedAt' => null]);
+        $clinics = $registry->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
 
-        return $this->returnTargets($doctors, $clinics);
+        return $this->returnTargets($serializer, $doctors, $clinics);
     }
 
     /**

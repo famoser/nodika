@@ -35,7 +35,7 @@ class EntityNormalizer extends ObjectNormalizer
         ?ClassMetadataFactoryInterface $classMetadataFactory = null,
         ?NameConverterInterface $nameConverter = null,
         ?PropertyAccessorInterface $propertyAccessor = null,
-        ?PropertyTypeExtractorInterface $propertyTypeExtractor = null
+        ?PropertyTypeExtractorInterface $propertyTypeExtractor = null,
     ) {
         parent::__construct($classMetadataFactory, $nameConverter, $propertyAccessor, $propertyTypeExtractor);
         // Entity manager

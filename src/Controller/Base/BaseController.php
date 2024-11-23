@@ -32,38 +32,11 @@ class BaseController extends AbstractController
     }
 
     /**
-     * @return KernelInterface
-     */
-    private function getKernel()
-    {
-        return $this->get('kernel');
-    }
-
-    /**
      * @return TranslatorInterface
      */
     protected function getTranslator()
     {
         return $this->get('translator');
-    }
-
-    /**BaseFormController
-     * get the parameter.
-     *
-     * remove this method as soon as possible
-     * here because of missing getParameter call in AbstractController, should be back in release 4.1
-     * clean up involves:
-     *  remove this method
-     *  remove getSubscribedServices override
-     *  remove file config/packages/parameters.yml
-     *
-     * @param string $name
-     *
-     * @return mixed
-     */
-    protected function getParameter(string $name)
-    {
-        return $this->getKernel()->getContainer()->getParameter($name);
     }
 
     /**
@@ -116,7 +89,7 @@ class BaseController extends AbstractController
     /**
      * @return Doctor|null
      */
-    protected function getUser()
+    protected function getUser(): ?\Symfony\Component\Security\Core\User\UserInterface
     {
         return parent::getUser();
     }
