@@ -11,28 +11,29 @@
 
 namespace App\Controller\Administration;
 
-use App\Controller\Administration\Base\BaseController;
+use App\Controller\Base\NewBaseController;
 use App\Entity\Doctor;
+use App\Form\Doctor\DoctorType;
 use App\Form\Doctor\RemoveType;
 use App\Helper\DoctrineHelper;
 use App\Model\Breadcrumb;
 use App\Service\InviteEmailService;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/doctors')]
-class DoctorController extends BaseController
+#[Route(path: '/doctors')]
+class DoctorController extends NewBaseController
 {
     /**
      * checks if the email is already used, and shows an error to the user if so.
      */
-    private function emailNotUsed(Doctor $user, TranslatorInterface $translator, ManagerRegistry $registry): bool
+    private function emailUnique(Doctor $doctor, TranslatorInterface $translator, ManagerRegistry $registry): bool
     {
-        $existing = $registry->getRepository(Doctor::class)->findBy(['email' => $user->getEmail()]);
+        $existing = $registry->getRepository(Doctor::class)->findBy(['email' => $doctor->getEmail()]);
         if (\count($existing) > 0) {
             $this->displayError($translator->trans('new.danger.email_not_unique', [], 'administration_doctor'));
 
@@ -42,101 +43,48 @@ class DoctorController extends BaseController
         return true;
     }
 
-    /**
-     * @return Response
-     */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_doctor_new')]
-    public function new(Request $request, TranslatorInterface $translator, ManagerRegistry $registry)
+    #[Route(path: '/new', name: 'administration_doctor_new')]
+    public function new(Request $request, ManagerRegistry $registry, TranslatorInterface $translator): Response
     {
-        $user = new Doctor();
-        $user->setPlainPassword(uniqid());
-        $user->setPassword();
-        $user->setRegistrationDate(new \DateTime());
+        $doctor = new Doctor();
+        $form = $this->createForm(DoctorType::class, $doctor)
+            ->add('submit', SubmitType::class, ['label' => 'new.submit', 'translation_domain' => 'administration_doctor']);
 
-        $myForm = $this->handleCreateForm(
-            $request,
-            $user,
-            function () use ($user, $translator, $registry): bool {
-                return $this->emailNotUsed($user, $translator, $registry);
-            }
-        );
-        if ($myForm instanceof Response) {
-            return $myForm;
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid() && $this->emailUnique($doctor, $translator, $registry)) {
+            DoctrineHelper::persistAndFlush($registry, $doctor);
+
+            $message = $translator->trans('new.success', [], 'administration_doctor');
+            $this->addFlash('success', $message);
+
+            return $this->redirectToRoute('administration_doctors');
         }
 
-        $arr['form'] = $myForm->createView();
-
-        return $this->render('administration/doctor/new.html.twig', $arr);
+        return $this->render('administration/doctor/new.html.twig', ['form' => $form->createView(), 'breadcrumbs' => $this->getBreadcrumbs($translator)]);
     }
 
-    /**
-     * @return Response
-     */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/edit', name: 'administration_doctor_edit')]
-    public function edit(Request $request, Doctor $doctor, TranslatorInterface $translator, ManagerRegistry $registry)
+    #[Route(path: '/{doctor}/edit', name: 'administration_doctor_edit')]
+    public function edit(Request $request, Doctor $doctor, ManagerRegistry $registry, TranslatorInterface $translator): Response
     {
         $beforeEmail = $doctor->getEmail();
-        $myForm = $this->handleUpdateForm(
-            $request,
-            $doctor,
-            function () use ($doctor, $translator, $beforeEmail, $registry): bool {
-                if ($beforeEmail === $doctor->getEmail()) {
-                    return true;
-                }
+        $form = $this->createForm(DoctorType::class, $doctor)
+            ->add('submit', SubmitType::class, ['label' => 'edit.submit', 'translation_domain' => 'administration_doctor']);
 
-                return $this->emailNotUsed($doctor, $translator, $registry);
-            }
-        );
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid() && ($beforeEmail == $doctor->getEmail() || $this->emailUnique($doctor, $translator, $registry))) {
+            DoctrineHelper::persistAndFlush($registry, $doctor);
 
-        if ($myForm instanceof Response) {
-            return $myForm;
+            $message = $translator->trans('edit.success', [], 'administration_doctor');
+            $this->addFlash('success', $message);
+
+            return $this->redirect($this->generateUrl('administration_doctors'));
         }
 
-        $arr['form'] = $myForm->createView();
-
-        return $this->render('administration/doctor/edit.html.twig', $arr);
+        return $this->render('administration/doctor/edit.html.twig', ['form' => $form->createView(), 'breadcrumbs' => $this->getBreadcrumbs($translator)]);
     }
 
-    /**
-     * deactivated because not safe.
-     *
-     * @*Route("/{doctor}/remove", name="administration_doctor_remove")
-     *
-     * @return Response
-     */
-    public function remove(Request $request, Doctor $doctor, ManagerRegistry $registry)
-    {
-        $canDelete = 0 === $doctor->getEvents()->count();
-        $myForm = $this->handleForm(
-            $this->createForm(RemoveType::class, $doctor),
-            $request,
-            function () use ($doctor, $canDelete, $registry): void {
-                if ($canDelete) {
-                    DoctrineHelper::removeAndFlush($registry, ...[$doctor]);
-                } else {
-                    $doctor->delete();
-                    DoctrineHelper::persistAndFlush($registry, ...[$doctor]);
-                }
-            }
-        );
-
-        if ($myForm instanceof Response) {
-            return $myForm;
-        }
-
-        $arr['can_delete'] = $canDelete;
-        $arr['form'] = $myForm->createView();
-
-        return $this->render('administration/doctor/remove.html.twig', $arr);
-    }
-
-    /**
-     * @return Response
-     *
-     * @throws \Exception
-     */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/invite', name: 'administration_doctor_invite')]
-    public function invite(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService): RedirectResponse
+    #[Route(path: '/{doctor}/invite', name: 'administration_doctor_invite')]
+    public function invite(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService): Response
     {
         if (!$doctor->isEnabled() || null !== $doctor->getLastLoginDate()) {
             $this->displayError($translator->trans('invite.danger.email_not_sent', [], 'administration_doctor'));
@@ -149,46 +97,38 @@ class DoctorController extends BaseController
     }
 
     /**
-     * @return Response
-     *
-     * @throws \Exception
+     * @Route("/{doctor}/remove", name="administration_doctor_remove").
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/invite_all', name: 'administration_doctor_invite_all')]
-    public function inviteAll(TranslatorInterface $translator, InviteEmailService $emailService, ManagerRegistry $registry): RedirectResponse
+    public function remove(Request $request, Doctor $doctor, ManagerRegistry $registry, TranslatorInterface $translator): Response
     {
-        $doctors = $registry->getRepository(Doctor::class)->findBy(['deletedAt' => null, 'lastLoginDate' => null, 'isEnabled' => true]);
-        foreach ($doctors as $doctor) {
-            $emailService->inviteDoctor($doctor);
+        $form = $this->createForm(RemoveType::class, $doctor)
+            ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $doctor->delete();
+            DoctrineHelper::persistAndFlush($registry, $doctor);
+
+            return $this->redirectToRoute('administration_doctors');
         }
-        $this->displaySuccess($translator->trans('invite.success.email_sent', [], 'administration_doctor'));
 
-        return $this->redirectToRoute('administration_doctors');
+        return $this->render('administration/doctor/remove.html.twig', ['form' => $form->createView(), 'breadcrumbs' => $this->getBreadcrumbs($translator)]);
     }
 
     /**
-     * @return Response
-     */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/toggle_login_enabled', name: 'administration_doctor_toggle_login_enabled')]
-    public function toggleLoginEnabled(Doctor $doctor, ManagerRegistry $registry): RedirectResponse
-    {
-        $doctor->setIsEnabled(!$doctor->isEnabled());
-        DoctrineHelper::persistAndFlush($registry, ...[$doctor]);
-
-        return $this->redirectToRoute('administration_doctors');
-    }
-
-    /**
-     * get the breadcrumbs leading to this controller.
-     *
      * @return Breadcrumb[]
      */
-    protected function getIndexBreadcrumbs(): array
+    private function getBreadcrumbs(TranslatorInterface $translator): array
     {
-        return array_merge(parent::getIndexBreadcrumbs(), [
+        return [
+            new Breadcrumb(
+                $this->generateUrl('administration_index'),
+                $translator->trans('index.title', [], 'administration')
+            ),
             new Breadcrumb(
                 $this->generateUrl('administration_doctors'),
-                $this->getTranslator()->trans('doctors.title', [], 'administration')
+                $translator->trans('doctors.title', [], 'administration')
             ),
-        ]);
+        ];
     }
 }

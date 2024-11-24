@@ -36,11 +36,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class LoginController extends BaseFormController
 {
     #[Route(path: '', name: 'login')]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         $user = new Doctor();
         // TODO: Handle login failed
-
         // create login form
         $form = $this->createForm(LoginType::class, $user);
         $form->add('form.login', SubmitType::class, ['translation_domain' => 'login', 'label' => 'login.do_login']);

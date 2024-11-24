@@ -11,103 +11,94 @@
 
 namespace App\Controller\Administration;
 
-use App\Controller\Administration\Base\BaseController;
+use App\Controller\Base\NewBaseController;
 use App\Entity\Clinic;
+use App\Form\Clinic\ClinicType;
 use App\Form\Clinic\RemoveType;
 use App\Helper\DoctrineHelper;
 use App\Model\Breadcrumb;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/clinics')]
-class ClinicController extends BaseController
+#[Route(path: '/clinics')]
+class ClinicController extends NewBaseController
 {
-    /**
-     * @return Response
-     */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_clinic_new')]
-    public function new(Request $request, ManagerRegistry $registry)
+    #[Route(path: '/new', name: 'administration_clinic_new')]
+    public function new(Request $request, ManagerRegistry $registry, TranslatorInterface $translator): Response
     {
-        $myForm = $this->handleCreateForm($request, new Clinic());
+        $clinic = new Clinic();
+        $form = $this->createForm(ClinicType::class, $clinic)
+            ->add('submit', SubmitType::class, ['label' => 'new.submit', 'translation_domain' => 'administration_clinic']);
 
-        if ($myForm instanceof Response) {
-            return $myForm;
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            DoctrineHelper::persistAndFlush($registry, $clinic);
+
+            $message = $translator->trans('new.success', [], 'administration_clinic');
+            $this->addFlash('success', $message);
+
+            return $this->redirectToRoute('administration_clinics');
         }
 
-        $arr['form'] = $myForm->createView();
+        return $this->render('administration/clinic/new.html.twig', ['form' => $form->createView(), 'breadcrumbs' => $this->getBreadcrumbs($translator)]);
+    }
 
-        return $this->render('administration/clinic/new.html.twig', $arr);
+    #[Route(path: '/{clinic}/edit', name: 'administration_clinic_edit')]
+    public function edit(Request $request, Clinic $clinic, ManagerRegistry $registry, TranslatorInterface $translator): Response
+    {
+        $form = $this->createForm(ClinicType::class, $clinic)
+            ->add('submit', SubmitType::class, ['label' => 'edit.submit', 'translation_domain' => 'administration_clinic']);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            DoctrineHelper::persistAndFlush($registry, $clinic);
+
+            $message = $translator->trans('edit.success', [], 'administration_clinic');
+            $this->addFlash('success', $message);
+
+            return $this->redirect($this->generateUrl('administration_clinics'));
+        }
+
+        return $this->render('administration/clinic/edit.html.twig', ['form' => $form->createView(), 'breadcrumbs' => $this->getBreadcrumbs($translator)]);
     }
 
     /**
-     * @return Response
+     * @Route("/{clinic}/remove", name="administration_clinic_remove").
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{clinic}/edit', name: 'administration_clinic_edit')]
-    public function edit(Request $request, Clinic $clinic, ManagerRegistry $registry)
+    public function remove(Request $request, Clinic $clinic, ManagerRegistry $registry, TranslatorInterface $translator): Response
     {
-        $myForm = $this->handleUpdateForm($request, $clinic);
+        $form = $this->createForm(RemoveType::class, $clinic)
+            ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']);
 
-        if ($myForm instanceof Response) {
-            return $myForm;
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $clinic->delete();
+            DoctrineHelper::persistAndFlush($registry, $clinic);
+
+            return $this->redirectToRoute('administration_clinics');
         }
 
-        $arr['form'] = $myForm->createView();
-
-        return $this->render('administration/clinic/edit.html.twig', $arr);
+        return $this->render('administration/clinic/remove.html.twig', ['form' => $form->createView(), 'breadcrumbs' => $this->getBreadcrumbs($translator)]);
     }
 
     /**
-     * deactivated because not safe
-     * Route("/{clinic}/remove", name="administration_clinic_remove").
-     *
-     * @return Response
-     */
-    public function remove(Request $request, Clinic $clinic, ManagerRegistry $registry)
-    {
-        $canDelete = 0 === $clinic->getEvents()->count();
-        $myForm = $this->handleForm(
-            $this->createForm(RemoveType::class, $clinic)
-                ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
-            $request,
-            function () use ($clinic, $canDelete, $registry): RedirectResponse {
-                $clinic->delete();
-                if ($canDelete) {
-                    DoctrineHelper::removeAndFlush($registry, ...[$clinic]);
-                } else {
-                    $clinic->delete();
-                    DoctrineHelper::persistAndFlush($registry, ...[$clinic]);
-                }
-
-                return $this->redirectToRoute('administration_clinics');
-            }
-        );
-
-        if ($myForm instanceof Response) {
-            return $myForm;
-        }
-
-        $arr['can_delete'] = $canDelete;
-        $arr['form'] = $myForm->createView();
-
-        return $this->render('administration/clinic/remove.html.twig', $arr);
-    }
-
-    /**
-     * get the breadcrumbs leading to this controller.
-     *
      * @return Breadcrumb[]
      */
-    protected function getIndexBreadcrumbs(): array
+    private function getBreadcrumbs(TranslatorInterface $translator): array
     {
-        return array_merge(parent::getIndexBreadcrumbs(), [
+        return [
+            new Breadcrumb(
+                $this->generateUrl('administration_index'),
+                $translator->trans('index.title', [], 'administration')
+            ),
             new Breadcrumb(
                 $this->generateUrl('administration_clinics'),
-                $this->getTranslator()->trans('clinics.title', [], 'administration')
+                $translator->trans('clinics.title', [], 'administration')
             ),
-        ]);
+        ];
     }
 }

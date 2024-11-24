@@ -35,9 +35,6 @@ class InviteEmailService
         $this->urlGenerator = $generator;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function inviteDoctor(Doctor $doctor): void
     {
         // map clinics to clinic name array

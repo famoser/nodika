@@ -1,10 +1,13 @@
 new:
   title: 'Neue Praxis'
   description: 'Fügen Sie eine neue Praxis hinzu'
+  submit: 'Praxis erstellen'
+  success: 'Praxis erstellt'
 
 edit:
   title: 'Praxis bearbeiten'
   description: 'Praxis ändern'
+  success: 'Praxis gespeichert'
 
 remove:
   title: 'Praxis entfernen'

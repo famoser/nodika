@@ -18,6 +18,7 @@ use App\Form\Traits\Address\AddressType;
 use App\Form\Traits\Communication\CommunicationType;
 use App\Form\Traits\Person\PersonType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,6 +30,8 @@ class DoctorType extends BaseAbstractType
         $builder->add('person', PersonType::class, ['inherit_data' => true]);
         $builder->add('communication', CommunicationType::class, ['inherit_data' => true]);
         $builder->add('address', AddressType::class, ['inherit_data' => true]);
+
+        $builder->add('isEnabled', CheckboxType::class, ['required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

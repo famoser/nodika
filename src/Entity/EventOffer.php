@@ -310,7 +310,7 @@ class EventOffer extends BaseEntity
     /**
      * @return Event[]
      */
-    public function getSenderOwnedEvents()
+    public function getSenderOwnedEvents(): ?array
     {
         $this->refreshCache();
 
@@ -320,7 +320,7 @@ class EventOffer extends BaseEntity
     /**
      * @return Event[]
      */
-    public function getReceiverOwnedEvents()
+    public function getReceiverOwnedEvents(): ?array
     {
         $this->refreshCache();
 

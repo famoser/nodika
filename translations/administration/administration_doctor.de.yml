@@ -1,8 +1,10 @@
 new:
   title: 'Neuer Tierarzt'
-  description: 'Neuer Tierarzt erstellen'
+  description: 'Neuer Tierarzt hinzufügen'
+  submit: 'Tierarzt hinzufügen'
   danger:
     email_not_unique: 'Diese E-Mail ist bereits vergeben'
+  success: 'Tierarzt hinzugefügt'
 
 edit:
   title: 'Tierarzt bearbeiten'
