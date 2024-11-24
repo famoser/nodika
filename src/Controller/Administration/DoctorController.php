@@ -14,8 +14,11 @@ namespace App\Controller\Administration;
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Doctor;
 use App\Form\Doctor\RemoveType;
+use App\Helper\DoctrineHelper;
 use App\Model\Breadcrumb;
 use App\Service\InviteEmailService;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,9 +30,9 @@ class DoctorController extends BaseController
     /**
      * checks if the email is already used, and shows an error to the user if so.
      */
-    private function emailNotUsed(Doctor $user, TranslatorInterface $translator): bool
+    private function emailNotUsed(Doctor $user, TranslatorInterface $translator, ManagerRegistry $registry): bool
     {
-        $existing = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['email' => $user->getEmail()]);
+        $existing = $registry->getRepository(Doctor::class)->findBy(['email' => $user->getEmail()]);
         if (\count($existing) > 0) {
             $this->displayError($translator->trans('new.danger.email_not_unique', [], 'administration_doctor'));
 
@@ -43,7 +46,7 @@ class DoctorController extends BaseController
      * @return Response
      */
     #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_doctor_new')]
-    public function new(Request $request, TranslatorInterface $translator)
+    public function new(Request $request, TranslatorInterface $translator, ManagerRegistry $registry)
     {
         $user = new Doctor();
         $user->setPlainPassword(uniqid());
@@ -53,8 +56,8 @@ class DoctorController extends BaseController
         $myForm = $this->handleCreateForm(
             $request,
             $user,
-            function () use ($user, $translator): bool {
-                return $this->emailNotUsed($user, $translator);
+            function () use ($user, $translator, $registry): bool {
+                return $this->emailNotUsed($user, $translator, $registry);
             }
         );
         if ($myForm instanceof Response) {
@@ -70,18 +73,18 @@ class DoctorController extends BaseController
      * @return Response
      */
     #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/edit', name: 'administration_doctor_edit')]
-    public function edit(Request $request, Doctor $doctor, TranslatorInterface $translator)
+    public function edit(Request $request, Doctor $doctor, TranslatorInterface $translator, ManagerRegistry $registry)
     {
         $beforeEmail = $doctor->getEmail();
         $myForm = $this->handleUpdateForm(
             $request,
             $doctor,
-            function () use ($doctor, $translator, $beforeEmail): bool {
+            function () use ($doctor, $translator, $beforeEmail, $registry): bool {
                 if ($beforeEmail === $doctor->getEmail()) {
                     return true;
                 }
 
-                return $this->emailNotUsed($doctor, $translator);
+                return $this->emailNotUsed($doctor, $translator, $registry);
             }
         );
 
@@ -101,18 +104,18 @@ class DoctorController extends BaseController
      *
      * @return Response
      */
-    public function remove(Request $request, Doctor $doctor)
+    public function remove(Request $request, Doctor $doctor, ManagerRegistry $registry)
     {
         $canDelete = 0 === $doctor->getEvents()->count();
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $doctor),
             $request,
-            function () use ($doctor, $canDelete): void {
+            function () use ($doctor, $canDelete, $registry): void {
                 if ($canDelete) {
-                    $this->fastRemove($doctor);
+                    DoctrineHelper::removeAndFlush($registry, ...[$doctor]);
                 } else {
                     $doctor->delete();
-                    $this->fastSave($doctor);
+                    DoctrineHelper::persistAndFlush($registry, ...[$doctor]);
                 }
             }
         );
@@ -133,7 +136,7 @@ class DoctorController extends BaseController
      * @throws \Exception
      */
     #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/invite', name: 'administration_doctor_invite')]
-    public function invite(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function invite(Doctor $doctor, TranslatorInterface $translator, InviteEmailService $emailService): RedirectResponse
     {
         if (!$doctor->isEnabled() || null !== $doctor->getLastLoginDate()) {
             $this->displayError($translator->trans('invite.danger.email_not_sent', [], 'administration_doctor'));
@@ -151,9 +154,9 @@ class DoctorController extends BaseController
      * @throws \Exception
      */
     #[\Symfony\Component\Routing\Attribute\Route(path: '/invite_all', name: 'administration_doctor_invite_all')]
-    public function inviteAll(TranslatorInterface $translator, InviteEmailService $emailService): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function inviteAll(TranslatorInterface $translator, InviteEmailService $emailService, ManagerRegistry $registry): RedirectResponse
     {
-        $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findBy(['deletedAt' => null, 'lastLoginDate' => null, 'isEnabled' => true]);
+        $doctors = $registry->getRepository(Doctor::class)->findBy(['deletedAt' => null, 'lastLoginDate' => null, 'isEnabled' => true]);
         foreach ($doctors as $doctor) {
             $emailService->inviteDoctor($doctor);
         }
@@ -166,10 +169,10 @@ class DoctorController extends BaseController
      * @return Response
      */
     #[\Symfony\Component\Routing\Attribute\Route(path: '/{doctor}/toggle_login_enabled', name: 'administration_doctor_toggle_login_enabled')]
-    public function toggleLoginEnabled(Doctor $doctor): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function toggleLoginEnabled(Doctor $doctor, ManagerRegistry $registry): RedirectResponse
     {
         $doctor->setIsEnabled(!$doctor->isEnabled());
-        $this->fastSave($doctor);
+        DoctrineHelper::persistAndFlush($registry, ...[$doctor]);
 
         return $this->redirectToRoute('administration_doctors');
     }

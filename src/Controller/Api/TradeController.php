@@ -16,24 +16,28 @@ use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Entity\EventOffer;
+use App\Helper\DoctrineHelper;
 use App\Model\Event\SearchModel;
 use App\Service\EmailService;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/trade')]
+#[Route(path: '/trade')]
 class TradeController extends BaseApiController
 {
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/my_events', name: 'api_trade_my_events')]
-    public function apiMyEvents(): JsonResponse
+    #[Route(path: '/my_events', name: 'api_trade_my_events')]
+    public function apiMyEvents(ManagerRegistry $registry, SerializerInterface $serializer): JsonResponse
     {
         // get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
         $searchModel->setClinics($this->getUser()->getClinics());
-        $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
+        $events = $registry->getRepository(Event::class)->search($searchModel);
 
         $apiEvents = [];
         foreach ($events as $event) {
@@ -42,15 +46,15 @@ class TradeController extends BaseApiController
             }
         }
 
-        return $this->returnEvents($apiEvents);
+        return $this->returnEvents($serializer, $apiEvents);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/their_events', name: 'ap_trade_their_events')]
-    public function theirEvents(): JsonResponse
+    #[Route(path: '/their_events', name: 'ap_trade_their_events')]
+    public function theirEvents(ManagerRegistry $registry, SerializerInterface $serializer): JsonResponse
     {
         // get all tradeable events
         $searchModel = new SearchModel(SearchModel::YEAR);
-        $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
+        $events = $registry->getRepository(Event::class)->search($searchModel);
 
         // exclude own events
         $apiEvents = [];
@@ -60,27 +64,27 @@ class TradeController extends BaseApiController
             }
         }
 
-        return $this->returnEvents($apiEvents);
+        return $this->returnEvents($serializer, $apiEvents);
     }
 
     /**
      * @return JsonResponse
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/clinics', name: 'api_trade_clinics')]
-    public function apiClinics()
+    #[Route(path: '/clinics', name: 'api_trade_clinics')]
+    public function apiClinics(ManagerRegistry $registry, SerializerInterface $serializer)
     {
-        $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null], ['name' => 'ASC']);
+        $clinics = $registry->getRepository(Clinic::class)->findBy(['deletedAt' => null], ['name' => 'ASC']);
 
-        return $this->returnClinics($clinics);
+        return $this->returnClinics($serializer, $clinics);
     }
 
     /**
      * @return JsonResponse
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/self', name: 'api_trade_self')]
-    public function self()
+    #[Route(path: '/self', name: 'api_trade_self')]
+    public function self(SerializerInterface $serializer)
     {
-        return $this->returnDoctors($this->getUser());
+        return $this->returnDoctors($serializer, $this->getUser());
     }
 
     /**
@@ -88,10 +92,10 @@ class TradeController extends BaseApiController
      *
      * @return Event[]|bool
      */
-    private function getEventsFromIds($eventIds): false|array
+    private function getEventsFromIds(ManagerRegistry $registry, $eventIds): false|array
     {
-        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
-        /* @var \App\Entity\Event[] $events */
+        $eventRepo = $registry->getRepository(Event::class);
+        /* @var Event[] $events */
         $events = [];
         foreach ($eventIds as $eventId) {
             $events[] = $eventRepo->find($eventId);
@@ -107,7 +111,7 @@ class TradeController extends BaseApiController
     /**
      * constructs the event offer, returns false if any values are wrong.
      */
-    private function constructEventOffer($values): false|EventOffer
+    private function constructEventOffer(ManagerRegistry $registry, $values): false|EventOffer
     {
         // check POST parameters
         $required = ['sender_event_ids', 'receiver_event_ids', 'sender_clinic_id', 'receiver_doctor_id', 'receiver_clinic_id', 'description'];
@@ -121,15 +125,15 @@ class TradeController extends BaseApiController
         }
 
         // get receiver stuff
-        $receiverEventIds = $this->getEventsFromIds($values['receiver_event_ids']);
-        $receiverEvents = $this->getDoctrine()->getRepository(Event::class)->findBy(['id' => array_values($receiverEventIds)]);
-        $receiverClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['receiver_clinic_id']);
-        $receiverDoctor = $this->getDoctrine()->getRepository(Doctor::class)->find((int) $values['receiver_doctor_id']);
+        $receiverEventIds = $this->getEventsFromIds($registry, $values['receiver_event_ids']);
+        $receiverEvents = $registry->getRepository(Event::class)->findBy(['id' => array_values($receiverEventIds)]);
+        $receiverClinic = $registry->getRepository(Clinic::class)->find((int) $values['receiver_clinic_id']);
+        $receiverDoctor = $registry->getRepository(Doctor::class)->find((int) $values['receiver_doctor_id']);
 
         // get sender stuff
-        $senderEventIds = $this->getEventsFromIds($values['sender_event_ids']);
-        $senderEvents = $this->getDoctrine()->getRepository(Event::class)->findBy(['id' => array_values($senderEventIds)]);
-        $senderClinic = $this->getDoctrine()->getRepository(Clinic::class)->find((int) $values['sender_clinic_id']);
+        $senderEventIds = $this->getEventsFromIds($registry, $values['sender_event_ids']);
+        $senderEvents = $registry->getRepository(Event::class)->findBy(['id' => array_values($senderEventIds)]);
+        $senderClinic = $registry->getRepository(Clinic::class)->find((int) $values['sender_clinic_id']);
         $senderDoctor = $this->getUser();
 
         // construct the offer
@@ -150,7 +154,7 @@ class TradeController extends BaseApiController
 
         // save if offer is valid
         if ($eventOffer->isValid()) {
-            $this->fastSave($eventOffer);
+            DoctrineHelper::persistAndFlush($registry, ...[$eventOffer]);
 
             return $eventOffer;
         }
@@ -163,11 +167,11 @@ class TradeController extends BaseApiController
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/create', name: 'api_trade_create')]
-    public function create(Request $request, EmailService $emailService, TranslatorInterface $translator): Response
+    #[Route(path: '/create', name: 'api_trade_create')]
+    public function create(Request $request, EmailService $emailService, ManagerRegistry $registry, TranslatorInterface $translator): Response
     {
         // try to construct offer from POST values
-        $eventOffer = $this->constructEventOffer(json_decode($request->getContent(), true));
+        $eventOffer = $this->constructEventOffer($registry, json_decode($request->getContent(), true));
         if (!$eventOffer) {
             $this->displayError($translator->trans('index.danger.trade_offer_invalid', [], 'trade'));
 

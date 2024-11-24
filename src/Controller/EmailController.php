@@ -12,16 +12,18 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseController;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/email')]
+#[Route(path: '/email')]
 class EmailController extends BaseController
 {
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{identifier}', name: 'email_view')]
-    public function email($identifier): Response
+    #[Route(path: '/{identifier}', name: 'email_view')]
+    public function email($identifier, ManagerRegistry $registry): Response
     {
-        $email = $this->getDoctrine()->getRepository('App:Email')->findOneBy(['identifier' => $identifier]);
+        $email = $registry->getRepository('App:Email')->findOneBy(['identifier' => $identifier]);
         if (null === $email) {
             throw new NotFoundHttpException();
         }

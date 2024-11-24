@@ -17,91 +17,29 @@ use App\Form\Traits\User\ChangePasswordType;
 use App\Form\Traits\User\LoginType;
 use App\Form\Traits\User\RecoverType;
 use App\Form\Traits\User\RequestInviteType;
+use App\Helper\DoctrineHelper;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EmailServiceInterface;
 use App\Service\InviteEmailService;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/login')]
+#[Route(path: '/login')]
 class LoginController extends BaseFormController
 {
-    public static function getSubscribedServices(): array
-    {
-        return parent::getSubscribedServices() +
-            [
-                'event_dispatcher' => EventDispatcherInterface::class,
-                'security.token_storage' => TokenStorageInterface::class,
-                'translator' => TranslatorInterface::class,
-            ];
-    }
-
-    protected function loginUser(Request $request, UserInterface $user)
-    {
-        // login programmatically
-        $token = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
-        $this->get('security.token_storage')->setToken($token);
-
-        $event = new InteractiveLoginEvent($request, $token);
-        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
-    }
-
-    /**
-     * @return string
-     */
-    private function getLastUsername(Request $request)
-    {
-        /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
-        $session = $request->getSession();
-
-        $authErrorKey = Security::AUTHENTICATION_ERROR;
-        // get the error if any (works with forward and redirect -- see below)
-        if ($request->attributes->has($authErrorKey)) {
-            $error = $request->attributes->get($authErrorKey);
-        } elseif (null !== $session && $session->has($authErrorKey)) {
-            $error = $session->get($authErrorKey);
-            $session->remove($authErrorKey);
-        } else {
-            $error = null;
-        }
-
-        // last username entered by the user
-        $lastUsername = (null === $session) ? '' : $session->get(Security::LAST_USERNAME);
-        if (!$error) {
-            return $lastUsername;
-        }
-
-        if (mb_strlen($lastUsername) > 0) {
-            $lastUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $lastUsername]);
-            if (null === $lastUser) {
-                $this->displayError($this->getTranslator()->trans('login.danger.email_not_found', [], 'login'));
-            } elseif (!$lastUser->isEnabled()) {
-                $this->displayError($this->getTranslator()->trans('login.danger.login_disabled', [], 'login'));
-            } else {
-                $this->displayError($this->getTranslator()->trans('login.danger.login_failed', [], 'login'));
-            }
-        }
-
-        return $lastUsername;
-    }
-
-    #[\Symfony\Component\Routing\Attribute\Route(path: '', name: 'login')]
+    #[Route(path: '', name: 'login')]
     public function index(Request $request): Response
     {
         $user = new Doctor();
-        $user->setEmail($this->getLastUsername($request));
+        // TODO: Handle login failed
 
         // create login form
         $form = $this->createForm(LoginType::class, $user);
@@ -111,21 +49,21 @@ class LoginController extends BaseFormController
         return $this->render('login/login.html.twig', $arr);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/recover', name: 'login_recover')]
-    public function recover(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator, LoggerInterface $logger): Response
+    #[Route(path: '/recover', name: 'login_recover')]
+    public function recover(Request $request, EmailServiceInterface $emailService, TranslatorInterface $translator, LoggerInterface $logger, ManagerRegistry $registry): Response
     {
         $form = $this->handleForm(
             $this->createForm(RecoverType::class)
                 ->add('form.recover', SubmitType::class, ['translation_domain' => 'login', 'label' => 'recover.title']),
             $request,
-            function ($form) use ($emailService, $translator, $logger) {
+            function ($form) use ($emailService, $translator, $logger, $registry) {
                 /* @var FormInterface $form */
 
                 // display success
                 $this->displaySuccess($translator->trans('recover.success.email_sent', [], 'login'));
 
                 // check if user exists
-                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
+                $exitingUser = $registry->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
                     $logger->warning('tried to reset passwort for non-exitant email '.$form->getData()['email']);
 
@@ -141,7 +79,7 @@ class LoginController extends BaseFormController
 
                 // create new reset hash
                 $exitingUser->setResetHash();
-                $this->fastSave($exitingUser);
+                DoctrineHelper::persistAndFlush($registry, ...[$exitingUser]);
 
                 // sent according email
                 $emailService->sendActionEmail(
@@ -161,10 +99,10 @@ class LoginController extends BaseFormController
         return $this->render('login/recover.html.twig', $arr);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/reset/{resetHash}', name: 'login_reset')]
-    public function reset(Request $request, $resetHash, TranslatorInterface $translator): RedirectResponse|Response
+    #[Route(path: '/reset/{resetHash}', name: 'login_reset')]
+    public function reset(Request $request, $resetHash, TranslatorInterface $translator, ManagerRegistry $registry): RedirectResponse|Response
     {
-        $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['resetHash' => $resetHash]);
+        $user = $registry->getRepository(Doctor::class)->findOneBy(['resetHash' => $resetHash]);
         if (null === $user) {
             $this->displayError($translator->trans('reset.danger.invalid_hash', [], 'login'));
 
@@ -182,7 +120,7 @@ class LoginController extends BaseFormController
             $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
                 ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
             $request,
-            function ($form) use ($user, $translator, $request) {
+            function ($form) use ($user, $translator, $registry) {
                 // check for valid password
                 if ($user->getPlainPassword() !== $user->getRepeatPlainPassword()) {
                     $this->displayError($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
@@ -196,10 +134,7 @@ class LoginController extends BaseFormController
                 // set new password & save
                 $user->setPassword();
                 $user->setResetHash();
-                $this->fastSave($user);
-
-                // login user & redirect
-                $this->loginUser($request, $user);
+                DoctrineHelper::persistAndFlush($registry, ...[$user]);
 
                 return $this->redirectToRoute('index_index');
             }
@@ -217,18 +152,18 @@ class LoginController extends BaseFormController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/request', name: 'login_request')]
-    public function request(Request $request, InviteEmailService $emailService, TranslatorInterface $translator)
+    #[Route(path: '/request', name: 'login_request')]
+    public function request(Request $request, InviteEmailService $emailService, TranslatorInterface $translator, ManagerRegistry $registry)
     {
         $form = $this->handleForm(
             $this->createForm(RequestInviteType::class)
                 ->add('form.request_invite', SubmitType::class, ['translation_domain' => 'login', 'label' => 'request.request_invite']),
             $request,
-            function ($form) use ($emailService, $translator) {
+            function ($form) use ($emailService, $translator, $registry) {
                 /* @var FormInterface $form */
 
                 // check if user exists
-                $exitingUser = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
+                $exitingUser = $registry->getRepository(Doctor::class)->findOneBy(['email' => $form->getData()['email']]);
                 if (null === $exitingUser) {
                     $this->displayError($translator->trans('request.error.email_not_found', [], 'login'));
 
@@ -282,13 +217,13 @@ class LoginController extends BaseFormController
         ];
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/login_check', name: 'login_check')]
+    #[Route(path: '/login_check', name: 'login_check')]
     public function loginCheck(): never
     {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/logout', name: 'login_logout')]
+    #[Route(path: '/logout', name: 'login_logout')]
     public function logout(): never
     {
         throw new \RuntimeException('You must configure the logout path to be handled by the firewall using form_login.logout in your security firewall configuration.');

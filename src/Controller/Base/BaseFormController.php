@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class BaseFormController extends BaseDoctrineController
+class BaseFormController extends BaseController
 {
     /**
      * @param callable $onValidCallable with $form ass an argument
@@ -59,7 +59,7 @@ class BaseFormController extends BaseDoctrineController
 
         // create persist callable
         $myOnSuccessCallable = function ($form) use ($defaultEntity, $beforeCreateCallable, $successfulText, $formType, $startEntity, $buttonLabel) {
-            $manager = $this->getDoctrine()->getManager();
+            $manager = $registry->getManager();
 
             if (!\is_callable($beforeCreateCallable) || false !== $beforeCreateCallable($manager)) {
                 $manager->persist($defaultEntity);
@@ -99,7 +99,7 @@ class BaseFormController extends BaseDoctrineController
 
         // create persist callable
         $myOnSuccessCallable = function ($form) use ($entity, $beforeUpdateCallable, $successfulText) {
-            $manager = $this->getDoctrine()->getManager();
+            $manager = $registry->getManager();
 
             if (!\is_callable($beforeUpdateCallable) || false !== $beforeUpdateCallable($manager)) {
                 $manager->persist($entity);
@@ -156,7 +156,7 @@ class BaseFormController extends BaseDoctrineController
     private function handleRemoveFormInternal(Request $request, BaseEntity $entity, string $formType, $buttonLabel, $successText, $beforeRemoveCallable)
     {
         $myOnSuccessCallable = function ($form) use ($entity, $successText, $beforeRemoveCallable) {
-            $manager = $this->getDoctrine()->getManager();
+            $manager = $registry->getManager();
 
             if (false !== $beforeRemoveCallable($entity, $manager)) {
                 $manager->remove($entity);

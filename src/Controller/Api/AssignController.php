@@ -17,16 +17,20 @@ use App\Entity\Event;
 use App\Entity\EventPast;
 use App\Entity\Setting;
 use App\Enum\EventChangeType;
+use App\Helper\DoctrineHelper;
 use App\Model\Event\SearchModel;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/assign')]
+#[Route(path: '/assign')]
 class AssignController extends BaseApiController
 {
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/doctors', name: 'assign_doctors')]
+    #[Route(path: '/doctors', name: 'assign_doctors')]
     public function doctors(SerializerInterface $serializer)
     {
         $result = [];
@@ -40,7 +44,7 @@ class AssignController extends BaseApiController
         }
         $result = array_values($result);
 
-        return $this->returnDoctors($result);
+        return $this->returnDoctors($serializer, $result);
     }
 
     /**
@@ -48,8 +52,8 @@ class AssignController extends BaseApiController
      *
      * @throws \Exception
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/events/{doctor}', name: 'assign_events')]
-    public function events(Doctor $doctor): \Symfony\Component\HttpFoundation\JsonResponse
+    #[Route(path: '/events/{doctor}', name: 'assign_events')]
+    public function events(Doctor $doctor, SerializerInterface $serializer, ManagerRegistry $registry): JsonResponse
     {
         // get all common clinics of current user & selected one
         $allowedFilter = [];
@@ -64,27 +68,27 @@ class AssignController extends BaseApiController
         }
 
         // get all assignable events
-        $settings = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
+        $settings = $registry->getRepository(Setting::class)->findSingle();
 
         // get the events for the doctor
         $searchModel = new SearchModel(SearchModel::NONE);
         $searchModel->setClinics($clinics);
         $searchModel->setEndDateTime((new \DateTime())->add(new \DateInterval('P'.$settings->getCanConfirmDaysAdvance().'D')));
-        $events = $this->getDoctrine()->getRepository(Event::class)->search($searchModel);
+        $events = $registry->getRepository(Event::class)->search($searchModel);
 
-        return $this->returnEvents($events);
+        return $this->returnEvents($serializer, $events);
     }
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/assign/{event}/{doctor}', name: 'assign_assign')]
-    public function assign(Event $event, Doctor $doctor)
+    #[Route(path: '/assign/{event}/{doctor}', name: 'assign_assign')]
+    public function assign(Event $event, Doctor $doctor, ManagerRegistry $registry, SerializerInterface $serializer)
     {
         $event->setDoctor($doctor);
         $eventPast = EventPast::create($event, EventChangeType::DOCTOR_ASSIGNED, $this->getUser());
-        $this->fastSave($event, $eventPast);
+        DoctrineHelper::persistAndFlush($registry, ...[$event, $eventPast]);
 
-        return $this->returnEvents($event);
+        return $this->returnEvents($serializer, $event);
     }
 }

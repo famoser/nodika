@@ -15,15 +15,20 @@ use App\Controller\Base\BaseFormController;
 use App\Entity\EventOffer;
 use App\Entity\EventPast;
 use App\Enum\EventChangeType;
+use App\Helper\DoctrineHelper;
 use App\Service\EmailService;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/trade')]
+#[Route(path: '/trade')]
 class TradeController extends BaseFormController
 {
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'trade_index')]
-    public function index(): \Symfony\Component\HttpFoundation\Response
+    #[Route(path: '/', name: 'trade_index')]
+    public function index(): Response
     {
         return $this->render('trade/index.html.twig');
     }
@@ -31,8 +36,8 @@ class TradeController extends BaseFormController
     /**
      * @throws \Exception
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/accept/{eventOffer}', name: 'trade_accept')]
-    public function accept(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService): \Symfony\Component\HttpFoundation\RedirectResponse
+    #[Route(path: '/accept/{eventOffer}', name: 'trade_accept')]
+    public function accept(EventOffer $eventOffer, ManagerRegistry $registry, TranslatorInterface $translator, EmailService $emailService): RedirectResponse
     {
         if (!$eventOffer->isValid()) {
             $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
@@ -44,7 +49,7 @@ class TradeController extends BaseFormController
             $this->displaySuccess($translator->trans('accept.success.trade_accepted', [], 'trade'));
         } else {
             // execute trade
-            $manager = $this->getDoctrine()->getManager();
+            $manager = $registry->getManager();
             foreach ($eventOffer->getSenderOwnedEvents() as $senderOwnedEvent) {
                 $senderOwnedEvent->setClinic($eventOffer->getReceiverClinic());
                 $senderOwnedEvent->setDoctor($eventOffer->getReceiver());
@@ -83,8 +88,8 @@ class TradeController extends BaseFormController
     /**
      * @throws \Exception
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/decline/{eventOffer}', name: 'trade_decline')]
-    public function decline(EventOffer $eventOffer, TranslatorInterface $translator, EmailService $emailService): \Symfony\Component\HttpFoundation\RedirectResponse
+    #[Route(path: '/decline/{eventOffer}', name: 'trade_decline')]
+    public function decline(EventOffer $eventOffer, ManagerRegistry $registry, TranslatorInterface $translator, EmailService $emailService): RedirectResponse
     {
         if (!$eventOffer->isValid()) {
             $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
@@ -98,7 +103,7 @@ class TradeController extends BaseFormController
                 $translator->trans('emails.offer_declined.message', [], 'trade'),
                 $translator->trans('emails.offer_declined.action_text', [], 'trade'),
                 $this->generateUrl('index_index', [], UrlGeneratorInterface::ABSOLUTE_URL));
-            $this->fastSave($eventOffer);
+            DoctrineHelper::persistAndFlush($registry, ...[$eventOffer]);
         } else {
             $this->displayError($translator->trans('accept.danger.action_invalid', [], 'trade'));
         }
@@ -106,13 +111,13 @@ class TradeController extends BaseFormController
         return $this->redirectToRoute('index_index');
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/acknowledge/{eventOffer}', name: 'trade_acknowledge')]
-    public function acknowledge(EventOffer $eventOffer, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\RedirectResponse
+    #[Route(path: '/acknowledge/{eventOffer}', name: 'trade_acknowledge')]
+    public function acknowledge(EventOffer $eventOffer, ManagerRegistry $registry, TranslatorInterface $translator): RedirectResponse
     {
         if ($eventOffer->acknowledge($this->getUser())) {
             $this->displaySuccess($translator->trans('acknowledge.success.trade_acknowledged', [], 'trade'));
             $eventOffer->tryMarkAsResolved();
-            $this->fastSave($eventOffer);
+            DoctrineHelper::persistAndFlush($registry, ...[$eventOffer]);
         } else {
             $this->displayError($translator->trans('accept.danger.action_invalid', [], 'trade'));
         }
@@ -120,15 +125,15 @@ class TradeController extends BaseFormController
         return $this->redirectToRoute('index_index');
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/withdraw/{eventOffer}', name: 'trade_withdraw')]
-    public function withdraw(EventOffer $eventOffer, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\RedirectResponse
+    #[Route(path: '/withdraw/{eventOffer}', name: 'trade_withdraw')]
+    public function withdraw(EventOffer $eventOffer, ManagerRegistry $registry, TranslatorInterface $translator): RedirectResponse
     {
         if (!$eventOffer->isValid()) {
             $this->displayError($translator->trans('accept.danger.invalid', [], 'trade'));
         } elseif ($eventOffer->withdraw($this->getUser())) {
             $this->displaySuccess($translator->trans('withdraw.success.trade_withdrawn', [], 'trade'));
             $eventOffer->tryMarkAsResolved();
-            $this->fastSave($eventOffer);
+            DoctrineHelper::persistAndFlush($registry, ...[$eventOffer]);
         } else {
             $this->displayError($translator->trans('accept.danger.action_invalid', [], 'trade'));
         }

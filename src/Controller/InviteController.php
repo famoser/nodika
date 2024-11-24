@@ -13,18 +13,22 @@ namespace App\Controller;
 
 use App\Entity\Doctor;
 use App\Form\Traits\User\ChangePasswordType;
+use App\Helper\DoctrineHelper;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/invite')]
+#[Route(path: '/invite')]
 class InviteController extends LoginController
 {
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/doctor/{guid}', name: 'invite_doctor')]
-    public function doctor(Request $request, $guid, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\RedirectResponse|Response
+    #[Route(path: '/doctor/{guid}', name: 'invite_doctor')]
+    public function doctor(Request $request, ManagerRegistry $registry, $guid, TranslatorInterface $translator): RedirectResponse|Response
     {
-        $user = $this->getDoctrine()->getRepository(Doctor::class)->findOneBy(['invitationIdentifier' => $guid]);
+        $user = $registry->getRepository(Doctor::class)->findOneBy(['invitationIdentifier' => $guid]);
         if (null === $user) {
             $this->displayError($translator->trans('invite_invalid.title', [], 'invite'));
 
@@ -42,7 +46,7 @@ class InviteController extends LoginController
         if (null !== $user->getLastLoginDate()) {
             $this->displayError($translator->trans('doctor.danger.already_login_occurred', [], 'invite'));
             $user->invitationAccepted();
-            $this->fastSave($user);
+            DoctrineHelper::persistAndFlush($registry, ...[$user]);
 
             return $this->redirectToRoute('login');
         }
@@ -54,7 +58,7 @@ class InviteController extends LoginController
             $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
                 ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
             $request,
-            function ($form) use ($user, $translator, $request) {
+            function ($form) use ($user, $translator, $request, $registry) {
                 // check for valid password
                 if ($user->getPlainPassword() !== $user->getRepeatPlainPassword()) {
                     $this->displayError($translator->trans('reset.danger.passwords_do_not_match', [], 'login'));
@@ -68,7 +72,7 @@ class InviteController extends LoginController
                 // set new password & save
                 $user->setPassword();
                 $user->setResetHash();
-                $this->fastSave($user);
+                DoctrineHelper::persistAndFlush($registry, ...[$user]);
 
                 // login user & redirect
                 $this->loginUser($request, $user);

@@ -25,26 +25,30 @@ use App\Enum\EventChangeType;
 use App\Enum\EventTagType;
 use App\Enum\EventType;
 use App\Form\Event\RemoveType;
+use App\Helper\DoctrineHelper;
 use App\Model\Breadcrumb;
 use App\Service\Interfaces\EventGenerationServiceInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/events')]
+#[Route(path: '/events')]
 class EventController extends BaseApiController
 {
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_event_new')]
-    public function new(Request $request, TranslatorInterface $translator)
+    #[Route(path: '/new', name: 'administration_event_new')]
+    public function new(Request $request, TranslatorInterface $translator, ManagerRegistry $registry)
     {
         $event = new Event();
         $myForm = $this->handleCreateForm(
@@ -55,7 +59,7 @@ class EventController extends BaseApiController
                     return false;
                 }
 
-                /* @var ObjectManager $manager */
+                /** @var ObjectManager $manager */
                 $eventPast = EventPast::create($event, EventChangeType::CREATED, $this->getUser());
                 $manager->persist($eventPast);
 
@@ -75,8 +79,8 @@ class EventController extends BaseApiController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/edit', name: 'administration_event_edit')]
-    public function edit(Request $request, Event $event, TranslatorInterface $translator)
+    #[Route(path: '/{event}/edit', name: 'administration_event_edit')]
+    public function edit(Request $request, Event $event, TranslatorInterface $translator, ManagerRegistry $registry)
     {
         $myForm = $this->handleUpdateForm(
             $request,
@@ -116,22 +120,19 @@ class EventController extends BaseApiController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/remove', name: 'administration_event_remove')]
-    public function remove(Request $request, Event $event, TranslatorInterface $translator)
+    #[Route(path: '/{event}/remove', name: 'administration_event_remove')]
+    public function remove(Request $request, Event $event, TranslatorInterface $translator, ManagerRegistry $registry)
     {
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $event)
                 ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
             $request,
-            function () use ($event, $translator): \Symfony\Component\HttpFoundation\RedirectResponse {
+            function () use ($event, $translator, $registry): RedirectResponse {
                 /* @var FormInterface $form */
                 $event->delete();
                 $eventPast = EventPast::create($event, EventChangeType::REMOVED, $this->getUser());
 
-                $manager = $this->getDoctrine()->getManager();
-                $manager->persist($eventPast);
-                $manager->persist($event);
-                $manager->flush();
+                DoctrineHelper::persistAndFlush($registry, ...[$eventPast, $event]);
 
                 $this->displaySuccess($translator->trans('successful.delete', [], 'common_form'));
 
@@ -148,7 +149,7 @@ class EventController extends BaseApiController
         return $this->render('administration/event/remove.html.twig', $arr);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/history', name: 'administration_event_history')]
+    #[Route(path: '/{event}/history', name: 'administration_event_history')]
     public function history(Event $event): Response
     {
         $arr['event'] = $event;
@@ -156,10 +157,10 @@ class EventController extends BaseApiController
         return $this->render('administration/event/history.html.twig', $arr);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/generations', name: 'administration_event_generations')]
-    public function generate(): Response
+    #[Route(path: '/generations', name: 'administration_event_generations')]
+    public function generate(ManagerRegistry $registry): Response
     {
-        $generations = $this->getDoctrine()->getRepository(EventGeneration::class)->findAll();
+        $generations = $registry->getRepository(EventGeneration::class)->findAll();
         $arr['generations'] = $generations;
 
         return $this->render('administration/event/generations.html.twig', $arr);
@@ -170,11 +171,11 @@ class EventController extends BaseApiController
      *
      * @throws \Exception
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/new/{tagType}', name: 'administration_event_generation_new')]
-    public function generateNew(int $tagType, EventGenerationServiceInterface $eventGenerationService, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\RedirectResponse
+    #[Route(path: '/generation/new/{tagType}', name: 'administration_event_generation_new')]
+    public function generateNew(int $tagType, EventGenerationServiceInterface $eventGenerationService, TranslatorInterface $translator, ManagerRegistry $registry): RedirectResponse
     {
         // get to be assigned tag
-        $tag = $this->getDoctrine()->getRepository(EventTag::class)->findOneBy(['tagType' => $tagType]);
+        $tag = $registry->getRepository(EventTag::class)->findOneBy(['tagType' => $tagType]);
         if (!($tag instanceof EventTag)) {
             return $this->redirectToRoute('administration_event_generations');
         }
@@ -185,7 +186,7 @@ class EventController extends BaseApiController
         $generation->registerChangeBy($this->getUser());
 
         // try to retrieve last generation of that type
-        $lastGenerations = $this->getDoctrine()->getRepository(EventGeneration::class)->findBy(['applied' => true], ['lastChangedAt' => 'DESC']);
+        $lastGenerations = $registry->getRepository(EventGeneration::class)->findBy(['applied' => true], ['lastChangedAt' => 'DESC']);
         $lastGeneration = null;
         foreach ($lastGenerations as $lastGenerationLoop) {
             if ($lastGenerationLoop->getAssignEventTags()->contains($tag)) {
@@ -262,7 +263,7 @@ class EventController extends BaseApiController
             $generation->setEndDateTime((new \DateTime())->add(new \DateInterval('P1Y')));
 
             // set participants
-            $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
+            $clinics = $registry->getRepository(Clinic::class)->findBy(['deletedAt' => null]);
             foreach ($clinics as $clinic) {
                 $targetClinic = new EventGenerationTargetClinic();
                 $targetClinic->setEventGeneration($generation);
@@ -282,7 +283,7 @@ class EventController extends BaseApiController
                 $generation->setEndCronExpression('0 8 */7 * *');
                 $generation->setConflictBufferInEventMultiples(1.0 / 7);
             }
-            foreach ($this->getDoctrine()->getRepository(EventTag::class)->findBy(['deletedAt' => null]) as $otherTag) {
+            foreach ($registry->getRepository(EventTag::class)->findBy(['deletedAt' => null]) as $otherTag) {
                 $generation->getConflictEventTags()->add($otherTag);
             }
             // add yearly holidays
@@ -319,12 +320,12 @@ class EventController extends BaseApiController
 
         // save
         $eventGenerationService->generate($generation);
-        $this->fastSave($generation);
+        DoctrineHelper::persistAndFlush($registry, ...[$generation]);
 
         return $this->redirectToRoute('administration_event_generation', ['generation' => $generation->getId()]);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}', name: 'administration_event_generation')]
+    #[Route(path: '/generation/{generation}', name: 'administration_event_generation')]
     public function generation(EventGeneration $generation): Response
     {
         return $this->render('administration/event/generation.html.twig', ['generation' => $generation]);
@@ -333,7 +334,7 @@ class EventController extends BaseApiController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/get', name: 'administration_event_generation_get')]
+    #[Route(path: '/generation/{generation}/get', name: 'administration_event_generation_get')]
     public function generationGet(SerializerInterface $serializer, EventGeneration $generation)
     {
         return $this->returnGeneration($serializer, $generation);
@@ -342,15 +343,15 @@ class EventController extends BaseApiController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/update', name: 'administration_event_generation_update')]
-    public function generationUpdate(Request $request, SerializerInterface $serializer, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService): \Symfony\Component\HttpFoundation\JsonResponse
+    #[Route(path: '/generation/{generation}/update', name: 'administration_event_generation_update')]
+    public function generationUpdate(Request $request, SerializerInterface $serializer, EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService, ManagerRegistry $registry): JsonResponse
     {
         // only update if not applied yet
         if ($generation->getIsApplied()) {
             throw new AccessDeniedHttpException();
         }
 
-        $manager = $this->getDoctrine()->getManager();
+        $manager = $registry->getManager();
 
         // prepare content & request
         $content = json_decode($request->getContent(), true);
@@ -391,7 +392,7 @@ class EventController extends BaseApiController
             // refresh dependencies
             if (\array_key_exists('conflictEventTagIds', $content)) {
                 $eventTagIds = $content['conflictEventTagIds'];
-                $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
+                $eventTags = $registry->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
                 $generation->getConflictEventTags()->clear();
                 foreach ($eventTags as $eventTag) {
                     $generation->getConflictEventTags()->add($eventTag);
@@ -399,7 +400,7 @@ class EventController extends BaseApiController
             }
             if (\array_key_exists('assignEventTagIds', $content)) {
                 $eventTagIds = $content['assignEventTagIds'];
-                $eventTags = $this->getDoctrine()->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
+                $eventTags = $registry->getRepository(EventTag::class)->findBy(['id' => $eventTagIds]);
                 $generation->getAssignEventTags()->clear();
                 foreach ($eventTags as $eventTag) {
                     $generation->getAssignEventTags()->add($eventTag);
@@ -420,7 +421,7 @@ class EventController extends BaseApiController
             }
             if (\array_key_exists('targetClinics', $content)) {
                 // get key/value of clinics
-                $clinics = $this->getDoctrine()->getRepository(Clinic::class)->findAll();
+                $clinics = $registry->getRepository(Clinic::class)->findAll();
                 $clinicById = [];
                 foreach ($clinics as $clinic) {
                     $clinicById[$clinic->getId()] = $clinic;
@@ -441,7 +442,7 @@ class EventController extends BaseApiController
             }
             if (\array_key_exists('targetDoctors', $content)) {
                 // get key/value of doctors
-                $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
+                $doctors = $registry->getRepository(Doctor::class)->findAll();
                 $doctorById = [];
                 foreach ($doctors as $doctor) {
                     $doctorById[$doctor->getId()] = $doctor;
@@ -475,7 +476,7 @@ class EventController extends BaseApiController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/targets', name: 'administration_event_generation_targets')]
+    #[Route(path: '/generation/{generation}/targets', name: 'administration_event_generation_targets')]
     public function generationTargets(SerializerInterface $serializer, ManagerRegistry $registry)
     {
         $doctors = $registry->getRepository(Doctor::class)->findBy(['deletedAt' => null]);
@@ -487,7 +488,7 @@ class EventController extends BaseApiController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/generation/{generation}/apply', name: 'administration_event_generation_apply')]
+    #[Route(path: '/generation/{generation}/apply', name: 'administration_event_generation_apply')]
     public function generateApply(EventGeneration $generation, EventGenerationServiceInterface $eventGenerationService)
     {
         $eventGenerationService->persist($generation, $this->getUser());
@@ -498,8 +499,8 @@ class EventController extends BaseApiController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/{event}/toggle_confirm', name: 'administration_event_toggle_confirm')]
-    public function toggleConfirm(Event $event): \Symfony\Component\HttpFoundation\RedirectResponse
+    #[Route(path: '/{event}/toggle_confirm', name: 'administration_event_toggle_confirm')]
+    public function toggleConfirm(Event $event, ManagerRegistry $registry): RedirectResponse
     {
         if ($event->isConfirmed()) {
             $event->undoConfirm();
@@ -508,7 +509,7 @@ class EventController extends BaseApiController
         }
 
         $eventPast = EventPast::create($event, EventChangeType::CHANGED, $this->getUser());
-        $this->fastSave($event, $eventPast);
+        DoctrineHelper::persistAndFlush($registry, ...[$event, $eventPast]);
 
         return $this->redirectToRoute('administration_events');
     }

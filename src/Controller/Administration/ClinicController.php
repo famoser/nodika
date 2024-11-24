@@ -14,8 +14,11 @@ namespace App\Controller\Administration;
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Clinic;
 use App\Form\Clinic\RemoveType;
+use App\Helper\DoctrineHelper;
 use App\Model\Breadcrumb;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +30,7 @@ class ClinicController extends BaseController
      * @return Response
      */
     #[\Symfony\Component\Routing\Attribute\Route(path: '/new', name: 'administration_clinic_new')]
-    public function new(Request $request)
+    public function new(Request $request, ManagerRegistry $registry)
     {
         $myForm = $this->handleCreateForm($request, new Clinic());
 
@@ -44,7 +47,7 @@ class ClinicController extends BaseController
      * @return Response
      */
     #[\Symfony\Component\Routing\Attribute\Route(path: '/{clinic}/edit', name: 'administration_clinic_edit')]
-    public function edit(Request $request, Clinic $clinic)
+    public function edit(Request $request, Clinic $clinic, ManagerRegistry $registry)
     {
         $myForm = $this->handleUpdateForm($request, $clinic);
 
@@ -63,20 +66,20 @@ class ClinicController extends BaseController
      *
      * @return Response
      */
-    public function remove(Request $request, Clinic $clinic)
+    public function remove(Request $request, Clinic $clinic, ManagerRegistry $registry)
     {
         $canDelete = 0 === $clinic->getEvents()->count();
         $myForm = $this->handleForm(
             $this->createForm(RemoveType::class, $clinic)
                 ->add('remove', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.delete']),
             $request,
-            function () use ($clinic, $canDelete): \Symfony\Component\HttpFoundation\RedirectResponse {
+            function () use ($clinic, $canDelete, $registry): RedirectResponse {
                 $clinic->delete();
                 if ($canDelete) {
-                    $this->fastRemove($clinic);
+                    DoctrineHelper::removeAndFlush($registry, ...[$clinic]);
                 } else {
                     $clinic->delete();
-                    $this->fastSave($clinic);
+                    DoctrineHelper::persistAndFlush($registry, ...[$clinic]);
                 }
 
                 return $this->redirectToRoute('administration_clinics');

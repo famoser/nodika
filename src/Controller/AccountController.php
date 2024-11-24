@@ -15,15 +15,19 @@ use App\Controller\Base\BaseFormController;
 use App\Entity\Setting;
 use App\Form\Doctor\EditAccountType;
 use App\Form\Traits\User\ChangePasswordType;
+use App\Helper\DoctrineHelper;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/account')]
+#[Route(path: '/account')]
 class AccountController extends BaseFormController
 {
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'account_index')]
-    public function index(Request $request, TranslatorInterface $translator): \Symfony\Component\HttpFoundation\Response
+    #[Route(path: '/', name: 'account_index')]
+    public function index(Request $request, ManagerRegistry $registry, TranslatorInterface $translator): Response
     {
         $arr = [];
 
@@ -35,7 +39,7 @@ class AccountController extends BaseFormController
             $this->createForm(ChangePasswordType::class, $user)
                 ->add('form.change_password', SubmitType::class, ['translation_domain' => 'account', 'label' => 'index.change_password']),
             $request,
-            function ($form) use ($user, $translator) {
+            function ($form) use ($user, $registry, $translator) {
                 if (
                     $user->getPlainPassword() !== $user->getRepeatPlainPassword()
                     || '' === $user->getPlainPassword()
@@ -46,7 +50,7 @@ class AccountController extends BaseFormController
                 }
 
                 $user->setPassword();
-                $this->fastSave($user);
+                DoctrineHelper::persistAndFlush($registry, ...[$user]);
                 $this->displaySuccess($translator->trans('reset.success.password_set', [], 'login'));
 
                 return $form;
@@ -54,16 +58,16 @@ class AccountController extends BaseFormController
         );
         $arr['change_password_form'] = $form->createView();
 
-        $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
+        $setting = $registry->getRepository(Setting::class)->findSingle();
         if ($setting->getDoctorsCanEditSelf()) {
             // edit account form
             $form = $this->handleForm(
                 $this->createForm(EditAccountType::class, $user)
                     ->add('form.save', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.update']),
                 $request,
-                function ($form) use ($user, $translator) {
+                function ($form) use ($user, $registry, $translator) {
                     $this->displaySuccess($translator->trans('successful.update', [], 'common_form'));
-                    $this->fastSave($user);
+                    DoctrineHelper::persistAndFlush($registry, ...[$user]);
 
                     return $form;
                 }

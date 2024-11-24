@@ -11,24 +11,27 @@
 
 namespace App\Controller;
 
-use App\Controller\Base\BaseDoctrineController;
+use App\Controller\Base\BaseController;
 use App\Entity\Event;
 use App\Entity\EventOffer;
 use App\Model\Event\SearchModel;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/')]
-class IndexController extends BaseDoctrineController
+#[Route(path: '/')]
+class IndexController extends BaseController
 {
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'index_index')]
-    public function index(): \Symfony\Component\HttpFoundation\Response
+    #[Route(path: '/', name: 'index_index')]
+    public function index(ManagerRegistry $registry): Response
     {
         // get the events from the next month
         $searchModel = new SearchModel(SearchModel::MONTH);
-        $eventRepository = $this->getDoctrine()->getRepository(Event::class);
+        $eventRepository = $registry->getRepository(Event::class);
         $events = $eventRepository->search($searchModel);
 
         // get open offers & determine which need actions
-        $offers = $this->getDoctrine()->getRepository(EventOffer::class)->findBy(['isResolved' => false]);
+        $offers = $registry->getRepository(EventOffer::class)->findBy(['isResolved' => false]);
         /** @var EventOffer[] $actingOffers */
         $actingOffers = [];
         foreach ($offers as $offer) {

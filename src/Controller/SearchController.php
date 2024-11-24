@@ -17,12 +17,13 @@ use App\Entity\Event;
 use App\Form\Model\Event\PublicSearchType;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/search')]
+#[Route(path: '/search')]
 class SearchController extends BaseFormController
 {
     use EventControllerTrait;
@@ -30,8 +31,8 @@ class SearchController extends BaseFormController
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'search_index')]
-    public function index(Request $request, TranslatorInterface $translator, CsvServiceInterface $csvService)
+    #[Route(path: '/', name: 'search_index')]
+    public function index(Request $request, ManagerRegistry $registry, CsvServiceInterface $csvService)
     {
         $searchModel = new SearchModel(SearchModel::MONTH);
 
@@ -49,7 +50,7 @@ class SearchController extends BaseFormController
             }
         );
 
-        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $eventRepo = $registry->getRepository(Event::class);
         $events = $eventRepo->search($searchModel);
 
         if ($export) {

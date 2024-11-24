@@ -14,6 +14,7 @@ namespace App\Controller\Administration;
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Doctor;
 use App\Entity\Setting;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -24,24 +25,24 @@ use Symfony\Component\HttpFoundation\Response;
 class SettingController extends BaseController
 {
     #[\Symfony\Component\Routing\Attribute\Route(path: '/edit', name: 'administration_setting_edit')]
-    public function edit(Request $request, FormFactoryInterface $factory): Response
+    public function edit(Request $request, FormFactoryInterface $factory, ManagerRegistry $registry): Response
     {
-        $setting = $this->getDoctrine()->getRepository(Setting::class)->findSingle();
+        $setting = $registry->getRepository(Setting::class)->findSingle();
         $settings = $this->handleUpdateForm(
             $request,
             $setting
         );
 
-        $admins = $this->processSelectDoctors($request, $factory, 'admins',
-            $this->getDoctrine()->getRepository(Doctor::class)->findBy(['isAdministrator' => true]),
+        $admins = $this->processSelectDoctors($registry, $request, $factory, 'admins',
+            $registry->getRepository(Doctor::class)->findBy(['isAdministrator' => true]),
             function ($doctor, $value): void {
                 /* @var Doctor $doctor */
                 $doctor->setIsAdministrator($value);
             }
         );
 
-        $emails = $this->processSelectDoctors($request, $factory, 'emails',
-            $this->getDoctrine()->getRepository(Doctor::class)->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]),
+        $emails = $this->processSelectDoctors($registry, $request, $factory, 'emails',
+            $registry->getRepository(Doctor::class)->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]),
             function ($doctor, $value): void {
                 /* @var Doctor $doctor */
                 $doctor->setReceivesAdministratorMail($value);
@@ -57,7 +58,7 @@ class SettingController extends BaseController
      *
      * @return \Symfony\Component\Form\FormInterface
      */
-    private function processSelectDoctors(Request $request, FormFactoryInterface $factory, string $name, $data, \Closure $setProperty)
+    private function processSelectDoctors(ManagerRegistry $registry, Request $request, FormFactoryInterface $factory, string $name, $data, \Closure $setProperty)
     {
         $adminForm = $factory->createNamedBuilder($name)
             ->setMapped(false)
@@ -67,8 +68,8 @@ class SettingController extends BaseController
         $adminForm->handleRequest($request);
 
         if ($adminForm->isSubmitted() && $adminForm->isValid()) {
-            $doctors = $this->getDoctrine()->getRepository(Doctor::class)->findAll();
-            $manager = $this->getDoctrine()->getManager();
+            $doctors = $registry->getRepository(Doctor::class)->findAll();
+            $manager = $registry->getManager();
             foreach ($doctors as $doctor) {
                 $setProperty($doctor, false);
                 $manager->persist($doctor);

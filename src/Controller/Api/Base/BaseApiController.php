@@ -11,48 +11,26 @@
 
 namespace App\Controller\Api\Base;
 
-use App\Controller\Base\BaseDoctrineController;
+use App\Controller\Base\BaseController;
 use App\Entity\Clinic;
 use App\Entity\Doctor;
 use App\Entity\Event;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class BaseApiController extends BaseDoctrineController
+class BaseApiController extends BaseController
 {
-    public static function getSubscribedServices(): array
-    {
-        return parent::getSubscribedServices() +
-            [
-                'serializer' => SerializerInterface::class,
-            ];
-    }
-
-    /**
-     * @return SerializerInterface
-     */
-    private function getSerializer()
-    {
-        return $this->get('serializer');
-    }
-
     /**
      * @param Event[]|Event $events
      *
      * @return JsonResponse
      */
-    protected function returnEvents($events)
+    protected function returnEvents(SerializerInterface $serializer, $events)
     {
-        return new JsonResponse(
-            $this->getSerializer()->serialize(
-                $events,
-                'json',
-                ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName'], 'eventTags' => ['name', 'colorText']]]
-            ),
-            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
-            [],
-            true
-        );
+        $data = $serializer->serialize($events, 'json', ['attributes' => ['id', 'startDateTime', 'endDateTime', 'clinic' => ['id', 'name'], 'doctor' => ['id', 'fullName'], 'eventTags' => ['name', 'colorText']]]);
+
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
@@ -60,17 +38,11 @@ class BaseApiController extends BaseDoctrineController
      *
      * @return JsonResponse
      */
-    protected function returnDoctors($doctors)
+    protected function returnDoctors(SerializerInterface $serializer, $doctors)
     {
-        return new JsonResponse(
-            $this->getSerializer()->serialize(
-                $doctors,
-                'json', ['attributes' => ['id', 'fullName', 'clinics' => ['id', 'name']]]
-            ),
-            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
-            [],
-            true
-        );
+        $data = $serializer->serialize($doctors, 'json', ['attributes' => ['id', 'fullName', 'clinics' => ['id', 'name']]]);
+
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 
     /**
@@ -78,16 +50,10 @@ class BaseApiController extends BaseDoctrineController
      *
      * @return JsonResponse
      */
-    protected function returnClinics($clinics)
+    protected function returnClinics(SerializerInterface $serializer, $clinics)
     {
-        return new JsonResponse(
-            $this->getSerializer()->serialize(
-                $clinics,
-                'json', ['attributes' => ['id', 'name', 'doctors' => ['id', 'fullName']]]
-            ),
-            \Symfony\Component\HttpFoundation\Response::HTTP_OK,
-            [],
-            true
-        );
+        $data = $serializer->serialize($clinics, 'json', ['attributes' => ['id', 'name', 'doctors' => ['id', 'fullName']]]);
+
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 }

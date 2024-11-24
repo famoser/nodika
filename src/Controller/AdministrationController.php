@@ -20,24 +20,26 @@ use App\Form\Model\Event\PublicSearchType;
 use App\Model\Breadcrumb;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\CsvServiceInterface;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/administration')]
+#[Route(path: '/administration')]
 class AdministrationController extends BaseFormController
 {
     use EventControllerTrait;
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'administration_index')]
-    public function index(): Response
+    #[Route(path: '/', name: 'administration_index')]
+    public function index(ManagerRegistry $registry): Response
     {
         $searchModel = new SearchModel(SearchModel::MONTH);
         $searchModel->setIsConfirmed(false);
 
-        $eventRepository = $this->getDoctrine()->getRepository(Event::class);
+        $eventRepository = $registry->getRepository(Event::class);
         $eventLineModels = $eventRepository->search($searchModel);
 
         $arr['unconfirmed_events'] = $eventLineModels;
@@ -48,8 +50,8 @@ class AdministrationController extends BaseFormController
     /**
      * @return Response
      */
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/events', name: 'administration_events')]
-    public function events(Request $request, CsvServiceInterface $csvService, TranslatorInterface $translator)
+    #[Route(path: '/events', name: 'administration_events')]
+    public function events(Request $request, ManagerRegistry $registry, CsvServiceInterface $csvService, TranslatorInterface $translator)
     {
         $searchModel = new SearchModel(SearchModel::YEAR);
 
@@ -67,7 +69,7 @@ class AdministrationController extends BaseFormController
             }
         );
 
-        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $eventRepo = $registry->getRepository(Event::class);
         $events = $eventRepo->search($searchModel);
 
         if ($export) {
@@ -80,10 +82,10 @@ class AdministrationController extends BaseFormController
         return $this->render('administration/events.html.twig', $arr);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/doctors', name: 'administration_doctors')]
-    public function doctors(): Response
+    #[Route(path: '/doctors', name: 'administration_doctors')]
+    public function doctors(ManagerRegistry $registry): Response
     {
-        $doctorRepo = $this->getDoctrine()->getRepository(Doctor::class);
+        $doctorRepo = $registry->getRepository(Doctor::class);
 
         /* @var Doctor[] $allDoctors */
         $allDoctors = $doctorRepo->findBy(['deletedAt' => null], ['familyName' => 'ASC', 'givenName' => 'ASC']);
@@ -95,10 +97,10 @@ class AdministrationController extends BaseFormController
         return $this->render('administration/doctors.html.twig', $arr);
     }
 
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/clinics', name: 'administration_clinics')]
-    public function clinics(): Response
+    #[Route(path: '/clinics', name: 'administration_clinics')]
+    public function clinics(ManagerRegistry $registry): Response
     {
-        $clinicRepo = $this->getDoctrine()->getRepository(Clinic::class);
+        $clinicRepo = $registry->getRepository(Clinic::class);
 
         $arr['clinics'] = $clinicRepo->findBy(['deletedAt' => null], ['name' => 'ASC']);
 

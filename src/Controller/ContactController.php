@@ -16,16 +16,19 @@ use App\Entity\Doctor;
 use App\Form\Model\ContactRequest\ContactRequestType;
 use App\Model\ContactRequest;
 use App\Service\EmailService;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[\Symfony\Component\Routing\Attribute\Route(path: '/contact')]
+#[Route(path: '/contact')]
 class ContactController extends BaseFormController
 {
-    #[\Symfony\Component\Routing\Attribute\Route(path: '/', name: 'contact_index')]
-    public function index(Request $request, TranslatorInterface $translator, EmailService $emailService): \Symfony\Component\HttpFoundation\Response
+    #[Route(path: '/', name: 'contact_index')]
+    public function index(Request $request, ManagerRegistry $registry, TranslatorInterface $translator, EmailService $emailService): Response
     {
         // prefill contact request with user data
         $createContactRequest = function (): ContactRequest {
@@ -49,16 +52,15 @@ class ContactController extends BaseFormController
         $form = $this->handleForm(
             $createForm($contactRequest),
             $request,
-            function ($form) use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm): \Symfony\Component\Form\FormInterface {
+            function ($form) use ($request, $contactRequest, $translator, $emailService, $createContactRequest, $createForm, $registry): FormInterface {
                 /** @var FormInterface $form */
                 // "check" is a hidden field; if it is filled out then we should prevent the bot from sending emails
                 if (ContactRequestType::CHECK_DATA === $form->get('check')->getData()
                     && ContactRequestType::CHECK2_DATA === $form->get('check2')->getData()
                     && false === mb_strpos($contactRequest->getMessage(), 'bit.ly')) {
-                    $userRepo = $this->getDoctrine()->getRepository(Doctor::class);
+                    $userRepo = $registry->getRepository(Doctor::class);
                     $admins = $userRepo->findBy(['isAdministrator' => true, 'receivesAdministratorMail' => true]);
                     foreach ($admins as $admin) {
-                        /* @var FormInterface $form */
                         $emailService->sendTextEmail(
                             $admin->getEmail(),
                             $translator->trans('contact_email.subject', [], 'contact'),
