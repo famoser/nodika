@@ -4,7 +4,6 @@ Introduction
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) 
 [![PHP Composer](https://github.com/famoser/nodika/actions/workflows/php.yml/badge.svg)](https://github.com/famoser/nodika/actions/workflows/php.yml)
 [![Node.js Encore](https://github.com/famoser/nodika/actions/workflows/node.js.yml/badge.svg)](https://github.com/famoser/nodika/actions/workflows/node.js.yml)
-[![Scrutinizer](https://scrutinizer-ci.com/g/famoser/nodika/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/famoser/nodika)
 
 Used by the veterinarians of Basel-Landschaft, Switzerland, this tool organizes emergency services.
 
