@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>{{ email.subject }}</title>
+    <title>{{ content.subject }}</title>
     <style>
         /* -------------------------------------
             GLOBAL RESETS
@@ -350,7 +350,7 @@
             <div class="content">
 
                 <!-- START CENTERED WHITE CONTAINER -->
-                <span class="preheader">{{ email.subject }}</span>
+                <span class="preheader">{{ content.subject }}</span>
                 <table class="main">
 
                     <!-- START MAIN CONTENT AREA -->
@@ -359,8 +359,8 @@
                             <table border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <p>{{ email.body|nl2br }}</p>
-                                        {% if email.actionLink != null %}
+                                        <p>{{ content.body|nl2br }}</p>
+                                        {% if content.actionLink != null %}
                                             <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                                 <tbody>
                                                 <tr>
@@ -369,8 +369,8 @@
                                                             <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <a href="{{ email.actionLink }}" target="_blank">
-                                                                        {{ email.actionText }}
+                                                                    <a href="{{ content.actionLink }}" target="_blank">
+                                                                        {{ content.actionText }}
                                                                     </a>
                                                                 </td>
                                                             </tr>
@@ -396,7 +396,7 @@
                         <tr>
 
                             <td class="content-block">
-                                <a href="{{ absolute_url(path("email_view", {"identifier" : email.identifier })) }}">
+                                <a href="{{ absolute_url(path("email_view", {"identifier" : content.identifier })) }}">
                                     {{ "mail_wrong_displayed"|trans }}
                                 </a> <br/>
                                 {{ "generated"|trans }} <br/>

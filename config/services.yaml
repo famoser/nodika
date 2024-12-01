@@ -9,6 +9,8 @@ services:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     public: false       # Allows optimizing the container by removing unused services; this also means
+    bind:
+      $contactEmail: '%env(CONTACT_EMAIL)%'
       # fetching services directly from the container via $container->get() won't work.
     # The best practice is to be explicit about your dependencies anyway.
 
@@ -23,18 +25,6 @@ services:
   App\Controller\:
     resource: '../src/Controller'
     tags: ['controller.service_arguments']
-
-  App\Service\ExchangeService:
-    arguments: ["@translator", "@session.flash_bag", "@validator", "@doctrine"]
-
-  App\Service\EventPastEvaluationService:
-    arguments: ["@doctrine"]
-
-  App\Service\EventGenerationService:
-    arguments: ["@doctrine","@translator","@session"]
-
-  App\Service\EmailService:
-    arguments: ["@mailer", "@doctrine", "@logger","@twig","%env(CONTACT_EMAIL)%"]
 
   App\Normalizer\EntityNormalizer:
     public: false

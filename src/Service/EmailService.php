@@ -38,18 +38,12 @@ class EmailService implements EmailServiceInterface
     private $doctrine;
 
     /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
      * EmailService constructor.
      */
-    public function __construct(MailerInterface $mailer, ManagerRegistry $registry, Environment $twig, string $contactEmail)
+    public function __construct(MailerInterface $mailer, ManagerRegistry $registry, string $contactEmail)
     {
         $this->mailer = $mailer;
         $this->doctrine = $registry;
-        $this->twig = $twig;
         $this->contactEmail = $contactEmail;
     }
 
@@ -64,7 +58,7 @@ class EmailService implements EmailServiceInterface
 
         $message = (new TemplatedEmail())
             ->subject($email->getSubject())
-            ->replyTo($this->contactEmail)
+            ->from($this->contactEmail)
             ->to($email->getReceiver());
 
         $body = $email->getBody();
@@ -75,7 +69,7 @@ class EmailService implements EmailServiceInterface
 
         if (EmailType::PLAIN_EMAIL !== $email->getEmailType()) {
             $message->htmlTemplate('email/view.html.twig')
-                ->context(['email' => $email]);
+                ->context(['content' => $email]);
         }
 
         foreach ($email->getCarbonCopyArray() as $item) {
