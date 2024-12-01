@@ -9,7 +9,7 @@ github:
   repository: famoser/nodika
 
 config:
-  path: .config
+  path: .agnes
   repository:
     url: git@gitlab.com:agnes-config/famoser-nodika
 
