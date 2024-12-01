@@ -12,9 +12,8 @@
 namespace App\Service;
 
 use App\Entity\Doctor;
-use App\Entity\Email;
 use App\Service\Interfaces\EmailServiceInterface;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
