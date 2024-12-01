@@ -41,9 +41,6 @@
     "doctrine/common": {
         "version": "2.12.0"
     },
-    "doctrine/data-fixtures": {
-        "version": "1.4.2"
-    },
     "doctrine/dbal": {
         "version": "v2.10.1"
     },
@@ -63,18 +60,6 @@
             "config/packages/prod/doctrine.yaml",
             "src/Entity/.gitignore",
             "src/Repository/.gitignore"
-        ]
-    },
-    "doctrine/doctrine-fixtures-bundle": {
-        "version": "3.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "3.0",
-            "ref": "fc52d86631a6dfd9fdf3381d0b7e3df2069e51b3"
-        },
-        "files": [
-            "src/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
@@ -143,9 +128,6 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
-    },
-    "fzaninotto/faker": {
-        "version": "v1.9.1"
     },
     "guzzlehttp/guzzle": {
         "version": "7.4.0"
@@ -519,15 +501,6 @@
     },
     "symfony/property-info": {
         "version": "v4.4.7"
-    },
-    "symfony/requirements-checker": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "93d0ec48679f5e240d265088305c1ad775723f93"
-        }
     },
     "symfony/routing": {
         "version": "4.2",
