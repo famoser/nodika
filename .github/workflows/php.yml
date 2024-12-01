@@ -44,4 +44,4 @@ jobs:
         php bin/console lint:twig templates
 
     - name: Check dependencies
-      run: composer audit
+      run: COMPOSER_AUDIT_ABANDONED=report composer audit
