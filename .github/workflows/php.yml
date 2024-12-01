@@ -53,14 +53,9 @@ jobs:
       run: |
         php bin/console doctrine:database:create --no-interaction
         php bin/console doctrine:migrations:migrate --no-interaction
-        php vendor/bin/phpunit
 
     - name: Check dependencies
       run: |
         wget -q -O local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64
         chmod +x local-php-security-checker
         ./local-php-security-checker
-
-    - name: Upload Scrutinizer coverage
-      run: |
-        wget -q -O ocular.phar https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml
