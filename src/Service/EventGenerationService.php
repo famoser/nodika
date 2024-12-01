@@ -27,7 +27,7 @@ use App\Exception\GenerationException;
 use App\Model\Event\SearchModel;
 use App\Service\Interfaces\EventGenerationServiceInterface;
 use Cron\CronExpression;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 class EventGenerationService implements EventGenerationServiceInterface
 {
