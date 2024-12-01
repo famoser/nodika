@@ -17,12 +17,14 @@ use App\Helper\HashHelper;
 use App\Service\Interfaces\EmailServiceInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
 use Twig\Environment;
 
 class EmailService implements EmailServiceInterface
 {
     /**
-     * @var \Swift_Mailer
+     * @var MailerInterface
      */
     private $mailer;
     /**
@@ -41,19 +43,13 @@ class EmailService implements EmailServiceInterface
     private $twig;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * EmailService constructor.
      */
-    public function __construct(\Swift_Mailer $mailer, ManagerRegistry $registry, LoggerInterface $logger, Environment $twig, string $contactEmail)
+    public function __construct(MailerInterface $mailer, ManagerRegistry $registry, Environment $twig, string $contactEmail)
     {
         $this->mailer = $mailer;
         $this->doctrine = $registry;
         $this->twig = $twig;
-        $this->logger = $logger;
         $this->contactEmail = $contactEmail;
     }
 
@@ -66,25 +62,20 @@ class EmailService implements EmailServiceInterface
         $manager->persist($email);
         $manager->flush();
 
-        $message = (new \Swift_Message())
-            ->setSubject($email->getSubject())
-            ->setFrom($this->contactEmail)
-            ->setTo($email->getReceiver());
+        $message = (new TemplatedEmail())
+            ->subject($email->getSubject())
+            ->replyTo($this->contactEmail)
+            ->to($email->getReceiver());
 
         $body = $email->getBody();
         if (null !== $email->getActionLink()) {
             $body .= "\n\n".$email->getActionText().': '.$email->getActionLink();
         }
-        $message->setBody($body, 'text/plain');
+        $message->text($body, 'text/plain');
 
         if (EmailType::PLAIN_EMAIL !== $email->getEmailType()) {
-            $message->addPart(
-                $this->twig->render(
-                    'email/view.html.twig',
-                    ['email' => $email]
-                ),
-                'text/html'
-            );
+            $message->htmlTemplate('email/view.html.twig')
+                ->context(['email' => $email]);
         }
 
         foreach ($email->getCarbonCopyArray() as $item) {
