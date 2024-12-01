@@ -16,6 +16,7 @@
     "dragonmantank/cron-expression": "^2.0",
     "erusev/parsedown": "^1.6",
     "ramsey/uuid": "^3",
+    "sensio/framework-extra-bundle": "^6.2",
     "symfony/apache-pack": "^1.0",
     "symfony/asset": "^5",
     "symfony/console": "^5",
