@@ -112,7 +112,7 @@ class LoginController extends BaseFormController
 
         // create login form
         $form = $this->createForm(LoginType::class, $user);
-        $form->add('form.login', SubmitType::class, ['translation_domain' => 'login', 'label' => 'login.do_login']);
+        $form->add('submit', SubmitType::class, ['translation_domain' => 'login', 'label' => 'login.do_login']);
         $arr['form'] = $form->createView();
 
         return $this->render('login/login.html.twig', $arr);
