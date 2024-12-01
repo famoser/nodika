@@ -16,7 +16,7 @@ use App\Entity\Doctor;
 use App\Entity\Event;
 use App\Helper\DateTimeFormatter;
 use App\Service\CsvService;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait EventControllerTrait
 {

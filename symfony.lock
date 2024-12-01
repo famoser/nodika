@@ -369,21 +369,6 @@
     "symfony/css-selector": {
         "version": "v4.4.7"
     },
-    "symfony/debug": {
-        "version": "v4.4.7"
-    },
-    "symfony/debug-bundle": {
-        "version": "4.1",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "4.1",
-            "ref": "f8863cbad2f2e58c4b65fa1eac892ab189971bea"
-        },
-        "files": [
-            "config/packages/dev/debug.yaml"
-        ]
-    },
     "symfony/dependency-injection": {
         "version": "v4.4.7"
     },
@@ -452,19 +437,10 @@
             "src/Kernel.php"
         ]
     },
-    "symfony/http-client-contracts": {
-        "version": "v1.1.10"
-    },
     "symfony/http-foundation": {
         "version": "v4.4.7"
     },
     "symfony/http-kernel": {
-        "version": "v4.4.7"
-    },
-    "symfony/inflector": {
-        "version": "v4.4.7"
-    },
-    "symfony/intl": {
         "version": "v4.4.7"
     },
     "symfony/maker-bundle": {
