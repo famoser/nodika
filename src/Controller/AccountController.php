@@ -40,7 +40,7 @@ class AccountController extends BaseFormController
         //change password form
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user)
-                ->add('form.change_password', SubmitType::class, ['translation_domain' => 'account', 'label' => 'index.change_password']),
+                ->add('submit', SubmitType::class, ['translation_domain' => 'account', 'label' => 'index.change_password']),
             $request,
             function ($form) use ($user, $translator) {
                 if (
@@ -66,7 +66,7 @@ class AccountController extends BaseFormController
             //edit account form
             $form = $this->handleForm(
                 $this->createForm(EditAccountType::class, $user)
-                    ->add('form.save', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.update']),
+                    ->add('submit', SubmitType::class, ['translation_domain' => 'common_form', 'label' => 'submit.update']),
                 $request,
                 function ($form) use ($user, $translator) {
                     $this->displaySuccess($translator->trans('successful.update', [], 'common_form'));

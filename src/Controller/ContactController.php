@@ -49,7 +49,7 @@ class ContactController extends BaseFormController
         //reuse create form logic
         $createForm = function ($contactRequest) {
             return $this->createForm(ContactRequestType::class, $contactRequest)
-                ->add('form.send', SubmitType::class, ['translation_domain' => 'contact', 'label' => 'index.send_mail']);
+                ->add('submit', SubmitType::class, ['translation_domain' => 'contact', 'label' => 'index.send_mail']);
         };
 
         //contact form

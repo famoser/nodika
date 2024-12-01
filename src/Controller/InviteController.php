@@ -61,7 +61,7 @@ class InviteController extends LoginController
         //present set password form
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
-                ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
+                ->add('set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
             $request,
             function ($form) use ($user, $translator, $request) {
                 //check for valid password

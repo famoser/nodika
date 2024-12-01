@@ -127,7 +127,7 @@ class LoginController extends BaseFormController
     {
         $form = $this->handleForm(
             $this->createForm(RecoverType::class)
-                ->add('form.recover', SubmitType::class, ['translation_domain' => 'login', 'label' => 'recover.title']),
+                ->add('submit', SubmitType::class, ['translation_domain' => 'login', 'label' => 'recover.title']),
             $request,
             function ($form) use ($emailService, $translator, $logger) {
                 /* @var FormInterface $form */
@@ -197,7 +197,7 @@ class LoginController extends BaseFormController
 
         $form = $this->handleForm(
             $this->createForm(ChangePasswordType::class, $user, ['data_class' => Doctor::class])
-                ->add('form.set_password', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
+                ->add('submit', SubmitType::class, ['translation_domain' => 'login', 'label' => 'reset.set_password']),
             $request,
             function ($form) use ($user, $translator, $request) {
                 //check for valid password
@@ -240,7 +240,7 @@ class LoginController extends BaseFormController
     {
         $form = $this->handleForm(
             $this->createForm(RequestInviteType::class)
-                ->add('form.request_invite', SubmitType::class, ['translation_domain' => 'login', 'label' => 'request.request_invite']),
+                ->add('submit', SubmitType::class, ['translation_domain' => 'login', 'label' => 'request.request_invite']),
             $request,
             function ($form) use ($emailService, $translator) {
                 /* @var FormInterface $form */
