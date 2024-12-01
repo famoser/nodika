@@ -58,7 +58,7 @@ class LoginController extends BaseFormController
         $this->get('security.token_storage')->setToken($token);
 
         $event = new InteractiveLoginEvent($request, $token);
-        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+        $this->get('event_dispatcher')->dispatch($event);
     }
 
     /**
