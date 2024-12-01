@@ -40,12 +40,9 @@
     "symfony/yaml": "^5"
   },
   "require-dev": {
-    "brainmaestro/composer-git-hooks": "^2.6",
     "famoser/agnes": "^4",
-    "phpunit/phpunit": "^8",
     "symfony/browser-kit": "^5",
     "symfony/css-selector": "^5",
-    "symfony/phpunit-bridge": "^5",
     "symfony/stopwatch": "^5.3",
     "symfony/web-profiler-bundle": "^5.0"
   },
@@ -78,7 +75,6 @@
   },
   "scripts": {
     "prepare-environment": [
-      "vendor/bin/cghooks update",
       "php bin/console doctrine:migrations:migrate -q"
     ],
     "post-install-cmd": "@prepare-environment",
@@ -97,14 +93,6 @@
     "symfony": {
       "id": "01C1WTEKAQ8E4EGPA14JTQ2WHZ",
       "allow-contrib": false
-    },
-    "hooks": {
-      "pre-commit": [
-        "echo committing as $(git config user.name)",
-        "./vendor/bin/php-cs-fixer fix",
-        "git update-index --again"
-      ],
-      "post-merge": "composer install"
     }
   }
 }
