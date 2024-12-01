@@ -275,7 +275,7 @@ trait UserTrait
      *
      * @return string
      */
-    protected function getUserIdentifier()
+    public function getUserIdentifier()
     {
         return $this->email;
     }
