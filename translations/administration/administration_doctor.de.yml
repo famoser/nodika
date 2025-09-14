@@ -22,6 +22,6 @@ invite:
     message: 'Willkommen! Sie haben auf nodika, der Notfalldienstverwaltung für Tierärzte, mit der E-Mail %email% Zugriff auf Ihre Praxis %clinics% erhalten.'
     action_text: 'Zugang einrichten'
   success:
-    email_sent: 'Das E-Mail wurde versandt'
+    email_sent: 'Die E-Mail wurde versandt'
   danger:
-    email_not_sent: 'Das E-Mail konnte nicht versandt werden'
+    email_not_sent: 'Die E-Mail konnte nicht versandt werden: Tierarzt deaktiviert.'
