@@ -10,6 +10,7 @@ github:
 
 config:
   path: .agnes
+  encryption_key: '%env(ANGES_ENCRYPTION_KEY)%'
   repository:
     url: git@gitlab.com:agnes-config/famoser-nodika
 
@@ -20,6 +21,7 @@ data:
   files:
     - path: .env.local
       required: true
+      encrypted: true
 
 scripts:
   build:
