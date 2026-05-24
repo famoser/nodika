@@ -73,7 +73,7 @@
     "symfony/polyfill-php73": "*",
     "symfony/polyfill-php74": "*",
     "symfony/polyfill-php80": "*",
-    "symfony/polyfill-php81": "*",
+    "symfony/polyfill-php81": "*"
   },
   "scripts": {
     "prepare-environment": [
@@ -91,7 +91,8 @@
     "projectTitle": "nodika",
     "symfony": {
       "id": "01C1WTEKAQ8E4EGPA14JTQ2WHZ",
-      "allow-contrib": false
+      "allow-contrib": false,
+      "require": "5.4.*"
     }
   }
 }
