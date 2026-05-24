@@ -7251,16 +7251,16 @@
     "packages-dev": [
         {
             "name": "famoser/agnes",
-            "version": "v4.4.0",
+            "version": "v4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/famoser/agnes.git",
-                "reference": "33beff16d576ee2d8032331b42b3ce00ed90e6be"
+                "reference": "bc00619106f6d77f9ec67896e2f25085729010b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/famoser/agnes/zipball/33beff16d576ee2d8032331b42b3ce00ed90e6be",
-                "reference": "33beff16d576ee2d8032331b42b3ce00ed90e6be",
+                "url": "https://api.github.com/repos/famoser/agnes/zipball/bc00619106f6d77f9ec67896e2f25085729010b4",
+                "reference": "bc00619106f6d77f9ec67896e2f25085729010b4",
                 "shasum": ""
             },
             "require": {
@@ -7303,7 +7303,7 @@
                 "issues": "https://github.com/famoser/agnes/issues",
                 "source": "https://github.com/famoser/agnes"
             },
-            "time": "2026-05-18T13:49:07+00:00"
+            "time": "2026-05-24T10:15:42+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
