@@ -68,7 +68,7 @@ class SearchModel
 
     public function __construct($size)
     {
-        $this->startDateTime = new \DateTime();
+        $this->startDateTime = new \DateTime("now - 1 day");
 
         if (self::MONTH === $size) {
             $this->endDateTime = new \DateTime('now + 1 month');
